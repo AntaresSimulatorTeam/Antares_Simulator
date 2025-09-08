@@ -25,7 +25,6 @@
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
-#include "antares/logs/logs.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
@@ -247,13 +246,14 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        std::optional<unsigned> scenario,
                        bool forceExportForScenarioIndex,
                        const Antares::Optimisation::EvaluationContextProvider& contextProvider,
-                       const Antares::Expressions::Visitors::EvaluationContext& evalContext,
                        const std::string& cid,
                        const std::string& outputName,
                        const Antares::Expressions::Nodes::Node* rootNode)
 {
+    auto evalContext = contextProvider.provide(component);
     Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext, fillContext, &component);
     auto value = evalVisitor.dispatch(rootNode);
+
     TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
                    .dispatch(rootNode);
     idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
@@ -289,7 +289,6 @@ void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
     const auto& cid = component.Id();
-    auto evalContext = contextProvider.provide(component);
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
         const auto& rootNode = portFieldDef.Definition().RootNode();
@@ -302,7 +301,6 @@ void addPortEntries(ISimulationTable& simulationTable,
                           scenario,
                           forceExportForScenarioIndex,
                           contextProvider,
-                          evalContext,
                           cid,
                           outputName,
                           rootNode);
@@ -319,7 +317,6 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
                            const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
     const auto& cid = component.Id();
-    auto evalContext = contextProvider.provide(component);
     for (const auto& [extraOutputId, extraOutput]: component.getModel()->ExtraOutputs())
     {
         const auto& rootNode = extraOutput.expression().RootNode();
@@ -332,7 +329,6 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
                           scenario,
                           forceExportForScenarioIndex,
                           contextProvider,
-                          evalContext,
                           cid,
                           outputName,
                           rootNode);

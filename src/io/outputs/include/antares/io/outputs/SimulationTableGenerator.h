@@ -121,7 +121,6 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        std::optional<unsigned> scenario,
                        bool forceExportForScenarioIndex,
                        const Antares::Optimisation::EvaluationContextProvider& contextProvider,
-                       const Antares::Expressions::Visitors::EvaluationContext& evalContext,
                        const std::string& cid,
                        const std::string& outputName,
                        const Antares::Expressions::Nodes::Node* rootNode);
