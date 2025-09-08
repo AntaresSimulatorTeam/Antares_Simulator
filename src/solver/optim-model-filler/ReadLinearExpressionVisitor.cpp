@@ -257,7 +257,9 @@ Derived cyclicRowShiftPerm(const Derived& m, int shift)
     int s = ((shift % n) + n) % n;
     Eigen::PermutationMatrix<Eigen::Dynamic> perm(n);
     for (int i = 0; i < n; ++i)
-        perm.indices()[i] = (i + s) % n;
+    {
+        perm.indices()[(i + s) % n] = i;
+    }
 
     return (perm * m).eval();
 }
