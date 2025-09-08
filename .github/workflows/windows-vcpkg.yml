@@ -110,7 +110,7 @@ jobs:
           ortools-dir: ${{env.ORTOOLS_DIR}}
 
       - name: Setup Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         id: setup-python
         with:
           architecture: 'x64'
