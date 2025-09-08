@@ -39,7 +39,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_):
     problemeHebdo_(problemeHebdo),
-    modelerSystem_(problemeHebdo->modelerSystem),
+    modelerSystem_(problemeHebdo->modelerData->system.get()),
     modelerVariableDictionary_(modelerVariableDictionary),
     evaluationContextProvider_(linearProblemData, scenarioGroupRepository_)
 {
@@ -105,7 +105,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
                                      areaBalanceConstraint->getUb() + expression.offset());
 }
 
-// TODO remove and ue proper scenario
+// TODO remove and use proper scenario
 class DefaultScenario: public IScenario
 {
 public:

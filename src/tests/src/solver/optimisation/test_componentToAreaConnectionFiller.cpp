@@ -131,7 +131,7 @@ struct ComponentToAreaConnectionFillerFixture
 {
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     VariableDictionary modelerVariableDictionary;
-    std::unique_ptr<System> modelerSystem;
+    std::unique_ptr<Modeler::Data> modelerData;
     std::vector<Library> libraries;
     Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
@@ -155,14 +155,15 @@ struct ComponentToAreaConnectionFillerFixture
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml);
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-        modelerSystem = std::make_unique<System>(std::move(system));
-        problemeHebdo->modelerSystem = modelerSystem.get();
+        modelerData = std::make_unique<Modeler::Data>();
+        modelerData->system = std::make_unique<System>(std::move(system));
+        problemeHebdo->modelerData = modelerData.get();
     }
 
     void setUpModelerVariables(unsigned int ts_start, unsigned int ts_end)
     {
         const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
-        for (const auto& component: modelerSystem->Components() | std::views::values)
+        for (const auto& component: modelerData->system->Components() | std::views::values)
         {
             for (const auto& variable: component.getModel()->Variables() | std::views::values)
             {
@@ -208,7 +209,6 @@ struct ComponentToAreaConnectionFillerFixture
     void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
     {
         problemeHebdo->NamedProblems = useNamedProblems;
-        problemeHebdo->modelerSystem = modelerSystem.get();
         addEmptyConstraints(constraintNames, useNamedProblems, rhs);
     }
 

@@ -100,6 +100,8 @@ models:
     variable-type: boolean
     lower-bound: 0
     upper-bound: 1
+    time-dependent: true
+    scenario-dependent: true
   - id: active_power
     variable-type: continuous
     lower-bound: 0
@@ -135,10 +137,10 @@ models:
   the [system file](#system-file).
     - **id**: an ID for the parameter. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
-    - **time-dependent**: `true` or `false`, indicates whether the parameter depends on time or is constant across the
-      whole simulation horizon.
-    - **scenario-dependent**: `true` or `false`, indicates whether the parameter changes depending on the simulated
-      scenario, or is the same for all scenarios.
+    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the parameter depends on time or is constant 
+      across the whole simulation horizon. Defaults to `true`.
+    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the 
+      simulated scenario, or is the same for all scenarios. Defaults to `true`.
 - **variables** _(optional)_: a collection of optimization variables that are defined for this model
     - **id**: an ID for the variable. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
@@ -149,6 +151,10 @@ models:
     - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. The
       expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to +inf for continuous and integer types, or 1 for binary.
+    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the variable depends on time or is constant 
+      across the whole simulation horizon. Defaults to `true`.
+    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the 
+      simulated scenario, or is the same for all scenarios. Defaults to `true`.
 - **constraints** _(optional)_: a collection of "internal" optimization constraints set by the model
     - **id**: an ID for the constraint. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).

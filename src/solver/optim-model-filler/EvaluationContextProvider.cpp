@@ -25,9 +25,11 @@ namespace Antares::Optimisation
 {
 EvaluationContextProvider::EvaluationContextProvider(
   const LinearProblemApi::ILinearProblemData& data,
-  const ScenarioGroupRepository& scenarioGroupRepository):
+  const ScenarioGroupRepository& scenarioGroupRepository,
+  std::map<std::string, double> variables):
     data_(data),
-    scenarioGroupRepository_(scenarioGroupRepository)
+    scenarioGroupRepository_(scenarioGroupRepository),
+    variables_(variables)
 {
 }
 
@@ -35,7 +37,7 @@ Expressions::Visitors::EvaluationContext EvaluationContextProvider::provide(
   const ModelerStudy::SystemModel::Component& component) const
 {
     return Expressions::Visitors::EvaluationContext(component.getParameterValues(),
-                                                    {},
+                                                    variables_,
                                                     data_,
                                                     scenarioGroupRepository_.scenario(
                                                       component.getScenarioGroupId()));

@@ -9,9 +9,9 @@ Feature: 5 - Simple end-to-end tests to test temporal expression management - Ti
     And the objective value is 715
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 0        | 50    |
       | node1     | gen1_p | 1        | 50    |
       | node1     | gen1_p | 2        | 50    |
-      | node1     | gen2_p | 0        | 30    |
+      | node1     | gen1_p | 3        | 50    |
       | node1     | gen2_p | 1        | 30    |
       | node1     | gen2_p | 2        | 30    |
+      | node1     | gen2_p | 3        | 30    |
