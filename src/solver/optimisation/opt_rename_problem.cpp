@@ -180,6 +180,12 @@ void VariableNamer::ShortTermStorageLevel(unsigned int variable,
     SetShortTermStorageVariableName(variable, "Level", shortTermStorageName);
 }
 
+void VariableNamer::ShortTermStorageOverflow(unsigned int variable,
+                                             const std::string& shortTermStorageName)
+{
+    SetShortTermStorageVariableName(variable, "Overflow", shortTermStorageName);
+}
+
 void VariableNamer::ShortTermStorageCostVariationInjection(unsigned int variable,
                                                            const std::string& shortTermStorageName)
 {

@@ -17,13 +17,21 @@ class modeler_output_handler:
             df[col] = df[col].astype(float)
         return df
 
-    def get_simulation_table_entry(self, component : str, output : str, timestep : int, scenario : int):
+    def get_simulation_table_entry(self, component : str, output : str, block : int, timestep : int, scenario : int):
         df = self.simulation_table[(self.simulation_table["component"] == component)
-                                   & (self.simulation_table["output"] == output)
-                                   & (self.simulation_table["absolute_time_index"] == timestep)
-                                   & (self.simulation_table["scenario_index"] == scenario)]
+                                   & (self.simulation_table["output"] == output)]
+        if not pd.isna(block):
+            df = df[df["block"] == block]
+        if pd.isna(timestep):
+            df = df[pd.isna(df["absolute_time_index"])]
+        else:
+            df = df[df["absolute_time_index"] == timestep]
+        if pd.isna(scenario):
+            df = df[pd.isna(df["scenario_index"])]
+        else:
+            df = df[df["scenario_index"] == scenario]
         if len(df) != 1:
-            raise LookupError(f"Simulation table does not contain exactly 1 row for component '{component}', output '{output}', timestep '{timestep}', scenario '{scenario}'")
+            raise LookupError(f"Simulation table does not contain exactly 1 row for component '{component}', output '{output}', block '{block}', timestep '{timestep}', scenario '{scenario}'")
         return df["value"].iloc[0]
 
     def get_objective_value(self):

@@ -45,6 +45,7 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
     runs-on: windows-2022
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
 
       - uses: actions/checkout@v5

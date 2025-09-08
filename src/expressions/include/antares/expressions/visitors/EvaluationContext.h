@@ -16,6 +16,7 @@ enum class ParameterType : unsigned int
 {
     CONSTANT = 0,
     TIMESERIE = 1
+    // TODO: add varying_in_scenario_only, varying_in_time_and_scenario, and handle them in visitors
 };
 
 // this struct contains more or less the same infos as the one in system.h

@@ -91,7 +91,7 @@ private:
 
 class VariableDictionary
 {
-    using Value = Antares::Optimisation::LinearProblemApi::IMipVariable*;
+    using Value = Optimisation::LinearProblemApi::IMipVariable*;
 
     class VectorWithOffset
     {

@@ -1,0 +1,61 @@
+system:
+  id: sys_example_6_1
+  description: >
+    One timestep
+    One component containing 2 generators
+      The generators have no Pmin constraint.
+      Generator 1 costs 0.5 €/MW and has a Pmax of 80 MW.
+      Generator 2 costs 6 €/MW and has a maximum output of 200 MW.
+    one component with a load of 100MW
+    One component representing the energy balance constraint=
+    Solution :
+      node1.gen1_p[0] = 80
+      node1.gen2_p[0] = 20
+      Objective function value: 160
+
+  model-libraries: lib_example_6_1
+
+  components:
+    - id: N
+      model: lib_example_6_1.balance_node
+
+    - id: NG
+      model: lib_example_6_1.node_2gen
+
+      parameters:
+        - id: gen1_max_p
+          time-dependent: false
+          scenario-dependent: false
+          value: 80
+        - id: gen1_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.5
+        - id: gen2_max_p
+          time-dependent: false
+          scenario-dependent: false
+          value: 200
+        - id: gen2_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 6
+
+    - id: NL
+      model: lib_example_6_1.node_load
+      scenario-group: load_group
+      parameters:
+        - id: load
+          time-dependent: true
+          scenario-dependent: true
+          value: load_value
+
+  connections:
+    - component1: N
+      port1: injection_port
+      component2: NL
+      port2: injection_port
+
+    - component1: N
+      port1: injection_port
+      component2: NG
+      port2: injection_port

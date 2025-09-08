@@ -90,6 +90,7 @@ target_link_libraries(expressions
         linear-problem-api
         PRIVATE
         Antares::antares-study-system-model
+        Antares::exception
 )
 
 

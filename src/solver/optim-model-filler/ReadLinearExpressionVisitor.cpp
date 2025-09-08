@@ -35,12 +35,14 @@ using namespace Antares::ModelerStudy;
 
 namespace Antares::Optimization
 {
+
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  EvaluationContext evalContext,
-  Optimisation::LinearProblemApi::FillContext fillContext,
+  const Optimisation::EvaluationContextProvider& evalContextProvider,
+  const Optimisation::LinearProblemApi::FillContext& fillContext,
   const SystemModel::Component& component):
-    fillContext_(std::move(fillContext)),
-    evalContext_(std::move(evalContext)),
+    evalContextProvider_(evalContextProvider),
+    evalContext_(evalContextProvider_.provide(component)),
+    fillContext_(fillContext),
     component_(component),
     evalVisitor_(evalContext_, fillContext_)
 {
@@ -183,13 +185,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const PortField
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
-                                                              {},
-                                                              evalContext_.data(),
-                                                              evalContext_.scenario());
-        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
-                                            fillContext_,
-                                            *component);
+        ReadLinearExpressionVisitor visitor(evalContextProvider_, fillContext_, *component);
 
         const Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);

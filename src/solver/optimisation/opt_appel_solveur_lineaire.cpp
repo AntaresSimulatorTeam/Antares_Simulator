@@ -74,23 +74,17 @@ static void logProblemSize(const MPSolver* mpSolver)
 }
 
 static void fillModelerComponents(
-  std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
-  std::vector<LinearProblemFiller*>& fillersCollection,
-  const ModelerStudy::SystemModel::System* modelerSystem,
-  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
+  std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
+  Modeler::Data* modelerData,
   VariableDictionary& variableDictionary)
 {
-    for (const auto& [_, component]: modelerSystem->Components())
+    for (const auto& [_, component]: modelerData->system->Components())
     {
-        componentFillers.push_back(
+        fillersCollection.push_back(
           std::make_unique<Optimisation::ComponentFiller>(component,
                                                           variableDictionary,
-                                                          scenarioGroupRepository));
-        // TODO: use scenario group repository
-    }
-    for (auto& component_filler: componentFillers)
-    {
-        fillersCollection.push_back(component_filler.get());
+                                                          *modelerData->dataSeries,
+                                                          modelerData->scenarioGroupRepository));
     }
 }
 
@@ -120,33 +114,31 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
+static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
+  LinearProblemDataImpl::LinearProblemData();
+
 // Returns a non-owning pointer
 MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                              FillContext& fillCtx,
                              const PROBLEME_HEBDO* problemeHebdo,
                              bool namedProblems)
 {
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
-    std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
-
+    std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
+    fillersCollection.push_back(std::make_unique<LegacyFiller>(problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
-
     VariableDictionary variableDictionary;
-    std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
-                                                                    variableDictionary);
-    if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
+    if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(componentFillers,
-                              fillersCollection,
-                              problemeHebdo->modelerSystem,
-                              *problemeHebdo->scenarioGroupRepository,
-                              variableDictionary);
+        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, variableDictionary);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(&componentToAreaConnectionFiller);
+        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
+          problemeHebdo,
+          variableDictionary,
+          *problemeHebdo->modelerData->dataSeries,
+          problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -154,7 +146,11 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     // Note that the modeler is only called for the 1st simulation week,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
-    linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
+    // TODO try to make this cleaner
+    linearProblemBuilder.build(ortoolsProblem,
+                               problemeHebdo->modelerData ? *problemeHebdo->modelerData->dataSeries
+                                                          : dummy_data,
+                               fillCtx);
 
     measure.tick();
 
@@ -239,21 +235,22 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    if (problemeHebdo->modelerSystem)
+    if (problemeHebdo->modelerData)
     {
         unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                                   ? problemeHebdo->weekInTheYear
-                                  : NumIntervalle;
+                                  : problemeHebdo->weekInTheYear * 7 + NumIntervalle;
         TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
         FillSimulationTable(simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
-                            problemeHebdo->modelerSystem->Components(),
+                            *problemeHebdo->modelerData,
                             fillCtx,
                             currentBlock,
-                            timeConversionMode);
+                            timeConversionMode,
+                            true);
     }
 
     return {.success = true,

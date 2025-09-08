@@ -33,10 +33,10 @@ namespace Antares::Optimization
 {
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-  Expressions::Visitors::EvaluationContext context,
+  const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const Component& component):
-    linear_expression_visitor_(std::move(context), fillContext, component)
+    linear_expression_visitor_(evalContextProvider, fillContext, component)
 {
 }
 

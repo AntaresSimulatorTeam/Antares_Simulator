@@ -26,6 +26,7 @@
 #include "antares/expressions/visitors/EvaluationContext.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 
+#include "EvaluationContextProvider.h"
 #include "ReadLinearConstraintVisitor.h"
 
 namespace Antares::ModelerStudy::SystemModel
@@ -48,7 +49,7 @@ class ScenarioGroupRepository;
  * Implements LinearProblemFiller interface.
  * Fills a LinearProblem with variables, constraints, and objective coefficients of a Component
  */
-class ComponentFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
+class ComponentFiller: public LinearProblemApi::LinearProblemFiller
 {
 public:
     ComponentFiller() = delete;
@@ -58,6 +59,7 @@ public:
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              Optimization::VariableDictionary& variableDictionary,
+                             const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -86,7 +88,7 @@ private:
 
     const ModelerStudy::SystemModel::Component& component_;
     Optimization::VariableDictionary& variableDictionary_;
-    const ScenarioGroupRepository& scenarioGroupRepository_;
+    const EvaluationContextProvider evaluationContextProvider_;
 };
 
 class VariablesBulkAddition

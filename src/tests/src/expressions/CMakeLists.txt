@@ -3,7 +3,7 @@ add_boost_test(test-expressions
         SRC
         test_main.cpp
         test_nodes.cpp
-        test_PrintAndEvalNodes.cpp
+        test_PrintAndEvalVisitors.cpp
         test_TimeIndexVisitor.cpp
         test_LinearVisitor.cpp
         test_CompareVisitor.cpp

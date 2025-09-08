@@ -280,7 +280,7 @@ BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
     // version>=9.2
     checkSizeFirst(series.costInjection, 0.0);
     checkSizeFirst(series.costWithdrawal, 0.0);
-    checkSizeFirst(series.costLevel, 0.0);
+    checkSizeFirst(series.costLevel, -1.e-6);
     checkSizeFirst(series.costVariationInjection, 0.0);
     checkSizeFirst(series.costVariationWithdrawal, 0.0);
 }

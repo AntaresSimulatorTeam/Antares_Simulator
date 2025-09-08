@@ -363,3 +363,11 @@ def check_no_mingen_column_for_cluster(context, area, year, cluster):
 def check_thermal_cluster_min_gen_for_hour(context, area, cluster_name, hour, year, expected_value):
     actual_value = context.soh.min_gen_for_thermal_cluster_at_hour(area, year, hour, cluster_name)
     assert_double_close(expected_value, actual_value, 0.001)
+
+
+@step('the message "{log}" is reported in the logs')
+def ckeck_log_exists(context, log):
+    for log_line in context.logs_out.splitlines():
+        if log in log_line:
+            return
+    raise AssertionError(f"Log '{log}' is not reported in the logs")

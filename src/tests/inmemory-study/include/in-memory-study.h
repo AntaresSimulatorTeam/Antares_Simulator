@@ -144,6 +144,8 @@ public:
     ShortTermStorageConfig& setGroupName(const std::string& groupName);
     ShortTermStorageConfig& setName(const std::string& name);
     ShortTermStorageConfig& setPenalizeVariationWithdrawal(bool penalizeVariationWithdrawal);
+    ShortTermStorageConfig& setAllowOverflow(bool allowOverflow);
+
     ShortTermStorageConfig& setPenalizeVariationInjection(bool penalizeVariationInjection);
     ShortTermStorageConfig& setEnabled(bool enabled);
 

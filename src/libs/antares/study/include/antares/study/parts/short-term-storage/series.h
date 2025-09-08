@@ -42,7 +42,6 @@ public:
 
     bool saveToFolder(const std::string& folder) const;
 
-public:
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
     TimeSeriesNumbers inflowsTSNumbers;
