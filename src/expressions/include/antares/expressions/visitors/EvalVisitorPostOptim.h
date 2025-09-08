@@ -46,24 +46,6 @@ public:
 
     std::string name() const override;
 
-    EvaluationResult visit(const Nodes::SumNode* node) override;
-    EvaluationResult visit(const Nodes::SubtractionNode* node) override;
-    EvaluationResult visit(const Nodes::MultiplicationNode* node) override;
-    EvaluationResult visit(const Nodes::DivisionNode* node) override;
-    EvaluationResult visit(const Nodes::EqualNode* node) override;
-    EvaluationResult visit(const Nodes::LessThanOrEqualNode* node) override;
-    EvaluationResult visit(const Nodes::GreaterThanOrEqualNode* node) override;
-    EvaluationResult visit(const Nodes::NegationNode* node) override;
-    EvaluationResult visit(const Nodes::VariableNode* node) override;
-    EvaluationResult visit(const Nodes::ParameterNode* node) override;
-    EvaluationResult visit(const Nodes::LiteralNode* node) override;
-    EvaluationResult visit(const Nodes::PortFieldNode* node) override;
     EvaluationResult visit(const Nodes::PortFieldSumNode* node) override;
-    EvaluationResult visit(const Nodes::ComponentVariableNode* node) override;
-    EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
-    EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
-    EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
-    EvaluationResult visit(const Nodes::TimeSumNode* node) override;
-    EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors
