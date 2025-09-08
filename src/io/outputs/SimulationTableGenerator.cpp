@@ -388,6 +388,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                        scenario,
                        forceExportForScenarioIndex,
                        contextProvider);
+<<<<<<< HEAD
 
         addExtraOutputEntries(simulationTable,
                               fillContext,
@@ -397,6 +398,8 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                               scenario,
                               forceExportForScenarioIndex,
                               contextProvider);
+=======
+>>>>>>> origin
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
 }
