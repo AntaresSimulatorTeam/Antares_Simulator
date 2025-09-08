@@ -143,7 +143,7 @@ TimeIndexVisitor::TimeIndexVisitor(const Component& component,
                                    const IEvaluationContextProvider& contextProvider):
     component_(component),
     contextProvider_(contextProvider),
-    context_(contextProvider.provide(component))
+    context_(contextProvider.provide(component)) // TODO perf: avoid this copy
 {
 }
 

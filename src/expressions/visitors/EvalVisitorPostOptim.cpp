@@ -27,4 +27,19 @@
 namespace Antares::Expressions::Visitors
 {
 
+EvalVisitorPostOptim::EvalVisitorPostOptim(const IEvaluationContextProvider& contextProvider,
+                                           Optimisation::LinearProblemApi::FillContext fillContext,
+                                           const ModelerStudy::SystemModel::Component* component):
+    EvalVisitor(contextProvider.provide(*component), // TODO perf: avoid this copy
+                fillContext,
+                component),
+    contextProvider_(contextProvider)
+{
+}
+
+EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node)
+{
+    throw EvalVisitorNotImplemented(name(), node->name());
+}
+
 } // namespace Antares::Expressions::Visitors
