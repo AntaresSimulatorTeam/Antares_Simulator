@@ -327,14 +327,13 @@ void ComponentFiller::addTimeDependentConstraints(
     {
         for (const auto t: dim.getTimesteps())
         {
-            const auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            auto* ct = pb.addConstraint(linear_constraints.lb(localIndex),
-                                        linear_constraints.ub(localIndex),
+            auto* ct = pb.addConstraint(linear_constraints.lb(t),
+                                        linear_constraints.ub(t),
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(t));
 
             for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
-                   it(linear_constraints.coef_per_var, localIndex);
+                   it(linear_constraints.coef_per_var, t);
                  it;
                  ++it)
             {
@@ -424,10 +423,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         for (const auto t: dim.getTimesteps())
         {
-            const auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVars,
-                                                                                localIndex);
-                 it;
+            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVars, t); it;
                  ++it)
             {
                 pb.setObjectiveCoefficient(solverVariables.at(it.col()), it.value());
