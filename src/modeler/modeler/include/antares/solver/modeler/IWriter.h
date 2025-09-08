@@ -19,8 +19,8 @@
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #pragma once
-#include <string>
-#include <vector>
+
+#include "data.h"
 
 namespace Antares::Optimization
 {
@@ -37,6 +37,7 @@ namespace Antares::Optimisation::LinearProblemApi
 {
 class IMipVariable;
 class ILinearProblem;
+class ILinearProblemData;
 class IMipSolution;
 class FillContext;
 } // namespace Antares::Optimisation::LinearProblemApi
@@ -59,14 +60,14 @@ public:
     virtual ~IWriter() = default;
     virtual void init(bool, const std::string& simulationId) = 0;
     virtual void writeSimulationTable(
-      const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+      const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
-      const std::vector<Antares::ModelerStudy::SystemModel::Component>& components,
-      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const
+      const Antares::Modeler::Data& modelerData,
+      const Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
 
     virtual void writeProblem(
-      const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
+      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
       = 0;
 };
 } // namespace Antares::Solver

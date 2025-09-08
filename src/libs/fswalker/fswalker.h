@@ -149,8 +149,6 @@ private:
     YString pDirectory;
     //! Statistics of the last run
     Statistics pStats;
-    //! Number of simultaneous jobs
-    uint pJobCount;
     //! Extensions
     IExtension::Vector pExtensions;
     //! Log prefix

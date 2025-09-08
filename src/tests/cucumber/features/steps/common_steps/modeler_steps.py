@@ -16,7 +16,7 @@
 #
 #  You should have received a copy of the Mozilla Public Licence 2.0
 #  along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-
+import math
 # Test steps definitions specific to antares-modeler
 
 import os
@@ -51,31 +51,37 @@ def modeler_obj_value(context, lb, ub):
 @step('the modeler outputs contain the following entries')
 def modeler_output_values(context):
     for row in context.table:
-        ts_array = row["timestep"].split("-")
-        ts_start = int(ts_array[0]) + 1
-        ts_end = int(ts_array[1]) + 1 if len(ts_array) == 2 else ts_start
+        ts_range = read_int_range(row, "timestep")
         if "scenario" not in context.table.headings:
-            print("No scenario specified, using default values")
-            scenario_start = 0
-            scenario_end = 0
+            scenario_range = [0]
         else:
-            scenario_array = row["scenario"].split("-")
-            scenario_start = int(scenario_array[0])
-            scenario_end = int(scenario_array[1]) if len(
-                scenario_array) == 2 else scenario_array
-        for scenario in range(scenario_start, scenario_end + 1):
-            for ts in range(ts_start, ts_end + 1):
-                assert_double_close(
-                    get_value(row, ts), context.moh.get_simulation_table_entry(row["component"], row["output"], ts, scenario), 1e-6
-                )
+            scenario_range = read_int_range(row, "scenario")
+        if "block" in context.table.headings:
+            block_range = read_int_range(row, "block")
+        else:
+            block_range = [math.nan]
+        for block in block_range:
+            for scenario in scenario_range:
+                for ts in ts_range:
+                    assert_double_close(
+                        get_value(row, ts), context.moh.get_simulation_table_entry(row["component"], row["output"], block, ts, scenario), 1e-6
+                    )
 
+def read_int_range(row, key : str):
+    if row[key] != "":
+        array = row[key].split("-")
+        start = int(array[0])
+        end = int(array[1]) if len(array) == 2 else start
+        return range(start, end + 1)
+    else:
+        return [math.nan]
 
 def get_value(row, ts):
     ret = row["value"]
 
-    if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
-        ret = ret.split("-")  # Split into a list of strings
-        return float(ret[ts])  # Index and convert to float
+    # if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
+    #     ret = ret.split("-")  # Split into a list of strings
+    #     return float(ret[ts])  # Index and convert to float
 
     return float(ret)  # Single value case (apply to all timesteps)
 

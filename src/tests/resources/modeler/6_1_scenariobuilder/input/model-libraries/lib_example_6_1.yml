@@ -1,0 +1,75 @@
+library:
+  id: lib_example_6_1
+  description: test model library
+
+  port-types:
+    - id:  power_flow
+      description: power flow
+      fields:
+        - id: flow
+  
+  models:
+    - id: balance_node
+      description: A basic balancing node model
+      ports:
+        - id: injection_port
+          type: power_flow
+      binding-constraints:
+        - id: balance
+          expression:  sum_connections(injection_port.flow) = 0
+
+    - id: node_2gen
+      description: A simple node with two generators 
+      parameters:
+        - id: gen1_max_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen1_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen2_max_p
+          time-dependent: false
+          scenario-dependent: false
+        - id: gen2_prop_cost
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: gen1_p
+          lower-bound: 0
+          upper-bound: gen1_max_p
+          variable-type: continuous
+        - id: gen2_p
+          lower-bound: 0
+          upper-bound: gen2_max_p
+          variable-type: continuous
+        - id: total_gen
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+      constraints:
+        - id: sum_injection
+          expression : total_gen - gen1_p - gen2_p = 0
+      ports:
+        - id: injection_port
+          type: power_flow
+      port-field-definitions:
+        - port: injection_port
+          field: flow
+          definition: total_gen
+      objective: sum(gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)
+
+    - id: node_load
+      description: A simple node with one load 
+      parameters:
+       - id: load
+         time-dependent: true
+         scenario-dependent: true
+      ports:
+        - id: injection_port
+          type: power_flow
+      port-field-definitions:
+        - port: injection_port
+          field: flow
+          definition: -load 
+      
+

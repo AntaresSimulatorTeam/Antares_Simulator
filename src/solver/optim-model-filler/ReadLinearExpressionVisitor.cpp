@@ -21,6 +21,7 @@
 
 #include <numeric>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
@@ -34,18 +35,20 @@ using namespace Antares::ModelerStudy;
 
 namespace Antares::Optimization
 {
+
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  EvaluationContext evalContext,
-  Optimisation::LinearProblemApi::FillContext fillContext,
+  const Optimisation::EvaluationContextProvider& evalContextProvider,
+  const Optimisation::LinearProblemApi::FillContext& fillContext,
   const SystemModel::Component& component,
   unsigned int nbModelVariables,
   const std::vector<unsigned int>& variableStartColumn):
-    fillContext_(std::move(fillContext)),
-    evalContext_(std::move(evalContext)),
+    evalContextProvider_(evalContextProvider),
+    evalContext_(evalContextProvider_.provide(component)),
+    fillContext_(fillContext),
     component_(component),
-    evalVisitor_(evalContext_, fillContext_),
-    nbModelVariables_(nbModelVariables),
-    variableStartColumn_(variableStartColumn)
+evalVisitor_(evalContext_, fillContext_),
+nbModelVariables_(nbModelVariables),
+variableStartColumn_(variableStartColumn)
 {
     nbtimeSteps_ = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep() + 1;
 }
@@ -89,17 +92,17 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const DivisionNode* nod
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const EqualNode*)
 {
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const LessThanOrEqualNode*)
 {
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const GreaterThanOrEqualNode*)
 {
-    throw std::invalid_argument("A linear expression can't contain comparison operators.");
+    throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const NegationNode* node)
@@ -145,7 +148,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     }
     else
     {
-        throw std::invalid_argument(
+        throw Error::InvalidArgumentError(
           "the support of scenario dependent variables is not available for now :(" + node->value()
           + ").");
     }
@@ -158,7 +161,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ParameterType::CONSTANT)
     {
-        throw std::invalid_argument(
+        throw Error::InvalidArgumentError(
           "Parameter " + node->value()
           + " is declared constant in time and scenario in library but not in system");
     }
@@ -196,7 +199,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const LiteralNode* node
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldNode*)
 {
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
+    throw Error::InvalidArgumentError("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node)
@@ -210,13 +213,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldSumNode*
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        const EvaluationContext connectedComponentEvalContext(component->getParameterValues(),
-                                                              {},
-                                                              evalContext_.data(),
-                                                              evalContext_.scenario());
-        ReadLinearExpressionVisitor visitor(connectedComponentEvalContext,
-                                            fillContext_,
-                                            *component,
+        ReadLinearExpressionVisitor visitor(evalContextProvider_, fillContext_, *component,
                                             nbModelVariables_,
                                             variableStartColumn_);
 
@@ -227,15 +224,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldSumNode*
     return to_return;
 }
 
-LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ComponentVariableNode*)
-{
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentVariableNodes");
-}
 
-LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ComponentParameterNode*)
-{
-    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
-}
 template<typename Derived>
 requires(std::same_as<Derived, Eigen::SparseMatrix<double, Eigen::RowMajor>>
          || std::same_as<Derived, Eigen::VectorXd>)

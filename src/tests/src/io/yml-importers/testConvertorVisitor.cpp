@@ -30,6 +30,7 @@
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
+namespace utf = boost::unit_test;
 
 class ExpressionToNodeConvertorEmptyModel
 {
@@ -137,6 +138,27 @@ BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertorEmptyModel)
     const auto& operands = nodeSum->getOperands();
     BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
+}
+
+/*
+  /!\ This test is disabled.
+  Current behavior
+  "1+2+3" -> SumNode(SumNode(1,2), 3)
+  Desired behavior
+  "1+2+3" -> SumNode(1,2,3)
+*/
+BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel, *utf::disabled())
+{
+    const std::string expression = "1 + 2 + 3";
+    auto expr = run(expression);
+
+    auto* nodeSum = dynamic_cast<Nodes::SumNode*>(expr.node);
+    BOOST_REQUIRE(nodeSum);
+    const auto& operands = nodeSum->getOperands();
+    BOOST_REQUIRE_EQUAL(operands.size(), 3);
+    BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
+    BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
+    BOOST_CHECK_EQUAL(toLiteral(operands[2])->value(), 3);
 }
 
 BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertorEmptyModel)

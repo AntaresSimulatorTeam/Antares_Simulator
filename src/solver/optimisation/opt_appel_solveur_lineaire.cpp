@@ -20,6 +20,7 @@
  */
 
 #include <chrono>
+#include <mutex>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
@@ -52,37 +53,6 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using Solver::IResultWriter;
 using Solver::Optimization::SingleOptimOptions;
 
-class TimeMeasurement
-{
-    using clock = std::chrono::steady_clock;
-
-public:
-    TimeMeasurement()
-    {
-        start_ = clock::now();
-        end_ = start_;
-    }
-
-    void tick()
-    {
-        end_ = clock::now();
-    }
-
-    long duration_ms() const
-    {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
-    }
-
-    std::string toString() const
-    {
-        return std::to_string(duration_ms()) + " ms";
-    }
-
-private:
-    clock::time_point start_;
-    clock::time_point end_;
-};
-
 struct SimplexResult
 {
     bool success = false;
@@ -91,30 +61,30 @@ struct SimplexResult
     double objectiveValue;
 };
 
+static std::once_flag logProblemSizeFlag;
+
+static void logProblemSize(const MPSolver* mpSolver)
+{
+    logs.info();
+    logs.info();
+    logs.info() << " Total Problem size : " << mpSolver->NumVariables() << " variables, "
+                << mpSolver->NumConstraints() << " constraints";
+    logs.info();
+    logs.info();
+}
+
 static void fillModelerComponents(
-  std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
-  std::vector<LinearProblemFiller*>& fillersCollection,
-  const ModelerStudy::SystemModel::System* modelerSystem,
-  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
+  std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
+  Modeler::Data* modelerData,
   VariableContainer& variablesContainer)
 {
-    if (!modelerSystem)
+    for (const auto& [_, component]: modelerData->system->Components())
     {
-        logs.info() << "No modeler system found, optimization will only be done on legacy study";
-        return;
-    }
-
-    for (const auto& component: modelerSystem->Components())
-    {
-        componentFillers.push_back(
+        fillersCollection.push_back(
           std::make_unique<Optimisation::ComponentFiller>(component,
                                                           variablesContainer,
-                                                          scenarioGroupRepository));
-        // TODO: use scenario group repository
-    }
-    for (auto& component_filler: componentFillers)
-    {
-        fillersCollection.push_back(component_filler.get());
+                                                          *modelerData->dataSeries,
+                                                          modelerData->scenarioGroupRepository));
     }
 }
 
@@ -144,31 +114,31 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
+static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
+  LinearProblemDataImpl::LinearProblemData();
+
 // Returns a non-owning pointer
 MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                              FillContext& fillCtx,
                              const PROBLEME_HEBDO* problemeHebdo,
                              bool namedProblems)
 {
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
-    std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
-
+    std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
+    fillersCollection.push_back(std::make_unique<LegacyFiller>(problemeHebdo, namedProblems));
+    Utils::TimeMeasurement measure;
     VariableContainer variableContainer;
-    std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
-                                                                    variableContainer);
-    if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
+    if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(componentFillers,
-                              fillersCollection,
-                              problemeHebdo->modelerSystem,
-                              *problemeHebdo->scenarioGroupRepository,
-                              variableContainer);
+        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, variableContainer);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(&componentToAreaConnectionFiller);
+        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
+          problemeHebdo,
+          variableContainer,
+          *problemeHebdo->modelerData->dataSeries,
+          problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -176,7 +146,16 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     // Note that the modeler is only called for the 1st simulation week,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
-    linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
+    // TODO try to make this cleaner
+    linearProblemBuilder.build(ortoolsProblem,
+                               problemeHebdo->modelerData ? *problemeHebdo->modelerData->dataSeries
+                                                          : dummy_data,
+                               fillCtx);
+
+    measure.tick();
+
+    logs.info();
+    logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
     return ortoolsProblem.getMpSolver();
 }
@@ -209,6 +188,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 problemeHebdo,
                                 problemeHebdo->NamedProblems);
 
+    std::call_once(logProblemSizeFlag, logProblemSize, solver);
+
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
@@ -219,7 +200,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
-    TimeMeasurement measure;
+    Utils::TimeMeasurement measure;
     solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
     if (solver != nullptr)
     {
@@ -254,21 +235,22 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    if (problemeHebdo->modelerSystem)
+    if (problemeHebdo->modelerData)
     {
         unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                                   ? problemeHebdo->weekInTheYear
-                                  : NumIntervalle;
+                                  : problemeHebdo->weekInTheYear * 7 + NumIntervalle;
         TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
         FillSimulationTable(simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
-                            problemeHebdo->modelerSystem->Components(),
+                            *problemeHebdo->modelerData,
                             fillCtx,
                             currentBlock,
-                            timeConversionMode);
+                            timeConversionMode,
+                            true);
     }
 
     return {.success = true,

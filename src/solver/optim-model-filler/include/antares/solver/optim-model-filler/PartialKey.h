@@ -34,6 +34,7 @@ public:
     const std::string& getVariable() const;
 
     auto operator<=>(const PartialKey&) const = default; // Automatically generates <, >, ==, etc.
+    auto operator==(const PartialKey&) const -> bool = default;
 
 private:
     std::string component_id;

@@ -36,7 +36,6 @@ class DurationCollector
 {
 public:
     void toFileContent(FileContent& file_content);
-    void addDuration(const std::string& name, int64_t duration);
 
     struct OperationTimer
     {

@@ -26,6 +26,7 @@
 #include <antares/io/inputs/yml-system/converter.h>
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/parser.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
@@ -130,9 +131,10 @@ struct ComponentToAreaConnectionFillerFixture
 {
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     VariableDictionary modelerVariableDictionary;
-    std::unique_ptr<System> modelerSystem;
+    std::unique_ptr<Modeler::Data> modelerData;
     std::vector<Library> libraries;
     Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
+    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
 
     ComponentToAreaConnectionFillerFixture():
         linearProblem(true, "scip")
@@ -140,6 +142,10 @@ struct ComponentToAreaConnectionFillerFixture
         problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
         problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
         setUpModelerSystem();
+
+        auto scenarioPtr = std::make_unique<Scenario>("SG");
+        scenarioPtr->setTimeSerieNumber(0, 1);
+        scenarioGroupRepository.addScenario("SG", std::move(scenarioPtr));
     }
 
     void setUpModelerSystem()
@@ -149,14 +155,15 @@ struct ComponentToAreaConnectionFillerFixture
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml);
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-        modelerSystem = std::make_unique<System>(std::move(system));
-        problemeHebdo->modelerSystem = modelerSystem.get();
+        modelerData = std::make_unique<Modeler::Data>();
+        modelerData->system = std::make_unique<System>(std::move(system));
+        problemeHebdo->modelerData = modelerData.get();
     }
 
     void setUpModelerVariables(unsigned int ts_start, unsigned int ts_end)
     {
         const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
-        for (const auto& component: modelerSystem->Components() | std::views::values)
+        for (const auto& component: modelerData->system->Components() | std::views::values)
         {
             for (const auto& variable: component.getModel()->Variables() | std::views::values)
             {
@@ -202,7 +209,6 @@ struct ComponentToAreaConnectionFillerFixture
     void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
     {
         problemeHebdo->NamedProblems = useNamedProblems;
-        problemeHebdo->modelerSystem = modelerSystem.get();
         addEmptyConstraints(constraintNames, useNamedProblems, rhs);
     }
 
@@ -217,7 +223,10 @@ struct ComponentToAreaConnectionFillerFixture
         DataSeriesRepository ds;
         ds.addDataSeries(std::move(tss));
         LinearProblemData data(std::move(ds));
-        ComponentToAreaConnectionFiller filler(problemeHebdo.get(), modelerVariableDictionary);
+        ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
+                                               modelerVariableDictionary,
+                                               data,
+                                               scenarioGroupRepository);
         filler.addVariables(linearProblem, data, fillCtx);
         filler.addConstraints(linearProblem, data, fillCtx);
         filler.addObjective(linearProblem, data, fillCtx);

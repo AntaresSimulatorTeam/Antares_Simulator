@@ -46,8 +46,8 @@ void LinearProblemBuildingFixture::buildLinearProblem(
   Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data,
   std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios)
 {
-    std::vector<std::unique_ptr<Antares::Optimisation::ComponentFiller>> fillers;
-    std::vector<Antares::Optimisation::LinearProblemApi::LinearProblemFiller*> fillers_ptr;
+    std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::LinearProblemFiller>>
+      fillers;
     // All LP variables coordinates (component id, variable id, scenario, time step)
     Antares::Optimization::VariableDictionary variableDictionary;
     Antares::Optimisation::ScenarioGroupRepository scenario_group_repository;
@@ -61,18 +61,14 @@ void LinearProblemBuildingFixture::buildLinearProblem(
         auto cf = std::make_unique<Antares::Optimisation::ComponentFiller>(
           component,
           variableDictionary,
+          dummy_data,
           scenario_group_repository);
         fillers.push_back(std::move(cf));
-    }
-    for (auto& component_filler: fillers)
-    {
-        fillers_ptr.push_back(component_filler.get());
     }
     pb = std::make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(
       false,
       "sirius");
-    Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(
-      fillers_ptr);
+    Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
 
     linear_problem_builder.build(*pb, dummy_data, time_scenario_ctx);
 }
@@ -100,7 +96,7 @@ void LinearProblemBuildingFixture::createComponent(
     auto component = component_builder.withId(componentId)
                        .withModel(&models.at(modelId))
                        .withScenarioGroupId(scenarioGroupId)
-                       .withParameterValues(move(parameterValues))
+                       .withParameterValues(std::move(parameterValues))
                        .build();
     components.emplace(component.Id(), std::move(component));
 }
@@ -183,7 +179,7 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
     std::vector<Constraint> constraints;
     for (const auto& [id, expression]: constraintsData)
     {
-        constraints.push_back(std::move(Constraint(id, createExpression(expression))));
+        constraints.emplace_back(id, createExpression(expression));
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)

@@ -42,7 +42,7 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     data.dataSeries = loadDataSeries(studyPath);
     logs.info() << "Timeseries loaded";
 
-    data.scenario_group_repository = loadScenarioGroupRepository(studyPath);
+    data.scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
     logs.info() << "Scenario groups loaded";
 
     return data;

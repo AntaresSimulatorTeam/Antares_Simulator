@@ -22,6 +22,7 @@
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
+#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 #include "antares/solver/optim-model-filler/LinearExpressionEigen.h"
 #include "antares/solver/optim-model-filler/VariableContainer.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -41,7 +42,9 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 {
 public:
     explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
-                                             const VariableContainer& variableContainer);
+                                             const VariableContainer& variableContainer,
+      const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
+      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -56,6 +59,7 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     const VariableContainer& variableContainer_;
+    const Optimisation::EvaluationContextProvider evaluationContextProvider_;
 
     std::map<std::string, unsigned> areaIndices_;
 
@@ -67,13 +71,11 @@ private:
                                    const LinearExpressionEigen& linearExpression,
                                    const Optimisation::LinearProblemApi::FillContext& ctx,
                                    const std::string& areaId) const;
-    void addComponentPortContributionToArea(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
-      Optimisation::LinearProblemApi::ILinearProblemData& data,
-      const Optimisation::LinearProblemApi::FillContext& ctx,
-      const ModelerStudy::SystemModel::Component& component,
-      const std::string& portId,
-      const std::string& areaId);
+    void addComponentPortContributionToArea(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                            const Optimisation::LinearProblemApi::FillContext& ctx,
+                                            const ModelerStudy::SystemModel::Component& component,
+                                            const std::string& portId,
+                                            const std::string& areaId);
 };
 
 } // namespace Antares::Optimization

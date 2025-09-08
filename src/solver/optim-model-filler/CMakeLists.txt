@@ -3,6 +3,7 @@ find_package(Eigen3 CONFIG REQUIRED)
 
 set(SRC_optim_model_filler
         ComponentFiller.cpp
+        EvaluationContextProvider.cpp
         FullKey.cpp
         PartialKey.cpp
         ReadLinearConstraintVisitor.cpp
@@ -10,6 +11,7 @@ set(SRC_optim_model_filler
         VariableDictionary.cpp
         LinearExpressionEigen.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
+        include/antares/solver/optim-model-filler/EvaluationContextProvider.h
         include/antares/solver/optim-model-filler/FullKey.h
         include/antares/solver/optim-model-filler/PartialKey.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
@@ -31,6 +33,7 @@ set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJ}
         PRIVATE
         Antares::expressions
+        Antares::exception
         Antares::antares-study-system-model
         Antares::linear-problem-api
         fmt::fmt

@@ -141,7 +141,7 @@ public:
                 .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
                   std::move(system)),
                 .dataSeries = std::move(data),
-                .scenario_group_repository = std::move(scenarioGroupRepository)};
+                .scenarioGroupRepository = std::move(scenarioGroupRepository)};
     }
 
     void setComponents(
@@ -216,9 +216,7 @@ public:
     void writeSimulationTable(
       const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
-      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>&
-        components,
-      const Antares::Optimization::VariableDictionary& variableDictionary,
+      const Antares::Modeler::Data& modelerData,
       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override
     {
         solution_.objectiveValue = solution.getObjectiveValue();

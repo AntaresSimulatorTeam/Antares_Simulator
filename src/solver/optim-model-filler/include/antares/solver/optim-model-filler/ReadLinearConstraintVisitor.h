@@ -55,9 +55,9 @@ class ReadLinearConstraintVisitor: public Expressions::Visitors::NodeVisitor<Lin
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
-      Expressions::Visitors::EvaluationContext context,
+      const Optimisation::EvaluationContextProvider& evalContextProvider,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const Antares::ModelerStudy::SystemModel::Component& component,
+      const ModelerStudy::SystemModel::Component& component,
       unsigned int nbModelVariables,
       const std::vector<unsigned int>& variableStartColumn);
 
@@ -77,8 +77,6 @@ private:
     LinearConstraint visit(const Expressions::Nodes::LiteralNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::PortFieldNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    LinearConstraint visit(const Expressions::Nodes::ComponentVariableNode* node) override;
-    LinearConstraint visit(const Expressions::Nodes::ComponentParameterNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::TimeShiftNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::TimeIndexNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::TimeSumNode* node) override;

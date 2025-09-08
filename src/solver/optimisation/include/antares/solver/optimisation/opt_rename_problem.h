@@ -99,6 +99,7 @@ public:
     void ShortTermStorageInjection(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageWithdrawal(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageLevel(unsigned int variable, const std::string& shortTermStorageName);
+    void ShortTermStorageOverflow(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageCostVariationInjection(unsigned int variable,
                                                 const std::string& shortTermStorageName);
     void ShortTermStorageCostVariationWithdrawal(unsigned int variable,

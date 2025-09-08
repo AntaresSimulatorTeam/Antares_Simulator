@@ -127,6 +127,12 @@ public:
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageOverflow(unsigned int index,
+                                                double coeff,
+                                                int offset = 0,
+                                                int delta = 0);
+
     ConstraintBuilder& ShortTermCostVariationInjection(unsigned int index,
                                                        double coeff,
                                                        int offset = 0,

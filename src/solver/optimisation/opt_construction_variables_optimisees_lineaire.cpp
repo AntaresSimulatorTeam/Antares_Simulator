@@ -132,6 +132,16 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                                                                           storage.name);
                     ++NombreDeVariables;
                 }
+                // 6. Overflow
+                if (storage.allowOverflow)
+                {
+                    variableManager.ShortTermStorageOverflow(clusterGlobalIndex, pdt)
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_INFERIEUREMENT;
+                    variableNamer.ShortTermStorageOverflow(NombreDeVariables, storage.name);
+                    NombreDeVariables++;
+                }
             }
 
             variableManager.PositiveUnsuppliedEnergy(pays, pdt) = NombreDeVariables;

@@ -21,13 +21,14 @@
 #pragma once
 
 #include <cmath>
-#include <functional>
 #include <sstream>
 #include <variant>
 
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
+#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -266,11 +267,17 @@ public:
      */
     explicit EvalVisitor(EvaluationContext context,
                          Optimisation::LinearProblemApi::FillContext fillContext);
+    explicit EvalVisitor(EvaluationContext context,
+                         Optimisation::LinearProblemApi::FillContext fillContext,
+                         const ModelerStudy::SystemModel::Component* component);
+
     std::string name() const override;
 
 private:
     const EvaluationContext context_;
     Optimisation::LinearProblemApi::FillContext fillContext_;
+    const ModelerStudy::SystemModel::Component* component_ = nullptr;
+
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;
     EvaluationResult visit(const Nodes::MultiplicationNode* node) override;
@@ -284,8 +291,6 @@ private:
     EvaluationResult visit(const Nodes::LiteralNode* node) override;
     EvaluationResult visit(const Nodes::PortFieldNode* node) override;
     EvaluationResult visit(const Nodes::PortFieldSumNode* node) override;
-    EvaluationResult visit(const Nodes::ComponentVariableNode* node) override;
-    EvaluationResult visit(const Nodes::ComponentParameterNode* node) override;
     EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;

@@ -28,6 +28,8 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
+#include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 using namespace Antares::Expressions;
@@ -43,19 +45,65 @@ struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario empty_scenario;
-    EvaluationContext evaluationContext{{}, {}, data, empty_scenario};
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     SystemModel::Model m;
     SystemModel::ComponentBuilder componentBuilder;
-    const SystemModel::Component component = componentBuilder.withId("compo")
-                                               .withModel(&m)
-                                               .withScenarioGroupId("group")
-                                               .build();
-    ReadLinearConstraintVisitor visitor{evaluationContext, {0, 0, 0, 0, 0}, component};
+    SystemModel::Component component = componentBuilder.withId("compo")
+                                         .withModel(&m)
+                                         .withScenarioGroupId("group")
+                                         .build();
+
+    MyDummyFixture()
+    {
+        auto scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
+          "SCENARIO_GROUP");
+        scenarioPtr->setTimeSerieNumber(0, 1);
+        scenarioGroupRepository.addScenario("SCENARIO_GROUP", std::move(scenarioPtr));
+        scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
+          "GROUP");
+        scenarioPtr->setTimeSerieNumber(0, 1);
+        scenarioGroupRepository.addScenario("GROUP", std::move(scenarioPtr));
+    }
+
+    Antares::Optimisation::EvaluationContextProvider evaluationContextProvider()
+    {
+        return Antares::Optimisation::EvaluationContextProvider(data, scenarioGroupRepository);
+    }
+
+    ReadLinearConstraintVisitor visitor()
+    {
+        Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+        return ReadLinearConstraintVisitor(evaluationContextProvider(), ctx, component);
+    }
+
+    void setComponentParameterValues(
+      const std::vector<std::tuple<std::string, ParameterType, std::string>>& values)
+    {
+        std::map<std::string, ParameterTypeAndValue> map;
+        std::vector<SystemModel::Parameter> parameters;
+        for (auto value: values)
+        {
+            map[std::get<0>(value)] = ParameterTypeAndValue{.id = std::get<0>(value),
+                                                            .type = std::get<1>(value),
+                                                            .value = std::get<2>(value)};
+            SystemModel::Parameter parameter{std::get<0>(value),
+                                             SystemModel::TimeDependent::YES,
+                                             SystemModel::ScenarioDependent::YES};
+            parameters.push_back(parameter);
+        }
+        SystemModel::ModelBuilder modelBuilder;
+        m = modelBuilder.withId("model").withParameters(std::move(parameters)).build();
+        component = componentBuilder.withId("compo")
+                      .withModel(&m)
+                      .withScenarioGroupId("group")
+                      .withParameterValues(map)
+                      .build();
+    }
 };
 
 BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
 {
-    BOOST_CHECK_EQUAL(visitor.name(), "ReadLinearConstraintVisitor");
+    BOOST_CHECK_EQUAL(visitor().name(), "ReadLinearConstraintVisitor");
 }
 
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
@@ -75,11 +123,9 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
                                                            create<VariableNode>("var1")),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<EqualNode>(lhs, rhs);
-    EvaluationContext context({build_context_parameter_with("param1", "9.")},
-                              {},
-                              data,
-                              empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
+    setComponentParameterValues({{"param1", ParameterType::CONSTANT, "9."}});
+    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    ReadLinearConstraintVisitor visitor(evaluationContextProvider(), ctx, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14.);
     BOOST_CHECK_EQUAL(constraint.ub, -14.);
@@ -101,11 +147,9 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
                                                            create<VariableNode>("var2")),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<LessThanOrEqualNode>(lhs, rhs);
-    EvaluationContext context({build_context_parameter_with("param1", "10.")},
-                              {},
-                              data,
-                              empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
+    setComponentParameterValues({{"param1", ParameterType::CONSTANT, "10."}});
+    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    ReadLinearConstraintVisitor visitor(evaluationContextProvider(), ctx, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub, -1.);
@@ -130,11 +174,9 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
                                                            create<VariableNode>("var1")),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<GreaterThanOrEqualNode>(lhs, rhs);
-    EvaluationContext context({build_context_parameter_with("param1", "9.")},
-                              {},
-                              data,
-                              empty_scenario);
-    ReadLinearConstraintVisitor visitor(context, {0, 0, 0, 0, 0}, component);
+    setComponentParameterValues({{"param1", ParameterType::CONSTANT, "9."}});
+    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    ReadLinearConstraintVisitor visitor(evaluationContextProvider(), ctx, component);
     auto constraint = visitor.dispatch(node)[0];
     BOOST_CHECK_EQUAL(constraint.lb, -14);
     BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
@@ -160,8 +202,6 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
                                         create<LiteralNode>(5.),
                                         create<PortFieldNode>("port", "field"),
                                         create<PortFieldSumNode>("port", "field"),
-                                        create<ComponentVariableNode>("x", "y"),
-                                        create<ComponentParameterNode>("x", "y"),
                                         create<TimeShiftNode>(lit, lit),
                                         create<TimeIndexNode>(lit, lit),
                                         create<TimeSumNode>(lit, lit, lit),
@@ -169,8 +209,8 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
 
     for (Node* node: illegal_nodes)
     {
-        BOOST_CHECK_EXCEPTION(visitor.dispatch(node),
-                              std::invalid_argument,
+        BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
+                              Antares::Error::InvalidArgumentError,
                               checkMessage("Root node of a constraint must be a comparator."));
     }
 }

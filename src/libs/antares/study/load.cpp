@@ -18,9 +18,11 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <fmt/format.h>
 #include <fstream>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include "antares/exception/LoadingError.hpp"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
@@ -227,7 +229,8 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = Solver::LoadFiles::loadAll(folder);
+        modelerInput_ = std::make_unique<Modeler::Data>(Solver::LoadFiles::loadAll(folder));
+        checkModelerDataCompatibility();
     }
     catch (const std::exception& e)
     {
@@ -238,6 +241,30 @@ void Study::loadModelerComponents()
     if (fs::exists(folder / "parameters.yml"))
     {
         logs.warning() << "parameters.yml ignored, use command line to set solver parameters";
+    }
+}
+
+/**
+ * Checks that the modeler data is compatible with the solver for hybrid studies.
+ * Currently, unsupported cases in the solver are :
+ * - variables that are not scenario dependent
+ */
+void Study::checkModelerDataCompatibility() const
+{
+    for (auto& component: modelerInput_->system->Components() | std::views::values)
+    {
+        for (auto& variable: component.getModel()->Variables() | std::views::values)
+        {
+            if (!variable.IsScenarioDependent())
+            {
+                throw Error::LoadingError(fmt::format(
+                  "Scenario-independent variables are not supported in hybrid studies. "
+                  "Please review variable \"{}\" in model \"{}\" (used in component \"{}\").",
+                  variable.Id(),
+                  component.getModel()->Id(),
+                  component.Id()));
+            }
+        }
     }
 }
 

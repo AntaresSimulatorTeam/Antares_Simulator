@@ -206,21 +206,22 @@ std::string VariablesBulkAddition::buildVariableName(
 
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  VariableContainer& solverVariables,
+                                 const LinearProblemApi::ILinearProblemData& data,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
     solverVariables_(solverVariables),
-    scenarioGroupRepository_(scenarioGroupRepository)
+    evaluationContextProvider_(data, scenarioGroupRepository)
 {
 }
 
-bool checkTimeSteps(const Optimisation::LinearProblemApi::FillContext& ctx)
+bool checkTimeSteps(const LinearProblemApi::FillContext& ctx)
 {
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
-void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
+                                   LinearProblemApi::ILinearProblemData& data,
+                                   const LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -228,12 +229,8 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
         return;
     }
 
-    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
-    Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
-                                                               {},
-                                                               data,
-                                                               scenario);
-
+    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_.provide(
+      component_);
     Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
@@ -294,7 +291,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
+void ComponentFiller::addStaticConstraint(LinearProblemApi::ILinearProblem& pb,
                                           const Optimization::LinearConstraint& linear_constraint,
                                           const std::string& constraint_id) const
 {
@@ -343,16 +340,11 @@ void ComponentFiller::addTimeDependentConstraints(
     }
 }
 
-void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                     Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                     const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
+                                     LinearProblemApi::ILinearProblemData& data,
+                                     const LinearProblemApi::FillContext& ctx)
 {
-    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
-    Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
-                                                               {},
-                                                               data,
-                                                               scenario);
-    Optimization::ReadLinearConstraintVisitor visitor(evaluationContext,
+    Optimization::ReadLinearConstraintVisitor visitor(evaluationContextProvider_,
                                                       ctx,
                                                       component_,
                                                       solverVariables_.getVariables().size(),
@@ -386,14 +378,9 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     {
         return;
     }
-    const auto& scenario = scenarioGroupRepository_.scenario(component_.getScenarioGroupId());
-    Expressions::Visitors::EvaluationContext evaluationContext(component_.getParameterValues(),
-                                                               {},
-                                                               data,
-                                                               scenario);
 
     const auto& solverVariables = solverVariables_.getVariables();
-    Optimization::ReadLinearExpressionVisitor visitor(evaluationContext,
+    Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
                                                       ctx,
                                                       component_,
                                                       solverVariables.size(),
@@ -434,7 +421,8 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
 bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_,
+                                                             evaluationContextProvider_);
     const auto ret = timeIndexVisitor.dispatch(node);
     return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
            || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
