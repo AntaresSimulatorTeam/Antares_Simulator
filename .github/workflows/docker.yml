@@ -2,12 +2,12 @@ name: Publish docker images
 on:
   push:
     branches:
-      - 'docker/*'
-      - dependabot/*
+    - 'docker/*'
+    - dependabot/**
 
 jobs:
   docker_publish:
-  
+
     runs-on: ubuntu-latest
 
     steps:
