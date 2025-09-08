@@ -71,7 +71,7 @@ Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
   Antares::Expressions::Visitors::TimeIndex timeIndex,
   bool forceExportForScenarioIndex);
 
-std::string BuildModelerConstraintName(const std::string& cid,
+std::string BuildModelerConstraintName(const std::string& componentId,
                                        const std::string& cname,
                                        const std::optional<unsigned>& ts);
 
@@ -121,7 +121,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        std::optional<unsigned> scenario,
                        bool forceExportForScenarioIndex,
                        const Antares::Optimisation::EvaluationContextProvider& contextProvider,
-                       const std::string& cid,
+                       const std::string& componentId,
                        const std::string& outputName,
                        const Antares::Expressions::Nodes::Node* rootNode);
 /**

@@ -60,11 +60,11 @@ TI updateTimeIndexIfShouldForceScenario(TI timeIndex, bool forceExportForScenari
     return forceExportForScenarioIndex ? timeIndex | TI::VARYING_IN_SCENARIO_ONLY : timeIndex;
 }
 
-std::string BuildModelerConstraintName(const std::string& cid,
+std::string BuildModelerConstraintName(const std::string& componentId,
                                        const std::string& cname,
                                        const std::optional<unsigned>& ts)
 {
-    std::string key = cid + "." + cname;
+    std::string key = componentId + "." + cname;
     if (ts)
     {
         key += "_" + std::to_string(*ts);
@@ -83,7 +83,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const TimeConversionMode& timeConversionMode,
                         std::optional<unsigned> scenario)
 {
-    const auto& cid = component.Id();
+    const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
     for (const auto& [varName, modelVar]: component.getModel()->Variables())
     {
@@ -93,7 +93,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
             std::string fullVarName = Antares::Optimization::VariableDictionary::buildVariableName(
-              {cid, varName},
+              {componentId, varName},
               Antares::Optimization::MCYearAndTime::MCYear{scenIdx.value_or(0)},
               timeStep);
             TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(
@@ -106,7 +106,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
             auto* var = linearProblem.lookupVariable(fullVarName);
             simulationTable.addEntry(
               {.block = tb.block,
-               .component = cid,
+               .component = componentId,
                .output = varName,
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
@@ -188,7 +188,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           bool forceExportForScenarioIndex,
                           const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
-    const auto& cid = component.Id();
+    const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
     for (const auto& [cname, modelConstr]: component.getModel()->Constraints())
     {
@@ -198,7 +198,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
-            std::string fullConstName = BuildModelerConstraintName(cid, cname, ts);
+            std::string fullConstName = BuildModelerConstraintName(componentId, cname, ts);
             const auto* c = linearProblem.lookupConstraint(fullConstName);
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
@@ -209,7 +209,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                                           .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry(
               {.block = tb.block,
-               .component = cid,
+               .component = componentId,
                .output = cname,
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
@@ -246,7 +246,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        std::optional<unsigned> scenario,
                        bool forceExportForScenarioIndex,
                        const Antares::Optimisation::EvaluationContextProvider& contextProvider,
-                       const std::string& cid,
+                       const std::string& componentId,
                        const std::string& outputName,
                        const Antares::Expressions::Nodes::Node* rootNode)
 {
@@ -268,7 +268,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                                       .absoluteTimeIndex = std::nullopt};
         auto val = ts.has_value() ? value.valuesAsVector()[ts.value()] : value.valueAsDouble();
         simulationTable.addEntry({.block = tb.block,
-                                  .component = cid,
+                                  .component = componentId,
                                   .output = outputName,
                                   .absolute_time_index = tb.absoluteTimeIndex,
                                   .block_time_index = tb.blockTimeIndex,
@@ -288,7 +288,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     bool forceExportForScenarioIndex,
                     const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
-    const auto& cid = component.Id();
+    const auto& componentId = component.Id();
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
         const auto& rootNode = portFieldDef.Definition().RootNode();
@@ -301,7 +301,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                           scenario,
                           forceExportForScenarioIndex,
                           contextProvider,
-                          cid,
+                          componentId,
                           outputName,
                           rootNode);
     }
@@ -316,7 +316,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
                            bool forceExportForScenarioIndex,
                            const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
-    const auto& cid = component.Id();
+    const auto& componentId = component.Id();
     for (const auto& [extraOutputId, extraOutput]: component.getModel()->ExtraOutputs())
     {
         const auto& rootNode = extraOutput.expression().RootNode();
@@ -329,7 +329,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
                           scenario,
                           forceExportForScenarioIndex,
                           contextProvider,
-                          cid,
+                          componentId,
                           outputName,
                           rootNode);
     }
