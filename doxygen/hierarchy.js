@@ -546,7 +546,6 @@ var hierarchy =
     [ "Antares::API::Error", "structAntares_1_1API_1_1Error.html", null ],
     [ "json_collector.error", "classjson__collector_1_1error.html", null ],
     [ "Antares::Expressions::Visitors::EvaluationContext", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html", null ],
-    [ "Antares::Optimisation::EvaluationContextProvider", "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html", null ],
     [ "Antares::Expressions::Visitors::EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html", null ],
     [ "ExchangeBalanceData", "structExchangeBalanceData.html", null ],
     [ "Antares::Toolbox::Process::Execute", "classAntares_1_1Toolbox_1_1Process_1_1Execute.html", null ],
@@ -637,6 +636,10 @@ var hierarchy =
           [ "Antares::Component::HTMLListbox::Datasource::ThermalClustersByAlphaReverseOrder", "classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByAlphaReverseOrder.html", null ]
         ] ]
       ] ]
+    ] ],
+    [ "Antares::Expressions::IEvaluationContextProvider", "classAntares_1_1Expressions_1_1IEvaluationContextProvider.html", [
+      [ "Antares::Optimisation::EvaluationContextProvider", "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html", null ],
+      [ "MockEvaluationContextProvider", "classMockEvaluationContextProvider.html", null ]
     ] ],
     [ "Yuni::IEventObserver", null, [
       [ "Antares::Component::Datagrid::Component", "classAntares_1_1Component_1_1Datagrid_1_1Component.html", null ],
@@ -903,6 +906,7 @@ var hierarchy =
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::ILinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html", [
       [ "Antares::Optimisation::LinearProblemDataImpl::LinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html", null ],
+      [ "BasicFixture::MockLinearProblemData", "structBasicFixture_1_1MockLinearProblemData.html", null ],
       [ "ConstantDataSeries", "classConstantDataSeries.html", [
         [ "EmptyDataSeries", "classEmptyDataSeries.html", null ]
       ] ],
@@ -1872,7 +1876,6 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::TimeSeriesTraits< TraitsType >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html", [
       [ "Antares::Solver::Variable::Economy::VCardTimeSeriesBase< TraitsType >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html", null ]
     ] ],
-    [ "TimeTestCase", "structTimeTestCase.html", null ],
     [ "tolerances.Tolerances", "classtolerances_1_1Tolerances.html", [
       [ "tolerances.Linux_tolerances", "classtolerances_1_1Linux__tolerances.html", null ],
       [ "tolerances.Win_tolerances", "classtolerances_1_1Win__tolerances.html", null ]

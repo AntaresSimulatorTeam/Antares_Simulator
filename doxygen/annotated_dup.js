@@ -449,6 +449,7 @@ var annotated_dup =
         ] ],
         [ "Hashable", "classAntares_1_1Expressions_1_1Hashable.html", "classAntares_1_1Expressions_1_1Hashable" ],
         [ "PortFieldHash", "structAntares_1_1Expressions_1_1PortFieldHash.html", "structAntares_1_1Expressions_1_1PortFieldHash" ],
+        [ "IEvaluationContextProvider", "classAntares_1_1Expressions_1_1IEvaluationContextProvider.html", "classAntares_1_1Expressions_1_1IEvaluationContextProvider" ],
         [ "IName", "classAntares_1_1Expressions_1_1IName.html", "classAntares_1_1Expressions_1_1IName" ],
         [ "NodeRegistry", "classAntares_1_1Expressions_1_1NodeRegistry.html", "classAntares_1_1Expressions_1_1NodeRegistry" ],
         [ "Registry", "classAntares_1_1Expressions_1_1Registry.html", "classAntares_1_1Expressions_1_1Registry" ]
@@ -1610,6 +1611,7 @@ var annotated_dup =
     [ "MinMaxHydroPowerGroup", "classMinMaxHydroPowerGroup.html", "classMinMaxHydroPowerGroup" ],
     [ "MockComponent", "classMockComponent.html", "classMockComponent" ],
     [ "MockConstraint", "classMockConstraint.html", "classMockConstraint" ],
+    [ "MockEvaluationContextProvider", "classMockEvaluationContextProvider.html", "classMockEvaluationContextProvider" ],
     [ "MockLinearProblem", "classMockLinearProblem.html", "classMockLinearProblem" ],
     [ "MockLinearProblemData", "structMockLinearProblemData.html", "structMockLinearProblemData" ],
     [ "MockMipSolution", "structMockMipSolution.html", "structMockMipSolution" ],
@@ -1727,7 +1729,6 @@ var annotated_dup =
     [ "TimeBlock", "structTimeBlock.html", "structTimeBlock" ],
     [ "TimeSeriesConfigurer", "classTimeSeriesConfigurer.html", "classTimeSeriesConfigurer" ],
     [ "TimeSeriesFile", "structTimeSeriesFile.html", "structTimeSeriesFile" ],
-    [ "TimeTestCase", "structTimeTestCase.html", "structTimeTestCase" ],
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html", "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE" ],
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html", "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE" ],
     [ "TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE" ],
