@@ -104,6 +104,15 @@ void addPortEntries(ISimulationTable& simulationTable,
                     bool forceExportForScenarioIndex,
                     const Antares::Optimisation::EvaluationContextProvider& contextProvider);
 
+void addExtraOutputEntries(ISimulationTable& simulationTable,
+                           const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                           const Antares::ModelerStudy::SystemModel::Component& component,
+                           unsigned currentBlock,
+                           const TimeConversionMode& timeConversionMode,
+                           std::optional<unsigned> scenario,
+                           bool forceExportForScenarioIndex,
+                           const Antares::Optimisation::EvaluationContextProvider& contextProvider);
+
 /**
  * Fill modeler outputs in the simulation table
  * @param simulationTable the simulation table to fill

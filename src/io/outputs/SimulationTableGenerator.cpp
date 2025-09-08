@@ -291,6 +291,55 @@ void addPortEntries(ISimulationTable& simulationTable,
     }
 }
 
+void addExtraOutputEntries(ISimulationTable& simulationTable,
+                           const FillContext& fillContext,
+                           const Antares::ModelerStudy::SystemModel::Component& component,
+                           unsigned currentBlock,
+                           const TimeConversionMode& timeConversionMode,
+                           std::optional<unsigned> scenario,
+                           bool forceExportForScenarioIndex,
+                           const Antares::Optimisation::EvaluationContextProvider& contextProvider)
+{
+    const auto& cid = component.Id();
+    auto evalContext = contextProvider.provide(component);
+
+    for (const auto& [extraOutputId, extraOutput]: component.getModel()->ExtraOutputs())
+    {
+        Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
+                                                                fillContext,
+                                                                &component);
+
+        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
+                       .dispatch(extraOutput.expression().RootNode());
+        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+
+        auto extraOutputValue = evalVisitor.dispatch(extraOutput.expression().RootNode());
+
+        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+        {
+            TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
+                                                                       timeConversionMode,
+                                                                       currentBlock)
+                              : TimeBlock{.block = currentBlock + 1,
+                                          .blockTimeIndex = std::nullopt,
+                                          .absoluteTimeIndex = std::nullopt};
+
+            auto value = ts.has_value() ? extraOutputValue.valuesAsVector()[ts.value()]
+                                        : extraOutputValue.valueAsDouble();
+            simulationTable.addEntry({.block = tb.block,
+                                      .component = cid,
+                                      .output = extraOutputId,
+                                      .absolute_time_index = tb.absoluteTimeIndex,
+                                      .block_time_index = tb.blockTimeIndex,
+                                      .scenario_index = scenIdx,
+                                      .value = value,
+                                      .status = MipBasisStatus::NOT_AVAILABLE});
+        };
+
+        handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+    }
+}
+
 void FillSimulationTable(ISimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
@@ -339,6 +388,15 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                        scenario,
                        forceExportForScenarioIndex,
                        contextProvider);
+
+        addExtraOutputEntries(simulationTable,
+                              fillContext,
+                              component,
+                              currentBlock,
+                              timeConversionMode,
+                              scenario,
+                              forceExportForScenarioIndex,
+                              contextProvider);
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
 }
