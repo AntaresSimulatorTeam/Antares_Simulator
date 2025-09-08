@@ -1,16 +1,16 @@
 ---
 hide:
- - toc
+- toc
 ---
 
 # Overview
 
 This software suite has been tested under:
 
-*   Ubuntu 20.04
-*   Microsoft Windows with Visual Studio 2019 (64-bit)
-*   Centos 7
-*   Oracle Linux
+* Ubuntu 20.04
+* Microsoft Windows with Visual Studio 2019 (64-bit)
+* Centos 7
+* Oracle Linux
 
 Antares Simulator is built using CMake.
 
@@ -23,3 +23,4 @@ Antares Simulator is built using CMake.
 - [Developer tests](4-Tests-dev.md)
 - [Installer creation](5-Installer-creation.md)
 - [Continuous integration](continuous-integration.md)
+- [Setting up a development environment with Docker or CMake presets](8-DockerAndCMakePresets.md)

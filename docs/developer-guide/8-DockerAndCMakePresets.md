@@ -117,6 +117,12 @@ reproducible environment and leveraging build caching for fast iteration.
 
 ---
 
+
+> **Note:** CLion requires the build directory to be inside the source folder. While it is cleaner to keep build output
+> outside (e.g., `/tmp/build`), you must ensure the build directory is within the source tree for full IDE integration.
+
+---
+
 ## 4. CMake Presets
 
 CMake Presets are a convenient way to save and share configuration and build parameters for CMake. They are especially
@@ -208,7 +214,7 @@ cmake --preset=default --build-dir=/tmp/build
 docker run -it \
   -v "$PWD:/work/Antares_Simulator" \
   -v "$PWD/_build":/tmp/build \
-  -v "$PWD/ccache":/tmp/deps/ccache \
+  -v "path/to/a/folder/ccache":/tmp/deps/ccache \
   antares/clang:latest bash
 ```
 
@@ -233,7 +239,53 @@ See example presets in `CMakeUserPresetsExample.json`.
 
 ---
 
-## 7. Tips and Best Practices
+## 7. Combining Docker Toolchains in CLion with CMakePresets for Seamless IDE Builds
+
+CLion allows you to fully integrate Docker toolchains with CMakePresets, enabling you to configure and build your
+project directly inside the IDE, without relying on command line workflows. This approach ensures reproducibility,
+leverages build caching, and keeps your development environment isolated.
+
+### Example: Docker Toolchain in CLion
+
+![CLion Docker Toolchain](DockerAndCMakePresetsImages/docker_toolchain.png)
+
+### How CMakeUserPresetsExample.json is Used
+
+The `configurePresets` section in `CMakeUserPresetsExample.json` sets up environment variables and cache paths to
+optimize builds inside Docker:
+
+- **ortools** and **sirius** dependencies are mounted in `/tmp/deps/` and referenced via `CMAKE_PREFIX_PATH`.
+- **ccache** is stored in `/tmp/deps/ccache` and enabled with `CMAKE_CXX_COMPILER_LAUNCHER=ccache` and `CCACHE_DIR`.
+- **vcpkg** cache is stored in `/tmp/deps/vcpkg_cache/` and configured with `VCPKG_BINARY_SOURCES` and
+  `VCPKG_INSTALL_OPTIONS`.
+
+Example from the preset:
+
+```json
+"environment": {
+"VCPKG_ROOT": "../vcpkg",
+"VCPKG_BINARY_SOURCES": "clear;files,/tmp/deps/vcpkg_cache/binary-cache,readwrite",
+"CCACHE_DIR": "/tmp/deps/ccache",
+"VCPKG_INSTALL_OPTIONS": "--x-buildtrees-root=/tmp/deps/vcpkg_cache/buildtrees;--x-packages-root=/tmp/deps/vcpkg_cache/packages"
+},
+"cacheVariables": {
+"CMAKE_PREFIX_PATH": "/tmp/deps/ortools_9.13-rte1.1_cxx_ubuntu-22.04_static_sirius;/tmp/deps/sirius",
+"CMAKE_CXX_COMPILER_LAUNCHER": "ccache"
+}
+```
+
+These paths must be mounted as Docker volumes in your toolchain configuration to persist build output and caches across
+sessions.
+
+### CLion Limitation
+
+> **Note:** CLion has a technical limitation that requires the build directory to be inside the source folder. While it
+> is cleaner to keep build output outside (e.g., `/tmp/build`), you must ensure the build directory is within the source
+> tree for full IDE integration.
+
+---
+
+## 8. Tips and Best Practices
 
 - Modify or add your own presets in `CMakeUserPresets.json` (not versioned).
 - For reproducible builds, use the shared presets in `CMakePresets.json`.
