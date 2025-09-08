@@ -22,6 +22,7 @@
 #include <ortools/linear_solver/linear_solver.h>
 
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
+#include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -59,6 +60,16 @@ double OrtoolsMipVariable::getUb() const
 const operations_research::MPVariable* OrtoolsMipVariable::getMpVar() const
 {
     return mpVar_;
+}
+
+LinearProblemApi::MipBasisStatus OrtoolsMipVariable::getMipBasisStatus() const
+{
+    return convertOrtoolsBasisStatus(mpVar_->basis_status());
+}
+
+double OrtoolsMipVariable::solutionValue() const
+{
+    return mpVar_->solution_value();
 }
 
 const std::string& OrtoolsMipVariable::getName() const

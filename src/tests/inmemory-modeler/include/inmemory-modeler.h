@@ -27,6 +27,7 @@
 #include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/modeler/data.h"
 #include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
@@ -62,9 +63,10 @@ struct LinearProblemBuildingFixture
 {
     std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model> models;
     Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodes;
-    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
+    std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
+    Antares::Modeler::Data modelerData;
 
     void createModel(const std::string& modelId,
                      const std::vector<std::string>& parameterIds,
@@ -93,7 +95,7 @@ struct LinearProblemBuildingFixture
       const std::string& componentId,
       std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues
       = {},
-      std::string scenarioGroupId = "default");
+      std::string scenarioGroupId = "");
 
     Antares::Expressions::Nodes::Node* literal(double value);
 
@@ -121,5 +123,16 @@ struct LinearProblemBuildingFixture
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx);
 
     void buildLinearProblem();
+
+    Antares::Modeler::Data& getModelerData()
+    {
+        Antares::ModelerStudy::SystemModel::SystemBuilder systemBuilder;
+        auto system = systemBuilder.withId("system").withComponents(std::move(components)).build();
+        modelerData.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
+          std::move(system));
+        modelerData.dataSeries = std::make_unique<
+          Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
+        return modelerData;
+    }
 };
 } // namespace Test::Modeler

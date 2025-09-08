@@ -24,6 +24,7 @@
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
+#include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -87,6 +88,11 @@ double OrtoolsMipConstraint::getCoefficient(const LinearProblemApi::IMipVariable
 const std::string& OrtoolsMipConstraint::getName() const
 {
     return mpConstraint_->name();
+}
+
+LinearProblemApi::MipBasisStatus OrtoolsMipConstraint::getMipBasisStatus() const
+{
+    return convertOrtoolsBasisStatus(mpConstraint_->basis_status());
 }
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

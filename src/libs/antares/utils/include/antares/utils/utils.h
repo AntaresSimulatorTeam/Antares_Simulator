@@ -21,6 +21,7 @@
 #ifndef __ANTARES_LIBS_UTILS_H__
 #define __ANTARES_LIBS_UTILS_H__
 
+#include <chrono>
 #include <map>
 #include <string>
 #include <vector>
@@ -65,6 +66,22 @@ bool isPathValid(const std::string& path);
 std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs);
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
+
+class TimeMeasurement
+{
+    using clock = std::chrono::steady_clock;
+
+public:
+    TimeMeasurement();
+    void tick();
+    long duration_ms() const;
+    std::string toString() const;
+    std::string toStringInSeconds() const;
+
+private:
+    clock::time_point start_;
+    clock::time_point end_;
+};
 
 } // namespace Utils
 } // namespace Antares

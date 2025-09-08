@@ -30,6 +30,7 @@
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
+namespace utf = boost::unit_test;
 
 class ExpressionToNodeConvertorEmptyModel
 {
@@ -82,7 +83,8 @@ BOOST_AUTO_TEST_CASE(identifier)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objective = "objectives",
+      .extra_outputs = {}};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     {
@@ -116,7 +118,8 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objective = "objectives",
+      .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
@@ -135,6 +138,27 @@ BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertorEmptyModel)
     const auto& operands = nodeSum->getOperands();
     BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
+}
+
+/*
+  /!\ This test is disabled.
+  Current behavior
+  "1+2+3" -> SumNode(SumNode(1,2), 3)
+  Desired behavior
+  "1+2+3" -> SumNode(1,2,3)
+*/
+BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel, *utf::disabled())
+{
+    const std::string expression = "1 + 2 + 3";
+    auto expr = run(expression);
+
+    auto* nodeSum = dynamic_cast<Nodes::SumNode*>(expr.node);
+    BOOST_REQUIRE(nodeSum);
+    const auto& operands = nodeSum->getOperands();
+    BOOST_REQUIRE_EQUAL(operands.size(), 3);
+    BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
+    BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
+    BOOST_CHECK_EQUAL(toLiteral(operands[2])->value(), 3);
 }
 
 BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertorEmptyModel)
@@ -203,7 +227,8 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objective = "objectives"};
+                          .objective = "objectives",
+                          .extra_outputs = {}};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "port1.field1";
@@ -225,7 +250,8 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objective = "objectives"};
+                          .objective = "objectives",
+                          .extra_outputs = {}};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "sum_connections(port1.field1)";
@@ -251,7 +277,8 @@ ExpressionToNodeConvertorEmptyModel createMediumExpression()
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objective = "objectives",
+      .extra_outputs = {}};
 
     return {std::move(model)};
 }

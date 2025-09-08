@@ -20,18 +20,22 @@
  */
 
 #include <algorithm>
+#include <memory>
 
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-LinearProblemBuilder::LinearProblemBuilder(const std::vector<LinearProblemFiller*>& fillers):
-    fillers_(fillers)
+LinearProblemBuilder::LinearProblemBuilder(
+  std::vector<std::unique_ptr<LinearProblemFiller>>& fillers):
+    fillers_(std::move(fillers))
 {
 }
 
-void LinearProblemBuilder::build(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx)
+void LinearProblemBuilder::build(ILinearProblem& pb,
+                                 ILinearProblemData& data,
+                                 const FillContext& ctx)
 {
     std::ranges::for_each(fillers_,
                           [&](const auto& filler) { filler->addVariables(pb, data, ctx); });

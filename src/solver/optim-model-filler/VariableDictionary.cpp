@@ -25,11 +25,10 @@
 
 namespace Antares::Optimization
 {
-namespace
-{
-std::string buildVariableName(const PartialKey& key,
-                              std::optional<MCYearAndTime::MCYear> mcyear,
-                              std::optional<unsigned int> timestep)
+
+std::string VariableDictionary::buildVariableName(const PartialKey& key,
+                                                  std::optional<MCYearAndTime::MCYear> mcyear,
+                                                  std::optional<unsigned int> timestep)
 {
     std::string ret = fmt::format("{}.{}", key.getComponent(), key.getVariable());
     if (mcyear.has_value())
@@ -42,7 +41,6 @@ std::string buildVariableName(const PartialKey& key,
     }
     return ret;
 }
-} // namespace
 
 IntegerInterval::Iterator::Iterator(unsigned int current):
     current_(current)
@@ -101,7 +99,7 @@ unsigned int Dimensions::getNumberOfTimesteps() const
 void VariableDictionary::VectorWithOffset::resize(size_t initial_size, unsigned int offset)
 {
     offset_ = offset;
-    values_.resize(initial_size);
+    values_.assign(initial_size, nullptr); // initialize all slots to nullptr
 }
 
 VariableDictionary::Value& VariableDictionary::VectorWithOffset::operator[](unsigned int index)

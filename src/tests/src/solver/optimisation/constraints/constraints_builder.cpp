@@ -107,6 +107,7 @@ struct BB
 
         for (auto i = 0; i < nombreDePasDeTempsPourUneOptimisation; i++)
         {
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
             CorrespondanceVarNativesVarOptim[i].SIM_ShortTermStorage = {
               .InjectionVariable = {0, 1, 4},
@@ -138,6 +139,7 @@ struct BB
     std::shared_ptr<AdditionalConstraints> addc2_injection;
     std::shared_ptr<AdditionalConstraints> addc3_netting;
 
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     ::ShortTermStorage::PROPERTIES storage1 = {.additionalConstraints = {addc1_withdrawal},
                                                .clusterGlobalIndex = 0,
@@ -168,9 +170,12 @@ struct BB
 
     ShortTermStorageCumulativeConstraintData InitializeShortTermStorageCumulativeConstraintData()
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-braces"
         return {CorrespondanceCntNativesCntOptim,
                 shortTermStorage,
                 CorrespondanceCntNativesCntOptimHebdomadaires};
+#pragma GCC diagnostic pop
     }
 
     ConstraintBuilderData constraint_builder_data = InitializeConstraintBuilderData();
@@ -427,6 +432,7 @@ void SetupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
         corresp.ShortTermStorageLevelConstraint.resize(numberOfAreas, 0);
     }
     problemeHebdo.NumeroDeContrainteEnergieHydraulique.resize(numberOfAreas, -1);
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     problemeHebdo.CaracteristiquesHydrauliques.resize(numberOfAreas,
                                                       {.TurbinageEntreBornes = false,

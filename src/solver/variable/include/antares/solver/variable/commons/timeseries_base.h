@@ -150,21 +150,6 @@ struct TimeSeriesTraits
  * * This template creates a VCard (Variable Card) that describes a time series variable.
  * It combines the common traits with specific traits provided by the TraitsType parameter.
  * * @tparam TraitsType Specific traits defining caption, description, and any custom properties
- * * ## Provided APIs:
- * * ### Modern C++20 API (recommended):
- * ```cpp
- * constexpr auto caption = VCard::kCaption;     // string_view
- * constexpr auto unit = VCard::kUnit;           // string_view* constexpr auto description =
- * VCard::kDescription; // string_view
- * ```
- * * ### Legacy API (for backward compatibility):
- * ```cpp
- * std::string caption = VCard::Caption();       // std::string
- * std::string unit = VCard::Unit();             // std::string
- * std::string description = VCard::Description(); // std::string
- * ```
- * * The modern API is preferred for new code as it provides compile-time string handling
- * and better performance.
  */
 template<typename TraitsType>
 struct VCardTimeSeriesBase: public TimeSeriesTraits<TraitsType>

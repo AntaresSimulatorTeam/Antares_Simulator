@@ -6,6 +6,7 @@ add_boost_test(test-system-model
   test_system.cpp
   test_library.cpp
   LIBS
+  Antares::exception
   Antares::expressions
   Antares::model-converter
   Antares::yml-model

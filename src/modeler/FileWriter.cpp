@@ -25,39 +25,50 @@
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include <antares/study/system-model/component.h>
+#include "antares/io/outputs/SimulationTableCsvFile.h"
+#include "antares/io/outputs/SimulationTableGenerator.h"
 
 #include "modeler/include/antares/solver/modeler/Modeler.h"
 
 namespace Antares::Modeler
 {
-void FileWriter::init(bool setOutput)
+void FileWriter::init(bool setOutput, const std::string& simulationId)
 {
     output = setOutput;
     outputPath_ = studyPath_ / "output";
+    simulationId_ = simulationId;
     if (output)
     {
         logs.info() << "Output folder : " << outputPath_;
         if (!std::filesystem::is_directory(outputPath_)
             && !std::filesystem::create_directory(outputPath_))
         {
-            throw Antares::Solver::Modeler::ModelerError(
+            throw Solver::Modeler::ModelerError(
               "Failed to create output directory. Exiting simulation.");
         }
     }
 }
 
-void FileWriter::writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution)
+void FileWriter::writeSimulationTable(
+  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+  const Optimisation::LinearProblemApi::IMipSolution& solution,
+  const Data& modelerData,
+  const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
     if (output)
     {
-        logs.info() << "Writing objective & variable values...";
-        std::ofstream sol_out(outputPath_ / "solution.csv");
-        sol_out << std::setprecision(15) << "objective " << solution.getObjectiveValue()
-                << std::endl;
-        for (const auto& [name, value]: solution.getOptimalValues())
-        {
-            sol_out << name << " " << value << std::endl;
-        }
+        SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
+        FillSimulationTable(simulationTable,
+                            linearProblem,
+                            solution.getObjectiveValue(),
+                            modelerData,
+                            fillContext,
+                            0,
+                            TimeConversionMode::SingleBlock);
+        simulationTable.writeHeader();
+        simulationTable.write();
     }
 }
 

@@ -6,6 +6,7 @@ set(SRC_PROJ
 
         include/antares/exception/AssertionError.hpp
         include/antares/exception/InitializationError.hpp
+        include/antares/exception/InvalidArgumentError.hpp
         include/antares/exception/LoadingError.hpp
         include/antares/exception/UnfeasibleProblemError.hpp
 )

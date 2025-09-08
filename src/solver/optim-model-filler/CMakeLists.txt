@@ -2,6 +2,7 @@ set(PROJ optim-model-filler)
 
 set(SRC_optim_model_filler
         ComponentFiller.cpp
+        EvaluationContextProvider.cpp
         FullKey.cpp
         LinearExpression.cpp
         PartialKey.cpp
@@ -10,6 +11,7 @@ set(SRC_optim_model_filler
         TimeDependentLinearExpression.cpp
         VariableDictionary.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
+        include/antares/solver/optim-model-filler/EvaluationContextProvider.h
         include/antares/solver/optim-model-filler/FullKey.h
         include/antares/solver/optim-model-filler/LinearExpression.h
         include/antares/solver/optim-model-filler/PartialKey.h
@@ -31,6 +33,7 @@ set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJ}
         PRIVATE
         Antares::expressions
+        Antares::exception
         Antares::antares-study-system-model
         Antares::linear-problem-api
         fmt::fmt

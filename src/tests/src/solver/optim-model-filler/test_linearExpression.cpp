@@ -42,11 +42,11 @@ BOOST_AUTO_TEST_CASE(default_linear_expression)
 
 BOOST_AUTO_TEST_CASE(linear_expression_explicit_construction)
 {
-    LinearExpression linearExpression(4., {{FullKey("compo", "some key"), -5.}});
+    LinearExpression linearExpression(4., {{FullKey("compo", "var"), -5.}});
 
     BOOST_CHECK_EQUAL(linearExpression.offset(), 4.);
     BOOST_CHECK_EQUAL(linearExpression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().at(FullKey("compo", "some key")), -5.);
+    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().at(FullKey("compo", "var")), -5.);
 }
 
 BOOST_AUTO_TEST_CASE(sum_two_linear_expressions)
@@ -238,11 +238,11 @@ BOOST_AUTO_TEST_CASE(AdditionOperator)
 
     Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
     TimeDependentLinearExpression expr1(context, exp1), expr2(context, exp2);
-    TimeDependentLinearExpression result = expr1 + expr2;
+    expr1 += expr2;
 
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 5.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y")) == 3.0);
+    BOOST_TEST(expr1.GetLinearExpressions().at(0).offset() == 5.0);
+    BOOST_TEST(expr1.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 3.0);
+    BOOST_TEST(expr1.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y")) == 3.0);
 }
 
 // Test subtraction operator
@@ -257,11 +257,11 @@ BOOST_AUTO_TEST_CASE(SubtractionOperator)
 
     Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
     TimeDependentLinearExpression expr1(context, exp1), expr2(context, exp2);
-    TimeDependentLinearExpression result = expr1 - expr2;
+    expr1 -= expr2;
 
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y")) == 2.0);
+    BOOST_TEST(expr1.GetLinearExpressions().at(0).offset() == 2.0);
+    BOOST_TEST(expr1.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 2.0);
+    BOOST_TEST(expr1.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y")) == 2.0);
 }
 
 // Test multiplication operator

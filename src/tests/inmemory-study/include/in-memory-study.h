@@ -22,6 +22,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <limits>
 
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"
@@ -143,6 +144,8 @@ public:
     ShortTermStorageConfig& setGroupName(const std::string& groupName);
     ShortTermStorageConfig& setName(const std::string& name);
     ShortTermStorageConfig& setPenalizeVariationWithdrawal(bool penalizeVariationWithdrawal);
+    ShortTermStorageConfig& setAllowOverflow(bool allowOverflow);
+
     ShortTermStorageConfig& setPenalizeVariationInjection(bool penalizeVariationInjection);
     ShortTermStorageConfig& setEnabled(bool enabled);
 

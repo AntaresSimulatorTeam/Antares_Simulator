@@ -75,6 +75,7 @@ public:
     void WriteLP(const std::string& filename) const override;
 
     double infinity() const override;
+    bool isLP() const override;
 
 protected:
     operations_research::MPSolver* MpSolver() const;
@@ -88,6 +89,7 @@ private:
     std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
 
     std::unique_ptr<OrtoolsMipSolution> solution_;
+    bool isLP_ = true;
 };
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

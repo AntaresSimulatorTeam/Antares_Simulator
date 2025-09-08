@@ -15,12 +15,14 @@ public:
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) override;
     void update() override;
+    const std::vector<double>& initialGen() override;
     std::vector<double>& generation() override;
 
 protected:
     void checkInput(size_t size) override;
 
     std::vector<double>& generation_;
+    const std::vector<double> initialGen_;
     std::vector<double>& unsupE_;
     const std::vector<double>& pmax_;
     const std::vector<double>& pmin_;

@@ -20,11 +20,18 @@
  */
 
 #include <chrono>
+#include <mutex>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_utils.h>
+#include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/io/outputs/ISimulationTable.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
@@ -43,39 +50,8 @@ using namespace operations_research;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
-using Antares::Solver::IResultWriter;
-using Antares::Solver::Optimization::SingleOptimOptions;
-
-class TimeMeasurement
-{
-    using clock = std::chrono::steady_clock;
-
-public:
-    TimeMeasurement()
-    {
-        start_ = clock::now();
-        end_ = start_;
-    }
-
-    void tick()
-    {
-        end_ = clock::now();
-    }
-
-    long duration_ms() const
-    {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
-    }
-
-    std::string toString() const
-    {
-        return std::to_string(duration_ms()) + " ms";
-    }
-
-private:
-    clock::time_point start_;
-    clock::time_point end_;
-};
+using Solver::IResultWriter;
+using Solver::Optimization::SingleOptimOptions;
 
 struct SimplexResult
 {
@@ -85,59 +61,31 @@ struct SimplexResult
     double objectiveValue;
 };
 
-static void fillModelerComponents(
-  std::vector<std::unique_ptr<Optimisation::ComponentFiller>>& componentFillers,
-  std::vector<LinearProblemFiller*>& fillersCollection,
-  const ModelerStudy::SystemModel::System* modelerSystem,
-  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-  VariableDictionary& variableDictionary)
-{
-    if (!modelerSystem)
-    {
-        logs.info() << "No modeler system found, optimization will only be done on legacy study";
-        return;
-    }
+static std::once_flag logProblemSizeFlag;
 
-    for (const auto& [_, component]: modelerSystem->Components())
-    {
-        componentFillers.push_back(
-          std::make_unique<Optimisation::ComponentFiller>(component,
-                                                          variableDictionary,
-                                                          scenarioGroupRepository));
-        // TODO: use scenario group repository
-    }
-    for (auto& component_filler: componentFillers)
-    {
-        fillersCollection.push_back(component_filler.get());
-    }
+static void logProblemSize(const MPSolver* mpSolver)
+{
+    logs.info();
+    logs.info();
+    logs.info() << " Total Problem size : " << mpSolver->NumVariables() << " variables, "
+                << mpSolver->NumConstraints() << " constraints";
+    logs.info();
+    logs.info();
 }
 
-static void writeModelerSolutions(const MPSolver* solver,
-                                  unsigned nLegacyVariables,
-                                  const int optimizationNumber,
-                                  const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                  IResultWriter& writer)
+static void fillModelerComponents(
+  std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
+  Modeler::Data* modelerData,
+  VariableDictionary& variableDictionary)
 {
-    std::stringstream contentStream;
-    const auto& variables = solver->variables();
-
-    // we want to only get modeler variables, they're added after legacy vars
-    // TODO make this cleaner (what happens if order changes? use modeler var dictionary instead?)
-    auto start = variables.begin() + nLegacyVariables;
-    if (start == variables.end())
+    for (const auto& [_, component]: modelerData->system->Components())
     {
-        logs.debug() << "No modeler solutions, skip writing files";
-        return;
+        fillersCollection.push_back(
+          std::make_unique<Optimisation::ComponentFiller>(component,
+                                                          variableDictionary,
+                                                          *modelerData->dataSeries,
+                                                          modelerData->scenarioGroupRepository));
     }
-    for (auto v = start; v < variables.end(); ++v)
-    {
-        contentStream << (*v)->name() << "\t" << (*v)->solution_value() << std::endl;
-    }
-
-    auto modelerSolutionFilename = createModelerSolutionsFilename(optPeriodStringGenerator,
-                                                                  optimizationNumber);
-    std::string content = contentStream.str();
-    writer.addEntryFromBuffer(modelerSolutionFilename, content);
 }
 
 FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
@@ -166,42 +114,48 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
-// Returns a non-owning pointer
-MPSolver* convertToMPSolver(const PROBLEME_HEBDO* problemeHebdo,
-                            const SingleOptimOptions& options,
-                            bool namedProblems,
-                            unsigned int NumIntervalle)
-{
-    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
-                                              options.solverName);
-    LegacyFiller legacyOrtoolsFiller(problemeHebdo, namedProblems);
-    std::vector<LinearProblemFiller*> fillersCollection = {&legacyOrtoolsFiller};
+static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
+  LinearProblemDataImpl::LinearProblemData();
 
-    std::vector<std::unique_ptr<Optimisation::ComponentFiller>> componentFillers;
+// Returns a non-owning pointer
+MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
+                             FillContext& fillCtx,
+                             const PROBLEME_HEBDO* problemeHebdo,
+                             bool namedProblems)
+{
+    std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
+    fillersCollection.push_back(std::make_unique<LegacyFiller>(problemeHebdo, namedProblems));
+    Utils::TimeMeasurement measure;
     VariableDictionary variableDictionary;
-    ComponentToAreaConnectionFiller componentToAreaConnectionFiller(problemeHebdo,
-                                                                    variableDictionary);
-    if (problemeHebdo->modelerSystem && problemeHebdo->scenarioGroupRepository)
+    if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(componentFillers,
-                              fillersCollection,
-                              problemeHebdo->modelerSystem,
-                              *problemeHebdo->scenarioGroupRepository,
-                              variableDictionary);
+        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, variableDictionary);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(&componentToAreaConnectionFiller);
+        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
+          problemeHebdo,
+          variableDictionary,
+          *problemeHebdo->modelerData->dataSeries,
+          problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
-    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     // Note that the modeler is only called for the 1st simulation week,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
-    linearProblemBuilder.build(ortoolsProblem, *problemeHebdo->linear_problem_data_, fillCtx);
+    // TODO try to make this cleaner
+    linearProblemBuilder.build(ortoolsProblem,
+                               problemeHebdo->modelerData ? *problemeHebdo->modelerData->dataSeries
+                                                          : dummy_data,
+                               fillCtx);
+
+    measure.tick();
+
+    logs.info();
+    logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
     return ortoolsProblem.getMpSolver();
 }
@@ -211,7 +165,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int NumIntervalle,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                          IResultWriter& writer)
+                                          IResultWriter& writer,
+                                          ISimulationTable& simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto* solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
@@ -225,7 +180,15 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
-    solver = convertToMPSolver(problemeHebdo, options, problemeHebdo->NamedProblems, NumIntervalle);
+    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
+                                              options.solverName);
+    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
+    solver = fillAndGetMpSolver(ortoolsProblem,
+                                fillCtx,
+                                problemeHebdo,
+                                problemeHebdo->NamedProblems);
+
+    std::call_once(logProblemSizeFlag, logProblemSize, solver);
 
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -237,7 +200,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
-    TimeMeasurement measure;
+    Utils::TimeMeasurement measure;
     solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
     if (solver != nullptr)
     {
@@ -272,11 +235,23 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    writeModelerSolutions(solver,
-                          ProblemeAResoudre->NombreDeVariables,
-                          optimizationNumber,
-                          optPeriodStringGenerator,
-                          writer);
+    if (problemeHebdo->modelerData)
+    {
+        unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
+                                  ? problemeHebdo->weekInTheYear
+                                  : problemeHebdo->weekInTheYear * 7 + NumIntervalle;
+        TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
+                                                  ? TimeConversionMode::WeeklyBlocks
+                                                  : TimeConversionMode::DailyBlocks;
+        FillSimulationTable(simulationTable,
+                            ortoolsProblem,
+                            ::getObjectiveValue(solver),
+                            *problemeHebdo->modelerData,
+                            fillCtx,
+                            currentBlock,
+                            timeConversionMode,
+                            true);
+    }
 
     return {.success = true,
             .timeMeasure = timeMeasure,
@@ -289,7 +264,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          int NumIntervalle,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
-                         IResultWriter& writer)
+                         IResultWriter& writer,
+                         ISimulationTable& simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -298,7 +274,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                        NumIntervalle,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
-                                                       writer);
+                                                       writer,
+                                                       simulationTable);
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
@@ -347,8 +324,11 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     }
     else
     {
+        LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
+                                                     options.solverName);
+        FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         std::unique_ptr<MPSolver> MPproblem(
-          convertToMPSolver(problemeHebdo, options, true, NumIntervalle));
+          fillAndGetMpSolver(infeasibleProblem, fillCtx, problemeHebdo, true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

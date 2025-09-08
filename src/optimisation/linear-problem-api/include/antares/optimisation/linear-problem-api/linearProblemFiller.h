@@ -30,9 +30,16 @@ namespace Antares::Optimisation::LinearProblemApi
 class LinearProblemFiller
 {
 public:
-    virtual void addVariables(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
-    virtual void addConstraints(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
-    virtual void addObjective(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
+    // TODO it may be better to move the LinearProblemData out of the addVariables / addConstraints
+    // / addObjective, and into the ctor because it is unique across the simulation
+    virtual void addVariables(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx)
+      = 0;
+    virtual void addConstraints(ILinearProblem& pb,
+                                ILinearProblemData& data,
+                                const FillContext& ctx)
+      = 0;
+    virtual void addObjective(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx)
+      = 0;
     virtual ~LinearProblemFiller() = default;
 };
 

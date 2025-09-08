@@ -261,21 +261,21 @@ public:
         for (const auto& sts: shortTermStorage.storagesByIndex)
         {
             unsigned int groupNumber = groupToNumbers_[sts.properties.groupName];
-            const auto& result = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
+            const auto& result = state.hourlyResults->ShortTermStorage[clusterIndex];
             // Injection
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::injection][state.hourInTheYear]
-              += result.injection[clusterIndex];
+              += result.injection[state.hourInTheWeek];
 
             // Withdrawal
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::withdrawal][state.hourInTheYear]
-              += result.withdrawal[clusterIndex];
+              += result.withdrawal[state.hourInTheWeek];
 
             // Levels
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::level][state.hourInTheYear]
-              += result.level[clusterIndex];
+              += result.level[state.hourInTheWeek];
 
             clusterIndex++;
         }

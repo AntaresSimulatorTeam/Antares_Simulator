@@ -26,30 +26,6 @@
  * the modern time series base framework. Load variables represent the electrical
  * demand that must be satisfied in each area during simulation.
  *
- * ## Key Features:
- *
- * - **Direct Data Access**: Efficient memory copying of load time series
- * - **DSM Integration**: Handles load data with Demand-Side Management modifications
- * - **Modern C++**: Built on the timeseries_base.h framework
- * - **Thread Safety**: Parallel processing support with isolated data structures
- *
- * ## Load-Specific Behavior:
- *
- * Load variables have unique characteristics:
- * - Data includes DSM (Demand-Side Management) modifications: L* = L + DSM
- * - Bulk data copying at year beginning for performance
- * - No complex hourly transformations needed
- * - Direct access to pre-processed load time series
- *
- * ## Data Processing:
- *
- * ```
- * Raw Load Data → DSM Transformations → Area Load Series → Yearly Values
- * ```
- *
- * The load data accessed by this variable has already been processed by
- * `performTransformationsBeforeLaunchingSimulation()` to include DSM effects.
- *
  * @see timeseries_base.h for the base framework
  * @see generation.h, hydro.h for other time series implementations
  */
@@ -104,42 +80,6 @@ using VCardTimeSeriesValuesLoad = VCardTimeSeriesBase<LoadTraits>;
  *
  * @tparam NextT The next variable in the processing chain
  *
- * ## Processing Characteristics:
- *
- * ### Year Begin Processing:
- * - Direct memory copy of entire year's load data
- * - Access to pre-processed data (L* = L + DSM)
- * - Bulk operation for optimal performance
- *
- * ### Hourly Processing:
- * - No additional hourly transformations required
- * - Data already available from year begin bulk copy
- * - Satisfies interface requirements with no-op implementation
- *
- * ## Data Access Pattern:
- *
- * ```cpp
- * // Year begin: Bulk copy for performance
- * std::memcpy(yearlyValues[space].hour,
- *             area->load.series.getColumn(year),
- *             dataSize);
- *
- * // Hourly: No additional processing needed
- * // (data already copied)
- * ```
- *
- * ## Thread Safety:
- *
- * Each parallel space maintains isolated data:
- * - `yearlyValues[space]` provides per-thread storage
- * - No shared mutable state during processing
- * - Safe for concurrent execution across spaces
- *
- * ## Performance Considerations:
- *
- * - **Memory Efficiency**: Single bulk copy vs 8760 individual accesses
- * - **Cache Locality**: Sequential memory access pattern
- * - **DSM Integration**: Uses pre-processed data to avoid runtime calculations
  */
 template<class NextT = Container::EndOfList>
 class TimeSeriesValuesLoad
@@ -156,19 +96,9 @@ public:
 
     /**
      * @brief Initialize load-specific settings from study
-     *     * Load variables currently don't require specific initialization
-     * beyond what's provided by the base class. This method exists
-     * to satisfy the interface requirements and provide a place for
-     * future load-specific configuration.
-     *     * @param study The study configuration (currently unused for load)
-     *     * ## Future Extensions:
-     *     * This method could be extended to handle:
-     * - Load forecasting parameters
-     * - DSM configuration validation
-     * - Load curve smoothing settings
-     * - Regional load balancing options
+     * Load variables currently don't require specific initialization
      */
-    void initializeDerivedFromStudy(Data::Study& study)
+    void initializeDerivedFromStudy(Data::Study&)
     {
         // No specific initialization needed for load
         // Load data is accessed directly and doesn't require
@@ -200,19 +130,6 @@ public:
      * - L = Original load time series
      * - DSM = Demand-Side Management modifications
      *
-     * ## Performance Optimization:
-     *
-     * Uses `std::memcpy` for maximum performance when copying the entire
-     * year's hourly data (8760 values). This is much faster than individual
-     * hourly assignments and provides better cache locality.
-     *
-     * ## Memory Layout:
-     *
-     * ```
-     * Source: area->load.series.getColumn(year) [8760 doubles]
-     *    ↓ memcpy
-     * Dest: yearlyValues[space].hour [8760 doubles]
-     * ```
      */
     void yearBeginImpl(unsigned int year, unsigned int space)
     {
@@ -230,35 +147,9 @@ public:
     /**
      * @brief Hourly processing for load variables
      *     * For load variables, no specific hourly processing is required since
-     * the data has already been bulk-copied during yearBeginImpl. This
-     * method exists to satisfy the interface requirements.
-     *
-     * @param state Current simulation state (unused for load)
-     * @param space The parallel space index (unused for load)
-     *
-     * ## Design Rationale:
-     *
-     * Load data processing differs from other time series:
-     *
-     * - **Load**: Pre-processed, bulk-copied, no hourly transformations
-     * - **Hydro**: Requires hourly index-based access to time series
-     * - **Generation**: May require aggregation checks and bulk copying
-     *
-     * This no-op implementation maintains interface consistency while
-     * avoiding unnecessary computational overhead.
-     *
-     * ## Alternative Approaches Considered:
-     *
-     * 1. **Hourly Assignment**: `yearlyValues[space][hour] = loadData[hour]`
-     *    - Rejected: 8760x slower than bulk copy, poor cache locality
-     *
-     * 2. **Lazy Loading**: Copy data on first access per hour
-     *    - Rejected: Unpredictable performance, complex state management
-     *
-     * 3. **Current Approach**: Bulk copy in yearBegin, no-op in hourly
-     *    - Selected: Optimal performance, simple design, clear separation
+     * the data has already been bulk-copied during yearBeginImpl.
      */
-    void hourForEachAreaImpl(State& state, unsigned int space)
+    void hourForEachAreaImpl(State&, unsigned int)
     {
         // No specific action needed - values are already copied in yearBeginImpl
         // This provides optimal performance by avoiding 8760 individual operations

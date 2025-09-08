@@ -20,6 +20,13 @@
 
 #pragma once
 
+#include "data.h"
+
+namespace Antares::Optimization
+{
+class VariableDictionary;
+}
+
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 class OrtoolsLinearProblem;
@@ -28,7 +35,20 @@ class OrtoolsMipSolution;
 
 namespace Antares::Optimisation::LinearProblemApi
 {
+class ILinearProblem;
+class ILinearProblemData;
 class IMipSolution;
+class FillContext;
+} // namespace Antares::Optimisation::LinearProblemApi
+
+namespace Antares::Optimisation
+{
+class VariableDictionary;
+}
+
+namespace Antares::ModelerStudy::SystemModel
+{
+class Component;
 }
 
 namespace Antares::Solver
@@ -37,13 +57,16 @@ class IWriter
 {
 public:
     virtual ~IWriter() = default;
-
-    virtual void init(bool) = 0;
-
-    virtual void writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution) = 0;
+    virtual void init(bool, const std::string& simulationId) = 0;
+    virtual void writeSimulationTable(
+      const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+      const Optimisation::LinearProblemApi::IMipSolution& solution,
+      const Antares::Modeler::Data& modelerData,
+      const Optimisation::LinearProblemApi::FillContext& fillContext) const
+      = 0;
 
     virtual void writeProblem(
-      const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
+      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
       = 0;
 };
 } // namespace Antares::Solver

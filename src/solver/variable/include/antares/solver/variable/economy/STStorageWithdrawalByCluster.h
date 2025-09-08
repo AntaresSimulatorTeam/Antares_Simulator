@@ -214,7 +214,7 @@ public:
         {
             // ST storage withdrawal for the current cluster and this hour
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-              = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex];
+              = state.hourlyResults->ShortTermStorage[clusterIndex].withdrawal[state.hourInTheWeek];
         }
 
         // Next variable

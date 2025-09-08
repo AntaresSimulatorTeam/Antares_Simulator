@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <functional>
 #include <typeindex>
+#include <unordered_map>
 
 #include <antares/expressions/IName.h>
 #include <antares/expressions/nodes/Node.h>
@@ -29,19 +29,10 @@
 
 namespace Antares::Expressions::Visitors
 {
-// we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the
+// we use logError because the inclusion of <antares/logs/logs.h> somehow results in the
 // inclusion of <windows.h> (very bad idea in a header!) which conflict with antlr4 headers (defines
 // in the former become enums in the latter etc...)
-struct LogSink
-{
-    using LogFunction = std::function<void(const std::string&)>;
-
-    LogFunction info;
-    LogFunction warning;
-    LogFunction error;
-};
-
-LogSink RedirectToAntaresLogs();
+void logError(const std::string& msg);
 
 template<class RetT, class VisitorT, class NodeT, class... Args>
 RetT tryVisit(const Nodes::Node* node, VisitorT& visitor, Args... args)
@@ -121,8 +112,6 @@ public:
           Nodes::LiteralNode,
           Nodes::PortFieldNode,
           Nodes::PortFieldSumNode,
-          Nodes::ComponentVariableNode,
-          Nodes::ComponentParameterNode,
           Nodes::TimeShiftNode,
           Nodes::TimeIndexNode,
           Nodes::TimeSumNode,
@@ -135,7 +124,7 @@ public:
         catch (std::exception& e)
         {
             using namespace std::string_literals;
-            log_.error("Antares::Expressions::Visitor: could not visit the node! "s + e.what());
+            logError("Antares::Expressions::Visitor: could not visit the node! "s + e.what());
             throw;
         }
     }
@@ -267,25 +256,6 @@ public:
     virtual R visit(const Nodes::PortFieldSumNode*, Args... args) = 0;
 
     /**
-     * @brief Visits a ComponentVariableNode.
-     *
-     * @param node A pointer to the ComponentVariableNode to be visited.
-     * @param args Additional arguments to be passed to the visitor's methods.
-     *
-     * @return The result of processing the ComponentVariableNode.
-     */
-    virtual R visit(const Nodes::ComponentVariableNode*, Args... args) = 0;
-
-    /**
-     * @brief Visits a ComponentParameterNode.
-     *
-     * @param node A pointer to the ComponentParameterNode to be visited.
-     * @param args Additional arguments to be passed to the visitor's methods.
-     *
-     * @return The result of processing the ComponentParameterNode.
-     */
-    virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
-    /**
      * @brief Visits a TimeShiftNode.
      *
      * @param node A pointer to the TimeShiftNode to be visited.
@@ -322,11 +292,5 @@ public:
      * @return The result of processing the AllTimeSumNode.
      */
     virtual R visit(const Nodes::AllTimeSumNode*, Args... args) = 0;
-
-private:
-    // we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the
-    // inclusion of <windows.h> (very bad idea in a header!) which conflict with antlr4 headers
-    // (defines in the former become enums in the latter etc...)
-    LogSink log_ = RedirectToAntaresLogs();
 };
 } // namespace Antares::Expressions::Visitors

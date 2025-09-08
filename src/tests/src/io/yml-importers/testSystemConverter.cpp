@@ -44,7 +44,8 @@ struct LibraryObjects
                            .port_field_definitions = {},
                            .constraints = {{"constraint1", "cost"}},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objective = "",
+                           .extra_outputs = {}};
 
     YmlSystem::Parser parser;
     YmlModel::Library library;

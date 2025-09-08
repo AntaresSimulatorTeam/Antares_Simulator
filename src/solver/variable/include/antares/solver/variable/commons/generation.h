@@ -330,7 +330,7 @@ public:
      *     * This differs from other time series like hydro where hourly
      * processing may involve complex calculations or data transformations.
      */
-    void hourForEachAreaImpl(State& state, unsigned int space)
+    void hourForEachAreaImpl(State&, unsigned int)
     {
         // Default implementation - no specific action needed for generation
         // Values are already copied in yearBeginImpl for performance

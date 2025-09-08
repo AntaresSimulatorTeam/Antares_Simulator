@@ -36,8 +36,6 @@ static constexpr BoxStyle NegationStyle{"tomato", "invtriangle", "filled, solid"
 static constexpr BoxStyle LiteralStyle{"lightgray", "box", "filled, solid"};
 static constexpr BoxStyle VariableStyle{"gold", "box", "filled, solid"};
 static constexpr BoxStyle ParameterStyle{"wheat", "box", "filled, solid"};
-static constexpr BoxStyle ComponentParameterStyle{"springgreen", "octagon", "filled, solid"};
-static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled, solid"};
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 static constexpr BoxStyle TimeIndexStyle{"gold", "diamond", "filled"};
 static constexpr BoxStyle TimeShiftStyle{"aqua", "hexagon", "filled, solid"};
@@ -160,24 +158,6 @@ void AstDOTStyleVisitor::visit(const Nodes::PortFieldSumNode* node, std::ostream
     emitNode(id,
              "PFSUM(" + node->getPortName() + "," + node->getFieldName() + ")",
              NodeStyle::PortFieldStyle,
-             os);
-}
-
-void AstDOTStyleVisitor::visit(const Nodes::ComponentVariableNode* node, std::ostream& os)
-{
-    auto id = getNodeID(node);
-    emitNode(id,
-             "CV(" + node->getComponentId() + "," + node->getComponentName() + ")",
-             NodeStyle::ComponentVariableStyle,
-             os);
-}
-
-void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::ostream& os)
-{
-    auto id = getNodeID(node);
-    emitNode(id,
-             "CP(" + node->getComponentId() + "," + node->getComponentName() + ")",
-             NodeStyle::ComponentParameterStyle,
              os);
 }
 

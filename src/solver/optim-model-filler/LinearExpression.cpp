@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -19,8 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <algorithm>
-#include <functional>
 #include <stdexcept>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
@@ -37,6 +35,7 @@ namespace Antares::Optimization
 FullKeyMap scale_map(const FullKeyMap& map, double scale)
 {
     FullKeyMap result;
+    result.reserve(map.size());
     for (auto [key, value]: map)
     {
         result[key] = scale * value;
@@ -44,10 +43,49 @@ FullKeyMap scale_map(const FullKeyMap& map, double scale)
     return result;
 }
 
+// Static helper: scale vector of terms
+std::vector<RawTerm> scaleTerms(const std::vector<RawTerm>& src, double factor)
+{
+    constexpr double epsilon = 1e-12;
+    if (std::abs(factor - 1.0) < epsilon)
+    {
+        return src; // copy elision
+    }
+    std::vector<RawTerm> out;
+    out.reserve(src.size());
+    for (const auto& [k, v]: src)
+    {
+        out.emplace_back(k, v * factor);
+    }
+    return out;
+}
+
 LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
     offset_(offset),
-    coef_per_var_(std::move(coef_per_var))
+    terms_(),
+    unique_terms_(std::move(coef_per_var)),
+    am_I_valid_(true)
 {
+    terms_.reserve(unique_terms_.size());
+    for (const auto& [k, v]: unique_terms_)
+    {
+        terms_.emplace_back(k, v);
+    }
+}
+
+void LinearExpression::materialize() const
+{
+    if (am_I_valid_)
+    {
+        return;
+    }
+    unique_terms_.clear();
+    unique_terms_.reserve(terms_.size());
+    for (const auto& [k, v]: terms_)
+    {
+        unique_terms_[k] += v; // accumulate duplicates
+    }
+    am_I_valid_ = true;
 }
 
 LinearExpression LinearExpression::operator+(const LinearExpression& other) const
@@ -59,13 +97,20 @@ LinearExpression LinearExpression::operator+(const LinearExpression& other) cons
 
 const FullKeyMap& LinearExpression::coefPerVar() const
 {
-    return coef_per_var_;
+    materialize();
+    return unique_terms_;
 }
 
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
-    this->offset_ += other.offset_;
-    add_maps(coef_per_var_, other.coef_per_var_);
+    offset_ += other.offset_;
+    if (!other.terms_.empty())
+    {
+        terms_.reserve(terms_.size() + other.terms_.size());
+        terms_.insert(terms_.end(), other.terms_.begin(), other.terms_.end());
+    }
+    // If other had pre-materialized unique map but no raw terms (should not happen), ignore.
+    invalidate();
     return *this;
 }
 
@@ -78,13 +123,24 @@ LinearExpression LinearExpression::operator-(const LinearExpression& other) cons
 
 LinearExpression LinearExpression::operator*(const LinearExpression& other) const
 {
-    if (coef_per_var_.empty())
+    if (terms_.empty())
     {
-        return {offset_ * other.offset_, scale_map(other.coef_per_var_, offset_)};
+        // this is constant; scale other's terms
+        auto scaledTerms = scaleTerms(other.terms_, offset_);
+        LinearExpression out;
+        out.offset_ = offset_ * other.offset_;
+        out.terms_ = std::move(scaledTerms);
+        out.invalidate();
+        return out;
     }
-    else if (other.coef_per_var_.empty())
+    else if (other.terms_.empty())
     {
-        return {offset_ * other.offset_, scale_map(coef_per_var_, other.offset_)};
+        auto scaledTerms = scaleTerms(terms_, other.offset_);
+        LinearExpression out;
+        out.offset_ = offset_ * other.offset_;
+        out.terms_ = std::move(scaledTerms);
+        out.invalidate();
+        return out;
     }
     else
     {
@@ -94,16 +150,27 @@ LinearExpression LinearExpression::operator*(const LinearExpression& other) cons
 
 LinearExpression LinearExpression::operator/(const LinearExpression& other) const
 {
-    if (!other.coef_per_var_.empty())
+    if (!other.terms_.empty())
     {
         throw std::invalid_argument("A linear expression can't have a variable as a dividend.");
     }
-    return LinearExpression(offset_ / other.offset_, scale_map(coef_per_var_, 1 / other.offset_));
+    double inv = 1.0 / other.offset_;
+    auto scaledTerms = scaleTerms(terms_, inv);
+    LinearExpression out;
+    out.offset_ = offset_ * inv;
+    out.terms_ = std::move(scaledTerms);
+    out.invalidate();
+    return out;
 }
 
 LinearExpression LinearExpression::operator-() const
 {
-    return {-offset_, scale_map(coef_per_var_, -1)};
+    auto scaledTerms = scaleTerms(terms_, -1.0);
+    LinearExpression out;
+    out.offset_ = -offset_;
+    out.terms_ = std::move(scaledTerms);
+    out.invalidate();
+    return out;
 }
 
 double LinearExpression::offset() const
