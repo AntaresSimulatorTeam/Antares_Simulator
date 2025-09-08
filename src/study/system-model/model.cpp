@@ -167,6 +167,7 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
         uniqueIdChecker_.add(v.Id());
     }
     model_.variables_ = std::move(variables);
+
     return *this;
 }
 

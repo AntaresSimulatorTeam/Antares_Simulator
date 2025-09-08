@@ -109,18 +109,9 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const NegationNode* nod
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
-    const auto& variables = component_.getModel()->Variables();
-    const auto& it = std::ranges::find_if(variables,
-                                          [&node](const auto& variable)
-                                          { return variable.Id() == node->value(); });
-    if (it == variables.end())
-    {
-        throw std::invalid_argument("Variable (" + node->value() + ") not found.");
-    }
     LinearExpressionEigen out(nbtimeSteps_, nbModelVariables_);
 
-    const auto& modelVariablesGlobalIndices = component_.ModelVariablesGlobalIndices();
-    const auto globalIndex = modelVariablesGlobalIndices.at(std::distance(variables.begin(), it));
+    const auto globalIndex = component_.getVariableGlobalIndex(node->value());
     const auto variableStart = variableStartColumn_.at(globalIndex);
     const auto variableEnd = variableStart == *variableStartColumn_.rbegin()
                                ? nbModelVariables_

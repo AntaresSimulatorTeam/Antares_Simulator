@@ -46,6 +46,7 @@ public:
     unsigned index = 0;
 
     std::vector<unsigned int> modelVariablesGlobalIndices_ = {};
+    std::unordered_map<std::string, unsigned int> variableIndexMap_;
 
     // std::vector<unsigned int> modelVariablesLocalIndices_ = {};
 
@@ -120,6 +121,11 @@ public:
     const std::vector<unsigned int>& ModelVariablesGlobalIndices() const
     {
         return data_.modelVariablesGlobalIndices_;
+    }
+
+    unsigned int getVariableGlobalIndex(const std::string& varId) const
+    {
+        return data_.variableIndexMap_.at(varId);
     }
 
 private:

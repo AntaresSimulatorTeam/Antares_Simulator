@@ -160,6 +160,13 @@ ComponentBuilder& ComponentBuilder::withModelVariablesGlobalIndices(
   const std::vector<unsigned>& modelVariablesGlobalIndices)
 {
     data_.modelVariablesGlobalIndices_ = modelVariablesGlobalIndices;
+    const auto& modelVariables = data_.model->Variables();
+    auto index = 0;
+    for (auto& globalIndex: data_.modelVariablesGlobalIndices_)
+    {
+        data_.variableIndexMap_.emplace(modelVariables.at(index).Id(), globalIndex);
+        ++index;
+    }
     return *this;
 }
 
