@@ -23,6 +23,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -39,6 +40,8 @@ EvalVisitorPostOptim::EvalVisitorPostOptim(const IEvaluationContextProvider& con
 
 EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node)
 {
+    auto idxType = Antares::Expressions::Visitors::TimeIndexVisitor(*component_, contextProvider_)
+                     .dispatch(node);
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
