@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -11,9 +32,7 @@
 #pragma once
 #include "charset.h"
 
-namespace Yuni
-{
-namespace Charset
+namespace Yuni::Charset
 {
 template<typename SrcStringT, typename DtsStringT>
 bool Converter::convert(SrcStringT& source, DtsStringT& destination, bool isLastBuffer)
@@ -23,6 +42,7 @@ bool Converter::convert(SrcStringT& source, DtsStringT& destination, bool isLast
     // the conversion performed, and since we want to perform complete
     // conversions, we require an expandable string as destination.
     YUNI_STATIC_ASSERT(DtsStringT::expandable == 1, CharsetConverterRequiresExpandableBuffers);
+
     enum
     {
         DSTSZ = sizeof(typename DtsStringT::Type),
@@ -182,5 +202,4 @@ inline bool Converter::valid() const
     return ((void*)-1 != pContext);
 }
 
-} // namespace Charset
-} // namespace Yuni
+} // namespace Yuni::Charset

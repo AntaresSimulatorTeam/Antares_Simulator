@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "main.h"
 #include "antares/study/study.h"
@@ -50,27 +50,27 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Window
 {
-namespace Window
-{
-class ItemWindow : public Component::Spotlight::IItem
+class ItemWindow: public Component::Spotlight::IItem
 {
 public:
     //! Smart ptr
     using Ptr = std::shared_ptr<ItemWindow>;
 
-    explicit ItemWindow(const Yuni::String& title, int id) : title(title), id(id)
+    explicit ItemWindow(const Yuni::String& title, int id):
+        title(title),
+        id(id)
     {
         caption(title);
-    };
+    }
 
 public:
     Yuni::String title;
     int id;
 };
 
-class SpotlightProviderWindows : public Component::Spotlight::IProvider
+class SpotlightProviderWindows: public Component::Spotlight::IProvider
 {
 public:
     using Spotlight = Antares::Component::Spotlight;
@@ -95,7 +95,9 @@ public:
         {
             ++elemIdx;
             if (frame->excludeFromMenu())
+            {
                 continue; // -> framelist foreach
+            }
 
             if (tokens.empty())
             {
@@ -119,7 +121,9 @@ public:
     {
         auto itemwin = std::dynamic_pointer_cast<ItemWindow>(item);
         if (!itemwin)
+        {
             return false;
+        }
 
         auto& framelist = Component::Frame::Registry::List();
         if ((uint)itemwin->id < framelist.size())
@@ -145,10 +149,11 @@ public:
 
 }; // class SpotlightProviderWindows
 
-class RaiseWindowBox : public wxDialog
+class RaiseWindowBox: public wxDialog
 {
 public:
     RaiseWindowBox(wxWindow* parent);
+
     virtual ~RaiseWindowBox()
     {
     }
@@ -159,13 +164,13 @@ private:
 
 }; // class RaiseWindowBox
 
-RaiseWindowBox::RaiseWindowBox(wxWindow* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Raise Window Box"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+RaiseWindowBox::RaiseWindowBox(wxWindow* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Raise Window Box"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
     // Informations about the study
     wxColour defaultBgColor = GetBackgroundColour();
@@ -209,8 +214,10 @@ RaiseWindowBox::RaiseWindowBox(wxWindow* parent) :
 
     // Close button
     {
-        auto* btn
-          = Component::CreateButton(pPanel, wxT("   Close   "), this, &RaiseWindowBox::onClose);
+        auto* btn = Component::CreateButton(pPanel,
+                                            wxT("   Close   "),
+                                            this,
+                                            &RaiseWindowBox::onClose);
         pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL);
         pPanelSizer->Add(5, 2);
         btn->SetDefault();
@@ -221,11 +228,15 @@ RaiseWindowBox::RaiseWindowBox(wxWindow* parent) :
     wxSize p = GetSize();
     p.SetWidth(p.GetWidth() + 20);
     if (p.GetWidth() < 390)
+    {
         p.SetWidth(390);
+    }
     else
     {
         if (p.GetWidth() > 600)
+        {
             p.SetWidth(600);
+        }
     }
     p.SetHeight(400);
     SetSize(p);
@@ -238,14 +249,11 @@ void RaiseWindowBox::onClose(void*)
     Dispatcher::GUI::Close(this);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window
 
 // ----- END Window Menu others management -----
 
-namespace Antares
-{
-namespace Forms
+namespace Antares::Forms
 {
 static inline bool IsCurrentStudyReadonly()
 {
@@ -259,13 +267,19 @@ wxString ApplWnd::openStudyFolder(bool autoLoad)
 
     wxString folder;
     if (gLastOpenedStudyFolder.IsEmpty())
+    {
         wxGetHomeDir(&folder); // Home sweet home
+    }
     else
+    {
         folder = gLastOpenedStudyFolder;
+    }
 
     // The dialog window
-    auto* dlg = new wxDirDialog(
-      this, wxT("Open a study"), folder, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    auto* dlg = new wxDirDialog(this,
+                                wxT("Open a study"),
+                                folder,
+                                wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
     if (wxID_OK == dlg->ShowModal())
     {
         // It is quite better to delete the windows before loading the study
@@ -275,7 +289,9 @@ wxString ApplWnd::openStudyFolder(bool autoLoad)
         if (!path.empty())
         {
             if (!wouldYouLikeToSaveTheStudy())
+            {
                 return wxEmptyString;
+            }
             // Load the study
             if (autoLoad)
             {
@@ -293,7 +309,9 @@ wxString ApplWnd::openStudyFolder(bool autoLoad)
 void ApplWnd::evtOnNewStudy(wxCommandEvent&)
 {
     if (GUIIsLock())
+    {
         return;
+    }
     Dispatcher::StudyNew();
 }
 
@@ -305,7 +323,9 @@ void MainFormData::onToolbarNewStudy(void*)
 void ApplWnd::evtOnOpenStudy(wxCommandEvent&)
 {
     if (GUIIsLock())
+    {
         return;
+    }
     openStudyFolder();
 }
 
@@ -317,7 +337,9 @@ void MainFormData::onToolbarOpenLocalStudy(void*)
 void ApplWnd::evtOnSave(wxCommandEvent&)
 {
     if (GUIIsLock())
+    {
         return;
+    }
     if (CurrentStudyIsValid())
     {
         if (IsCurrentStudyReadonly())
@@ -331,14 +353,18 @@ void ApplWnd::evtOnSave(wxCommandEvent&)
             message.showModal();
         }
         else
+        {
             Dispatcher::GUI::Post(this, &ApplWnd::saveStudy, 80 /*ms*/);
+        }
     }
 }
 
 void MainFormData::onToolbarSave(void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     if (CurrentStudyIsValid())
     {
@@ -353,34 +379,46 @@ void MainFormData::onToolbarSave(void*)
             message.showModal();
         }
         else
+        {
             Dispatcher::GUI::Post(&pMainForm, &ApplWnd::saveStudy, 80 /*ms*/);
+        }
     }
 }
 
 void ApplWnd::evtOnSaveAs(wxCommandEvent&)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     // Save the current study
     if (CurrentStudyIsValid())
+    {
         Dispatcher::GUI::CreateAndShowModal<Window::SaveAs>(this);
+    }
 }
 
 void ApplWnd::evtOnExportMap(wxCommandEvent&)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     // Export the current study map
     if (CurrentStudyIsValid())
+    {
         Dispatcher::GUI::CreateAndShowModal<Window::ExportMap>(this);
+    }
 }
 
 void ApplWnd::evtOnQuickOpenStudy(wxCommandEvent& evt)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     const int indx = evt.GetId() - mnIDOpenRecents_0;
     if (indx >= 0 && indx < (int)RecentFiles::Max)
@@ -405,7 +443,9 @@ void ApplWnd::evtOnQuickOpenStudy(wxCommandEvent& evt)
 void ApplWnd::evtOnRaiseWindow(wxCommandEvent& evt)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     if (evt.GetId() == mnIDWindowRaise_Other)
     {
@@ -420,13 +460,17 @@ void ApplWnd::evtOnRaiseWindow(wxCommandEvent& evt)
 
     uint indx = (uint)(evt.GetId() - mnIDWindowRaise_0);
     if (indx < framelist.size())
+    {
         framelist[indx]->frameRaise();
+    }
 }
 
 void ApplWnd::evtOnCloseStudy(wxCommandEvent&)
 {
     if (GUIIsLock())
+    {
         return;
+    }
     Dispatcher::StudyClose();
 }
 
@@ -460,5 +504,4 @@ void MainFormData::onToolbarOpenRecentMenu(Component::Button&, wxMenu& menu, voi
     Menu::RebuildRecentFiles(&menu, true);
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms

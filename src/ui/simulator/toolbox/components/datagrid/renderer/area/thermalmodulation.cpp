@@ -1,43 +1,40 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include "thermalmodulation.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 ThermalClusterCommonModulation::ThermalClusterCommonModulation(
   wxWindow* control,
-  Toolbox::InputSelector::ThermalCluster* notifier) :
- Renderer::Matrix<>(control), pCluster(nullptr)
+  Toolbox::InputSelector::ThermalCluster* notifier):
+    Renderer::Matrix<>(control),
+    pCluster(nullptr)
 {
     if (notifier)
-        notifier->onThermalClusterChanged.connect(
-          this, &ThermalClusterCommonModulation::internalThermalClusterChanged);
+    {
+        notifier->onThermalClusterChanged
+          .connect(this, &ThermalClusterCommonModulation::internalThermalClusterChanged);
+    }
 }
 
 ThermalClusterCommonModulation::~ThermalClusterCommonModulation()
@@ -48,7 +45,9 @@ ThermalClusterCommonModulation::~ThermalClusterCommonModulation()
 wxString ThermalClusterCommonModulation::rowCaption(int row) const
 {
     if (!study || row >= Date::Calendar::maxHoursInYear)
+    {
         return wxEmptyString;
+    }
     return wxStringFromUTF8(study->calendar.text.hours[row]);
 }
 
@@ -95,12 +94,10 @@ wxString ThermalClusterCommonModulation::cellValue(int x, int y) const
             return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalMinGenModulation][y], 3));
         case (Data::thermalModulationCost + Data::thermalModulationMax):
             return DoubleToWxString(
-              Math::Round(pCluster->getCostProvider().getMarginalCost(0, y),
-                          3));
+              Math::Round(pCluster->getCostProvider().getMarginalCost(0, y), 3));
         case (Data::thermalModulationMarketBid + Data::thermalModulationMax):
             return DoubleToWxString(
-              Math::Round(pCluster->getCostProvider().getMarketBidCost(y, 0),
-                          3));
+              Math::Round(pCluster->getCostProvider().getMarketBidCost(y, 0), 3));
         case (Data::thermalModulationCapacity + Data::thermalModulationMax):
             return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalModulationCapacity][y]
                                                   * pCluster->nominalCapacity,
@@ -150,7 +147,9 @@ void ThermalClusterCommonModulation::internalThermalClusterChanged(
     {
         pCluster = cluster;
         if (cluster != nullptr)
+        {
             cluster->modulation.forceReload(true);
+        }
         matrix(cluster ? &cluster->modulation : nullptr);
     }
 }
@@ -158,18 +157,24 @@ void ThermalClusterCommonModulation::internalThermalClusterChanged(
 IRenderer::CellStyle ThermalClusterCommonModulation::cellStyle(int col, int row) const
 {
     if (col > 3)
+    {
         return IRenderer::cellStyleDisabled;
+    }
     const double v = Renderer::Matrix<>::cellNumericValue(col, row);
 
     if (v < 0.)
+    {
         return IRenderer::cellStyleError;
+    }
 
     if (col == Data::thermalModulationCapacity)
     {
         if (pCluster->minDivModulation.isCalculated
             && v / ceil(v) < pCluster->minDivModulation.border
             && !pCluster->minDivModulation.isValidated)
+        {
             return IRenderer::cellStyleError;
+        }
     }
 
     return IRenderer::cellStyleWithNumericCheck(col, row);
@@ -190,9 +195,13 @@ wxColour ThermalClusterCommonModulation::horizontalBorderColor(int x, int y) con
         auto& hourinfo = study->calendar.hours[y + 1];
 
         if (hourinfo.firstHourInMonth)
+        {
             return Default::BorderMonthSeparator();
+        }
         if (hourinfo.firstHourInDay)
+        {
             return Default::BorderDaySeparator();
+        }
     }
     return IRenderer::verticalBorderColor(x, y);
 }
@@ -203,9 +212,13 @@ bool ThermalClusterCommonModulation::cellValue(int x, int y, const String& value
     {
         double v;
         if (!value.to(v))
+        {
             return false;
+        }
         if (v < 0.)
+        {
             v = 0.;
+        }
         switch (x)
         {
         case Data::thermalModulationCost:
@@ -253,7 +266,4 @@ void ThermalClusterCommonModulation::onStudyClosed()
     Renderer::Matrix<>::onStudyClosed();
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -11,11 +32,7 @@
 #pragma once
 #include "../system/console.h"
 
-namespace Yuni
-{
-namespace Logs
-{
-namespace Verbosity
+namespace Yuni::Logs::Verbosity
 {
 struct YUNI_DECL Unknown final
 {
@@ -23,10 +40,12 @@ struct YUNI_DECL Unknown final
     {
         return "";
     }
+
     template<class U>
     static void AppendName(U&)
     {
     }
+
     enum
     {
         level = 0,
@@ -34,6 +53,7 @@ struct YUNI_DECL Unknown final
         hasName = 0,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::none;
     //! Message Text Color
@@ -47,11 +67,13 @@ struct YUNI_DECL Quiet final
     {
         return "quiet";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
         u << "[quiet]";
     }
+
     enum
     {
         level = 100000, // equivalent to infinite
@@ -59,6 +81,7 @@ struct YUNI_DECL Quiet final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::none;
     //! Message Text Color
@@ -72,11 +95,13 @@ struct YUNI_DECL Fatal final
     {
         return "fatal";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
         u << "[fatal]";
     }
+
     enum
     {
         level = 1000,
@@ -84,6 +109,7 @@ struct YUNI_DECL Fatal final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::red;
     //! Message Text Color
@@ -97,11 +123,13 @@ struct YUNI_DECL Error final
     {
         return "error";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
         u << "[error]";
     }
+
     enum
     {
         level = 2000,
@@ -109,6 +137,7 @@ struct YUNI_DECL Error final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::red;
     //! Message Text Color
@@ -122,11 +151,13 @@ struct YUNI_DECL Warning final
     {
         return "warning";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
         u << "[warns]";
     }
+
     enum
     {
         level = 3000,
@@ -134,6 +165,7 @@ struct YUNI_DECL Warning final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::yellow;
     //! Message Text Color
@@ -147,6 +179,7 @@ struct YUNI_DECL Checkpoint final
     {
         return "checkpoint";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
@@ -160,6 +193,7 @@ struct YUNI_DECL Checkpoint final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::white;
     //! Message Text Color
@@ -173,6 +207,7 @@ struct YUNI_DECL Notice final
     {
         return "notice";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
@@ -186,6 +221,7 @@ struct YUNI_DECL Notice final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::green;
     //! Message Text Color
@@ -199,6 +235,7 @@ struct YUNI_DECL Progress final
     {
         return "progress";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
@@ -212,6 +249,7 @@ struct YUNI_DECL Progress final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::none;
     //! Message Text Color
@@ -225,6 +263,7 @@ struct YUNI_DECL Info final
     {
         return "info";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
@@ -238,6 +277,7 @@ struct YUNI_DECL Info final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::none;
     //! Message Text Color
@@ -251,6 +291,7 @@ struct YUNI_DECL Compatibility final
     {
         return "Compatibility";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
@@ -264,6 +305,7 @@ struct YUNI_DECL Compatibility final
         hasName = 1,
         enabled = 1,
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::yellow;
     //! Message Text Color
@@ -277,6 +319,7 @@ struct YUNI_DECL Debug final
     {
         return "debug";
     }
+
     template<class U>
     static void AppendName(U& u)
     {
@@ -294,6 +337,7 @@ struct YUNI_DECL Debug final
         enabled = 1,
 #endif
     };
+
     //! Text Color for displaying the verbosity
     static const System::Console::Color color = System::Console::none;
     //! Message Text Color
@@ -301,6 +345,4 @@ struct YUNI_DECL Debug final
 
 }; // class Debug
 
-} // namespace Verbosity
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs::Verbosity

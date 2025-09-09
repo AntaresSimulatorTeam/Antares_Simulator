@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include "connection.h"
 #include "../settings.h"
 #include "../tools/remover.h"
@@ -31,9 +31,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 namespace // anonymous
 {
@@ -42,6 +40,7 @@ enum
     fontSize = 7,
     connectMouseSensibility = 3,
 };
+
 static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 }; // anonymous namespace
 
@@ -51,7 +50,9 @@ static inline wxPoint ComputeBarycentre(const wxPoint& a,
                                         const int coeff2)
 {
     if (!coeff1 && !coeff2)
+    {
         return wxPoint();
+    }
     return wxPoint((coeff1 * a.x + coeff2 * b.x) / (coeff1 + coeff2),
                    (coeff1 * a.y + coeff2 * b.y) / (coeff1 + coeff2));
 }
@@ -100,17 +101,17 @@ static int DistanceBetweenAPointAndASegment(const double pointX,
     return (int)sqrt(diffX * diffX + diffY * diffY);
 }
 
-Connection::Connection(Manager& manager, Item* a, Item* b) :
- Item(manager),
- pA(nullptr),
- pB(nullptr),
- pDirection(dirDirect),
- pArrowDirection(dirNone),
- pCachedAbsolutePosition(0, 0),
- pHaveTools(false),
- pAttachedAreaLink(nullptr),
- pDefaultPen(wxPen(wxColour(225, 225, 225), 6, wxPENSTYLE_SOLID)),
- pErrorPen(wxPen(wxColour(255, 200, 200), 6, wxPENSTYLE_SOLID))
+Connection::Connection(Manager& manager, Item* a, Item* b):
+    Item(manager),
+    pA(nullptr),
+    pB(nullptr),
+    pDirection(dirDirect),
+    pArrowDirection(dirNone),
+    pCachedAbsolutePosition(0, 0),
+    pHaveTools(false),
+    pAttachedAreaLink(nullptr),
+    pDefaultPen(wxPen(wxColour(225, 225, 225), 6, wxPENSTYLE_SOLID)),
+    pErrorPen(wxPen(wxColour(255, 200, 200), 6, wxPENSTYLE_SOLID))
 {
     if (a && b)
     {
@@ -126,9 +127,13 @@ Connection::Connection(Manager& manager, Item* a, Item* b) :
         }
     }
     if (pA)
+    {
         pA->pLinks->insert(std::pair<Item*, bool>(this, true));
+    }
     if (pB)
+    {
         pB->pLinks->insert(std::pair<Item*, bool>(this, true));
+    }
 
     // apply the standard color for this type of item
     this->color(Settings::connection);
@@ -138,7 +143,9 @@ Connection::~Connection()
 {
     // Remove the link if not already done
     if (pManager.study() && pAttachedAreaLink)
+    {
         pManager.pendingDeleteLink(pAttachedAreaLink);
+    }
     pAttachedAreaLink = nullptr;
 
     this->selected(false);
@@ -150,13 +157,17 @@ Connection::~Connection()
     {
         Links::iterator i = pA->pLinks->find(this);
         if (i != pA->pLinks->end())
+        {
             pA->pLinks->erase(i);
+        }
     }
     if (pB && pB->pLinks)
     {
         Links::iterator i = pB->pLinks->find(this);
         if (i != pB->pLinks->end())
+        {
             pB->pLinks->erase(i);
+        }
     }
 }
 
@@ -169,6 +180,7 @@ bool Connection::isVisibleOnLayer(const size_t& layerID) const
 {
     return pA->isVisibleOnLayer(layerID) && pB->isVisibleOnLayer(layerID);
 }
+
 //@}
 
 void Connection::arrowDirection(const Connection::Direction& d)
@@ -190,9 +202,13 @@ void Connection::refreshCache(wxDC& dc)
 {
     // The new comments
     if (pAttachedAreaLink && pAttachedAreaLink->displayComments)
+    {
         pCaption = wxStringFromUTF8(pAttachedAreaLink->comments);
+    }
     else
+    {
         pCaption.clear();
+    }
 
     // Detecting bad line orientation
     pCachedError = (pAttachedAreaLink && pAttachedAreaLink->from->id > pAttachedAreaLink->with->id);
@@ -212,14 +228,22 @@ void Connection::refreshCache(wxDC& dc)
     if (pA && pB)
     {
         if (pA->x() < pB->x())
+        {
             pCachedMiddlePoint.x = (pB->x() - pA->x()) / 2;
+        }
         else
+        {
             pCachedMiddlePoint.x = (pA->x() - pB->x()) / 2;
+        }
 
         if (pA->y() < pB->y())
+        {
             pCachedMiddlePoint.y = (pB->y() - pA->y()) / 2;
+        }
         else
+        {
             pCachedMiddlePoint.y = (pA->y() - pB->y()) / 2;
+        }
     }
 
     pInvalidated = false;
@@ -231,7 +255,9 @@ void Connection::createANewConnectionIfNeeded()
     {
         auto study = pManager.study();
         if (!study)
+        {
             return;
+        }
 
         const Node* aa = dynamic_cast<Node*>(pA);
         const Node* bb = dynamic_cast<Node*>(pB);
@@ -243,9 +269,13 @@ void Connection::createANewConnectionIfNeeded()
             const Data::AreaName sA = aa->attachedArea()->id;
             const Data::AreaName sB = bb->attachedArea()->id;
             if (sA < sB)
+            {
                 pAttachedAreaLink = Data::AreaListAddLink(&study->areas, sA.c_str(), sB.c_str());
+            }
             else
+            {
                 pAttachedAreaLink = Data::AreaListAddLink(&study->areas, sB.c_str(), sA.c_str());
+            }
 
             pAttachedAreaLink->resetToDefaultValues();
             OnStudyLinkAdded(pAttachedAreaLink);
@@ -259,9 +289,13 @@ void Connection::createANewConnectionIfNeeded()
 bool Connection::contains(const int x, const int y, double& distance)
 {
     return (pA && pB)
-           && (distance
-               = (DistanceBetweenAPointAndASegment(x, y, pA->x(), pA->y(), pB->x(), pB->y()))
-                 < connectMouseSensibility);
+           && (distance = (DistanceBetweenAPointAndASegment(x,
+                                                            y,
+                                                            pA->x(),
+                                                            pA->y(),
+                                                            pB->x(),
+                                                            pB->y()))
+                          < connectMouseSensibility);
 }
 
 bool Connection::isContained(const int, const int, const int, const int) const
@@ -334,7 +368,9 @@ void Connection::drawArrow(wxDC& dc,
 void Connection::draw(DrawingContext& dc)
 {
     if (!pA || !pB || !isVisibleOnLayer(dc.getLayerId()))
+    {
         return;
+    }
 
     // Position for the first node
     wxPoint rCenterA(dc.origin().x + pA->pX, dc.origin().y - pA->pY);
@@ -385,8 +421,9 @@ void Connection::draw(DrawingContext& dc)
         device.DrawLine(rCenterA.x, rCenterA.y, rCenterB.x, rCenterB.y);
     }
 
-    wxColor personalColor(
-      pAttachedAreaLink->color[0], pAttachedAreaLink->color[1], pAttachedAreaLink->color[2]);
+    wxColor personalColor(pAttachedAreaLink->color[0],
+                          pAttachedAreaLink->color[1],
+                          pAttachedAreaLink->color[2]);
     // The line itself
     int penWidth = pAttachedAreaLink->linkWidth;
     wxPenStyle myStyle;
@@ -408,15 +445,19 @@ void Connection::draw(DrawingContext& dc)
         myStyle = wxPENSTYLE_SOLID;
     }
     if (pSelected)
+    {
         device.SetPen(wxPen(Settings::connectionHighlighted,
                             penWidth,
                             (pDirection == dirIndirect ? wxPENSTYLE_LONG_DASH : myStyle)));
+    }
     else
     {
-        wxColor personalColor(
-          pAttachedAreaLink->color[0], pAttachedAreaLink->color[1], pAttachedAreaLink->color[2]);
-        device.SetPen(wxPen(
-          personalColor, penWidth, (pDirection == dirIndirect ? wxPENSTYLE_LONG_DASH : myStyle)));
+        wxColor personalColor(pAttachedAreaLink->color[0],
+                              pAttachedAreaLink->color[1],
+                              pAttachedAreaLink->color[2]);
+        device.SetPen(wxPen(personalColor,
+                            penWidth,
+                            (pDirection == dirIndirect ? wxPENSTYLE_LONG_DASH : myStyle)));
     }
     // Draw the line
     device.DrawLine(rCenterA.x, rCenterA.y, rCenterB.x, rCenterB.y);
@@ -426,10 +467,10 @@ void Connection::draw(DrawingContext& dc)
         device.SetFont(font);
 
         // Position
-        pCachedAbsolutePosition.x
-          = rCenterA.x + (rCenterB.x - rCenterA.x) / 2 - pCachedSize.x / 2 + 4;
-        pCachedAbsolutePosition.y
-          = rCenterA.y + (rCenterB.y - rCenterA.y) / 2 - pCachedSize.y / 2 + 2;
+        pCachedAbsolutePosition.x = rCenterA.x + (rCenterB.x - rCenterA.x) / 2 - pCachedSize.x / 2
+                                    + 4;
+        pCachedAbsolutePosition.y = rCenterA.y + (rCenterB.y - rCenterA.y) / 2 - pCachedSize.y / 2
+                                    + 2;
 
         // Draw the text
         // Its background first
@@ -442,15 +483,21 @@ void Connection::draw(DrawingContext& dc)
     }
 
     if (pArrowDirection != dirNone)
+    {
         drawArrow(device, pArrowDirection, rCenterA, rCenterB);
+    }
 }
 
 void Connection::extendBoundingBox(wxPoint& topLeft, wxPoint& bottomRight)
 {
     if (pA)
+    {
         pA->extendBoundingBox(topLeft, bottomRight);
+    }
     if (pB)
+    {
         pB->extendBoundingBox(topLeft, bottomRight);
+    }
 }
 
 void Connection::destroyTools()
@@ -466,7 +513,9 @@ void Connection::destroyTools()
 void Connection::createTools()
 {
     if (pHaveTools)
+    {
         destroyTools();
+    }
     pToolDirection = new Tool::Remover(pManager);
     pToolDirection->x(pCachedAbsolutePosition.x);
     pToolDirection->y(pCachedAbsolutePosition.y);
@@ -490,7 +539,9 @@ void Connection::selected(bool v)
             --pManager.pSelectedItemsAsConnection;
             auto i = pManager.pSelectedItems.find(this);
             if (i != pManager.pSelectedItems.end())
+            {
                 pManager.pSelectedItems.erase(i);
+            }
         }
         forceReload();
     }
@@ -517,5 +568,4 @@ void Connection::attachedAreaLink(Data::AreaLink* a)
     pAttachedAreaLink = a;
 }
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map

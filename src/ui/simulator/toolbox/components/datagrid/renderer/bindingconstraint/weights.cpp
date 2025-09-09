@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
@@ -27,17 +27,11 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer::BindingConstraint
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-namespace BindingConstraint
-{
-LinkWeights::LinkWeights(wxWindow* control) : pControl(control), pZero(wxT("0 "))
+LinkWeights::LinkWeights(wxWindow* control):
+    pControl(control),
+    pZero(wxT("0 "))
 {
 }
 
@@ -83,10 +77,14 @@ wxString LinkWeights::rowCaption(int rowIndx) const
 wxString LinkWeights::cellValue(int x, int y) const
 {
     if (!study)
+    {
         return wxEmptyString;
+    }
 
     if ((uint)x >= study->uiinfo->constraintCount())
+    {
         return wxEmptyString;
+    }
     if (y < 5)
     {
         Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
@@ -106,7 +104,9 @@ wxString LinkWeights::cellValue(int x, int y) const
             if (constraint->enabled())
             {
                 if (constraint->skipped())
+                {
                     return wxT("   Skipped   ");
+                }
                 return wxT("   Yes   ");
             }
             return wxT("   Disabled   ");
@@ -117,27 +117,37 @@ wxString LinkWeights::cellValue(int x, int y) const
 
     const double d = cellNumericValue(x, y);
     if (!Math::Zero(d))
+    {
         return DoubleToWxString(d);
+    }
     return pZero;
 }
 
 wxString LinkWeights::columnCaption(int x) const
 {
     if (not CurrentStudyIsValid())
+    {
         return wxEmptyString;
+    }
 
     if ((uint)x < study->uiinfo->constraintCount())
+    {
         return wxStringFromUTF8((study->uiinfo->constraint((uint)x))->name());
+    }
     return wxEmptyString;
 }
 
 IRenderer::CellStyle LinkWeights::cellStyle(int x, int y) const
 {
     if (not CurrentStudyIsValid())
+    {
         return IRenderer::cellStyleConstraintDisabled;
+    }
 
     if ((uint)x >= study->uiinfo->constraintCount())
+    {
         return IRenderer::cellStyleConstraintDisabled;
+    }
 
     Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
 
@@ -169,20 +179,25 @@ IRenderer::CellStyle LinkWeights::cellStyle(int x, int y) const
 bool LinkWeights::cellValue(int x, int y, const String& value)
 {
     if (!study || !study->uiinfo || (uint)x >= study->uiinfo->constraintCount())
+    {
         return false;
+    }
 
     auto& uiinfo = *(study->uiinfo);
-    Data::BindingConstraint* constraint
-      = ((uint)x < uiinfo.orderedConstraint.size()) ? (uiinfo.constraint(x)) : nullptr;
+    Data::BindingConstraint* constraint = ((uint)x < uiinfo.orderedConstraint.size())
+                                            ? (uiinfo.constraint(x))
+                                            : nullptr;
     if (!constraint)
+    {
         return false;
+    }
 
     switch (y)
     {
     case 0: // operator
     {
-        const Data::BindingConstraint::Operator op
-          = Data::BindingConstraint::StringToOperator(value);
+        const Data::BindingConstraint::Operator op = Data::BindingConstraint::StringToOperator(
+          value);
         if (op != Data::BindingConstraint::opUnknown)
         {
             constraint->operatorType(op);
@@ -231,7 +246,9 @@ bool LinkWeights::cellValue(int x, int y, const String& value)
             {
                 constraint->weight(uiinfo.link(linkIndex), d);
                 if (pControl)
+                {
                     pControl->Refresh();
+                }
                 OnStudyConstraintModified(constraint);
                 return true;
             }
@@ -249,7 +266,9 @@ bool LinkWeights::valid() const
 double LinkWeights::cellNumericValue(int x, int y) const
 {
     if (!study)
+    {
         return 0;
+    }
 
     return (y > 4) ? (study->uiinfo->constraint(x))->weight(study->uiinfo->link(y - 5))
                    : ((y == 3) ? (study->uiinfo->constraint(x))->linkCount() : 0.);
@@ -268,11 +287,15 @@ int LinkWeights::height() const
 wxColour LinkWeights::cellBackgroundColor(int x, int y) const
 {
     if (!study)
+    {
         return wxColour(229, 206, 206);
+    }
 
     double value = cellNumericValue(x, y);
     if (Math::NaN(value) || Math::Zero(value))
+    {
         return wxColour(250, 250, 250);
+    }
 
     return wxColour(240, 240, 250);
 }
@@ -280,11 +303,15 @@ wxColour LinkWeights::cellBackgroundColor(int x, int y) const
 wxColour LinkWeights::cellTextColor(int x, int y) const
 {
     if (!study)
+    {
         return wxColour(0, 0, 0);
+    }
 
     double value = cellNumericValue(x, y);
     if (Math::Zero(value))
+    {
         return wxColour(230, 230, 230);
+    }
     return wxColour(255, 100, 43);
 }
 
@@ -322,7 +349,9 @@ void LinkWeights::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
     gridHelper->virtualSize.y = last;
 }
 
-ClusterWeights::ClusterWeights(wxWindow* control) : pControl(control), pZero(wxT("0 "))
+ClusterWeights::ClusterWeights(wxWindow* control):
+    pControl(control),
+    pZero(wxT("0 "))
 {
 }
 
@@ -365,10 +394,14 @@ wxString ClusterWeights::rowCaption(int rowIndx) const
 wxString ClusterWeights::cellValue(int x, int y) const
 {
     if (!study)
+    {
         return wxEmptyString;
+    }
 
     if ((uint)x >= study->uiinfo->constraintCount())
+    {
         return wxEmptyString;
+    }
 
     if (y < 5)
     {
@@ -389,7 +422,9 @@ wxString ClusterWeights::cellValue(int x, int y) const
             if (constraint->enabled())
             {
                 if (constraint->skipped())
+                {
                     return wxT("   Skipped   ");
+                }
                 return wxT("   Yes   ");
             }
             return wxT("   Disabled   ");
@@ -400,35 +435,49 @@ wxString ClusterWeights::cellValue(int x, int y) const
 
     // Cluster is must-run : this cluster state is printed in the grid
     if (study->uiinfo->cluster(y - 5)->mustrun)
+    {
         return wxT("   must-run   ");
+    }
 
     // Cluster is disabled : this cluster state is printed in the grid
     if (not study->uiinfo->cluster(y - 5)->enabled)
+    {
         return wxT("   disabled   ");
+    }
 
     const double d = cellNumericValue(x, y);
     if (!Math::Zero(d))
+    {
         return DoubleToWxString(d);
+    }
     return pZero;
 }
 
 wxString ClusterWeights::columnCaption(int x) const
 {
     if (not CurrentStudyIsValid())
+    {
         return wxEmptyString;
+    }
 
     if ((uint)x < study->uiinfo->constraintCount())
+    {
         return wxStringFromUTF8((study->uiinfo->constraint((uint)x))->name());
+    }
     return wxEmptyString;
 }
 
 IRenderer::CellStyle ClusterWeights::cellStyle(int x, int y) const
 {
     if (not CurrentStudyIsValid())
+    {
         return IRenderer::cellStyleConstraintDisabled;
+    }
 
     if ((uint)x >= study->uiinfo->constraintCount())
+    {
         return IRenderer::cellStyleConstraintDisabled;
+    }
 
     Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
 
@@ -450,9 +499,13 @@ IRenderer::CellStyle ClusterWeights::cellStyle(int x, int y) const
     default:
     {
         if (study->uiinfo->cluster(y - 5)->enabled && !study->uiinfo->cluster(y - 5)->mustrun)
+        {
             return IRenderer::cellStyleCustom;
+        }
         else
+        {
             return IRenderer::cellStyleDisabled;
+        }
     }
     }
 }
@@ -460,20 +513,25 @@ IRenderer::CellStyle ClusterWeights::cellStyle(int x, int y) const
 bool ClusterWeights::cellValue(int x, int y, const String& value)
 {
     if (!study || !study->uiinfo || (uint)x >= study->uiinfo->constraintCount())
+    {
         return false;
+    }
 
     auto& uiinfo = *(study->uiinfo);
-    Data::BindingConstraint* constraint
-      = ((uint)x < uiinfo.orderedConstraint.size()) ? (uiinfo.constraint(x)) : nullptr;
+    Data::BindingConstraint* constraint = ((uint)x < uiinfo.orderedConstraint.size())
+                                            ? (uiinfo.constraint(x))
+                                            : nullptr;
     if (!constraint)
+    {
         return false;
+    }
 
     switch (y)
     {
     case 0: // operator
     {
-        const Data::BindingConstraint::Operator op
-          = Data::BindingConstraint::StringToOperator(value);
+        const Data::BindingConstraint::Operator op = Data::BindingConstraint::StringToOperator(
+          value);
         if (op != Data::BindingConstraint::opUnknown)
         {
             constraint->operatorType(op);
@@ -517,7 +575,9 @@ bool ClusterWeights::cellValue(int x, int y, const String& value)
         bool clusterEnabled = uiinfo.cluster(clusterIndex)->enabled;
         bool clusterMustRun = uiinfo.cluster(clusterIndex)->mustrun;
         if (not clusterEnabled || clusterMustRun)
+        {
             return true;
+        }
 
         double d;
         if (value.to(d))
@@ -526,7 +586,9 @@ bool ClusterWeights::cellValue(int x, int y, const String& value)
             {
                 constraint->weight(uiinfo.cluster(clusterIndex), d);
                 if (pControl)
+                {
                     pControl->Refresh();
+                }
                 OnStudyConstraintModified(constraint);
                 return true;
             }
@@ -544,7 +606,9 @@ bool ClusterWeights::valid() const
 double ClusterWeights::cellNumericValue(int x, int y) const
 {
     if (!study)
+    {
         return 0;
+    }
     Data::BindingConstraint* constraint = study->uiinfo->constraint(x);
     return (y > 4) ? constraint->weight(study->uiinfo->cluster(y - 5))
                    : ((y == 3) ? constraint->clusterCount() : 0.);
@@ -563,11 +627,15 @@ int ClusterWeights::height() const
 wxColour ClusterWeights::cellBackgroundColor(int x, int y) const
 {
     if (!study)
+    {
         return wxColour(229, 206, 206);
+    }
 
     double value = cellNumericValue(x, y);
     if (Math::NaN(value) || Math::Zero(value))
+    {
         return wxColour(250, 250, 250);
+    }
 
     return wxColour(240, 240, 250);
 }
@@ -575,11 +643,15 @@ wxColour ClusterWeights::cellBackgroundColor(int x, int y) const
 wxColour ClusterWeights::cellTextColor(int x, int y) const
 {
     if (!study)
+    {
         return wxColour(0, 0, 0);
+    }
 
     double value = cellNumericValue(x, y);
     if (Math::Zero(value))
+    {
         return wxColour(230, 230, 230);
+    }
     return wxColour(255, 100, 43);
 }
 
@@ -615,8 +687,4 @@ void ClusterWeights::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper
     gridHelper->virtualSize.y = last;
 }
 
-} // namespace BindingConstraint
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer::BindingConstraint

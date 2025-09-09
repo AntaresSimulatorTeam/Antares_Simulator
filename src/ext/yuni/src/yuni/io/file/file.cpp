@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -25,11 +46,7 @@
 #include <unistd.h>
 #endif
 
-namespace Yuni
-{
-namespace IO
-{
-namespace File
+namespace Yuni::IO::File
 {
 bool CreateEmptyFile(const AnyString& filename)
 {
@@ -51,7 +68,9 @@ bool Size(const AnyString& filename, uint64_t& value)
     const char* const p = filename.c_str();
 
     if (p[len - 1] == '\\' or p[len - 1] == '/')
+    {
         --len;
+    }
 
     // Driver letters
     if (len == 2 and p[1] == ':')
@@ -70,8 +89,13 @@ bool Size(const AnyString& filename, uint64_t& value)
         return false;
     }
 
-    HANDLE hndl = CreateFileW(
-      wstr.c_str(), 0, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    HANDLE hndl = CreateFileW(wstr.c_str(),
+                              0,
+                              FILE_SHARE_READ,
+                              nullptr,
+                              OPEN_EXISTING,
+                              FILE_ATTRIBUTE_NORMAL,
+                              nullptr);
     if (hndl == INVALID_HANDLE_VALUE)
     {
         value = 0u;
@@ -112,7 +136,9 @@ Yuni::IO::Error Delete(const AnyString& filename)
     // with Visual Studio. Consequently we can not use the word DeleteFile.....
 
     if (filename.empty())
+    {
         return Yuni::IO::errUnknown;
+    }
 
 #ifndef YUNI_OS_WINDOWS
 
@@ -124,11 +150,15 @@ Yuni::IO::Error Delete(const AnyString& filename)
     uint len = filename.size();
 
     if (p[len - 1] == '\\' or p[len - 1] == '/')
+    {
         --len;
+    }
 
     // Driver letters
     if (len == 2 and p[1] == ':')
+    {
         return Yuni::IO::errBadFilename;
+    }
 
     String norm;
     Yuni::IO::Normalize(norm, AnyString(p, len));
@@ -136,7 +166,9 @@ Yuni::IO::Error Delete(const AnyString& filename)
     // Conversion into wchar_t
     WString wstr(norm, true);
     if (wstr.empty())
+    {
         return Yuni::IO::errUnknown;
+    }
     wstr.replace('/', '\\');
 
     return (DeleteFileW(wstr.c_str())) ? Yuni::IO::errNone : Yuni::IO::errUnknown;
@@ -185,7 +217,9 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
     out.clear();
     Yuni::IO::File::Stream f(filename);
     if (not f.opened())
+    {
         return errNotFound;
+    }
 
     // retrieve the file size in bytes
     f.seekFromEndOfFile(0);
@@ -204,6 +238,7 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
         {
             smallFragment = 512 * 1024
         };
+
         uint64_t offset = 0;
         do
         {
@@ -216,7 +251,9 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
             }
             offset += smallFragment;
             if (offset >= hardlimit)
+            {
                 return errMemoryLimit;
+            }
         } while (true);
 
 #endif
@@ -224,7 +261,9 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
     }
 
     if (filesize > hardlimit or filesize > (uint)-10)
+    {
         return errMemoryLimit;
+    }
 
     // resize the buffer accordingly
     out.resize((typename StringT::size_type)filesize);
@@ -236,6 +275,7 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
     {
         fragment = 4 * 1024 * 1024
     };
+
     if (filesize < fragment)
     {
         uint64_t numread = f.read((char*)out.data(), filesize);
@@ -290,6 +330,4 @@ IO::Error LoadFromFile(Clob& out, const AnyString& filename, uint64_t hardlimit)
     return LoadFromFileImpl(out, filename, hardlimit);
 }
 
-} // namespace File
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::File

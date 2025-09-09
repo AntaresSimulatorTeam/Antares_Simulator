@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -61,11 +82,7 @@
 
 #endif // ifndef YUNI_NO_THREAD_SAFE
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Thread
+namespace Yuni::Private::Thread
 {
 #ifndef YUNI_NO_THREAD_SAFE
 
@@ -77,7 +94,9 @@ extern "C" YUNI_THREAD_FNC_RETURN threadCallbackExecute(void* arg)
     // assert, for the debugger
     assert(arg and "Yuni Thread Internal: invalid argument (pthread callback)");
     if (nullptr == arg)
+    {
         return 0;
+    }
 
     // Get back our object.
     Yuni::Thread::IThread& thread = *((Yuni::Thread::IThread*)arg);
@@ -109,7 +128,9 @@ extern "C" YUNI_THREAD_FNC_RETURN threadCallbackExecute(void* arg)
             try
             {
                 if (not thread.onExecute())
+                {
                     break;
+                }
             }
             catch (...)
             {
@@ -120,7 +141,9 @@ extern "C" YUNI_THREAD_FNC_RETURN threadCallbackExecute(void* arg)
             {
                 Yuni::MutexLocker flagLocker(thread.pInnerFlagMutex);
                 if (thread.pShouldStop or not thread.pStarted)
+                {
                     break;
+                }
             }
 
             // Notifying the thread that it has just been paused and waiting for
@@ -135,7 +158,9 @@ extern "C" YUNI_THREAD_FNC_RETURN threadCallbackExecute(void* arg)
                 // The signal must be reset for future use
                 // However for thread-safety issues, we have to lock the thread itself
                 if (thread.pShouldStop or not thread.pStarted)
+                {
                     break;
+                }
             }
 
             // If we don't have to stop, the signal must be reset for future use
@@ -174,31 +199,27 @@ extern "C" YUNI_THREAD_FNC_RETURN threadCallbackExecute(void* arg)
 
 #endif // ifndef YUNI_NO_THREAD_SAFE
 
-} // namespace Thread
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Thread
 
-namespace Yuni
+namespace Yuni::Thread
 {
-namespace Thread
-{
-IThread::IThread(uint stacksize) :
+IThread::IThread(uint stacksize):
 #ifndef YUNI_NO_THREAD_SAFE
 #ifdef YUNI_OS_WINDOWS
- pThreadHandle(nullptr),
+    pThreadHandle(nullptr),
 #else
- pThreadIDValid(false),
+    pThreadIDValid(false),
 #endif
 #endif
- pStarted(false)
+    pStarted(false)
 
 #ifndef YUNI_NO_THREAD_SAFE
- ,
- pShouldStop(true),
+    ,
+    pShouldStop(true),
 #ifdef YUNI_HAS_PTHREAD_ATTR_SETSTACKSIZE
- pStackSize((stacksize < PTHREAD_STACK_MIN ? static_cast<uint>(PTHREAD_STACK_MIN) : stacksize))
+    pStackSize((stacksize < PTHREAD_STACK_MIN ? static_cast<uint>(PTHREAD_STACK_MIN) : stacksize))
 #else
- pStackSize(stacksize)
+    pStackSize(stacksize)
 #endif
 #endif
 {
@@ -256,8 +277,12 @@ Error IThread::start()
     pSignalWakeUp.reset();
 
 #ifdef YUNI_OS_WINDOWS
-    pThreadHandle = CreateThread(
-      nullptr, pStackSize * 1024, Yuni::Private::Thread::threadCallbackExecute, this, 0, nullptr);
+    pThreadHandle = CreateThread(nullptr,
+                                 pStackSize * 1024,
+                                 Yuni::Private::Thread::threadCallbackExecute,
+                                 this,
+                                 0,
+                                 nullptr);
     if (not pThreadHandle)
 #else
 
@@ -267,8 +292,10 @@ Error IThread::start()
 // reset the thread stack size
 #ifdef YUNI_HAS_PTHREAD_ATTR_SETSTACKSIZE
     if (0 != pthread_attr_setstacksize(&attr, pStackSize * 1024))
+    {
         std::cerr << "Yuni::Thread: impossible to set thread stack size to " << (pStackSize * 1024)
                   << " bytes" << std::endl;
+    }
 #endif
 
     // Lock the startup condition before creating the thread,
@@ -277,8 +304,10 @@ Error IThread::start()
     // Then we can check the isRunning status and determine if the startup
     // was a success or not.
     pThreadIDValid = (0
-                      == ::pthread_create(
-                        &pThreadID, &attr, Yuni::Private::Thread::threadCallbackExecute, this));
+                      == ::pthread_create(&pThreadID,
+                                          &attr,
+                                          Yuni::Private::Thread::threadCallbackExecute,
+                                          this));
     if (not pThreadIDValid)
 #endif
     {
@@ -349,10 +378,14 @@ Error IThread::stopWL(uint timeout)
 // We are out of time, no choice but to kill our thread
 #ifdef YUNI_OS_WINDOWS
         if (pThreadHandle)
+        {
             TerminateThread(pThreadHandle, 0);
+        }
 #else
         if (pThreadIDValid)
+        {
             ::pthread_cancel(pThreadID);
+        }
 #endif
 
         // Stopping the native thread - we should call onKill after that the
@@ -390,7 +423,9 @@ Error IThread::wait()
         ThreadingPolicy::MutexLocker locker(*this);
         Yuni::MutexLocker flagLocker(pInnerFlagMutex);
         if (not pStarted) // already stopped, nothing to do.
+        {
             return errNone;
+        }
     }
 
     pSignalHaveStopped.wait();
@@ -407,11 +442,15 @@ Error IThread::wait(uint milliseconds)
         ThreadingPolicy::MutexLocker locker(*this);
         Yuni::MutexLocker flagLocker(pInnerFlagMutex);
         if (not pStarted) // already stopped, nothing to do.
+        {
             return errNone;
+        }
     }
 
     if (not pSignalHaveStopped.wait(milliseconds)) // We timed out.
+    {
         return errTimeout;
+    }
 
 #else // YUNI_NO_THREAD_SAFE
     (void)milliseconds;
@@ -426,7 +465,9 @@ void IThread::wakeUp()
     ThreadingPolicy::MutexLocker locker(*this);
     Yuni::MutexLocker flagLocker(pInnerFlagMutex);
     if (pStarted)
+    {
         pSignalWakeUp.notify();
+    }
 #endif
 }
 
@@ -437,7 +478,9 @@ bool IThread::suspend(uint delay)
     {
         Yuni::MutexLocker flagLocker(pInnerFlagMutex);
         if (pShouldStop or not pStarted)
+        {
             return true;
+        }
     }
 
     // We should rest for a while...
@@ -445,7 +488,9 @@ bool IThread::suspend(uint delay)
     {
         // If the timeout has been reached, the thread can continue
         if (not pSignalMustStop.wait(delay))
+        {
             return false;
+        }
     }
 
     Yuni::MutexLocker flagLocker(pInnerFlagMutex);
@@ -478,5 +523,4 @@ Error IThread::restart(uint timeout)
     return (status != errNone) ? status : start();
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

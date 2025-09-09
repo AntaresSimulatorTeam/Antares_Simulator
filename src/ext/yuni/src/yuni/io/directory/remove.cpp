@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -36,11 +57,7 @@
 #include <fstream>
 #define SEP Yuni::IO::Separator
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 #ifndef YUNI_OS_WINDOWS
 
@@ -60,8 +77,8 @@ static bool RmDirRecursiveInternal(const AnyString& path)
                 if (ep->d_type == DT_DIR)
                 {
                     const char* const p = ep->d_name;
-                    bool sysfolder
-                      = (p[0] == '.' and (p[1] == '\0' or (p[1] == '.' and p[2] == '\0')));
+                    bool sysfolder = (p[0] == '.'
+                                      and (p[1] == '\0' or (p[1] == '.' and p[2] == '\0')));
                     if (not sysfolder)
                     {
                         buffer.clear() << path << SEP << (const char*)ep->d_name;
@@ -96,12 +113,16 @@ static bool RecursiveDeleteWindow(const wchar_t* path, uint size)
     };
 
     if (size >= maxLen)
+    {
         return false;
+    }
 
     // temporary buffer for filename manipulation
     wchar_t* filename = new (std::nothrow) wchar_t[maxLen];
     if (nullptr == filename)
+    {
         return false;
+    }
     ::wcsncpy_s(filename, maxLen, path, size);
     if (size + 2 < maxLen)
     {
@@ -122,7 +143,9 @@ static bool RecursiveDeleteWindow(const wchar_t* path, uint size)
             {
                 if (not ::wcscmp(filedata.cFileName, L".")
                     or not ::wcscmp(filedata.cFileName, L".."))
+                {
                     continue;
+                }
             }
 
             // Overwrite the '*'
@@ -131,7 +154,9 @@ static bool RecursiveDeleteWindow(const wchar_t* path, uint size)
             {
                 int written = 0;
                 for (; newSize < maxLen && filedata.cFileName[written]; ++newSize, ++written)
+                {
                     filename[newSize] = filedata.cFileName[written];
+                }
                 if (written <= 0 or newSize >= maxLen)
                 {
                     ::FindClose(handle);
@@ -157,7 +182,9 @@ static bool RecursiveDeleteWindow(const wchar_t* path, uint size)
                 // If the file has the read-only attribute, trying to
                 // remove it first.
                 if (0 != (filedata.dwFileAttributes & FILE_ATTRIBUTE_READONLY))
+                {
                     ::SetFileAttributesW(filename, FILE_ATTRIBUTE_NORMAL);
+                }
 
                 // Trying to delete the file
                 if (not ::DeleteFileW(filename))
@@ -186,7 +213,9 @@ static bool RecursiveDeleteWindow(const wchar_t* path, uint size)
 bool Remove(const AnyString& path)
 {
     if (path.empty())
+    {
         return true;
+    }
 
 #ifdef YUNI_OS_WINDOWS
     {
@@ -195,7 +224,9 @@ bool Remove(const AnyString& path)
 
         WString fsource(canon, true);
         if (fsource.empty())
+        {
             return false;
+        }
 
         // SHFILEOPSTRUCT operation;
         // operation.hwnd = nullptr;
@@ -218,6 +249,4 @@ bool Remove(const AnyString& path)
 #endif
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -12,9 +33,7 @@
 #include "../math.h"
 #include "view.h"
 
-namespace Yuni
-{
-namespace Functional
+namespace Yuni::Functional
 {
 template<class CollectionT>
 class Loop final
@@ -33,14 +52,17 @@ class Loop<CollectionT<T, Other>> final
 public:
     typedef CollectionT<T, Other> CollType;
     typedef T ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    Loop(const CollType& collection) :
-     begin(collection.begin()), it(collection.begin()), end(collection.end())
+    Loop(const CollType& collection):
+        begin(collection.begin()),
+        it(collection.begin()),
+        end(collection.end())
     {
     }
 
@@ -79,13 +101,16 @@ class Loop<T*> final
 {
 public:
     typedef T ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    Loop(const T* const& collection) : start(collection), ptr(collection)
+    Loop(const T* const& collection):
+        start(collection),
+        ptr(collection)
     {
     }
 
@@ -123,13 +148,16 @@ class Loop<const T*> final
 {
 public:
     typedef T ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    Loop(const T* const& collection) : start(collection), ptr(collection)
+    Loop(const T* const& collection):
+        start(collection),
+        ptr(collection)
     {
     }
 
@@ -167,18 +195,26 @@ class Loop<T[N]> final
 {
 public:
     typedef T ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    Loop(const T collection[N]) : start(0u), i(0u), end((uint)-1), data(collection)
+    Loop(const T collection[N]):
+        start(0u),
+        i(0u),
+        end((uint)-1),
+        data(collection)
     {
     }
 
-    Loop(uint startIdx, uint endIdx, const T collection[N]) :
-     start(startIdx), i(startIdx), end(endIdx), data(collection)
+    Loop(uint startIdx, uint endIdx, const T collection[N]):
+        start(startIdx),
+        i(startIdx),
+        end(endIdx),
+        data(collection)
     {
     }
 
@@ -217,13 +253,17 @@ class LoopIterator final
 {
 public:
     typedef typename BeginT::value_type ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    LoopIterator(const BeginT& itBegin, const EndT& itEnd) : begin(itBegin), it(itBegin), end(itEnd)
+    LoopIterator(const BeginT& itBegin, const EndT& itEnd):
+        begin(itBegin),
+        it(itBegin),
+        end(itEnd)
     {
     }
 
@@ -255,5 +295,4 @@ private:
     EndT end;
 };
 
-} // namespace Functional
-} // namespace Yuni
+} // namespace Yuni::Functional

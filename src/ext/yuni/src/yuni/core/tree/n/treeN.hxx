@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -11,12 +32,13 @@
 #pragma once
 #include "treeN.h"
 
-namespace Yuni
-{
-namespace Core
+namespace Yuni::Core
 {
 template<class T, template<class> class TP, template<class> class ChckP, class ConvP>
-inline TreeN<T, TP, ChckP, ConvP>::TreeN() : pParent(nullptr), pChildrenCount(0), pRefCount(0)
+inline TreeN<T, TP, ChckP, ConvP>::TreeN():
+    pParent(nullptr),
+    pChildrenCount(0),
+    pRefCount(0)
 {
 }
 
@@ -63,7 +85,9 @@ inline void TreeN<T, TP, ChckP, ConvP>::detachFromParent()
 {
     typename ThreadingPolicy::MutexLocker locker(*this);
     if (pParent)
+    {
         detachFromParentWL();
+    }
 }
 
 template<class T, template<class> class TP, template<class> class ChckP, class ConvP>
@@ -220,7 +244,9 @@ void TreeN<T, TP, ChckP, ConvP>::clear()
 {
     typename ThreadingPolicy::MutexLocker locker(*this);
     if (pChildrenCount)
+    {
         clearWL();
+    }
 }
 
 template<class T, template<class> class TP, template<class> class ChckP, class ConvP>
@@ -232,7 +258,9 @@ void TreeN<T, TP, ChckP, ConvP>::clearWL()
         // Getting a copy of the list of all children
         const iterator endIt = end();
         for (iterator i = begin(); i != endIt; ++i)
+        {
             queue.push(&*i);
+        }
 
         // Now we have a copy of the list, we can safely remove the links
         // with our children
@@ -355,7 +383,9 @@ std::ostream& TreeN<T, TP, ChckP, ConvP>::print(std::ostream& out, bool recursiv
 {
     typename ThreadingPolicy::MutexLocker locker(*this);
     for (uint i = 0; i < level; ++i)
+    {
         out << "    ";
+    }
     printBeginWL(out, level);
     out << "\n";
 
@@ -363,11 +393,15 @@ std::ostream& TreeN<T, TP, ChckP, ConvP>::print(std::ostream& out, bool recursiv
     {
         const iterator end;
         for (iterator i = begin(); i != end; ++i)
+        {
             i->print(out, true, level + 1);
+        }
     }
 
     for (uint i = 0; i < level; ++i)
+    {
         out << "    ";
+    }
     printEndWL(out, level);
     out << '\n';
     return out;
@@ -391,7 +425,9 @@ typename TreeN<T, TP, ChckP, ConvP>::SizeType TreeN<T, TP, ChckP, ConvP>::treeHe
 {
     typename ThreadingPolicy::MutexLocker locker(*this);
     if (!pChildrenCount)
+    {
         return 0;
+    }
     SizeType d = 0;
 
     const iterator end;
@@ -399,7 +435,9 @@ typename TreeN<T, TP, ChckP, ConvP>::SizeType TreeN<T, TP, ChckP, ConvP>::treeHe
     {
         SizeType nd = i->treeHeight();
         if (nd > d)
+        {
             d = nd;
+        }
     }
 
     return d + 1;
@@ -473,7 +511,9 @@ bool TreeN<T, TP, ChckP, ConvP>::release() const
 #pragma GCC diagnostic ignored "-Wpragmas" // g++-10 has no -Wvolatile, g++-13 does
 #pragma GCC diagnostic ignored "-Wvolatile"
     if (--pRefCount != 0)
+    {
         return false;
+    }
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
     // Early clean-up
@@ -481,12 +521,15 @@ bool TreeN<T, TP, ChckP, ConvP>::release() const
     // we have to be properly detached from the parent node.
     TreeNNode& ref = *(const_cast<TreeNNode*>(this));
     if (pParent)
+    {
         ref.detachFromParentWL();
+    }
     if (pChildrenCount)
+    {
         ref.clearWL();
+    }
     return true;
 }
-
 
 template<class T, template<class> class TP, template<class> class ChckP, class ConvP>
 inline bool TreeN<T, TP, ChckP, ConvP>::hasIntrusiveSmartPtr() const
@@ -494,5 +537,4 @@ inline bool TreeN<T, TP, ChckP, ConvP>::hasIntrusiveSmartPtr() const
     return true;
 }
 
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core

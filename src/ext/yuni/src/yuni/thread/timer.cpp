@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -11,19 +32,26 @@
 #include "timer.h"
 #include <cassert>
 
-namespace Yuni
+namespace Yuni::Thread
 {
-namespace Thread
-{
-Timer::Timer() : IThread(), pTimeInterval(defaultInterval), pCycleCount(infinite)
-{
-}
-
-Timer::Timer(uint interval) : IThread(), pTimeInterval(interval), pCycleCount(infinite)
+Timer::Timer():
+    IThread(),
+    pTimeInterval(defaultInterval),
+    pCycleCount(infinite)
 {
 }
 
-Timer::Timer(uint interval, uint cycles) : IThread(), pTimeInterval(interval), pCycleCount(cycles)
+Timer::Timer(uint interval):
+    IThread(),
+    pTimeInterval(interval),
+    pCycleCount(infinite)
+{
+}
+
+Timer::Timer(uint interval, uint cycles):
+    IThread(),
+    pTimeInterval(interval),
+    pCycleCount(cycles)
 {
 }
 
@@ -32,7 +60,8 @@ Timer::~Timer()
     assert(started() == false);
 }
 
-Timer::Timer(const Timer& rhs) : IThread()
+Timer::Timer(const Timer& rhs):
+    IThread()
 {
     rhs.pTimerMutex.lock();
     pTimeInterval = rhs.pTimeInterval;
@@ -59,11 +88,17 @@ bool Timer::internalRunInfiniteLoop()
     do
     {
         if (IThread::suspend(nnTimeInterval))
+        {
             break;
+        }
         if (not onInterval(infinite /* no cycle */))
+        {
             break;
+        }
         if (pShouldReload)
+        {
             return false;
+        }
     } while (true);
 
     return true;
@@ -79,11 +114,17 @@ bool Timer::internalRunFixedNumberOfCycles()
     {
         // Wait then execute the timer
         if (suspend(nnTimeInterval) or not onInterval(cycleIndex))
+        {
             return true;
+        }
         if (++cycleIndex >= pCycleCount) // the maximum number of cycle is reached
+        {
             return true;
+        }
         if (pShouldReload)
+        {
             return false;
+        }
     } while (true);
 
     return true;
@@ -160,5 +201,4 @@ void Timer::reload(uint milliseconds, uint cycles)
     pShouldReload = true;
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

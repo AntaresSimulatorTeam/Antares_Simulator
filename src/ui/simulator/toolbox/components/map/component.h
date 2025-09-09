@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_MAP_COMPONENT_H__
 #define __ANTARES_TOOLBOX_MAP_COMPONENT_H__
 
@@ -31,14 +31,12 @@
 
 #include <wx/textctrl.h>
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 /*!
 ** \brief Standard study MAP
 */
-class Component final : public Antares::Component::Panel, public Yuni::IEventObserver<Component>
+class Component final: public Antares::Component::Panel, public Yuni::IEventObserver<Component>
 {
 public:
     //! \name Constructor & Destructor
@@ -200,6 +198,7 @@ public:
     ** \brief Refresh the internal cache about the X-coordinate  of a single area
     */
     void moveNodeFromAreaY(const Data::Area* area, int y);
+
     //@}
 
     size_t getActiveLayerID()
@@ -218,13 +217,15 @@ public:
     // Yuni::Event<void (void*)> onTextEnter;
 
 private:
-    class Drawer final : public Antares::Component::Panel
+    class Drawer final: public Antares::Component::Panel
     {
     public:
-        Drawer(wxWindow* parent, Component& com) :
-         Antares::Component::Panel(parent), pComponent(com)
+        Drawer(wxWindow* parent, Component& com):
+            Antares::Component::Panel(parent),
+            pComponent(com)
         {
         }
+
         void onDraw(wxPaintEvent& evt);
         void onSize(wxSizeEvent& evt);
 
@@ -242,10 +243,12 @@ private:
 
     Antares::Component::MapNotebook::Page* addNewLayer(wxString pageName = wxString(""),
                                                        size_t uID = 0);
+
     void addNewEmptyLayer()
     {
         addNewLayer();
     }
+
     void removeLayer(Antares::Component::MapNotebook::Page& page);
 
     void evtOnPopupEvent(int x, int y);
@@ -273,7 +276,9 @@ private:
     inline void evtNewArea(wxCommandEvent&)
     {
         if (pMapActiveLayer)
+        {
             pMapActiveLayer->addNewNode(N);
+        }
         setFocus();
     }
 
@@ -310,7 +315,6 @@ private:
 
 }; // class Component
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map
 
 #endif // __ANTARES_TOOLBOX_MAP_COMPONENT_H__

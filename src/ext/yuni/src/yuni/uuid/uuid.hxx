@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -110,11 +131,7 @@ inline bool UUID::operator>=(const UUID& rhs) const
 
 } // namespace Yuni
 
-namespace Yuni
-{
-namespace Private
-{
-namespace UUID
+namespace Yuni::Private::UUID
 {
 class Helper final
 {
@@ -125,15 +142,9 @@ public:
     }
 };
 
-} // namespace UUID
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::UUID
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT>
 class Append<CStringT, Yuni::UUID> final
@@ -156,6 +167,7 @@ class Into<Yuni::UUID> final
 {
 public:
     typedef Yuni::UUID TargetType;
+
     enum
     {
         valid = 1
@@ -175,9 +187,7 @@ public:
 
 }; // class Into
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
 
 // ostream
 std::ostream& operator<<(std::ostream& out, const Yuni::UUID& rhs);

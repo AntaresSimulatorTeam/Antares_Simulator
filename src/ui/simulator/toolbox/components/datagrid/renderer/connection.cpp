@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "connection.h"
 #include "antares/antares/constants.h"
@@ -29,19 +29,16 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-Connection::Connection(wxWindow* control, Toolbox::InputSelector::Connections* notifier) :
- Renderer::Matrix<>(control), pControl(control)
+Connection::Connection(wxWindow* control, Toolbox::InputSelector::Connections* notifier):
+    Renderer::Matrix<>(control),
+    pControl(control)
 {
     if (notifier)
+    {
         notifier->onConnectionChanged.connect(this, &Connection::onConnectionChanged);
+    }
 }
 
 Connection::~Connection()
@@ -52,7 +49,9 @@ Connection::~Connection()
 wxString Connection::rowCaption(int row) const
 {
     if (!study || row >= study->calendar.maxHoursInYear)
+    {
         return wxString() << (row + 1);
+    }
     return wxStringFromUTF8(study->calendar.text.hours[row]);
 }
 
@@ -82,9 +81,13 @@ wxColour Connection::horizontalBorderColor(int x, int y) const
         auto& hourinfo = study->calendar.hours[y + 1];
 
         if (hourinfo.firstHourInMonth)
+        {
             return Default::BorderMonthSeparator();
+        }
         if (hourinfo.firstHourInDay)
+        {
             return Default::BorderDaySeparator();
+        }
     }
     return IRenderer::verticalBorderColor(x, y);
 }
@@ -93,8 +96,8 @@ wxColour Connection::horizontalBorderColor(int x, int y) const
 // Parameters grid renderer
 // ===========================
 connectionParameters::connectionParameters(wxWindow* parent,
-                                           Toolbox::InputSelector::Connections* notifier) :
- Connection(parent, notifier)
+                                           Toolbox::InputSelector::Connections* notifier):
+    Connection(parent, notifier)
 {
 }
 
@@ -128,9 +131,13 @@ bool connectionParameters::cellValue(int x, int y, const Yuni::String& value)
     {
         double v;
         if (!value.to(v))
+        {
             return false;
+        }
         if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
+        {
             return Renderer::Matrix<>::cellValue(x, y, "0");
+        }
         break;
     }
     }
@@ -145,7 +152,9 @@ static bool checkLoopFlow(const Antares::Matrix<>* direct_ntc,
                           bool useLoopFlow)
 {
     if (!useLoopFlow)
+    {
         return true;
+    }
 
     for (uint ts = 0; ts < direct_ntc->width; ts++)
     {
@@ -174,9 +183,13 @@ IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
         double cellvalueHrdlCostIndirect = cellNumericValue(col + 1, row);
         double sumCellValues = cellvalue + cellvalueHrdlCostIndirect;
         if (sumCellValues < 0.)
+        {
             return IRenderer::cellStyleError;
+        }
         if (sumCellValues >= 0. && cellvalue < 0.)
+        {
             return IRenderer::cellStyleWarning;
+        }
         break;
     }
     case Data::fhlHurdlesCostIndirect:
@@ -184,9 +197,13 @@ IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
         double cellvalueHrdlCostDirect = cellNumericValue(col - 1, row);
         double sumCellValues = cellvalueHrdlCostDirect + cellvalue;
         if (sumCellValues < 0.)
+        {
             return IRenderer::cellStyleError;
+        }
         if (sumCellValues >= 0. && cellvalue < 0.)
+        {
             return IRenderer::cellStyleWarning;
+        }
         break;
     }
     case Data::fhlImpedances:
@@ -195,7 +212,9 @@ IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
     case Data::fhlLoopFlow:
     {
         if (!checkLoopFlow(direct_ntc_, indirect_ntc_, cellvalue, row, mUseLoopFlow))
+        {
             return IRenderer::cellStyleWarning;
+        }
         break;
     }
     case Data::fhlPShiftMinus:
@@ -232,8 +251,8 @@ void connectionParameters::setMatrix(Data::AreaLink* link)
 // ===========================
 // NTC grid renderer
 // ===========================
-connectionNTC::connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier) :
- Connection(parent, notifier)
+connectionNTC::connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier):
+    Connection(parent, notifier)
 {
 }
 
@@ -241,9 +260,13 @@ bool connectionNTC::cellValue(int x, int y, const Yuni::String& value)
 {
     double v;
     if (!value.to(v))
+    {
         return false;
+    }
     if (v < 0.)
+    {
         return Renderer::Matrix<>::cellValue(x, y, "0");
+    }
 
     return Renderer::Matrix<>::cellValue(x, y, value);
 }
@@ -251,12 +274,16 @@ bool connectionNTC::cellValue(int x, int y, const Yuni::String& value)
 IRenderer::CellStyle connectionNTC::cellStyle(int col, int row) const
 {
     if (!mLoopFlowData)
+    {
         return Renderer::Matrix<>::cellStyle(col, row);
+    }
 
     const double loopFlow = (*mLoopFlowData)[row];
     const double ntc = Renderer::Matrix<>::cellNumericValue(col, row);
     if (!checkLoopFlow(ntc, loopFlow))
+    {
         return IRenderer::cellStyleWarning;
+    }
 
     return Renderer::Matrix<>::cellStyle(col, row);
 }
@@ -265,10 +292,11 @@ IRenderer::CellStyle connectionNTC::cellStyle(int col, int row) const
 // Direct
 // ----------------
 connectionNTCdirect::connectionNTCdirect(wxWindow* parent,
-                                         Toolbox::InputSelector::Connections* notifier) :
- connectionNTC(parent, notifier)
+                                         Toolbox::InputSelector::Connections* notifier):
+    connectionNTC(parent, notifier)
 {
 }
+
 void connectionNTCdirect::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->directCapacities.timeSeries) : nullptr);
@@ -278,17 +306,21 @@ void connectionNTCdirect::setMatrix(Data::AreaLink* link)
 bool connectionNTCdirect::checkLoopFlow(double ntcDirect, double loopFlow) const
 {
     if (!mUseLoopFlow)
+    {
         return true;
+    }
     return ntcDirect >= loopFlow;
 }
+
 // ----------------
 // Indirect
 // ----------------
 connectionNTCindirect::connectionNTCindirect(wxWindow* parent,
-                                             Toolbox::InputSelector::Connections* notifier) :
- connectionNTC(parent, notifier)
+                                             Toolbox::InputSelector::Connections* notifier):
+    connectionNTC(parent, notifier)
 {
 }
+
 void connectionNTCindirect::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->indirectCapacities.timeSeries) : nullptr);
@@ -298,10 +330,9 @@ void connectionNTCindirect::setMatrix(Data::AreaLink* link)
 bool connectionNTCindirect::checkLoopFlow(double ntcIndirect, double loopFlow) const
 {
     if (!mUseLoopFlow)
+    {
         return true;
+    }
     return (loopFlow >= 0) || (std::abs(loopFlow) <= ntcIndirect);
 }
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

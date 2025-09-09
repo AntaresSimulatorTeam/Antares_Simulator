@@ -1,3 +1,24 @@
+/*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
 #pragma once
 // file included by program.cpp
 
@@ -9,9 +30,7 @@
 #endif
 #include <iostream>
 
-namespace Yuni
-{
-namespace Process
+namespace Yuni::Process
 {
 namespace // anonymous
 {
@@ -71,14 +90,20 @@ bool Program::ThreadMonitor::spawnProcess()
             {
                 args[0] = duplicateString(procinfo.executable);
                 for (uint i = 0; i != count; ++i)
+                {
                     args[i + 1] = duplicateString(procinfo.arguments[i]);
+                }
                 args[count + 1] = nullptr;
             }
             else
+            {
                 return false;
+            }
         }
         else
+        {
             args = nullptr;
+        }
     }
 
     // The parent is going to write into
@@ -151,8 +176,10 @@ bool Program::ThreadMonitor::spawnProcess()
         {
             // ignoring return value
             if (not Yuni::IO::Directory::Current::Set(procinfo.workingDirectory))
+            {
                 std::cerr << "invalid working directory: " << procinfo.workingDirectory
                           << std::endl;
+            }
         }
 
         int status = ::execvp(argv0, args); // shall never returns
@@ -173,7 +200,9 @@ bool Program::ThreadMonitor::spawnProcess()
         if (args)
         {
             for (char** string = args; *string; ++string)
+            {
                 ::free(*string);
+            }
             ::free(args);
         }
 
@@ -202,6 +231,7 @@ void Program::ThreadMonitor::waitForSubProcess()
     {
         bufferSize = 4096
     };
+
     // buffer for reading std::cout and std::cerr
     char* const buffer = (captureOutput) ? (char*)::malloc(sizeof(char) * bufferSize) : nullptr;
     if (YUNI_UNLIKELY(!buffer and captureOutput)) // allocation failed
@@ -231,7 +261,9 @@ void Program::ThreadMonitor::waitForSubProcess()
             // waiting for some changes on the file descriptors
             int rp = ::poll(pfds, (nfds_t)2, /*no timeout*/ -1);
             if (rp < 0)
+            {
                 break;
+            }
 
             // flag to remember if something has been read from std::cerr
             //
@@ -247,7 +279,9 @@ void Program::ThreadMonitor::waitForSubProcess()
                 if (stdcerrsize > 0)
                 {
                     if (pRedirectToConsole)
+                    {
                         std::cerr.write(buffer, (std::streamsize)stdcerrsize);
+                    }
                     if (hasStream)
                     {
                         // just in case - if the calling code uses ::strlen on the buffer
@@ -284,7 +318,9 @@ void Program::ThreadMonitor::waitForSubProcess()
 
             // nothing on std::cout and actually nothing on std::cerr: aborting
             if (not hasInputOnStdcerr)
+            {
                 break;
+            }
         }
 
         // failed to read something from std::cout and std::cerr
@@ -300,7 +336,9 @@ void Program::ThreadMonitor::waitForSubProcess()
                 pEndTime = currentTime();
 
                 if (WIFEXITED(status))
+                {
                     pExitStatus = WEXITSTATUS(status);
+                }
                 else if (WIFSIGNALED(status))
                 {
                     pExitStatus = -127;
@@ -359,7 +397,6 @@ void Program::ThreadMonitor::onKill()
     theProcessHasStopped(killed, -127);
 }
 
-} // namespace Process
-} // namespace Yuni
+} // namespace Yuni::Process
 
 #endif // YUNI_OS_WINDOWS

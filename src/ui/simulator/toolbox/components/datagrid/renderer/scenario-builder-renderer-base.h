@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__
 
@@ -25,15 +25,9 @@
 #include <antares/study/scenario-builder/rules.h>
 #include "../../../../toolbox/input/area.h"
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-class ScBuilderRendererBase : public IRenderer
+class ScBuilderRendererBase: public IRenderer
 {
 public:
     ScBuilderRendererBase() = default;
@@ -52,6 +46,7 @@ public:
     {
         return 0;
     }
+
     IRenderer::CellStyle cellStyle(int col, int row) const override;
 
     void control(wxWindow* gridPanel)
@@ -65,6 +60,7 @@ public:
 
 protected:
     virtual void onStudyClosed();
+
     wxWindow* gridPanel()
     {
         return pGridPanel;
@@ -83,7 +79,7 @@ private:
 //      Renderer for a scenario builder grid of which lines are
 //      names of area.
 // ------------------------------------------------------------------
-class ScBuilderRendererAreasAsRows : public ScBuilderRendererBase
+class ScBuilderRendererAreasAsRows: public ScBuilderRendererBase
 {
 public:
     ScBuilderRendererAreasAsRows() = default;
@@ -101,7 +97,7 @@ public:
 //      on the selected area.
 //      Example : grid lines are clusters of an area.
 // ------------------------------------------------------------------
-class ScBuilderRendererForAreaSelector : public ScBuilderRendererBase
+class ScBuilderRendererForAreaSelector: public ScBuilderRendererBase
 {
 public:
     explicit ScBuilderRendererForAreaSelector(const Toolbox::InputSelector::Area* notifier);
@@ -112,6 +108,7 @@ public:
 protected:
     void onAreaChanged(Data::Area* area);
     void onStudyClosed() override;
+
     Data::Area* selectedArea() const
     {
         return pArea;
@@ -121,9 +118,6 @@ private:
     Data::Area* pArea = nullptr;
 };
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SCENARIO_BUILDER_H__

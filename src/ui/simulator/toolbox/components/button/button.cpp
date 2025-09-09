@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "button.h"
 #include "../../resources.h"
@@ -29,9 +29,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 BEGIN_EVENT_TABLE(Button, Panel)
 EVT_PAINT(Button::onDraw)
@@ -54,6 +52,7 @@ enum
 {
     fontSize = 8,
 };
+
 static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 static const wxFont fontBold(
   wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).Bold().FaceName("Tahoma"));
@@ -62,43 +61,47 @@ static wxMenu* gPopupMenu = nullptr;
 
 } // anonymous namespace
 
-Button::Button(wxWindow* parent, const wxString& caption) :
- Panel(parent),
- pCaption(caption),
- pUserData(nullptr),
- pIcon(nullptr),
- pClickBehavior(clkDefault),
- pRecommendedWidth(0),
- pMiddleWidth(0),
- pSelected(false),
- pPushed(false),
- pAutoToggle(false),
- pBold(false),
- pHover(true)
+Button::Button(wxWindow* parent, const wxString& caption):
+    Panel(parent),
+    pCaption(caption),
+    pUserData(nullptr),
+    pIcon(nullptr),
+    pClickBehavior(clkDefault),
+    pRecommendedWidth(0),
+    pMiddleWidth(0),
+    pSelected(false),
+    pPushed(false),
+    pAutoToggle(false),
+    pBold(false),
+    pHover(true)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
     if (parent)
+    {
         SetBackgroundColour(parent->GetBackgroundColour());
+    }
     precalculateCoordinates();
 }
 
-Button::Button(wxWindow* parent, const wxString& caption, const char* bitmap) :
- Panel(parent),
- pCaption(caption),
- pUserData(nullptr),
- pIcon(nullptr),
- pClickBehavior(clkDefault),
- pRecommendedWidth(0),
- pMiddleWidth(0),
- pSelected(false),
- pPushed(false),
- pAutoToggle(false),
- pBold(false),
- pHover(true)
+Button::Button(wxWindow* parent, const wxString& caption, const char* bitmap):
+    Panel(parent),
+    pCaption(caption),
+    pUserData(nullptr),
+    pIcon(nullptr),
+    pClickBehavior(clkDefault),
+    pRecommendedWidth(0),
+    pMiddleWidth(0),
+    pSelected(false),
+    pPushed(false),
+    pAutoToggle(false),
+    pBold(false),
+    pHover(true)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
     if (parent)
+    {
         SetBackgroundColour(parent->GetBackgroundColour());
+    }
     loadIconFromResource(bitmap);
     precalculateCoordinates();
 }
@@ -106,24 +109,26 @@ Button::Button(wxWindow* parent, const wxString& caption, const char* bitmap) :
 Button::Button(wxWindow* parent,
                const wxString& caption,
                const char* bitmap,
-               const Button::OnClick& onclick) :
- Panel(parent),
- pCaption(caption),
- pOnClick(onclick),
- pUserData(nullptr),
- pIcon(nullptr),
- pClickBehavior(clkDefault),
- pRecommendedWidth(0),
- pMiddleWidth(0),
- pSelected(false),
- pPushed(false),
- pAutoToggle(false),
- pBold(false),
- pHover(true)
+               const Button::OnClick& onclick):
+    Panel(parent),
+    pCaption(caption),
+    pOnClick(onclick),
+    pUserData(nullptr),
+    pIcon(nullptr),
+    pClickBehavior(clkDefault),
+    pRecommendedWidth(0),
+    pMiddleWidth(0),
+    pSelected(false),
+    pPushed(false),
+    pAutoToggle(false),
+    pBold(false),
+    pHover(true)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
     if (parent)
+    {
         SetBackgroundColour(parent->GetBackgroundColour());
+    }
     loadIconFromResource(bitmap);
     precalculateCoordinates();
 }
@@ -152,7 +157,9 @@ void Button::loadIconFromResource(const char* filename)
         }
     }
     else
+    {
         pIcon = nullptr;
+    }
 }
 
 void Button::precalculateCoordinates()
@@ -171,9 +178,13 @@ void Button::precalculateCoordinates()
     {
         wxClientDC dc(this);
         if (not pBold)
+        {
             dc.SetFont(font);
+        }
         else
+        {
             dc.SetFont(fontBold);
+        }
 
         pCaptionExtent = dc.GetTextExtent(pCaption);
         pRecommendedWidth = pCaptionExtent.GetWidth() + (int)captionMargin + 2;
@@ -203,7 +214,9 @@ void Button::precalculateCoordinates()
     }
 
     if (pClickBehavior != clkDefault)
+    {
         pRecommendedWidth += (int)dropDownWidth;
+    }
 
     SetSize(pRecommendedWidth, (int)recommendedHeight);
     SetMinSize(wxSize(pRecommendedWidth, (int)recommendedHeight));
@@ -227,6 +240,7 @@ void Button::onDraw(wxPaintEvent&)
         decalY = 0
 #endif
     };
+
     // The DC
     wxAutoBufferedPaintDC dc(this);
     // Shifts the device origin so we don't have to worry
@@ -234,9 +248,13 @@ void Button::onDraw(wxPaintEvent&)
     PrepareDC(dc);
     // Cute font
     if (not pBold)
+    {
         dc.SetFont(font);
+    }
     else
+    {
         dc.SetFont(fontBold);
+    }
 
     // Drawing the background
     wxRect rect = GetRect();
@@ -296,8 +314,10 @@ void Button::onDraw(wxPaintEvent&)
         dc.DrawRectangle(rect);
 
         if (enabled())
+        {
             dc.SetTextForeground(
               GetForegroundColour()); // wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
+        }
         else
         {
             wxColour a((unsigned char)Math::MinMax<int>(originalColor.Red() - 80, 0, 255),
@@ -328,7 +348,9 @@ void Button::onDraw(wxPaintEvent&)
         {
             x = rect.x + rect.width / 2 - pIcon->GetWidth() / 2;
             if (pClickBehavior != clkDefault)
+            {
                 x -= (int)dropDownWidth / 2;
+            }
         }
 
         dc.DrawBitmap(*pIcon, x, rect.y + rect.height / 2 - pIcon->GetHeight() / 2);
@@ -407,7 +429,9 @@ void Button::onMouseUp(wxMouseEvent& evt)
     assert(wxIsMainThread() == true && "Must be ran from the main thread");
 
     if (pAutoToggle)
+    {
         pPushed = !pPushed;
+    }
 
     switch (pClickBehavior)
     {
@@ -446,7 +470,9 @@ void Button::onMouseUp(wxMouseEvent& evt)
         // we should not call PopupMenu if no item is present
         // (ex: the user may decide to popup a custom form)
         if (popupMenu->GetMenuItemCount() > 0)
+        {
             PopupMenu(popupMenu, 0, rect.height + rect.y - 2);
+        }
         else
         {
             delete popupMenu;
@@ -467,21 +493,28 @@ void Button::caption(const wxString& rhs)
     pCaption = rhs;
     precalculateCoordinates();
     if (GetParent())
+    {
         GetParent()->Layout();
+    }
     Refresh();
 }
 
 void Button::caption(const wxChar* rhs)
 {
     if (rhs)
+    {
         pCaption = rhs;
+    }
     else
+    {
         pCaption.clear();
+    }
     precalculateCoordinates();
     if (GetParent())
+    {
         GetParent()->Layout();
+    }
     Refresh();
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component

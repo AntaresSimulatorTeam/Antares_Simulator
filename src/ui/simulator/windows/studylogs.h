@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_APPLICATION_WINDOWS_STUDY_LOGS_H__
 #define __ANTARES_APPLICATION_WINDOWS_STUDY_LOGS_H__
 
@@ -36,9 +36,7 @@
 #include <ui/common/component/frame/local-frame.h>
 #include <ui/common/component/spotlight.h>
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 class CompareDesc final
 {
@@ -49,7 +47,8 @@ public:
 using MapFileList = std::map<wxString, YString, CompareDesc>;
 
 class StudyLogs;
-class FileListProvider final : public Component::Spotlight::IProvider
+
+class FileListProvider final: public Component::Spotlight::IProvider
 {
 public:
     using Spotlight = Antares::Component::Spotlight;
@@ -78,7 +77,7 @@ private:
     std::shared_ptr<wxBitmap> pBmpFile;
 }; // class FileListProvider
 
-class StudyLogs final : public Component::Frame::WxLocalFrame
+class StudyLogs final: public Component::Frame::WxLocalFrame
 {
 public:
     using LogEntry = Component::Datagrid::Renderer::LogEntry;
@@ -196,7 +195,6 @@ private:
 
 }; // class StudyLogs
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window
 
 #endif // __ANTARES_APPLICATION_WINDOWS_STUDY_LOGS_H__

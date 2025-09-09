@@ -1,31 +1,27 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_MODIFIERS_HXX__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_MODIFIERS_HXX__
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
+namespace Antares::Component::Datagrid
 {
 namespace // anonymous
 {
@@ -81,6 +77,7 @@ struct ModifierOperatorsData<modifierValues>
     {
         return L"Apply";
     }
+
     static const wchar_t* OperatorToCString(uint op)
     {
         if (op < (uint)opMax)
@@ -109,14 +106,18 @@ struct ModifierOperatorsData<modifierValues>
     static OpInputType OperatorInputType(uint op)
     {
         if (op == (uint)opAbs)
+        {
             return opInputVoid;
+        }
         return opInputText;
     }
 
     static void ApplyChanges(uint op, const YString& value, Renderer::IRenderer*, VGridHelper* grid)
     {
         if (op >= (uint)opMax)
+        {
             return;
+        }
         double input;
         if ((Operator)op != opAbs && not value.to(input))
         {
@@ -152,7 +153,9 @@ struct ModifierOperatorsData<modifierValues>
             for (int w = 0; w < width; ++w)
             {
                 for (int h = 0; h < height; ++h)
+                {
                     grid->SetValue(h, w, text);
+                }
             }
             break;
         }
@@ -180,7 +183,9 @@ struct ModifierOperatorsData<modifierValues>
                 for (int w = 0; w < width; ++w)
                 {
                     for (int h = 0; h < height; ++h)
+                    {
                         grid->SetValue(h, w, text);
+                    }
                 }
             }
             else
@@ -288,7 +293,9 @@ struct ModifierOperatorsData<modifierDataset>
     static OpInputType OperatorInputType(uint op)
     {
         if (op == (uint)opShiftRows)
+        {
             return opInputDate;
+        }
         return opInputText;
     }
 
@@ -298,7 +305,9 @@ struct ModifierOperatorsData<modifierDataset>
                              VGridHelper*)
     {
         if (op >= (uint)opMax)
+        {
             return;
+        }
 
         switch ((Operator)op)
         {
@@ -308,27 +317,30 @@ struct ModifierOperatorsData<modifierDataset>
             uint month = (uint)-1;
             uint day = 1;
 
-            value.words(" /-.", [&](AnyString& word) -> bool {
-                switch (index)
-                {
-                case 0:
-                    month = word.to<uint>();
-                    if (month < 1 || month > 12)
-                    {
-                        logs.error() << "invalid month: got '" << word << "' => " << month;
-                        month = (uint)-1;
-                    }
-                    break;
-                case 1:
-                    if (not word.to(day) || day < 1 || day > 31)
-                    {
-                        logs.error() << "invalid day";
-                        day = (uint)-1;
-                    }
-                }
-                ++index;
-                return true;
-            });
+            value.words(" /-.",
+                        [&](AnyString& word) -> bool
+                        {
+                            switch (index)
+                            {
+                            case 0:
+                                month = word.to<uint>();
+                                if (month < 1 || month > 12)
+                                {
+                                    logs.error()
+                                      << "invalid month: got '" << word << "' => " << month;
+                                    month = (uint)-1;
+                                }
+                                break;
+                            case 1:
+                                if (not word.to(day) || day < 1 || day > 31)
+                                {
+                                    logs.error() << "invalid day";
+                                    day = (uint)-1;
+                                }
+                            }
+                            ++index;
+                            return true;
+                        });
 
             --month;
             --day;
@@ -336,7 +348,9 @@ struct ModifierOperatorsData<modifierDataset>
             {
                 auto monthname = (MonthName)month;
                 if (not renderer->circularShiftRowsUntilDate(monthname, day))
+                {
                     logs.error() << "impossible to perform the row shifting in this dataset";
+                }
             }
             break;
         }
@@ -368,7 +382,9 @@ struct ModifierOperatorsData<modifierDataset>
                     }
                 }
                 else
+                {
                     logs.error() << "impossible to resize the matrix";
+                }
             }
             break;
         }
@@ -457,7 +473,9 @@ struct ModifierOperators
                              VGridHelper* grid)
     {
         if (!renderer)
+        {
             return;
+        }
         switch (modifier)
         {
         case modifierValues:
@@ -474,8 +492,6 @@ struct ModifierOperators
 }; // class ModifierOperators
 
 } // anonymous namespace
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_MODIFIERS_HXX__

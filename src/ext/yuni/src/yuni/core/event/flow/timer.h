@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -13,13 +34,7 @@
 #include "../../../thread/thread.h"
 #include <cassert>
 
-namespace Yuni
-{
-namespace Core
-{
-namespace EventLoop
-{
-namespace Flow
+namespace Yuni::Core::EventLoop::Flow
 {
 template<class EventLoopT>
 class YUNI_DECL Timer
@@ -34,9 +49,12 @@ public:
     /*!
     ** \brief Default constructor
     */
-    Timer() : pTimeout(200), pEventLoop(NULL)
+    Timer():
+        pTimeout(200),
+        pEventLoop(NULL)
     {
     }
+
     //@}
 
     /*!
@@ -54,7 +72,9 @@ public:
             // When not in detached mode, there is no cancellation point
             // so it is impossible to properly stop the loop if the timeout is too high
             if (t > 10000)
+            {
                 t = 10000;
+            }
         }
         // The timeout will be set from the loop to avoid continuous locking
         Bind<bool()> b;
@@ -98,6 +118,7 @@ protected:
         (void)request;
         return true;
     }
+
     //@}
 
     //! \name Events triggered from the main thread of the event loop
@@ -114,6 +135,7 @@ protected:
         pEventLoop->suspend(pTimeout);
         return true;
     }
+
     //@}
 
     /*!
@@ -141,7 +163,4 @@ private:
 
 }; // class Timer<>
 
-} // namespace Flow
-} // namespace EventLoop
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::EventLoop::Flow

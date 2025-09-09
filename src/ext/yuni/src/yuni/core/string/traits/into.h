@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -12,11 +33,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 /*!
 ** \brief Generic implementation
@@ -78,6 +95,7 @@ class Into<Yuni::CString<ChunkSizeT, ExpandableT>> final
 {
 public:
     typedef Yuni::CString<ChunkSizeT, ExpandableT> TargetType;
+
     enum
     {
         valid = 1
@@ -105,6 +123,7 @@ class Into<std::basic_string<CharT, TraitsT, AllocT>> final
 {
 public:
     typedef std::basic_string<CharT, TraitsT, AllocT> TargetType;
+
     enum
     {
         valid = 1
@@ -248,7 +267,9 @@ public:
 
                 char buffer[5] = {0, 0, 0, 0, 0};
                 for (uint i = 0; i != count; ++i)
+                {
                     buffer[i] = static_cast<char>(::tolower(s[i]));
+                }
                 return (!::strcmp("true", buffer) or !::strcmp("on", buffer)
                         or !::strcmp("yes", buffer));
             }
@@ -403,6 +424,7 @@ public:
     {
         valid = 1
     };
+
     enum
     {
         bufferSize = 256u
@@ -431,7 +453,9 @@ public:
                 cstr = buffer;
             }
             else
+            {
                 cstr = s.c_str();
+            }
 
 #ifdef YUNI_OS_MSVC
             // Visual Studio does not support strtof
@@ -468,7 +492,9 @@ public:
                 cstr = buffer;
             }
             else
+            {
                 cstr = s.c_str();
+            }
 
 #ifdef YUNI_OS_MSVC
             // Visual Studio does not support strtof
@@ -492,6 +518,7 @@ public:
     {
         valid = 1
     };
+
     enum
     {
         bufferSize = 256u
@@ -520,7 +547,9 @@ public:
                 cstr = buffer;
             }
             else
+            {
                 cstr = s.c_str();
+            }
 
             out = static_cast<double>(::strtod(cstr, &pend));
             return (NULL != pend and '\0' == *pend);
@@ -552,7 +581,9 @@ public:
                 cstr = buffer;
             }
             else
+            {
                 cstr = s.c_str();
+            }
 
             return static_cast<double>(::strtod(cstr, &pend));
         }
@@ -593,6 +624,4 @@ public:
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString

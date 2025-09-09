@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -22,9 +43,7 @@
 #endif
 #endif
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 Signal::Signal()
 {
@@ -34,8 +53,8 @@ Signal::Signal()
     assert(sizeof(HANDLE) >= sizeof(void*) and "Invalid type for Signal::pHandle");
 
     pHandle = (void*)CreateEvent(nullptr,  // default security attributes
-                                 TRUE,  // manual-reset event
-                                 FALSE, // initial state is nonsignaled
+                                 TRUE,     // manual-reset event
+                                 FALSE,    // initial state is nonsignaled
                                  nullptr); // unamed
 
 #else
@@ -54,8 +73,8 @@ Signal::Signal(const Signal&)
     assert(sizeof(HANDLE) >= sizeof(void*) and "Invalid type for Signal::pHandle");
 
     pHandle = (void*)CreateEvent(nullptr,  // default security attributes
-                                 TRUE,  // manual-reset event
-                                 FALSE, // initial state is nonsignaled
+                                 TRUE,     // manual-reset event
+                                 FALSE,    // initial state is nonsignaled
                                  nullptr); // unamed
 
 #else
@@ -102,7 +121,9 @@ void Signal::wait()
 #ifdef YUNI_OS_WINDOWS
 
     if (pHandle)
+    {
         WaitForSingleObject(pHandle, INFINITE);
+    }
 
 #else
 
@@ -177,7 +198,9 @@ bool Signal::wait(uint timeout)
     if (pHandle)
     {
         if (WAIT_OBJECT_0 == WaitForSingleObject(pHandle, (DWORD)timeout))
+        {
             return true;
+        }
     }
     return false;
 #else
@@ -212,7 +235,7 @@ bool Signal::wait(uint timeout)
     } while (
       not pSignalled         // Condition not verified
       and error != ETIMEDOUT // We have not timedout
-      and error != EINVAL);  // When t is in the past, we got EINVAL. We consider this as a timeout.
+      and error != EINVAL); // When t is in the past, we got EINVAL. We consider this as a timeout.
 
     bool result = (pSignalled != false);
     ::pthread_mutex_unlock(&pMutex);
@@ -247,5 +270,4 @@ bool Signal::notify()
 #endif
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

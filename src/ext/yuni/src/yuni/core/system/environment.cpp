@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -16,11 +37,7 @@
 #endif
 #include "../string/wstring.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace Environment
+namespace Yuni::System::Environment
 {
 namespace // anonymous
 {
@@ -28,7 +45,9 @@ template<class StringT>
 inline bool ReadImpl(const AnyString& name, StringT& out, bool emptyBefore)
 {
     if (emptyBefore)
+    {
         out.clear();
+    }
 
 #ifdef YUNI_OS_WINDOWS
     {
@@ -44,8 +63,14 @@ inline bool ReadImpl(const AnyString& name, StringT& out, bool emptyBefore)
                 GetEnvironmentVariableW(nameUTF16.c_str(), buffer, size);
                 if (size != 0)
                 {
-                    int sizeRequired
-                      = WideCharToMultiByte(CP_UTF8, 0, buffer, (int)size - 1, nullptr, 0, nullptr, nullptr);
+                    int sizeRequired = WideCharToMultiByte(CP_UTF8,
+                                                           0,
+                                                           buffer,
+                                                           (int)size - 1,
+                                                           nullptr,
+                                                           0,
+                                                           nullptr,
+                                                           nullptr);
                     if (sizeRequired > 0)
                     {
                         out.reserve(out.size() + sizeRequired);
@@ -96,14 +121,18 @@ bool ReadAsBool(const AnyString& name)
         String out;
         ReadImpl(name, out, false);
         if (not out.empty())
+        {
             return out.to<bool>();
+        }
     }
 #else
     {
 #ifdef YUNI_HAS_STDLIB_H
         AnyString value = ::getenv(name.c_str());
         if (not value.empty())
+        {
             return value.to<bool>();
+        }
 #else
 #error not implemented
 #endif
@@ -119,14 +148,18 @@ int64_t ReadAsInt64(const AnyString& name, int64_t defvalue)
         String out;
         ReadImpl(name, out, false);
         if (not out.empty())
+        {
             return out.to<int64_t>();
+        }
     }
 #else
     {
 #ifdef YUNI_HAS_STDLIB_H
         AnyString value = ::getenv(name.c_str());
         if (not value.empty())
+        {
             return value.to<int64_t>();
+        }
 #else
 #error not implemented
 #endif
@@ -165,6 +198,4 @@ bool Read(const AnyString& name, String& out, bool emptyBefore)
     return ReadImpl(name, out, emptyBefore);
 }
 
-} // namespace Environment
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Environment

@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -16,11 +37,7 @@
 #include "../../core/string/wstring.h"
 #endif
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 #ifdef YUNI_OS_WINDOWS
 
@@ -31,7 +48,9 @@ static bool WindowsMake(const AnyString& path)
 
     WString wstr(norm, true);
     if (wstr.size() < 4)
+    {
         return false;
+    }
     wchar_t* t = wstr.data() + 4;
 
     while (*t != L'\0')
@@ -42,7 +61,9 @@ static bool WindowsMake(const AnyString& path)
             if (!CreateDirectoryW(wstr.c_str(), nullptr))
             {
                 if (GetLastError() != ERROR_ALREADY_EXISTS)
+                {
                     return false;
+                }
             }
             *t = L'\\';
         }
@@ -52,7 +73,9 @@ static bool WindowsMake(const AnyString& path)
     if (not CreateDirectoryW(wstr.c_str(), nullptr))
     {
         if (GetLastError() != ERROR_ALREADY_EXISTS)
+        {
             return false;
+        }
     }
     return true;
 }
@@ -86,7 +109,9 @@ static bool UnixMake(const AnyString& path, uint mode)
                 }
             }
             if ('\0' == tmp)
+            {
                 break;
+            }
             *pt = tmp;
         }
         ++pt;
@@ -113,6 +138,4 @@ bool Create(const AnyString& path, uint mode)
     return true;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

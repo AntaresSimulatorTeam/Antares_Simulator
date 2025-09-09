@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -25,9 +46,7 @@
 #include <string.h>
 #endif
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 namespace // anonymous
 {
@@ -49,12 +68,16 @@ static inline NodeType Stat(const AnyString& filename,
         if (p[len - 1] == '\\' or p[len - 1] == '/')
         {
             if (0 == --len)
+            {
                 return Yuni::IO::typeUnknown;
+            }
         }
 
         // Driver letters
         if (len == 2 and p[1] == ':' and String::IsAlpha(p[0]))
+        {
             return Yuni::IO::typeFolder;
+        }
 
         String norm;
         Yuni::IO::Normalize(norm, AnyString(p, len));
@@ -88,13 +111,21 @@ static inline NodeType Stat(const AnyString& filename,
             outSize = (uint64_t)s.st_size;
 
             if (0 != S_ISREG(s.st_mode))
+            {
                 return Yuni::IO::typeFile;
+            }
             if (0 != S_ISDIR(s.st_mode))
+            {
                 return Yuni::IO::typeFolder;
+            }
             if (0 != S_ISLNK(s.st_mode))
+            {
                 return Yuni::IO::typeSymlink;
+            }
             if (0 != S_ISSOCK(s.st_mode))
+            {
                 return Yuni::IO::typeSocket;
+            }
 
             return Yuni::IO::typeSpecial;
         }
@@ -125,5 +156,4 @@ NodeType FetchFileStatus(const AnyString& filename,
                                                : IO::typeUnknown;
 }
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

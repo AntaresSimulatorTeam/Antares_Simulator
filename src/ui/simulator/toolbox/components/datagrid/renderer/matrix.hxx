@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MATRIX_HXX__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MATRIX_HXX__
 
@@ -29,13 +29,7 @@
 #include <yuni/io/file.h>
 #include <ui/common/lock.h>
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 template<class T, class ReadWriteT, uint PrecisionT>
 inline Antares::Matrix<T, ReadWriteT>* Matrix<T, ReadWriteT, PrecisionT>::matrix() const
@@ -73,8 +67,9 @@ inline int Matrix<T, ReadWriteT, PrecisionT>::height() const
 
 template<class T, class ReadWriteT, uint PrecisionT>
 inline Matrix<T, ReadWriteT, PrecisionT>::Matrix(wxWindow* parent,
-                                                 Antares::Matrix<T, ReadWriteT>* matrix) :
- pControl(parent), pMatrix(matrix)
+                                                 Antares::Matrix<T, ReadWriteT>* matrix):
+    pControl(parent),
+    pMatrix(matrix)
 {
 }
 
@@ -117,9 +112,13 @@ bool Matrix<T, ReadWriteT, PrecisionT>::cellValue(int x, int y, const Yuni::Stri
         {
             // The value must be rounded if not a decimal value
             if (Yuni::Static::Type::IsDecimal<ReadWriteT>::No)
+            {
                 v = Yuni::Math::Round(v);
+            }
             else
+            {
                 v = Yuni::Math::Round(v, matrixPrecision);
+            }
 
             if (!Yuni::Math::Equals((double)pMatrix->entry[x][y], v))
             {
@@ -155,7 +154,9 @@ bool Matrix<T, ReadWriteT, PrecisionT>::ensureDataAreLoaded()
         {
             jit.lastModification = timestamp;
             if (!jit.modified)
+            {
                 jit.alreadyLoaded = false;
+            }
         }
     }
 
@@ -193,9 +194,13 @@ bool Matrix<T, ReadWriteT, PrecisionT>::ensureDataAreLoaded()
         if (not pMatrix->forceReload(true))
         {
             if (pMatrix->jit)
+            {
                 logs.error() << "I/O Error: Impossible to load '" << jit.sourceFilename << "'";
+            }
             else
+            {
                 logs.error() << "I/O Error: Impossible to load the data";
+            }
         }
         // Notify
         onMatrixLoad();
@@ -250,7 +255,9 @@ template<class T, class ReadWriteT, uint PrecisionT>
 bool Matrix<T, ReadWriteT, PrecisionT>::circularShiftRowsUntilDate(MonthName month, uint daymonth)
 {
     if (!study || !pMatrix)
+    {
         return false;
+    }
     if (daymonth > 30)
     {
 #ifndef NDEBUG
@@ -263,11 +270,15 @@ bool Matrix<T, ReadWriteT, PrecisionT>::circularShiftRowsUntilDate(MonthName mon
     uint relativeMonth = calendar.mapping.months[(uint)month];
     uint daysForMonth = calendar.months[relativeMonth].days;
     if (daymonth >= daysForMonth)
+    {
         return false;
+    }
 
     uint dayYear = calendar.months[relativeMonth].daysYear.first + daymonth;
     if (dayYear >= calendar.maxDaysInYear)
+    {
         return false;
+    }
     uint hourindex = calendar.days[dayYear].hours.first;
 
     switch (this->precision())
@@ -309,9 +320,6 @@ bool Matrix<T, ReadWriteT, PrecisionT>::circularShiftRowsUntilDate(MonthName mon
     return false;
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_MATRIX_HXX__

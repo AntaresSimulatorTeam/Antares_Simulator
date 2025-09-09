@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -14,9 +35,7 @@
 #include "../../smartptr.h"
 #include "../cstring.h"
 
-namespace Yuni
-{
-namespace Extension
+namespace Yuni::Extension
 {
 template<>
 class IntoCString<char*> final
@@ -59,6 +78,7 @@ class IntoCString<Yuni::CString<ChunkSizeT, ExpandableT>> final
 {
 public:
     typedef Yuni::CString<ChunkSizeT, ExpandableT> CStringType;
+
     enum
     {
         valid = 1,
@@ -85,14 +105,14 @@ template<uint ChunkSizeT,
          template<class>
          class ConsP>
 class IntoCString<
-  Yuni::SmartPtr<Yuni::CString<ChunkSizeT, ExpandableT>, OwspP, ChckP, ConvP, StorP, ConsP>>
-  final
+  Yuni::SmartPtr<Yuni::CString<ChunkSizeT, ExpandableT>, OwspP, ChckP, ConvP, StorP, ConsP>> final
 {
 public:
     typedef Yuni::CString<ChunkSizeT, ExpandableT> CStringType;
     typedef Yuni::
       SmartPtr<Yuni::CString<ChunkSizeT, ExpandableT>, OwspP, ChckP, ConvP, StorP, ConsP>
         CStringTypePtr;
+
     enum
     {
         valid = 1,
@@ -112,6 +132,7 @@ class IntoCString<Yuni::CString<ChunkSizeT, ExpandableT>*> final
 {
 public:
     typedef typename Yuni::CString<ChunkSizeT, ExpandableT> CStringType;
+
     enum
     {
         valid = 1,
@@ -156,13 +177,13 @@ template<class T,
          template<class>
          class ConsP>
 class IntoCString<
-  Yuni::SmartPtr<std::basic_string<char, T, Alloc>, OwspP, ChckP, ConvP, StorP, ConsP>>
-  final
+  Yuni::SmartPtr<std::basic_string<char, T, Alloc>, OwspP, ChckP, ConvP, StorP, ConsP>> final
 {
 public:
     typedef std::basic_string<char, T, Alloc> StringType;
     typedef Yuni::SmartPtr<std::basic_string<char, T, Alloc>, OwspP, ChckP, ConvP, StorP, ConsP>
       StringTypePtr;
+
     enum
     {
         valid = 1,
@@ -213,5 +234,4 @@ public:
     }
 };
 
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension

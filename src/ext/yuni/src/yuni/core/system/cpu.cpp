@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -15,14 +36,11 @@
 #endif
 #include "windows.hdr.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace CPU
+namespace Yuni::System::CPU
 {
 #if defined(YUNI_OS_WINDOWS) || defined(YUNI_OS_CYGWIN)
 #define YUNI_CPU_COUNT_HAS_IMPLEMENTATION
+
 uint Count()
 {
     SYSTEM_INFO si;
@@ -34,6 +52,7 @@ uint Count()
 #if defined(YUNI_OS_LINUX) || defined(YUNI_OS_DARWIN) || defined(YUNI_OS_FREEBSD) \
   || defined(YUNI_OS_NETBSD) || defined(YUNI_OS_OPENBSD)
 #define YUNI_CPU_COUNT_HAS_IMPLEMENTATION
+
 uint Count()
 {
     // The number of processors online (capable of running processes)
@@ -44,12 +63,11 @@ uint Count()
 
 #ifndef YUNI_CPU_COUNT_HAS_IMPLEMENTATION
 #warning "The method Yuni::System::CPU::Count() has not been implemented for the current platform"
+
 uint Count()
 {
     return 1; // Default value
 }
 #endif
 
-} // namespace CPU
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::CPU

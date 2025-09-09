@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "component.h"
 #include "drawingcontext.h"
@@ -47,21 +47,19 @@ using namespace Yuni;
 static wxBitmapType formatWXConstant[]
   = {wxBITMAP_TYPE_PNG, wxBITMAP_TYPE_JPEG, wxBITMAP_TYPE_INVALID};
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 BEGIN_EVENT_TABLE(Component::Drawer, Component::Panel)
 EVT_PAINT(Component::Drawer::onDraw)
 EVT_SIZE(Component::Drawer::onSize)
 END_EVENT_TABLE()
 
-Component::Component(wxWindow* parent) :
- Panel(parent),
- pMapActiveLayer(nullptr),
- pInfosAreaCount(nullptr),
- pInfosConnxCount(nullptr),
- pSelectionPopUpMenu(nullptr)
+Component::Component(wxWindow* parent):
+    Panel(parent),
+    pMapActiveLayer(nullptr),
+    pInfosAreaCount(nullptr),
+    pInfosConnxCount(nullptr),
+    pSelectionPopUpMenu(nullptr)
 {
     // Create Manager Singleton Instance
     new Manager(*this);
@@ -126,7 +124,9 @@ Component::~Component()
     detachStudy(false);
     // destroy all components on the map
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->nodes.clear();
+    }
 
     // A bit paranoid
     pMapActiveLayer = nullptr;
@@ -142,7 +142,9 @@ Component::~Component()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 // TODO
@@ -171,9 +173,13 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
     Control* pMapLayer;
     // The map
     if (uID == 0)
+    {
         pMapLayer = new Control(p, *this);
+    }
     else
+    {
         pMapLayer = new Control(p, *this, uID);
+    }
 
     mapLayersPtrList.push_back(pMapLayer);
     pMapLayer->onPopupEvent.connect(this, &Component::evtOnPopupEvent);
@@ -202,30 +208,33 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
 
     hs->AddSpacer(15);
 
-    wxWindow* lblMouse
-      = Antares::Component::CreateLabel(panelHeader, wxT("mouse :"), false, true, -1);
+    wxWindow* lblMouse = Antares::Component::CreateLabel(panelHeader,
+                                                         wxT("mouse :"),
+                                                         false,
+                                                         true,
+                                                         -1);
     lblMouse->SetToolTip(wxT("Mouse selection"));
     hs->Add(lblMouse, 0, wxALL | wxALIGN_CENTER_VERTICAL);
     hs->AddSpacer(4);
 
-    pMapLayer->pBtnSelectionArea
-      = new Antares::Component::Button(panelHeader,
-                                       wxEmptyString,
-                                       "images/16x16/area.png",
-                                       this,
-                                       &Component::onToggleMouseSelectionArea);
+    pMapLayer->pBtnSelectionArea = new Antares::Component::Button(
+      panelHeader,
+      wxEmptyString,
+      "images/16x16/area.png",
+      this,
+      &Component::onToggleMouseSelectionArea);
     pMapLayer->pBtnSelectionArea->SetBackgroundColour(Settings::background);
     pMapLayer->pBtnSelectionArea->autoToggle(true);
     pMapLayer->pBtnSelectionArea->pushed(true);
     pBtnSelectionArea = pMapLayer->pBtnSelectionArea;
     hs->Add(pMapLayer->pBtnSelectionArea, 0, wxALL | wxEXPAND);
 
-    pMapLayer->pBtnSelectionLink
-      = new Antares::Component::Button(panelHeader,
-                                       wxEmptyString,
-                                       "images/16x16/link.png",
-                                       this,
-                                       &Component::onToggleMouseSelectionLink);
+    pMapLayer->pBtnSelectionLink = new Antares::Component::Button(
+      panelHeader,
+      wxEmptyString,
+      "images/16x16/link.png",
+      this,
+      &Component::onToggleMouseSelectionLink);
     pMapLayer->pBtnSelectionLink->SetBackgroundColour(Settings::background);
     pMapLayer->pBtnSelectionLink->autoToggle(true);
     pMapLayer->pBtnSelectionLink->pushed(true);
@@ -240,12 +249,12 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
     // pBtnSelectionPlant = btnPlant;
     // hs->Add(btnPlant, 0, wxALL| wxEXPAND);
 
-    pMapLayer->pBtnSelectionConstraint
-      = new Antares::Component::Button(panelHeader,
-                                       wxEmptyString,
-                                       "images/16x16/constraint.png",
-                                       this,
-                                       &Component::onToggleMouseSelectionConstraint);
+    pMapLayer->pBtnSelectionConstraint = new Antares::Component::Button(
+      panelHeader,
+      wxEmptyString,
+      "images/16x16/constraint.png",
+      this,
+      &Component::onToggleMouseSelectionConstraint);
     pMapLayer->pBtnSelectionConstraint->SetBackgroundColour(Settings::background);
     pMapLayer->pBtnSelectionConstraint->autoToggle(true);
     pMapLayer->pBtnSelectionConstraint->pushed(true);
@@ -256,8 +265,11 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
     Antares::Component::AddVerticalSeparator(panelHeader, hs);
 
     // New area
-    auto* btnNewArea = new Antares::Component::Button(
-      panelHeader, wxEmptyString, "images/16x16/plus.png", this, &Component::onNew);
+    auto* btnNewArea = new Antares::Component::Button(panelHeader,
+                                                      wxEmptyString,
+                                                      "images/16x16/plus.png",
+                                                      this,
+                                                      &Component::onNew);
     btnNewArea->SetBackgroundColour(Settings::background);
     btnNewArea->dropDown(true);
     btnNewArea->onPopupMenu(this, &Component::onNewDropdown);
@@ -267,24 +279,33 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
     Antares::Component::AddVerticalSeparator(panelHeader, hs);
 
     // Copy
-    auto* btnCopy = new Antares::Component::Button(
-      panelHeader, wxT("Copy"), "images/16x16/copy.png", this, &Component::onCopy);
+    auto* btnCopy = new Antares::Component::Button(panelHeader,
+                                                   wxT("Copy"),
+                                                   "images/16x16/copy.png",
+                                                   this,
+                                                   &Component::onCopy);
     btnCopy->SetBackgroundColour(Settings::background);
     btnCopy->dropDown(true);
     btnCopy->onPopupMenu(this, &Component::onCopyDropdown);
     hs->Add(btnCopy, 0, wxALL | wxEXPAND);
 
     // Paste
-    auto* btnPaste = new Antares::Component::Button(
-      panelHeader, wxT("Paste"), "images/16x16/paste.png", this, &Component::onPaste);
+    auto* btnPaste = new Antares::Component::Button(panelHeader,
+                                                    wxT("Paste"),
+                                                    "images/16x16/paste.png",
+                                                    this,
+                                                    &Component::onPaste);
     btnPaste->SetBackgroundColour(Settings::background);
     btnPaste->dropDown(true);
     btnPaste->onPopupMenu(this, &Component::onPasteDropdown);
     hs->Add(btnPaste, 0, wxALL | wxEXPAND);
 
     // Select all
-    auto* btnSelectAll = new Antares::Component::Button(
-      panelHeader, wxT("Select all"), nullptr, this, &Component::onSelectAll);
+    auto* btnSelectAll = new Antares::Component::Button(panelHeader,
+                                                        wxT("Select all"),
+                                                        nullptr,
+                                                        this,
+                                                        &Component::onSelectAll);
     btnSelectAll->SetBackgroundColour(Settings::background);
     hs->Add(btnSelectAll, 0, wxALL | wxEXPAND);
 
@@ -292,8 +313,11 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
     Antares::Component::AddVerticalSeparator(panelHeader, hs);
 
     // Re-center
-    auto* btnCenter = new Antares::Component::Button(
-      panelHeader, wxEmptyString, "images/16x16/target.png", this, &Component::onCenterXY);
+    auto* btnCenter = new Antares::Component::Button(panelHeader,
+                                                     wxEmptyString,
+                                                     "images/16x16/target.png",
+                                                     this,
+                                                     &Component::onCenterXY);
     btnCenter->SetBackgroundColour(Settings::background);
     hs->Add(btnCenter, 0, wxALL | wxEXPAND);
 
@@ -312,8 +336,10 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
                                   wxTE_PROCESS_ENTER,
                                   wxTextValidator(wxFILTER_NUMERIC, &testString));
     pointX->SetBackgroundColour(Settings::background);
-    pointX->Connect(
-      wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(Component::onEvtCenterXY), 0, this);
+    pointX->Connect(wxEVT_COMMAND_TEXT_ENTER,
+                    wxCommandEventHandler(Component::onEvtCenterXY),
+                    0,
+                    this);
     hs->Add(pointX, 0, wxALL | wxEXPAND);
     pMapLayer->setPointX(pointX);
     hs->AddSpacer(2);
@@ -332,8 +358,10 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
                                   wxTE_PROCESS_ENTER,
                                   wxTextValidator(wxFILTER_NUMERIC, &testString2));
     pointY->SetBackgroundColour(Settings::background);
-    pointY->Connect(
-      wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(Component::onEvtCenterXY), 0, this);
+    pointY->Connect(wxEVT_COMMAND_TEXT_ENTER,
+                    wxCommandEventHandler(Component::onEvtCenterXY),
+                    0,
+                    this);
     hs->Add(pointY, 0, wxALL | wxEXPAND);
     pMapLayer->setPointY(pointY);
     hs->AddSpacer(2);
@@ -344,8 +372,11 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
     Antares::Component::AddVerticalSeparator(panelHeader, hs);
 
     // Re-size
-    auto* btnResize = new Antares::Component::Button(
-      panelHeader, wxEmptyString, "images/16x16/crop.png", this, &Component::onCenter);
+    auto* btnResize = new Antares::Component::Button(panelHeader,
+                                                     wxEmptyString,
+                                                     "images/16x16/crop.png",
+                                                     this,
+                                                     &Component::onCenter);
     btnResize->SetBackgroundColour(Settings::background);
     hs->Add(btnResize, 0, wxALL | wxEXPAND);
 
@@ -387,12 +418,15 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
 
         while (pNoteBook->find(wxString::FromUTF8("Map ") << pMapLayer->getUid() + numberOffset)
                != nullptr)
+        {
             numberOffset++;
+        }
 
-        resultPage
-          = pNoteBook->add(p,
-                           wxString::FromUTF8("Map ") << pMapLayer->getUid() + numberOffset,
-                           wxString::FromUTF8("Map ") << pMapLayer->getUid() + numberOffset);
+        resultPage = pNoteBook->add(p,
+                                    wxString::FromUTF8("Map ")
+                                      << pMapLayer->getUid() + numberOffset,
+                                    wxString::FromUTF8("Map ")
+                                      << pMapLayer->getUid() + numberOffset);
         Antares::MarkTheStudyAsModified();
     }
     else
@@ -403,7 +437,9 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
     pMapLayer->pPage = resultPage;
 
     if (pMapLayer->nodes.study() != nullptr)
+    {
         pMapLayer->nodes.study()->layers[pMapLayer->getUid()] = resultPage->name().ToStdString();
+    }
 
     OnMapLayerAdded(&resultPage->name());
 
@@ -492,15 +528,15 @@ void Component::attachStudy(Data::Study::Ptr study)
         if (pMapActiveLayer->nodes.study()->layers.size() > 0)
         {
             // Create the layers according to study Content
-            std::map<size_t, std::string>::iterator iterator
-              = pMapActiveLayer->nodes.study()->layers.begin();
+            std::map<size_t, std::string>::iterator iterator = pMapActiveLayer->nodes.study()
+                                                                 ->layers.begin();
             mapLayersPtrList[0]->pPage->name(iterator->second);
             size_t i = 1;
             for (iterator++; iterator != pMapActiveLayer->nodes.study()->layers.end();
                  iterator++, i++)
             {
-                Antares::Component::Notebook::Page* newPage
-                  = addNewLayer(iterator->second, iterator->first);
+                Antares::Component::Notebook::Page* newPage = addNewLayer(iterator->second,
+                                                                          iterator->first);
                 size_t activeLayerID = pMapActiveLayer->nodes.study()->activeLayerID;
                 if (activeLayerID == iterator->first)
                 {
@@ -542,7 +578,9 @@ Data::Study::Ptr Component::attachedStudy()
 bool Component::loadFromStudy(Data::Study& study)
 {
     if (!pMapActiveLayer)
+    {
         return false;
+    }
 
     logs.debug() << "[map] loading from study...";
     pMapActiveLayer->nodes.beginUpdate();
@@ -568,7 +606,9 @@ void Component::clear()
 bool Component::loadFromAttachedStudy()
 {
     if (!pMapActiveLayer)
+    {
         return false;
+    }
 
     logs.debug() << "[map] loading from study...";
     pMapActiveLayer->nodes.beginUpdate();
@@ -583,12 +623,16 @@ bool Component::loadFromAttachedStudy()
 bool Component::saveToStudy(Data::Study& /*study*/, bool incremental)
 {
     if (!pMapActiveLayer)
+    {
         return false;
+    }
 
     if (incremental)
     {
         if (pMapActiveLayer->nodes.hasChanges())
+        {
             pMapActiveLayer->nodes.setChangesFlag(false);
+        }
         return true;
     }
     pMapActiveLayer->nodes.setChangesFlag(false);
@@ -605,10 +649,14 @@ bool Component::saveToImageFile(const AnyString& filePath,
                                 const Antares::Map::MapRenderOptions& options)
 {
     if (not pMapActiveLayer)
+    {
         return false;
+    }
 
     if (filePath.empty())
+    {
         return false;
+    }
 
     switch (options.fileFormat)
     {
@@ -627,13 +675,18 @@ bool Component::saveToImageFile(const AnyString& filePath,
         BoundingBox box = pMapActiveLayer->nodes.boundingBox(pMapActiveLayer->getUid());
         wxRect boundsRect(box.first, box.second);
         // That is another matter
-        wxSVGFileDC svgDC(
-          wxStringFromUTF8(filePath), boundsRect.GetWidth() + 80, boundsRect.GetHeight() + 80);
+        wxSVGFileDC svgDC(wxStringFromUTF8(filePath),
+                          boundsRect.GetWidth() + 80,
+                          boundsRect.GetHeight() + 80);
 
         if (options.transparentBackground)
+        {
             pMapActiveLayer->setBackgroundColor(wxNullColour);
+        }
         else
+        {
             pMapActiveLayer->setBackgroundColor(options.backgroundColor);
+        }
 
         pMapActiveLayer->paintGraph(svgDC, true);
 
@@ -653,7 +706,9 @@ void Component::setFocus()
 {
     assert(pMapActiveLayer);
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->SetFocus();
+    }
 }
 
 void Component::Drawer::onDraw(wxPaintEvent&)
@@ -694,13 +749,17 @@ void Component::Drawer::drawFromDevice(wxDC& dc)
 
     // ReDraw the map
     if (pComponent.pMapActiveLayer)
+    {
         pComponent.pMapActiveLayer->nodes.drawExternalDrawer(drawingContext);
+    }
 }
 
 void Component::forceReload()
 {
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->nodes.invalidateAllNodes();
+    }
 }
 
 void Component::refresh()
@@ -719,16 +778,24 @@ void Component::refreshHeaderInformations()
         uint cCnnx = pMapActiveLayer->connectionsCount();
 
         if (cArea < 2)
+        {
             pMapActiveLayer->getpInfosAreaCount()->SetLabel(wxString(wxT(' '))
                                                             << cArea << wxT(" area, "));
+        }
         else
+        {
             pMapActiveLayer->getpInfosAreaCount()->SetLabel(wxString(wxT(' '))
                                                             << cArea << wxT(" areas, "));
+        }
 
         if (cCnnx < 2)
+        {
             pMapActiveLayer->getpInfosConnxCount()->SetLabel(wxString() << cCnnx << wxT(" link "));
+        }
         else
+        {
             pMapActiveLayer->getpInfosConnxCount()->SetLabel(wxString() << cCnnx << wxT(" links "));
+        }
     }
     else
     {
@@ -749,7 +816,9 @@ void Component::renameNodeFromArea(const Data::Area* area)
     {
         auto* node = pMapActiveLayer->nodes.find(area);
         if (node)
+        {
             node->caption(wxStringFromUTF8(area->name));
+        }
     }
 }
 
@@ -759,7 +828,9 @@ void Component::reimportNodeColors(const Data::Area* area)
     {
         auto* node = pMapActiveLayer->nodes.find(area);
         if (node)
+        {
             node->color(area->ui->color[0], area->ui->color[1], area->ui->color[2]);
+        }
     }
 }
 
@@ -769,7 +840,9 @@ void Component::moveNodeFromAreaX(const Data::Area* area, int x)
     {
         auto* node = pMapActiveLayer->nodes.find(area);
         if (node)
+        {
             node->x(x);
+        }
     }
 }
 
@@ -779,7 +852,9 @@ void Component::moveNodeFromAreaY(const Data::Area* area, int y)
     {
         auto* node = pMapActiveLayer->nodes.find(area);
         if (node)
+        {
             node->y(y);
+        }
     }
 }
 
@@ -795,7 +870,9 @@ void Component::unselectAll(bool canRefresh)
         pMapActiveLayer->reset();
         pMapActiveLayer->nodes.unselectAll();
         if (canRefresh)
+        {
             refresh();
+        }
     }
 }
 
@@ -858,7 +935,9 @@ void Component::evtOnPopupEvent(int x, int y)
 {
     // onPopupEvent(x, y);
     if (mapLayersPtrList[0] != pMapActiveLayer)
+    {
         PopupMenu(pSelectionPopUpMenu, x + 1, y + 48);
+    }
 }
 
 void Component::evtOnSelectionHide(wxCommandEvent&)
@@ -885,17 +964,23 @@ void Component::onSelectAll(void*)
 void Component::onCopy(void*)
 {
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->reset();
+    }
 
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->copyToClipboard();
+    }
 }
 
 void Component::onNew(void*)
 {
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->addNewNode();
+    }
     setFocus();
 }
 
@@ -903,7 +988,9 @@ void Component::evtPopupCopy(wxCommandEvent&)
 {
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->copyToClipboard();
+    }
 }
 
 void Component::evtPopupCopyAll(wxCommandEvent&)
@@ -916,7 +1003,9 @@ void Component::evtPopupCopyAll(wxCommandEvent&)
     }
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->copyToClipboard();
+    }
 }
 
 void Component::evtPopupCopyAllAreas(wxCommandEvent&)
@@ -929,7 +1018,9 @@ void Component::evtPopupCopyAllAreas(wxCommandEvent&)
     }
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->copyToClipboard();
+    }
 }
 
 void Component::evtPopupCopyAllLinks(wxCommandEvent&)
@@ -942,15 +1033,19 @@ void Component::evtPopupCopyAllLinks(wxCommandEvent&)
     }
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->copyToClipboard();
+    }
 }
 
 void Component::onCopyDropdown(Antares::Component::Button&, wxMenu& menu, void*)
 {
     wxMenuItem* it;
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Copy the selection to the clipboard\tCtrl+C"), "images/16x16/copy.png");
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Copy the selection to the clipboard\tCtrl+C"),
+                          "images/16x16/copy.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Component::evtPopupCopy),
@@ -983,28 +1078,40 @@ void Component::onCopyDropdown(Antares::Component::Button&, wxMenu& menu, void*)
 void Component::onPaste(void*)
 {
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->reset();
+    }
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->pasteFromClipboard(false);
+    }
 }
 
 void Component::evtPopupPaste(wxCommandEvent&)
 {
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->reset();
+    }
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->pasteFromClipboard(false);
+    }
 }
 
 void Component::evtPopupPasteSpecial(wxCommandEvent&)
 {
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->reset();
+    }
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->pasteFromClipboard(true);
+    }
 }
 
 void Component::onPasteDropdown(Antares::Component::Button&, wxMenu& menu, void*)
@@ -1031,7 +1138,9 @@ void Component::onToggleMouseSelectionArea(void*)
     using ButtonType = Antares::Component::Button;
     auto* button = dynamic_cast<ButtonType*>(pBtnSelectionArea);
     if (button)
+    {
         pMapActiveLayer->nodes.mouseSelectionArea = !pMapActiveLayer->nodes.mouseSelectionArea;
+    }
 }
 
 void Component::onToggleMouseSelectionLink(void*)
@@ -1046,8 +1155,8 @@ void Component::onToggleMouseSelectionPlant(void*)
 
 void Component::onToggleMouseSelectionConstraint(void*)
 {
-    pMapActiveLayer->nodes.mouseSelectionConstraints
-      = !pMapActiveLayer->nodes.mouseSelectionConstraints;
+    pMapActiveLayer->nodes.mouseSelectionConstraints = !pMapActiveLayer->nodes
+                                                          .mouseSelectionConstraints;
 }
 
 void Component::onNewDropdown(Antares::Component::Button&, wxMenu& menu, void*)
@@ -1061,8 +1170,10 @@ void Component::onNewDropdown(Antares::Component::Button&, wxMenu& menu, void*)
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Tip : Press N to directly create a new area"), nullptr);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Tip : Press N to directly create a new area"),
+                          nullptr);
     it->Enable(false);
 
     menu.AppendSeparator();
@@ -1096,18 +1207,22 @@ void Component::onNewDropdown(Antares::Component::Button&, wxMenu& menu, void*)
 void Component::recenterView()
 {
     for (int i = 0, size = mapLayersPtrList.size(); i < size; i++)
+    {
         if (mapLayersPtrList[i])
         {
             Yuni::Bind<void()> callback;
             callback.bind(mapLayersPtrList[i], &Control::recenter);
             Dispatcher::GUI::Post(callback, 20); // arbitrary
         }
+    }
 }
 
 void Component::onCenter(void*)
 {
     if (pMapActiveLayer)
+    {
         pMapActiveLayer->recenter();
+    }
 }
 
 void Component::onCenterXY(void*)
@@ -1126,5 +1241,4 @@ void Component::onEvtCenterXY(wxCommandEvent& WXUNUSED(event))
     onCenterXY(this);
 }
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map

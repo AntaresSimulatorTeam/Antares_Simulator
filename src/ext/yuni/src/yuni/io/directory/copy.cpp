@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -13,11 +34,7 @@
 #include "info.h"
 #include "../file.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 namespace // anonymous
 {
@@ -27,6 +44,7 @@ struct InfoItem
     uint64_t size;
     String filename;
 };
+
 typedef std::vector<InfoItem> List;
 
 } // anonymous namespace
@@ -41,17 +59,23 @@ bool Copy(const AnyString& src,
     String fsrc;
     IO::Normalize(fsrc, src);
     if (fsrc.empty())
+    {
         return false;
+    }
 
     String fdst;
     IO::Normalize(fdst, dst);
 
     // Adding the target folder, to create it if required
     if (not onUpdate(cpsGatheringInformation, fdst, fdst, 0, 1))
+    {
         return false;
+    }
 
     if (not IO::Directory::Create(fdst))
+    {
         return false;
+    }
 
     // The list of files to copy
     List list;
@@ -73,7 +97,9 @@ bool Copy(const AnyString& src,
                 info.isFile = i.isFile();
                 totalSize += i.size();
                 if (not onUpdate(cpsGatheringInformation, *i, *i, 0, list.size()))
+                {
                     return false;
+                }
             }
         }
         else
@@ -87,15 +113,22 @@ bool Copy(const AnyString& src,
                 info.isFile = i.isFile();
                 totalSize += i.size();
 
-                if (not onUpdate(
-                      cpsGatheringInformation, i.filename(), i.filename(), 0, list.size()))
+                if (not onUpdate(cpsGatheringInformation,
+                                 i.filename(),
+                                 i.filename(),
+                                 0,
+                                 list.size()))
+                {
                     return false;
+                }
             }
         }
     }
 
     if (list.empty())
+    {
         return true;
+    }
 
     // A temporary buffer for copying files' contents
     // 16k seems to be a good choice (better than smaller block size when used
@@ -103,7 +136,9 @@ bool Copy(const AnyString& src,
     const uint bufferSize = 16384;
     char* const buffer = new (std::nothrow) char[bufferSize];
     if (YUNI_UNLIKELY(nullptr == buffer))
+    {
         return false;
+    }
 
     uint64_t current = 0;
     // A temporary string
@@ -122,6 +157,7 @@ bool Copy(const AnyString& src,
     {
         maxSkip = 6
     };
+
     uint skip = (uint)maxSkip;
     // result
     bool success = true;
@@ -135,7 +171,9 @@ bool Copy(const AnyString& src,
         // Address of the target file
         tmp = fdst; // without any OS-dependant separator
         if (fsrc.size() < info.filename.size())
+        {
             tmp.append(info.filename.c_str() + fsrc.size(), info.filename.size() - fsrc.size());
+        }
 
         if (not info.isFile)
         {
@@ -152,7 +190,9 @@ bool Copy(const AnyString& src,
             // The target file is a real file (and not a folder)
             // Checking first for overwritting
             if (not overwrite and IO::Exists(tmp))
+            {
                 continue;
+            }
 
             // Try to open the source file
             // The previous opened source file will be closed here
@@ -207,6 +247,4 @@ bool Copy(const AnyString& src,
     return success;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

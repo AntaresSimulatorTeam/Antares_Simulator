@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -35,11 +56,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-namespace Yuni
-{
-namespace System
-{
-namespace Memory
+namespace Yuni::System::Memory
 {
 //! Constants to use when information about the memory usage could not be retrieved
 enum
@@ -66,7 +83,8 @@ uint64_t Available()
     // see http://msdn.microsoft.com/en-us/library/aa366589(VS.85).aspx
     MEMORYSTATUSEX statex;
     statex.dwLength = (DWORD)sizeof(statex);
-    return (GlobalMemoryStatusEx(&statex)) ? (uint64_t)statex.ullAvailPhys : (uint64_t)defaultAvailable;
+    return (GlobalMemoryStatusEx(&statex)) ? (uint64_t)statex.ullAvailPhys
+                                           : (uint64_t)defaultAvailable;
 }
 
 bool Usage::update()
@@ -107,7 +125,9 @@ static inline int fgetline(FILE* fp, char* s, int maxlen)
             return i;
         }
         if (i >= maxlen)
+        {
             return i;
+        }
 
         *s++ = c;
         ++i;
@@ -152,12 +172,16 @@ static inline uint64_t readvalue(char* line)
 
     // Trimming the string from the begining
     while (*line == ' ' and *line != '\0')
+    {
         ++line;
+    }
     const char* first = line;
 
     // Looking for the end of the number
     while (*line != ' ' and *line != '\0')
+    {
         ++line;
+    }
     // Tagging the end of the number
     *line = '\0';
 
@@ -198,25 +222,33 @@ bool Usage::update()
             {
                 total = readvalue(line + 10);
                 if (!(remains >> 1))
+                {
                     break;
+                }
             }
             if (!strncmp("MemFree:", line, 8))
             {
                 available += readvalue(line + 9);
                 if (!(remains >> 1))
+                {
                     break;
+                }
             }
             if (!strncmp("Cached:", line, 7))
             {
                 available += readvalue(line + 8);
                 if (!(remains >> 1))
+                {
                     break;
+                }
             }
             if (!strncmp("Buffers:", line, 8))
             {
                 available += readvalue(line + 9);
                 if (!(remains >> 1))
+                {
                     break;
+                }
             }
         }
 
@@ -331,6 +363,4 @@ bool Usage::update()
 
 #endif // Fallback
 
-} // namespace Memory
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Memory

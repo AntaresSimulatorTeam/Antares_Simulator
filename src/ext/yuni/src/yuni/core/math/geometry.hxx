@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -12,9 +33,7 @@
 #include "geometry.h"
 #include <cassert>
 
-namespace Yuni
-{
-namespace Geometry
+namespace Yuni::Geometry
 {
 template<typename T>
 inline Point3D<T> LinePlaneIntersection(const Point3D<T>& linePoint,
@@ -69,10 +88,14 @@ inline bool SegmentIntersectsTriangle(const Point3D<T>& segmentStart,
     T a = -Vector3D<T>::DotProduct(normal, w0);
     T b = Vector3D<T>::DotProduct(normal, ray);
     if (Math::Zero(b))
+    {
         return a == 0;
+    }
     T r = a / b;
     if (r < 0 || r > 1)
+    {
         return false;
+    }
     Point3D<T> intersection(segmentStart);
     ray *= r;
     intersection.x += ray.x;
@@ -88,10 +111,14 @@ inline bool SegmentIntersectsTriangle(const Point3D<T>& segmentStart,
     T denominator = (udotv * udotv - udotu * vdotv);
     T s = (udotv * wdotv - vdotv * wdotu) / denominator;
     if (s < 0 || s > 1)
+    {
         return false;
+    }
     T t = (udotv * wdotu - udotu * wdotv) / denominator;
     if (t < 0 || s + t > 1)
+    {
         return false;
+    }
     return true;
 }
 
@@ -105,7 +132,9 @@ inline bool SegmentIntersectsQuad(const Point3D<T>& segmentStart,
 {
     Vector3D<T> normal = Vector3D<T>::CrossProduct(p1, p2, p3);
     if (!SegmentIntersectsPlane(segmentStart, segmentEnd, p1, normal))
+    {
         return false;
+    }
     return SegmentIntersectsTriangle(segmentStart, segmentEnd, p1, p2, p3)
            || SegmentIntersectsTriangle(segmentStart, segmentEnd, p1, p3, p4);
 }
@@ -122,13 +151,19 @@ inline bool SegmentIntersectsSphere(const Point3D<T>& startPoint,
     // Check point ordering along the line : projection must be between start and end
     if ((projection.x < startPoint.x and projection.x < endPoint.x)
         or (projection.x > startPoint.x and projection.x > endPoint.x))
+    {
         return false;
+    }
     if ((projection.y < startPoint.y and projection.y < endPoint.y)
         or (projection.y > startPoint.y and projection.y > endPoint.y))
+    {
         return false;
+    }
     if ((projection.z < startPoint.z and projection.z < endPoint.z)
         or (projection.z > startPoint.z and projection.z > endPoint.z))
+    {
         return false;
+    }
     // Now check that the projection is inside the sphere : OO' <= r
     return Vector3D<T>(center, projection).squareMagnitude() <= radius * radius;
 }
@@ -169,5 +204,4 @@ inline T VectorAngle(const Vector3D<T>& start, const Vector3D<T>& destination)
     return T();
 }
 
-} // namespace Geometry
-} // namespace Yuni
+} // namespace Yuni::Geometry

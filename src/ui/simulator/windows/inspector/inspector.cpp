@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <wx/frame.h>
 #include <wx/panel.h>
@@ -34,16 +34,14 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Inspector
+namespace Antares::Window::Inspector
 {
 static void DelayedUpdate()
 {
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 void Destroy()
@@ -71,7 +69,9 @@ void Unselect()
 {
     gData = nullptr;
     if (gInspector)
+    {
         gInspector->apply(nullptr);
+    }
 }
 
 uint SelectionAreaCount()
@@ -106,7 +106,9 @@ uint SelectionTotalCount()
 void Hide()
 {
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     if (gInspector)
     {
@@ -120,7 +122,9 @@ void Hide()
 void Show()
 {
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     if (!gInspector)
     {
@@ -155,68 +159,92 @@ void Show()
 void SelectStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
     if (study)
     {
         if (gData->studies.insert(study).second)
+        {
             gData->empty = false;
+        }
     }
 
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 void AddStudy(const Data::Study::Ptr& study)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     if (gData->studies.insert(study).second)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
 void SelectArea(const Data::Area* area)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
     if (area)
     {
         if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
+        {
             gData->empty = false;
+        }
     }
 
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 void AddArea(const Data::Area* area)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     if (gData->areas.insert(const_cast<Data::Area*>(area)).second)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
 void AddAreas(const Data::Area::Vector& list)
 {
     if (list.empty())
+    {
         return;
+    }
 
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     bool notEmpty = false;
     Data::Area::Vector::const_iterator end = list.end();
@@ -224,24 +252,32 @@ void AddAreas(const Data::Area::Vector& list)
     {
         Data::Area* area = const_cast<Data::Area*>(*i);
         if (area)
+        {
             notEmpty = gData->areas.insert(area).second || notEmpty;
+        }
     }
 
     if (notEmpty)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
 void AddAreas(const Data::Area::Set& list)
 {
     if (list.empty())
+    {
         return;
+    }
 
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     bool notEmpty = false;
     Data::Area::Set::const_iterator end = list.end();
@@ -249,55 +285,75 @@ void AddAreas(const Data::Area::Set& list)
     {
         Data::Area* area = const_cast<Data::Area*>(*i);
         if (area)
+        {
             notEmpty = gData->areas.insert(area).second || notEmpty;
+        }
     }
 
     if (notEmpty)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
 void AddLinks(const Data::AreaLink::Vector& list)
 {
     if (list.empty())
+    {
         return;
+    }
 
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     bool notEmpty = false;
     Data::AreaLink::Vector::const_iterator end = list.end();
     for (Data::AreaLink::Vector::const_iterator i = list.begin(); i != end; ++i)
+    {
         notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
+    }
 
     if (notEmpty)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
 void AddLinks(const Data::AreaLink::Set& list)
 {
     if (list.empty())
+    {
         return;
+    }
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     bool notEmpty = false;
     Data::AreaLink::Set::const_iterator end = list.end();
     for (Data::AreaLink::Set::const_iterator i = list.begin(); i != end; ++i)
+    {
         notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
+    }
 
     if (notEmpty)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
@@ -309,34 +365,45 @@ const Data::AreaLink::Set& getLinks()
 void AddBindingConstraints(const Data::BindingConstraint::Set& list)
 {
     if (list.empty())
+    {
         return;
+    }
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     bool notEmpty = false;
     auto end = list.end();
     for (auto i = list.begin(); i != end; ++i)
-        notEmpty
-          = gData->constraints.insert(*i).second || notEmpty;
+    {
+        notEmpty = gData->constraints.insert(*i).second || notEmpty;
+    }
 
     if (notEmpty)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
 void AddLink(const Data::AreaLink* link)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     if (gData->links.insert(const_cast<Data::AreaLink*>(link)).second)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
@@ -344,13 +411,17 @@ void AddLink(const Data::AreaLink* link)
 void AddThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
@@ -358,21 +429,29 @@ void AddThermalCluster(const Data::ThermalCluster* cluster)
 void AddThermalClusters(const Data::ThermalCluster::Vector& list)
 {
     if (list.empty())
+    {
         return;
+    }
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     bool notEmpty = false;
     Data::ThermalCluster::Vector::const_iterator end = list.end();
     for (Data::ThermalCluster::Vector::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty
-          = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+    {
+        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second
+                   || notEmpty;
+    }
 
     if (notEmpty)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
@@ -380,21 +459,29 @@ void AddThermalClusters(const Data::ThermalCluster::Vector& list)
 void AddThermalClusters(const Data::ThermalCluster::Set& list)
 {
     if (list.empty())
+    {
         return;
+    }
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     bool notEmpty = false;
     Data::ThermalCluster::Set::const_iterator end = list.end();
     for (Data::ThermalCluster::Set::const_iterator i = list.begin(); i != end; ++i)
-        notEmpty
-          = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second || notEmpty;
+    {
+        notEmpty = gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(*i)).second
+                   || notEmpty;
+    }
 
     if (notEmpty)
     {
         gData->empty = false;
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
@@ -404,7 +491,9 @@ void RemoveArea(const Data::Area* area)
     {
         gData->determineEmpty();
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
@@ -414,7 +503,9 @@ void RemoveLink(const Data::AreaLink* link)
     {
         gData->determineEmpty();
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
@@ -424,7 +515,9 @@ void RemoveThermalCluster(const Data::ThermalCluster* cluster)
     {
         gData->determineEmpty();
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
@@ -434,14 +527,18 @@ void RemoveRenewableCluster(const Data::RenewableCluster* cluster)
     {
         gData->determineEmpty();
         if (gInspector)
+        {
             gInspector->apply(gData);
+        }
     }
 }
 
 void SelectAreas(const Data::Area::Vector& areas)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
     if (!areas.empty())
@@ -452,19 +549,27 @@ void SelectAreas(const Data::Area::Vector& areas)
         {
             Data::Area* area = const_cast<Data::Area*>(*i);
             if (area)
+            {
                 notEmpty = gData->areas.insert(area).second || notEmpty;
+            }
         }
         if (notEmpty)
+        {
             gData->empty = false;
+        }
     }
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 void SelectAreas(const Data::Area::Set& areas)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
     if (!areas.empty())
@@ -475,34 +580,48 @@ void SelectAreas(const Data::Area::Set& areas)
         {
             Data::Area* area = const_cast<Data::Area*>(*i);
             if (area)
+            {
                 notEmpty = gData->areas.insert(area).second || notEmpty;
+            }
         }
         if (notEmpty)
+        {
             gData->empty = false;
+        }
     }
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 void SelectLink(const Data::AreaLink* lnk)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
     if (lnk)
     {
         if (gData->links.insert(const_cast<Data::AreaLink*>(lnk)).second)
+        {
             gData->empty = false;
+        }
     }
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 void SelectLinks(const Data::AreaLink::Vector& lnks)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
     if (!lnks.empty())
@@ -510,34 +629,48 @@ void SelectLinks(const Data::AreaLink::Vector& lnks)
         bool notEmpty = false;
         const Data::AreaLink::Vector::const_iterator end = lnks.end();
         for (Data::AreaLink::Vector::const_iterator i = lnks.begin(); i != end; ++i)
+        {
             notEmpty = gData->links.insert(const_cast<Data::AreaLink*>(*i)).second || notEmpty;
+        }
         if (notEmpty)
+        {
             gData->empty = false;
+        }
     }
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 void SelectThermalCluster(const Data::ThermalCluster* cluster)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
     if (cluster)
     {
         if (gData->ThClusters.insert(const_cast<Data::ThermalCluster*>(cluster)).second)
+        {
             gData->empty = false;
+        }
     }
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 // gp : never used - to be removed
 void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
 
@@ -546,36 +679,50 @@ void SelectThermalClusters(const Data::ThermalCluster::Vector& clusters)
         bool notEmpty = false;
         auto end = clusters.end();
         for (auto i = clusters.begin(); i != end; ++i)
+        {
             notEmpty = (gData->ThClusters).insert(const_cast<Data::ThermalCluster*>(*i)).second
                        || notEmpty;
+        }
 
         if (notEmpty)
+        {
             gData->empty = false;
+        }
     }
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 void SelectRenewableCluster(const Data::RenewableCluster* cluster)
 {
     if (!gData)
+    {
         gData = std::make_shared<InspectorData>(GetCurrentStudy());
+    }
 
     gData->clear();
     if (cluster)
     {
         if (gData->RnClusters.insert(const_cast<Data::RenewableCluster*>(cluster)).second)
+        {
             gData->empty = false;
+        }
     }
     if (gInspector)
+    {
         gInspector->apply(gData);
+    }
 }
 
 uint CopyToClipboard()
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr || !gData)
+    {
         return 0; // nothing was copied
+    }
 
     // alias to the current study
     auto& study = *studyptr;
@@ -591,7 +738,9 @@ uint CopyToClipboard()
     // antares has to fail when a paster occurs into another instance to prevent
     // against incomplete data
     if (StudyHasBeenModified())
+    {
         text += "was-modified: true\n";
+    }
 
     uint count = 0;
 
@@ -657,7 +806,9 @@ bool AreasSelected(const Data::Area::NameSet& set,
                    std::map<Antares::Data::AreaName, Antares::Data::AreaName>& nameMap)
 {
     if (gData == nullptr || (set.empty() && gData->areas.size()))
+    {
         return false;
+    }
 
     auto end = gData->areas.end();
     for (auto i = gData->areas.begin(); i != end; ++i)
@@ -666,9 +817,13 @@ bool AreasSelected(const Data::Area::NameSet& set,
         if (area)
         {
             if (set.find(area->name) != set.end())
+            {
                 nameMap[*set.find(area->name)] = area->name;
+            }
             else
+            {
                 return false;
+            }
         }
     }
     return true;
@@ -677,7 +832,9 @@ bool AreasSelected(const Data::Area::NameSet& set,
 bool isAreaSelected(Antares::Data::AreaName name)
 {
     if (name.empty() || gData == nullptr)
+    {
         return false;
+    }
     auto end = gData->areas.end();
     for (auto i = gData->areas.begin(); i != end; ++i)
     {
@@ -693,7 +850,9 @@ bool isAreaSelected(Antares::Data::AreaName name)
 bool isConstraintSelected(const Yuni::String& constraintName)
 {
     if (constraintName.empty() || gData == nullptr)
+    {
         return false;
+    }
     auto end = gData->constraints.end();
     for (auto i = gData->constraints.begin(); i != end; ++i)
     {
@@ -709,11 +868,13 @@ bool isConstraintSelected(const Yuni::String& constraintName)
 bool ConstraintsSelected(const std::set<Yuni::String>& set)
 {
     if (gData == nullptr || (set.empty() && gData->constraints.size()))
+    {
         return false;
+    }
     auto end = gData->constraints.end();
     for (auto i = gData->constraints.begin(); i != end; ++i)
     {
-       auto constraint = *i;
+        auto constraint = *i;
         if (set.find(constraint->name()) == set.end())
         {
             return false;
@@ -725,7 +886,9 @@ bool ConstraintsSelected(const std::set<Yuni::String>& set)
 bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with)
 {
     if (gData == nullptr || from.empty() || with.empty())
+    {
         return false;
+    }
 
     auto end = gData->links.end();
     for (auto i = gData->links.begin(); i != end; ++i)
@@ -743,7 +906,9 @@ bool IsLinkSelected(const Data::AreaName& from, const Data::AreaName& with)
 bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set)
 {
     if (gData == nullptr || (set.empty() && gData->links.size()))
+    {
         return false;
+    }
     auto end = gData->links.end();
     for (auto i = gData->links.begin(); i != end; ++i)
     {
@@ -754,12 +919,16 @@ bool LinksSelected(std::map<Data::AreaName, std::map<Data::AreaName, bool>>& set
             auto with = from->second.find(link->with->name);
 
             if (with != from->second.end() && with->second == true)
+            {
                 continue;
+            }
 
             return false;
         }
         else
+        {
             return false;
+        }
     }
     return true;
 }
@@ -794,6 +963,4 @@ void FirstSelectedAreaLink(Data::AreaLink** link)
     *link = *(gData->links.begin());
 }
 
-} // namespace Inspector
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Inspector

@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -11,11 +32,7 @@
 #pragma once
 #include "rgba.h"
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace Color
+namespace Yuni::Extension::Color
 {
 template<class RGBType, class T>
 struct RGBA final
@@ -30,12 +47,13 @@ struct RGBA final
             upperBound = Yuni::Private::Color::DefaultValues<T>::upperBound,
             lowerBound = Yuni::Private::Color::DefaultValues<T>::lowerBound,
         };
+
         // new value
-        const CalculationType v
-          = ((int)RGBType::upperBound == (int)upperBound
-             and (int) RGBType::lowerBound == (int)lowerBound)
-              ? static_cast<CalculationType>(value)
-              : static_cast<CalculationType>(value) * RGBType::upperBound / upperBound;
+        const CalculationType v = ((int)RGBType::upperBound == (int)upperBound
+                                   and (int) RGBType::lowerBound == (int)lowerBound)
+                                    ? static_cast<CalculationType>(value)
+                                    : static_cast<CalculationType>(value) * RGBType::upperBound
+                                        / upperBound;
         // assignment
         color.red = v;
         color.green = v;
@@ -50,12 +68,13 @@ struct RGBA final
             upperBound = Yuni::Private::Color::DefaultValues<T>::upperBound,
             lowerBound = Yuni::Private::Color::DefaultValues<T>::lowerBound,
         };
+
         // new value
-        const CalculationType v
-          = ((int)RGBType::upperBound == (int)upperBound
-             and (int) RGBType::lowerBound == (int)lowerBound)
-              ? static_cast<CalculationType>(value)
-              : static_cast<CalculationType>(value) * RGBType::upperBound / upperBound;
+        const CalculationType v = ((int)RGBType::upperBound == (int)upperBound
+                                   and (int) RGBType::lowerBound == (int)lowerBound)
+                                    ? static_cast<CalculationType>(value)
+                                    : static_cast<CalculationType>(value) * RGBType::upperBound
+                                        / upperBound;
 
         return Math::Equals(color.red, v) and Math::Equals(color.green, v)
                and Math::Equals(color.blue, v) and Math::Equals(color.alpha, v);
@@ -69,12 +88,13 @@ struct RGBA final
             upperBound = Yuni::Private::Color::DefaultValues<T>::upperBound,
             lowerBound = Yuni::Private::Color::DefaultValues<T>::lowerBound,
         };
+
         // new value
-        const CalculationType v
-          = ((int)RGBType::upperBound == (int)upperBound
-             and (int) RGBType::lowerBound == (int)lowerBound)
-              ? static_cast<CalculationType>(value)
-              : static_cast<CalculationType>(value) * RGBType::upperBound / upperBound;
+        const CalculationType v = ((int)RGBType::upperBound == (int)upperBound
+                                   and (int) RGBType::lowerBound == (int)lowerBound)
+                                    ? static_cast<CalculationType>(value)
+                                    : static_cast<CalculationType>(value) * RGBType::upperBound
+                                        / upperBound;
         // assignment
         if (PlusT)
         {
@@ -181,106 +201,106 @@ struct RGBA<Yuni::Color::RGBA<U>, Yuni::Color::RGBA<V>> final
         {
             if (PlusT)
             {
-                color.red = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.red) + static_cast<U>(value.red),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.green = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.green) + static_cast<U>(value.green),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.blue = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.blue) + static_cast<U>(value.blue),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.alpha = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.alpha) + static_cast<U>(value.alpha),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
+                color.red = Math::MinMaxEx<U>(static_cast<CalculationType>(color.red)
+                                                + static_cast<U>(value.red),
+                                              Yuni::Color::RGBA<U>::lowerBound,
+                                              Yuni::Color::RGBA<U>::upperBound);
+                color.green = Math::MinMaxEx<U>(static_cast<CalculationType>(color.green)
+                                                  + static_cast<U>(value.green),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
+                color.blue = Math::MinMaxEx<U>(static_cast<CalculationType>(color.blue)
+                                                 + static_cast<U>(value.blue),
+                                               Yuni::Color::RGBA<U>::lowerBound,
+                                               Yuni::Color::RGBA<U>::upperBound);
+                color.alpha = Math::MinMaxEx<U>(static_cast<CalculationType>(color.alpha)
+                                                  + static_cast<U>(value.alpha),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
             }
             else
             {
-                color.red = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.red) - static_cast<U>(value.red),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.green = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.green) - static_cast<U>(value.green),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.blue = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.blue) - static_cast<U>(value.blue),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.alpha = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.alpha) - static_cast<U>(value.alpha),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
+                color.red = Math::MinMaxEx<U>(static_cast<CalculationType>(color.red)
+                                                - static_cast<U>(value.red),
+                                              Yuni::Color::RGBA<U>::lowerBound,
+                                              Yuni::Color::RGBA<U>::upperBound);
+                color.green = Math::MinMaxEx<U>(static_cast<CalculationType>(color.green)
+                                                  - static_cast<U>(value.green),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
+                color.blue = Math::MinMaxEx<U>(static_cast<CalculationType>(color.blue)
+                                                 - static_cast<U>(value.blue),
+                                               Yuni::Color::RGBA<U>::lowerBound,
+                                               Yuni::Color::RGBA<U>::upperBound);
+                color.alpha = Math::MinMaxEx<U>(static_cast<CalculationType>(color.alpha)
+                                                  - static_cast<U>(value.alpha),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
             }
         }
         else
         {
             if (PlusT)
             {
-                color.red
-                  = Math::MinMaxEx<U>(color.red
-                                        + static_cast<U>(static_cast<CalculationType>(value.red)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGBA<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.green
-                  = Math::MinMaxEx<U>(color.green
-                                        + static_cast<U>(static_cast<CalculationType>(value.green)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGBA<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.blue
-                  = Math::MinMaxEx<U>(color.blue
-                                        + static_cast<U>(static_cast<CalculationType>(value.blue)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGBA<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.alpha
-                  = Math::MinMaxEx<U>(color.alpha
-                                        + static_cast<U>(static_cast<CalculationType>(value.alpha)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGBA<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
+                color.red = Math::MinMaxEx<U>(color.red
+                                                + static_cast<U>(
+                                                  static_cast<CalculationType>(value.red)
+                                                  * Yuni::Color::RGBA<U>::upperBound
+                                                  / Yuni::Color::RGBA<V>::upperBound),
+                                              Yuni::Color::RGBA<U>::lowerBound,
+                                              Yuni::Color::RGBA<U>::upperBound);
+                color.green = Math::MinMaxEx<U>(color.green
+                                                  + static_cast<U>(
+                                                    static_cast<CalculationType>(value.green)
+                                                    * Yuni::Color::RGBA<U>::upperBound
+                                                    / Yuni::Color::RGBA<V>::upperBound),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
+                color.blue = Math::MinMaxEx<U>(color.blue
+                                                 + static_cast<U>(
+                                                   static_cast<CalculationType>(value.blue)
+                                                   * Yuni::Color::RGBA<U>::upperBound
+                                                   / Yuni::Color::RGBA<V>::upperBound),
+                                               Yuni::Color::RGBA<U>::lowerBound,
+                                               Yuni::Color::RGBA<U>::upperBound);
+                color.alpha = Math::MinMaxEx<U>(color.alpha
+                                                  + static_cast<U>(
+                                                    static_cast<CalculationType>(value.alpha)
+                                                    * Yuni::Color::RGBA<U>::upperBound
+                                                    / Yuni::Color::RGBA<V>::upperBound),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
             }
             else
             {
-                color.red
-                  = Math::MinMaxEx<U>(color.red
-                                        - static_cast<U>(static_cast<CalculationType>(value.red)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGBA<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.green
-                  = Math::MinMaxEx<U>(color.green
-                                        - static_cast<U>(static_cast<CalculationType>(value.green)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGBA<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.blue
-                  = Math::MinMaxEx<U>(color.blue
-                                        - static_cast<U>(static_cast<CalculationType>(value.blue)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGBA<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.alpha
-                  = Math::MinMaxEx<U>(color.alpha
-                                        - static_cast<U>(static_cast<CalculationType>(value.alpha)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGBA<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
+                color.red = Math::MinMaxEx<U>(color.red
+                                                - static_cast<U>(
+                                                  static_cast<CalculationType>(value.red)
+                                                  * Yuni::Color::RGBA<U>::upperBound
+                                                  / Yuni::Color::RGBA<V>::upperBound),
+                                              Yuni::Color::RGBA<U>::lowerBound,
+                                              Yuni::Color::RGBA<U>::upperBound);
+                color.green = Math::MinMaxEx<U>(color.green
+                                                  - static_cast<U>(
+                                                    static_cast<CalculationType>(value.green)
+                                                    * Yuni::Color::RGBA<U>::upperBound
+                                                    / Yuni::Color::RGBA<V>::upperBound),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
+                color.blue = Math::MinMaxEx<U>(color.blue
+                                                 - static_cast<U>(
+                                                   static_cast<CalculationType>(value.blue)
+                                                   * Yuni::Color::RGBA<U>::upperBound
+                                                   / Yuni::Color::RGBA<V>::upperBound),
+                                               Yuni::Color::RGBA<U>::lowerBound,
+                                               Yuni::Color::RGBA<U>::upperBound);
+                color.alpha = Math::MinMaxEx<U>(color.alpha
+                                                  - static_cast<U>(
+                                                    static_cast<CalculationType>(value.alpha)
+                                                    * Yuni::Color::RGBA<U>::upperBound
+                                                    / Yuni::Color::RGBA<V>::upperBound),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
             }
         }
     }
@@ -352,107 +372,109 @@ struct RGBA<Yuni::Color::RGBA<U>, Yuni::Color::RGB<V>> final
         {
             if (PlusT)
             {
-                color.red = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.red) + static_cast<U>(value.red),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.green = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.green) + static_cast<U>(value.green),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.blue = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.blue) + static_cast<U>(value.blue),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
+                color.red = Math::MinMaxEx<U>(static_cast<CalculationType>(color.red)
+                                                + static_cast<U>(value.red),
+                                              Yuni::Color::RGBA<U>::lowerBound,
+                                              Yuni::Color::RGBA<U>::upperBound);
+                color.green = Math::MinMaxEx<U>(static_cast<CalculationType>(color.green)
+                                                  + static_cast<U>(value.green),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
+                color.blue = Math::MinMaxEx<U>(static_cast<CalculationType>(color.blue)
+                                                 + static_cast<U>(value.blue),
+                                               Yuni::Color::RGBA<U>::lowerBound,
+                                               Yuni::Color::RGBA<U>::upperBound);
             }
             else
             {
-                color.red = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.red) - static_cast<U>(value.red),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.green = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.green) - static_cast<U>(value.green),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
-                color.blue = Math::MinMaxEx<U>(
-                  static_cast<CalculationType>(color.blue) - static_cast<U>(value.blue),
-                  Yuni::Color::RGBA<U>::lowerBound,
-                  Yuni::Color::RGBA<U>::upperBound);
+                color.red = Math::MinMaxEx<U>(static_cast<CalculationType>(color.red)
+                                                - static_cast<U>(value.red),
+                                              Yuni::Color::RGBA<U>::lowerBound,
+                                              Yuni::Color::RGBA<U>::upperBound);
+                color.green = Math::MinMaxEx<U>(static_cast<CalculationType>(color.green)
+                                                  - static_cast<U>(value.green),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
+                color.blue = Math::MinMaxEx<U>(static_cast<CalculationType>(color.blue)
+                                                 - static_cast<U>(value.blue),
+                                               Yuni::Color::RGBA<U>::lowerBound,
+                                               Yuni::Color::RGBA<U>::upperBound);
             }
         }
         else
         {
             if (PlusT)
             {
-                color.red
-                  = Math::MinMaxEx<U>(color.red
-                                        + static_cast<U>(static_cast<CalculationType>(value.red)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGB<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.green
-                  = Math::MinMaxEx<U>(color.green
-                                        + static_cast<U>(static_cast<CalculationType>(value.green)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGB<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.blue
-                  = Math::MinMaxEx<U>(color.blue
-                                        + static_cast<U>(static_cast<CalculationType>(value.blue)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGB<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
+                color.red = Math::MinMaxEx<U>(color.red
+                                                + static_cast<U>(
+                                                  static_cast<CalculationType>(value.red)
+                                                  * Yuni::Color::RGBA<U>::upperBound
+                                                  / Yuni::Color::RGB<V>::upperBound),
+                                              Yuni::Color::RGBA<U>::lowerBound,
+                                              Yuni::Color::RGBA<U>::upperBound);
+                color.green = Math::MinMaxEx<U>(color.green
+                                                  + static_cast<U>(
+                                                    static_cast<CalculationType>(value.green)
+                                                    * Yuni::Color::RGBA<U>::upperBound
+                                                    / Yuni::Color::RGB<V>::upperBound),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
+                color.blue = Math::MinMaxEx<U>(color.blue
+                                                 + static_cast<U>(
+                                                   static_cast<CalculationType>(value.blue)
+                                                   * Yuni::Color::RGBA<U>::upperBound
+                                                   / Yuni::Color::RGB<V>::upperBound),
+                                               Yuni::Color::RGBA<U>::lowerBound,
+                                               Yuni::Color::RGBA<U>::upperBound);
             }
             else
             {
-                color.red
-                  = Math::MinMaxEx<U>(color.red
-                                        - static_cast<U>(static_cast<CalculationType>(value.red)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGB<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.green
-                  = Math::MinMaxEx<U>(color.green
-                                        - static_cast<U>(static_cast<CalculationType>(value.green)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGB<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
-                color.blue
-                  = Math::MinMaxEx<U>(color.blue
-                                        - static_cast<U>(static_cast<CalculationType>(value.blue)
-                                                         * Yuni::Color::RGBA<U>::upperBound
-                                                         / Yuni::Color::RGB<V>::upperBound),
-                                      Yuni::Color::RGBA<U>::lowerBound,
-                                      Yuni::Color::RGBA<U>::upperBound);
+                color.red = Math::MinMaxEx<U>(color.red
+                                                - static_cast<U>(
+                                                  static_cast<CalculationType>(value.red)
+                                                  * Yuni::Color::RGBA<U>::upperBound
+                                                  / Yuni::Color::RGB<V>::upperBound),
+                                              Yuni::Color::RGBA<U>::lowerBound,
+                                              Yuni::Color::RGBA<U>::upperBound);
+                color.green = Math::MinMaxEx<U>(color.green
+                                                  - static_cast<U>(
+                                                    static_cast<CalculationType>(value.green)
+                                                    * Yuni::Color::RGBA<U>::upperBound
+                                                    / Yuni::Color::RGB<V>::upperBound),
+                                                Yuni::Color::RGBA<U>::lowerBound,
+                                                Yuni::Color::RGBA<U>::upperBound);
+                color.blue = Math::MinMaxEx<U>(color.blue
+                                                 - static_cast<U>(
+                                                   static_cast<CalculationType>(value.blue)
+                                                   * Yuni::Color::RGBA<U>::upperBound
+                                                   / Yuni::Color::RGB<V>::upperBound),
+                                               Yuni::Color::RGBA<U>::lowerBound,
+                                               Yuni::Color::RGBA<U>::upperBound);
             }
         }
     }
 
 }; // class RGBA
 
-} // namespace Color
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::Color
 
-namespace Yuni
-{
-namespace Color
+namespace Yuni::Color
 {
 template<class T>
-inline RGBA<T>::RGBA() :
- red(lowerBound), green(lowerBound), blue(lowerBound), alpha(upperBound) // Opaque black
+inline RGBA<T>::RGBA():
+    red(lowerBound),
+    green(lowerBound),
+    blue(lowerBound),
+    alpha(upperBound) // Opaque black
 {
 }
 
 template<class T>
-inline RGBA<T>::RGBA(const RGBA<T>& rhs) :
- red(rhs.red), green(rhs.green), blue(rhs.blue), alpha(rhs.alpha)
+inline RGBA<T>::RGBA(const RGBA<T>& rhs):
+    red(rhs.red),
+    green(rhs.green),
+    blue(rhs.blue),
+    alpha(rhs.alpha)
 {
 }
 
@@ -465,21 +487,21 @@ inline RGBA<T>::RGBA(const U& value)
 
 template<class T>
 template<class R, class G, class B, class A>
-inline RGBA<T>::RGBA(R r, G g, B b, A a) :
- red(Math::MinMaxEx<T>(r, static_cast<R>(lowerBound), static_cast<R>(upperBound))),
- green(Math::MinMaxEx<T>(g, static_cast<G>(lowerBound), static_cast<G>(upperBound))),
- blue(Math::MinMaxEx<T>(b, static_cast<B>(lowerBound), static_cast<B>(upperBound))),
- alpha(Math::MinMaxEx<T>(a, static_cast<A>(lowerBound), static_cast<A>(upperBound)))
+inline RGBA<T>::RGBA(R r, G g, B b, A a):
+    red(Math::MinMaxEx<T>(r, static_cast<R>(lowerBound), static_cast<R>(upperBound))),
+    green(Math::MinMaxEx<T>(g, static_cast<G>(lowerBound), static_cast<G>(upperBound))),
+    blue(Math::MinMaxEx<T>(b, static_cast<B>(lowerBound), static_cast<B>(upperBound))),
+    alpha(Math::MinMaxEx<T>(a, static_cast<A>(lowerBound), static_cast<A>(upperBound)))
 {
 }
 
 template<class T>
 template<class R, class G, class B>
-inline RGBA<T>::RGBA(R r, G g, B b) :
- red(Math::MinMaxEx<T>(r, static_cast<R>(lowerBound), static_cast<R>(upperBound))),
- green(Math::MinMaxEx<T>(g, static_cast<G>(lowerBound), static_cast<G>(upperBound))),
- blue(Math::MinMaxEx<T>(b, static_cast<B>(lowerBound), static_cast<B>(upperBound))),
- alpha(static_cast<T>(Yuni::Private::Color::DefaultValues<T>::upperBound))
+inline RGBA<T>::RGBA(R r, G g, B b):
+    red(Math::MinMaxEx<T>(r, static_cast<R>(lowerBound), static_cast<R>(upperBound))),
+    green(Math::MinMaxEx<T>(g, static_cast<G>(lowerBound), static_cast<G>(upperBound))),
+    blue(Math::MinMaxEx<T>(b, static_cast<B>(lowerBound), static_cast<B>(upperBound))),
+    alpha(static_cast<T>(Yuni::Private::Color::DefaultValues<T>::upperBound))
 {
 }
 
@@ -607,14 +629,9 @@ void RGBA<T>::print(StreamT& stream) const
            << static_cast<PrintType>(blue) << ',' << static_cast<PrintType>(alpha) << ')';
 }
 
-} // namespace Color
-} // namespace Yuni
+} // namespace Yuni::Color
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT, class T>
 class Append<CStringT, Yuni::Color::RGBA<T>> final
@@ -631,6 +648,7 @@ class Into<Yuni::Color::RGBA<T>> final
 {
 public:
     typedef Yuni::Color::RGBA<T> TargetType;
+
     enum
     {
         valid = 1
@@ -678,14 +696,20 @@ private:
         }
         // trimming
         if (*i != 'r' or ++i == end or *i != 'g' or ++i == end or *i != 'b' or ++i == end)
+        {
             return false;
+        }
         bool hasAlpha = (*i == 'a');
         if (hasAlpha and ++i == end)
+        {
             return false;
+        }
         if (*i != '(')
         {
             if (!i.findFirstNonSpace(end.offset()) or *i != '(')
+            {
                 return false;
+            }
         }
         if (++i == end or !i.findFirstNonSpace(end.offset()))
         {
@@ -702,54 +726,78 @@ private:
 
         // RED CHANNEL
         if (!i.find(',', end.offset()))
+        {
             return false;
+        }
         tmp.assign(j, i);
         if (!tmp.to(channel) or ++i == end or !i.findFirstNonSpace(end.offset()))
+        {
             return false;
-        out.red
-          = Math::MinMaxEx<T>(channel, static_cast<T>(lowerBound), static_cast<T>(upperBound));
+        }
+        out.red = Math::MinMaxEx<T>(channel,
+                                    static_cast<T>(lowerBound),
+                                    static_cast<T>(upperBound));
 
         // GREEN CHANNEL
         j = i;
         if (!i.find(',', end.offset()))
+        {
             return false;
+        }
         tmp.assign(j, i);
         if (!tmp.to(channel) or ++i == end or !i.findFirstNonSpace(end.offset()))
+        {
             return false;
-        out.green
-          = Math::MinMaxEx<T>(channel, static_cast<T>(lowerBound), static_cast<T>(upperBound));
+        }
+        out.green = Math::MinMaxEx<T>(channel,
+                                      static_cast<T>(lowerBound),
+                                      static_cast<T>(upperBound));
 
         if (hasAlpha)
         {
             // BLUE CHANNEL
             j = i;
             if (!i.find(',', end.offset()))
+            {
                 return false;
+            }
             tmp.assign(j, i);
             if (!tmp.to(channel) or ++i == end or !i.findFirstNonSpace(end.offset()))
+            {
                 return false;
-            out.blue
-              = Math::MinMaxEx<T>(channel, static_cast<T>(lowerBound), static_cast<T>(upperBound));
+            }
+            out.blue = Math::MinMaxEx<T>(channel,
+                                         static_cast<T>(lowerBound),
+                                         static_cast<T>(upperBound));
 
             // ALPHA CHANNEL
             j = i;
             if (!i.find(')', end.rawOffset()))
+            {
                 return false;
+            }
             tmp.assign(j, i);
             if (!tmp.to(channel))
+            {
                 return false;
-            out.alpha
-              = Math::MinMaxEx<T>(channel, static_cast<T>(lowerBound), static_cast<T>(upperBound));
+            }
+            out.alpha = Math::MinMaxEx<T>(channel,
+                                          static_cast<T>(lowerBound),
+                                          static_cast<T>(upperBound));
         }
         else
         {
             // BLUE CHANNEL
             j = i;
             if (!i.find(')', end.rawOffset()))
+            {
                 return false;
+            }
             tmp.assign(j, i);
             if (!tmp.to(channel))
+            {
                 return false;
+            }
             out.blue = static_cast<T>(channel);
 
             // default value for alpha
@@ -760,9 +808,7 @@ private:
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
 
 template<class T>
 inline std::ostream& operator<<(std::ostream& out, const Yuni::Color::RGBA<T>& rhs)

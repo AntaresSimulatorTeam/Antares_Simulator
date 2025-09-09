@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -30,32 +51,26 @@
 #include <unistd.h>
 #endif
 
-namespace Yuni
-{
-namespace Private
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::Private::IO::Directory
 {
 enum
 {
     wbufferMax = 6192,
 };
 
-class DirInfo final : private Yuni::NonCopyable<DirInfo>
+class DirInfo final: private Yuni::NonCopyable<DirInfo>
 {
 public:
-    DirInfo() :
-     size(),
-     modified(),
-     isFolder(false),
+    DirInfo():
+        size(),
+        modified(),
+        isFolder(false),
 #ifndef YUNI_OS_WINDOWS
-     pdir(nullptr),
-     pent(nullptr)
+        pdir(nullptr),
+        pent(nullptr)
 #else
-     h(-1),
-     callNext(false)
+        h(-1),
+        callNext(false)
 #endif
     {
     }
@@ -64,10 +79,14 @@ public:
     {
 #ifdef YUNI_OS_WINDOWS
         if (h >= 0)
+        {
             _findclose(h);
+        }
 #else
         if (pdir) // check required to avoid segv
+        {
             closedir(pdir);
+        }
 #endif
     }
 
@@ -85,8 +104,12 @@ public:
         wbuffer[1] = L'\\';
         wbuffer[2] = L'?';
         wbuffer[3] = L'\\';
-        int n = ::MultiByteToWideChar(
-          CP_UTF8, 0, canonPath.c_str(), canonPath.size(), wbuffer + 4, wbufferMax - 10);
+        int n = ::MultiByteToWideChar(CP_UTF8,
+                                      0,
+                                      canonPath.c_str(),
+                                      canonPath.size(),
+                                      wbuffer + 4,
+                                      wbufferMax - 10);
         if (!n)
         {
             h = -1;
@@ -131,14 +154,18 @@ public:
             {
                 if ((pent->d_name[1] == '.' and pent->d_name[2] == '\0')
                     or (pent->d_name[1] == '\0'))
+                {
                     continue;
+                }
             }
 
             name = (const char*)pent->d_name;
             filename.clear();
             filename << parent << Yuni::IO::Separator << name;
             if (stat(filename.c_str(), &s) != 0)
+            {
                 continue;
+            }
 
             if (S_ISDIR(s.st_mode))
             {
@@ -170,7 +197,9 @@ public:
 #else // WINDOWS
 
         if (h < 0)
+        {
             return false;
+        }
         do
         {
             if (callNext and 0 != _wfindnexti64(h, &data))
@@ -185,16 +214,32 @@ public:
             if (*(data.name) == L'.')
             {
                 if ((data.name[1] == L'.' and data.name[2] == L'\0') or (data.name[1] == L'\0'))
+                {
                     continue;
+                }
             }
 
-            const int sizeRequired
-              = WideCharToMultiByte(CP_UTF8, 0, data.name, -1, nullptr, 0, nullptr, nullptr);
+            const int sizeRequired = WideCharToMultiByte(CP_UTF8,
+                                                         0,
+                                                         data.name,
+                                                         -1,
+                                                         nullptr,
+                                                         0,
+                                                         nullptr,
+                                                         nullptr);
             if (sizeRequired <= 0)
+            {
                 continue;
+            }
             name.reserve((uint)sizeRequired);
-            WideCharToMultiByte(
-              CP_UTF8, 0, data.name, -1, (char*)name.data(), sizeRequired, nullptr, nullptr);
+            WideCharToMultiByte(CP_UTF8,
+                                0,
+                                data.name,
+                                -1,
+                                (char*)name.data(),
+                                sizeRequired,
+                                nullptr,
+                                nullptr);
             name.resize(((uint)sizeRequired) - 1);
 
             filename.clear();
@@ -256,11 +301,13 @@ private:
 class IteratorData final
 {
 public:
-    IteratorData() : flags()
+    IteratorData():
+        flags()
     {
     }
 
-    IteratorData(const IteratorData& rhs) : flags(rhs.flags)
+    IteratorData(const IteratorData& rhs):
+        flags(rhs.flags)
     {
         if (not rhs.dirinfo.empty())
         {
@@ -304,7 +351,9 @@ public:
                 // Parent folder
                 pop();
                 if (dirinfo.empty())
+                {
                     return false;
+                }
             }
             else
             {
@@ -358,7 +407,9 @@ IteratorData* IteratorDataNext(IteratorData* data)
 {
     assert(data);
     if (data->next())
+    {
         return data;
+    }
     delete data;
     return nullptr;
 }
@@ -405,7 +456,4 @@ bool IteratorDataIsFile(const IteratorData* data)
     return !data->dirinfo.front().isFolder;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::IO::Directory

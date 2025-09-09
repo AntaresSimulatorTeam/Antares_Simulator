@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -21,9 +42,7 @@
 #endif
 #include "mutex.h"
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \name Threading policies
@@ -85,10 +104,12 @@ public:
         MutexLocker()
         {
         }
+
         template<class C>
         MutexLocker(const C&)
         {
         }
+
         ~MutexLocker()
         {
         }
@@ -116,14 +137,17 @@ public:
     SingleThreaded()
     {
     }
+
     //! Copy constructor
     SingleThreaded(const SingleThreaded&)
     {
     }
+
     //! Destructor
     ~SingleThreaded()
     {
     }
+
     //@}
 
 }; // class SingleThreaded
@@ -154,7 +178,8 @@ public:
     {
     public:
         template<class C>
-        MutexLocker(const C& h) : pHostToLock(MutexExtractor<C>::Reference(h))
+        MutexLocker(const C& h):
+            pHostToLock(MutexExtractor<C>::Reference(h))
         {
             pHostToLock.lock();
         }
@@ -187,17 +212,22 @@ public:
     //! \name Constructor & Destructor
     //@{
     //! Default constructor
-    ObjectLevelLockable() : pMutex(true /*recursive*/)
+    ObjectLevelLockable():
+        pMutex(true /*recursive*/)
     {
     }
+
     //! Copy constructor
-    ObjectLevelLockable(const ObjectLevelLockable&) : pMutex(true /*recursive*/)
+    ObjectLevelLockable(const ObjectLevelLockable&):
+        pMutex(true /*recursive*/)
     {
     }
+
     //! Destructor
     ~ObjectLevelLockable()
     {
     }
+
     //@}
 
 protected:
@@ -232,7 +262,8 @@ public:
     {
     public:
         template<class C>
-        MutexLocker(const C& h) : pHostToLock(MutexExtractor<C>::Reference(h))
+        MutexLocker(const C& h):
+            pHostToLock(MutexExtractor<C>::Reference(h))
         {
             pHostToLock.lock();
         }
@@ -265,17 +296,22 @@ public:
     //! \name Constructor & Destructor
     //@{
     //! Default constructor
-    ObjectLevelLockableNotRecursive() : pMutex(false)
+    ObjectLevelLockableNotRecursive():
+        pMutex(false)
     {
     }
+
     //! Copy constructor
-    ObjectLevelLockableNotRecursive(const ObjectLevelLockableNotRecursive&) : pMutex(false)
+    ObjectLevelLockableNotRecursive(const ObjectLevelLockableNotRecursive&):
+        pMutex(false)
     {
     }
+
     //! Destructor
     ~ObjectLevelLockableNotRecursive()
     {
     }
+
     //@}
 
 protected:
@@ -313,14 +349,17 @@ public:
         {
             Mutex::ClassLevelLockable<Host>::mutex.lock();
         }
+
         MutexLocker(const MutexLocker&)
         {
         }
+
         template<class C>
         MutexLocker(const C&)
         {
             Mutex::ClassLevelLockable<Host>::mutex.lock();
         }
+
         ~MutexLocker()
         {
             Mutex::ClassLevelLockable<Host>::mutex.unlock();
@@ -346,17 +385,22 @@ public:
     //! \name Constructor & Destructor
     //@{
     //! Default constructor
-    ClassLevelLockable() : pMutex(Mutex::ClassLevelLockable<Host>::mutex)
+    ClassLevelLockable():
+        pMutex(Mutex::ClassLevelLockable<Host>::mutex)
     {
     }
+
     //! Copy constructor
-    ClassLevelLockable(const ClassLevelLockable&) : pMutex(Mutex::ClassLevelLockable<Host>::mutex)
+    ClassLevelLockable(const ClassLevelLockable&):
+        pMutex(Mutex::ClassLevelLockable<Host>::mutex)
     {
     }
+
     //! Destructor
     ~ClassLevelLockable()
     {
     }
+
     //@}
 
 private:
@@ -367,5 +411,4 @@ private:
 
 //@} // Threading Policies
 
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

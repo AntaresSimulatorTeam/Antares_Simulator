@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_FILTER_FILTER_H__
 #define __ANTARES_TOOLBOX_FILTER_FILTER_H__
 
@@ -26,11 +26,7 @@
 #include "operator.list.h"
 #include <antares/date/date.h>
 
-namespace Antares
-{
-namespace Toolbox
-{
-namespace Filter
+namespace Antares::Toolbox::Filter
 {
 // Forward declaration
 class Input;
@@ -48,7 +44,7 @@ class Input;
 ** Graphically, it will be the same. All components created by the filter
 ** only handle data specific to the filter itself.
 */
-class AFilterBase : public wxEvtHandler
+class AFilterBase: public wxEvtHandler
 {
 public:
     /*!
@@ -70,6 +66,7 @@ public:
     {
         return wxT("(null)");
     }
+
     //@}
 
     //! \name Caption
@@ -79,6 +76,7 @@ public:
     {
         return wxT("(null)");
     }
+
     //@}
 
     /*!
@@ -103,6 +101,7 @@ public:
     //! \name Precision of the filter
     //@{
     virtual Date::Precision precision() const;
+
     //@}
 
     //! \name What kind of item should be tested
@@ -111,14 +110,17 @@ public:
     {
         return false;
     }
+
     virtual bool checkOnColsLabels() const
     {
         return false;
     }
+
     virtual bool checkOnCells() const
     {
         return false;
     }
+
     //@}
 
     //! Get if the filter is about the raw values
@@ -175,6 +177,7 @@ public:
     }
 
     void refreshAttachedGrid();
+
     //@}
 
     //! Get the parent input
@@ -214,8 +217,6 @@ private:
 
 }; // class AFilterBase
 
-} // namespace Filter
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Filter
 
 #endif // __ANTARES_TOOLBOX_FILTER_FILTER_H__

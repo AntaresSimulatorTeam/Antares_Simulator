@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -15,66 +36,73 @@
     T(QuantityConversion<Q1, T1, Q, T>::Value(rhs.toSIBaseUnit<P>()) \
       / Abstract<Q, Child, T, P, N>::RelationToSI())
 
-namespace Yuni
-{
-namespace Unit
+namespace Yuni::Unit
 {
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract() : pValue()
+inline Abstract<Q, Child, T, P, N>::Abstract():
+    pValue()
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(int16_t u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(int16_t u):
+    pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(int32_t u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(int32_t u):
+    pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(int64_t u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(int64_t u):
+    pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(uint16 u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(uint16 u):
+    pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(uint32_t u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(uint32_t u):
+    pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(uint64_t u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(uint64_t u):
+    pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(float u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(float u):
+    pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
-inline Abstract<Q, Child, T, P, N>::Abstract(double u) : pValue((T)u)
+inline Abstract<Q, Child, T, P, N>::Abstract(double u):
+    pValue((T)u)
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
 template<typename P1>
-inline Abstract<Q, Child, T, P, N>::Abstract(const Abstract<Q, Child, T, P1, N>& rhs) :
- pValue(rhs.value())
+inline Abstract<Q, Child, T, P, N>::Abstract(const Abstract<Q, Child, T, P1, N>& rhs):
+    pValue(rhs.value())
 {
 }
 
 template<class Q, class Child, typename T, typename P, typename N>
 template<class Q1, typename T1, class C1, typename P1, typename N1>
-inline Abstract<Q, Child, T, P, N>::Abstract(const Abstract<Q1, C1, T1, P1, N1>& rhs) :
- pValue(YUNI_UNIT_FORMULA)
+inline Abstract<Q, Child, T, P, N>::Abstract(const Abstract<Q1, C1, T1, P1, N1>& rhs):
+    pValue(YUNI_UNIT_FORMULA)
 {
 }
 
@@ -371,12 +399,12 @@ inline bool Abstract<Q, Child, T, P, N>::operator>(const Abstract<Q1, C1, T1, P1
     }
 
 #define YUNI_UNIT_OPERATOR_FOR_ALLSTD_TYPES(OP) \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, int16_t)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, int32_t)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, int64_t)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int16_t)      \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int32_t)      \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, int64_t)      \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, uint16)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint32_t)       \
-    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint64_t)       \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint32_t)     \
+    YUNI_UNIT_OPERATOR_ASSIGN(OP, uint64_t)     \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, float)        \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, double)       \
     YUNI_UNIT_OPERATOR_ASSIGN(OP, long double)  \
@@ -394,7 +422,6 @@ YUNI_UNIT_OPERATOR_FOR_ALLSTD_TYPES(*=)
 #undef YUNI_UNIT_OPERATOR_ASSIGN_ABSTRACT_PRECISION
 #undef YUNI_UNIT_OPERATOR_FOR_ALLSTD_TYPES
 
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit
 
 #undef YUNI_UNIT_FORMULA

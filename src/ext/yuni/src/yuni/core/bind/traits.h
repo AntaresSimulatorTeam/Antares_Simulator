@@ -1,42 +1,23 @@
 /*
-** YUNI's default license is the GNU Lesser Public License (LGPL), with some
-** exclusions (see below). This basically means that you can get the full source
-** code for nothing, so long as you adhere to a few rules.
-**
-** Under the LGPL you may use YUNI for any purpose you wish, and modify it if you
-** require, as long as you:
-**
-** Pass on the (modified) YUNI source code with your software, with original
-** copyrights intact :
-**  * If you distribute electronically, the source can be a separate download
-**    (either from your own site if you modified YUNI, or to the official YUNI
-**    website if you used an unmodified version) – just include a link in your
-**    documentation
-**  * If you distribute physical media, the YUNI source that you used to build
-**    your application should be included on that media
-** Make it clear where you have customised it.
-**
-** In addition to the LGPL license text, the following exceptions / clarifications
-** to the LGPL conditions apply to YUNI:
-**
-**  * Making modifications to YUNI configuration files, build scripts and
-**    configuration headers such as yuni/platform.h in order to create a
-**    customised build setup of YUNI with the otherwise unmodified source code,
-**    does not constitute a derived work
-**  * Building against YUNI headers which have inlined code does not constitute a
-**    derived work
-**  * Code which subclasses YUNI classes outside of the YUNI libraries does not
-**    form a derived work
-**  * Statically linking the YUNI libraries into a user application does not make
-**    the user application a derived work.
-**  * Using source code obsfucation on the YUNI source code when distributing it
-**    is not permitted.
-** As per the terms of the LGPL, a "derived work" is one for which you have to
-** distribute source code for, so when the clauses above define something as not
-** a derived work, it means you don't have to distribute source code for it.
-** However, the original YUNI source code with all modifications must always be
-** made available.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #pragma once
 
 /*!
@@ -56,11 +37,7 @@ class Bind;
 
 } // namespace Yuni
 
-namespace Yuni
-{
-namespace Private
-{
-namespace BindImpl
+namespace Yuni::Private::BindImpl
 {
 // Forward declarations for classes which will hold informations about the
 // targetted function or member
@@ -178,6 +155,7 @@ struct Argument<R(A0, A1), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R, class A0, class A1>
 struct Argument<R(A0, A1), 1>
@@ -192,12 +170,14 @@ struct Argument<R(A0, A1, A2), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R, class A0, class A1, class A2>
 struct Argument<R(A0, A1, A2), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R, class A0, class A1, class A2>
 struct Argument<R(A0, A1, A2), 2>
@@ -212,18 +192,21 @@ struct Argument<R(A0, A1, A2, A3), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R, class A0, class A1, class A2, class A3>
 struct Argument<R(A0, A1, A2, A3), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R, class A0, class A1, class A2, class A3>
 struct Argument<R(A0, A1, A2, A3), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R, class A0, class A1, class A2, class A3>
 struct Argument<R(A0, A1, A2, A3), 3>
@@ -238,24 +221,28 @@ struct Argument<R(A0, A1, A2, A3, A4), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R, class A0, class A1, class A2, class A3, class A4>
 struct Argument<R(A0, A1, A2, A3, A4), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R, class A0, class A1, class A2, class A3, class A4>
 struct Argument<R(A0, A1, A2, A3, A4), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R, class A0, class A1, class A2, class A3, class A4>
 struct Argument<R(A0, A1, A2, A3, A4), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R, class A0, class A1, class A2, class A3, class A4>
 struct Argument<R(A0, A1, A2, A3, A4), 4>
@@ -270,30 +257,35 @@ struct Argument<R(A0, A1, A2, A3, A4, A5), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5>
 struct Argument<R(A0, A1, A2, A3, A4, A5), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5>
 struct Argument<R(A0, A1, A2, A3, A4, A5), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5>
 struct Argument<R(A0, A1, A2, A3, A4, A5), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5>
 struct Argument<R(A0, A1, A2, A3, A4, A5), 4>
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5>
 struct Argument<R(A0, A1, A2, A3, A4, A5), 5>
@@ -308,36 +300,42 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6), 4>
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6), 5>
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6), 6>
@@ -352,42 +350,49 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7), 4>
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7), 5>
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7), 6>
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7), 7>
@@ -411,6 +416,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R,
          class A0,
@@ -426,6 +432,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R,
          class A0,
@@ -441,6 +448,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R,
          class A0,
@@ -456,6 +464,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R,
          class A0,
@@ -471,6 +480,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8), 4>
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R,
          class A0,
@@ -486,6 +496,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8), 5>
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R,
          class A0,
@@ -501,6 +512,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8), 6>
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R,
          class A0,
@@ -516,6 +528,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8), 7>
 {
     typedef A7 Type;
 };
+
 // Argument 8
 template<class R,
          class A0,
@@ -549,6 +562,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R,
          class A0,
@@ -565,6 +579,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R,
          class A0,
@@ -581,6 +596,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R,
          class A0,
@@ -597,6 +613,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R,
          class A0,
@@ -613,6 +630,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 4>
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R,
          class A0,
@@ -629,6 +647,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 5>
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R,
          class A0,
@@ -645,6 +664,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 6>
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R,
          class A0,
@@ -661,6 +681,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 7>
 {
     typedef A7 Type;
 };
+
 // Argument 8
 template<class R,
          class A0,
@@ -677,6 +698,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), 8>
 {
     typedef A8 Type;
 };
+
 // Argument 9
 template<class R,
          class A0,
@@ -712,6 +734,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R,
          class A0,
@@ -729,6 +752,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R,
          class A0,
@@ -746,6 +770,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R,
          class A0,
@@ -763,6 +788,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R,
          class A0,
@@ -780,6 +806,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 4>
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R,
          class A0,
@@ -797,6 +824,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 5>
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R,
          class A0,
@@ -814,6 +842,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 6>
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R,
          class A0,
@@ -831,6 +860,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 7>
 {
     typedef A7 Type;
 };
+
 // Argument 8
 template<class R,
          class A0,
@@ -848,6 +878,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 8>
 {
     typedef A8 Type;
 };
+
 // Argument 9
 template<class R,
          class A0,
@@ -865,6 +896,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10), 9>
 {
     typedef A9 Type;
 };
+
 // Argument 10
 template<class R,
          class A0,
@@ -902,6 +934,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R,
          class A0,
@@ -920,6 +953,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R,
          class A0,
@@ -938,6 +972,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R,
          class A0,
@@ -956,6 +991,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R,
          class A0,
@@ -974,6 +1010,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 4>
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R,
          class A0,
@@ -992,6 +1029,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 5>
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R,
          class A0,
@@ -1010,6 +1048,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 6>
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R,
          class A0,
@@ -1028,6 +1067,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 7>
 {
     typedef A7 Type;
 };
+
 // Argument 8
 template<class R,
          class A0,
@@ -1046,6 +1086,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 8>
 {
     typedef A8 Type;
 };
+
 // Argument 9
 template<class R,
          class A0,
@@ -1064,6 +1105,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 9>
 {
     typedef A9 Type;
 };
+
 // Argument 10
 template<class R,
          class A0,
@@ -1082,6 +1124,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11), 10>
 {
     typedef A10 Type;
 };
+
 // Argument 11
 template<class R,
          class A0,
@@ -1121,6 +1164,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 0>
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R,
          class A0,
@@ -1140,6 +1184,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 1>
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R,
          class A0,
@@ -1159,6 +1204,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 2>
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R,
          class A0,
@@ -1178,6 +1224,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 3>
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R,
          class A0,
@@ -1197,6 +1244,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 4>
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R,
          class A0,
@@ -1216,6 +1264,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 5>
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R,
          class A0,
@@ -1235,6 +1284,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 6>
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R,
          class A0,
@@ -1254,6 +1304,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 7>
 {
     typedef A7 Type;
 };
+
 // Argument 8
 template<class R,
          class A0,
@@ -1273,6 +1324,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 8>
 {
     typedef A8 Type;
 };
+
 // Argument 9
 template<class R,
          class A0,
@@ -1292,6 +1344,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 9>
 {
     typedef A9 Type;
 };
+
 // Argument 10
 template<class R,
          class A0,
@@ -1311,6 +1364,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 10>
 {
     typedef A10 Type;
 };
+
 // Argument 11
 template<class R,
          class A0,
@@ -1330,6 +1384,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12), 11>
 {
     typedef A11 Type;
 };
+
 // Argument 12
 template<class R,
          class A0,
@@ -1371,6 +1426,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 0
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R,
          class A0,
@@ -1391,6 +1447,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 1
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R,
          class A0,
@@ -1411,6 +1468,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 2
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R,
          class A0,
@@ -1431,6 +1489,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 3
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R,
          class A0,
@@ -1451,6 +1510,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 4
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R,
          class A0,
@@ -1471,6 +1531,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 5
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R,
          class A0,
@@ -1491,6 +1552,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 6
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R,
          class A0,
@@ -1511,6 +1573,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 7
 {
     typedef A7 Type;
 };
+
 // Argument 8
 template<class R,
          class A0,
@@ -1531,6 +1594,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 8
 {
     typedef A8 Type;
 };
+
 // Argument 9
 template<class R,
          class A0,
@@ -1551,6 +1615,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 9
 {
     typedef A9 Type;
 };
+
 // Argument 10
 template<class R,
          class A0,
@@ -1571,6 +1636,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 1
 {
     typedef A10 Type;
 };
+
 // Argument 11
 template<class R,
          class A0,
@@ -1591,6 +1657,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 1
 {
     typedef A11 Type;
 };
+
 // Argument 12
 template<class R,
          class A0,
@@ -1611,6 +1678,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13), 1
 {
     typedef A12 Type;
 };
+
 // Argument 13
 template<class R,
          class A0,
@@ -1654,6 +1722,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R,
          class A0,
@@ -1675,6 +1744,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R,
          class A0,
@@ -1696,6 +1766,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R,
          class A0,
@@ -1717,6 +1788,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R,
          class A0,
@@ -1738,6 +1810,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R,
          class A0,
@@ -1759,6 +1832,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R,
          class A0,
@@ -1780,6 +1854,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R,
          class A0,
@@ -1801,6 +1876,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A7 Type;
 };
+
 // Argument 8
 template<class R,
          class A0,
@@ -1822,6 +1898,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A8 Type;
 };
+
 // Argument 9
 template<class R,
          class A0,
@@ -1843,6 +1920,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A9 Type;
 };
+
 // Argument 10
 template<class R,
          class A0,
@@ -1864,6 +1942,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A10 Type;
 };
+
 // Argument 11
 template<class R,
          class A0,
@@ -1885,6 +1964,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A11 Type;
 };
+
 // Argument 12
 template<class R,
          class A0,
@@ -1906,6 +1986,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A12 Type;
 };
+
 // Argument 13
 template<class R,
          class A0,
@@ -1927,6 +2008,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A13 Type;
 };
+
 // Argument 14
 template<class R,
          class A0,
@@ -1972,6 +2054,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A0 Type;
 };
+
 // Argument 1
 template<class R,
          class A0,
@@ -1994,6 +2077,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A1 Type;
 };
+
 // Argument 2
 template<class R,
          class A0,
@@ -2016,6 +2100,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A2 Type;
 };
+
 // Argument 3
 template<class R,
          class A0,
@@ -2038,6 +2123,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A3 Type;
 };
+
 // Argument 4
 template<class R,
          class A0,
@@ -2060,6 +2146,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A4 Type;
 };
+
 // Argument 5
 template<class R,
          class A0,
@@ -2082,6 +2169,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A5 Type;
 };
+
 // Argument 6
 template<class R,
          class A0,
@@ -2104,6 +2192,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A6 Type;
 };
+
 // Argument 7
 template<class R,
          class A0,
@@ -2126,6 +2215,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A7 Type;
 };
+
 // Argument 8
 template<class R,
          class A0,
@@ -2148,6 +2238,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A8 Type;
 };
+
 // Argument 9
 template<class R,
          class A0,
@@ -2170,6 +2261,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A9 Type;
 };
+
 // Argument 10
 template<class R,
          class A0,
@@ -2192,6 +2284,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A10 Type;
 };
+
 // Argument 11
 template<class R,
          class A0,
@@ -2214,6 +2307,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A11 Type;
 };
+
 // Argument 12
 template<class R,
          class A0,
@@ -2236,6 +2330,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A12 Type;
 };
+
 // Argument 13
 template<class R,
          class A0,
@@ -2258,6 +2353,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A13 Type;
 };
+
 // Argument 14
 template<class R,
          class A0,
@@ -2280,6 +2376,7 @@ struct Argument<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
 {
     typedef A14 Type;
 };
+
 // Argument 15
 template<class R,
          class A0,
@@ -2356,6 +2453,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke() const = 0;
 
@@ -2391,6 +2489,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0) const = 0;
 
@@ -2426,6 +2525,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1) const = 0;
 
@@ -2461,6 +2561,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1, A2 a2) const = 0;
 
@@ -2496,6 +2597,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3) const = 0;
 
@@ -2531,6 +2633,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4) const = 0;
 
@@ -2566,6 +2669,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const = 0;
 
@@ -2601,6 +2705,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const = 0;
 
@@ -2636,6 +2741,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const = 0;
 
@@ -2658,8 +2764,8 @@ public:
     virtual bool isDescendantOfIEventObserverBase() const = 0;
 
     //! Compare with a mere pointer-to-function
-    virtual bool compareWithPointerToFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7)) const = 0;
+    virtual bool compareWithPointerToFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7)) const
+      = 0;
     //! Compare with a pointer-to-object
     virtual bool compareWithPointerToObject(const void* object) const = 0;
 };
@@ -2681,6 +2787,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const = 0;
 
@@ -2704,7 +2811,8 @@ public:
 
     //! Compare with a mere pointer-to-function
     virtual bool compareWithPointerToFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8)) const = 0;
+      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8)) const
+      = 0;
     //! Compare with a pointer-to-object
     virtual bool compareWithPointerToObject(const void* object) const = 0;
 };
@@ -2727,9 +2835,10 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
-    virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
-      const = 0;
+    virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) const
+      = 0;
 
     //! Get if the object is binded
     virtual bool empty() const
@@ -2751,7 +2860,8 @@ public:
 
     //! Compare with a mere pointer-to-function
     virtual bool compareWithPointerToFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)) const = 0;
+      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)) const
+      = 0;
     //! Compare with a pointer-to-object
     virtual bool compareWithPointerToObject(const void* object) const = 0;
 };
@@ -2775,9 +2885,11 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10)
-      const = 0;
+      const
+      = 0;
 
     //! Get if the object is binded
     virtual bool empty() const
@@ -2799,7 +2911,8 @@ public:
 
     //! Compare with a mere pointer-to-function
     virtual bool compareWithPointerToFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) const = 0;
+      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) const
+      = 0;
     //! Compare with a pointer-to-object
     virtual bool compareWithPointerToObject(const void* object) const = 0;
 };
@@ -2824,10 +2937,12 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const = 0;
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const
+      = 0;
 
     //! Get if the object is binded
     virtual bool empty() const
@@ -2849,7 +2964,8 @@ public:
 
     //! Compare with a mere pointer-to-function
     virtual bool compareWithPointerToFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) const = 0;
+      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) const
+      = 0;
     //! Compare with a pointer-to-object
     virtual bool compareWithPointerToObject(const void* object) const = 0;
 };
@@ -2875,6 +2991,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0,
                      A1 a1,
@@ -2888,7 +3005,8 @@ public:
                      A9 a9,
                      A10 a10,
                      A11 a11,
-                     A12 a12) const = 0;
+                     A12 a12) const
+      = 0;
 
     //! Get if the object is binded
     virtual bool empty() const
@@ -2910,7 +3028,8 @@ public:
 
     //! Compare with a mere pointer-to-function
     virtual bool compareWithPointerToFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) const = 0;
+      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) const
+      = 0;
     //! Compare with a pointer-to-object
     virtual bool compareWithPointerToObject(const void* object) const = 0;
 };
@@ -2937,6 +3056,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0,
                      A1 a1,
@@ -2951,7 +3071,8 @@ public:
                      A10 a10,
                      A11 a11,
                      A12 a12,
-                     A13 a13) const = 0;
+                     A13 a13) const
+      = 0;
 
     //! Get if the object is binded
     virtual bool empty() const
@@ -2973,7 +3094,8 @@ public:
 
     //! Compare with a mere pointer-to-function
     virtual bool compareWithPointerToFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) const = 0;
+      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) const
+      = 0;
     //! Compare with a pointer-to-object
     virtual bool compareWithPointerToObject(const void* object) const = 0;
 };
@@ -3001,6 +3123,7 @@ public:
     virtual ~IPointer()
     {
     }
+
     //! Invoke the delegate
     virtual R invoke(A0 a0,
                      A1 a1,
@@ -3016,7 +3139,8 @@ public:
                      A11 a11,
                      A12 a12,
                      A13 a13,
-                     A14 a14) const = 0;
+                     A14 a14) const
+      = 0;
 
     //! Get if the object is binded
     virtual bool empty() const
@@ -3038,7 +3162,8 @@ public:
 
     //! Compare with a mere pointer-to-function
     virtual bool compareWithPointerToFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) const = 0;
+      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) const
+      = 0;
     //! Compare with a pointer-to-object
     virtual bool compareWithPointerToObject(const void* object) const = 0;
 };
@@ -3046,7 +3171,7 @@ public:
 // class Void
 
 template<class R>
-class None<R()> final : public IPointer<R()>
+class None<R()> final: public IPointer<R()>
 {
 public:
     //! Destructor
@@ -3097,7 +3222,7 @@ public:
 }; // class None<R ()>
 
 template<class R, class A0>
-class None<R(A0)> final : public IPointer<R(A0)>
+class None<R(A0)> final: public IPointer<R(A0)>
 {
 public:
     //! Destructor
@@ -3148,7 +3273,7 @@ public:
 }; // class None<R (A0)>
 
 template<class R, class A0, class A1>
-class None<R(A0, A1)> final : public IPointer<R(A0, A1)>
+class None<R(A0, A1)> final: public IPointer<R(A0, A1)>
 {
 public:
     //! Destructor
@@ -3199,7 +3324,7 @@ public:
 }; // class None<R (A0, A1)>
 
 template<class R, class A0, class A1, class A2>
-class None<R(A0, A1, A2)> final : public IPointer<R(A0, A1, A2)>
+class None<R(A0, A1, A2)> final: public IPointer<R(A0, A1, A2)>
 {
 public:
     //! Destructor
@@ -3250,7 +3375,7 @@ public:
 }; // class None<R (A0, A1, A2)>
 
 template<class R, class A0, class A1, class A2, class A3>
-class None<R(A0, A1, A2, A3)> final : public IPointer<R(A0, A1, A2, A3)>
+class None<R(A0, A1, A2, A3)> final: public IPointer<R(A0, A1, A2, A3)>
 {
 public:
     //! Destructor
@@ -3301,7 +3426,7 @@ public:
 }; // class None<R (A0, A1, A2, A3)>
 
 template<class R, class A0, class A1, class A2, class A3, class A4>
-class None<R(A0, A1, A2, A3, A4)> final : public IPointer<R(A0, A1, A2, A3, A4)>
+class None<R(A0, A1, A2, A3, A4)> final: public IPointer<R(A0, A1, A2, A3, A4)>
 {
 public:
     //! Destructor
@@ -3352,7 +3477,7 @@ public:
 }; // class None<R (A0, A1, A2, A3, A4)>
 
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5>
-class None<R(A0, A1, A2, A3, A4, A5)> final : public IPointer<R(A0, A1, A2, A3, A4, A5)>
+class None<R(A0, A1, A2, A3, A4, A5)> final: public IPointer<R(A0, A1, A2, A3, A4, A5)>
 {
 public:
     //! Destructor
@@ -3403,7 +3528,7 @@ public:
 }; // class None<R (A0, A1, A2, A3, A4, A5)>
 
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
-class None<R(A0, A1, A2, A3, A4, A5, A6)> final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
+class None<R(A0, A1, A2, A3, A4, A5, A6)> final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
 {
 public:
     //! Destructor
@@ -3456,7 +3581,7 @@ public:
 
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 class None<R(A0, A1, A2, A3, A4, A5, A6, A7)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
 {
 public:
     //! Destructor
@@ -3518,7 +3643,7 @@ template<class R,
          class A7,
          class A8>
 class None<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
 {
 public:
     //! Destructor
@@ -3581,7 +3706,7 @@ template<class R,
          class A8,
          class A9>
 class None<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
 {
 public:
     //! Destructor
@@ -3645,7 +3770,7 @@ template<class R,
          class A9,
          class A10>
 class None<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 {
 public:
     //! Destructor
@@ -3710,7 +3835,7 @@ template<class R,
          class A10,
          class A11>
 class None<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
 {
 public:
     //! Destructor
@@ -3776,7 +3901,7 @@ template<class R,
          class A11,
          class A12>
 class None<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
 {
 public:
     //! Destructor
@@ -3843,7 +3968,7 @@ template<class R,
          class A12,
          class A13>
 class None<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
 {
 public:
     //! Destructor
@@ -3911,7 +4036,7 @@ template<class R,
          class A13,
          class A14>
 class None<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
 {
 public:
     //! Destructor
@@ -3965,7 +4090,7 @@ public:
 // class BoundWithFunction
 
 template<class R>
-class BoundWithFunction<R()> final : public IPointer<R()>
+class BoundWithFunction<R()> final: public IPointer<R()>
 {
 public:
     //! Destructor
@@ -3973,7 +4098,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)()) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)()):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4020,7 +4146,7 @@ private:
 }; // class BoundWithFunction<R ()>
 
 template<class R, class A0>
-class BoundWithFunction<R(A0)> final : public IPointer<R(A0)>
+class BoundWithFunction<R(A0)> final: public IPointer<R(A0)>
 {
 public:
     //! Destructor
@@ -4028,7 +4154,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4075,7 +4202,7 @@ private:
 }; // class BoundWithFunction<R (A0)>
 
 template<class R, class A0, class A1>
-class BoundWithFunction<R(A0, A1)> final : public IPointer<R(A0, A1)>
+class BoundWithFunction<R(A0, A1)> final: public IPointer<R(A0, A1)>
 {
 public:
     //! Destructor
@@ -4083,7 +4210,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4130,7 +4258,7 @@ private:
 }; // class BoundWithFunction<R (A0, A1)>
 
 template<class R, class A0, class A1, class A2>
-class BoundWithFunction<R(A0, A1, A2)> final : public IPointer<R(A0, A1, A2)>
+class BoundWithFunction<R(A0, A1, A2)> final: public IPointer<R(A0, A1, A2)>
 {
 public:
     //! Destructor
@@ -4138,7 +4266,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4185,7 +4314,7 @@ private:
 }; // class BoundWithFunction<R (A0, A1, A2)>
 
 template<class R, class A0, class A1, class A2, class A3>
-class BoundWithFunction<R(A0, A1, A2, A3)> final : public IPointer<R(A0, A1, A2, A3)>
+class BoundWithFunction<R(A0, A1, A2, A3)> final: public IPointer<R(A0, A1, A2, A3)>
 {
 public:
     //! Destructor
@@ -4193,7 +4322,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4240,7 +4370,7 @@ private:
 }; // class BoundWithFunction<R (A0, A1, A2, A3)>
 
 template<class R, class A0, class A1, class A2, class A3, class A4>
-class BoundWithFunction<R(A0, A1, A2, A3, A4)> final : public IPointer<R(A0, A1, A2, A3, A4)>
+class BoundWithFunction<R(A0, A1, A2, A3, A4)> final: public IPointer<R(A0, A1, A2, A3, A4)>
 {
 public:
     //! Destructor
@@ -4248,7 +4378,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4295,8 +4426,7 @@ private:
 }; // class BoundWithFunction<R (A0, A1, A2, A3, A4)>
 
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5>
-class BoundWithFunction<R(A0, A1, A2, A3, A4, A5)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5)>
+class BoundWithFunction<R(A0, A1, A2, A3, A4, A5)> final: public IPointer<R(A0, A1, A2, A3, A4, A5)>
 {
 public:
     //! Destructor
@@ -4304,7 +4434,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4352,7 +4483,7 @@ private:
 
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
 {
 public:
     //! Destructor
@@ -4360,7 +4491,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4409,7 +4541,7 @@ private:
 
 template<class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6, A7)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
 {
 public:
     //! Destructor
@@ -4417,7 +4549,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4475,7 +4608,7 @@ template<class R,
          class A7,
          class A8>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
 {
 public:
     //! Destructor
@@ -4483,7 +4616,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4542,7 +4676,7 @@ template<class R,
          class A8,
          class A9>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
 {
 public:
     //! Destructor
@@ -4550,7 +4684,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4611,7 +4746,7 @@ template<class R,
          class A9,
          class A10>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 {
 public:
     //! Destructor
@@ -4619,7 +4754,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) : pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4681,7 +4817,7 @@ template<class R,
          class A10,
          class A11>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
 {
 public:
     //! Destructor
@@ -4689,15 +4825,15 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) :
-     pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
 
     virtual R
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const override
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const override
     {
         return (*pPointer)(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
     }
@@ -4754,7 +4890,7 @@ template<class R,
          class A11,
          class A12>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
 {
 public:
     //! Destructor
@@ -4762,8 +4898,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) :
-     pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4838,7 +4974,7 @@ template<class R,
          class A12,
          class A13>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
 {
 public:
     //! Destructor
@@ -4846,8 +4982,8 @@ public:
     {
     }
 
-    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) :
-     pPointer(pointer)
+    BoundWithFunction(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -4924,7 +5060,7 @@ template<class R,
          class A13,
          class A14>
 class BoundWithFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
 {
 public:
     //! Destructor
@@ -4933,8 +5069,8 @@ public:
     }
 
     BoundWithFunction(
-      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) :
-     pPointer(pointer)
+      R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)):
+        pPointer(pointer)
     {
         assert(pointer != nullptr and "binded pointer-to-function can not be null");
     }
@@ -5000,7 +5136,7 @@ private:
 #ifdef YUNI_HAS_CPP_BIND_LAMBDA
 
 template<class C, class R>
-class BoundWithFunctor<C, R()> final : public IPointer<R()>
+class BoundWithFunctor<C, R()> final: public IPointer<R()>
 {
 public:
     //! Destructor
@@ -5008,7 +5144,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5054,7 +5191,7 @@ private:
 }; // class BoundWithFunctor<C, R ()>
 
 template<class C, class R, class A0>
-class BoundWithFunctor<C, R(A0)> final : public IPointer<R(A0)>
+class BoundWithFunctor<C, R(A0)> final: public IPointer<R(A0)>
 {
 public:
     //! Destructor
@@ -5062,7 +5199,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5108,7 +5246,7 @@ private:
 }; // class BoundWithFunctor<C, R (A0)>
 
 template<class C, class R, class A0, class A1>
-class BoundWithFunctor<C, R(A0, A1)> final : public IPointer<R(A0, A1)>
+class BoundWithFunctor<C, R(A0, A1)> final: public IPointer<R(A0, A1)>
 {
 public:
     //! Destructor
@@ -5116,7 +5254,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5162,7 +5301,7 @@ private:
 }; // class BoundWithFunctor<C, R (A0, A1)>
 
 template<class C, class R, class A0, class A1, class A2>
-class BoundWithFunctor<C, R(A0, A1, A2)> final : public IPointer<R(A0, A1, A2)>
+class BoundWithFunctor<C, R(A0, A1, A2)> final: public IPointer<R(A0, A1, A2)>
 {
 public:
     //! Destructor
@@ -5170,7 +5309,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5216,7 +5356,7 @@ private:
 }; // class BoundWithFunctor<C, R (A0, A1, A2)>
 
 template<class C, class R, class A0, class A1, class A2, class A3>
-class BoundWithFunctor<C, R(A0, A1, A2, A3)> final : public IPointer<R(A0, A1, A2, A3)>
+class BoundWithFunctor<C, R(A0, A1, A2, A3)> final: public IPointer<R(A0, A1, A2, A3)>
 {
 public:
     //! Destructor
@@ -5224,7 +5364,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5270,7 +5411,7 @@ private:
 }; // class BoundWithFunctor<C, R (A0, A1, A2, A3)>
 
 template<class C, class R, class A0, class A1, class A2, class A3, class A4>
-class BoundWithFunctor<C, R(A0, A1, A2, A3, A4)> final : public IPointer<R(A0, A1, A2, A3, A4)>
+class BoundWithFunctor<C, R(A0, A1, A2, A3, A4)> final: public IPointer<R(A0, A1, A2, A3, A4)>
 {
 public:
     //! Destructor
@@ -5278,7 +5419,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5325,7 +5467,7 @@ private:
 
 template<class C, class R, class A0, class A1, class A2, class A3, class A4, class A5>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5)>
 {
 public:
     //! Destructor
@@ -5333,7 +5475,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5380,7 +5523,7 @@ private:
 
 template<class C, class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
 {
 public:
     //! Destructor
@@ -5388,7 +5531,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5445,7 +5589,7 @@ template<class C,
          class A6,
          class A7>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6, A7)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
 {
 public:
     //! Destructor
@@ -5453,7 +5597,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5511,7 +5656,7 @@ template<class C,
          class A7,
          class A8>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
 {
 public:
     //! Destructor
@@ -5519,7 +5664,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5578,7 +5724,7 @@ template<class C,
          class A8,
          class A9>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
 {
 public:
     //! Destructor
@@ -5586,7 +5732,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5647,7 +5794,7 @@ template<class C,
          class A9,
          class A10>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 {
 public:
     //! Destructor
@@ -5655,7 +5802,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5717,7 +5865,7 @@ template<class C,
          class A10,
          class A11>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
 {
 public:
     //! Destructor
@@ -5725,13 +5873,14 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
     virtual R
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const override
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const override
     {
         return pFunctor(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
     }
@@ -5789,7 +5938,7 @@ template<class C,
          class A11,
          class A12>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
 {
 public:
     //! Destructor
@@ -5797,7 +5946,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5872,7 +6022,7 @@ template<class C,
          class A12,
          class A13>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
 {
 public:
     //! Destructor
@@ -5880,7 +6030,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -5957,7 +6108,7 @@ template<class C,
          class A13,
          class A14>
 class BoundWithFunctor<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
 {
 public:
     //! Destructor
@@ -5965,7 +6116,8 @@ public:
     {
     }
 
-    BoundWithFunctor(C&& functor) : pFunctor(std::forward<C>(functor))
+    BoundWithFunctor(C&& functor):
+        pFunctor(std::forward<C>(functor))
     {
     }
 
@@ -6030,11 +6182,12 @@ private:
 // class BoundWithFunctionAndUserData
 
 template<class U, class R, class A0>
-class BoundWithFunctionAndUserData<U, R(A0)> final : public IPointer<R()>
+class BoundWithFunctionAndUserData<U, R(A0)> final: public IPointer<R()>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6085,11 +6238,12 @@ private:
 }; // class BoundWithFunctionAndUserData<U, R(A0)>
 
 template<class U, class R, class A0, class A1>
-class BoundWithFunctionAndUserData<U, R(A0, A1)> final : public IPointer<R(A0)>
+class BoundWithFunctionAndUserData<U, R(A0, A1)> final: public IPointer<R(A0)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6140,11 +6294,12 @@ private:
 }; // class BoundWithFunctionAndUserData<U, R(A0, A1)>
 
 template<class U, class R, class A0, class A1, class A2>
-class BoundWithFunctionAndUserData<U, R(A0, A1, A2)> final : public IPointer<R(A0, A1)>
+class BoundWithFunctionAndUserData<U, R(A0, A1, A2)> final: public IPointer<R(A0, A1)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6195,11 +6350,12 @@ private:
 }; // class BoundWithFunctionAndUserData<U, R(A0, A1, A2)>
 
 template<class U, class R, class A0, class A1, class A2, class A3>
-class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3)> final : public IPointer<R(A0, A1, A2)>
+class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3)> final: public IPointer<R(A0, A1, A2)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6251,11 +6407,12 @@ private:
 
 template<class U, class R, class A0, class A1, class A2, class A3, class A4>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4)> final
- : public IPointer<R(A0, A1, A2, A3)>
+    : public IPointer<R(A0, A1, A2, A3)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6307,11 +6464,12 @@ private:
 
 template<class U, class R, class A0, class A1, class A2, class A3, class A4, class A5>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5)> final
- : public IPointer<R(A0, A1, A2, A3, A4)>
+    : public IPointer<R(A0, A1, A2, A3, A4)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6363,11 +6521,12 @@ private:
 
 template<class U, class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5, A6)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6428,19 +6587,20 @@ template<class U,
          class A6,
          class A7>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5, A6, A7)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const override
     {
-        return (*pPointer)(
-          a0, a1, a2, a3, a4, a5, a6, *const_cast<UserDataTypeByCopy*>(&pUserdata));
+        return (
+          *pPointer)(a0, a1, a2, a3, a4, a5, a6, *const_cast<UserDataTypeByCopy*>(&pUserdata));
     }
 
     virtual const void* object() const override
@@ -6496,19 +6656,20 @@ template<class U,
          class A7,
          class A8>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const override
     {
-        return (*pPointer)(
-          a0, a1, a2, a3, a4, a5, a6, a7, *const_cast<UserDataTypeByCopy*>(&pUserdata));
+        return (
+          *pPointer)(a0, a1, a2, a3, a4, a5, a6, a7, *const_cast<UserDataTypeByCopy*>(&pUserdata));
     }
 
     virtual const void* object() const override
@@ -6565,19 +6726,28 @@ template<class U,
          class A8,
          class A9>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
 {
 public:
-    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+    BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9), U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const override
     {
-        return (*pPointer)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, *const_cast<UserDataTypeByCopy*>(&pUserdata));
+        return (*pPointer)(a0,
+                           a1,
+                           a2,
+                           a3,
+                           a4,
+                           a5,
+                           a6,
+                           a7,
+                           a8,
+                           *const_cast<UserDataTypeByCopy*>(&pUserdata));
     }
 
     virtual const void* object() const override
@@ -6635,12 +6805,13 @@ template<class U,
          class A9,
          class A10>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
 {
 public:
     BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10),
-                                 U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+                                 U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6648,8 +6819,17 @@ public:
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
       const override
     {
-        return (*pPointer)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, *const_cast<UserDataTypeByCopy*>(&pUserdata));
+        return (*pPointer)(a0,
+                           a1,
+                           a2,
+                           a3,
+                           a4,
+                           a5,
+                           a6,
+                           a7,
+                           a8,
+                           a9,
+                           *const_cast<UserDataTypeByCopy*>(&pUserdata));
     }
 
     virtual const void* object() const override
@@ -6708,12 +6888,13 @@ template<class U,
          class A10,
          class A11>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 {
 public:
     BoundWithFunctionAndUserData(R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11),
-                                 U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+                                 U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6792,20 +6973,21 @@ template<class U,
          class A11,
          class A12>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
 {
 public:
     BoundWithFunctionAndUserData(
       R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12),
-      U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+      U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
 
     virtual R
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const override
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const override
     {
         return (*pPointer)(a0,
                            a1,
@@ -6881,13 +7063,14 @@ template<class U,
          class A12,
          class A13>
 class BoundWithFunctionAndUserData<U, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
 {
 public:
     BoundWithFunctionAndUserData(
       R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13),
-      U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+      U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -6984,13 +7167,14 @@ template<class U,
 class BoundWithFunctionAndUserData<
   U,
   R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
 {
 public:
     BoundWithFunctionAndUserData(
       R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14),
-      U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+      U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -7090,13 +7274,14 @@ template<class U,
 class BoundWithFunctionAndUserData<
   U,
   R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
 {
 public:
     BoundWithFunctionAndUserData(
       R (*pointer)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15),
-      U userdata) :
-     pPointer(pointer), pUserdata(userdata)
+      U userdata):
+        pPointer(pointer),
+        pUserdata(userdata)
     {
         assert(pointer != NULL and "binded pointer-to-function can not be null");
     }
@@ -7180,16 +7365,19 @@ private:
 // class BoundWithMember
 
 template<class C, class R>
-class BoundWithMember<C, R()> final : public IPointer<R()>
+class BoundWithMember<C, R()> final: public IPointer<R()>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)()) : pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)()):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke() const override
@@ -7236,16 +7424,19 @@ private:
 }; // class BoundWithMember<C, R()>
 
 template<class C, class R, class A0>
-class BoundWithMember<C, R(A0)> final : public IPointer<R(A0)>
+class BoundWithMember<C, R(A0)> final: public IPointer<R(A0)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0)) : pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0) const override
@@ -7292,16 +7483,19 @@ private:
 }; // class BoundWithMember<C, R(A0)>
 
 template<class C, class R, class A0, class A1>
-class BoundWithMember<C, R(A0, A1)> final : public IPointer<R(A0, A1)>
+class BoundWithMember<C, R(A0, A1)> final: public IPointer<R(A0, A1)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1)) : pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1) const override
@@ -7348,16 +7542,19 @@ private:
 }; // class BoundWithMember<C, R(A0, A1)>
 
 template<class C, class R, class A0, class A1, class A2>
-class BoundWithMember<C, R(A0, A1, A2)> final : public IPointer<R(A0, A1, A2)>
+class BoundWithMember<C, R(A0, A1, A2)> final: public IPointer<R(A0, A1, A2)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2)) : pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2) const override
@@ -7404,16 +7601,19 @@ private:
 }; // class BoundWithMember<C, R(A0, A1, A2)>
 
 template<class C, class R, class A0, class A1, class A2, class A3>
-class BoundWithMember<C, R(A0, A1, A2, A3)> final : public IPointer<R(A0, A1, A2, A3)>
+class BoundWithMember<C, R(A0, A1, A2, A3)> final: public IPointer<R(A0, A1, A2, A3)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3)) : pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3) const override
@@ -7460,16 +7660,19 @@ private:
 }; // class BoundWithMember<C, R(A0, A1, A2, A3)>
 
 template<class C, class R, class A0, class A1, class A2, class A3, class A4>
-class BoundWithMember<C, R(A0, A1, A2, A3, A4)> final : public IPointer<R(A0, A1, A2, A3, A4)>
+class BoundWithMember<C, R(A0, A1, A2, A3, A4)> final: public IPointer<R(A0, A1, A2, A3, A4)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4)) : pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4) const override
@@ -7517,16 +7720,19 @@ private:
 
 template<class C, class R, class A0, class A1, class A2, class A3, class A4, class A5>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5)) : pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const override
@@ -7574,16 +7780,19 @@ private:
 
 template<class C, class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6)) : pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const override
@@ -7640,17 +7849,19 @@ template<class C,
          class A6,
          class A7>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6, A7)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7)) :
-     pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const override
@@ -7708,17 +7919,19 @@ template<class C,
          class A7,
          class A8>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8)) :
-     pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const override
@@ -7778,17 +7991,19 @@ template<class C,
          class A8,
          class A9>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)) :
-     pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
@@ -7850,17 +8065,19 @@ template<class C,
          class A9,
          class A10>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) :
-     pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10)
@@ -7923,22 +8140,24 @@ template<class C,
          class A10,
          class A11>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) :
-     pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const override
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const override
     {
         return (pThis->*pMember)(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
     }
@@ -7998,17 +8217,19 @@ template<class C,
          class A11,
          class A12>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) :
-     pThis(c), pMember(member)
+    BoundWithMember(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0,
@@ -8084,18 +8305,20 @@ template<class C,
          class A12,
          class A13>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
 {
 public:
     //! \name Constructor
     //@{
     //! Constructor
     BoundWithMember(C* c,
-                    R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) :
-     pThis(c), pMember(member)
+                    R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0,
@@ -8173,7 +8396,7 @@ template<class C,
          class A13,
          class A14>
 class BoundWithMember<C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
 {
 public:
     //! \name Constructor
@@ -8181,11 +8404,13 @@ public:
     //! Constructor
     BoundWithMember(
       C* c,
-      R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) :
-     pThis(c), pMember(member)
+      R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)):
+        pThis(c),
+        pMember(member)
     {
         assert(c != NULL and "binded object can not be null");
     }
+
     //@}
 
     virtual R invoke(A0 a0,
@@ -8249,14 +8474,16 @@ private:
 // class BoundWithMemberAndUserData
 
 template<class U, class C, class R, class A0>
-class BoundWithMemberAndUserData<U, C, R(A0)> final : public IPointer<R()>
+class BoundWithMemberAndUserData<U, C, R(A0)> final: public IPointer<R()>
 {
 public:
     typedef typename Static::Remove::RefOnly<A0>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithMemberAndUserData(C* c, R (C::*member)(A0), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithMemberAndUserData(C* c, R (C::*member)(A0), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -8307,14 +8534,16 @@ private:
 }; // class BoundWithMemberAndUserData<U, C, R(A0)>
 
 template<class U, class C, class R, class A0, class A1>
-class BoundWithMemberAndUserData<U, C, R(A0, A1)> final : public IPointer<R(A0)>
+class BoundWithMemberAndUserData<U, C, R(A0, A1)> final: public IPointer<R(A0)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A1>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -8365,14 +8594,16 @@ private:
 }; // class BoundWithMemberAndUserData<U, C, R(A0, A1)>
 
 template<class U, class C, class R, class A0, class A1, class A2>
-class BoundWithMemberAndUserData<U, C, R(A0, A1, A2)> final : public IPointer<R(A0, A1)>
+class BoundWithMemberAndUserData<U, C, R(A0, A1, A2)> final: public IPointer<R(A0, A1)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A2>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -8423,14 +8654,16 @@ private:
 }; // class BoundWithMemberAndUserData<U, C, R(A0, A1, A2)>
 
 template<class U, class C, class R, class A0, class A1, class A2, class A3>
-class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3)> final : public IPointer<R(A0, A1, A2)>
+class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3)> final: public IPointer<R(A0, A1, A2)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A3>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -8482,14 +8715,16 @@ private:
 
 template<class U, class C, class R, class A0, class A1, class A2, class A3, class A4>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4)> final
- : public IPointer<R(A0, A1, A2, A3)>
+    : public IPointer<R(A0, A1, A2, A3)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A4>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3, A4), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3, A4), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -8541,14 +8776,16 @@ private:
 
 template<class U, class C, class R, class A0, class A1, class A2, class A3, class A4, class A5>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5)> final
- : public IPointer<R(A0, A1, A2, A3, A4)>
+    : public IPointer<R(A0, A1, A2, A3, A4)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A5>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -8609,22 +8846,24 @@ template<class U,
          class A5,
          class A6>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5, A6)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A6>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const override
     {
-        return (pThis->*pMember)(
-          a0, a1, a2, a3, a4, a5, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (
+          pThis->*pMember)(a0, a1, a2, a3, a4, a5, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -8679,22 +8918,24 @@ template<class U,
          class A6,
          class A7>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5, A6, A7)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A7>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithMemberAndUserData(C* c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const override
     {
-        return (pThis->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (
+          pThis->*pMember)(a0, a1, a2, a3, a4, a5, a6, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -8750,7 +8991,7 @@ template<class U,
          class A7,
          class A8>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A8>::Type UserDataTypeByCopy;
@@ -8758,16 +8999,19 @@ public:
 public:
     BoundWithMemberAndUserData(C* c,
                                R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8),
-                               U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                               U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const override
     {
-        return (pThis->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (
+          pThis
+            ->*pMember)(a0, a1, a2, a3, a4, a5, a6, a7, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -8824,7 +9068,7 @@ template<class U,
          class A8,
          class A9>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A9>::Type UserDataTypeByCopy;
@@ -8832,16 +9076,26 @@ public:
 public:
     BoundWithMemberAndUserData(C* c,
                                R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9),
-                               U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                               U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const override
     {
-        return (pThis->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (pThis->*pMember)(a0,
+                                 a1,
+                                 a2,
+                                 a3,
+                                 a4,
+                                 a5,
+                                 a6,
+                                 a7,
+                                 a8,
+                                 const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -8900,7 +9154,7 @@ template<class U,
          class A9,
          class A10>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A10>::Type UserDataTypeByCopy;
@@ -8908,8 +9162,10 @@ public:
 public:
     BoundWithMemberAndUserData(C* c,
                                R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10),
-                               U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                               U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -8917,8 +9173,17 @@ public:
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
       const override
     {
-        return (pThis->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (pThis->*pMember)(a0,
+                                 a1,
+                                 a2,
+                                 a3,
+                                 a4,
+                                 a5,
+                                 a6,
+                                 a7,
+                                 a8,
+                                 a9,
+                                 const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -8978,7 +9243,7 @@ template<class U,
          class A10,
          class A11>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A11>::Type UserDataTypeByCopy;
@@ -8986,8 +9251,10 @@ public:
 public:
     BoundWithMemberAndUserData(C* c,
                                R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11),
-                               U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                               U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -8995,8 +9262,18 @@ public:
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10)
       const override
     {
-        return (pThis->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (pThis->*pMember)(a0,
+                                 a1,
+                                 a2,
+                                 a3,
+                                 a4,
+                                 a5,
+                                 a6,
+                                 a7,
+                                 a8,
+                                 a9,
+                                 a10,
+                                 const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -9057,7 +9334,7 @@ template<class U,
          class A11,
          class A12>
 class BoundWithMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A12>::Type UserDataTypeByCopy;
@@ -9066,15 +9343,17 @@ public:
     BoundWithMemberAndUserData(
       C* c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
 
     virtual R
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const override
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const override
     {
         return (pThis->*pMember)(a0,
                                  a1,
@@ -9153,7 +9432,7 @@ template<class U,
 class BoundWithMemberAndUserData<U,
                                  C,
                                  R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A13>::Type UserDataTypeByCopy;
@@ -9162,8 +9441,10 @@ public:
     BoundWithMemberAndUserData(
       C* c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -9261,7 +9542,7 @@ template<class U,
 class BoundWithMemberAndUserData<U,
                                  C,
                                  R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A14>::Type UserDataTypeByCopy;
@@ -9270,8 +9551,10 @@ public:
     BoundWithMemberAndUserData(
       C* c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -9373,7 +9656,7 @@ class BoundWithMemberAndUserData<
   U,
   C,
   R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
 {
 public:
     typedef typename Static::Remove::RefOnly<A15>::Type UserDataTypeByCopy;
@@ -9382,8 +9665,10 @@ public:
     BoundWithMemberAndUserData(
       C* c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
         assert(c != NULL and "binded object can not be null");
     }
@@ -9465,7 +9750,7 @@ private:
    // A12, A13, A14, A15)>
 
 template<class PtrT, class R>
-class BoundWithSmartPtrMember<PtrT, R()> final : public IPointer<R()>
+class BoundWithSmartPtrMember<PtrT, R()> final: public IPointer<R()>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9474,9 +9759,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)()) : pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)()):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke() const override
@@ -9524,7 +9812,7 @@ private:
 }; // class BoundWithSmartPtrMember<C, R()>
 
 template<class PtrT, class R, class A0>
-class BoundWithSmartPtrMember<PtrT, R(A0)> final : public IPointer<R(A0)>
+class BoundWithSmartPtrMember<PtrT, R(A0)> final: public IPointer<R(A0)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9533,9 +9821,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0)) : pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0) const override
@@ -9583,7 +9874,7 @@ private:
 }; // class BoundWithSmartPtrMember<C, R(A0)>
 
 template<class PtrT, class R, class A0, class A1>
-class BoundWithSmartPtrMember<PtrT, R(A0, A1)> final : public IPointer<R(A0, A1)>
+class BoundWithSmartPtrMember<PtrT, R(A0, A1)> final: public IPointer<R(A0, A1)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9592,9 +9883,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1)) : pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1) const override
@@ -9642,7 +9936,7 @@ private:
 }; // class BoundWithSmartPtrMember<C, R(A0, A1)>
 
 template<class PtrT, class R, class A0, class A1, class A2>
-class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2)> final : public IPointer<R(A0, A1, A2)>
+class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2)> final: public IPointer<R(A0, A1, A2)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9651,9 +9945,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2)) : pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2) const override
@@ -9701,7 +9998,7 @@ private:
 }; // class BoundWithSmartPtrMember<C, R(A0, A1, A2)>
 
 template<class PtrT, class R, class A0, class A1, class A2, class A3>
-class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3)> final : public IPointer<R(A0, A1, A2, A3)>
+class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3)> final: public IPointer<R(A0, A1, A2, A3)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9710,10 +10007,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3)) :
-     pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3) const override
@@ -9762,7 +10061,7 @@ private:
 
 template<class PtrT, class R, class A0, class A1, class A2, class A3, class A4>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4)> final
- : public IPointer<R(A0, A1, A2, A3, A4)>
+    : public IPointer<R(A0, A1, A2, A3, A4)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9771,10 +10070,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4)) :
-     pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4) const override
@@ -9823,7 +10124,7 @@ private:
 
 template<class PtrT, class R, class A0, class A1, class A2, class A3, class A4, class A5>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9832,10 +10133,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5)) :
-     pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const override
@@ -9884,7 +10187,7 @@ private:
 
 template<class PtrT, class R, class A0, class A1, class A2, class A3, class A4, class A5, class A6>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5, A6)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9893,10 +10196,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6)) :
-     pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const override
@@ -9954,7 +10259,7 @@ template<class PtrT,
          class A6,
          class A7>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -9963,10 +10268,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7)) :
-     pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const override
@@ -10025,7 +10332,7 @@ template<class PtrT,
          class A7,
          class A8>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10034,10 +10341,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8)) :
-     pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const override
@@ -10098,7 +10407,7 @@ template<class PtrT,
          class A8,
          class A9>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10107,10 +10416,12 @@ public:
     //! \name Constructor
     //@{
     //! Constructor
-    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)) :
-     pThis(c), pMember(member)
+    BoundWithSmartPtrMember(const PtrT& c, R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
@@ -10173,7 +10484,7 @@ template<class PtrT,
          class A9,
          class A10>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10183,10 +10494,12 @@ public:
     //@{
     //! Constructor
     BoundWithSmartPtrMember(const PtrT& c,
-                            R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)) :
-     pThis(c), pMember(member)
+                            R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10)
@@ -10250,7 +10563,7 @@ template<class PtrT,
          class A10,
          class A11>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10260,15 +10573,17 @@ public:
     //@{
     //! Constructor
     BoundWithSmartPtrMember(const PtrT& c,
-                            R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)) :
-     pThis(c), pMember(member)
+                            R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const override
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const override
     {
         return ((pThis.pointer())->*pMember)(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
     }
@@ -10329,7 +10644,7 @@ template<class PtrT,
          class A11,
          class A12>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10339,10 +10654,12 @@ public:
     //@{
     //! Constructor
     BoundWithSmartPtrMember(const PtrT& c,
-                            R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)) :
-     pThis(c), pMember(member)
+                            R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0,
@@ -10419,7 +10736,7 @@ template<class PtrT,
          class A12,
          class A13>
 class BoundWithSmartPtrMember<PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10430,10 +10747,12 @@ public:
     //! Constructor
     BoundWithSmartPtrMember(
       const PtrT& c,
-      R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)) :
-     pThis(c), pMember(member)
+      R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0,
@@ -10451,8 +10770,8 @@ public:
                      A12 a12,
                      A13 a13) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+        return (
+          (pThis.pointer())->*pMember)(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
     }
 
     virtual const void* object() const override
@@ -10515,7 +10834,7 @@ template<class PtrT,
          class A14>
 class BoundWithSmartPtrMember<PtrT,
                               R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10526,10 +10845,12 @@ public:
     //! Constructor
     BoundWithSmartPtrMember(
       const PtrT& c,
-      R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)) :
-     pThis(c), pMember(member)
+      R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)):
+        pThis(c),
+        pMember(member)
     {
     }
+
     //@}
 
     virtual R invoke(A0 a0,
@@ -10548,8 +10869,8 @@ public:
                      A13 a13,
                      A14 a14) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14);
+        return ((pThis.pointer())
+                  ->*pMember)(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14);
     }
 
     virtual const void* object() const override
@@ -10596,15 +10917,17 @@ private:
 // class BoundWithMemberAndUserData
 
 template<class U, class PtrT, class R, class A0>
-class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0)> final : public IPointer<R()>
+class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0)> final: public IPointer<R()>
 {
 public:
     typedef typename PtrT::Type C;
     typedef typename Static::Remove::RefOnly<A0>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithSmartPtrMemberAndUserData(const PtrT& c, R (C::*member)(A0), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithSmartPtrMemberAndUserData(const PtrT& c, R (C::*member)(A0), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
@@ -10655,15 +10978,17 @@ private:
 }; // class BoundWithSmartPtrMemberAndUserData<U, C, R(A0)>
 
 template<class U, class PtrT, class R, class A0, class A1>
-class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1)> final : public IPointer<R(A0)>
+class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1)> final: public IPointer<R(A0)>
 {
 public:
     typedef typename PtrT::Type C;
     typedef typename Static::Remove::RefOnly<A1>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithSmartPtrMemberAndUserData(const PtrT& c, R (C::*member)(A0, A1), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithSmartPtrMemberAndUserData(const PtrT& c, R (C::*member)(A0, A1), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
@@ -10714,15 +11039,17 @@ private:
 }; // class BoundWithSmartPtrMemberAndUserData<U, C, R(A0, A1)>
 
 template<class U, class PtrT, class R, class A0, class A1, class A2>
-class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2)> final : public IPointer<R(A0, A1)>
+class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2)> final: public IPointer<R(A0, A1)>
 {
 public:
     typedef typename PtrT::Type C;
     typedef typename Static::Remove::RefOnly<A2>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithSmartPtrMemberAndUserData(const PtrT& c, R (C::*member)(A0, A1, A2), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithSmartPtrMemberAndUserData(const PtrT& c, R (C::*member)(A0, A1, A2), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
@@ -10774,22 +11101,24 @@ private:
 
 template<class U, class PtrT, class R, class A0, class A1, class A2, class A3>
 class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2, A3)> final
- : public IPointer<R(A0, A1, A2)>
+    : public IPointer<R(A0, A1, A2)>
 {
 public:
     typedef typename PtrT::Type C;
     typedef typename Static::Remove::RefOnly<A3>::Type UserDataTypeByCopy;
 
 public:
-    BoundWithSmartPtrMemberAndUserData(const PtrT& c, R (C::*member)(A0, A1, A2, A3), U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+    BoundWithSmartPtrMemberAndUserData(const PtrT& c, R (C::*member)(A0, A1, A2, A3), U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (
+          (pThis.pointer())->*pMember)(a0, a1, a2, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -10835,7 +11164,7 @@ private:
 
 template<class U, class PtrT, class R, class A0, class A1, class A2, class A3, class A4>
 class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2, A3, A4)> final
- : public IPointer<R(A0, A1, A2, A3)>
+    : public IPointer<R(A0, A1, A2, A3)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10844,15 +11173,17 @@ public:
 public:
     BoundWithSmartPtrMemberAndUserData(const PtrT& c,
                                        R (C::*member)(A0, A1, A2, A3, A4),
-                                       U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                                       U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (
+          (pThis.pointer())->*pMember)(a0, a1, a2, a3, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -10898,7 +11229,7 @@ private:
 
 template<class U, class PtrT, class R, class A0, class A1, class A2, class A3, class A4, class A5>
 class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2, A3, A4, A5)> final
- : public IPointer<R(A0, A1, A2, A3, A4)>
+    : public IPointer<R(A0, A1, A2, A3, A4)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10907,15 +11238,17 @@ public:
 public:
     BoundWithSmartPtrMemberAndUserData(const PtrT& c,
                                        R (C::*member)(A0, A1, A2, A3, A4, A5),
-                                       U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                                       U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return ((pThis.pointer())
+                  ->*pMember)(a0, a1, a2, a3, a4, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -10970,7 +11303,7 @@ template<class U,
          class A5,
          class A6>
 class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2, A3, A4, A5, A6)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -10979,15 +11312,17 @@ public:
 public:
     BoundWithSmartPtrMemberAndUserData(const PtrT& c,
                                        R (C::*member)(A0, A1, A2, A3, A4, A5, A6),
-                                       U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                                       U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, a5, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return ((pThis.pointer())
+                  ->*pMember)(a0, a1, a2, a3, a4, a5, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -11043,7 +11378,7 @@ template<class U,
          class A6,
          class A7>
 class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11052,15 +11387,18 @@ public:
 public:
     BoundWithSmartPtrMemberAndUserData(const PtrT& c,
                                        R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7),
-                                       U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                                       U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (
+          (pThis.pointer())
+            ->*pMember)(a0, a1, a2, a3, a4, a5, a6, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -11117,7 +11455,7 @@ template<class U,
          class A7,
          class A8>
 class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11126,15 +11464,18 @@ public:
 public:
     BoundWithSmartPtrMemberAndUserData(const PtrT& c,
                                        R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8),
-                                       U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                                       U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return (
+          (pThis.pointer())
+            ->*pMember)(a0, a1, a2, a3, a4, a5, a6, a7, const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -11192,7 +11533,7 @@ template<class U,
          class A8,
          class A9>
 class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> final
- : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
+    : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11201,15 +11542,25 @@ public:
 public:
     BoundWithSmartPtrMemberAndUserData(const PtrT& c,
                                        R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9),
-                                       U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                                       U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return ((pThis.pointer())->*pMember)(a0,
+                                             a1,
+                                             a2,
+                                             a3,
+                                             a4,
+                                             a5,
+                                             a6,
+                                             a7,
+                                             a8,
+                                             const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -11269,7 +11620,7 @@ template<class U,
          class A9,
          class A10>
 class BoundWithSmartPtrMemberAndUserData<U, PtrT, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11278,16 +11629,27 @@ public:
 public:
     BoundWithSmartPtrMemberAndUserData(const PtrT& c,
                                        R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10),
-                                       U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+                                       U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
       const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return ((pThis.pointer())->*pMember)(a0,
+                                             a1,
+                                             a2,
+                                             a3,
+                                             a4,
+                                             a5,
+                                             a6,
+                                             a7,
+                                             a8,
+                                             a9,
+                                             const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -11350,7 +11712,7 @@ template<class U,
 class BoundWithSmartPtrMemberAndUserData<U,
                                          PtrT,
                                          R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11360,16 +11722,28 @@ public:
     BoundWithSmartPtrMemberAndUserData(
       const PtrT& c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10)
       const override
     {
-        return ((pThis.pointer())->*pMember)(
-          a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, const_cast<UserDataTypeByCopy&>(pUserdata));
+        return ((pThis.pointer())->*pMember)(a0,
+                                             a1,
+                                             a2,
+                                             a3,
+                                             a4,
+                                             a5,
+                                             a6,
+                                             a7,
+                                             a8,
+                                             a9,
+                                             a10,
+                                             const_cast<UserDataTypeByCopy&>(pUserdata));
     }
 
     virtual const void* object() const override
@@ -11434,7 +11808,7 @@ template<class U,
 class BoundWithSmartPtrMemberAndUserData<U,
                                          PtrT,
                                          R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11444,14 +11818,16 @@ public:
     BoundWithSmartPtrMemberAndUserData(
       const PtrT& c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
     virtual R
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const override
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const override
     {
         return ((pThis.pointer())->*pMember)(a0,
                                              a1,
@@ -11532,7 +11908,7 @@ class BoundWithSmartPtrMemberAndUserData<
   U,
   PtrT,
   R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11542,8 +11918,10 @@ public:
     BoundWithSmartPtrMemberAndUserData(
       const PtrT& c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
@@ -11642,7 +12020,7 @@ class BoundWithSmartPtrMemberAndUserData<
   U,
   PtrT,
   R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11652,8 +12030,10 @@ public:
     BoundWithSmartPtrMemberAndUserData(
       const PtrT& c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
@@ -11755,7 +12135,7 @@ class BoundWithSmartPtrMemberAndUserData<
   U,
   PtrT,
   R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15)>
-  final : public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
+  final: public IPointer<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14)>
 {
 public:
     typedef typename PtrT::Type C;
@@ -11765,8 +12145,10 @@ public:
     BoundWithSmartPtrMemberAndUserData(
       const PtrT& c,
       R (C::*member)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15),
-      U userdata) :
-     pThis(c), pMember(member), pUserdata(userdata)
+      U userdata):
+        pThis(c),
+        pMember(member),
+        pUserdata(userdata)
     {
     }
 
@@ -11847,6 +12229,4 @@ private:
 }; // class BoundWithSmartPtrMemberAndUserData<U, C, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10,
    // A11, A12, A13, A14, A15)>
 
-} // namespace BindImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::BindImpl

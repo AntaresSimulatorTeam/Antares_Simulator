@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -14,9 +35,7 @@
 #include "unit.h"
 #include "define.h"
 
-namespace Yuni
-{
-namespace Unit
+namespace Yuni::Unit
 {
 /*!
 ** \defgroup UnitTime  Time
@@ -101,7 +120,7 @@ YUNI_UNIT_IMPL(Centisecond, "centisecond", "cs", double, 1e-2);
 YUNI_UNIT_IMPL(Millisecond, "millisecond", "ms", double, 1e-3);
 //! \brief Microsecond
 //! \ingroup UnitTime
-YUNI_UNIT_IMPL(Microsecond, "microsecond", "µs,", double, 1e-6);
+YUNI_UNIT_IMPL(Microsecond, "microsecond", "ï¿½s,", double, 1e-6);
 //! \brief Nanosecond
 //! \ingroup UnitTime
 YUNI_UNIT_IMPL(Nanosecond, "nanosecond", "ns,", double, 1e-9);
@@ -122,8 +141,7 @@ YUNI_UNIT_IMPL(Zeptosecond, "zeptosecond", "zs,", double, 1e-21);
 YUNI_UNIT_IMPL(Yoctosecond, "yoctosecond", "ys,", double, 1e-24);
 
 } // namespace Time
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit
 
 #include "../undef.h"
 

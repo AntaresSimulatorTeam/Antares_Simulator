@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -35,9 +56,7 @@ long long int llrintl(long double x);
 long long int llrintf(float x);
 #endif
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 template<class U, class V>
 inline U Max(U a, V b)
@@ -374,13 +393,19 @@ template<class T>
 inline T RoundUp(T value, T multiple)
 {
     if (multiple == T())
+    {
         return value;
+    }
 
     T remainder = Abs(value) % multiple;
     if (remainder == T())
+    {
         return value;
+    }
     if (value < 0)
+    {
         return -(Abs(value) - remainder);
+    }
     return value + multiple - remainder;
 }
 
@@ -460,6 +485,7 @@ struct YUNI_DECL RoundToInt final
 {
     typedef T Type;
     typedef R ResultType;
+
     static inline ResultType Value(Type x)
     {
         // Default Behavior
@@ -472,6 +498,7 @@ struct YUNI_DECL RoundToInt<T, T> final
 {
     typedef T Type;
     typedef T ResultType;
+
     static inline ResultType Value(Type x)
     {
         // Same type nothing to do
@@ -484,6 +511,7 @@ struct YUNI_DECL RoundToInt<float, double> final
 {
     typedef float Type;
     typedef double ResultType;
+
     static inline ResultType Value(Type x)
     {
         return static_cast<ResultType>(x);
@@ -495,6 +523,7 @@ struct YUNI_DECL RoundToInt<double, float> final
 {
     typedef double Type;
     typedef float ResultType;
+
     static inline ResultType Value(Type x)
     {
         return static_cast<ResultType>(x);
@@ -506,6 +535,7 @@ struct YUNI_DECL RoundToInt<float, long int> final
 {
     typedef float Type;
     typedef long int ResultType;
+
     static inline ResultType Value(Type x)
     {
         return ::lrintf(x);
@@ -517,6 +547,7 @@ struct YUNI_DECL RoundToInt<double, long int> final
 {
     typedef double Type;
     typedef long int ResultType;
+
     static inline ResultType Value(Type x)
     {
         return ::lrint(x);
@@ -529,6 +560,7 @@ struct YUNI_DECL RoundToInt<long double, long int> final
 {
     typedef long double Type;
     typedef long int ResultType;
+
     static inline ResultType Value(Type x)
     {
         return ::lrintl(x);
@@ -541,6 +573,7 @@ struct YUNI_DECL RoundToInt<float, long long int> final
 {
     typedef float Type;
     typedef long long int ResultType;
+
     static inline ResultType Value(Type x)
     {
         return ::llrintf(x);
@@ -552,6 +585,7 @@ struct YUNI_DECL RoundToInt<double, long long int> final
 {
     typedef double Type;
     typedef long long int ResultType;
+
     static inline ResultType Value(Type x)
     {
         return ::llrint(x);
@@ -564,6 +598,7 @@ struct YUNI_DECL RoundToInt<long double, long long int> final
 {
     typedef long double Type;
     typedef long long int ResultType;
+
     static inline ResultType Value(Type x)
     {
         return ::llrintl(x);
@@ -624,20 +659,25 @@ inline U GCD(U u, V v)
 {
     // Euclidean algorithm
     if (!u)
+    {
         return v;
+    }
 
     while (v)
     {
         if (u > v)
+        {
             u = u - v;
+        }
         else
+        {
             v = v - u;
+        }
     }
     return u;
 }
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math
 
 #if defined(YUNI_OS_MSVC) && _MSC_VER < 1800
 #include "msvc.hxx"

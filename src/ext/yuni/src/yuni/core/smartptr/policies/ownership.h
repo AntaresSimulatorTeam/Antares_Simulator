@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -30,9 +51,7 @@
 #include "../../atomic/int.h"
 #include "../../static/method.h"
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \brief Ownership policies
@@ -68,29 +87,34 @@ public:
         //! Get if the ownership policy is destructive
         destructiveCopy = false
     };
+
     typedef Atomic::Int<> AtomicType;
 
 public:
     //! \name Constructors
     //@{
     //! Default constructor
-    ReferenceCountedMT() : pCount(new AtomicType(1))
+    ReferenceCountedMT():
+        pCount(new AtomicType(1))
     {
         // Check if T is a compatible class for this kind of ownership
         // If it does not compile, `COMReferenceCounted` is probably more suitable
         YUNI_STATIC_ASSERT(HasIntrusiveSmartPtr<T>::no, IncompatibleSmartPtrType);
     }
+
     //! Copy constructor
     ReferenceCountedMT(const ReferenceCountedMT& c)
     {
         pCount = c.pCount;
     }
+
     //! Copy constructor for any king of template parameter
     template<typename U>
     ReferenceCountedMT(const ReferenceCountedMT<U>& c)
     {
         pCount = reinterpret_cast<const ReferenceCountedMT<T>&>(c).pCount;
     }
+
     //@}
 
     /*!
@@ -154,7 +178,8 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    ReferenceCounted() : pCount(new uint(1))
+    ReferenceCounted():
+        pCount(new uint(1))
     {
         // Check if T is a compatible class for this kind of ownership
         // If it does not compile, `COMReferenceCounted` is probably more suitable
@@ -162,16 +187,18 @@ public:
     }
 
     //! Copy constructor
-    ReferenceCounted(const ReferenceCounted& c) : pCount(c.pCount) // copying shared pointer
+    ReferenceCounted(const ReferenceCounted& c):
+        pCount(c.pCount) // copying shared pointer
     {
     }
 
     //! Copy constructor for any king of template parameter
     template<typename U>
-    ReferenceCounted(const ReferenceCounted<U>& c) :
-     pCount(reinterpret_cast<const ReferenceCounted&>(c).pCount)
+    ReferenceCounted(const ReferenceCounted<U>& c):
+        pCount(reinterpret_cast<const ReferenceCounted&>(c).pCount)
     {
     }
+
     //@}
 
     /*!
@@ -240,11 +267,13 @@ public:
         // If it does not compile, `ReferenceCountedMT` is probably more suitable
         YUNI_STATIC_ASSERT(HasIntrusiveSmartPtr<T>::yes, IncompatibleSmartPtrType);
     }
+
     //! Copy constructor for any king of template parameter
     template<typename U>
     COMReferenceCounted(const COMReferenceCounted<U>&)
     {
     }
+
     //@}
 
     /*!
@@ -262,7 +291,9 @@ public:
     static T clone(const T& rhs)
     {
         if (0 != rhs)
+        {
             rhs->addRef();
+        }
         return rhs;
     }
 
@@ -304,11 +335,13 @@ public:
         // If it does not compile, `COMReferenceCounted` is probably more suitable
         YUNI_STATIC_ASSERT(HasIntrusiveSmartPtr<T>::no, IncompatibleSmartPtrType);
     }
+
     //! Copy constructor
     template<class U>
     DestructiveCopy(const DestructiveCopy<U>&)
     {
     }
+
     //@}
 
     /*!
@@ -365,11 +398,13 @@ public:
         // If it does not compile, `COMReferenceCounted` is probably more suitable
         YUNI_STATIC_ASSERT(HasIntrusiveSmartPtr<T>::no, IncompatibleSmartPtrType);
     }
+
     //! Copy constructor
     template<class U>
     NoCopy(const NoCopy<U>&)
     {
     }
+
     //@}
 
     /*!
@@ -401,5 +436,4 @@ public:
 }; // class NoCopy
 
 } // namespace Ownership
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

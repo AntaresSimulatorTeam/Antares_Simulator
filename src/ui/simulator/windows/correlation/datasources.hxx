@@ -1,33 +1,31 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/correlation.h"
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 class DatasourceAlphaOrder final
- : public Component::Datagrid::Renderer::CorrelationMatrix::IDatasource
+    : public Component::Datagrid::Renderer::CorrelationMatrix::IDatasource
 {
 public:
     DatasourceAlphaOrder()
@@ -53,7 +51,9 @@ public:
             pArray.reserve(study->areas.size());
             const Data::Area::Map::iterator end = study->areas.end();
             for (Data::Area::Map::iterator i = study->areas.begin(); i != end; ++i)
+            {
                 pArray.push_back(i->second);
+            }
         }
     }
 
@@ -77,7 +77,7 @@ public:
 };
 
 class DatasourceReverseAlphaOrder
- : public Component::Datagrid::Renderer::CorrelationMatrix::IDatasource
+    : public Component::Datagrid::Renderer::CorrelationMatrix::IDatasource
 {
 public:
     DatasourceReverseAlphaOrder()
@@ -104,7 +104,9 @@ public:
             pArray.reserve(study->areas.size());
             const Data::Area::Map::reverse_iterator end = study->areas.rend();
             for (Data::Area::Map::reverse_iterator i = study->areas.rbegin(); i != end; ++i)
+            {
                 pArray.push_back(i->second);
+            }
         }
     }
 
@@ -138,7 +140,7 @@ struct SortColor
     }
 };
 
-class DatasourceColorOrder : public Component::Datagrid::Renderer::CorrelationMatrix::IDatasource
+class DatasourceColorOrder: public Component::Datagrid::Renderer::CorrelationMatrix::IDatasource
 {
 public:
     DatasourceColorOrder()
@@ -165,7 +167,9 @@ public:
             {
                 const Data::Area::Map::iterator end = study->areas.end();
                 for (Data::Area::Map::iterator i = study->areas.begin(); i != end; ++i)
+                {
                     pArray.push_back(i->second);
+                }
             }
             std::sort(pArray.begin(), pArray.end(), SortColor());
             pRegionStart.resize(pArray.size(), 0);
@@ -185,7 +189,9 @@ public:
                     if (old != (*i)->ui->cacheColorHSV)
                     {
                         for (int z = lastLevel; z < j; ++z)
+                        {
                             pRegionEnd[z] = j - 1;
+                        }
                         old = (*i)->ui->cacheColorHSV;
                         color.Set(
                           (unsigned char)Yuni::Math::MinMax<int>((*i)->ui->color[0] + 35, 0, 255),
@@ -202,7 +208,9 @@ public:
                     pRegionColorIdentity[j] = colorIdentity;
                 }
                 for (int z = lastLevel; z < (int)pArray.size(); ++z)
+                {
                     pRegionEnd[z] = (int)pArray.size() - 1;
+                }
             }
         }
     }
@@ -248,5 +256,4 @@ public:
 
 }; // class DatasourceAlphaOrder
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

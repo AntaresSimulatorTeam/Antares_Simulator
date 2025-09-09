@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "input.h"
 #include <wx/choice.h>
@@ -28,11 +28,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Toolbox
-{
-namespace Filter
+namespace Antares::Toolbox::Filter
 {
 namespace // anonymous
 {
@@ -54,27 +50,33 @@ void Input::addStdPreset()
     this->add(wxT("columnindex"));
 }
 
-Input::Input(Component* parent) :
- Antares::Component::Panel(parent),
- pId(gInputNextId++),
- pParent(parent),
- pSelected(nullptr),
- pBtnMinus(nullptr),
- pBtnPlus(nullptr),
- pPrecision(Date::stepAny)
+Input::Input(Component* parent):
+    Antares::Component::Panel(parent),
+    pId(gInputNextId++),
+    pParent(parent),
+    pSelected(nullptr),
+    pBtnMinus(nullptr),
+    pBtnPlus(nullptr),
+    pPrecision(Date::stepAny)
 {
     // Main sizer
     auto* sizer = new wxBoxSizer(wxHORIZONTAL);
     SetSizer(sizer);
 
     // -
-    pBtnMinus = new Antares::Component::Button(
-      this, wxEmptyString, "images/16x16/minus.png", this, &Input::onRemoveFilter);
+    pBtnMinus = new Antares::Component::Button(this,
+                                               wxEmptyString,
+                                               "images/16x16/minus.png",
+                                               this,
+                                               &Input::onRemoveFilter);
     sizer->Add(pBtnMinus, 0, wxALL | wxALIGN_CENTER, 1);
 
     // +
-    pBtnPlus = new Antares::Component::Button(
-      this, wxEmptyString, "images/16x16/plus.png", this, &Input::onAddFilter);
+    pBtnPlus = new Antares::Component::Button(this,
+                                              wxEmptyString,
+                                              "images/16x16/plus.png",
+                                              this,
+                                              &Input::onAddFilter);
     sizer->Add(pBtnPlus, 0, wxALL | wxALIGN_CENTER, 1);
 
     sizer->AddSpacer(5);
@@ -101,9 +103,13 @@ Input::~Input()
 {
     // Disconnection
     if (pBtnMinus)
+    {
         pBtnMinus->disconnectClickEvent();
+    }
     if (pBtnPlus)
+    {
         pBtnPlus->disconnectClickEvent();
+    }
 }
 
 void Input::add(const wxString& filterName)
@@ -169,7 +175,9 @@ void Input::selectFilter(SelectorClientData* data)
     }
 }
 
-Input::SelectorClientData::SelectorClientData(const wxString& i) : id(i), filter(nullptr)
+Input::SelectorClientData::SelectorClientData(const wxString& i):
+    id(i),
+    filter(nullptr)
 {
 }
 
@@ -184,7 +192,9 @@ AFilterBase* Input::SelectorClientData::createIfNeeded(Input* input, wxWindow* p
     {
         filter = AFilterBase::FactoryCreate(input, id);
         if (filter)
+        {
             filter->recreateGUI(parent);
+        }
     }
     return filter;
 }
@@ -199,11 +209,15 @@ void Input::SelectorClientData::attachToSizer(wxSizer& sizer)
         // Hide all controls
         auto end = sizer.GetChildren().end();
         for (auto i = sizer.GetChildren().begin(); i != end; ++i)
+        {
             (*i)->Show(false);
+        }
 
         // Attaching our filter to the given sizer
         if (!sizer.GetItem(filter->sizer()))
+        {
             sizer.Add(filter->sizer(), 0, wxALL | wxEXPAND);
+        }
 
         // Make the new sizer visible
         sizer.Show(filter->sizer(), true);
@@ -221,9 +235,13 @@ void Input::onRemoveFilter(void*)
     {
         // Disconnection first to avoid SegV
         if (pBtnMinus)
+        {
             pBtnMinus->disconnectClickEvent();
+        }
         if (pBtnPlus)
+        {
             pBtnPlus->disconnectClickEvent();
+        }
         pBtnMinus = nullptr;
         // remove me !
         pParent->remove(pId);
@@ -248,6 +266,4 @@ void Input::showBtnToRemoveFilter(bool visible)
     }
 }
 
-} // namespace Filter
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Filter

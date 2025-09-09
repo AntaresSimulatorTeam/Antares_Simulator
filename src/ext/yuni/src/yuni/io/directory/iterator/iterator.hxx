@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -15,11 +36,7 @@
 #include "../../../core/static/remove.h"
 #include "../../io.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 #ifndef YUNI_NO_THREAD_SAFE
 template<bool DetachedT>
@@ -37,8 +54,8 @@ inline IIterator<DetachedT>::DetachedThread::~DetachedThread()
 template<bool DetachedT>
 inline IIterator<DetachedT>::IIterator()
 #ifndef YUNI_NO_THREAD_SAFE
- :
- pThread(NULL)
+    :
+    pThread(NULL)
 #endif
 {
 }
@@ -46,8 +63,8 @@ inline IIterator<DetachedT>::IIterator()
 template<bool DetachedT>
 inline IIterator<DetachedT>::IIterator(const IIterator& rhs)
 #ifndef YUNI_NO_THREAD_SAFE
- :
- pThread(NULL)
+    :
+    pThread(NULL)
 #endif
 {
     typename ThreadingPolicy::MutexLocker locker(rhs);
@@ -104,7 +121,9 @@ bool IIterator<DetachedT>::start()
 
         // Early detection of an invalid root folder
         if (pRootFolder.empty())
+        {
             return false;
+        }
 
         if (nullptr == pThread)
         {
@@ -114,7 +133,9 @@ bool IIterator<DetachedT>::start()
         {
             // Do nothing if already started
             if (pThread->started())
+            {
                 return false;
+            }
         }
 
         // Providing a reference to ourselves for events
@@ -135,7 +156,9 @@ bool IIterator<DetachedT>::start()
             typename ThreadingPolicy::MutexLocker locker(*this);
             // Early detection of an invalid root folder
             if (pRootFolder.empty())
+            {
                 return false;
+            }
 
             opts.rootFolder = pRootFolder;
         }
@@ -197,7 +220,9 @@ inline void IIterator<DetachedT>::wait(uint timeout)
         // Lock
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pThread)
+        {
             pThread->wait(timeout);
+        }
     }
 #else
     (void)timeout;
@@ -253,6 +278,4 @@ inline bool IIterator<DetachedT>::onStart(const String&)
     return true;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

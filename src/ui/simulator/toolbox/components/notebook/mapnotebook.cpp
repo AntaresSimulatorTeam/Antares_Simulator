@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include "antares/antares/antares.h"
 #include "mapnotebook.h"
 #include "../../resources.h"
@@ -38,22 +38,24 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 BEGIN_EVENT_TABLE(MapNotebook::MapTabs, Notebook::Tabs)
 EVT_PAINT(MapNotebook::MapTabs::onDraw)
 END_EVENT_TABLE()
 
-MapNotebook::MapNotebook(wxWindow* parent, Notebook::Orientation orientation) :
- Notebook::Notebook(parent, orientation)
+MapNotebook::MapNotebook(wxWindow* parent, Notebook::Orientation orientation):
+    Notebook::Notebook(parent, orientation)
 {
     alignment(alignLeft);
     if (GetSizer())
+    {
         GetSizer()->Clear();
+    }
     if (pTabs != nullptr)
+    {
         delete pTabs;
+    }
     pTabs = new MapTabs(this, *this);
     wxBoxSizer* sizer = new wxBoxSizer((orientation == orLeft ? wxHORIZONTAL : wxVERTICAL));
     SetSizer(sizer);
@@ -86,7 +88,9 @@ MapNotebook::MapNotebook(wxWindow* parent, Notebook::Orientation orientation) :
 void MapNotebook::onMapLayerChanged(const wxString* text)
 {
     if (find(*text) != nullptr)
+    {
         select(*text);
+    }
 }
 
 bool MapNotebook::remove(Page* page)
@@ -95,14 +99,19 @@ bool MapNotebook::remove(Page* page)
     return true;
 }
 
-MapNotebook::MapTabs::MapTabs(wxWindow* parent, Notebook& notebook) :
- Tabs(parent, notebook), undrawnLeftTabs(0), remainingRightTabs(0), pTabNameCtrl(nullptr)
+MapNotebook::MapTabs::MapTabs(wxWindow* parent, Notebook& notebook):
+    Tabs(parent, notebook),
+    undrawnLeftTabs(0),
+    remainingRightTabs(0),
+    pTabNameCtrl(nullptr)
 {
     Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(MapTabs::onMouseMove), nullptr, this);
     Connect(GetId(), wxEVT_LEAVE_WINDOW, wxMouseEventHandler(MapTabs::onMouseLeave), nullptr, this);
     // add Page button
-    addPageButton = new tabButton(
-      "images/16x16/white_add_18.png", this, tabButton::btnNone, "images/16x16/grey_add_18.png");
+    addPageButton = new tabButton("images/16x16/white_add_18.png",
+                                  this,
+                                  tabButton::btnNone,
+                                  "images/16x16/grey_add_18.png");
     // right navigation button
     rightTabScroll = new tabButton("images/16x16/white_arrow_right_18.png",
                                    this,
@@ -118,13 +127,19 @@ MapNotebook::MapTabs::MapTabs(wxWindow* parent, Notebook& notebook) :
 void MapNotebook::MapTabs::onDraw(wxPaintEvent&)
 {
     sizingOffset = 0;
+
     // The font re-used for each drawing
     enum
     {
         fontSize = 8,
     };
-    static const wxFont font(
-      fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTSTYLE_NORMAL, false, wxT("Tahoma"));
+
+    static const wxFont font(fontSize,
+                             wxFONTFAMILY_SWISS,
+                             wxFONTSTYLE_NORMAL,
+                             wxFONTSTYLE_NORMAL,
+                             false,
+                             wxT("Tahoma"));
 
     // The DC
     wxAutoBufferedPaintDC dc(this);
@@ -141,10 +156,10 @@ void MapNotebook::MapTabs::onDraw(wxPaintEvent&)
 
             drawOrientationTop(dc);
 
-            addPageButton->drawButton(
-              dc,
-              pRect.GetWidth() - addPageButton->buttonImage->GetWidth(),
-              (pRect.height >> 2) - (addPageButton->buttonImage->GetHeight() >> 2));
+            addPageButton->drawButton(dc,
+                                      pRect.GetWidth() - addPageButton->buttonImage->GetWidth(),
+                                      (pRect.height >> 2)
+                                        - (addPageButton->buttonImage->GetHeight() >> 2));
         }
     }
 }
@@ -167,11 +182,15 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
     double u = (ori.Blue() - y) * 0.565;
     double v = (ori.Red() - y) * 0.713;
     if (y < 50.)
+    {
         y = 50.;
+    }
     else
     {
         if (y > 225.)
+        {
             y = 225.;
+        }
     }
 
     const int r = Math::MinMax<int>((int)(y + 1.403 * v), 0, 255);
@@ -194,7 +213,10 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
     // Gradient inside
     dc.GradientFillLinear(wxRect(pRect.x, pRect.y, pRect.width, pRect.height / 2), a1, b1, wxSOUTH);
     dc.GradientFillLinear(
-      wxRect(pRect.x, pRect.y + pRect.height / 2, pRect.width, pRect.height / 2), a2, b2, wxSOUTH);
+      wxRect(pRect.x, pRect.y + pRect.height / 2, pRect.width, pRect.height / 2),
+      a2,
+      b2,
+      wxSOUTH);
     dc.SetPen(wxPen(a2, 1, wxPENSTYLE_SOLID));
     dc.DrawLine(0, pRect.height - 1, pRect.width, pRect.height - 1);
 
@@ -216,18 +238,22 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
                 {
                     const wxSize size = dc.GetTextExtent(pNotebook.pCaption);
                     dc.SetTextForeground(wxColour(50, 50, 50));
-                    dc.DrawText(
-                      pNotebook.pCaption, 31, 1 + (pRect.height >> 1) - (size.GetHeight() >> 1));
+                    dc.DrawText(pNotebook.pCaption,
+                                31,
+                                1 + (pRect.height >> 1) - (size.GetHeight() >> 1));
                     dc.SetTextForeground(wxColour(255, 166, 25));
-                    dc.DrawText(
-                      pNotebook.pCaption, 30, (pRect.height >> 1) - (size.GetHeight() >> 1));
+                    dc.DrawText(pNotebook.pCaption,
+                                30,
+                                (pRect.height >> 1) - (size.GetHeight() >> 1));
                     pos = 30 + size.GetWidth() + 10;
                 }
 
                 for (int i = 0, size = pNotebook.pPages.size(); i < size; ++i)
                 {
                     if (i >= undrawnLeftTabs)
+                    {
                         drawItemTop(dc, pNotebook.pPages[i], pos, Notebook::alignLeft);
+                    }
                     else
                     {
                         pNotebook.pPages[i]->pBoundingBox.x = 0;
@@ -248,11 +274,13 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
                 {
                     const wxSize size = dc.GetTextExtent(pNotebook.pCacheTitle);
                     dc.SetTextForeground(wxColour(50, 50, 50));
-                    dc.DrawText(
-                      pNotebook.pCacheTitle, 31, 1 + (pRect.height >> 1) - (size.GetHeight() >> 1));
+                    dc.DrawText(pNotebook.pCacheTitle,
+                                31,
+                                1 + (pRect.height >> 1) - (size.GetHeight() >> 1));
                     dc.SetTextForeground(wxColour(255, 166, 25));
-                    dc.DrawText(
-                      pNotebook.pCacheTitle, 30, (pRect.height >> 1) - (size.GetHeight() >> 1));
+                    dc.DrawText(pNotebook.pCacheTitle,
+                                30,
+                                (pRect.height >> 1) - (size.GetHeight() >> 1));
                 }
                 break;
             }
@@ -272,7 +300,9 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
                 for (int i = 0, size = pNotebook.pPages.size(); i < size; ++i)
                 {
                     if (i >= undrawnLeftTabs)
+                    {
                         drawItemTop(dc, pNotebook.pPages[i], pos, Notebook::alignLeft);
+                    }
                 }
                 break;
             }
@@ -281,7 +311,9 @@ void MapNotebook::MapTabs::drawOrientationTop(wxDC& dc)
                 int pos = pRect.GetWidth() - 15;
                 const Pages::const_reverse_iterator end = pNotebook.pPages.rend();
                 for (Pages::const_reverse_iterator i = pNotebook.pPages.rbegin(); i != end; ++i)
+                {
                     drawItemTop(dc, *i, pos, alignRight);
+                }
                 break;
             }
             }
@@ -313,10 +345,10 @@ void MapNotebook::MapTabs::doSizing(wxDC& dc)
                                        // right scrolling button
     {
         // draw right button
-        rightTabScroll->drawButton(
-          dc,
-          pRect.GetWidth() - 21 - 18,
-          (pRect.height >> 2) - (rightTabScroll->buttonImage->GetHeight() >> 2));
+        rightTabScroll->drawButton(dc,
+                                   pRect.GetWidth() - 21 - 18,
+                                   (pRect.height >> 2)
+                                     - (rightTabScroll->buttonImage->GetHeight() >> 2));
     }
     else if (realTotalSize <= pRect.GetWidth()) // the added size of all layers fit in the window
     {
@@ -329,8 +361,10 @@ void MapNotebook::MapTabs::doSizing(wxDC& dc)
     {
         sizingOffset = 8;
         // draw left button
-        leftTabScroll->drawButton(
-          dc, 1, (pRect.height >> 2) - (leftTabScroll->buttonImage->GetHeight() >> 2));
+        leftTabScroll->drawButton(dc,
+                                  1,
+                                  (pRect.height >> 2)
+                                    - (leftTabScroll->buttonImage->GetHeight() >> 2));
     }
 }
 
@@ -379,8 +413,9 @@ void MapNotebook::MapTabs::drawItemTop(wxDC& dc, Page* page, int& pos, Notebook:
                         rect.x + 8,
                         pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2 + 1);
             dc.SetTextForeground(wxColour(230, 230, 230));
-            dc.DrawText(
-              page->caption(), rect.x + 7, pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2);
+            dc.DrawText(page->caption(),
+                        rect.x + 7,
+                        pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2);
         }
         else
         {
@@ -409,8 +444,9 @@ void MapNotebook::MapTabs::drawItemTop(wxDC& dc, Page* page, int& pos, Notebook:
             dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height);
 
             dc.SetTextForeground(colBlack);
-            dc.DrawText(
-              page->caption(), rect.x + 8, pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2);
+            dc.DrawText(page->caption(),
+                        rect.x + 8,
+                        pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2);
 
             // closing layer image
             wxBitmap* image = Resources::BitmapLoadFromFile("images/16x16/close.png");
@@ -474,15 +510,17 @@ void MapNotebook::MapTabs::onMouseUp(wxMouseEvent& evt)
             else if (page->selected() && page->pBoundingBox.Contains(p))
             {
                 if (static_cast<MapNotebook&>(pNotebook).closePageBoundingBox.Contains(p))
+                {
                     static_cast<MapNotebook&>(pNotebook).onPageDelete(*page);
+                }
                 else
                 {
                     if (pTabNameCtrl == nullptr)
                     {
                         pTabNameCtrl = new MapNotebook::TabTextCtrl(this, wxID_ANY, page);
-                        pTabNameCtrl->Connect(
-                          wxEVT_COMMAND_TEXT_ENTER,
-                          wxCommandEventHandler(MapNotebook::TabTextCtrl::OnTextEnter));
+                        pTabNameCtrl->Connect(wxEVT_COMMAND_TEXT_ENTER,
+                                              wxCommandEventHandler(
+                                                MapNotebook::TabTextCtrl::OnTextEnter));
                     }
                     else
                     {
@@ -501,12 +539,20 @@ void MapNotebook::MapTabs::onMouseUp(wxMouseEvent& evt)
         }
 
         if (leftTabScroll->isVisible)
+        {
             if (leftTabScroll->pBoundingBox->Contains(p))
+            {
                 leftTabScroll->onMouseUp(evt);
+            }
+        }
 
         if (rightTabScroll->isVisible)
+        {
             if (rightTabScroll->pBoundingBox->Contains(p))
+            {
                 rightTabScroll->onMouseUp(evt);
+            }
+        }
     }
     evt.Skip();
 }
@@ -566,13 +612,16 @@ void MapNotebook::MapTabs::onMouseLeave(wxMouseEvent& /* evt */)
 MapNotebook::MapTabs::tabButton::tabButton(std::string imagePath,
                                            MapTabs* parentFrame,
                                            BtnType t,
-                                           const char* hoverImagePath) :
- type(t), parentTabFrame(parentFrame)
+                                           const char* hoverImagePath):
+    type(t),
+    parentTabFrame(parentFrame)
 {
     buttonImage = Resources::BitmapLoadFromFile(imagePath.c_str());
     isVisible = false;
     if (hoverImagePath != nullptr)
+    {
         hoverImage = Resources::BitmapLoadFromFile(hoverImagePath);
+    }
 }
 
 MapNotebook::MapTabs::tabButton::~tabButton()
@@ -584,8 +633,10 @@ MapNotebook::MapTabs::tabButton::~tabButton()
 void MapNotebook::MapTabs::tabButton::drawButton(wxDC& dc, int x, int y)
 {
     coords = wxPoint(x, y);
-    pBoundingBox
-      = new wxRect(x - 1, 0, buttonImage->GetWidth() + 2, parentTabFrame->pRect.GetHeight());
+    pBoundingBox = new wxRect(x - 1,
+                              0,
+                              buttonImage->GetWidth() + 2,
+                              parentTabFrame->pRect.GetHeight());
 
     // The DC
     if (buttonImage)
@@ -627,6 +678,7 @@ void MapNotebook::MapTabs::tabButton::onMouseLeave()
 void MapNotebook::MapTabs::tabButton::onClick(wxMouseEvent&, BtnType t)
 {
     if (isVisible)
+    {
         switch (t)
         {
         case btnLeft:
@@ -640,6 +692,7 @@ void MapNotebook::MapTabs::tabButton::onClick(wxMouseEvent&, BtnType t)
         default:
             break;
         }
+    }
 }
 
 void MapNotebook::TabTextCtrl::OnTextEnter(wxCommandEvent& evt)
@@ -664,7 +717,9 @@ void MapNotebook::TabTextCtrl::OnTextEnter(wxCommandEvent& evt)
         for (auto layerIt = study->layers.begin(); layerIt != layerItEnd; layerIt++)
         {
             if (layerIt->second == pPage->name())
+            {
                 layerIt->second = GetValue();
+            }
         }
 
         pPage->name(GetValue());
@@ -682,5 +737,4 @@ void MapNotebook::TabTextCtrl::OnTextEnter(wxCommandEvent& evt)
     evt.Skip();
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component

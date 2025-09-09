@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -15,11 +36,7 @@
 #include "../../static/if.h"
 #include "../../atomic/int.h"
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Random
+namespace Yuni::Math::Random
 {
 /*!
 ** \brief Pre-Cached table of random numbers
@@ -69,7 +86,7 @@ template<class D,                // The distribution
          bool Cyclic = true,     // Cycle through the list or regenerate a new set ?
          template<class> class TP = Policy::SingleThreaded // The Threading policy
          >
-class YUNI_DECL Table : public TP<Table<D, TableSize, Cyclic, TP>>, public D
+class YUNI_DECL Table: public TP<Table<D, TableSize, Cyclic, TP>>, public D
 {
 public:
     //! Type for a single random number
@@ -79,6 +96,7 @@ public:
 
     // Assert about the table size
     YUNI_STATIC_ASSERT((TableSize > 10), MathRandomTable_InvalidTableSize);
+
     enum
     {
         //! The table size
@@ -145,8 +163,6 @@ private:
 
 }; // class Table
 
-} // namespace Random
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math::Random
 
 #include "table.hxx"

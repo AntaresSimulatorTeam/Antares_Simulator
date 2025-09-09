@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -31,22 +52,15 @@
 #define YUNI_ATOMIC_INHERITS
 #endif
 
-namespace Yuni
-{
-namespace Atomic
+namespace Yuni::Atomic
 {
 // Forward declaration
 template<int Size, template<class> class TP>
 class Int;
 
-} // namespace Atomic
-} // namespace Yuni
+} // namespace Yuni::Atomic
 
-namespace Yuni
-{
-namespace Private
-{
-namespace AtomicImpl
+namespace Yuni::Private::AtomicImpl
 {
 template<int ThreadSafe, class C>
 struct ThreadingPolicy final
@@ -95,6 +109,7 @@ struct TypeFromSize<1> final
     {
         size = 32
     };
+
     typedef int32_t Type;
 };
 
@@ -109,6 +124,7 @@ struct TypeFromSize<16> final
     {
         size = 32
     };
+
     typedef int32_t Type;
 };
 
@@ -120,6 +136,7 @@ struct TypeFromSize<32> final
     {
         size = 32
     };
+
     typedef int32_t Type;
 };
 
@@ -131,6 +148,7 @@ struct TypeFromSize<64> final
     {
         size = 64
     };
+
     typedef int64_t Type;
 };
 
@@ -362,6 +380,4 @@ struct Operator<64, TP> final
 
 }; // class Operator<64, TP>
 
-} // namespace AtomicImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::AtomicImpl

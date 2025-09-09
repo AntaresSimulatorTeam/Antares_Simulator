@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -12,11 +33,10 @@
 #include <string.h> // memset
 #include <cassert>
 
-namespace Yuni
+namespace Yuni::Bit
 {
-namespace Bit
-{
-inline Array::Array() : pCount(0)
+inline Array::Array():
+    pCount(0)
 {
 }
 
@@ -71,9 +91,13 @@ inline void Array::set(uint i, bool value)
 {
     assert(i < pCount and "index out of range");
     if (value)
+    {
         YUNI_BIT_SET(pBuffer.data(), i);
+    }
     else
+    {
         YUNI_BIT_UNSET(pBuffer.data(), i);
+    }
 }
 
 inline void Array::unset(uint i)
@@ -137,9 +161,13 @@ template<class AnyBufferT>
 inline void Array::saveToBuffer(AnyBufferT& u)
 {
     if (pCount)
+    {
         u.assign(pBuffer.c_str(), pBuffer.sizeInBytes());
+    }
     else
+    {
         u.clear();
+    }
 }
 
 inline Array& Array::operator=(const Array& rhs)
@@ -159,7 +187,9 @@ template<class U>
 inline void Array::print(U& out) const
 {
     for (uint i = 0; i != pCount; ++i)
+    {
         out.put((YUNI_BIT_GET(pBuffer.data(), i)) ? '1' : '0');
+    }
 }
 
 template<bool ValueT>
@@ -168,7 +198,9 @@ uint Array::findN(uint count, uint offset) const
     while (npos != (offset = find<ValueT>(offset)))
     {
         if (offset + count > pCount)
+        {
             return npos;
+        }
 
         bool ok = true;
 
@@ -183,14 +215,15 @@ uint Array::findN(uint count, uint offset) const
             }
         }
         if (ok)
+        {
             return offset;
+        }
         ++offset;
     }
     return npos;
 }
 
-} // namespace Bit
-} // namespace Yuni
+} // namespace Yuni::Bit
 
 //! \name Operator overload for stream printing
 //@{

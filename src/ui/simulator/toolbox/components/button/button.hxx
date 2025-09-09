@@ -1,53 +1,53 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_BUTTON_BUTTON_HXX__
 #define __ANTARES_TOOLBOX_COMPONENTS_BUTTON_BUTTON_HXX__
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 template<class T>
 Button::Button(wxWindow* parent,
                const wxString& caption,
                const char* bitmap,
                T* object,
-               void (T::*method)(void*)) :
- Panel(parent),
- pCaption(caption),
- pUserData(NULL),
- pIcon(NULL),
- pClickBehavior(clkDefault),
- pRecommendedWidth(0),
- pMiddleWidth(0),
- pSelected(false),
- pPushed(false),
- pAutoToggle(false),
- pBold(false),
- pHover(true)
+               void (T::*method)(void*)):
+    Panel(parent),
+    pCaption(caption),
+    pUserData(NULL),
+    pIcon(NULL),
+    pClickBehavior(clkDefault),
+    pRecommendedWidth(0),
+    pMiddleWidth(0),
+    pSelected(false),
+    pPushed(false),
+    pAutoToggle(false),
+    pBold(false),
+    pHover(true)
 {
     // callback
     using MethodType = void (T::*)(void*);
     if (object)
+    {
         pOnClick.bind(const_cast<T*>(object), reinterpret_cast<MethodType>(method));
+    }
 
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
     SetBackgroundColour(parent->GetBackgroundColour());
@@ -64,7 +64,9 @@ inline void Button::onPopupMenu(const T* object, void (T::*method)(Button&, wxMe
         pOnPopup.bind(const_cast<T*>(object), reinterpret_cast<MethodType>(method));
     }
     else
+    {
         pOnPopup.clear();
+    }
 }
 
 inline void Button::onPopupMenu(const OnPopupMenu& popup)
@@ -81,7 +83,9 @@ inline void Button::onClick(const T* object, void (T::*method)(void*))
         pOnClick.bind(const_cast<T*>(object), reinterpret_cast<MethodType>(method));
     }
     else
+    {
         pOnClick.clear();
+    }
 }
 
 inline void Button::disconnectClickEvent()
@@ -172,7 +176,9 @@ inline void Button::pushedColor(const wxWindow* wnd)
 {
     assert(wnd && "invalid window");
     if (wnd)
+    {
         pColorOverridePushed = wnd->GetBackgroundColour();
+    }
 }
 
 inline bool Button::bold() const
@@ -205,7 +211,6 @@ inline void Button::hover(bool value)
     pHover = value;
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component
 
 #endif // __ANTARES_TOOLBOX_COMPONENTS_BUTTON_BUTTON_HXX__

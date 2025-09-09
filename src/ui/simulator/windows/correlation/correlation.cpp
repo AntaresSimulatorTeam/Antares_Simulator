@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -36,9 +36,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 class CorrelationPanelData final
 {
@@ -348,5 +346,4 @@ void CorrelationPanel::assignMatrices(Data::Correlation* corr)
     }
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

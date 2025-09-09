@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -17,11 +38,7 @@
 #define YUNI_PRIVATE_MEMBUF_SPTRINF(BUFFER, SIZE, F, V) ::snprintf(BUFFER, SIZE, F, V)
 #endif
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT, class C>
 class Assign final
@@ -74,7 +91,9 @@ public:
                     buffer));
             }
             else
+            {
                 s.assignWithoutChecking("0x0", 3);
+            }
 #else
             typename CStringT::Type buffer[32];
             // On Windows, it may return a negative value
@@ -86,7 +105,9 @@ public:
                     buffer));
             }
             else
+            {
                 s.assignWithoutChecking("0x0", 3);
+            }
 #endif
         }
     }
@@ -101,11 +122,14 @@ public:
     {
         if (rhs)
         {
-            s.assignWithoutChecking(
-              rhs, Yuni::Traits::Length<char*, typename CStringT::Size>::Value(rhs));
+            s.assignWithoutChecking(rhs,
+                                    Yuni::Traits::Length<char*, typename CStringT::Size>::Value(
+                                      rhs));
         }
         else
+        {
             s.clear();
+        }
     }
 };
 
@@ -115,6 +139,7 @@ class Assign<CStringT, char[N]> final
 {
 public:
     typedef char C;
+
     static void Perform(CStringT& s, const C rhs[N])
     {
         if (N > 0)
@@ -124,7 +149,9 @@ public:
             s.assignWithoutChecking(rhs, N - ((rhs[N - 1] == C()) ? 1 : 0));
         }
         else
+        {
             s.clear();
+        }
     }
 };
 
@@ -158,14 +185,16 @@ public:
     static void Perform(CStringT& s, const bool rhs)
     {
         if (rhs)
+        {
             s.assignWithoutChecking("true", 4);
+        }
         else
+        {
             s.assignWithoutChecking("false", 5);
+        }
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
 
 #undef YUNI_PRIVATE_MEMBUF_SPTRINF

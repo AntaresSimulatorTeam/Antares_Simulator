@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -15,9 +36,7 @@
 #include "../../smartptr.h"
 #include "../length.h"
 
-namespace Yuni
-{
-namespace Extension
+namespace Yuni::Extension
 {
 // C{N}
 template<int N, class SizeT>
@@ -25,6 +44,7 @@ class Length<char[N], SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -49,6 +69,7 @@ class Length<char*, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -69,6 +90,7 @@ class Length<wchar_t*, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -90,6 +112,7 @@ class Length<char, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -110,6 +133,7 @@ class Length<wchar_t, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -130,6 +154,7 @@ class Length<Yuni::CString<ChunkSizeT, ExpandableT>, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -161,11 +186,11 @@ template<uint ChunkSizeT,
          class SizeT>
 class Length<
   Yuni::SmartPtr<Yuni::CString<ChunkSizeT, ExpandableT>, OwspP, ChckP, ConvP, StorP, ConsP>,
-  SizeT>
-  final
+  SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -191,6 +216,7 @@ class Length<Yuni::CString<ChunkSizeT, ExpandableT>*, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -211,6 +237,7 @@ class Length<std::basic_string<C, T, Alloc>, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -242,11 +269,11 @@ template<class C,
          template<class>
          class ConsP>
 class Length<Yuni::SmartPtr<std::basic_string<C, T, Alloc>, OwspP, ChckP, ConvP, StorP, ConsP>,
-             SizeT>
-  final
+             SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -271,6 +298,7 @@ class Length<std::basic_string<C, T, Alloc>*, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -295,6 +323,7 @@ class Length<YuniNullPtr, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -309,5 +338,4 @@ public:
     }
 };
 
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension

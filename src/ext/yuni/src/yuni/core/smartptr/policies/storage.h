@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -14,9 +35,7 @@
 ** \brief Storage policies
 */
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \brief Storage policies
@@ -50,19 +69,27 @@ public:
 public:
     //! \name Constructors
     //@{
-    Pointer() : pData(DefaultValue())
+    Pointer():
+        pData(DefaultValue())
     {
     }
-    Pointer(const Pointer&) : pData(0)
+
+    Pointer(const Pointer&):
+        pData(0)
     {
     }
+
     template<class U>
-    Pointer(const Pointer<U>&) : pData(0)
+    Pointer(const Pointer<U>&):
+        pData(0)
     {
     }
-    Pointer(const StoredType& p) : pData(p)
+
+    Pointer(const StoredType& p):
+        pData(p)
     {
     }
+
     //@}
 
     //! Swap the data
@@ -77,14 +104,17 @@ public:
     {
         return rhs.pData;
     }
+
     friend StoredType& storageReference(Pointer& rhs)
     {
         return rhs.pData;
     }
+
     friend const StoredType& storageReference(const Pointer& rhs)
     {
         return rhs.pData;
     }
+
     //@}
 
     //! \name Operators
@@ -94,11 +124,13 @@ public:
     {
         return pData;
     }
+
     //! The operator *
     ReferenceType operator*() const
     {
         return *pData;
     }
+
     //@}
 
 protected:
@@ -110,7 +142,9 @@ protected:
         // and the complete class has a non-trivial destructor or a deallocation function,
         // the behavior is undefined.
         if (0 < sizeof(T)) // won't compile for incomplete type
+        {
             delete pData;
+        }
     }
 
 private:
@@ -145,19 +179,27 @@ public:
 public:
     //! \name Constructors
     //@{
-    Array() : pData(DefaultValue())
+    Array():
+        pData(DefaultValue())
     {
     }
-    Array(const Array&) : pData(0)
+
+    Array(const Array&):
+        pData(0)
     {
     }
+
     template<class U>
-    Array(const Pointer<U>&) : pData(0)
+    Array(const Pointer<U>&):
+        pData(0)
     {
     }
-    Array(const StoredType& p) : pData(p)
+
+    Array(const StoredType& p):
+        pData(p)
     {
     }
+
     //@}
 
     //! Swap the data
@@ -172,14 +214,17 @@ public:
     {
         return rhs.pData;
     }
+
     friend StoredType& storageReference(Array& rhs)
     {
         return rhs.pData;
     }
+
     friend const StoredType& storageReference(const Array& rhs)
     {
         return rhs.pData;
     }
+
     //@}
 
     //! \name Operators
@@ -189,11 +234,13 @@ public:
     {
         return pData;
     }
+
     //! The operator *
     ReferenceType operator*() const
     {
         return *pData;
     }
+
     //@}
 
 protected:
@@ -205,7 +252,9 @@ protected:
         // and the complete class has a non-trivial destructor or a deallocation function,
         // the behavior is undefined.
         if (0 < sizeof(T)) // won't compile for incomplete type
+        {
             delete[] pData;
+        }
     }
 
 private:
@@ -215,5 +264,4 @@ private:
 }; // class Array
 
 } // namespace Storage
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

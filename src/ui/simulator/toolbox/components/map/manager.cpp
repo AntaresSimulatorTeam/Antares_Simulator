@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "manager.h"
 #include <limits.h>
@@ -33,9 +33,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 //! Global instance for the main form
 static Manager* gInstance = nullptr;
@@ -47,19 +45,19 @@ Manager* Manager::Instance()
     return gInstance;
 }
 
-Manager::Manager(Component& component) :
- mouseSelectionArea(true),
- mouseSelectionLinks(true),
- mouseSelectionPlants(false),
- mouseSelectionConstraints(true),
- pComponent(component),
- pStudy(nullptr),
- pAllNodes(),
- pStackDeallocation(),
- pSelectedItemsAsConnection(0),
- pExternalQueue(),
- pHasChanges(true),
- pUpdaterLock(0)
+Manager::Manager(Component& component):
+    mouseSelectionArea(true),
+    mouseSelectionLinks(true),
+    mouseSelectionPlants(false),
+    mouseSelectionConstraints(true),
+    pComponent(component),
+    pStudy(nullptr),
+    pAllNodes(),
+    pStackDeallocation(),
+    pSelectedItemsAsConnection(0),
+    pExternalQueue(),
+    pHasChanges(true),
+    pUpdaterLock(0)
 {
     // Setting the global instance
     gInstance = this;
@@ -98,38 +96,48 @@ bool Manager::loadFromStudy(Data::Study& study)
 
     // Node creation
     // Browsing all areas in the study
-    study.areas.each([&](Data::Area& area) {
-        // The new node
-        Node* node = this->addNode(
-          wxStringFromUTF8(area.id), wxStringFromUTF8(area.name), area.ui->x, area.ui->y);
-        // We have to attach the area to the node to perform further updates
-        node->attachedArea(&area);
-        // Color of the node
-        node->color(wxColour(area.ui->color[0], area.ui->color[1], area.ui->color[2]));
-        // Keep a reference to the node
-        nodeFromID.insert(std::pair<Data::AreaName, Node*>(area.id, node));
-    });
+    study.areas.each(
+      [&](Data::Area& area)
+      {
+          // The new node
+          Node* node = this->addNode(wxStringFromUTF8(area.id),
+                                     wxStringFromUTF8(area.name),
+                                     area.ui->x,
+                                     area.ui->y);
+          // We have to attach the area to the node to perform further updates
+          node->attachedArea(&area);
+          // Color of the node
+          node->color(wxColour(area.ui->color[0], area.ui->color[1], area.ui->color[2]));
+          // Keep a reference to the node
+          nodeFromID.insert(std::pair<Data::AreaName, Node*>(area.id, node));
+      });
 
     // Interconnections
     const NodeFromID::iterator endNodeID = nodeFromID.end();
-    study.areas.each([&](Data::Area& area) {
-        const auto end = area.links.end();
-        for (auto i = area.links.begin(); i != end; ++i)
-        {
-            Data::AreaLink* lnk = i->second;
+    study.areas.each(
+      [&](Data::Area& area)
+      {
+          const auto end = area.links.end();
+          for (auto i = area.links.begin(); i != end; ++i)
+          {
+              Data::AreaLink* lnk = i->second;
 
-            auto a = nodeFromID.find(area.id);
-            auto b = nodeFromID.find(lnk->with->id);
-            if (a != endNodeID and b != endNodeID)
-            {
-                auto* connection = this->addConnection(a->second, b->second);
-                if (connection)
-                    connection->attachedAreaLink(lnk);
-                else
-                    logs.error() << "impossible to add a connection";
-            }
-        }
-    });
+              auto a = nodeFromID.find(area.id);
+              auto b = nodeFromID.find(lnk->with->id);
+              if (a != endNodeID and b != endNodeID)
+              {
+                  auto* connection = this->addConnection(a->second, b->second);
+                  if (connection)
+                  {
+                      connection->attachedAreaLink(lnk);
+                  }
+                  else
+                  {
+                      logs.error() << "impossible to add a connection";
+                  }
+              }
+          }
+      });
 
     // Restoring the previous state of the attached study
     pStudy = attachedStudy;
@@ -147,8 +155,12 @@ BoundingBox Manager::boundingBox(const size_t& layerID) const
     {
         NodeMap::const_iterator jEnd = i->second.end();
         for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
+        {
             if (j->first->isVisibleOnLayer(layerID))
+            {
                 j->first->extendBoundingBox(topLeft, bottomRight);
+            }
+        }
     }
     return BoundingBox(topLeft, bottomRight);
 }
@@ -164,7 +176,9 @@ BoundingBox Manager::boundingBoxOfSelectedNodes(const size_t& layerID) const
         for (NodeMap::const_iterator j = pSelectedItems.begin(); j != end; ++j)
         {
             if (j->first->isVisibleOnLayer(layerID))
+            {
                 j->first->extendBoundingBox(topLeft, bottomRight);
+            }
         }
     }
     return BoundingBox(topLeft, bottomRight);
@@ -239,7 +253,9 @@ Item::Vector* Manager::find(const int x1, const int y1, const int x2, const int 
             for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
             {
                 if (j->first->isContained(x1, y1, x2, y2))
+                {
                     result->push_back(j->first);
+                }
             }
         }
     }
@@ -261,7 +277,9 @@ Item* Manager::find(const wxString& text) const
                 {
                     Node* node = dynamic_cast<Node*>(j->first);
                     if (node->id() == text or node->caption() == text)
+                    {
                         return node;
+                    }
                 }
             }
         }
@@ -278,7 +296,9 @@ void Manager::invalidateAllNodes()
         {
             NodeMap::const_iterator jEnd = i->second.end();
             for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
+            {
                 j->first->forceReload();
+            }
         }
     }
 }
@@ -320,7 +340,9 @@ void Manager::refreshCacheForAllNodes(wxDC& dc)
             for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
             {
                 if (j->first->isInvalidated() || j->first->selected())
+                {
                     j->first->refreshCache(dc);
+                }
             }
         }
     }
@@ -362,10 +384,14 @@ void Manager::selectOnly(const Data::Area::Vector& areaList)
                         }
                     }
                     if (!selected)
+                    {
                         j->first->selected(false);
+                    }
                 }
                 else
+                {
                     j->first->selected(false);
+                }
                 j->first->forceReload();
             }
         }
@@ -411,7 +437,9 @@ void Manager::selectOnly(const Data::Area::Vector& areaList, const Data::AreaLin
                             }
                         }
                         if (selected)
+                        {
                             continue;
+                        }
                     }
                 }
                 {
@@ -430,7 +458,9 @@ void Manager::selectOnly(const Data::Area::Vector& areaList, const Data::AreaLin
                             }
                         }
                         if (selected)
+                        {
                             continue;
+                        }
                     }
                 }
 
@@ -470,17 +500,13 @@ void Manager::selectOnly(Item* item)
                 Data::BindingConstraint::Set constraintlist;
 
                 const auto cEnd = pStudy->bindingConstraints.end();
-                for (auto i = pStudy->bindingConstraints.begin();
-                     i != cEnd;
-                     ++i)
+                for (auto i = pStudy->bindingConstraints.begin(); i != cEnd; ++i)
                 {
                     bool stop = false;
                     // alias to the current constraint
                     auto constraint = *i;
                     const auto lend = constraint->end();
-                    for (auto ly = constraint->begin();
-                         ly != lend;
-                         ++ly)
+                    for (auto ly = constraint->begin(); ly != lend; ++ly)
                     {
                         if (!linklist.count(const_cast<Data::AreaLink*>(ly->first)))
                         {
@@ -489,7 +515,9 @@ void Manager::selectOnly(Item* item)
                         }
                     }
                     if (!stop)
+                    {
                         constraintlist.insert(constraint);
+                    }
                 }
                 Window::Inspector::AddBindingConstraints(constraintlist);
             }
@@ -507,17 +535,25 @@ void Manager::changeItemSelectionState(Item* item)
     if (node && mouseSelectionArea)
     {
         if (select)
+        {
             Window::Inspector::AddArea(node->attachedArea());
+        }
         else
+        {
             Window::Inspector::RemoveArea(node->attachedArea());
+        }
     }
     const Connection* cnnx = dynamic_cast<const Connection*>(item);
     if (cnnx && mouseSelectionLinks)
     {
         if (select)
+        {
             Window::Inspector::AddLink(cnnx->attachedAreaLink());
+        }
         else
+        {
             Window::Inspector::RemoveLink(cnnx->attachedAreaLink());
+        }
 
         if (mouseSelectionConstraints)
         {
@@ -527,15 +563,13 @@ void Manager::changeItemSelectionState(Item* item)
             Data::BindingConstraint::Set constraintlist;
 
             const auto cEnd = pStudy->bindingConstraints.end();
-            for (auto i = pStudy->bindingConstraints.begin(); i != cEnd;
-                 ++i)
+            for (auto i = pStudy->bindingConstraints.begin(); i != cEnd; ++i)
             {
                 bool stop = false;
                 // alias to the current constraint
                 auto constraint = *i;
                 const auto lend = constraint->end();
-                for (auto ly = constraint->begin(); ly != lend;
-                     ++ly)
+                for (auto ly = constraint->begin(); ly != lend; ++ly)
                 {
                     if (!linklist.count(const_cast<Data::AreaLink*>(ly->first)))
                     {
@@ -544,7 +578,9 @@ void Manager::changeItemSelectionState(Item* item)
                     }
                 }
                 if (!stop)
+                {
                     constraintlist.insert(constraint);
+                }
             }
             Window::Inspector::AddBindingConstraints(constraintlist);
         }
@@ -558,7 +594,9 @@ void Manager::selectOnly(const Item::Vector& list)
 {
     Window::Inspector::Unselect();
     if (pAllNodes.empty())
+    {
         return;
+    }
 
     unselectAll();
     foreach (auto* item, list)
@@ -572,7 +610,9 @@ void Manager::selectOnly(const Item::Vector& list)
         }
         auto* cnx = dynamic_cast<const Connection*>(item);
         if (cnx)
+        {
             Window::Inspector::AddLink(cnx->attachedAreaLink());
+        }
     }
 }
 
@@ -590,7 +630,9 @@ void Manager::getAllSelectedItems(std::vector<Item*>& list)
 {
     NodeMap::const_iterator jEnd = pSelectedItems.end();
     for (NodeMap::const_iterator j = pSelectedItems.begin(); j != jEnd; ++j)
+    {
         list.push_back(j->first);
+    }
 }
 
 void Manager::selectAllNodes(size_t layerID)
@@ -613,7 +655,9 @@ void Manager::selectAllNodes(size_t layerID)
                     j->first->selected(true);
                 }
                 else
+                {
                     j->first->selected(false);
+                }
             }
         }
         Window::Inspector::SelectAreas(list);
@@ -640,7 +684,9 @@ void Manager::selectAllAreas(size_t layerID)
                     j->first->selected(true);
                 }
                 else
+                {
                     j->first->selected(false);
+                }
             }
         }
         Window::Inspector::SelectAreas(list);
@@ -702,11 +748,15 @@ void Manager::reverseSelection()
                     j->first->selected(true);
                 }
                 else
+                {
                     j->first->selected(false);
+                }
             }
         }
         if (!list.empty())
+        {
             Window::Inspector::SelectAreas(list);
+        }
     }
 }
 
@@ -716,7 +766,9 @@ void Manager::moveAllSelected(const int x, const int y)
     {
         NodeMap::const_iterator jEnd = pSelectedItems.end();
         for (NodeMap::const_iterator j = pSelectedItems.begin(); j != jEnd; ++j)
+        {
             j->first->move(x, y);
+        }
     }
 }
 
@@ -755,11 +807,15 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
                         Data::Area* area = node->attachedArea();
                         arealist.insert(area);
                         if (mouseSelectionArea)
+                        {
                             j->first->selected(true);
+                        }
                         if (mouseSelectionPlants)
                         {
-                            for(auto cluster : area->thermal.list.all())
+                            for (auto cluster: area->thermal.list.all())
+                            {
                                 clusterlist.push_back(cluster.get());
+                            }
                         }
                         continue;
                     }
@@ -776,7 +832,9 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
                 for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
                 {
                     if (j->first->selected())
+                    {
                         continue;
+                    }
                     const Connection* link = dynamic_cast<const Connection*>(j->first);
                     if (link)
                     {
@@ -785,7 +843,9 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
                         {
                             linklist.insert(al);
                             if (mouseSelectionLinks)
+                            {
                                 j->first->selected(true);
+                            }
                         }
                     }
                 }
@@ -795,15 +855,13 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
         if (mouseSelectionConstraints)
         {
             const auto end = pStudy->bindingConstraints.end();
-            for (auto i = pStudy->bindingConstraints.begin(); i != end;
-                 ++i)
+            for (auto i = pStudy->bindingConstraints.begin(); i != end; ++i)
             {
                 bool stop = false;
                 // alias to the current constraint
                 auto constraint = *i;
                 const auto lend = constraint->end();
-                for (auto ly = constraint->begin(); ly != lend;
-                     ++ly)
+                for (auto ly = constraint->begin(); ly != lend; ++ly)
                 {
                     if (!linklist.count(const_cast<Data::AreaLink*>(ly->first)))
                     {
@@ -812,20 +870,30 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
                     }
                 }
                 if (!stop)
+                {
                     constraintlist.insert(constraint);
+                }
             }
         }
 
         // remove all items from the selection first
         Window::Inspector::Unselect();
         if (mouseSelectionArea)
+        {
             Window::Inspector::AddAreas(arealist);
+        }
         if (mouseSelectionLinks)
+        {
             Window::Inspector::AddLinks(linklist);
+        }
         if (mouseSelectionPlants)
+        {
             Window::Inspector::AddThermalClusters(clusterlist);
+        }
         if (mouseSelectionConstraints)
+        {
             Window::Inspector::AddBindingConstraints(constraintlist);
+        }
     }
 }
 
@@ -835,7 +903,9 @@ void Manager::internalAddItem(Item* item, bool takeOwnership)
     {
         pAllNodes[item->zPosition()][item] = takeOwnership;
         if (!pUpdaterLock)
+        {
             pComponent.refreshHeaderInformations();
+        }
     }
 }
 
@@ -857,7 +927,9 @@ void Manager::clear()
             {
                 auto endM = i->second.end();
                 for (auto j = i->second.begin(); j != endM; ++j)
+                {
                     toDelete.push_back(j->first);
+                }
             }
         }
         pAllNodes.clear();
@@ -867,7 +939,9 @@ void Manager::clear()
         {
             auto vEnd = toDelete.end();
             for (auto i = toDelete.begin(); i != vEnd; ++i)
+            {
                 delete *i;
+            }
         }
     }
 
@@ -892,7 +966,9 @@ void Manager::internalRemoveItem(Item* item)
                 {
                     i->second.erase(s);
                     if (i->second.empty())
+                    {
                         pAllNodes.erase(i);
+                    }
                 }
             }
 
@@ -911,14 +987,18 @@ void Manager::draw(DrawingContext& dc)
     {
         const NodeMap::iterator endM = i->second.end();
         for (NodeMap::iterator j = i->second.begin(); j != endM; ++j)
+        {
             j->first->draw(dc);
+        }
     }
 }
 
 void Manager::drawExternalDrawer(DrawingContext& dc)
 {
     if (!pExternalQueue.empty())
+    {
         pExternalQueue.front()->drawExternalDrawer(dc);
+    }
 }
 
 Connection* Manager::addConnection(Item* a, Item* b)
@@ -927,7 +1007,9 @@ Connection* Manager::addConnection(Item* a, Item* b)
     internalAddItem(c, true);
     c->createANewConnectionIfNeeded();
     if (!pUpdaterLock)
+    {
         pComponent.refreshHeaderInformations();
+    }
     return c;
 }
 
@@ -940,7 +1022,9 @@ void Manager::addConnectionFromEachSelectedItem(Item* to, Item::Vector* results)
     {
         Item* item = j->first;
         if (item->type() != Item::tyNode)
+        {
             continue;
+        }
 
         if (item->pLinks and not item->pLinks->empty())
         {
@@ -962,13 +1046,17 @@ void Manager::addConnectionFromEachSelectedItem(Item* to, Item::Vector* results)
             }
 
             if (!canContinue)
+            {
                 continue;
+            }
         }
         list.push_back(item);
     }
 
     if (results)
+    {
         results->clear();
+    }
 
     if (not list.empty())
     {
@@ -979,14 +1067,20 @@ void Manager::addConnectionFromEachSelectedItem(Item* to, Item::Vector* results)
             {
                 Item* a = this->addConnection(*j, to);
                 if (a)
+                {
                     results->push_back(a);
+                }
             }
             else
+            {
                 this->addConnection(*j, to);
+            }
         }
     }
     if (not pUpdaterLock)
+    {
         pComponent.refreshHeaderInformations();
+    }
 }
 
 bool Manager::removeTheFirstSelectedItem()
@@ -996,7 +1090,9 @@ bool Manager::removeTheFirstSelectedItem()
         NodeMap::const_iterator j = pSelectedItems.begin();
         internalRemoveItem(j->first);
         if (!pUpdaterLock)
+        {
             deleteAllPendingData();
+        }
         return true;
     }
     return false;
@@ -1010,7 +1106,9 @@ uint Manager::removeAllSelected()
     {
         beginUpdate();
         while (removeTheFirstSelectedItem())
+        {
             ++ret;
+        }
         endUpdate();
     }
     return ret;
@@ -1026,8 +1124,12 @@ void Manager::hideAllSelected(size_t layerID)
         NodeMap::const_iterator j = pSelectedItems.begin();
         NodeMap::const_iterator end = pSelectedItems.end();
         for (; j != end; j++)
+        {
             if (dynamic_cast<Node*>(j->first))
+            {
                 (dynamic_cast<Node*>(j->first))->removeLayerVisibility(layerID);
+            }
+        }
         endUpdate();
     }
 }
@@ -1042,8 +1144,12 @@ void Manager::showAllSelected(size_t layerID)
         NodeMap::const_iterator j = pSelectedItems.begin();
         NodeMap::const_iterator end = pSelectedItems.end();
         for (; j != end; j++)
+        {
             if (dynamic_cast<Node*>(j->first))
+            {
                 (dynamic_cast<Node*>(j->first))->addLayerVisibility(layerID);
+            }
+        }
         endUpdate();
     }
 }
@@ -1095,8 +1201,12 @@ uint Manager::areasCount(const size_t& layerID) const
             for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
             {
                 if (dynamic_cast<Node*>(j->first))
+                {
                     if ((dynamic_cast<Node*>(j->first))->isVisibleOnLayer(layerID))
+                    {
                         ++result;
+                    }
+                }
             }
         }
         return result;
@@ -1113,7 +1223,9 @@ void Manager::removeLayerVisibility(const size_t& layerID)
         for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
         {
             if (dynamic_cast<Node*>(j->first))
+            {
                 (dynamic_cast<Node*>(j->first))->removeLayerVisibility(layerID);
+            }
         }
     }
 }
@@ -1133,7 +1245,9 @@ Node* Manager::find(const Data::Area* area)
         {
             Node* node = (dynamic_cast<Node*>(j->first));
             if (node and node->attachedArea() == area)
+            {
                 return node;
+            }
         }
     }
     return nullptr;
@@ -1151,8 +1265,12 @@ uint Manager::connectionsCount(const size_t& layerID) const
             for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
             {
                 if (dynamic_cast<Connection*>(j->first))
+                {
                     if ((dynamic_cast<Connection*>(j->first))->isVisibleOnLayer(layerID))
+                    {
                         ++result;
+                    }
+                }
             }
         }
         return result;
@@ -1209,7 +1327,9 @@ void Manager::deleteAllPendingData()
     }
 
     if (reloadConstraints and study() and study()->uiinfo)
+    {
         study()->uiinfo->reloadAll();
+    }
 }
 
 void Manager::beginUpdate()
@@ -1227,5 +1347,4 @@ void Manager::endUpdate()
     }
 }
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map

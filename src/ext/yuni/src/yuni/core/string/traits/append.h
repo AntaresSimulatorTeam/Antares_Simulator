@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -21,11 +42,7 @@
 #define YUNI_PRIVATE_MEMBUF_SPTRINF(BUFFER, SIZE, F, V) ::snprintf(BUFFER, SIZE, F, V)
 #endif
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT, class C>
 class Append; // specialization required
@@ -48,11 +65,14 @@ class Append<CStringT, char*> final
 public:
     typedef typename CStringT::Type TypeC;
     typedef typename Static::Remove::Const<TypeC>::Type C;
+
     static void Perform(CStringT& s, const C* rhs)
     {
         if (rhs)
+        {
             s.appendWithoutChecking(rhs,
                                     Yuni::Traits::Length<C*, typename CStringT::Size>::Value(rhs));
+        }
     }
 };
 
@@ -62,6 +82,7 @@ class Append<CStringT, char[N]> final
 {
 public:
     typedef typename CStringT::Type C;
+
     static void Perform(CStringT& s, const C rhs[N])
     {
         if (N > 0 and rhs)
@@ -79,6 +100,7 @@ class Append<CStringT, char> final
 {
 public:
     typedef char C;
+
     static void Perform(CStringT& s, const C rhs)
     {
         s.appendWithoutChecking(rhs);
@@ -91,6 +113,7 @@ class Append<CStringT, unsigned char> final
 {
 public:
     typedef unsigned char C;
+
     static void Perform(CStringT& s, const C rhs)
     {
         s.appendWithoutChecking(static_cast<char>(rhs));
@@ -115,9 +138,13 @@ public:
     static void Perform(CStringT& s, const bool rhs)
     {
         if (rhs)
+        {
             s.appendWithoutChecking("true", 4);
+        }
         else
+        {
             s.appendWithoutChecking("false", 5);
+        }
     }
 };
 
@@ -140,7 +167,9 @@ public:
     static void Perform(CStringT& string, const wchar_t rhs[N])
     {
         if (N > 0 and rhs)
+        {
             string.append(rhs, N - ((rhs[N - 1] == wchar_t()) ? 1 : 0));
+        }
     }
 };
 
@@ -173,7 +202,9 @@ public:
                                            typename CStringT::Size>::Value(buffer));
                 }
                 else
+                {
                     s.appendWithoutChecking("0x0", 3);
+                }
             }
 #else
             {
@@ -187,7 +218,9 @@ public:
                                            typename CStringT::Size>::Value(buffer));
                 }
                 else
+                {
                     s.appendWithoutChecking("0x0", 3);
+                }
             }
 #endif
         }
@@ -256,6 +289,7 @@ class Append<CStringT, std::vector<T>> final
 {
 public:
     typedef std::vector<T> ListType;
+
     static void Perform(CStringT& s, const ListType& rhs)
     {
         s += '[';
@@ -266,7 +300,9 @@ public:
             s += *i;
             ++i;
             for (; i != end; ++i)
+            {
                 s << ", " << *i;
+            }
         }
         s += ']';
     }
@@ -278,6 +314,7 @@ class Append<CStringT, std::list<T>> final
 {
 public:
     typedef std::list<T> ListType;
+
     static void Perform(CStringT& s, const ListType& rhs)
     {
         s += '[';
@@ -288,7 +325,9 @@ public:
             s += *i;
             ++i;
             for (; i != end; ++i)
+            {
                 s << ", " << *i;
+            }
         }
         s += ']';
     }
@@ -304,8 +343,6 @@ public:
         s << rhs.string();
     }
 };
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
 
 #undef YUNI_PRIVATE_MEMBUF_SPTRINF

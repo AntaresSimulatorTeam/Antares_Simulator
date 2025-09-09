@@ -1,4 +1,25 @@
 /*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+/*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
 ** This Source Code Form is subject to the terms of the Mozilla Public License
@@ -11,12 +32,11 @@
 #pragma once
 #include "array.h"
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 template<class T>
-inline Array<T>::Array() : pAutoStart(false)
+inline Array<T>::Array():
+    pAutoStart(false)
 {
 }
 
@@ -29,20 +49,26 @@ Array<T>::Array(const Array<T>& rhs)
 }
 
 template<class T>
-inline Array<T>::Array(uint n) : pAutoStart(false)
+inline Array<T>::Array(uint n):
+    pAutoStart(false)
 {
     // Bound checks
     if (n > maxThreadsLimit)
+    {
         n = maxThreadsLimit;
+    }
     appendNThreadsWL(n, false);
 }
 
 template<class T>
-inline Array<T>::Array(uint n, bool autoStart) : pAutoStart(autoStart)
+inline Array<T>::Array(uint n, bool autoStart):
+    pAutoStart(autoStart)
 {
     // Bound checks
     if (n > maxThreadsLimit)
+    {
         n = maxThreadsLimit;
+    }
     appendNThreadsWL(n, autoStart);
 }
 
@@ -76,7 +102,9 @@ void Array<T>::clear()
     {
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pList.empty())
+        {
             return;
+        }
         copy.swap(pList);
     }
     // the container `copy` will be destroyed here, thus all threads
@@ -86,7 +114,9 @@ template<class T>
 void Array<T>::add(typename T::Ptr thread)
 {
     if (pAutoStart)
+    {
         thread->start();
+    }
     typename ThreadingPolicy::MutexLocker locker(*this);
     pList.push_back(thread);
 }
@@ -95,7 +125,9 @@ template<class T>
 void Array<T>::add(typename T::Ptr thread, bool autostart)
 {
     if (autostart)
+    {
         thread->start();
+    }
     // Locking
     typename ThreadingPolicy::MutexLocker locker(*this);
     pList.push_back(thread);
@@ -122,7 +154,9 @@ void Array<T>::resize(uint n)
 
     // Bound checks error
     if (n > maxThreadsLimit)
+    {
         n = maxThreadsLimit;
+    }
 
     // If we have some thread to remove from the pool, we will use this copy list
     // since it can take some time
@@ -135,7 +169,9 @@ void Array<T>::resize(uint n)
         // Keeping the number of existing thread
         const uint count = pList.size();
         if (count == n)
+        {
             return;
+        }
 
         if (count < n)
         {
@@ -148,12 +184,16 @@ void Array<T>::resize(uint n)
         // This should be done early to make them stop asynchronously.
         // We may earn a lot of time like this.
         for (uint i = n; i < count; ++i)
+        {
             pList[i]->gracefulStop();
+        }
 
         // Creating a list of all threads that must be removed
         copy.reserve(count - n);
         for (uint i = n; i < count; ++i)
+        {
             copy.push_back(pList[i]);
+        }
         // We can resize the vector, the removed threads will be stopped later
         pList.resize(count);
     }
@@ -170,7 +210,9 @@ void Array<T>::start()
     {
         const typename ThreadList::iterator end = pList.end();
         for (typename ThreadList::iterator i = pList.begin(); i != end; ++i)
+        {
             (*i)->start();
+        }
     }
 }
 
@@ -184,7 +226,9 @@ void Array<T>::gracefulStop()
     {
         const typename ThreadList::iterator end = pList.end();
         for (typename ThreadList::iterator i = pList.begin(); i != end; ++i)
+        {
             (*i)->gracefulStop();
+        }
     }
 }
 
@@ -197,14 +241,18 @@ void Array<T>::wait()
     {
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pList.empty())
+        {
             return;
+        }
         copy = pList;
     }
 
     // waiting for all threads
     const typename ThreadList::iterator end = copy.end();
     for (typename ThreadList::iterator i = copy.begin(); i != end; ++i)
+    {
         (*i)->wait();
+    }
 }
 
 template<class T>
@@ -216,14 +264,18 @@ void Array<T>::wait(uint milliseconds)
     {
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pList.empty())
+        {
             return;
+        }
         copy = pList;
     }
 
     // waiting for all threads
     const typename ThreadList::iterator end = copy.end();
     for (typename ThreadList::iterator i = copy.begin(); i != end; ++i)
+    {
         (*i)->wait(milliseconds);
+    }
 }
 
 template<class T>
@@ -235,7 +287,9 @@ void Array<T>::stop(uint timeout)
     {
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pList.empty())
+        {
             return;
+        }
         copy = pList;
     }
 
@@ -245,11 +299,15 @@ void Array<T>::stop(uint timeout)
     // This should be done early to make them stop asynchronously.
     // We may earn a lot of time like this.
     for (typename ThreadList::iterator i = copy.begin(); i != end; ++i)
+    {
         (*i)->gracefulStop();
+    }
 
     // Now we can kill them if they don't cooperate...
     for (typename ThreadList::iterator i = copy.begin(); i != end; ++i)
+    {
         (*i)->stop(timeout);
+    }
 }
 
 template<class T>
@@ -261,7 +319,9 @@ void Array<T>::restart(uint timeout)
     {
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pList.empty())
+        {
             return;
+        }
         copy = pList;
     }
 
@@ -271,13 +331,19 @@ void Array<T>::restart(uint timeout)
     // This should be done early to make them stop asynchronously.
     // We may earn a lot of time like this.
     for (typename ThreadList::iterator i = copy.begin(); i != end; ++i)
+    {
         (*i)->gracefulStop();
+    }
     // Now we can kill them if they don't cooperate...
     for (typename ThreadList::iterator i = copy.begin(); i != end; ++i)
+    {
         (*i)->stop(timeout);
+    }
     // And start them again
     for (typename ThreadList::iterator i = copy.begin(); i != end; ++i)
+    {
         (*i)->start();
+    }
 }
 
 template<class T>
@@ -290,7 +356,9 @@ void Array<T>::wakeUp()
     {
         const typename ThreadList::iterator end = pList.end();
         for (typename ThreadList::iterator i = pList.begin(); i != end; ++i)
+        {
             (*i)->wakeUp();
+        }
     }
 }
 
@@ -329,7 +397,9 @@ Array<T>& Array<T>::operator+=(const Array<T>& rhs)
     typename ThreadingPolicy::MutexLocker locker(*this);
     const typename ThreadList::const_iterator end = rhs.pList.end();
     for (typename ThreadList::const_iterator i = rhs.pList.begin(); i != end; ++i)
+    {
         pList.push_back(*i);
+    }
     return *this;
 }
 
@@ -341,7 +411,9 @@ Array<T>& Array<T>::operator+=(const Ptr& rhs)
     typename ThreadingPolicy::MutexLocker locker(*this);
     const typename ThreadList::const_iterator end = keepReference->pList.end();
     for (typename ThreadList::const_iterator i = keepReference->pList.begin(); i != end; ++i)
+    {
         pList.push_back(*i);
+    }
     return *this;
 }
 
@@ -352,7 +424,9 @@ Array<T>& Array<T>::operator<<(const Array<T>& rhs)
     typename ThreadingPolicy::MutexLocker locker(*this);
     const typename ThreadList::const_iterator end = rhs.pList.end();
     for (typename ThreadList::const_iterator i = rhs.pList.begin(); i != end; ++i)
+    {
         pList.push_back(*i);
+    }
     return *this;
 }
 
@@ -364,7 +438,9 @@ Array<T>& Array<T>::operator<<(const Ptr& rhs)
     typename ThreadingPolicy::MutexLocker locker(*this);
     const typename ThreadList::const_iterator end = keepReference->pList.end();
     for (typename ThreadList::const_iterator i = keepReference->pList.begin(); i != end; ++i)
+    {
         pList.push_back(*i);
+    }
     return *this;
 }
 
@@ -418,7 +494,9 @@ void Array<T>::appendNThreadsWL(uint n, bool autostart)
         else
         {
             for (uint i = count; i < n; ++i)
+            {
                 pList.push_back(new T());
+            }
         }
     }
 }
@@ -448,7 +526,9 @@ void Array<T>::foreachThread(const PredicateT& predicate) const
     {
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pList.empty())
+        {
             return;
+        }
         copy = pList;
     }
 
@@ -456,7 +536,9 @@ void Array<T>::foreachThread(const PredicateT& predicate) const
     for (typename ThreadList::const_iterator i = copy.begin(); i != end; ++i)
     {
         if (not predicate(*i))
+        {
             return;
+        }
     }
 }
 
@@ -471,7 +553,9 @@ void Array<T>::foreachThread(const PredicateT& predicate)
     {
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pList.empty())
+        {
             return;
+        }
         copy = pList;
     }
 
@@ -479,9 +563,10 @@ void Array<T>::foreachThread(const PredicateT& predicate)
     for (typename ThreadList::iterator i = copy.begin(); i != end; ++i)
     {
         if (not predicate(*i))
+        {
             return;
+        }
     }
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread
