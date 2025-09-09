@@ -1,4 +1,3 @@
-#include <memory>
 #define BOOST_TEST_MODULE hydro monthly
 #include <boost/test/unit_test.hpp>
 
@@ -24,7 +23,7 @@ BOOST_AUTO_TEST_CASE(TestInitialization)
     BOOST_CHECK_EQUAL(Xmax[Var], data.VolumeInitial);
 
     auto& CoutLineaire = data.ProblemeHydraulique.ProblemeLineairePartieFixe.CoutLineaire;
-    for (int Pdt = 0; Pdt < nbMonths; Pdt++)
+    for (unsigned Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         Var = data.ProblemeHydraulique.CorrespondanceDesVariables
                 .NumeroDeVariableDepassementVolumeMax[Pdt];
