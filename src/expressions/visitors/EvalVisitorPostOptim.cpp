@@ -40,8 +40,25 @@ EvalVisitorPostOptim::EvalVisitorPostOptim(const IEvaluationContextProvider& con
 
 EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node)
 {
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
     auto idxType = Antares::Expressions::Visitors::TimeIndexVisitor(*component_, contextProvider_)
                      .dispatch(node);
+    if (idxType == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    {
+        EvaluationResult result(0.);
+        for (const auto connexion_end: component_->componentConnectionsViaPort(portId))
+        {
+            auto* component = connexion_end.component();
+            auto* port = connexion_end.port();
+            EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
+            const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+            result += visitor.dispatch(node);
+        }
+        return result;
+    }
+
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
