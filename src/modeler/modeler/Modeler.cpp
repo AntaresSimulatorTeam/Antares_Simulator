@@ -128,7 +128,7 @@ void Modeler::solve() const
           0};
         system_linear_problem.Provide(ortools_linear_problem,
                                       data.dataSeries.get(),
-                                      data.scenario_group_repository,
+                                      data.scenarioGroupRepository,
                                       timeScenarioCtx);
 
         logs.info() << "Linear problem provided";
@@ -149,11 +149,7 @@ void Modeler::solve() const
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
-            writer_.writeSimulationTable(ortools_linear_problem,
-                                         *solution,
-                                         data.system->Components(),
-                                         system_linear_problem.getVariableDictionary(),
-                                         timeScenarioCtx);
+            writer_.writeSimulationTable(ortools_linear_problem, *solution, data, timeScenarioCtx);
             break;
         default:
             logs.error() << "Problem during linear optimization";
@@ -161,7 +157,7 @@ void Modeler::solve() const
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
-        throw Antares::Solver::Modeler::ModelerError("Error while loading files, exiting");
+        throw ModelerError("Error while loading files, exiting");
     }
 }
 } // namespace Antares::Solver

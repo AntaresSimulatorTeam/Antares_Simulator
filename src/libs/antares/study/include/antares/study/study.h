@@ -626,19 +626,9 @@ public:
     */
     const bool usedByTheSolver;
 
-    Antares::ModelerStudy::SystemModel::System* getModelerSystem() const
+    Antares::Modeler::Data* getModelerData() const
     {
-        return modelerInput_.system.get();
-    }
-
-    Optimisation::LinearProblemApi::ILinearProblemData* getModelerData() const
-    {
-        return modelerInput_.dataSeries.get();
-    }
-
-    Optimisation::ScenarioGroupRepository* getScenarioGroupRepository()
-    {
-        return &modelerInput_.scenario_group_repository;
+        return modelerInput_.get();
     }
 
 protected:
@@ -658,8 +648,9 @@ protected:
 
     bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
 
-    //! Load extra modeler components for hybrid studies
+    //! Load extra modeler components for hybrid studies and verify compatibility
     void loadModelerComponents();
+    void checkModelerDataCompatibility() const;
 
     void parameterFiller(const StudyLoadOptions& options);
 
@@ -670,7 +661,7 @@ protected:
     //@}
 
 private:
-    Antares::Modeler::Data modelerInput_;
+    std::unique_ptr<Modeler::Data> modelerInput_;
 }; // class Study
 
 /*!

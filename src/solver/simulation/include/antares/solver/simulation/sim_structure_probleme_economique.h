@@ -611,8 +611,6 @@ public:
       ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
-    const ModelerStudy::SystemModel::System* modelerSystem;                   // for hybrid studies
-    Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
-    Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository;  // for hybrid studies
+    Modeler::Data* modelerData = nullptr;
 };
 #endif

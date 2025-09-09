@@ -8,8 +8,8 @@ Feature: 2 - Simple end-to-end tests to test temporal expression management : Ti
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 0-1      | 80    |
-      | node1     | gen2_p | 0-1      | 20    |
+      | node1     | gen1_p | 1-2      | 80    |
+      | node1     | gen2_p | 1-2      | 20    |
 
   @fast
   Scenario: 2.2: One model with one load and two generators, two timesteps ; TimeEval operator in the objective (on variables and constant param)
@@ -19,8 +19,8 @@ Feature: 2 - Simple end-to-end tests to test temporal expression management : Ti
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 0-1      | 80    |
-      | node1     | gen2_p | 0-1      | 20    |
+      | node1     | gen1_p | 1-2      | 80    |
+      | node1     | gen2_p | 1-2      | 20    |
 
 
   @fast
@@ -31,8 +31,8 @@ Feature: 2 - Simple end-to-end tests to test temporal expression management : Ti
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 0-1      | 80    |
-      | node1     | gen2_p | 0-1      | 20    |
+      | node1     | gen1_p | 1-2      | 80    |
+      | node1     | gen2_p | 1-2      | 20    |
 
   @fast
   Scenario: 2.4: One model with one load and two generators, two timesteps ; TimeEval operator in the objective (on arithmetic expression)
@@ -42,5 +42,5 @@ Feature: 2 - Simple end-to-end tests to test temporal expression management : Ti
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 0-1      | 80    |
-      | node1     | gen2_p | 0-1      | 20    |
+      | node1     | gen1_p | 1-2      | 80    |
+      | node1     | gen2_p | 1-2      | 20    |

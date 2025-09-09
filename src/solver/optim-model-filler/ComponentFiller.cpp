@@ -146,14 +146,14 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
 {
 }
 
-bool checkTimeSteps(const Optimisation::LinearProblemApi::FillContext& ctx)
+bool checkTimeSteps(const LinearProblemApi::FillContext& ctx)
 {
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
-void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                   Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                   const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
+                                   LinearProblemApi::ILinearProblemData& data,
+                                   const LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -224,7 +224,7 @@ void ComponentFiller::addVariables(Optimisation::LinearProblemApi::ILinearProble
     }
 }
 
-void ComponentFiller::addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
+void ComponentFiller::addStaticConstraint(LinearProblemApi::ILinearProblem& pb,
                                           const Optimization::LinearConstraint& linear_constraint,
                                           const std::string& constraint_id) const
 {
@@ -258,9 +258,9 @@ void ComponentFiller::addTimeDependentConstraints(
     }
 }
 
-void ComponentFiller::addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                     Optimisation::LinearProblemApi::ILinearProblemData& data,
-                                     const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
+                                     LinearProblemApi::ILinearProblemData& data,
+                                     const LinearProblemApi::FillContext& ctx)
 {
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContextProvider_, ctx, component_);
     for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
@@ -313,7 +313,8 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
 
 bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_);
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_,
+                                                             evaluationContextProvider_);
     const auto ret = timeIndexVisitor.dispatch(node);
     return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
            || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;

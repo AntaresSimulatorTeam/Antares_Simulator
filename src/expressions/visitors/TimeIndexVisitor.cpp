@@ -76,6 +76,12 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::VariableNode* var)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
 {
+    const auto systemParameter = context_.getParameter(param->value());
+    if (systemParameter.type == ParameterType::CONSTANT)
+    {
+        return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+        // TODO: handle more cases, but ParameterType must be exhaustive first
+    }
     return param->timeIndex();
 }
 
@@ -105,7 +111,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        TimeIndexVisitor visitor(*component);
+        TimeIndexVisitor visitor(*component, contextProvider_);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
@@ -133,8 +139,11 @@ TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* 
     return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-TimeIndexVisitor::TimeIndexVisitor(const Component& component):
-    component_(component)
+TimeIndexVisitor::TimeIndexVisitor(const Component& component,
+                                   const IEvaluationContextProvider& contextProvider):
+    component_(component),
+    contextProvider_(contextProvider),
+    context_(contextProvider.provide(component))
 {
 }
 

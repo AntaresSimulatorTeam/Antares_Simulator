@@ -20,28 +20,19 @@
  */
 
 #pragma once
-#include "antares/expressions/IEvaluationContextProvider.h"
-#include "antares/expressions/visitors/EvaluationContext.h"
 #include "antares/study/system-model/component.h"
 
-#include "scenarioGroupRepo.h"
+#include "visitors/EvaluationContext.h"
 
-namespace Antares::Optimisation
+namespace Antares::Expressions
 {
-class EvaluationContextProvider: public Expressions::IEvaluationContextProvider
+class IEvaluationContextProvider
 {
 public:
-    explicit EvaluationContextProvider(const LinearProblemApi::ILinearProblemData& data,
-                                       const ScenarioGroupRepository& scenarioGroupRepository,
-                                       std::map<std::string, double> variables = {});
-    ~EvaluationContextProvider() override = default;
-
-    [[nodiscard]] Expressions::Visitors::EvaluationContext provide(
-      const ModelerStudy::SystemModel::Component& component) const;
-
-private:
-    const LinearProblemApi::ILinearProblemData& data_;
-    const ScenarioGroupRepository& scenarioGroupRepository_;
-    const std::map<std::string, double> variables_;
+    virtual ~IEvaluationContextProvider() = default;
+    virtual Visitors::EvaluationContext provide(
+      const ModelerStudy::SystemModel::Component& component) const
+      = 0;
 };
-} // namespace Antares::Optimisation
+
+} // namespace Antares::Expressions

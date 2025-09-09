@@ -2,16 +2,16 @@ name: Build Userguide pdf
 
 on:
   release:
-    types: [created]
+    types: [ created ]
   push:
     branches:
-      - release/*
-      - feature/*
-      - features/*
-      - fix/*
-      - issue-*
-      - doc/*
-      - dependabot/*
+    - release/*
+    - feature/*
+    - features/*
+    - fix/*
+    - issue-*
+    - doc/*
+    - dependabot/**
   workflow_call:
     inputs:
       run-tests:
@@ -37,19 +37,19 @@ jobs:
         ref: ${{ inputs.target_branch}}
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: 3.12
 
     - name: Install dependencies
       run: |
-          python -m pip install --upgrade pip
-          pip3 install -r requirements-doc.txt
+        python -m pip install --upgrade pip
+        pip3 install -r requirements-doc.txt
 
     - name: Install libraries
       run: |
-           sudo apt-get update --fix-missing
-           sudo apt-get install latexmk texlive-latex-recommended texlive-formats-extra
+        sudo apt-get update --fix-missing
+        sudo apt-get install latexmk texlive-latex-recommended texlive-formats-extra
 
 
     - name: Generate PDF for user-guide
