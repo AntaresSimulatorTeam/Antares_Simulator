@@ -24,7 +24,7 @@
 namespace Antares::Solver::Variable::Commons
 {
 
-// Fournit des implémentations par défaut (no-op) pour les méthodes d'agrégation spatiale
+// Provides default (no-op) implementations for spatial aggregation methods
 struct SpatialAggregatesUtils
 {
     template<class V>
