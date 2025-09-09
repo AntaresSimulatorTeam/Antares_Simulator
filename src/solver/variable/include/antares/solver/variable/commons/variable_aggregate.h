@@ -29,9 +29,9 @@ template<typename... Vars>
 class SpatialAggregate;
 }
 
-// Alias générique pour agréger une liste de variables
-// Utilisable pour factoriser les typedefs de listes de variables
-// Exemple : using MyVars = VariablesAggregate<A, B, C>;
+// Generic alias to aggregate a list of variables
+// Usable to factorize variable list typedefs
+// Example: using MyVars = VariablesAggregate<A, B, C>;
 template<typename... Vars>
 using VariablesAggregate = Common::SpatialAggregate<Vars...>;
 
