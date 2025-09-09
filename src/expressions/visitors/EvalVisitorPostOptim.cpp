@@ -38,6 +38,11 @@ EvalVisitorPostOptim::EvalVisitorPostOptim(const IEvaluationContextProvider& con
 {
 }
 
+std::string EvalVisitorPostOptim::name() const
+{
+    return "EvalVisitorPostOptim";
+}
+
 EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node)
 {
     std::string portId = node->getPortName();
