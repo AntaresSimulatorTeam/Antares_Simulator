@@ -59,6 +59,21 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
         return result;
     }
 
+    std::vector<double> results;
+    results.resize(fillContext_.getLocalNumberOfTimeSteps());
+    for (auto timeStep = fillContext_.getGlobalFirstTimeStep();
+         timeStep <= fillContext_.getGlobalLastTimeStep();
+         ++timeStep)
+    {
+        for (const auto connexion_end: component_->componentConnectionsViaPort(portId))
+        {
+            auto* component = connexion_end.component();
+            auto* port = connexion_end.port();
+            EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
+            const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+            results[timeStep] += visitor.dispatch(node).valueAsDouble();
+        }
+    }
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
