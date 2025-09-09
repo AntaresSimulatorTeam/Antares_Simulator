@@ -128,56 +128,53 @@ $(document).ready(function(){initNavTree('connection_8hxx_source.html',''); init
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2024, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_TOOLBOX_MAP_CONNECTION_HXX__</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_TOOLBOX_MAP_CONNECTION_HXX__</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>Antares</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>Antares::Map</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>Map</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classAntares_1_1Map_1_1Connection.html#ac1dce6d19bd32dd67392b7de5a143d74">   28</a></span>&#160;<span class="keyword">inline</span> Item::Type <a class="code" href="classAntares_1_1Map_1_1Connection.html#ac1dce6d19bd32dd67392b7de5a143d74">Connection::type</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> tyConnection;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classAntares_1_1Map_1_1Connection.html#ac666bc5ea455ba634e4cc764c939e096">   33</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Map_1_1Connection.html#ac666bc5ea455ba634e4cc764c939e096">Connection::selected</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classAntares_1_1Map_1_1Item.html#a61798af4c488b07a9deacc7e9dd64ad2">pSelected</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classAntares_1_1Map_1_1Connection.html#a81b53fd1c93553b5f20b25cc3b984499">   38</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a>* <a class="code" href="classAntares_1_1Map_1_1Connection.html#a81b53fd1c93553b5f20b25cc3b984499">Connection::attachedAreaLink</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">return</span> pAttachedAreaLink;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classAntares_1_1Map_1_1Connection.html#ac1dce6d19bd32dd67392b7de5a143d74">   26</a></span>&#160;<span class="keyword">inline</span> Item::Type <a class="code" href="classAntares_1_1Map_1_1Connection.html#ac1dce6d19bd32dd67392b7de5a143d74">Connection::type</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> tyConnection;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classAntares_1_1Map_1_1Connection.html#ac666bc5ea455ba634e4cc764c939e096">   31</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Map_1_1Connection.html#ac666bc5ea455ba634e4cc764c939e096">Connection::selected</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classAntares_1_1Map_1_1Item.html#a61798af4c488b07a9deacc7e9dd64ad2">pSelected</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classAntares_1_1Map_1_1Connection.html#a81b53fd1c93553b5f20b25cc3b984499">   36</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a>* <a class="code" href="classAntares_1_1Map_1_1Connection.html#a81b53fd1c93553b5f20b25cc3b984499">Connection::attachedAreaLink</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span> pAttachedAreaLink;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;} <span class="comment">// namespace Antares::Map</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;} <span class="comment">// namespace Map</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_TOOLBOX_MAP_CONNECTION_HXX__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:50</div></div>
-<div class="ttc" id="aclassAntares_1_1Map_1_1Connection_html_a81b53fd1c93553b5f20b25cc3b984499"><div class="ttname"><a href="classAntares_1_1Map_1_1Connection.html#a81b53fd1c93553b5f20b25cc3b984499">Antares::Map::Connection::attachedAreaLink</a></div><div class="ttdeci">Data::AreaLink * attachedAreaLink() const</div><div class="ttdoc">Get the attached link.</div><div class="ttdef"><b>Definition:</b> connection.hxx:38</div></div>
-<div class="ttc" id="aclassAntares_1_1Map_1_1Connection_html_ac1dce6d19bd32dd67392b7de5a143d74"><div class="ttname"><a href="classAntares_1_1Map_1_1Connection.html#ac1dce6d19bd32dd67392b7de5a143d74">Antares::Map::Connection::type</a></div><div class="ttdeci">virtual Type type() const</div><div class="ttdoc">Type of the node.</div><div class="ttdef"><b>Definition:</b> connection.hxx:28</div></div>
-<div class="ttc" id="aclassAntares_1_1Map_1_1Connection_html_ac666bc5ea455ba634e4cc764c939e096"><div class="ttname"><a href="classAntares_1_1Map_1_1Connection.html#ac666bc5ea455ba634e4cc764c939e096">Antares::Map::Connection::selected</a></div><div class="ttdeci">virtual bool selected() const</div><div class="ttdoc">Get if the item is selected.</div><div class="ttdef"><b>Definition:</b> connection.hxx:33</div></div>
-<div class="ttc" id="aclassAntares_1_1Map_1_1Item_html_a61798af4c488b07a9deacc7e9dd64ad2"><div class="ttname"><a href="classAntares_1_1Map_1_1Item.html#a61798af4c488b07a9deacc7e9dd64ad2">Antares::Map::Item::pSelected</a></div><div class="ttdeci">bool pSelected</div><div class="ttdoc">Selected.</div><div class="ttdef"><b>Definition:</b> item.h:267</div></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_TOOLBOX_MAP_CONNECTION_HXX__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:48</div></div>
+<div class="ttc" id="aclassAntares_1_1Map_1_1Connection_html_a81b53fd1c93553b5f20b25cc3b984499"><div class="ttname"><a href="classAntares_1_1Map_1_1Connection.html#a81b53fd1c93553b5f20b25cc3b984499">Antares::Map::Connection::attachedAreaLink</a></div><div class="ttdeci">Data::AreaLink * attachedAreaLink() const</div><div class="ttdoc">Get the attached link.</div><div class="ttdef"><b>Definition:</b> connection.hxx:36</div></div>
+<div class="ttc" id="aclassAntares_1_1Map_1_1Connection_html_ac1dce6d19bd32dd67392b7de5a143d74"><div class="ttname"><a href="classAntares_1_1Map_1_1Connection.html#ac1dce6d19bd32dd67392b7de5a143d74">Antares::Map::Connection::type</a></div><div class="ttdeci">virtual Type type() const</div><div class="ttdoc">Type of the node.</div><div class="ttdef"><b>Definition:</b> connection.hxx:26</div></div>
+<div class="ttc" id="aclassAntares_1_1Map_1_1Connection_html_ac666bc5ea455ba634e4cc764c939e096"><div class="ttname"><a href="classAntares_1_1Map_1_1Connection.html#ac666bc5ea455ba634e4cc764c939e096">Antares::Map::Connection::selected</a></div><div class="ttdeci">virtual bool selected() const</div><div class="ttdoc">Get if the item is selected.</div><div class="ttdef"><b>Definition:</b> connection.hxx:31</div></div>
+<div class="ttc" id="aclassAntares_1_1Map_1_1Item_html_a61798af4c488b07a9deacc7e9dd64ad2"><div class="ttname"><a href="classAntares_1_1Map_1_1Item.html#a61798af4c488b07a9deacc7e9dd64ad2">Antares::Map::Item::pSelected</a></div><div class="ttdeci">bool pSelected</div><div class="ttdoc">Selected.</div><div class="ttdef"><b>Definition:</b> item.h:285</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -128,75 +128,70 @@ $(document).ready(function(){initNavTree('action_2include_2action_2handler_2anta
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2024, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_CREATE_HXX__</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_CREATE_HXX__</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>Antares</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>Antares::Action::AntaresStudy::Constraint</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>Action</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span><a class="code" href="classAntaresStudy.html">AntaresStudy</a></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>Constraint</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#af2825ac32b293abeff1df707591fc60d">   33</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#af2825ac32b293abeff1df707591fc60d">Create::Create</a>(<span class="keyword">const</span> StringT&amp; areaname,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                      <a class="code" href="classAntares_1_1Data_1_1BindingConstraint.html#ac59cf9315a99eaae6a836795c1a7e9f2">Data::BindingConstraint::Type</a> t,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                      Data::BindingConstraint::Operator o) :</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; pOriginalConstraintName(areaname), pType(t), pOperator(o)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classAntares_1_1Action_1_1IAction.html#aad8700c6bc89db3ffebfd2e1ffb7f4f8">pInfos</a>.<a class="code" href="classAntares_1_1Action_1_1ActionInformations.html#ab18001a5589be8a4609266a5b4004188">behavior</a> = bhOverwrite;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT1, <span class="keyword">class</span> StringT2&gt;</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#ab3f4d8133d5ea2d9c66b1a43ed26b660">   42</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#af2825ac32b293abeff1df707591fc60d">Create::Create</a>(<span class="keyword">const</span> StringT1&amp; areaname,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                      <span class="keyword">const</span> StringT2&amp; targetname,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                      <a class="code" href="classAntares_1_1Data_1_1BindingConstraint.html#ac59cf9315a99eaae6a836795c1a7e9f2">Data::BindingConstraint::Type</a> t,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                      Data::BindingConstraint::Operator o) :</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; pOriginalConstraintName(areaname), pTargetConstraintName(targetname), pType(t), pOperator(o)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="classAntares_1_1Action_1_1IAction.html#aad8700c6bc89db3ffebfd2e1ffb7f4f8">pInfos</a>.<a class="code" href="classAntares_1_1Action_1_1ActionInformations.html#ab18001a5589be8a4609266a5b4004188">behavior</a> = bhOverwrite;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#a6edcb51e7001430dd030b5c8d4299790">   51</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#a6edcb51e7001430dd030b5c8d4299790">Create::~Create</a>()</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> Create::allowUpdate()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;} <span class="comment">// namespace Constraint</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;} <span class="comment">// namespace AntaresStudy</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;} <span class="comment">// namespace Action</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_CREATE_HXX__</span></div>
-<div class="ttc" id="aclassAntaresStudy_html"><div class="ttname"><a href="classAntaresStudy.html">AntaresStudy</a></div><div class="ttdef"><b>Definition:</b> antares-study.h:28</div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT&gt;</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#af2825ac32b293abeff1df707591fc60d">   27</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#af2825ac32b293abeff1df707591fc60d">Create::Create</a>(<span class="keyword">const</span> StringT&amp; areaname,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                      <a class="code" href="classAntares_1_1Data_1_1BindingConstraint.html#ac59cf9315a99eaae6a836795c1a7e9f2">Data::BindingConstraint::Type</a> t,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                      Data::BindingConstraint::Operator o):</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    pOriginalConstraintName(areaname),</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    pType(t),</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    pOperator(o)</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classAntares_1_1Action_1_1IAction.html#aad8700c6bc89db3ffebfd2e1ffb7f4f8">pInfos</a>.<a class="code" href="classAntares_1_1Action_1_1ActionInformations.html#ab18001a5589be8a4609266a5b4004188">behavior</a> = bhOverwrite;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT1, <span class="keyword">class</span> StringT2&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#ab3f4d8133d5ea2d9c66b1a43ed26b660">   38</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#af2825ac32b293abeff1df707591fc60d">Create::Create</a>(<span class="keyword">const</span> StringT1&amp; areaname,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                      <span class="keyword">const</span> StringT2&amp; targetname,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                      <a class="code" href="classAntares_1_1Data_1_1BindingConstraint.html#ac59cf9315a99eaae6a836795c1a7e9f2">Data::BindingConstraint::Type</a> t,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                      Data::BindingConstraint::Operator o):</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    pOriginalConstraintName(areaname),</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    pTargetConstraintName(targetname),</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    pType(t),</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    pOperator(o)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="classAntares_1_1Action_1_1IAction.html#aad8700c6bc89db3ffebfd2e1ffb7f4f8">pInfos</a>.<a class="code" href="classAntares_1_1Action_1_1ActionInformations.html#ab18001a5589be8a4609266a5b4004188">behavior</a> = bhOverwrite;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#a6edcb51e7001430dd030b5c8d4299790">   50</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#a6edcb51e7001430dd030b5c8d4299790">Create::~Create</a>()</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> Create::allowUpdate()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;} <span class="comment">// namespace Antares::Action::AntaresStudy::Constraint</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_CONSTRAINT_CREATE_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Action_1_1ActionInformations_html_ab18001a5589be8a4609266a5b4004188"><div class="ttname"><a href="classAntares_1_1Action_1_1ActionInformations.html#ab18001a5589be8a4609266a5b4004188">Antares::Action::ActionInformations::behavior</a></div><div class="ttdeci">Behavior behavior</div><div class="ttdoc">Behavior of the action.</div><div class="ttdef"><b>Definition:</b> fwd.h:56</div></div>
-<div class="ttc" id="aclassAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create_html_a6edcb51e7001430dd030b5c8d4299790"><div class="ttname"><a href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#a6edcb51e7001430dd030b5c8d4299790">Antares::Action::AntaresStudy::Constraint::Create::~Create</a></div><div class="ttdeci">virtual ~Create()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> create.hxx:51</div></div>
-<div class="ttc" id="aclassAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create_html_af2825ac32b293abeff1df707591fc60d"><div class="ttname"><a href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#af2825ac32b293abeff1df707591fc60d">Antares::Action::AntaresStudy::Constraint::Create::Create</a></div><div class="ttdeci">Create(const StringT &amp;areaname, Data::BindingConstraint::Type t, Data::BindingConstraint::Operator o)</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> create.hxx:33</div></div>
-<div class="ttc" id="aclassAntares_1_1Action_1_1IAction_html_aad8700c6bc89db3ffebfd2e1ffb7f4f8"><div class="ttname"><a href="classAntares_1_1Action_1_1IAction.html#aad8700c6bc89db3ffebfd2e1ffb7f4f8">Antares::Action::IAction::pInfos</a></div><div class="ttdeci">ActionInformations pInfos</div><div class="ttdoc">All data related to the action.</div><div class="ttdef"><b>Definition:</b> action.h:168</div></div>
+<div class="ttc" id="aclassAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create_html_a6edcb51e7001430dd030b5c8d4299790"><div class="ttname"><a href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#a6edcb51e7001430dd030b5c8d4299790">Antares::Action::AntaresStudy::Constraint::Create::~Create</a></div><div class="ttdeci">virtual ~Create()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> create.hxx:50</div></div>
+<div class="ttc" id="aclassAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create_html_af2825ac32b293abeff1df707591fc60d"><div class="ttname"><a href="classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Create.html#af2825ac32b293abeff1df707591fc60d">Antares::Action::AntaresStudy::Constraint::Create::Create</a></div><div class="ttdeci">Create(const StringT &amp;areaname, Data::BindingConstraint::Type t, Data::BindingConstraint::Operator o)</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> create.hxx:27</div></div>
+<div class="ttc" id="aclassAntares_1_1Action_1_1IAction_html_aad8700c6bc89db3ffebfd2e1ffb7f4f8"><div class="ttname"><a href="classAntares_1_1Action_1_1IAction.html#aad8700c6bc89db3ffebfd2e1ffb7f4f8">Antares::Action::IAction::pInfos</a></div><div class="ttdeci">ActionInformations pInfos</div><div class="ttdoc">All data related to the action.</div><div class="ttdef"><b>Definition:</b> action.h:170</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraint_html_ac59cf9315a99eaae6a836795c1a7e9f2"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraint.html#ac59cf9315a99eaae6a836795c1a7e9f2">Antares::Data::BindingConstraint::Type</a></div><div class="ttdeci">Type</div><div class="ttdef"><b>Definition:</b> BindingConstraint.h:55</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

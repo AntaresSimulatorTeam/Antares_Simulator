@@ -128,25 +128,25 @@ $(document).ready(function(){initNavTree('ui_2simulator_2windows_2hydro_2managem
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2024, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_APPLICATION_HYDROOW_HYDRO_MANAGEMENT_H__</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_APPLICATION_HYDROOW_HYDRO_MANAGEMENT_H__</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
@@ -155,106 +155,100 @@ $(document).ready(function(){initNavTree('ui_2simulator_2windows_2hydro_2managem
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;ui/common/component/panel.h&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;../../toolbox/components/button.h&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>Antares</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>Antares::Window::Hydro</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>Window</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classAntares_1_1Window_1_1Hydro_1_1Management.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Window_1_1Hydro_1_1Management.html">Management</a>: <span class="keyword">public</span> wxScrolledWindow, <span class="keyword">public</span> Yuni::IEventObserver&lt;Management&gt;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>Hydro</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classAntares_1_1Window_1_1Hydro_1_1Management.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Window_1_1Hydro_1_1Management.html">Management</a> : <span class="keyword">public</span> wxScrolledWindow, <span class="keyword">public</span> Yuni::IEventObserver&lt;Management&gt;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="classAntares_1_1Window_1_1Hydro_1_1Management.html#aa473a71e9fc2146e984bf9b1e9dacc01">Management</a>(wxWindow* parent, <a class="code" href="classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html">Toolbox::InputSelector::Area</a>* notifier);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classAntares_1_1Window_1_1Hydro_1_1Management.html#a81c4be85c6df8149ec969469793ec636">~Management</a>();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> createComponents();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> onStudyClosed();</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> onAreaChanged(<a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* area);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> onInterdailyBreakdownChanged(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">void</span> onIntradailyModulationChanged(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> onIntermonthlyBreakdownChanged(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> onReservoirCapacityChanged(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> onLeewayLowBoundChanged(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> onLeewayUpperBoundChanged(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> onPumpingEfficiencyChanged(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> onToggleReservoirManagement(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> onToggleFollowLoad(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> onToggleUseLeeway(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> onToggleUseWaterValue(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> onToggleHardBoundsOnRuleCurves(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> onToggleInitializeReservoirLevelDate(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> onToggleUseHeuristicTarget(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> onTogglePowerToLevel(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> onEnableReserveManagement(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> onDisableReserveManagement(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> onEnableUseLeeway(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> onDisableUseLeeway(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> onFollowingLoadModulations(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> onUnfollowingLoadModulations(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> onEnableUseWaterValue(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">void</span> onDisableUseWaterValue(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">void</span> onEnableHardBoundsOnRuleCurves(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> onDisableHardBoundsOnRuleCurves(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> onChangingInitializeReservoirLevelDate(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">void</span> onEnableUseHeuristicTarget(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> onDisableUseHeuristicTarget(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">void</span> onEnablePowerToLevel(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> onDisablePowerToLevel(wxCommandEvent&amp; evt);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html">Toolbox::InputSelector::Area</a>* pInputAreaSelector;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* pArea = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">bool</span> pComponentsAreReady = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Panel.html">Component::Panel</a>* pSupport = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    wxTextCtrl* pIntermonthlyBreakdown = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    wxTextCtrl* pInterdailyBreakdown = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    wxTextCtrl* pIntradailyModulation = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    wxTextCtrl* pReservoirCapacity = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    wxTextCtrl* pLeewayUpperBound = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    wxTextCtrl* pLeewayLowerBound = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    wxTextCtrl* pPumpingEfficiency = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    wxWindow* pLabelReservoirCapacity = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    wxWindow* pLabelUseWaterValues = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    wxWindow* pLabelHardBounds = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    wxWindow* pLabelUseHeuristicTarget = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    wxWindow* pLabelLeewayLow = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    wxWindow* pLabelLeewayUp = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    wxWindow* pLabelUseLeeway = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    wxWindow* pLabelPowerToLevel = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pReservoirManagement = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pFollowLoad = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pUseLeeway = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pUseWaterValue = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pHardBoundsOnRuleCurves = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pInitializeReservoirLevelDate = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pUseHeuristicTarget = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pPowerToLevel = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classAntares_1_1Window_1_1Hydro_1_1Management.html#aa473a71e9fc2146e984bf9b1e9dacc01">Management</a>(wxWindow* parent, <a class="code" href="classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html">Toolbox::InputSelector::Area</a>* notifier);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classAntares_1_1Window_1_1Hydro_1_1Management.html#a81c4be85c6df8149ec969469793ec636">~Management</a>();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> createComponents();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> onStudyClosed();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> onAreaChanged(<a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* area);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> onInterdailyBreakdownChanged(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> onIntradailyModulationChanged(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> onIntermonthlyBreakdownChanged(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">void</span> onReservoirCapacityChanged(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> onLeewayLowBoundChanged(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">void</span> onLeewayUpperBoundChanged(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> onPumpingEfficiencyChanged(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> onToggleReservoirManagement(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> onToggleFollowLoad(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> onToggleUseLeeway(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> onToggleUseWaterValue(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> onToggleHardBoundsOnRuleCurves(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> onToggleInitializeReservoirLevelDate(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> onToggleUseHeuristicTarget(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> onTogglePowerToLevel(<a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> onEnableReserveManagement(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> onDisableReserveManagement(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> onEnableUseLeeway(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> onDisableUseLeeway(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> onFollowingLoadModulations(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> onUnfollowingLoadModulations(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> onEnableUseWaterValue(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> onDisableUseWaterValue(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> onEnableHardBoundsOnRuleCurves(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> onDisableHardBoundsOnRuleCurves(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">void</span> onChangingInitializeReservoirLevelDate(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> onEnableUseHeuristicTarget(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">void</span> onDisableUseHeuristicTarget(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> onEnablePowerToLevel(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">void</span> onDisablePowerToLevel(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html">Toolbox::InputSelector::Area</a>* pInputAreaSelector;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* pArea = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">bool</span> pComponentsAreReady = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Panel.html">Component::Panel</a>* pSupport = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    wxTextCtrl* pIntermonthlyBreakdown = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    wxTextCtrl* pInterdailyBreakdown = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    wxTextCtrl* pIntradailyModulation = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    wxTextCtrl* pReservoirCapacity = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    wxTextCtrl* pLeewayUpperBound = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    wxTextCtrl* pLeewayLowerBound = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    wxTextCtrl* pPumpingEfficiency = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    wxWindow* pLabelReservoirCapacity = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    wxWindow* pLabelUseWaterValues = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    wxWindow* pLabelHardBounds = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    wxWindow* pLabelUseHeuristicTarget = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    wxWindow* pLabelLeewayLow = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    wxWindow* pLabelLeewayUp = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    wxWindow* pLabelUseLeeway = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    wxWindow* pLabelPowerToLevel = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pReservoirManagement = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pFollowLoad = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pUseLeeway = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pUseWaterValue = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pHardBoundsOnRuleCurves = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pInitializeReservoirLevelDate = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pUseHeuristicTarget = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Button.html">Component::Button</a>* pPowerToLevel = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}; <span class="comment">// class Management</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;} <span class="comment">// namespace Antares::Window::Hydro</span></div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}; <span class="comment">// class Management</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;} <span class="comment">// namespace Hydro</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;} <span class="comment">// namespace Window</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_APPLICATION_HYDROOW_HYDRO_MANAGEMENT_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Button_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Button.html">Antares::Component::Button</a></div><div class="ttdef"><b>Definition:</b> button.h:34</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Panel_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Panel.html">Antares::Component::Panel</a></div><div class="ttdoc">Panel implementation.</div><div class="ttdef"><b>Definition:</b> panel.h:36</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:52</div></div>
-<div class="ttc" id="aclassAntares_1_1Toolbox_1_1InputSelector_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html">Antares::Toolbox::InputSelector::Area</a></div><div class="ttdoc">Visual Component for displaying all available areas (and groups)</div><div class="ttdef"><b>Definition:</b> area.h:41</div></div>
-<div class="ttc" id="aclassAntares_1_1Window_1_1Hydro_1_1Management_html"><div class="ttname"><a href="classAntares_1_1Window_1_1Hydro_1_1Management.html">Antares::Window::Hydro::Management</a></div><div class="ttdef"><b>Definition:</b> management.h:36</div></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_APPLICATION_HYDROOW_HYDRO_MANAGEMENT_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Button_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Button.html">Antares::Component::Button</a></div><div class="ttdef"><b>Definition:</b> button.h:32</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Panel_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Panel.html">Antares::Component::Panel</a></div><div class="ttdoc">Panel implementation.</div><div class="ttdef"><b>Definition:</b> panel.h:34</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:50</div></div>
+<div class="ttc" id="aclassAntares_1_1Toolbox_1_1InputSelector_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html">Antares::Toolbox::InputSelector::Area</a></div><div class="ttdoc">Visual Component for displaying all available areas (and groups)</div><div class="ttdef"><b>Definition:</b> area.h:37</div></div>
+<div class="ttc" id="aclassAntares_1_1Window_1_1Hydro_1_1Management_html"><div class="ttname"><a href="classAntares_1_1Window_1_1Hydro_1_1Management.html">Antares::Window::Hydro::Management</a></div><div class="ttdef"><b>Definition:</b> management.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Window_1_1Hydro_1_1Management_html_a81c4be85c6df8149ec969469793ec636"><div class="ttname"><a href="classAntares_1_1Window_1_1Hydro_1_1Management.html#a81c4be85c6df8149ec969469793ec636">Antares::Window::Hydro::Management::~Management</a></div><div class="ttdeci">virtual ~Management()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> management.cpp:376</div></div>
 <div class="ttc" id="aclassAntares_1_1Window_1_1Hydro_1_1Management_html_aa473a71e9fc2146e984bf9b1e9dacc01"><div class="ttname"><a href="classAntares_1_1Window_1_1Hydro_1_1Management.html#aa473a71e9fc2146e984bf9b1e9dacc01">Antares::Window::Hydro::Management::Management</a></div><div class="ttdeci">Management(wxWindow *parent, Toolbox::InputSelector::Area *notifier)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> management.cpp:36</div></div>
 </div><!-- fragment --></div><!-- contents -->
