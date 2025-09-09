@@ -48,10 +48,10 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
     if (idxType == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         EvaluationResult result(0.);
-        for (const auto connexion_end: component_->componentConnectionsViaPort(portId))
+        for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))
         {
-            auto* component = connexion_end.component();
-            auto* port = connexion_end.port();
+            auto* component = connectionEnd.component();
+            auto* port = connectionEnd.port();
             EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
             const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
             result += visitor.dispatch(node);
@@ -65,16 +65,16 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
          timeStep <= fillContext_.getGlobalLastTimeStep();
          ++timeStep)
     {
-        for (const auto connexion_end: component_->componentConnectionsViaPort(portId))
+        for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))
         {
-            auto* component = connexion_end.component();
-            auto* port = connexion_end.port();
+            auto* component = connectionEnd.component();
+            auto* port = connectionEnd.port();
             EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
             const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
             results[timeStep] += visitor.dispatch(node).valueAsDouble();
         }
     }
-    throw EvalVisitorNotImplemented(name(), node->name());
+    return EvaluationResult{results};
 }
 
 } // namespace Antares::Expressions::Visitors
