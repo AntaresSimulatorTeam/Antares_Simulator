@@ -26,15 +26,6 @@
  * in the Antares Simulator solver. It eliminates code duplication by providing
  * common functionality through templates and traits.
  *
- * ## Design Philosophy
- *
- * The design follows these principles:
- * - **DRY (Don't Repeat Yourself)**: Common functionality is factored into base classes
- * - **Type Safety**: C++20 concepts enforce correct usage at compile-time
- * - **Performance**: Zero-cost abstractions with compile-time polymorphism
- * - **Extensibility**: Easy to add new time series types
- * - **Maintainability**: Single point of change for common functionality
- *
  * ## Architecture Overview
  *
  * ```
