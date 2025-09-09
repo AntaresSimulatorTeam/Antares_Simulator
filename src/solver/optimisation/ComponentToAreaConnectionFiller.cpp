@@ -98,11 +98,6 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     // Contribution is added to the left-hand side of the constraint
     // We invert the sign bc modeler is in "gen>0, load<0" convention
     // legacy constraint is in "gen<0, load>0" convention
-    // for (const auto& [varKey, coef]: coeffPerVar)
-    // {
-    //     auto* var = modelerVariableDictionary_[varKey];
-    //     areaBalanceConstraint->setCoefficient(var, -coef);
-    // }
     std::string lowerAreaId = areaId;
     boost::algorithm::to_lower(lowerAreaId);
     const auto& solverVariables = variableContainer_.getVariables();
@@ -111,7 +106,6 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
          ++localIndex)
     {
         IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localIndex);
-        // addExpressionToConstraint(expression, areaBalanceConstraint);
 
         const auto& coeffPerVar = linearExpression.coefPerVar();
         for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coeffPerVar,
@@ -119,7 +113,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
              it;
              ++it)
         {
-            areaBalanceConstraint->setCoefficient(solverVariables.at(it.col()), it.value());
+            areaBalanceConstraint->setCoefficient(solverVariables.at(it.col()), -it.value());
         }
         double offset = linearExpression.offset()(localIndex);
         areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + offset,

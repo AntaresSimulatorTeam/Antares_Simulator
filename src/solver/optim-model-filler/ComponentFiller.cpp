@@ -52,7 +52,7 @@ VariablesBulkAddition::VariablesBulkAddition(
   Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
   VariableContainer& variableDictionary):
     linear_problem_(linear_problem),
-    variableDictionary_(variableDictionary)
+    variableContainer_(variableDictionary)
 {
 }
 
@@ -64,7 +64,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         bool integer,
                                         const Optimization::Dimensions& dim) const
 {
-    variableDictionary_.addStartColumn();
+    variableContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -74,7 +74,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            variableDictionary_.addVariable(
+            variableContainer_.addVariable(
               linear_problem_.addVariable(lb,
                                           ub,
                                           integer,
@@ -98,7 +98,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but lb size = " << lb.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableDictionary_.addStartColumn();
+    variableContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -109,7 +109,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            variableDictionary_.addVariable(
+            variableContainer_.addVariable(
               linear_problem_.addVariable(lb.at(t), /*use localIndex*/
                                           ub,
                                           integer,
@@ -132,7 +132,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableDictionary_.addStartColumn();
+    variableContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -143,7 +143,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            variableDictionary_.addVariable(
+            variableContainer_.addVariable(
               linear_problem_.addVariable(lb,
                                           ub.at(t), /*use localIndex*/
                                           integer,
@@ -167,7 +167,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                    << " and ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableDictionary_.addStartColumn();
+    variableContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -177,7 +177,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            variableDictionary_.addVariable(
+            variableContainer_.addVariable(
               linear_problem_.addVariable(lb.at(t), /*use localIndex*/
                                           ub.at(t), /*use localIndex*/
                                           integer,

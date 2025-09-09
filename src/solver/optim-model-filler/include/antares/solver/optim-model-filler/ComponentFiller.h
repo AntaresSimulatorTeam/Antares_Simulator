@@ -141,6 +141,6 @@ public:
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    VariableContainer& variableDictionary_;
+    VariableContainer& variableContainer_;
 };
 } // namespace Antares::Optimisation
