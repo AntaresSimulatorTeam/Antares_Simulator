@@ -1,23 +1,3 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
 
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
@@ -819,7 +799,7 @@ inline std::ostream& operator<<(std::ostream& out, const Yuni::Color::RGBA<T>& r
 
 template<class U, class V>
 inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type>
-  operator+(const Yuni::Color::RGBA<U> a, const Yuni::Color::RGBA<V>& b)
+operator+(const Yuni::Color::RGBA<U> a, const Yuni::Color::RGBA<V>& b)
 {
     Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type> r = a;
     r += b;
@@ -828,7 +808,7 @@ inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calcul
 
 template<class U, class V>
 inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type>
-  operator-(const Yuni::Color::RGBA<U>& a, const Yuni::Color::RGBA<V>& b)
+operator-(const Yuni::Color::RGBA<U>& a, const Yuni::Color::RGBA<V>& b)
 {
     Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type> r = a;
     r -= b;
@@ -837,7 +817,7 @@ inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calcul
 
 template<class U, class V>
 inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type>
-  operator+(const Yuni::Color::RGB<U> a, const Yuni::Color::RGBA<V>& b)
+operator+(const Yuni::Color::RGB<U> a, const Yuni::Color::RGBA<V>& b)
 {
     Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type> r = a;
     r += b;
@@ -846,7 +826,7 @@ inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calcul
 
 template<class U, class V>
 inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type>
-  operator-(const Yuni::Color::RGB<U>& a, const Yuni::Color::RGBA<V>& b)
+operator-(const Yuni::Color::RGB<U>& a, const Yuni::Color::RGBA<V>& b)
 {
     Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type> r = a;
     r -= b;
@@ -855,7 +835,7 @@ inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calcul
 
 template<class U, class V>
 inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type>
-  operator+(const Yuni::Color::RGBA<U> a, const Yuni::Color::RGB<V>& b)
+operator+(const Yuni::Color::RGBA<U> a, const Yuni::Color::RGB<V>& b)
 {
     Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type> r = a;
     r += b;
@@ -864,55 +844,55 @@ inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calcul
 
 template<class U, class V>
 inline Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type>
-  operator-(const Yuni::Color::RGBA<U>& a, const Yuni::Color::RGB<V>& b)
+operator-(const Yuni::Color::RGBA<U>& a, const Yuni::Color::RGB<V>& b)
 {
     Yuni::Color::RGBA<typename Yuni::Color::template RGBA<U>::template Calculation<V>::Type> r = a;
     r -= b;
     return r;
 }
 
-#define YUNI_COLOR_RGBA_OPERATOR_TYPE_RGBA(V)                                                      \
-    template<class T>                                                                              \
-    inline Yuni::Color::RGBA<                                                                      \
-      typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type>                       \
-      operator+(V v, const Yuni::Color::RGBA<T>& rhs)                                              \
-    {                                                                                              \
-        Yuni::Color::RGBA<typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type> r \
-          = rhs;                                                                                   \
-        r += v;                                                                                    \
-        return r;                                                                                  \
-    }                                                                                              \
-    template<class T>                                                                              \
-    inline Yuni::Color::RGBA<                                                                      \
-      typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type>                       \
-      operator-(V v, const Yuni::Color::RGBA<T>& rhs)                                              \
-    {                                                                                              \
-        Yuni::Color::RGBA<typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type> r \
-          = rhs;                                                                                   \
-        r -= v;                                                                                    \
-        return r;                                                                                  \
+#define YUNI_COLOR_RGBA_OPERATOR_TYPE_RGBA(V)                                                    \
+    template<class T>                                                                            \
+    inline Yuni::Color::RGBA<                                                                    \
+      typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type>                     \
+    operator+(V v, const Yuni::Color::RGBA<T>& rhs)                                              \
+    {                                                                                            \
+        Yuni::Color::RGBA<typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type> \
+          r = rhs;                                                                               \
+        r += v;                                                                                  \
+        return r;                                                                                \
+    }                                                                                            \
+    template<class T>                                                                            \
+    inline Yuni::Color::RGBA<                                                                    \
+      typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type>                     \
+    operator-(V v, const Yuni::Color::RGBA<T>& rhs)                                              \
+    {                                                                                            \
+        Yuni::Color::RGBA<typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type> \
+          r = rhs;                                                                               \
+        r -= v;                                                                                  \
+        return r;                                                                                \
     }
 
-#define YUNI_COLOR_RGBA_OPERATOR_RGBA_TYPE(V)                                                      \
-    template<class T>                                                                              \
-    inline Yuni::Color::RGBA<                                                                      \
-      typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type>                       \
-      operator+(const Yuni::Color::RGBA<T>& rhs, V v)                                              \
-    {                                                                                              \
-        Yuni::Color::RGBA<typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type> r \
-          = rhs;                                                                                   \
-        r += v;                                                                                    \
-        return r;                                                                                  \
-    }                                                                                              \
-    template<class T>                                                                              \
-    inline Yuni::Color::RGBA<                                                                      \
-      typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type>                       \
-      operator-(const Yuni::Color::RGBA<T>& rhs, V v)                                              \
-    {                                                                                              \
-        Yuni::Color::RGBA<typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type> r \
-          = rhs;                                                                                   \
-        r -= v;                                                                                    \
-        return r;                                                                                  \
+#define YUNI_COLOR_RGBA_OPERATOR_RGBA_TYPE(V)                                                    \
+    template<class T>                                                                            \
+    inline Yuni::Color::RGBA<                                                                    \
+      typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type>                     \
+    operator+(const Yuni::Color::RGBA<T>& rhs, V v)                                              \
+    {                                                                                            \
+        Yuni::Color::RGBA<typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type> \
+          r = rhs;                                                                               \
+        r += v;                                                                                  \
+        return r;                                                                                \
+    }                                                                                            \
+    template<class T>                                                                            \
+    inline Yuni::Color::RGBA<                                                                    \
+      typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type>                     \
+    operator-(const Yuni::Color::RGBA<T>& rhs, V v)                                              \
+    {                                                                                            \
+        Yuni::Color::RGBA<typename Yuni::Color::template RGBA<T>::template Calculation<V>::Type> \
+          r = rhs;                                                                               \
+        r -= v;                                                                                  \
+        return r;                                                                                \
     }
 
 YUNI_COLOR_RGBA_OPERATOR_TYPE_RGBA(int8_t)

@@ -1,23 +1,3 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
 
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
@@ -29,26 +9,29 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../yuni.h"
-#include <time.h>
+#include <cassert>
 #include <sys/timeb.h>
 #include <sys/types.h>
-#include <cassert>
+#include <time.h>
+
+#include "../yuni.h"
 #ifndef YUNI_OS_WINDOWS
 #ifndef YUNI_OS_HAIKU
 #include <sys/errno.h>
 #endif
-#include <unistd.h>
 #include <sys/time.h>
+#include <unistd.h>
 #else
-#include "../core/system/windows.hdr.h"
 #include <process.h>
+
 #include "../core/system/gettimeofday.h"
+#include "../core/system/windows.hdr.h"
 #endif
 
-#include "thread.h"
-#include <limits.h> // for PTHREAD_STACK_MIN
 #include <iostream>
+#include <limits.h> // for PTHREAD_STACK_MIN
+
+#include "thread.h"
 
 //! Invalid timeout
 #define INVALID_TIMEOUT 2147483648u
