@@ -30,7 +30,7 @@
 #include "productionByRenewablePlant.h"
 #include "profitByPlant.h"
 #include "thermalAirPollutantEmissions.h"
-// Ajouter ici toutes les variables économiques à agréger
+// Add here all economic variables to aggregate
 
 #define ECONOMY_VARIABLES                                                                      \
     VCardOverallCost, VCardOperatingCost, VCardPrice, VCardThermalAirPollutantEmissions,       \

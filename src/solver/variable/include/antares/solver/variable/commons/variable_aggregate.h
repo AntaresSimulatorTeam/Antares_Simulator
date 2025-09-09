@@ -35,7 +35,7 @@ class SpatialAggregate;
 template<typename... Vars>
 using VariablesAggregate = Common::SpatialAggregate<Vars...>;
 
-// Générateur récursif d'imbrication SpatialAggregate<A, SpatialAggregate<B, ...> >
+// Recursive generator for nested SpatialAggregate<A, SpatialAggregate<B, ...> >
 template<typename... Vars>
 struct MakeSpatialAggregate;
 

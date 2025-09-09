@@ -226,7 +226,7 @@ public:
     template<class V, class SetT>
     void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set)
     {
-        // No-op, conserver pour compatibilité
+        // No-op, kept for compatibility
     }
 
     template<class V>
@@ -238,7 +238,6 @@ public:
     template<class V, class SetT>
     void simulationEndSpatialAggregates(V& allVars, const SetT& set)
     {
-        // No-op, conserver pour compatibilité
     }
 
     //@}
