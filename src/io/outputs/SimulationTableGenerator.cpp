@@ -250,7 +250,6 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        const std::string& outputName,
                        const Antares::Expressions::Nodes::Node* rootNode)
 {
-    auto evalContext = contextProvider.provide(component);
     Antares::Expressions::Visitors::EvalVisitorPostOptim evalVisitor(contextProvider,
                                                                      fillContext,
                                                                      &component);
