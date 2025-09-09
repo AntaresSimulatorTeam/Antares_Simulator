@@ -316,18 +316,25 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeSumNode* node
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const AllTimeSumNode* node)
 {
     const auto expression = dispatch(node->child());
-    Eigen::RowVectorXd row = Eigen::RowVectorXd::Zero(nbModelVariables_);
-
-    for (int localTimeStep = fillContext_.getLocalFirstTimeStep();
-         localTimeStep <= fillContext_.getLocalLastTimeStep();
-         ++localTimeStep)
-    {
-        row += expression.coefPerVar().row(localTimeStep);
-    }
-
+    // Eigen::RowVectorXd row = Eigen::RowVectorXd::Zero(nbModelVariables_);
+    //
+    // for (int localTimeStep = fillContext_.getLocalFirstTimeStep();
+    //      localTimeStep <= fillContext_.getLocalLastTimeStep();
+    //      ++localTimeStep)
+    // {
+    //     row += expression.coefPerVar().row(localTimeStep);
+    // }
+    //
+    // LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+    // to_return.setCoefPerVar(row.replicate(nbtimeSteps_, 1).sparseView());
+    //
+    // return to_return;
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
-    to_return.setCoefPerVar(row.replicate(nbtimeSteps_, 1).sparseView());
-
+    for (auto t = fillContext_.getLocalFirstTimeStep(); t <= fillContext_.getLocalLastTimeStep();
+         ++t)
+    {
+        to_return += TimeIndex(expression, t);
+    }
     return to_return;
 }
 } // namespace Antares::Optimization
