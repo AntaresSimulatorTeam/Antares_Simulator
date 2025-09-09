@@ -14,6 +14,8 @@
 #include <filesystem>
 #include <stdio.h>
 
+#include "yuni/core/string/utf8char.h"
+
 #include "../../traits/length.h"
 #include "integer.h"
 
