@@ -273,6 +273,13 @@ void BindingConstraints<NextT>::buildDigest(SurveyResults& results,
 
 template<class NextT>
 template<class V>
+void BindingConstraints<NextT>::simulationEndSpatialAggregates(V& allVars)
+{
+    Commons::SpatialAggregatesUtils::simulationEndSpatialAggregates(allVars);
+}
+
+template<class NextT>
+template<class V>
 void BindingConstraints<NextT>::computeSpatialAggregatesSummary(V& allVars,
                                                                 unsigned int year,
                                                                 unsigned int numSpace)

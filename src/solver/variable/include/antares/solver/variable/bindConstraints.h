@@ -156,10 +156,7 @@ public:
     }
 
     template<class V>
-    void simulationEndSpatialAggregates(V& allVars)
-    {
-        Commons::SpatialAggregatesUtils::simulationEndSpatialAggregates(allVars);
-    }
+    void simulationEndSpatialAggregates(V& allVars);
 
     template<class I>
     static void provideInformations(I& infos);
