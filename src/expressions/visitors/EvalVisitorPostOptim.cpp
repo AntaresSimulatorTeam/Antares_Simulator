@@ -24,6 +24,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/logs/logs.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -66,17 +67,19 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
 
     std::vector<double> results;
     results.resize(fillContext_.getLocalNumberOfTimeSteps());
-    for (auto timeStep = fillContext_.getGlobalFirstTimeStep();
-         timeStep <= fillContext_.getGlobalLastTimeStep();
-         ++timeStep)
+    for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))
     {
-        for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))
+        auto* component = connectionEnd.component();
+        auto* port = connectionEnd.port();
+        EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
+        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+        auto r = visitor.dispatch(node).valuesAsVector();
+        for (auto timeStep = fillContext_.getGlobalFirstTimeStep();
+             timeStep <= fillContext_.getGlobalLastTimeStep();
+             ++timeStep)
         {
-            auto* component = connectionEnd.component();
-            auto* port = connectionEnd.port();
-            EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
-            const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
-            results[timeStep] += visitor.dispatch(node).valueAsDouble();
+            logs.notice() << "PortFieldSumNode: adding value " << r[timeStep] << " at index " << timeStep;
+            results[timeStep] += r[timeStep];
         }
     }
     return EvaluationResult{results};
