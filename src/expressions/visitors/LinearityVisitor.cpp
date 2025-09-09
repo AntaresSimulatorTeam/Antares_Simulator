@@ -31,7 +31,7 @@ namespace Antares::Expressions::Visitors
 
 LinearStatus LinearityVisitor::visit(const Nodes::SumNode* node)
 {
-    auto operands = node->getOperands();
+    const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            LinearStatus::CONSTANT,
@@ -95,16 +95,6 @@ LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode*)
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::PortFieldSumNode*)
-{
-    return LinearStatus::CONSTANT;
-}
-
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentVariableNode*)
-{
-    return LinearStatus::LINEAR;
-}
-
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentParameterNode*)
 {
     return LinearStatus::CONSTANT;
 }

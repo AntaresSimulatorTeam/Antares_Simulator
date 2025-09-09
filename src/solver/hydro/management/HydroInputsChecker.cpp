@@ -30,7 +30,6 @@
 
 namespace Antares
 {
-
 HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
     areas_(study.areas),
     parameters_(study.parameters),
@@ -44,7 +43,7 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 
 void HydroInputsChecker::Execute(uint year)
 {
-    prepareInflows_.Run(year);
+    prepareInflows_.loadInflows(year);
     minGenerationScaling_.Run(year);
     if (!checkRuleCurves(year))
     {
@@ -58,6 +57,7 @@ void HydroInputsChecker::Execute(uint year)
     {
         CheckFinalReservoirLevelsConfiguration(year);
     }
+    prepareInflows_.changeInflowsToAccommodateFinalLevels(year);
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year)
@@ -248,7 +248,6 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
           double finalLevel = scenarioFinalHydroLevels_.entry[area.index][year];
 
           Antares::Solver::FinalLevelValidator validator(area.hydro,
-                                                         area.index,
                                                          area.name,
                                                          initialLevel,
                                                          finalLevel,
@@ -273,5 +272,4 @@ void HydroInputsChecker::CheckForErrors() const
 {
     errorCollector_.CheckForErrors();
 }
-
 } // namespace Antares

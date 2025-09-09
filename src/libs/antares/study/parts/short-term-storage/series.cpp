@@ -49,7 +49,7 @@ bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 
     if (auto path = folder / "inflows.txt"; std::filesystem::exists(path))
     {
-        ret = inflows.loadFromFile(path, false) && ret;
+        ret = inflows.loadFromFile(path, false, Matrix<>::optImmediate) && ret;
     }
     else
     {
@@ -164,7 +164,7 @@ void Series::fillDefaultSeriesIfEmpty()
 
     fillIfEmpty(costInjection, 0.0);
     fillIfEmpty(costWithdrawal, 0.0);
-    fillIfEmpty(costLevel, 0.0);
+    fillIfEmpty(costLevel, -1.e-6);
 
     fillIfEmpty(costVariationInjection, 0.0);
 

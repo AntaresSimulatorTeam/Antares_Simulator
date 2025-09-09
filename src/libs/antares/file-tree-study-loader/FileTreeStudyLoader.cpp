@@ -29,7 +29,7 @@
 namespace Antares
 {
 FileTreeStudyLoader::FileTreeStudyLoader(std::filesystem::path study_path):
-    study_path_{std::move(study_path.string())}
+    study_path_{study_path.string()}
 {
 }
 

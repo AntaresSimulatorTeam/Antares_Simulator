@@ -6,6 +6,8 @@ import configparser
 from enum import Enum
 from pathlib import Path
 
+from numpy.ma.core import absolute
+
 
 class result_type(Enum):
     VALUES = "values"
@@ -42,6 +44,18 @@ class solver_output_handler:
         execution_info.read(os.path.join(self.study_output_path, "execution_info.ini"))
         return float(execution_info['durations_ms']['total']) / 1000
 
+    def get_optim1_simulation_table(self):
+        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-1.csv"))
+        assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
+        return open(absolute_path, 'r').readlines()
+
+    def get_optim2_simulation_table(self):
+        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-2.csv"))
+        if absolute_path.exists():
+            return open(absolute_path, 'r').readlines()
+        else:
+            return None
+
     def __read_csv(self, file_name) -> pd.DataFrame:
         ignore_rows = [0, 1, 2, 3, 6]
         absolute_path = Path(os.path.join(self.study_output_path, file_name.replace("/", os.sep)))
@@ -65,6 +79,10 @@ class solver_output_handler:
 
     def __get_values_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
+
+    def __get_values_hourly_for_specific_week(self, area: str, year: int, week: int):
+        df = self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
+        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
 
     def __get_values_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
         df = self.__get_values_hourly(area, year)
@@ -96,6 +114,10 @@ class solver_output_handler:
 
     def get_hourly_n_dispatched_units(self, area: str, year: int, prod_name: str) -> pd.Series:
         return self.__get_details_hourly(area, year)[prod_name]['NODU']
+
+    def get_loss_of_load_weekly_duration_h(self, area: str, year: int, week: int) -> int:
+        df = self.__get_values_hourly_for_specific_week(area, year, week)
+        return self.__get_values_hourly_for_specific_week(area, year, week)["LOLD"]["Hours"].sum()
 
     def get_loss_of_load_duration_h(self, area: str, year: int) -> int:
         return self.__get_values_hourly(area, year)["LOLD"]["Hours"].sum()

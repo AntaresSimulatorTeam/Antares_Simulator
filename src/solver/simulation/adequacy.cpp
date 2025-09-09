@@ -23,6 +23,7 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/io/outputs/ISimulationTable.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -34,7 +35,8 @@ Adequacy::Adequacy(Data::Study& study,
                    Simulation::ISimulationObserver& simulationObserver):
     study(study),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTables_(study.maxNbYearsInParallel)
 {
 }
 
@@ -59,6 +61,20 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
     state.problemeHebdo = &pProblemesHebdo[numSpace];
     state.resSpilled.reset(study.areas.size(), (uint)nbHoursInAWeek);
     state.numSpace = numSpace;
+}
+
+OptimisationsSimulationTable& Adequacy::getSimulationTable(uint numSpace)
+{
+    return simulationTables_[numSpace];
+}
+
+std::string Adequacy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
 }
 
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
@@ -121,7 +137,6 @@ bool Adequacy::year(Progression::Task& progression,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
-                    bool isFirstPerformedYearOfSimulation,
                     const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                     OptimizationStatisticsWriter& optWriter,
                     const Antares::Data::Area::ScratchMap& scratchmap)
@@ -137,11 +152,10 @@ bool Adequacy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
-    if (isFirstPerformedYearOfSimulation)
-    {
-        currentProblem.firstWeekOfSimulation = true;
-    }
-    bool reinitOptim = true;
+
+    // In order to avoid slight differences in parallel/sequential, we clear the basis at the start
+    // of each year
+    currentProblem.ProblemeAResoudre->clearBasis();
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -161,10 +175,6 @@ bool Adequacy::year(Progression::Task& progression,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-
-        // Reinit optimisation if needed
-        currentProblem.ReinitOptimisation = reinitOptim;
-        reinitOptim = false;
 
         state.simplexRunNeeded = (w == 0)
                                  || simplexIsRequired(hourInTheYear,
@@ -208,10 +218,13 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
+                auto& currentSimTable = simulationTables_[numSpace];
                 OPT_OptimisationHebdomadaire(study.parameters.optOptions,
                                              &currentProblem,
                                              resultWriter,
-                                             simulationObserver_.get());
+                                             simulationObserver_.get(),
+                                             currentSimTable);
+                currentSimTable.write();
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
@@ -233,9 +246,6 @@ bool Adequacy::year(Progression::Task& progression,
             }
             catch (Data::UnfeasibleProblemError&)
             {
-                // need to clean next problemeHebdo
-                reinitOptim = true;
-
                 // Indicate failed week list (first week of the year is "week number one" for the
                 // user but w=0 for the loop)
                 failedWeekList.push_back(w + 1);
@@ -351,9 +361,6 @@ bool Adequacy::year(Progression::Task& progression,
         variables.weekEnd(state);
 
         hourInTheYear += nbHoursInAWeek;
-
-        currentProblem.firstWeekOfSimulation = false;
-
         optWriter.addTime(w, currentProblem.timeMeasure);
 
         ++progression;
@@ -394,7 +401,11 @@ void Adequacy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
+        ComputeFlowQuad(study,
+                        pProblemesHebdo[0],
+                        balance,
+                        pNbWeeks,
+                        simulationTables_[0] /*TODO*/);
     }
 }
 

@@ -1,3 +1,22 @@
+#  Copyright 2007-2025, RTE (https://www.rte-france.com)
+#  See AUTHORS.txt
+#  SPDX-License-Identifier: MPL-2.0
+#  This file is part of Antares-Simulator,
+#  Adequacy and Performance assessment for interconnected energy networks.
+#
+#  Antares_Simulator is free software: you can redistribute it and/or modify
+#  it under the terms of the Mozilla Public Licence 2.0 as published by
+#  the Mozilla Foundation, either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Antares_Simulator is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  Mozilla Public Licence 2.0 for more details.
+#
+#  You should have received a copy of the Mozilla Public Licence 2.0
+#  along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+import math
 # Test steps definitions specific to antares-modeler
 
 import os
@@ -12,43 +31,57 @@ from common_steps.modeler_output_handler import modeler_output_handler
 def modeler_study_path_is(context, string):
     context.study_path = os.path.join(context.config.userdata["resources-path"], string.replace("/", os.sep))
 
+
 @when("I run antares modeler")
 def run_antares_modeler(context):
     run_modeler(context)
 
 
-@step('the optimal value of variable {var} is {value:g}')
-def modeler_var_optimal_value(context, var, value):
-    assert_double_close(value, context.moh.get_optimal_value(var), 1e-6)
-
-
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
-    assert_double_close(value, context.moh.get_optimal_value("objective"), 1e-6)
+    assert_double_close(value, context.moh.get_objective_value(), 1e-6)
 
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')
 def modeler_obj_value(context, lb, ub):
-    assert lb <= context.moh.get_optimal_value("objective") <= ub, f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
+    assert lb <= context.moh.get_objective_value() <= ub, \
+         f"Objective value is not inside expected range: {context.moh.get_optimal_value('objective')}"
 
 
-@step('the optimal values of the variables are')
-def modeler_var_optimal_value(context):
+@step('the modeler outputs contain the following entries')
+def modeler_output_values(context):
     for row in context.table:
-        ts_array = row["timestep"].split("-")
-        ts_start = int(ts_array[0])
-        ts_end =  int(ts_array[1]) if len(ts_array) == 2 else ts_start
-        for ts in range(ts_start, ts_end + 1):
-            var_id = row["component"] + "." + row["variable"] + "_t" + str(ts)
-            assert_double_close(get_value(row, ts), context.moh.get_optimal_value(var_id), 1e-6)
+        ts_range = read_int_range(row, "timestep")
+        if "scenario" not in context.table.headings:
+            scenario_range = [0]
+        else:
+            scenario_range = read_int_range(row, "scenario")
+        if "block" in context.table.headings:
+            block_range = read_int_range(row, "block")
+        else:
+            block_range = [math.nan]
+        for block in block_range:
+            for scenario in scenario_range:
+                for ts in ts_range:
+                    assert_double_close(
+                        get_value(row, ts), context.moh.get_simulation_table_entry(row["component"], row["output"], block, ts, scenario), 1e-6
+                    )
 
+def read_int_range(row, key : str):
+    if row[key] != "":
+        array = row[key].split("-")
+        start = int(array[0])
+        end = int(array[1]) if len(array) == 2 else start
+        return range(start, end + 1)
+    else:
+        return [math.nan]
 
 def get_value(row, ts):
     ret = row["value"]
 
-    if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
-        ret = ret.split("-")  # Split into a list of strings
-        return float(ret[ts])  # Index and convert to float
+    # if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
+    #     ret = ret.split("-")  # Split into a list of strings
+    #     return float(ret[ts])  # Index and convert to float
 
     return float(ret)  # Single value case (apply to all timesteps)
 
@@ -78,9 +111,17 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
-        context.moh = modeler_output_handler(context.output_path)
+        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out))
 
     context.return_code = process.returncode
+
+
+def parse_simulation_table_from_logs(logs: str) -> str:
+    for line in logs.splitlines():
+        if 'Simulation table is written in: ' in line:
+            return line.split('Simulation table is written in: ')[1]
+    raise LookupError("Could not find simulation table location in output logs")
+
 
 
 def build_antares_modeler_command(context):

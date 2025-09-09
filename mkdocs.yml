@@ -76,7 +76,6 @@ nav:
           - 'Study Cleaner': 'user-guide/other-features/study-cleaner.md'
           - 'Study Finder': 'user-guide/other-features/study-finder.md'
           - 'Study Updater': 'user-guide/other-features/study-updater.md'
-          - 'Time-Series Analyzer': 'user-guide/other-features/analyzer.md'
           - 'Vacuum': 'user-guide/other-features/vacuum.md'
           - 'Year-by-Year Aggregator': 'user-guide/other-features/ybyaggregator.md'
       - 'Migration guides': 'user-guide/04-migration-guides.md'
@@ -93,9 +92,10 @@ nav:
       - 'Contributing': 'developer-guide/6-Contributing.md'
       - 'Continuous Integration': 'developer-guide/continuous-integration.md'
       - 'OR-tools integration': 'developer-guide/ortools-integration.md'
+      - 'Study format conventions': 'developer-guide/8-study-format-conventions.md'
       - 'Changelog': 'developer-guide/CHANGELOG.md'
       - 'Software architecture':
-          - 'Dynamic modeler architecture' : 'developer-guide/Architecture/Dynamic-modeler-architecture.md'
+          - 'Dynamic modeler architecture': 'developer-guide/Architecture/Dynamic-modeler-architecture.md'
   - 'External links':
       - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
       - 'Antares website': 'https://antares-simulator.org'

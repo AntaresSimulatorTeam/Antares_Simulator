@@ -19,8 +19,12 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <mutex>
+
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
+#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -30,6 +34,8 @@
 
 using namespace Antares::Solver;
 using Antares::Solver::Optimization::OptimizationOptions;
+
+std::once_flag export_once;
 
 namespace
 {
@@ -116,7 +122,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
-                           Solver::Simulation::ISimulationObserver& simulationObserver)
+                           Solver::Simulation::ISimulationObserver& simulationObserver,
+                           ISimulationTable& simulationTable)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -162,7 +169,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                                  numeroDeLIntervalle,
                                  optimizationNumber,
                                  *optPeriodStringGenerator,
-                                 writer))
+                                 writer,
+                                 simulationTable))
         {
             return false;
         }
@@ -231,7 +239,8 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver& simulationObserver)
+                              Solver::Simulation::ISimulationObserver& simulationObserver,
+                              OptimisationsSimulationTable& simulationTables)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -258,16 +267,19 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),
                    problemeHebdo->ProblemeAResoudre->NombreDeVariables,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-    if (problemeHebdo->ExportStructure && problemeHebdo->firstWeekOfSimulation)
+    if (problemeHebdo->ExportStructure)
     {
-        OPT_ExportStructures(problemeHebdo, writer);
+        std::call_once(export_once,
+                       [&problemeHebdo, &writer]()
+                       { OPT_ExportStructures(problemeHebdo, writer); });
     }
 
     bool ret = runWeeklyOptimization(options.firstOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
-                                     simulationObserver);
+                                     simulationObserver,
+                                     simulationTables.firstOptimSimulationTable());
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -280,7 +292,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      writer,
                                      DEUXIEME_OPTIMISATION,
-                                     simulationObserver);
+                                     simulationObserver,
+                                     simulationTables.secondOptimSimulationTable());
     }
     return ret;
 }

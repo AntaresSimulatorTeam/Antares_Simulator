@@ -214,18 +214,13 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            // Merge all those values with the global results
-            AncestorType::pResults.merge(numSpaceToYear[numSpace] /*year*/,
-                                         pValuesForTheCurrentYear[numSpace]);
-        }
+        // Merge all those values with the global results
+        AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
 
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, numSpace);
     }
 
     void weekBegin(State& state)
@@ -314,14 +309,11 @@ public:
     }
 
     template<class V>
-    static void computeSpatialAggregatesSummary(
-      V& allVars,
-      std::map<unsigned int, unsigned int>& numSpaceToYear,
-      unsigned int nbYearsForCurrentSummary)
+    static void computeSpatialAggregatesSummary(V& allVars,
+                                                unsigned int year,
+                                                unsigned int numSpace)
     {
-        NextType::template computeSpatialAggregatesSummary<V>(allVars,
-                                                              numSpaceToYear,
-                                                              nbYearsForCurrentSummary);
+        NextType::template computeSpatialAggregatesSummary<V>(allVars, year, numSpace);
     }
 
     void beforeYearByYearExport(uint year, uint numSpace)
@@ -384,6 +376,7 @@ public:
             return;
         }
 
+        results.isCurrentVarNA = AncestorType::isNonApplicable;
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
 
@@ -411,6 +404,7 @@ public:
                 && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
             {
                 results.isPrinted = AncestorType::isPrinted;
+                results.isCurrentVarNA = AncestorType::isNonApplicable;
                 results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
                 results.variableCaption = getBindConstraintCaption();
 

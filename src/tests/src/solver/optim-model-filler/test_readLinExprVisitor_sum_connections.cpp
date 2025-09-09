@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -29,6 +29,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/connection.h"
@@ -42,7 +43,7 @@ using namespace Antares::Optimization;
 
 struct container_of_helpful_data_for_unit_tests
 {
-    SystemModel::Expression toExpression(Node* node, const std::string& value)
+    Expression toExpression(Node* node, const std::string& value)
     {
         NodeRegistry nodeRegistry(node, std::move(registry));
         return SystemModel::Expression(value, std::move(nodeRegistry));
@@ -50,9 +51,24 @@ struct container_of_helpful_data_for_unit_tests
 
     Registry<Node> registry;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    EvaluationContext evaluationContext{{}, {}, data};
-    SystemModel::ModelBuilder modelBuilder;
-    SystemModel::ComponentBuilder componentBuilder;
+    Antares::Optimisation::LinearProblemApi::EmptyScenario empty_scenario;
+    ModelBuilder modelBuilder;
+    ComponentBuilder componentBuilder;
+    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0, 0, 0, 0};
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+
+    container_of_helpful_data_for_unit_tests()
+    {
+        auto scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
+          "scenario_GROUP");
+        scenarioPtr->setTimeSerieNumber(0, 1);
+        scenarioGroupRepository.addScenario("scenario_GROUP", std::move(scenarioPtr));
+    }
+
+    Antares::Optimisation::EvaluationContextProvider evaluationContextProvider() const
+    {
+        return Antares::Optimisation::EvaluationContextProvider(data, scenarioGroupRepository);
+    }
 };
 
 BOOST_AUTO_TEST_SUITE(_running_the_read_linear_expression_visitor_on_a_sum_connections_)
@@ -131,7 +147,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                                          ConnectionEnd(&generatorComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContextProvider(), fillContext, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
@@ -245,14 +261,14 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     nodeComponent.addComponentConnection(portId, ConnectionEnd(&demandComponent, &injection_port));
 
     // Visitor associated to component named "N"
-    ReadLinearExpressionVisitor visitor{evaluationContext, {0, 0}, nodeComponent};
+    ReadLinearExpressionVisitor visitor{evaluationContextProvider(), fillContext, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
 
     auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
 
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    FullKey generationKey(generatorComponent.Id(), "generation", 0, 0);
+    FullKey generationKey(generatorComponent.Id(), "generation", MCYearAndTime::MCYear{0}, 0);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(generationKey), 1.);
     BOOST_CHECK_EQUAL(linear_expression.offset(), -5.);
 }

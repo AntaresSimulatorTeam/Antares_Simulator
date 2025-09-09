@@ -159,14 +159,14 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
             {
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 auto& STSResult = problemeHebdo->ResultatsHoraires[areaIndex]
-                                    .ShortTermStorage[pdtHebdo];
+                                    .ShortTermStorage[storageIndex];
                 // 1. Injection
                 int varInjection = variableManager.ShortTermStorageInjection(clusterGlobalIndex,
                                                                              pdtJour);
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection] = storage.injectionNominalCapacity
                                      * storage.series->maxInjectionModulation[hourInTheYear];
-                AddressForVars[varInjection] = &STSResult.injection[storageIndex];
+                AddressForVars[varInjection] = &STSResult.injection[pdtHebdo];
 
                 // 2. Withdrwal
                 int varWithdrawal = variableManager.ShortTermStorageWithdrawal(clusterGlobalIndex,
@@ -174,7 +174,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal] = storage.withdrawalNominalCapacity
                                       * storage.series->maxWithdrawalModulation[hourInTheYear];
-                AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
+                AddressForVars[varWithdrawal] = &STSResult.withdrawal[pdtHebdo];
 
                 // 3. Levels
                 int varLevel = variableManager.ShortTermStorageLevel(clusterGlobalIndex, pdtJour);
@@ -190,7 +190,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                     Xmax[varLevel] = storage.reservoirCapacity
                                      * storage.series->upperRuleCurve[hourInTheYear];
                 }
-                AddressForVars[varLevel] = &STSResult.level[storageIndex];
+                AddressForVars[varLevel] = &STSResult.level[pdtHebdo];
                 // 4. Cost Variation Injection
 
                 // is this necessary?
@@ -214,6 +214,12 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                     Xmin[varCostVariationWithdrawal] = 0.;
                 }
                 storageIndex++;
+                if (storage.allowOverflow)
+                {
+                    int var = variableManager.ShortTermStorageOverflow(clusterGlobalIndex, pdtJour);
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                }
             }
         }
     }
@@ -492,12 +498,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 Xmax[var] = LINFINI_ANTARES;
 
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
-
-                //	Note: if there were a single optimization run instead of two; the following
-                // could be used: 	adresseDuResultat =
-                //&(problemeHebdo->CaracteristiquesHydrauliques[pays].LevelForTimeInterval);
-                //	AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
             }
             for (uint nblayer = 0; nblayer < 100; nblayer++)

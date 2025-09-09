@@ -47,6 +47,12 @@ class Tolerances():
         for key, value in tol_collection.items():
             self.ATOL[key] = value
 
+    def reset_with_loose_default(self):
+        self.RTOL = {}
+        self.ATOL = {}
+        self.default_abs_tol = 2
+        self.default_rel_tol = 2
+
 class Linux_tolerances(Tolerances):
     def __init__(self):
         self.RTOL = {"CO2 EMIS.": 1e-3, "FLOW LIN.": 1e-3, "UCAP LIN.": 1e-3, "H. INFL": 1e-3, "H. STOR": 1e-3,

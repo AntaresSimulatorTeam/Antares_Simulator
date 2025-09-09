@@ -38,6 +38,20 @@ const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
 
 using Antares::Solver::Optimization::SingleOptimOptions;
 
+// TODO use Objective().Value() instead
+// This is a temporary workaround for Windows
+double getObjectiveValue(const MPSolver* solver)
+{
+    double ret = 0;
+    const auto& objective = solver->Objective();
+    for (const auto* variable: solver->variables())
+    {
+        ret += variable->solution_value() * objective.GetCoefficient(variable);
+    }
+    ret += objective.offset();
+    return ret;
+}
+
 // MPSolverParameters's copy constructor is private
 static void setGenericParameters(MPSolverParameters& params)
 {
@@ -100,6 +114,7 @@ static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solv
 {
     switch (solverType)
     {
+    case MPSolver::SIRIUS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
         return true;
     default:
@@ -218,7 +233,6 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
 {
     auto status = solver->Solve(params);
-
     if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
     {
         resultStatus = OUI_SPX;
@@ -372,6 +386,27 @@ std::list<std::string> availableLinearSolversList()
         }
     }
     return result;
+}
+
+bool isLinearSolverAvailable(const std::string& solverName)
+{
+    auto it = OrtoolsUtils::mpSolverMap.find(solverName);
+    if (it == OrtoolsUtils::mpSolverMap.end())
+    {
+        return false;
+    }
+
+    MPSolver::OptimizationProblemType solverType;
+    if (it->second.LPSolverName.has_value())
+    {
+        MPSolver::ParseSolverType(it->second.LPSolverName.value(), &solverType);
+    }
+    else
+    {
+        MPSolver::ParseSolverType(it->second.MIPSolverName.value(), &solverType);
+    }
+
+    return MPSolver::SupportsProblemType(solverType);
 }
 
 std::list<std::string> availableQuadraticSolversList()

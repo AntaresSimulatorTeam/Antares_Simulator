@@ -52,12 +52,7 @@ public:
         Node* portFieldNode = registry_.create<PortFieldNode>("gasStation", "1149");
         Node* portFieldSumNode = registry_.create<PortFieldSumNode>("portfield", "sum");
         Node* sumNode = registry_.create<SumNode>(divisionNode, portFieldNode, portFieldSumNode);
-        Node* componentVariableNode = registry_.create<ComponentVariableNode>("1150",
-                                                                              "otherStation");
-        Node* componentParameterNode = registry_.create<ComponentParameterNode>("1151",
-                                                                                "otherConstant");
-        Node* subtractionNode = registry_.create<SubtractionNode>(componentVariableNode,
-                                                                  componentParameterNode);
+        Node* subtractionNode = registry_.create<SubtractionNode>(parameterNode, variableNode);
         Node* equalNode = registry_.create<EqualNode>(subtractionNode, sumNode);
         Node* literalNode2 = registry_.create<LiteralNode>(53.);
         Node* lessThanOrEqualNode = registry_.create<LessThanOrEqualNode>(literalNode2, equalNode);
@@ -118,28 +113,28 @@ node[style = filled]
   5 -> 6;
   6 [label="-", shape="oval", style="filled, rounded", color="aqua"];
   6 -> 7;
-  7 [label="CV(1150,otherStation)", shape="octagon", style="filled, solid", color="goldenrod"];
+  7 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
   6 -> 8;
-  8 [label="CP(1151,otherConstant)", shape="octagon", style="filled, solid", color="springgreen"];
+  8 [label="Var(atoms_count)", shape="box", style="filled, solid", color="gold"];
   5 -> 9;
   9 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
   9 -> 10;
   10 [label="/", shape="oval", style="filled, rounded", color="aqua"];
+  10 -> 8;
+  8 [label="Var(atoms_count)", shape="box", style="filled, solid", color="gold"];
   10 -> 11;
-  11 [label="Var(atoms_count)", shape="box", style="filled, solid", color="gold"];
-  10 -> 12;
-  12 [label="*", shape="oval", style="filled, rounded", color="aqua"];
+  11 [label="*", shape="oval", style="filled, rounded", color="aqua"];
+  11 -> 12;
+  12 [label="-", shape="invtriangle", style="filled, solid", color="tomato"];
   12 -> 13;
-  13 [label="-", shape="invtriangle", style="filled, solid", color="tomato"];
-  13 -> 14;
-  14 [label="-40.000000", shape="box", style="filled, solid", color="lightgray"];
-  12 -> 15;
-  15 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
-  9 -> 16;
-  16 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
-  9 -> 17;
-  17 [label="PFSUM(portfield,sum)", shape="component", style="filled, solid", color="olive"];
-label="AST Diagram(Total nodes : 17)"
+  13 [label="-40.000000", shape="box", style="filled, solid", color="lightgray"];
+  11 -> 7;
+  7 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
+  9 -> 14;
+  14 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
+  9 -> 15;
+  15 [label="PFSUM(portfield,sum)", shape="component", style="filled, solid", color="olive"];
+label="AST Diagram(Total nodes : 15)"
 labelloc = "t"
 subgraph cluster_legend {
 label = "Legend";
@@ -148,10 +143,6 @@ fontsize = 16;
 color = lightgrey;
 node [shape=plaintext];
 
-legend_ComponentParameterNode [ label =" ComponentParameterNode: 1"]
-legend_ComponentParameterNode -> legend_ComponentVariableNode [style=invis];
-legend_ComponentVariableNode [ label =" ComponentVariableNode: 1"]
-legend_ComponentVariableNode -> legend_DivisionNode [style=invis];
 legend_DivisionNode [ label =" DivisionNode: 1"]
 legend_DivisionNode -> legend_EqualNode [style=invis];
 legend_EqualNode [ label =" EqualNode: 1"]
@@ -200,64 +191,64 @@ node[style = filled]
   6 -> 7;
   7 [label="-", shape="oval", style="filled, rounded", color="aqua"];
   7 -> 8;
-  8 [label="CV(1150,otherStation)", shape="octagon", style="filled, solid", color="goldenrod"];
+  8 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
   7 -> 9;
-  9 [label="CP(1151,otherConstant)", shape="octagon", style="filled, solid", color="springgreen"];
+  9 [label="Var(atoms_count)", shape="box", style="filled, solid", color="gold"];
   6 -> 10;
   10 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
   10 -> 11;
   11 [label="/", shape="oval", style="filled, rounded", color="aqua"];
+  11 -> 9;
+  9 [label="Var(atoms_count)", shape="box", style="filled, solid", color="gold"];
   11 -> 12;
-  12 [label="Var(atoms_count)", shape="box", style="filled, solid", color="gold"];
-  11 -> 13;
-  13 [label="*", shape="oval", style="filled, rounded", color="aqua"];
+  12 [label="*", shape="oval", style="filled, rounded", color="aqua"];
+  12 -> 13;
+  13 [label="-", shape="invtriangle", style="filled, solid", color="tomato"];
   13 -> 14;
-  14 [label="-", shape="invtriangle", style="filled, solid", color="tomato"];
-  14 -> 15;
-  15 [label="-40.000000", shape="box", style="filled, solid", color="lightgray"];
-  13 -> 16;
-  16 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
-  10 -> 17;
-  17 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
-  10 -> 18;
-  18 [label="PFSUM(portfield,sum)", shape="component", style="filled, solid", color="olive"];
-  1 -> 19;
-  19 [label="[]", shape="diamond", style="filled", color="gold"];
+  14 [label="-40.000000", shape="box", style="filled, solid", color="lightgray"];
+  12 -> 8;
+  8 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
+  10 -> 15;
+  15 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
+  10 -> 16;
+  16 [label="PFSUM(portfield,sum)", shape="component", style="filled, solid", color="olive"];
+  1 -> 17;
+  17 [label="[]", shape="diamond", style="filled", color="gold"];
+  17 -> 18;
+  18 [label="6.626070", shape="box", style="filled, solid", color="lightgray"];
+  17 -> 19;
+  19 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
   19 -> 20;
-  20 [label="6.626070", shape="box", style="filled, solid", color="lightgray"];
+  20 [label="Param(par)", shape="box", style="filled, solid", color="wheat"];
   19 -> 21;
-  21 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
-  21 -> 22;
-  22 [label="Param(par)", shape="box", style="filled, solid", color="wheat"];
-  21 -> 23;
-  23 [label="12.400000", shape="box", style="filled, solid", color="lightgray"];
-  1 -> 24;
-  24 [label="[t]", shape="hexagon", style="filled, solid", color="aqua"];
-  24 -> 25;
-  25 [label="Param(Planck's constant)", shape="box", style="filled, solid", color="wheat"];
-  24 -> 26;
-  26 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
-  1 -> 27;
-  27 [label="sum[t]", shape="hexagon", style="filled, solid", color="aqua"];
-  27 -> 28;
-  28 [label="Param(from)", shape="box", style="filled, solid", color="wheat"];
-  27 -> 29;
-  29 [label="Param(to)", shape="box", style="filled, solid", color="wheat"];
-  27 -> 30;
-  30 [label="/", shape="oval", style="filled, rounded", color="aqua"];
-  30 -> 31;
-  31 [label="Param(temp)", shape="box", style="filled, solid", color="wheat"];
-  30 -> 32;
-  32 [label="658.000000", shape="box", style="filled, solid", color="lightgray"];
-  1 -> 33;
-  33 [label="sum[]", shape="diamond", style="filled", color="gold"];
-  33 -> 34;
-  34 [label="*", shape="oval", style="filled, rounded", color="aqua"];
-  34 -> 35;
-  35 [label="Param(div)", shape="box", style="filled, solid", color="wheat"];
-  34 -> 36;
-  36 [label="365.000000", shape="box", style="filled, solid", color="lightgray"];
-label="AST Diagram(Total nodes : 36)"
+  21 [label="12.400000", shape="box", style="filled, solid", color="lightgray"];
+  1 -> 22;
+  22 [label="[t]", shape="hexagon", style="filled, solid", color="aqua"];
+  22 -> 23;
+  23 [label="Param(Planck's constant)", shape="box", style="filled, solid", color="wheat"];
+  22 -> 24;
+  24 [label="-34.000000", shape="box", style="filled, solid", color="lightgray"];
+  1 -> 25;
+  25 [label="sum[t]", shape="hexagon", style="filled, solid", color="aqua"];
+  25 -> 26;
+  26 [label="Param(from)", shape="box", style="filled, solid", color="wheat"];
+  25 -> 27;
+  27 [label="Param(to)", shape="box", style="filled, solid", color="wheat"];
+  25 -> 28;
+  28 [label="/", shape="oval", style="filled, rounded", color="aqua"];
+  28 -> 29;
+  29 [label="Param(temp)", shape="box", style="filled, solid", color="wheat"];
+  28 -> 30;
+  30 [label="658.000000", shape="box", style="filled, solid", color="lightgray"];
+  1 -> 31;
+  31 [label="sum[]", shape="diamond", style="filled", color="gold"];
+  31 -> 32;
+  32 [label="*", shape="oval", style="filled, rounded", color="aqua"];
+  32 -> 33;
+  33 [label="Param(div)", shape="box", style="filled, solid", color="wheat"];
+  32 -> 34;
+  34 [label="365.000000", shape="box", style="filled, solid", color="lightgray"];
+label="AST Diagram(Total nodes : 34)"
 labelloc = "t"
 subgraph cluster_legend {
 label = "Legend";
@@ -267,11 +258,7 @@ color = lightgrey;
 node [shape=plaintext];
 
 legend_AllTimeSumNode [ label =" AllTimeSumNode: 1"]
-legend_AllTimeSumNode -> legend_ComponentParameterNode [style=invis];
-legend_ComponentParameterNode [ label =" ComponentParameterNode: 1"]
-legend_ComponentParameterNode -> legend_ComponentVariableNode [style=invis];
-legend_ComponentVariableNode [ label =" ComponentVariableNode: 1"]
-legend_ComponentVariableNode -> legend_DivisionNode [style=invis];
+legend_AllTimeSumNode -> legend_DivisionNode [style=invis];
 legend_DivisionNode [ label =" DivisionNode: 2"]
 legend_DivisionNode -> legend_EqualNode [style=invis];
 legend_EqualNode [ label =" EqualNode: 1"]

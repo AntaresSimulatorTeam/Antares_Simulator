@@ -26,9 +26,11 @@
 #include <antares/exception/LoadingError.hpp>
 #include "antares/config/config.h"
 #include "antares/solver/utils/ortools_utils.h"
+#include "antares/utils/utils.h"
 
 using namespace Antares;
 using namespace Antares::Data;
+namespace fs = std::filesystem;
 
 std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
 {
@@ -108,8 +110,8 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.solverOptions.linearSolver,
                 ' ',
                 "linear-solver",
-                "Solver used for linear optimizations during simulation. Available solver list : "
-                  + toString(availableLinearSolversList()));
+                "Solver used for linear optimizations during simulation. Use --list-solvers to get "
+                "the avaible solver list");
 
     //--solver
     parser->add(options.solverOptions.linearSolver,
@@ -159,12 +161,11 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                     "Use basis of first optimization in second optimization");
 
     //--quadratic-solver
-    parser->add(
-      options.solverOptions.quadraticSolver,
-      ' ',
-      "quadratic-solver",
-      "Solver used for quadratic optimizations during simulation. Available solver list : "
-        + toString(availableQuadraticSolversList()));
+    parser->add(options.solverOptions.quadraticSolver,
+                ' ',
+                "quadratic-solver",
+                "Solver used for quadratic optimizations during simulation. Use --list-solvers to "
+                "get the avaible solver list");
 
     //--quadratic-solver-param
     parser->add(options.solverOptions.quadraticSolverParameters,
@@ -234,7 +235,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     return parser;
 }
 
-void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
+void printPIDtoDisk(Settings& settings)
 {
     const auto& optPID = settings.PID;
     if (!optPID.empty())
@@ -248,8 +249,10 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
             throw Error::WritingPID(optPID);
         }
     }
+}
 
-    // Simulation name
+void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
+{
     if (!options.simulationName.empty())
     {
         settings.simulationName = options.simulationName;
@@ -288,33 +291,36 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
     options.checkForceSimulationMode();
 
-    // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
     {
         throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
     }
 }
 
-void Settings::checkAndSetStudyFolder(const std::string& folder)
+void checkStudyFolder(const std::string& studyFolder)
 {
-    // The study folder
-    if (folder.empty())
+    if (studyFolder.empty())
     {
         throw Error::NoStudyProvided();
     }
 
-    // Making the path absolute
-    std::filesystem::path abspath = std::filesystem::absolute(folder);
+    if (!Utils::isPathValid(studyFolder))
+    {
+        throw Error::StudyFolderContainsNonASCIIchars(studyFolder);
+    }
+}
+
+std::string fixStudyFolder(const std::string& studyFolder)
+{
+    fs::path abspath = fs::absolute(studyFolder);
     abspath = abspath.lexically_normal();
 
-    // Checking if the path exists
-    if (!std::filesystem::exists(abspath))
+    if (!fs::exists(abspath) || !fs::is_directory(abspath))
     {
-        throw Error::StudyFolderDoesNotExist(folder);
+        throw Error::StudyFolderDoesNotExist(studyFolder);
     }
 
-    // Copying the result
-    studyFolder = abspath.string();
+    return abspath.string();
 }
 
 void Settings::reset()

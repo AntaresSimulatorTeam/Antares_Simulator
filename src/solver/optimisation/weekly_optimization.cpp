@@ -28,17 +28,23 @@ namespace Antares::Solver::Optimization
 WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
                                        IResultWriter& writer,
-                                       Simulation::ISimulationObserver& simulationObserver):
+                                       Simulation::ISimulationObserver& simulationObserver,
+                                       OptimisationsSimulationTable& simulationTables):
     options_(options),
     problemeHebdo_(problemeHebdo),
     writer_(writer),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTables_(simulationTables)
 {
 }
 
 void WeeklyOptimization::solve()
 {
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, writer_, simulationObserver_.get());
+    OPT_OptimisationHebdomadaire(options_,
+                                 problemeHebdo_,
+                                 writer_,
+                                 simulationObserver_.get(),
+                                 simulationTables_);
 }
 
 } // namespace Antares::Solver::Optimization

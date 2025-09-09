@@ -40,6 +40,10 @@ enum class SolverType;
 
 using namespace operations_research;
 
+// TODO use Objective().Value() instead
+// This is a temporary workaround for Windows
+double getObjectiveValue(const MPSolver* solver);
+
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
@@ -64,6 +68,11 @@ std::list<std::string> availableLinearSolversList();
  *  \return List of available ortools quadratic solver names
  */
 std::list<std::string> availableQuadraticSolversList();
+
+/*!
+ *  \brief Check if a linear solver is available
+ */
+bool isLinearSolverAvailable(const std::string& solverName);
 
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant

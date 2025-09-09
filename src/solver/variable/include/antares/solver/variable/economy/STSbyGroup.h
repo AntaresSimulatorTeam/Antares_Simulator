@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <antares/utils/utils.h>
 #include "antares/solver/variable/variable.h"
 
 namespace
@@ -33,18 +34,6 @@ inline std::vector<std::string> sortedUniqueGroups(
         names.insert(cluster.properties.groupName);
     }
     return {names.begin(), names.end()};
-}
-
-inline std::map<std::string, unsigned int> giveNumbersToGroups(
-  const std::vector<std::string>& groupNames)
-{
-    unsigned int groupNumber{0};
-    std::map<std::string, unsigned int> groupToNumbers;
-    for (const auto& name: groupNames)
-    {
-        groupToNumbers[name] = groupNumber++;
-    }
-    return groupToNumbers;
 }
 } // namespace
 
@@ -165,7 +154,7 @@ public:
 
         // Building the vector of group names the clusters belong to.
         groupNames_ = sortedUniqueGroups(area->shortTermStorage.storagesByIndex);
-        groupToNumbers_ = giveNumbersToGroups(groupNames_);
+        groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
         nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
 
@@ -247,24 +236,15 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        // Here we compute synthesis :
-        //  for each interval of any time period results (hourly, daily, weekly, ...),
-        //  we compute the average over all MC years :
-        //  For instance :
-        //      - we compute the average of the results of the first hour over all MC years
-        //      - or we compute the average of the results of the n-th day over all MC years
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                                 AncestorType::pResults,
-                                                 numSpaceToYear[numSpace]);
-        }
+        // Merge all those values with the global results
+        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                             AncestorType::pResults,
+                                             year);
 
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, numSpace);
     }
 
     void hourBegin(unsigned int hourInTheYear)
@@ -281,21 +261,21 @@ public:
         for (const auto& sts: shortTermStorage.storagesByIndex)
         {
             unsigned int groupNumber = groupToNumbers_[sts.properties.groupName];
-            const auto& result = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
+            const auto& result = state.hourlyResults->ShortTermStorage[clusterIndex];
             // Injection
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::injection][state.hourInTheYear]
-              += result.injection[clusterIndex];
+              += result.injection[state.hourInTheWeek];
 
             // Withdrawal
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::withdrawal][state.hourInTheYear]
-              += result.withdrawal[clusterIndex];
+              += result.withdrawal[state.hourInTheWeek];
 
             // Levels
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::level][state.hourInTheYear]
-              += result.level[clusterIndex];
+              += result.level[state.hourInTheWeek];
 
             clusterIndex++;
         }

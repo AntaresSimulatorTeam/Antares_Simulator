@@ -81,43 +81,6 @@ bool FindLocation(String& location)
     return false;
 }
 
-bool FindAnalyzerLocation(String& location)
-{
-    // reset
-    location.clear();
-
-    // The root folder
-    String root;
-    Resources::GetRootFolder(root);
-    String s;
-    s.reserve(root.size() + 30 /*arbitrary*/);
-
-    IO::SearchPath searchpaths;
-    searchpaths.prefixes.push_back((s = "antares-"));
-
-    if (System::windows)
-    {
-        searchpaths.extensions.push_back(".exe");
-        searchpaths.directories.push_back((s = root) << "\\..\\bin");
-        searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
-#ifdef NDEBUG
-        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\analyzer\\Release"); // msvc
-#else
-        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\analyzer\\Debug"); // msvc
-#endif
-        searchpaths.directories.push_back((s = root) << "\\..\\..\\analyzer"); // mingw
-        searchpaths.directories.push_back((s = root));
-    }
-    else
-    {
-        searchpaths.directories.push_back((s = root) << "/../../analyzer");
-        searchpaths.directories.push_back(s.clear() << "/usr/local/bin/");
-        searchpaths.directories.push_back(s.clear() << "/usr/bin/");
-    }
-
-    return searchpaths.find(location, "analyzer");
-}
-
 bool FindConstraintsBuilderLocation(String& location)
 {
     // reset

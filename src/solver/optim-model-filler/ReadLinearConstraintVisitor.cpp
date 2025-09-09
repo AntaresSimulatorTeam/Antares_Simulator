@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -23,6 +23,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions::Nodes;
@@ -32,10 +33,10 @@ namespace Antares::Optimization
 {
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-  Expressions::Visitors::EvaluationContext context,
+  const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const Antares::ModelerStudy::SystemModel::Component& component):
-    linear_expression_visitor_(std::move(context), fillContext, component)
+  const Component& component):
+    linear_expression_visitor_(evalContextProvider, fillContext, component)
 {
 }
 
@@ -46,10 +47,10 @@ std::string ReadLinearConstraintVisitor::name() const
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const EqualNode* node)
 {
-    auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
-                          - linear_expression_visitor_.dispatch(node->right());
+    auto left = linear_expression_visitor_.dispatch(node->left());
+    left -= linear_expression_visitor_.dispatch(node->right());
 
-    const auto& leftMinusRightLinearExpression = leftMinusRight.GetLinearExpressions();
+    const auto& leftMinusRightLinearExpression = left.GetLinearExpressions();
     std::vector<LinearConstraint> constraints;
     constraints.reserve(leftMinusRightLinearExpression.size());
 
@@ -65,10 +66,10 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const EqualNode
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
 {
-    auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
-                          - linear_expression_visitor_.dispatch(node->right());
+    auto left = linear_expression_visitor_.dispatch(node->left());
+    left -= linear_expression_visitor_.dispatch(node->right());
 
-    const auto& leftMinusRightLinearExpression = leftMinusRight.GetLinearExpressions();
+    const auto& leftMinusRightLinearExpression = left.GetLinearExpressions();
     std::vector<LinearConstraint> constraints;
     constraints.reserve(leftMinusRightLinearExpression.size());
 
@@ -83,10 +84,10 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LessThanO
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
 {
-    auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
-                          - linear_expression_visitor_.dispatch(node->right());
+    auto left = linear_expression_visitor_.dispatch(node->left());
+    left -= linear_expression_visitor_.dispatch(node->right());
 
-    const auto& leftMinusRightLinearExpression = leftMinusRight.GetLinearExpressions();
+    const auto& leftMinusRightLinearExpression = left.GetLinearExpressions();
     std::vector<LinearConstraint> constraints;
     constraints.reserve(leftMinusRightLinearExpression.size());
 
@@ -99,9 +100,9 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const GreaterTh
     return constraints;
 }
 
-static std::invalid_argument IllegalNodeException()
+static Error::InvalidArgumentError IllegalNodeException()
 {
-    return std::invalid_argument("Root node of a constraint must be a comparator.");
+    return Error::InvalidArgumentError("Root node of a constraint must be a comparator.");
 }
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const SumNode*)
@@ -150,16 +151,6 @@ std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortField
 }
 
 std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldSumNode*)
-{
-    throw IllegalNodeException();
-}
-
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentVariableNode*)
-{
-    throw IllegalNodeException();
-}
-
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ComponentParameterNode*)
 {
     throw IllegalNodeException();
 }

@@ -16,10 +16,13 @@ You can find simple examples by checking out the studies used in our [test base]
 The hybrid simulation outputs the [same files as a legacy study](03-outputs.md). But these files only contain the 
 optimization results of the system components that were created by the legacy study.  
 
-The optimal values of the variables created by the modeler (ie the state of the components modelled in the 
-[system file](../modeler/02-inputs.md#system-file)) are output in separate files.  
-Currently, the results are written in an output file with this format: modeler-solutions-\*-\*-\*--optim-nb-\*.txt.  
-They respect the same format as the [modeler outputs](../modeler/03-outputs.md).
+The results of the modeler's components optimization is exported under the simulation table format, described in 
+the [modeler outputs page](../modeler/03-outputs.md), in the same output folder as the legacy outputs.  
+One simulation table for each optimization step (called `simulation_table--optim-nb-X`) will be generated.
+
+> _**Note:**_ 
+> Because every MC year is divided into multiple simplex ranges (blocks), time-independent outputs will appear once for 
+> every block in the simulation table.
 
 ## Features
 Hybrid studies offer the following features.
@@ -94,6 +97,11 @@ of the area's [balance constraint](05-model.md#balance-between-load-and-generati
       - Generation contributions to the balance should be **positive**  
       - Load contributions to the balance should be **negative**  
     Take this into account when defining the connection port value.
+
+## Limitations
+
+- In legacy mode, each MC year is optimized separately. Thus, hybrid studies cannot contain scenario-independent 
+  variables. If you try to use such a variable in hybrid mode, the solver will fail.
 
 ## Troubleshooting
 

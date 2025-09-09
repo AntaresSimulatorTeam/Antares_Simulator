@@ -1,6 +1,7 @@
 set(PROJ linear-problem-mpsolver-impl)
 
 set(HEADERS
+		include/antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h
         include/antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h
         include/antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h
         include/antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h
@@ -8,6 +9,7 @@ set(HEADERS
 )
 set(SRC_ORTOOLS_IMPL
         ${HEADERS}
+		convertOrtoolsBasisStatus.cpp
         mipVariable.cpp
         mipSolution.cpp
         mipConstraint.cpp
@@ -25,7 +27,7 @@ target_link_libraries(${PROJ}
         Antares::linear-problem-api
         Antares::logs
         Antares::solverUtils
-		ortools::ortools
+	ortools::ortools
 )
 
 target_include_directories(${PROJ}

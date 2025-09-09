@@ -25,6 +25,8 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
@@ -36,9 +38,21 @@ EvalVisitor::EvalVisitor(EvaluationContext context,
 {
 }
 
+EvalVisitor::EvalVisitor(EvaluationContext context,
+                         Optimisation::LinearProblemApi::FillContext fillContext,
+                         const ModelerStudy::SystemModel::Component* component):
+    // TODO put component or its id inside context, it is already component-bound.
+    // Plus it is mandatory to visit Variables & PortFieldSums
+    // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
+    context_(std::move(context)),
+    fillContext_(std::move(fillContext)),
+    component_(component)
+{
+}
+
 EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
 {
-    auto operands = node->getOperands();
+    const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
                            EvaluationResult{0.},
@@ -51,9 +65,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::SubtractionNode* node)
     return dispatch(node->left()) - dispatch(node->right());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node
-
-)
+EvaluationResult EvalVisitor::visit(const Nodes::MultiplicationNode* node)
 {
     return dispatch(node->left()) * dispatch(node->right());
 }
@@ -80,7 +92,33 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    return EvaluationResult{context_.getVariableValue(node->value())};
+    if (!component_)
+    {
+        throw Error::RuntimeError("Component null. Cannot evaluate VariableNode.");
+    }
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->timeIndex() == TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    {
+        std::string varName = Optimization::VariableDictionary::buildVariableName(
+          {component_->Id(), node->value()},
+          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
+          std::nullopt);
+        return EvaluationResult(context_.getVariableValue(varName));
+    }
+    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+    std::vector<double> varValues;
+    varValues.reserve(fillContext_.getLocalNumberOfTimeSteps());
+    for (auto timeStep = fillContext_.getLocalFirstTimeStep();
+         timeStep <= fillContext_.getLocalLastTimeStep();
+         ++timeStep)
+    {
+        std::string varName = Optimization::VariableDictionary::buildVariableName(
+          {component_->Id(), node->value()},
+          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
+          timeStep);
+        varValues.emplace_back(context_.getVariableValue(varName));
+    }
+    return EvaluationResult{varValues};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
@@ -98,21 +136,20 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
         return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
     }
     std::vector<double> params;
-    params.reserve(fillContext_.getNumberOfTimestep());
-    for (auto timeStep = fillContext_.getFirstTimeStep();
-         timeStep <= fillContext_.getLastTimeStep();
+    params.reserve(fillContext_.getLocalNumberOfTimeSteps());
+    for (auto timeStep = fillContext_.getGlobalFirstTimeStep();
+         timeStep <= fillContext_.getGlobalLastTimeStep();
          ++timeStep)
     {
-        params.emplace_back(context_.getParameterValue(node->value(), "", 0, timeStep));
+        params.emplace_back(
+          context_.getParameterValue(node->value(), fillContext_.getYear(), timeStep));
     }
     return EvaluationResult{params};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return
-
-      EvaluationResult{node->value()};
+    return EvaluationResult{node->value()};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
@@ -126,16 +163,6 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
-{
-    throw EvalVisitorNotImplemented(name(), node->name());
-}
-
-EvaluationResult EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
-{
-    throw EvalVisitorNotImplemented(name(), node->name());
-}
-
-EvaluationResult EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
@@ -170,7 +197,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
     const EvaluationResult expression = dispatch(node->child());
-    return expression.alltimeSum(fillContext_.getNumberOfTimestep());
+    return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
 std::string EvalVisitor::name() const

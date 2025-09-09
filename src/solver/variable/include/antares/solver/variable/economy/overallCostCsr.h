@@ -180,17 +180,13 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            // Merge all those values with the global results
-            AncestorType::pResults.merge(numSpaceToYear[numSpace] /*year*/,
-                                         pValuesForTheCurrentYear[numSpace]);
-        }
+        // Merge all those values with the global results
+        AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
 
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        // Next variable
+        NextType::computeSummary(year, numSpace);
     }
 
     void hourForEachArea(State& state, unsigned int numSpace)
@@ -200,12 +196,7 @@ public:
           (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]
            * state.area->thermal.unsuppliedEnergyCost)
           + (state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-             * state.area->thermal.spilledEnergyCost)
-          // Current hydro storage and pumping generation costs
-          + (state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek]
-             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - state.area->hydro.pumpingEfficiency
-                    * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
+             * state.area->thermal.spilledEnergyCost);
 
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
           += costForSpilledOrUnsuppliedEnergyCSR;

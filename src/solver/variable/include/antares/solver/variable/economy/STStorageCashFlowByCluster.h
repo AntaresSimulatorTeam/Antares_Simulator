@@ -186,22 +186,17 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
         {
-            for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
-            {
-                // Merge all those values with the global results
-                AncestorType::pResults[clusterIndex].merge(
-                  numSpaceToYear[numSpace],
-                  pValuesForTheCurrentYear[numSpace][clusterIndex]);
-            }
+            // Merge all those values with the global results
+            AncestorType::pResults[clusterIndex]
+              .merge(year, pValuesForTheCurrentYear[numSpace][clusterIndex]);
         }
 
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, numSpace);
     }
 
     void hourBegin(unsigned int hourInTheYear)
@@ -216,13 +211,12 @@ public:
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
              ++clusterIndex)
         {
-            const auto& stsHourlyResults = state.hourlyResults
-                                             ->ShortTermStorage[state.hourInTheWeek];
+            const auto& stsHourlyResults = state.hourlyResults->ShortTermStorage[clusterIndex];
             // ST storage injection for the current cluster and this hour
             // CashFlow[h] = (withdrawal - injection) * MRG. PRICE
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[hourInYear]
-              = (stsHourlyResults.withdrawal[clusterIndex]
-                 - stsHourlyResults.injection[clusterIndex])
+              = (stsHourlyResults.withdrawal[state.hourInTheWeek]
+                 - stsHourlyResults.injection[state.hourInTheWeek])
                 * (-state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek]);
             // Note: The marginal price provided by the solver is negative (naming convention).
         }

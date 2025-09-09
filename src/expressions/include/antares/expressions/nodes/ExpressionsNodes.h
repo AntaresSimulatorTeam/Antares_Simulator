@@ -20,7 +20,6 @@
 */
 #pragma once
 #include <antares/expressions/nodes/AllTimeSumNode.h>
-#include <antares/expressions/nodes/ComponentNode.h>
 #include <antares/expressions/nodes/DivisionNode.h>
 #include <antares/expressions/nodes/EqualNode.h>
 #include <antares/expressions/nodes/GreaterThanOrEqualNode.h>

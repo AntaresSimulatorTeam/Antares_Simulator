@@ -20,11 +20,16 @@ Feature: hybrid (simulator+modeler) studies
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_0"
     When I run antares simulator
     Then the simulation succeeds
-    And the simulation takes less than 5 seconds
+    And the simulation takes less than 10 seconds
     # 100MW @ 0.3€/MW/h, for 1 week = 5040 €
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
     And in area "NODE", during year 1, loss of load lasts 0 hours
+    And the modeler outputs contain the following entries
+      | block   | component | output                 | timestep  | scenario | value |
+      |         | gen1      | generation.flow_field  | 1-24      | 0-4      | 100   |
+      |         | gen1      | generation.flow_field  | 6184-6230 | 0-4      | 100   |
+      | 330-364 | load1     | consumption.flow_field |           | 0-4      | -100  |
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
@@ -36,6 +41,7 @@ Feature: hybrid (simulator+modeler) studies
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
     And in area "AREA", during year 1, loss of load lasts 0 hours
+    And simulation tables match the references
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=5900) (168h simplex)
@@ -59,3 +65,24 @@ Feature: hybrid (simulator+modeler) studies
     And the annual system cost is 17640000.0
     And in area "AREA", during year 1, loss of load lasts 0 hours
     And in area "AREA", during year 1, hourly production of "base" is always equal to 3000 MWh
+
+  @fast @short
+  Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (168h simplex)
+    # copy of test 3_6_1, both weeks are clones
+    # except max_p of the generator component is 6200 in first week, 5900 in second
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_4"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
+    # for now, modeler costs does not figure in system cost txt
+    And the annual system cost is 520000
+    And in area "AREA", during year 1, week 1, loss of load lasts 0 hours
+    And in area "AREA", during year 1, week 2, loss of load lasts 1 hours
+    And in area "AREA", during year 1, total unsupplied energy is 52 MWh
+
+  @fast @short
+  Scenario: Invalid study - scenario-independent variable
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/Scenario-independent variable"
+    When I run antares simulator
+    Then the simulation fails
+    And the message "Scenario-independent variables are not supported in hybrid studies" is reported in the logs

@@ -39,7 +39,8 @@ Economy::Economy(Data::Study& study,
     study(study),
     preproOnly(false),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTables_(study.maxNbYearsInParallel)
 {
 }
 
@@ -65,6 +66,20 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
+OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
+{
+    return simulationTables_[numSpace];
+}
+
+std::string Economy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
+}
+
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
@@ -83,7 +98,8 @@ bool Economy::simulationBegin()
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
-                                            simulationObserver_.get());
+                                            simulationObserver_.get(),
+                                            simulationTables_[numSpace]);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -112,7 +128,6 @@ bool Economy::year(Progression::Task& progression,
                    uint numSpace,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
-                   bool isFirstPerformedYearOfSimulation,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
                    const Antares::Data::Area::ScratchMap& scratchmap)
@@ -128,11 +143,10 @@ bool Economy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
-    if (isFirstPerformedYearOfSimulation)
-    {
-        currentProblem.firstWeekOfSimulation = true;
-    }
-    bool reinitOptim = true;
+
+    // In order to avoid slight differences in parallel/sequential, we clear the basis at the start
+    // of each year
+    currentProblem.ProblemeAResoudre->clearBasis();
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -152,15 +166,11 @@ bool Economy::year(Progression::Task& progression,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-
-        // Reinit optimisation if needed
-        currentProblem.ReinitOptimisation = reinitOptim;
-        reinitOptim = false;
-
+        auto& currentSimTable = simulationTables_[numSpace];
         try
         {
             weeklyOptProblems_[numSpace].solve();
-
+            currentSimTable.write();
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
@@ -207,7 +217,6 @@ bool Economy::year(Progression::Task& progression,
         catch (Data::UnfeasibleProblemError&)
         {
             // need to clean next problemeHebdo
-            reinitOptim = true;
 
             // Indicate failed week list (first week of the year is "week number one" for the user
             // but w=0 for the loop)
@@ -221,8 +230,6 @@ bool Economy::year(Progression::Task& progression,
         }
 
         hourInTheYear += nbHoursInAWeek;
-
-        currentProblem.firstWeekOfSimulation = false;
 
         ++progression;
     }
@@ -262,7 +269,11 @@ void Economy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
+        ComputeFlowQuad(study,
+                        pProblemesHebdo[0],
+                        balance,
+                        pNbWeeks,
+                        simulationTables_[0] /*TODO*/);
     }
 }
 

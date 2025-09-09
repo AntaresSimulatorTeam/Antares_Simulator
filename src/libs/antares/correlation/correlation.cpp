@@ -266,6 +266,7 @@ int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string
     return 0;
 }
 
+#ifdef BUILD_UI
 IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
 {
     /* Asserts */
@@ -325,6 +326,7 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
     }
     return 0;
 }
+#endif
 
 Correlation::Correlation():
     pMode(modeNone)
@@ -606,12 +608,11 @@ static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
 {
     // for (uint x = 0; x <= areaSource; ++x)
     // We MUST take the original area list, and not the current one
-    auto end = studySource.areas.nameidSet.end();
-    for (auto i = studySource.areas.nameidSet.begin(); i != end; ++i)
+    for (const auto& i: studySource.areas.nameidSet)
     {
         uint x;
         {
-            auto* a = studySource.areas.find(*i);
+            auto* a = studySource.areas.find(i);
             if (!a)
             {
                 continue;

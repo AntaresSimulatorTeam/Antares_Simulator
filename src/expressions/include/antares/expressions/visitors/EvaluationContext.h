@@ -3,12 +3,12 @@
 #include <map>
 #include <stdexcept>
 #include <string>
-#include <vector>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
+class IScenario;
 class ILinearProblemData;
-}
+} // namespace Antares::Optimisation::LinearProblemApi
 
 namespace Antares::Expressions::Visitors
 {
@@ -16,6 +16,7 @@ enum class ParameterType : unsigned int
 {
     CONSTANT = 0,
     TIMESERIE = 1
+    // TODO: add varying_in_scenario_only, varying_in_time_and_scenario, and handle them in visitors
 };
 
 // this struct contains more or less the same infos as the one in system.h
@@ -43,7 +44,8 @@ public:
      */
     explicit EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
                                std::map<std::string, double> variables,
-                               Optimisation::LinearProblemApi::ILinearProblemData& data);
+                               const Optimisation::LinearProblemApi::ILinearProblemData& data,
+                               const Optimisation::LinearProblemApi::IScenario& scenario);
 
     /**
      * @brief Retrieves the value of a variable.
@@ -62,16 +64,20 @@ public:
      * @throws std::out_of_range If the parameter is not found.
      */
     [[nodiscard]] double getSystemParameterValueAsDouble(const std::string& key) const;
+
     [[nodiscard]] std::string getSystemParameterValue(const std::string& key) const;
 
     [[nodiscard]] double getParameterValue(const std::string& key,
-                                           const std::string& scenarioGroup,
-                                           unsigned scenario,
+                                           unsigned int year,
                                            unsigned int hour) const;
 
     [[nodiscard]] ParameterType getParameterType(const std::string& key) const;
+
     [[nodiscard]] ParameterTypeAndValue getParameter(const std::string& key) const;
-    [[nodiscard]] Optimisation::LinearProblemApi::ILinearProblemData& data() const;
+
+    [[nodiscard]] const Optimisation::LinearProblemApi::ILinearProblemData& data() const;
+
+    [[nodiscard]] const Optimisation::LinearProblemApi::IScenario& scenario() const;
 
     template<class T>
     struct CouldNotEvaluateConstantParameter: T
@@ -89,7 +95,7 @@ private:
      * @brief A map storing variable values.
      */
     std::map<std::string, double> variables_;
-    Optimisation::LinearProblemApi::ILinearProblemData& data_;
+    const Optimisation::LinearProblemApi::ILinearProblemData& data_;
+    const Optimisation::LinearProblemApi::IScenario& scenario_;
 };
-
 } // namespace Antares::Expressions::Visitors

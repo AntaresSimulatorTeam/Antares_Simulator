@@ -162,11 +162,9 @@ static inline void ExpansionWL()
 {
     PredicateEnv predicate;
     String out;
-    // The end of the container
-    auto end = entries->end();
-    for (auto i = entries->begin(); i != end; ++i)
+
+    for (auto& [_, value]: *entries)
     {
-        String& value = i->second;
         if (ExpandWL(out, value, predicate))
         {
             value = out;
@@ -324,14 +322,13 @@ void DumpToString(Clob& out)
     }
 
     // The end of the container
-    const PolicyMap::const_iterator end = entries->end();
 
     // Find the longest key length
     uint maxlen = 0;
     {
-        for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
+        for (const auto& [row, value]: *entries)
         {
-            uint len = i->first.size();
+            uint len = row.size();
             if (len > maxlen)
             {
                 maxlen = len;
@@ -340,14 +337,13 @@ void DumpToString(Clob& out)
     }
 
     maxlen += 3; // spaces after the key
-    PolicyKey row;
 
-    for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
+    for (const auto& [row, value]: *entries)
     {
-        row = i->first;
-        row.resize(maxlen, " ");
+        std::string rowKey = row;
+        rowKey.resize(maxlen, ' ');
         out.append("  ", 2);
-        out << row << ": " << i->second << '\n';
+        out << rowKey << ": " << value << '\n';
     }
 }
 
@@ -362,12 +358,9 @@ void DumpToLogs()
         return;
     }
 
-    // The end of the container
-    auto end = entries->end();
-    for (auto i = entries->begin(); i != end; ++i)
+    for (const auto& [key, value]: *entries)
     {
-        // if (!i->first.startsWith("product_"))
-        logs.info() << "  policy: " << i->first << ":  " << i->second;
+        logs.info() << "  policy: " << key << ":  " << value;
     }
 }
 

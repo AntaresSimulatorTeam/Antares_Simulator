@@ -28,6 +28,7 @@
 #include <antares/logs/logs.h>
 #include <antares/study/area/scratchpad.h>
 #include "antares/antares/antares.h"
+#include "antares/array/matrix.h"
 #include "antares/study//study.h"
 #include "antares/study/area/area.h"
 #include "antares/study/parts/load/prepro.h"
@@ -163,6 +164,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& file
     return true;
 }
 
+#ifdef BUILD_UI
 static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
 {
     IniFile ini;
@@ -333,6 +335,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area,
 
     return ret;
 }
+#endif
 
 } // anonymous namespace
 
@@ -611,6 +614,7 @@ void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
       });
 }
 
+#ifdef BUILD_UI
 bool AreaList::saveListToFile(const AnyString& filename) const
 {
     if (!filename)
@@ -650,6 +654,7 @@ bool AreaList::saveListToFile(const AnyString& filename) const
     logs.error() << "impossible to write " << filename;
     return false;
 }
+#endif
 
 bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount) const
 {
@@ -680,6 +685,7 @@ void AreaList::markAsModified() const
     each([](const Data::Area& area) { area.markAsModified(); });
 }
 
+#ifdef BUILD_UI
 bool AreaList::saveToFolder(const AnyString& folder) const
 {
     if (folder.empty())
@@ -760,7 +766,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 
     // Save all areas
     each(
-      [&ret, &buffer, &folder, this](const Data::Area& area)
+      [&ret, &folder, this](const Data::Area& area)
       {
           logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
                       << area.name;
@@ -780,6 +786,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 
     return ret;
 }
+#endif
 
 static void readAdqPatchMode(Study& study, Area& area)
 {
@@ -818,6 +825,28 @@ static void readAdqPatchMode(Study& study, Area& area)
             }
         }
     }
+}
+
+static bool checkMatrixPositive(const Matrix<>& m, const std::string& buffer, unsigned limit)
+{
+    logs.debug() << "Checking : " << buffer;
+    if (m.width and m.height and limit)
+    {
+        for (unsigned x = 0; x < limit; ++x)
+        {
+            auto& column = m.entry[x];
+            for (unsigned y = 0; y < m.height; ++y)
+            {
+                if (column[y] < 0.)
+                {
+                    logs.error() << buffer << ": negative value detected (at column " << x
+                                 << ", row: " << y << ')';
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
 }
 
 template<class StringT>
@@ -875,10 +904,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           && ret;
 
     // Check misc gen
-    {
-        buffer.clear() << "Misc Gen: `" << area.id << '`';
-        MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
-    }
+    buffer.clear() << "Misc Gen: `" << area.id << '`';
+    ret = checkMatrixPositive(area.miscGen, buffer, fhhPSP) && ret;
 
     // Links
     {
@@ -1663,7 +1690,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
         return nullptr;
     }
     AreaName parentName(key.c_str(), offset);
-    ClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
+    std::string id(key.c_str() + offset + 1, key.size() - (offset + 1));
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
     {

@@ -39,8 +39,8 @@ namespace Antares::ModelerStudy::SystemModel
 class Constraint
 {
 public:
-    Constraint(std::string name, Expression expression):
-        id_(std::move(name)),
+    Constraint(std::string id, Expression expression):
+        id_(std::move(id)),
         expression_(std::move(expression))
     {
     }

@@ -29,24 +29,27 @@
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
 #include <antares/study/duplicates.h>
+#include <antares/study/header.h>
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
 #include "antares/config/config.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 #include "antares/solver/simulation/simulation-run.h"
 #include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
-
 using namespace Antares::Check;
 
 namespace fs = std::filesystem;
 
 namespace
 {
+const char totalTimeKey[] = "total";
+
 void printSolvers()
 {
     std::cout << "Available linear solvers: " << toString(availableLinearSolversList())
@@ -342,12 +345,15 @@ void Application::prepare(int argc, const char* argv[])
         return;
     }
 
-    // Perform some checks
+    printPIDtoDisk(pSettings);
+
     checkAndCorrectSettingsAndOptions(pSettings, options);
 
-    pSettings.checkAndSetStudyFolder(options.studyFolder);
+    checkStudyFolder(options.studyFolder);
+    pSettings.studyFolder = fixStudyFolder(options.studyFolder);
 
-    checkStudyVersion(pSettings.studyFolder);
+    auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
+    checkStudyVersion(version, pSettings.studyFolder);
 
     // Determine the log filename to use for this simulation
     resetLogFilename();
@@ -390,17 +396,19 @@ void Application::execute()
 
     // Save about-the-study files (comments, notes, etc.)
     pStudy->saveAboutTheStudy(*resultWriter);
-
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    pOptimizationInfo = simulationRun(*pStudy,
-                                      pSettings,
-                                      pDurationCollector,
-                                      *resultWriter,
-                                      observer);
+    pDurationCollector(totalTimeKey) << [&]
+    {
+        pOptimizationInfo = simulationRun(*pStudy,
+                                          pSettings,
+                                          pDurationCollector,
+                                          *resultWriter,
+                                          observer);
+    };
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
@@ -478,10 +486,7 @@ void Application::writeExectutionInfo()
         return;
     }
 
-    pTotalTimer.stop();
-    pDurationCollector.addDuration("total", pTotalTimer.get_duration());
-
-    logTotalTime(pTotalTimer.get_duration());
+    logTotalTime(pDurationCollector.getTime(totalTimeKey));
 
     // If no writer is available, we can't write
     if (!resultWriter)

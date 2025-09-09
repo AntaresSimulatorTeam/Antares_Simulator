@@ -199,17 +199,13 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int nbYearsForCurrentSummary)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                                 AncestorType::pResults,
-                                                 numSpaceToYear[numSpace]);
-        }
+        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[year],
+                                             AncestorType::pResults,
+                                             year);
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, nbYearsForCurrentSummary);
     }
 
     void hourBegin(unsigned int hourInTheYear)

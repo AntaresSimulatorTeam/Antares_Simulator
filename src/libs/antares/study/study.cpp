@@ -519,6 +519,7 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
     return area;
 }
 
+#ifdef BUILD_UI
 // TODO VP: delete with GUI
 bool Study::areaDelete(Area* area)
 {
@@ -740,7 +741,7 @@ bool Study::areaRename(Area* area, AreaName newName)
 }
 
 // TODO VP: delete with GUI
-bool Study::clusterRename(Cluster* cluster, ClusterName newName)
+bool Study::clusterRename(Cluster* cluster, std::string newName)
 {
     // A name must not be empty
     if (!cluster or newName.empty())
@@ -757,7 +758,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     newName = beautifyname.c_str();
 
     // Preparing the new area ID
-    ClusterName newID = transformNameIntoID(newName);
+    std::string newID = transformNameIntoID(newName);
     if (newID.empty())
     {
         logs.error() << "invalid id transformation";
@@ -840,25 +841,11 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     return ret;
 }
 
-void Study::destroyAllLoadTSGeneratorData()
+bool Study::readonly() const
 {
-    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
+    return (parameters.readonly);
 }
-
-void Study::destroyAllSolarTSGeneratorData()
-{
-    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
-}
-
-void Study::destroyAllHydroTSGeneratorData()
-{
-    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
-}
-
-void Study::destroyAllWindTSGeneratorData()
-{
-    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
-}
+#endif // BUILD_UI
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
@@ -869,6 +856,31 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
             constraint->forceReload(true);
         }
     }
+}
+
+template<>
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
+
+{
+    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
+}
+
+template<>
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesSolar>()
+{
+    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
+}
+
+template<>
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesWind>()
+{
+    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
+}
+
+template<>
+inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
+{
+    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
 }
 
 void Study::initializeProgressMeter(bool tsGeneratorOnly)
@@ -1017,7 +1029,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String areaname;
 
         areas.each(
-          [&output, &linkname, &areaname](const Area& area)
+          [&linkname, &areaname](const Area& area)
           {
               if (areaname.size() < area.id.size())
               {

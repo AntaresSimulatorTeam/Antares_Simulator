@@ -42,7 +42,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
 {
     bool error = false;
 
-    double X = problem.Volume[11] - problem.Turbine[11] + problem.Apport[11];
+    double X = problem.Volume[11] - problem.Turbine[11] + problem.Apport[11] - problem.overflow[11];
     if (!Utils::isZero(X - lvi))
     {
         logs.fatal() << area.id << ": hydro management: monthly: reservoir error";
@@ -171,10 +171,11 @@ static double calcTurbineMaxForMonth(unsigned simulationMonth,
     return turbine;
 }
 
-void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
-                                                       uint y,
-                                                       Antares::Data::Area::ScratchMap& scratchmap,
-                                                       HydroSpecificMap& hydro_specific_map)
+void HydroManagement::prepareMonthlyOptimalGenerations(
+  const std::vector<double>& random_reservoir_level,
+  uint y,
+  Antares::Data::Area::ScratchMap& scratchmap,
+  HydroSpecificMap& hydro_specific_map)
 {
     uint indexArea = 0;
     areas_.each(

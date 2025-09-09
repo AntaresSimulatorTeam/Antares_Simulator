@@ -2,16 +2,16 @@ name: Publish docker images
 on:
   push:
     branches:
-      - 'docker/*'
-      - dependabot/*
+    - 'docker/*'
+    - dependabot/**
 
 jobs:
   docker_publish:
-  
+
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Docker file push
       uses: elgohr/Publish-Docker-Github-Action@master

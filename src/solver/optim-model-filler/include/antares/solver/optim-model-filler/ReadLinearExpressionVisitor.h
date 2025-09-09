@@ -29,6 +29,8 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/study/system-model/component.h"
 
+#include "EvaluationContextProvider.h"
+
 /**
  * Read Linear Expression Visitor
  * Visits a Node and produces a Linear Expression (defined by an offset and non-zero
@@ -42,12 +44,10 @@ class ReadLinearExpressionVisitor
     : public Expressions::Visitors::NodeVisitor<TimeDependentLinearExpression>
 {
 public:
-    explicit ReadLinearExpressionVisitor(
-      Expressions::Visitors::EvaluationContext evalContext,
-      Optimisation::LinearProblemApi::FillContext fillContext,
-      const Antares::ModelerStudy::SystemModel::Component& component);
-
-    ReadLinearExpressionVisitor() = default;
+    ReadLinearExpressionVisitor() = delete;
+    ReadLinearExpressionVisitor(const Optimisation::EvaluationContextProvider& evalContextProvider,
+                                const Optimisation::LinearProblemApi::FillContext& fillContext,
+                                const ModelerStudy::SystemModel::Component& component);
     std::string name() const override;
 
 private:
@@ -67,18 +67,15 @@ private:
     TimeDependentLinearExpression visit(const Expressions::Nodes::LiteralNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::PortFieldNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::ComponentVariableNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::ComponentParameterNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeShiftNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeIndexNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::TimeSumNode* node) override;
     TimeDependentLinearExpression visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
-    Optimisation::LinearProblemApi::FillContext fillContext_;
+    const Optimisation::EvaluationContextProvider& evalContextProvider_;
     const Expressions::Visitors::EvaluationContext evalContext_;
-    const Antares::ModelerStudy::SystemModel::Component& component_;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
+    const ModelerStudy::SystemModel::Component& component_;
     Expressions::Visitors::EvalVisitor evalVisitor_;
 };
 } // namespace Antares::Optimization

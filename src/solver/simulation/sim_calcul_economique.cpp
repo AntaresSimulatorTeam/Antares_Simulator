@@ -43,25 +43,35 @@ static void importShortTermStorages(
 {
     int clusterGlobalIndex = 0;
     int constraintGlobalIndex = 0;
+
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
-        ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
+        const auto* area = areas[areaIndex];
+        ShortTermStorageOut[areaIndex].resize(area->shortTermStorage.count());
         int storageIndex = 0;
-        for (const auto& st: areas[areaIndex]->shortTermStorage.storagesByIndex)
+        for (const auto& st: area->shortTermStorage.storagesByIndex)
         {
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
             toInsert.clusterGlobalIndex = clusterGlobalIndex;
 
-            // Properties
+            // capacities
             toInsert.reservoirCapacity = st.properties.reservoirCapacity.value();
             toInsert.injectionEfficiency = st.properties.injectionEfficiency;
             toInsert.withdrawalEfficiency = st.properties.withdrawalEfficiency;
             toInsert.injectionNominalCapacity = st.properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
+            // initial level
             toInsert.initialLevel = st.properties.initialLevel;
             toInsert.initialLevelOptim = st.properties.initialLevelOptim;
+
+            // optional penalization
             toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
+            // optional overflow
+            toInsert.allowOverflow = st.properties.allowOverflow;
+            toInsert.overflowCost = area->thermal.spilledEnergyCost
+                                    + area->hydro.overflowSpilledCostDifference;
+
             toInsert.name = st.properties.name;
             for (const auto& constraint: st.additionalConstraints)
             {
@@ -94,11 +104,9 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     auto& parameters = study.parameters;
 
     // For hybrid studies
-    problem.modelerSystem = study.getModelerSystem();
-    problem.linear_problem_data_ = study.getModelerData();
+    problem.modelerData = study.getModelerData();
 
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
-    problem.firstWeekOfSimulation = false;
 
     // gp adq : to be removed
     if (parameters.adqPatchParams.enabled)
@@ -409,13 +417,15 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
         if (area.hydro.reservoirManagement)
         {
-            problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-              = problem.previousSimulationFinalLevel[k];
+            double& nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+            nivInit = problem.previousSimulationFinalLevel[k];
+            if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
+            {
+                nivInit = hydroVentilationResults[k].NiveauxReservoirsDebutJours[weekFirstDay]
+                          * area.hydro.reservoirCapacity;
+                problem.previousSimulationFinalLevel[k] = nivInit;
+            }
 
-            problem.CaracteristiquesHydrauliques[k].LevelForTimeInterval
-              = problem.CaracteristiquesHydrauliques[k]
-                  .NiveauInitialReservoir; /*for first 24-hour optim*/
-            double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
             if (nivInit < -LEVEL_TOLERANCE_MWH)
             {
                 std::ostringstream msg;
@@ -435,14 +445,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (area.hydro.powerToLevel)
             {
                 problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation = Antares::Data::
-                  getWeeklyModulation(problem.previousSimulationFinalLevel[k] * 100
-                                        / area.hydro.reservoirCapacity,
+                  getWeeklyModulation(nivInit * 100 / area.hydro.reservoirCapacity,
                                       area.hydro.creditModulation,
                                       Data::PartHydro::genMod);
 
                 problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation = Antares::Data::
-                  getWeeklyModulation(problem.previousSimulationFinalLevel[k] * 100
-                                        / area.hydro.reservoirCapacity,
+                  getWeeklyModulation(nivInit * 100 / area.hydro.reservoirCapacity,
                                       area.hydro.creditModulation,
                                       Data::PartHydro::pumpMod);
             }
@@ -450,8 +458,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             if (area.hydro.useWaterValue)
             {
                 problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular
-                  = getWaterValue(problem.previousSimulationFinalLevel[k] * 100
-                                    / area.hydro.reservoirCapacity,
+                  = getWaterValue(nivInit * 100 / area.hydro.reservoirCapacity,
                                   area.hydro.waterValues,
                                   weekFirstDay);
             }

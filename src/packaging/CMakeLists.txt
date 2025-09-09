@@ -50,7 +50,7 @@ set(TARGET_LIBS #No alias
         misc
         model_antares
         antares-solver-ts-generator
-        shave-peaks-by-remix-hydro
+        shave-peaks-by-remix-storage-gen
 
         # lps : nothing
 
@@ -81,6 +81,7 @@ set(TARGET_LIBS #No alias
         linear-problem-api
         linear-problem-data-impl
         linear-problem-mpsolver-impl
+        modeler-lib
 
         # solver-lib
         args_helper
@@ -104,6 +105,9 @@ set(TARGET_LIBS #No alias
         data-series-csv-importer
         expressions-iterators
         additional-constraint-rhs-antlr-interface
+        modeler-simulation-table
+        scenario-builder-antlr
+        scenario-group-parser
 )
 
 install(TARGETS ${TARGET_LIBS}

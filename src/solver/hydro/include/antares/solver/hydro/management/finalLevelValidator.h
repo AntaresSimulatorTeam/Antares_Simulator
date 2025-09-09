@@ -41,8 +41,7 @@ namespace Solver
 class FinalLevelValidator
 {
 public:
-    FinalLevelValidator(Antares::Data::PartHydro& hydro,
-                        unsigned int areaIndex,
+    FinalLevelValidator(const Antares::Data::PartHydro& hydro,
                         const Antares::Data::AreaName areaName,
                         double initialLevel,
                         double finalLevel,
@@ -69,8 +68,7 @@ private:
     unsigned int firstMonthOfSimulation_ = 0;
 
     // Data from area
-    Antares::Data::PartHydro& hydro_;
-    unsigned int areaIndex_;
+    const Antares::Data::PartHydro& hydro_;
     const Antares::Data::AreaName areaName_;
     double initialLevel_;
     double finalLevel_;

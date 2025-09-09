@@ -9,6 +9,7 @@ follows:
     - **input**: a directory that contains all input files
         - **model-libraries**: a directory that contains all [model libraries](#model-libraries) needed by the study
         - **data-series**: a directory that contains all [data series](#data-series) needed by the study
+            - Contains **modeler-scenariobuilder.dat** file, which is used to map scenarios to data series
         - **system.yml**: the [system file](#system-file) describing the simulated energy system
     - **parameters.yml**: the [parameters](04-parameters.md) file
 
@@ -52,15 +53,15 @@ Example:
 
 ~~~yaml
 port-types:
-  - id: dc_port
-    description: A port which transfers power flow value
-    fields:
-      - id: flow
-  - id: ac_port
-    description: A port which transfers power flow and voltage angle values
-    fields:
-      - id: flow
-      - id: angle
+- id: dc_port
+  description: A port which transfers power flow value
+  fields:
+  - id: flow
+- id: ac_port
+  description: A port which transfers power flow and voltage angle values
+  fields:
+  - id: flow
+  - id: angle
 ~~~
 
 - **id**: the ID for the port type. Must be unique inside the scope of the library, and
@@ -82,46 +83,51 @@ Example:
 
 ~~~yaml
 models:
-  - id: generator_dc
-    description: A simple DC model of a generator
-    parameters:
-      - id: min_active_power_setpoint
-        time-dependent: false
-        scenario-dependent: false
-      - id: max_active_power_setpoint
-        time-dependent: true
-        scenario-dependent: true
-      - id: proportional_cost
-        time-dependent: false
-        scenario-dependent: true
-    variables:
-      - id: is_on
-        variable-type: boolean
-        lower-bound: 0
-        upper-bound: 1
-      - id: active_power
-        variable-type: continuous
-        lower-bound: 0
-        upper-bound: max_active_power_setpoint
-    constraints:
-      - id: respect_min_p
-        expression: active_power >= is_on * min_active_power_setpoint
-    objective: active_power * proportional_cost
-    ports:
-      - id: injection
-        type: dc_port
-    port-field-definitions:
-      - port: injection
-        field: flow
-        definition: active_power
-  - id: node
-    description: A balance node with injections (productions and loads)
-    ports:
-      - id: injections
-        type: dc_port
-    binding-constraints:
-      - id: balance
-        expression: sum_connections(injections.flow) = 0
+- id: generator_dc
+  description: A simple DC model of a generator
+  parameters:
+  - id: min_active_power_setpoint
+    time-dependent: false
+    scenario-dependent: false
+  - id: max_active_power_setpoint
+    time-dependent: true
+    scenario-dependent: true
+  - id: proportional_cost
+    time-dependent: false
+    scenario-dependent: true
+  variables:
+  - id: is_on
+    variable-type: boolean
+    lower-bound: 0
+    upper-bound: 1
+    time-dependent: true
+    scenario-dependent: true
+  - id: active_power
+    variable-type: continuous
+    lower-bound: 0
+    upper-bound: max_active_power_setpoint
+  constraints:
+  - id: respect_min_p
+    expression: active_power >= is_on * min_active_power_setpoint
+  objective: active_power * proportional_cost
+  ports:
+  - id: injection
+    type: dc_port
+  port-field-definitions:
+  - port: injection
+    field: flow
+    definition: active_power
+  extra-outputs:
+  - id: total_cost_in_millions
+    expression: sum(active_power * proportional_cost) / 1000000
+- id: node
+  description: A balance node with injections (productions and loads)
+  ports:
+  - id: injections
+    type: dc_port
+  binding-constraints:
+  - id: balance
+    expression: sum_connections(injections.flow) = 0
 ~~~
 
 - **id**: an ID for the model. Must be unique inside the scope of the library, and
@@ -131,18 +137,24 @@ models:
   the [system file](#system-file).
     - **id**: an ID for the parameter. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
-    - **time-dependent**: `true` or `false`, indicates whether the parameter depends on time or is constant across the
-      whole simulation horizon.
-    - **scenario-dependent**: `true` or `false`, indicates whether the parameter changes depending on the simulated
-      scenario, or is the same for all scenarios.
+    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the parameter depends on time or is constant 
+      across the whole simulation horizon. Defaults to `true`.
+    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the 
+      simulated scenario, or is the same for all scenarios. Defaults to `true`.
 - **variables** _(optional)_: a collection of optimization variables that are defined for this model
     - **id**: an ID for the variable. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
     - **variable-type**: `continuous`, `integer`, or `binary`
-    - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. Must use scalars
+    - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. The
+      expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to -inf for continuous and integer types, or 0 for binary.
-    - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. Must use scalars
+    - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. The
+      expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to +inf for continuous and integer types, or 1 for binary.
+    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the variable depends on time or is constant 
+      across the whole simulation horizon. Defaults to `true`.
+    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the 
+      simulated scenario, or is the same for all scenarios. Defaults to `true`.
 - **constraints** _(optional)_: a collection of "internal" optimization constraints set by the model
     - **id**: an ID for the constraint. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
@@ -170,6 +182,13 @@ models:
     - **field**: the field to define (refers to a field ID defined in the port type)
     - **definition**: an [expression](#expressions) representing the definition of the field. Can use scalars,
       parameters, and variables of the model.
+- **extra-outputs** _(optional)_: a collection of outputs relevant to the model, that can be computed after optimization
+  (i.e. using the optimal values of the variables). 
+  The values of these extra outputs will appear in the [output files](03-outputs.md) along with variable and port values.
+    - **id**: an ID for the extra-output. Must be unique inside the scope of the model, and
+      respect [these rules](#rules-for-ids).
+    - **expression**: the [expression](#expressions) of the output. Can use all operators, as long as the expression can be 
+      evaluated after optimization. Note that using an output's id in another output's expression is not allowed. 
 
 ### Expressions
 
@@ -293,7 +312,7 @@ You can aggregate incoming ports using the following operator:
 Examples:
 
 ~~~yaml
-expression: sum(dc_port.flow) = 0
+expression: sum_connections(dc_port.flow) = 0
 ~~~
 
 ## System file
@@ -331,40 +350,40 @@ Example:
 
 ~~~yaml
 components:
-  - id: generator1
-    model: my_lib_id.dc_generator
-    scenario-group: thermal_group
-    parameters:
-      - id: min_active_power_setpoint
-        time-dependent: false
-        scenario-dependent: false
-        value: 100
-      - id: max_active_power_setpoint
-        time-dependent: true
-        scenario-dependent: true
-        value: generator1_max_p
-      - id: proportional_cost
-        time-dependent: false
-        scenario-dependent: true
-        value: generator1_cost
-  - id: generator2
-    model: my_lib_id.dc_generator
-    scenario-group: hydro_group
-    parameters:
-      - id: min_active_power_setpoint
-        time-dependent: false
-        scenario-dependent: false
-        value: 20
-      - id: max_active_power_setpoint
-        time-dependent: true
-        scenario-dependent: false
-        value: generator2_max_p
-      - id: proportional_cost
-        time-dependent: false
-        scenario-dependent: false
-        value: 0.5
-  - id: node1
-    model: my_lib_id.node
+- id: generator1
+  model: my_lib_id.dc_generator
+  scenario-group: thermal_group
+  parameters:
+  - id: min_active_power_setpoint
+    time-dependent: false
+    scenario-dependent: false
+    value: 100
+  - id: max_active_power_setpoint
+    time-dependent: true
+    scenario-dependent: true
+    value: generator1_max_p
+  - id: proportional_cost
+    time-dependent: false
+    scenario-dependent: true
+    value: generator1_cost
+- id: generator2
+  model: my_lib_id.dc_generator
+  scenario-group: hydro_group
+  parameters:
+  - id: min_active_power_setpoint
+    time-dependent: false
+    scenario-dependent: false
+    value: 20
+  - id: max_active_power_setpoint
+    time-dependent: true
+    scenario-dependent: false
+    value: generator2_max_p
+  - id: proportional_cost
+    time-dependent: false
+    scenario-dependent: false
+    value: 0.5
+- id: node1
+  model: my_lib_id.node
 ~~~
 
 - **id**: an ID for the component. Must be unique in the scope of the system, and respect [these rules](#rules-for-ids).
@@ -373,7 +392,7 @@ components:
   "model_id" is the ID of the model as it is defined inside the [model library](#models).
 - **scenario-group** _(only needed if the model has scenario-dependent parameters)_: the ID of the scenario group this
   component belongs to. Must be correctly configured in the [scenario builder](#scenario-builder), and
-  respect [these rules](#rules-for-ids).
+  respect [these rules](#rules-for-ids). Default value is "" (empty string).
 - **parameters** _(not needed if model has no parameters)_: a collection of values for the model's parameters. Note that
   all the parameters of the model should have their values assigned by the component.
     - **id**: the ID of the parameter, as defined by the [model](#models)
@@ -389,6 +408,8 @@ components:
         - If the parameter is scenario-dependent, then this is the ID of a scenario-dependent [data serie](#data-series)
         - If the parameter is time and scenario-dependent, then this is the ID of a
           time-and-scenario-dependent [data serie](#data-series)
+      
+        Note that using an expression is not allowed (e.g. neither `3 * 4`, nor `6 * some_time_series`).
 
 ### Port connections
 
@@ -397,14 +418,14 @@ Example:
 
 ~~~yaml
 connections:
-  - component1: generator1
-    port1: injection
-    component2: node1
-    port2: injections
-  - component1: generator2
-    port1: injection
-    component2: node1
-    port2: injections
+- component1: generator1
+  port1: injection
+  component2: node1
+  port2: injections
+- component1: generator2
+  port1: injection
+  component2: node1
+  port2: injections
 ~~~
 
 - **component1**, **component2**: the IDs of the components to connect together
@@ -423,7 +444,8 @@ studies, [see the relevant documentation](../solver/08-hybrid-studies.md#connect
 The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define
 component parameter values.
 
-Currently, Antares modeler supports defining data-series using tab-seperated-values files. Values must be separated
+Currently, Antares modeler supports defining data-series using either tab or space seperated values files. Values must
+be separated
 using tabs, and the character `.` represents the floating point.
 
 ### Naming
@@ -480,12 +502,31 @@ All IDs in the model library and system file must respect the following:
 - All other characters are prohibited
 - Only lower-case is allowed
 
-## Scenario builder
+### Scenario builder
 
-_**This feature is under development**_  
-This feature allows you to map, for different scenario groups of components, all scenarios to a limited number of data
-sets. This prevents duplication of data when some data-series are "less" scenario-dependent than others.  
-For now, "scenario-groups" are ignored and scenario indices map to data set indices.
+The **modeler-scenariobuilder.dat** file, located in the **data-series** directory, is used to map scenarios to data
+series.
+Each line consists of the association of a groupe name and Monte-carlo year -referred to as _year_- to a data series ID
+-referred to as _time serie number_-.
+
+Example:
+
+~~~
+thermal_group, 0 = 1
+thermal_group, 1 = 5
+hydro_group, 2 = 7
+~~~
+
+* For thermal_group the year 0 is associated with the time serie number 1 whereas the year 1 is associated with the time
+  serie number 5.
+* For hydro_group the year 2 is associated with the time serie number 7.
+
+
+* A _year_ is a integer, starting at 0.
+* A _time serie number_ is a integer, starting at 1, and refers to the column number in the corresponding
+  data series file.
+* Group IDs refer to groups defined in the [components](#components) description.
+* All years of the simulation require an association to a time serie number
 
 ## Full examples
 

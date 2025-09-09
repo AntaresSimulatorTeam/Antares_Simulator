@@ -4,7 +4,6 @@ add_subdirectory(antlr-interface)
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
         nodes/PortFieldSumNode.cpp
-        nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
         nodes/ParentNode.cpp
@@ -18,9 +17,6 @@ set(SRC_Expressions
         visitors/LinearityVisitor.cpp
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
-        visitors/SubstitutionVisitor.cpp
-        visitors/PortFieldSubstitutionVisitor.cpp
-        visitors/PortFieldSumSubstitutionVisitor.cpp
         visitors/AstDOTStyleVisitor.cpp
         visitors/InvalidNode.cpp
         visitors/NodeVisitor.cpp
@@ -33,7 +29,6 @@ set(SRC_Expressions
         include/antares/expressions/nodes/ParentNode.h
         include/antares/expressions/nodes/BinaryNode.h
         include/antares/expressions/nodes/ComparisonNode.h
-        include/antares/expressions/nodes/ComponentNode.h
         include/antares/expressions/nodes/DivisionNode.h
         include/antares/expressions/nodes/EqualNode.h
         include/antares/expressions/nodes/ExpressionsNodes.h
@@ -64,9 +59,6 @@ set(SRC_Expressions
         include/antares/expressions/visitors/PrintVisitor.h
         include/antares/expressions/visitors/TimeIndexVisitor.h
         include/antares/expressions/visitors/TimeIndex.h
-        include/antares/expressions/visitors/SubstitutionVisitor.h
-        include/antares/expressions/visitors/PortFieldSubstitutionVisitor.h
-        include/antares/expressions/visitors/PortFieldSumSubstitutionVisitor.h
         include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/InvalidNode.h
 
@@ -98,6 +90,7 @@ target_link_libraries(expressions
         linear-problem-api
         PRIVATE
         Antares::antares-study-system-model
+        Antares::exception
 )
 
 

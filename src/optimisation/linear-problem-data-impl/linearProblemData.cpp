@@ -24,26 +24,16 @@
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
 
-void LinearProblemData::addScenarioGroup(const std::string& groupId,
-                                         std::pair<unsigned, unsigned> scenarioToRank)
-{
-    groupRepository_.addPairScenarioRankToGroup(groupId, scenarioToRank);
-}
-
 void LinearProblemData::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
 {
     dataSeriesRepository_.addDataSeries(std::move(dataSeries));
 }
 
 double LinearProblemData::getData(const std::string& dataSetId,
-                                  const std::string& scenarioGroup,
-                                  unsigned scenario,
-                                  unsigned hour)
+                                  LinearProblemApi::IScenario::TimeSeriesNumber timeSeriesNumber,
+                                  unsigned hour) const
 {
-    // TODO: use the following line to add scenario group support
-    // unsigned rank = groupRepository_.getDataRank(scenarioGroup, scenario);
-    unsigned rank = scenario;
-    return dataSeriesRepository_.getDataSeries(dataSetId).getData(rank, hour);
+    return dataSeriesRepository_.getDataSeries(dataSetId).getData(timeSeriesNumber, hour);
 }
 
 } // namespace Antares::Optimisation::LinearProblemDataImpl

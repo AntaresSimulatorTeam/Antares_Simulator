@@ -19,22 +19,24 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "main.h"
 #include <ctime>
 #include <fstream>
+
+#include "main.h"
 // Status Bar
 #include <wx/statusbr.h>
 
 // Rich Text
-#include <wx/richtext/richtextxml.h>
 #include <wx/richtext/richtexthtml.h>
+#include <wx/richtext/richtextxml.h>
 
 #include <antares/logs/logs.h>
-#include "toolbox/resources.h"
-#include "toolbox/locales.h"
-#include "internal-data.h"
-#include "windows/version.h"
+
 #include "drag-drop.hxx"
+#include "internal-data.h"
+#include "toolbox/locales.h"
+#include "toolbox/resources.h"
+#include "windows/version.h"
 
 // Antares study
 #include <antares/study/study.h>
@@ -53,36 +55,35 @@
 // Datagrid
 #include "toolbox/components/datagrid/component.h"
 #include "toolbox/components/datagrid/gridhelper.h"
-#include "toolbox/components/datagrid/renderer/connection.h"
 #include "toolbox/components/datagrid/renderer/area/dsm.h"
 #include "toolbox/components/datagrid/renderer/area/misc.h"
 #include "toolbox/components/datagrid/renderer/area/timeseries.h"
-#include "toolbox/components/datagrid/renderer/links/summary.h"
+#include "toolbox/components/datagrid/renderer/connection.h"
 #include "toolbox/components/datagrid/renderer/layers.h"
+#include "toolbox/components/datagrid/renderer/links/summary.h"
 #include "toolbox/input/area.h"
-#include "toolbox/input/connection.h"
 #include "toolbox/input/bindingconstraint.h"
+#include "toolbox/input/connection.h"
 // MainPanel
 #include "toolbox/components/mainpanel.h"
 
 // Windows
-#include "windows/connection.h"
-#include "windows/simulation/panel.h"
-#include "windows/thermal/panel.h"
-#include "windows/renewables/panel.h"
-#include "windows/correlation/correlation.h"
 #include "windows/bindingconstraint/bindingconstraint.h"
-#include "windows/analyzer/analyzer.h"
+#include "windows/connection.h"
+#include "windows/correlation/correlation.h"
 #include "windows/inspector/inspector.h"
 #include "windows/options/advanced/advanced.h"
+#include "windows/renewables/panel.h"
+#include "windows/simulation/panel.h"
+#include "windows/thermal/panel.h"
 
 // Standard page
 #include "build/standard-page.hxx"
 // Wait
 #include "../wait.h"
 // startup wizard
-#include "windows/startupwizard.h"
 #include "toolbox/dispatcher/study.h"
+#include "windows/startupwizard.h"
 // license
 #include "windows/message.h"
 
@@ -93,7 +94,7 @@ namespace Antares
 {
 namespace Forms
 {
-class CustomStatusBar : public wxStatusBar
+class CustomStatusBar: public wxStatusBar
 {
 public:
     /*!
@@ -102,7 +103,8 @@ public:
     static wxString DefaultText();
 
 public:
-    CustomStatusBar(wxWindow* parent) : wxStatusBar(parent)
+    CustomStatusBar(wxWindow* parent):
+        wxStatusBar(parent)
     {
     }
 
@@ -269,7 +271,9 @@ void ApplWnd::internalInitialize()
 
     // Icon file for studies
     if (Data::StudyIconFile.empty())
+    {
         prepareStudyIconFile();
+    }
 
     // Icon for antares
     // MinSize
@@ -333,8 +337,8 @@ void ApplWnd::internalInitialize()
     pNotebook->onPageChanged.connect(this, &ApplWnd::onMainNotebookPageChanging);
 
     // The Layers Notebook
-    Component::Notebook* layersNotebook
-      = new Component::Notebook(pNotebook, Component::Notebook::orTop);
+    Component::Notebook* layersNotebook = new Component::Notebook(pNotebook,
+                                                                  Component::Notebook::orTop);
     layersNotebook->displayTitle(false);
     pNotebook->add(layersNotebook, wxT("sys"), wxT("System Maps"));
 
@@ -346,23 +350,27 @@ void ApplWnd::internalInitialize()
     layersNotebook->add(pMainMap, wxT("map"), wxT("Set Content"));
 
     // Create a standard page with an input selector
-    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> layersUIPage
-      = createStdNotebookPage<Toolbox::InputSelector::Area>(
-        layersNotebook, wxT("properties"), wxT("Set Visibility"));
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*>
+      layersUIPage = createStdNotebookPage<Toolbox::InputSelector::Area>(layersNotebook,
+                                                                         wxT("properties"),
+                                                                         wxT("Set Visibility"));
 
-    Component::Datagrid::Renderer::LayersUI* areaUIPropertiesRenderer
-      = new Component::Datagrid::Renderer::LayersUI(layersUIPage.second);
-    Component::Datagrid::Component* areaUIPropertiesGrid
-      = new Component::Datagrid::Component(layersUIPage.first, areaUIPropertiesRenderer);
+    Component::Datagrid::Renderer::LayersUI* areaUIPropertiesRenderer = new Component::Datagrid::
+      Renderer::LayersUI(layersUIPage.second);
+    Component::Datagrid::Component* areaUIPropertiesGrid = new Component::Datagrid::Component(
+      layersUIPage.first,
+      areaUIPropertiesRenderer);
     layersUIPage.first->add(areaUIPropertiesGrid, wxT("layersUI"), wxT("Map Wise"));
     areaUIPropertiesRenderer->control(areaUIPropertiesGrid);
 
-    Component::Datagrid::Renderer::LayersVisibility* visibilityRenderer
-      = new Component::Datagrid::Renderer::LayersVisibility();
-    Component::Datagrid::Component* visibilityGrid
-      = new Component::Datagrid::Component(layersUIPage.first, visibilityRenderer);
-    auto pageVisilityGrid
-      = layersUIPage.first->add(visibilityGrid, wxT("areaVisibility"), wxT("Area Wise"));
+    Component::Datagrid::Renderer::LayersVisibility* visibilityRenderer = new Component::Datagrid::
+      Renderer::LayersVisibility();
+    Component::Datagrid::Component* visibilityGrid = new Component::Datagrid::Component(
+      layersUIPage.first,
+      visibilityRenderer);
+    auto pageVisilityGrid = layersUIPage.first->add(visibilityGrid,
+                                                    wxT("areaVisibility"),
+                                                    wxT("Area Wise"));
     pageVisilityGrid->displayExtraControls(false);
     visibilityRenderer->control(visibilityGrid);
 
@@ -410,15 +418,13 @@ void ApplWnd::internalInitialize()
 
     // Binding events
     OnStudyLoaded.connect(this, &ApplWnd::onStudyLoaded);
-    OnStudyLoaded.connect(&Window::AnalyzerWizard::ResetLastFolderToCurrentStudyUser);
-    OnStudySavedAs.connect(&Window::AnalyzerWizard::ResetLastFolderToCurrentStudyUser);
     OnStudyBeginUpdate.connect(&MemoryFlushBeginUpdate);
     OnStudyEndUpdate.connect(&MemoryFlushEndUpdate);
     // System parameter
     OnStudySettingsChanged.connect(this, &ApplWnd::onSystemParametersChanged);
     // Advanced parameters
-    Window::Options::OnRenewableGenerationModellingChanged.connect(
-      this, &ApplWnd::onRenewableGenerationModellingChanged);
+    Window::Options::OnRenewableGenerationModellingChanged
+      .connect(this, &ApplWnd::onRenewableGenerationModellingChanged);
 
     // Update the status bar
     resetDefaultStatusBarText();
@@ -443,8 +449,11 @@ void ApplWnd::startAntares()
         msg << wxT("Please check your permissions for writing into the temporary folder");
 #endif
 
-        Window::Message message(
-          this, wxT("Logs"), wxT("No Log file"), msg, "images/misc/warning.png");
+        Window::Message message(this,
+                                wxT("Logs"),
+                                wxT("No Log file"),
+                                msg,
+                                "images/misc/warning.png");
         message.add(Window::Message::btnContinue, true);
         message.showModal();
     }
@@ -471,7 +480,9 @@ void ApplWnd::createAllComponentsNeededByTheMainNotebook()
     assert(wxIsMainThread() == true && "Must be ran from the main thread");
 
     if (pMainNotebookAlreadyHasItsComponents)
+    {
         return;
+    }
 
     logs.info() << LOG_UI << "Preparing the interface";
     ::wxBeginBusyCursor();
@@ -618,8 +629,11 @@ void ApplWnd::createNBBindingConstraints()
 
     pWndBindingConstraints = new Window::BindingConstraint(pNotebook);
     if (pWndBindingConstraints)
-        pNotebook->add(
-          pWndBindingConstraints, wxT("bindingconstraints"), wxT("Binding constraint"));
+    {
+        pNotebook->add(pWndBindingConstraints,
+                       wxT("bindingconstraints"),
+                       wxT("Binding constraint"));
+    }
 }
 
 void ApplWnd::createNBDSM()
@@ -627,15 +641,16 @@ void ApplWnd::createNBDSM()
     assert(pNotebook);
 
     // Create a standard page with an input selector
-    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page
-      = createStdNotebookPage<Toolbox::InputSelector::Area>(
-        pNotebook, wxT("dsm"), wxT("Reserves / DSM"));
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*>
+      page = createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook,
+                                                                 wxT("dsm"),
+                                                                 wxT("Reserves / DSM"));
 
     // Time-series
-    auto* p = page.first->add(
-      new Component::Datagrid::Component(
-        page.first, new Component::Datagrid::Renderer::DSM(page.first, page.second)),
-      wxT("Reserves / DSM"));
+    auto* p = page.first->add(new Component::Datagrid::Component(
+                                page.first,
+                                new Component::Datagrid::Renderer::DSM(page.first, page.second)),
+                              wxT("Reserves / DSM"));
     p->select();
 }
 
@@ -644,14 +659,16 @@ void ApplWnd::createNBMisc()
     assert(pNotebook);
 
     // Create a standard page with an input selector
-    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page
-      = createStdNotebookPage<Toolbox::InputSelector::Area>(
-        pNotebook, wxT("misc"), wxT("Misc. Gen."));
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Area*>
+      page = createStdNotebookPage<Toolbox::InputSelector::Area>(pNotebook,
+                                                                 wxT("misc"),
+                                                                 wxT("Misc. Gen."));
 
     // Time-series
     Component::Notebook::Page* p = page.first->add(
-      new Component::Datagrid::Component(
-        page.first, new Component::Datagrid::Renderer::Misc(page.first, page.second)),
+      new Component::Datagrid::Component(page.first,
+                                         new Component::Datagrid::Renderer::Misc(page.first,
+                                                                                 page.second)),
       wxT("Misc. Gen."));
     p->select();
 }
@@ -660,20 +677,23 @@ void ApplWnd::createNBInterconnections()
 {
     assert(pNotebook);
     // Create a standard page with an input selector
-    std::pair<Component::Notebook*, Toolbox::InputSelector::Connections*> page
-      = createStdNotebookPage<Toolbox::InputSelector::Connections>(
-        pNotebook, wxT("interconnections"), wxT("Links"));
+    std::pair<Component::Notebook*, Toolbox::InputSelector::Connections*>
+      page = createStdNotebookPage<Toolbox::InputSelector::Connections>(pNotebook,
+                                                                        wxT("interconnections"),
+                                                                        wxT("Links"));
 
     // links parameters time series
     auto* parametersGrid = new_check_allocation<Window::linkParametersGrid>();
-    auto* intercoParam
-      = new_check_allocation<Window::Interconnection>(page.first, page.second, parametersGrid);
+    auto* intercoParam = new_check_allocation<Window::Interconnection>(page.first,
+                                                                       page.second,
+                                                                       parametersGrid);
     pageLinksParameters = page.first->add(intercoParam, wxT(" Parameters "));
 
     // links NTC time series
     auto* ntcGrid = new_check_allocation<Window::linkNTCgrid>();
-    auto* intercoGrid
-      = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
+    auto* intercoGrid = new_check_allocation<Window::Interconnection>(page.first,
+                                                                      page.second,
+                                                                      ntcGrid);
     pageLinksNTC = page.first->add(intercoGrid, wxT(" Transmission capacities "));
 
     // Summary

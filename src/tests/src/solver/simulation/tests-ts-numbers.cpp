@@ -36,7 +36,7 @@ using namespace Antares::Solver::TimeSeriesNumbers;
 
 void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 {
-    study->parameters.derated = false;
+    study->parameters.reset();
 
     study->runtime.rangeLimits.year[rangeBegin] = 0;
     study->runtime.rangeLimits.year[rangeEnd] = nbYears - 1;
@@ -81,58 +81,6 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
     addClusterToAreaList(area, cluster);
 
     return cluster;
-}
-
-BOOST_AUTO_TEST_CASE(all_one_OK)
-{
-    using namespace Antares::Solver::TimeSeriesNumbers;
-    std::vector<std::pair<unsigned, std::string>> list = {{1, ""}, {1, ""}, {1, ""}};
-    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_OK)
-{
-    using namespace Antares::Solver::TimeSeriesNumbers;
-    std::vector<std::pair<unsigned, std::string>> list = {{4, ""}, {4, ""}, {4, ""}, {4, ""}};
-    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_and_one_OK)
-{
-    using namespace Antares::Solver::TimeSeriesNumbers;
-    std::vector<std::pair<unsigned, std::string>> list = {{4, ""}, {4, ""}, {4, ""}, {1, ""}};
-    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_one_and_identical_values_OK)
-{
-    using namespace Antares::Solver::TimeSeriesNumbers;
-    std::vector<std::pair<unsigned, std::string>> list = {{1, ""}, {4, ""}, {4, ""}, {4, ""}};
-    BOOST_CHECK(Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_two_distinct_values_of_which_one_KO)
-{
-    using namespace Antares::Solver::TimeSeriesNumbers;
-    std::vector<std::pair<unsigned, std::string>> list = {{1, ""},
-                                                          {2, ""},
-                                                          {1, ""},
-                                                          {2, ""},
-                                                          {1, ""},
-                                                          {3, ""}};
-    BOOST_CHECK(!Utils::checkAllElementsIdenticalOrOne(list));
-}
-
-BOOST_AUTO_TEST_CASE(test_compare_function_three_distinct_values_KO)
-{
-    using namespace Antares::Solver::TimeSeriesNumbers;
-    std::vector<std::pair<unsigned, std::string>> list = {{1, ""},
-                                                          {2, ""},
-                                                          {1, ""},
-                                                          {3, ""},
-                                                          {2, ""},
-                                                          {1, ""}};
-    BOOST_CHECK(!Utils::checkAllElementsIdenticalOrOne(list));
 }
 
 BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_consistency_OK)
@@ -673,39 +621,4 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
     BOOST_CHECK(hydroTsNumber < hydroNumberOfTs);
     BOOST_CHECK(thermalTsNumber < thermalNumberOfTs);
     BOOST_CHECK_LT(binding_constraints_TS_number, binding_constraints_number_of_TS);
-}
-
-BOOST_AUTO_TEST_CASE(split_string_ts_cluster_gen)
-{
-    char delimiter1 = ';';
-    char delimiter2 = '.';
-
-    using stringPair = std::pair<std::string, std::string>;
-    std::vector<stringPair> v;
-
-    // only one pair of area cluster
-    v = splitStringIntoPairs("abc.def", delimiter1, delimiter2);
-    BOOST_CHECK(v[0] == stringPair("abc", "def"));
-
-    // two pairs
-    v = splitStringIntoPairs("abc.def;ghi.jkl", delimiter1, delimiter2);
-    BOOST_CHECK(v[0] == stringPair("abc", "def"));
-    BOOST_CHECK(v[1] == stringPair("ghi", "jkl"));
-
-    // first pair isn't valid
-    v = splitStringIntoPairs("abcdef;ghi.jkl", delimiter1, delimiter2);
-    BOOST_CHECK(v[0] == stringPair("ghi", "jkl"));
-
-    // second pair isn't valid
-    v = splitStringIntoPairs("abc.def;ghijkl", delimiter1, delimiter2);
-    BOOST_CHECK(v[0] == stringPair("abc", "def"));
-
-    // no semi colon
-    v = splitStringIntoPairs("abc.def.ghi.jkl", delimiter1, delimiter2);
-    BOOST_CHECK(v[0] == stringPair("abc", "def.ghi.jkl"));
-
-    // no separator
-    v.clear();
-    v = splitStringIntoPairs("abcdef", delimiter1, delimiter2);
-    BOOST_CHECK(v.empty());
 }

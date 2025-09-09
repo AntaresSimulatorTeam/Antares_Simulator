@@ -33,13 +33,15 @@ using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Optimization
 {
-
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const VariableDictionary& modelerVariableDictionary):
+  const VariableDictionary& modelerVariableDictionary,
+  const ILinearProblemData& linearProblemData,
+  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_):
     problemeHebdo_(problemeHebdo),
-    modelerSystem_(problemeHebdo->modelerSystem),
-    modelerVariableDictionary_(modelerVariableDictionary)
+    modelerSystem_(problemeHebdo->modelerData->system.get()),
+    modelerVariableDictionary_(modelerVariableDictionary),
+    evaluationContextProvider_(linearProblemData, scenarioGroupRepository_)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
@@ -50,7 +52,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
 
 void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&,
                                                    ILinearProblemData&,
-                                                   FillContext&)
+                                                   const FillContext&)
 {
     // nothing to do
 }
@@ -103,18 +105,27 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
                                      areaBalanceConstraint->getUb() + expression.offset());
 }
 
+// TODO remove and use proper scenario
+class DefaultScenario: public IScenario
+{
+public:
+    using IScenario::IScenario;
+
+    [[nodiscard]] TimeSeriesNumber getData(Year) const override
+    {
+        return 1; // Default rank for empty groupId
+    }
+};
+
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   ILinearProblem& pb,
-  ILinearProblemData& data,
   const FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    const Expressions::Visitors::EvaluationContext
-      connectedComponentEvalContext(component.getParameterValues(), {}, data);
-    ReadLinearExpressionVisitor visitor(connectedComponentEvalContext, ctx, component);
+    ReadLinearExpressionVisitor visitor(evaluationContextProvider_, ctx, component);
     auto timeDependentLinearExpression = visitor.dispatch(
       component.nodeAtPortField(portId, injectionFieldId));
     std::string lowerAreaId = areaId;
@@ -128,22 +139,21 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
 
 void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
                                                      ILinearProblemData& data,
-                                                     FillContext& ctx)
+                                                     const FillContext& ctx)
 {
-    for (auto component: modelerSystem_->Components() | std::ranges::views::values)
+    for (const auto& component: modelerSystem_->Components() | std::ranges::views::values)
     {
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            addComponentPortContributionToArea(pb, data, ctx, component, portId, areaId);
+            addComponentPortContributionToArea(pb, ctx, component, portId, areaId);
         }
     }
 }
 
 void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&,
                                                    ILinearProblemData&,
-                                                   FillContext&)
+                                                   const FillContext&)
 {
     // nothing to do
 }
-
 } // namespace Antares::Optimization

@@ -21,7 +21,6 @@
 
 #include "antares/solver/variable/surveyresults/surveyresults.h"
 
-#include <algorithm>
 #include <cmath>
 
 #include <yuni/yuni.h>
@@ -145,7 +144,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
               outThermal << area.id << '\t';
               outThermal << cluster->id() << '\t';
               outThermal << cluster->name() << '\t';
-              outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
+              outThermal << cluster->getGroup() << '\t';
               outThermal << cluster->unitCount << '\t';
               outThermal << cluster->nominalCapacity << '\t';
               outThermal << cluster->minStablePower << '\t';

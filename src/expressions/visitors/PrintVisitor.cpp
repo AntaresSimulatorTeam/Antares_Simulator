@@ -30,7 +30,7 @@ namespace Antares::Expressions::Visitors
 {
 std::string PrintVisitor::visit(const Nodes::SumNode* node)
 {
-    auto operands = node->getOperands();
+    const auto& operands = node->getOperands();
     if (operands.empty())
     {
         return "()";
@@ -101,16 +101,6 @@ std::string PrintVisitor::visit(const Nodes::PortFieldNode* node)
 std::string PrintVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     return node->getPortName() + "." + node->getFieldName();
-}
-
-std::string PrintVisitor::visit(const Nodes::ComponentVariableNode* node)
-{
-    return node->getComponentId() + "." + node->getComponentName();
-}
-
-std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
-{
-    return node->getComponentId() + "." + node->getComponentName();
 }
 
 std::string PrintVisitor::trimAndFormat(const std::string& in)
