@@ -208,40 +208,26 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldSumNode*
 {
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
-    const auto& connectionEnds = component_.componentConnectionsViaPort(portId);
-    if (!connectionEnds.empty())
+
+    LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+    to_return.reserve(nbtimeSteps_ * nbModelVariables_ * 0.2); // 80% sparse
+    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
-        const auto& firstConnection = connectionEnds.at(0);
-        const auto& firstComponent = *firstConnection.component();
-        ReadLinearExpressionVisitor visitor0(evalContextProvider_,
-                                             fillContext_,
-                                             firstComponent,
-                                             nbModelVariables_,
-                                             variableStartColumn_);
-        auto to_return = visitor0.dispatch(
-          firstComponent.nodeAtPortField(firstConnection.port()->Id(), fieldId));
+        auto* component = connexion_end.component();
+        auto* port = connexion_end.port();
 
-        for (auto connexion_end = connectionEnds.begin() + 1; connexion_end != connectionEnds.end();
-             ++connexion_end)
-        {
-            auto* component = connexion_end->component();
-            auto* port = connexion_end->port();
+        ReadLinearExpressionVisitor visitor(evalContextProvider_,
+                                            fillContext_,
+                                            *component,
+                                            nbModelVariables_,
+                                            variableStartColumn_);
 
-            ReadLinearExpressionVisitor visitor(evalContextProvider_,
-                                                fillContext_,
-                                                *component,
-                                                nbModelVariables_,
-                                                variableStartColumn_);
-
-            const Node* currentNode = component->nodeAtPortField(port->Id(), fieldId);
-            to_return += visitor.dispatch(currentNode);
-        }
-        return to_return;
+        const Node* node = component->nodeAtPortField(port->Id(), fieldId);
+        to_return += visitor.dispatch(node);
     }
 
-    return LinearExpressionEigen(nbtimeSteps_, nbModelVariables_);
+    return to_return;
 }
-
 
 template<typename Derived>
 requires(std::same_as<Derived, Eigen::SparseMatrix<double, Eigen::RowMajor>>

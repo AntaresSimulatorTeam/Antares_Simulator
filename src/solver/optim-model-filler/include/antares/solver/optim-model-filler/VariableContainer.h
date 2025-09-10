@@ -37,7 +37,7 @@ public:
         variableStartColumn_.push_back(variables_.size());
     }
 
-    std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*> getVariables() const
+    const std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*>& getVariables() const
     {
         return variables_;
     }
