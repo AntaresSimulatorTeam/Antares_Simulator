@@ -59,7 +59,7 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
             auto* component = connectionEnd.component();
             auto* port = connectionEnd.port();
             EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
-            const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+            const auto* node = component->nodeAtPortField(port->Id(), fieldId);
             auto dispatchResult = visitor.dispatch(node);
             processor(dispatchResult);
         }
@@ -73,6 +73,8 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
                           [&result](const auto& dispatchResult) { result += dispatchResult; });
         return result;
     }
+
+    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
     std::vector<double> results;
     results.resize(fillContext_.getLocalNumberOfTimeSteps());
     forEachConnection(portId,
