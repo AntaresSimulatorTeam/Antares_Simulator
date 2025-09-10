@@ -29,10 +29,15 @@ public:
     void print() const;
     LinearExpressionEigen(const Eigen::SparseMatrix<double, Eigen::RowMajor>& coeffs,
                           const Eigen::VectorXd& offsets);
+    LinearExpressionEigen(LinearExpressionEigen&&) = default;
+    LinearExpressionEigen& operator=(LinearExpressionEigen&&) = default;
+    LinearExpressionEigen(const LinearExpressionEigen& other) = default;
+    LinearExpressionEigen(Eigen::SparseMatrix<double, Eigen::RowMajor>&& coeffs,
+                          Eigen::VectorXd&& offsets);
 
     LinearExpressionEigen operator+(const LinearExpressionEigen& b) const;
-    static void CheckLinearExpressionSize(const LinearExpressionEigen& a,
-                                          const LinearExpressionEigen& b);
+    inline static void CheckLinearExpressionSize(const LinearExpressionEigen& a,
+                                                 const LinearExpressionEigen& b);
 
     LinearExpressionEigen& operator+=(const LinearExpressionEigen& b);
 
@@ -81,6 +86,7 @@ public:
 
     void setCol(int colIndex, const Eigen::SparseVector<double>& col);
     void setRow(int rowIndex, const Eigen::SparseVector<double>& row);
+    void reserve(int expectedNonZeros);
 
 private:
     Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs_; // [nTimesteps × nVars]

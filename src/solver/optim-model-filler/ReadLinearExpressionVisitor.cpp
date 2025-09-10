@@ -113,6 +113,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const NegationNode* nod
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
     LinearExpressionEigen out(nbtimeSteps_, nbModelVariables_);
+    out.reserve(nbtimeSteps_);
 
     const auto globalIndex = component_.getVariableGlobalIndex(node->value());
     const auto variableStart = variableStartColumn_.at(globalIndex);
@@ -120,10 +121,12 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
                                ? nbModelVariables_
                                : variableStartColumn_.at(globalIndex + 1);
 
+    auto localFirstTimeStep = fillContext_.getLocalFirstTimeStep();
+    auto localLastTimeStep = fillContext_.getLocalLastTimeStep();
+
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
-             localTimeStep <= fillContext_.getLocalLastTimeStep();
+        for (auto localTimeStep = localFirstTimeStep; localTimeStep <= localLastTimeStep;
              ++localTimeStep)
         {
             out.setCoeff(localTimeStep, variableStart, 1);
@@ -135,8 +138,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
         || node->timeIndex() == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
     {
         auto variableIndex = variableStart;
-        for (auto localTimeStep = fillContext_.getLocalFirstTimeStep();
-             localTimeStep <= fillContext_.getLocalLastTimeStep();
+        for (auto localTimeStep = localFirstTimeStep; localTimeStep <= localLastTimeStep;
              ++localTimeStep)
         {
             // for (auto variableIndex(variableStart); variableIndex < variableEnd; ++variableIndex)
@@ -247,7 +249,7 @@ Derived cyclicRowShiftPerm(const Derived& m, int shift)
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {
-    const auto expression = dispatch(node->left());
+    auto expression = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto timeShift = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
     return {cyclicRowShiftPerm(expression.coefPerVar(), timeShift),
@@ -258,11 +260,14 @@ LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
   const LinearExpressionEigen& expression,
   int timeIndex) const
 {
+    const auto& modelVariablesGlobalIndices = component_.ModelVariablesGlobalIndices();
+
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+    to_return.reserve(modelVariablesGlobalIndices.size() * nbtimeSteps_);
     const auto offset = expression.offset()(timeIndex);
     to_return.setOffset(Eigen::VectorXd::Constant(nbtimeSteps_, offset));
     const auto& expressionMatrix = expression.coefPerVar();
-    for (auto globalIndex: component_.ModelVariablesGlobalIndices())
+    for (auto globalIndex: modelVariablesGlobalIndices)
     {
         const auto variableStart = variableStartColumn_.at(globalIndex);
         const auto variableEnd = variableStart == *variableStartColumn_.rbegin()
@@ -305,6 +310,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeSumNode* node
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+    to_return.reserve((nbtimeSteps_ * nbModelVariables_) * 0.2);
     for (auto timeShift = from; timeShift <= to; ++timeShift)
     {
         to_return += {cyclicRowShiftPerm(expression.coefPerVar(), timeShift),
@@ -315,21 +321,9 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeSumNode* node
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const AllTimeSumNode* node)
 {
-    const auto expression = dispatch(node->child());
-    // Eigen::RowVectorXd row = Eigen::RowVectorXd::Zero(nbModelVariables_);
-    //
-    // for (int localTimeStep = fillContext_.getLocalFirstTimeStep();
-    //      localTimeStep <= fillContext_.getLocalLastTimeStep();
-    //      ++localTimeStep)
-    // {
-    //     row += expression.coefPerVar().row(localTimeStep);
-    // }
-    //
-    // LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
-    // to_return.setCoefPerVar(row.replicate(nbtimeSteps_, 1).sparseView());
-    //
-    // return to_return;
+    auto expression = dispatch(node->child());
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
+    to_return.reserve((nbtimeSteps_ * nbModelVariables_) * 0.2);
     for (auto t = fillContext_.getLocalFirstTimeStep(); t <= fillContext_.getLocalLastTimeStep();
          ++t)
     {

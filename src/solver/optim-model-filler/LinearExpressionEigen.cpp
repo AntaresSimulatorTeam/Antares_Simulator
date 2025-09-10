@@ -30,6 +30,7 @@ LinearExpressionEigen::LinearExpressionEigen(int nRows, int nCols):
 {
     // TODO
     offsets_.setZero();
+    // coeffs_.reserve(std::min(nRows * 2, nRows * nCols / 10));
 }
 
 void LinearExpressionEigen::print() const
@@ -48,6 +49,18 @@ LinearExpressionEigen::LinearExpressionEigen(
     }
     coeffs_ = coeffs;
     offsets_ = offsets;
+}
+
+LinearExpressionEigen::LinearExpressionEigen(Eigen::SparseMatrix<double, Eigen::RowMajor>&& coeffs,
+                                             Eigen::VectorXd&& offsets):
+    coeffs_(std::move(coeffs)),
+    offsets_(std::move(offsets))
+{
+    if (coeffs_.rows() != offsets_.size())
+    {
+        throw std::invalid_argument(
+          "Coefficient matrix and offset vector must have the same number of rows");
+    }
 }
 
 LinearExpressionEigen LinearExpressionEigen::operator+(const LinearExpressionEigen& b) const
@@ -95,10 +108,7 @@ LinearExpressionEigen& LinearExpressionEigen::operator-=(const LinearExpressionE
 
 LinearExpressionEigen LinearExpressionEigen::operator-() const
 {
-    LinearExpressionEigen out(coeffs_.rows(), coeffs_.cols());
-    out.coeffs_ = -coeffs_;
-    out.offsets_ = -offsets_;
-    return out;
+    return {-coeffs_, -offsets_};
 }
 
 LinearExpressionEigen LinearExpressionEigen::operator*(const LinearExpressionEigen& b) const
@@ -146,8 +156,8 @@ LinearExpressionEigen& LinearExpressionEigen::operator*=(const LinearExpressionE
         }
     }
 
-    offsets_ = offsets_.cwiseProduct(b.offsets_);
-
+    // offsets_ = offsets_.cwiseProduct(b.offsets_);
+    offsets_.array() *= b.offsets_.array();
     return *this;
 }
 
@@ -178,7 +188,8 @@ LinearExpressionEigen& LinearExpressionEigen::operator/=(const LinearExpressionE
         }
     }
 
-    offsets_ = offsets_.cwiseQuotient(b.offsets_);
+    // offsets_ = offsets_.cwiseQuotient(b.offsets_);
+    offsets_.array() /= b.offsets_.array();
     return *this;
 }
 
@@ -296,4 +307,9 @@ void LinearExpressionEigen::setRow(int rowIndex, const Eigen::SparseVector<doubl
     }
 
     coeffs_.row(rowIndex) = row;
+}
+
+void LinearExpressionEigen::reserve(int expectedNonZeros)
+{
+    coeffs_.reserve(expectedNonZeros);
 }
