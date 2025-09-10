@@ -85,9 +85,7 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
                                timeStep <= fillContext_.getGlobalLastTimeStep();
                                ++timeStep)
                           {
-                              logs.notice() << "PortFieldSumNode: adding value " << r[timeStep]
-                                            << " at index " << timeStep;
-                              results[timeStep] += 20;
+                              results[timeStep] += r[timeStep];
                           }
                       });
     return EvaluationResult{results};
