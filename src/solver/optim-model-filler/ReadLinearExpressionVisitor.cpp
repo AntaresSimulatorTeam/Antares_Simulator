@@ -61,12 +61,17 @@ std::string ReadLinearExpressionVisitor::name() const
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const SumNode* node)
 {
     const auto& operands = node->getOperands();
-    LinearExpressionEigen ret(nbtimeSteps_, nbModelVariables_);
-    for (auto* operand: operands)
+    if (!operands.empty())
     {
-        ret += dispatch(operand);
+        auto ret = dispatch(operands.at(0));
+
+        for (auto operand = operands.begin() + 1; operand != operands.end(); ++operand)
+        {
+            ret += dispatch(*operand);
+        }
+        return ret;
     }
-    return ret;
+    return LinearExpressionEigen(nbtimeSteps_, nbModelVariables_);
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const SubtractionNode* node)
@@ -208,22 +213,38 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldSumNode*
 {
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
-
-    LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
-    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
+    const auto& connectionEnds = component_.componentConnectionsViaPort(portId);
+    if (!connectionEnds.empty())
     {
-        auto* component = connexion_end.component();
-        auto* port = connexion_end.port();
+        const auto& firstConnection = connectionEnds.at(0);
+        const auto& firstComponent = *firstConnection.component();
+        ReadLinearExpressionVisitor visitor0(evalContextProvider_,
+                                             fillContext_,
+                                             firstComponent,
+                                             nbModelVariables_,
+                                             variableStartColumn_);
+        auto to_return = visitor0.dispatch(
+          firstComponent.nodeAtPortField(firstConnection.port()->Id(), fieldId));
 
-        ReadLinearExpressionVisitor visitor(evalContextProvider_, fillContext_, *component,
-                                            nbModelVariables_,
-                                            variableStartColumn_);
+        for (auto connexion_end = connectionEnds.begin() + 1; connexion_end != connectionEnds.end();
+             ++connexion_end)
+        {
+            auto* component = connexion_end->component();
+            auto* port = connexion_end->port();
 
-        const Node* node = component->nodeAtPortField(port->Id(), fieldId);
-        to_return += visitor.dispatch(node);
+            ReadLinearExpressionVisitor visitor(evalContextProvider_,
+                                                fillContext_,
+                                                *component,
+                                                nbModelVariables_,
+                                                variableStartColumn_);
+
+            const Node* currentNode = component->nodeAtPortField(port->Id(), fieldId);
+            to_return += visitor.dispatch(currentNode);
+        }
+        return to_return;
     }
 
-    return to_return;
+    return LinearExpressionEigen(nbtimeSteps_, nbModelVariables_);
 }
 
 

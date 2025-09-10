@@ -101,13 +101,13 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     std::string lowerAreaId = areaId;
     boost::algorithm::to_lower(lowerAreaId);
     const auto& solverVariables = variableContainer_.getVariables();
+    const auto& coeffPerVar = linearExpression.coefPerVar();
 
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
         IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localIndex);
 
-        const auto& coeffPerVar = linearExpression.coefPerVar();
         for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coeffPerVar,
                                                                             localIndex);
              it;
