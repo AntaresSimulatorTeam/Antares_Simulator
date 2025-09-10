@@ -61,17 +61,36 @@ std::string ReadLinearExpressionVisitor::name() const
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const SumNode* node)
 {
     const auto& operands = node->getOperands();
-    if (!operands.empty())
-    {
-        auto ret = dispatch(operands.at(0));
 
-        for (auto operand = operands.begin() + 1; operand != operands.end(); ++operand)
+    std::vector<Eigen::Triplet<double>> triplets;
+    triplets.reserve(operands.size() * 8); // heuristique
+
+    Eigen::VectorXd offsets = Eigen::VectorXd::Zero(nbtimeSteps_);
+
+    for (auto* operand: operands)
+    {
+        auto expr = dispatch(operand);
+
+        const auto& coefPerVar = expr.coefPerVar();
+        // collecter les coeffs
+        for (int k = 0; k < coefPerVar.outerSize(); ++k)
         {
-            ret += dispatch(*operand);
+            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVar, k); it;
+                 ++it)
+            {
+                triplets.emplace_back(it.row(), it.col(), it.value());
+            }
         }
-        return ret;
+
+        // collecter les offsets
+        offsets += expr.offset();
     }
-    return LinearExpressionEigen(nbtimeSteps_, nbModelVariables_);
+
+    // Construire en une seule fois
+    Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs(nbtimeSteps_, nbModelVariables_);
+    coeffs.setFromTriplets(triplets.begin(), triplets.end());
+
+    return LinearExpressionEigen(coeffs, offsets);
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const SubtractionNode* node)
@@ -343,13 +362,37 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeSumNode* node
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const AllTimeSumNode* node)
 {
     auto expression = dispatch(node->child());
-    LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
-    to_return.reserve(expression.coefPerVar().innerSize());
+
+    std::vector<Eigen::Triplet<double>> triplets;
+    triplets.reserve(expression.coefPerVar().nonZeros());
+
+    Eigen::VectorXd offsets = Eigen::VectorXd::Zero(nbtimeSteps_);
+
+    // On accumule les contributions de chaque pas de temps
     for (auto t = fillContext_.getLocalFirstTimeStep(); t <= fillContext_.getLocalLastTimeStep();
          ++t)
     {
-        to_return += TimeIndex(expression, t);
+        // extraire la ligne t de expression
+        for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(expression.coefPerVar(),
+                                                                            t);
+             it;
+             ++it)
+        {
+            // Ici on "réplique" la ligne t dans toutes les lignes du résultat
+            for (int row = 0; row < nbtimeSteps_; ++row)
+            {
+                triplets.emplace_back(row, it.col(), it.value());
+            }
+        }
+
+        // offsets
+        offsets.array() += expression.offset()[t];
     }
-    return to_return;
+
+    Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs(nbtimeSteps_, nbModelVariables_);
+    coeffs.setFromTriplets(triplets.begin(), triplets.end());
+
+    return LinearExpressionEigen(coeffs, offsets);
 }
+
 } // namespace Antares::Optimization
