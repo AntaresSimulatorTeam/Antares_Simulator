@@ -24,7 +24,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
-#include "antares/logs/logs.h"
 
 namespace Antares::Expressions::Visitors
 {
