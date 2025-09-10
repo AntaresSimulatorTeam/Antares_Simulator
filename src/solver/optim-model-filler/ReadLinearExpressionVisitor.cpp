@@ -61,36 +61,12 @@ std::string ReadLinearExpressionVisitor::name() const
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const SumNode* node)
 {
     const auto& operands = node->getOperands();
-
-    std::vector<Eigen::Triplet<double>> triplets;
-    triplets.reserve(operands.size() * 8); // heuristique
-
-    Eigen::VectorXd offsets = Eigen::VectorXd::Zero(nbtimeSteps_);
-
+    LinearExpressionEigen ret(nbtimeSteps_, nbModelVariables_);
     for (auto* operand: operands)
     {
-        auto expr = dispatch(operand);
-
-        const auto& coefPerVar = expr.coefPerVar();
-        // collecter les coeffs
-        for (int k = 0; k < coefPerVar.outerSize(); ++k)
-        {
-            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVar, k); it;
-                 ++it)
-            {
-                triplets.emplace_back(it.row(), it.col(), it.value());
-            }
-        }
-
-        // collecter les offsets
-        offsets += expr.offset();
+        ret += dispatch(operand);
     }
-
-    // Construire en une seule fois
-    Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs(nbtimeSteps_, nbModelVariables_);
-    coeffs.setFromTriplets(triplets.begin(), triplets.end());
-
-    return LinearExpressionEigen(coeffs, offsets);
+    return ret;
 }
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const SubtractionNode* node)
