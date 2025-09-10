@@ -323,7 +323,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const AllTimeSumNode* n
 {
     auto expression = dispatch(node->child());
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
-    to_return.reserve((nbtimeSteps_ * nbModelVariables_) * 0.2);
+    to_return.reserve(expression.coefPerVar().innerSize());
     for (auto t = fillContext_.getLocalFirstTimeStep(); t <= fillContext_.getLocalLastTimeStep();
          ++t)
     {

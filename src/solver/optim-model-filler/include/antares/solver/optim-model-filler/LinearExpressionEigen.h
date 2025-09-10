@@ -69,9 +69,19 @@ public:
         return offsets_;
     }
 
+    Eigen::VectorXd& offset()
+    {
+        return offsets_;
+    }
+
     void setOffset(const Eigen::VectorXd& offsets)
     {
         offsets_ = offsets;
+    }
+
+    void setOffset(Eigen::VectorXd&& offsets)
+    {
+        offsets_ = std::move(offsets);
     }
 
     const Eigen::SparseMatrix<double, Eigen::RowMajor>& coefPerVar() const
@@ -79,9 +89,19 @@ public:
         return coeffs_;
     }
 
+    Eigen::SparseMatrix<double, Eigen::RowMajor>& coefPerVar()
+    {
+        return coeffs_;
+    }
+
     void setCoefPerVar(const Eigen::SparseMatrix<double>& coeffs)
     {
         coeffs_ = coeffs;
+    }
+
+    void setCoefPerVar(Eigen::SparseMatrix<double>&& coeffs)
+    {
+        coeffs_ = std::move(coeffs);
     }
 
     void setCol(int colIndex, const Eigen::SparseVector<double>& col);
