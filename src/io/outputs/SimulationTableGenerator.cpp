@@ -145,10 +145,9 @@ void addVariableEntries(ISimulationTable& simulationTable,
     }
 }
 
-void handleDependingOnTimeIndex(
-  const FillContext& fillContext,
-  TI idxType,
-  const std::function<void(std::optional<unsigned> ts)>& handle)
+void handleDependingOnTimeIndex(const FillContext& fillContext,
+                                TI idxType,
+                                const std::function<void(std::optional<unsigned> ts)>& handle)
 {
     switch (idxType)
     {
