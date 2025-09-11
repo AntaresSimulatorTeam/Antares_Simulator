@@ -91,12 +91,20 @@ void addVariableEntries(ISimulationTable& simulationTable,
 
     const auto& variableStart = variableContainer.getVariableStartColumn();
     const auto& solverVariables = variableContainer.getVariables();
+
+    const auto& modelVariablesGlobalIndices = component.ModelVariablesGlobalIndices();
+    unsigned variableLocalIndex = 0;
     for (const auto& modelVar: component.getModel()->Variables())
     {
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
-        auto varGlobalIndice = component.getVariableGlobalIndex(modelVar.Id());
-
+        // this the global Indice
+        // auto varGlobalIndice = component.getVariableGlobalIndex(modelVar.Id());
+        // but since model::Variables is a vector, the order never changes, in consequence
+        // component.getVariableGlobalIndex(modelVar.Id()) ==
+        // modelVariablesGlobalIndices.at(variableLocalIndex)
+        auto varGlobalIndice = modelVariablesGlobalIndices.at(variableLocalIndex);
+        ++variableLocalIndex;
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
             std::string fullVarName = Antares::Optimization::VariableDictionary::buildVariableName(
