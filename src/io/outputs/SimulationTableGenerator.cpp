@@ -30,6 +30,7 @@
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
+#include "antares/solver/optim-model-filler/VariableContainer.h"
 
 #include "../../modeler/FileWriter.h"
 
@@ -80,16 +81,21 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
                         const Antares::ModelerStudy::SystemModel::Component& component,
+                        const VariableContainer& variableContainer,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
                         std::optional<unsigned> scenario)
 {
     const auto& cid = component.Id();
     const bool isLp = linearProblem.isLP();
+
+    const auto& variableStart = variableContainer.getVariableStartColumn();
+    const auto& solverVariables = variableContainer.getVariables();
     for (const auto& modelVar: component.getModel()->Variables())
     {
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
+        auto varGlobalIndice = component.getVariableGlobalIndex(modelVar.Id());
 
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
@@ -104,7 +110,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
                                     : TimeBlock{.block = currentBlock + 1,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
-            auto* var = linearProblem.lookupVariable(fullVarName);
+            auto* var = solverVariables.at(variableStart.at(varGlobalIndice)
+                                           + timeStep.value_or(0));
             simulationTable.addEntry(
               {.block = tb.block,
                .component = cid,
@@ -295,6 +302,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
                          const Antares::Modeler::Data& modelerData,
+                         const VariableContainer& variableContainer,
                          const FillContext& fillContext,
                          unsigned currentBlock,
                          const TimeConversionMode& timeConversionMode,
@@ -317,6 +325,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                            linearProblem,
                            fillContext,
                            component,
+                           variableContainer,
                            currentBlock,
                            timeConversionMode,
                            scenario);

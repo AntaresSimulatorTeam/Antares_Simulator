@@ -42,10 +42,7 @@ class IMipSolution;
 class FillContext;
 } // namespace Antares::Optimisation::LinearProblemApi
 
-namespace Antares::Optimisation
-{
-class VariableDictionary;
-}
+class VariableContainer;
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -63,6 +60,7 @@ public:
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const Antares::Modeler::Data& modelerData,
+      const VariableContainer& variableContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
 

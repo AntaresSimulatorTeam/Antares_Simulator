@@ -81,7 +81,7 @@ public:
         linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }
 
-    [[nodiscard]] const VariableContainer& getVariableDictionary() const
+    [[nodiscard]] const VariableContainer& getVariableContainer() const
     {
         return variableContainer_;
     }
@@ -151,7 +151,11 @@ void Modeler::solve() const
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
-            writer_.writeSimulationTable(ortools_linear_problem, *solution, data, timeScenarioCtx);
+            writer_.writeSimulationTable(ortools_linear_problem,
+                                         *solution,
+                                         data,
+                                         system_linear_problem.getVariableContainer(),
+                                         timeScenarioCtx);
             break;
         default:
             logs.error() << "Problem during linear optimization";
