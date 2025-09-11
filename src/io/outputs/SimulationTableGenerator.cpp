@@ -98,7 +98,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
     {
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
-        // this the global Indice
+        // this is the global Index
         // auto varGlobalIndice = component.getVariableGlobalIndex(modelVar.Id());
         // but since model::Variables is a vector, the order never changes, in consequence
         // component.getVariableGlobalIndex(modelVar.Id()) ==
