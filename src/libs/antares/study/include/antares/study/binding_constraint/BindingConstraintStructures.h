@@ -27,9 +27,7 @@
 
 #include <vector>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 struct BindingConstraintStructures
@@ -43,5 +41,4 @@ struct BindingConstraintStructures
     mutable std::vector<long> clustersAreaIndex;
 };
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

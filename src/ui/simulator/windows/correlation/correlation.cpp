@@ -36,9 +36,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 class CorrelationPanelData final
 {
@@ -348,5 +346,4 @@ void CorrelationPanel::assignMatrices(Data::Correlation* corr)
     }
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

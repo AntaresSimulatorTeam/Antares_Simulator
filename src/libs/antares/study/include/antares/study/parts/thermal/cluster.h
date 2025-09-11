@@ -39,9 +39,7 @@
 #include "ecoInput.h"
 #include "pollutant.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 enum ThermalModulation
 {
@@ -322,8 +320,7 @@ private:
     std::unique_ptr<CostProvider> costProvider;
 
 }; // class ThermalCluster
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "cluster.hxx"
 

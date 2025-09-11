@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \brief Checking policies
@@ -31,6 +30,7 @@ public:
     None()
     {
     }
+
     template<class U>
     None(const None<U>&)
     {
@@ -68,6 +68,7 @@ public:
     NeverNull()
     {
     }
+
     template<class U>
     NeverNull(const NeverNull<U>&)
     {
@@ -76,7 +77,9 @@ public:
     static void onInit(const T& ptr)
     {
         if (!ptr)
+        {
             throw;
+        }
     }
 
     static void onDereference(const T&)
@@ -90,5 +93,4 @@ public:
 }; // class NotNull
 
 } // namespace Checking
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

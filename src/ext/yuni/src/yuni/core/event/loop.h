@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,23 +10,22 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <cassert>
+
+#include "../../thread/thread.h"
 #include "../../yuni.h"
-#include "event.h"
 #include "../atomic/bool.h"
 #include "../slist/slist.h"
-#include "flow/continuous.h"
-#include "flow/timer.h"
-#include "statistics/none.h"
-#include "../system/suspend.h"
 #include "../static/assert.h"
 #include "../static/inherit.h"
-#include <cassert>
-#include "../../thread/thread.h"
+#include "../system/suspend.h"
+#include "event.h"
+#include "flow/continuous.h"
+#include "flow/timer.h"
 #include "loop.fwd.h"
+#include "statistics/none.h"
 
-namespace Yuni
-{
-namespace Core
+namespace Yuni::Core
 {
 /*!
 **
@@ -73,10 +73,10 @@ template<class ParentT,                                   // The parent class (C
          bool DetachedT = true                            // Use a separate thread or not
          >
 class YUNI_DECL IEventLoop
- : public Policy::ObjectLevelLockableNotRecursive<IEventLoop<ParentT, FlowT, StatsT, DetachedT>>,
-   public FlowT<IEventLoop<ParentT, FlowT, StatsT, DetachedT>>,
-   public StatsT<IEventLoop<ParentT, FlowT, StatsT, DetachedT>>,
-   private NonCopyable<IEventLoop<ParentT, FlowT, StatsT, DetachedT>>
+    : public Policy::ObjectLevelLockableNotRecursive<IEventLoop<ParentT, FlowT, StatsT, DetachedT>>,
+      public FlowT<IEventLoop<ParentT, FlowT, StatsT, DetachedT>>,
+      public StatsT<IEventLoop<ParentT, FlowT, StatsT, DetachedT>>,
+      private NonCopyable<IEventLoop<ParentT, FlowT, StatsT, DetachedT>>
 {
 public:
     //! Parent
@@ -216,7 +216,6 @@ private:
 bool RequestStop();
 
 } // namespace EventLoop
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core
 
 #include "loop.hxx"

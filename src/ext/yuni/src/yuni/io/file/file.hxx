@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,16 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "file.h"
+#include "../../core/static/remove.h"
 #include "../../core/traits/cstring.h"
 #include "../../core/traits/length.h"
-#include "../../core/static/remove.h"
+#include "file.h"
+#include "stream.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace File
+namespace Yuni::IO::File
 {
 inline uint64_t Size(const AnyString& filename)
 {
@@ -76,13 +74,13 @@ bool ReadLineByLine(const AnyString& filename, const PredicateT& predicate)
     {
         String line;
         while (file.readline<4096u, String>(line))
+        {
             predicate(line);
+        }
 
         return true;
     }
     return false;
 }
 
-} // namespace File
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::File

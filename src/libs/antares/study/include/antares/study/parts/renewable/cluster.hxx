@@ -21,11 +21,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_HXX__
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_HXX__
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Data
-{
-} // namespace Data
-} // namespace Antares
+}
 
 #endif //__ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_HXX__

@@ -23,15 +23,9 @@
 #include "scenario-builder-renderer-base.h"
 #include "../../../input/connection.h"
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-class ntcScBuilderRenderer : public ScBuilderRendererBase
+class ntcScBuilderRenderer: public ScBuilderRendererBase
 {
 public:
     ntcScBuilderRenderer();
@@ -51,7 +45,4 @@ private:
     Data::AreaLink::Vector* pListOfLinks = nullptr;
 }; // class ntcScBuilderRenderer
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

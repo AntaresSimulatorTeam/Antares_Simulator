@@ -21,13 +21,10 @@
 #ifndef __ANTARES_LIBS_STUDY_CLEANER_VERSION_H__
 #define __ANTARES_LIBS_STUDY_CLEANER_VERSION_H__
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos);
 
-} // namespace Data
-} // namespace Antares
+}
 
 #endif // __ANTARES_LIBS_STUDY_CLEANER_VERSION_H__

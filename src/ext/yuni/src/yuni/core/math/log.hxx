@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include <cassert>
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 template<class T>
 inline T Log(T x)
@@ -76,5 +75,4 @@ inline T LogOnePlusX(T x)
              : (-0.5 * x + 1.) * x;
 }
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math

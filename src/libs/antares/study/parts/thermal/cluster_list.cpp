@@ -39,9 +39,7 @@ struct TSNumbersPredicate
 
 } // anonymous namespace
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 using namespace Yuni;
 
@@ -628,5 +626,4 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const fs::path& folder)
                                });
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

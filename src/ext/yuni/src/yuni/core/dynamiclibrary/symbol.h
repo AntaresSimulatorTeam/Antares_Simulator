@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -15,9 +16,7 @@
 */
 #include "../../yuni.h"
 
-namespace Yuni
-{
-namespace DynamicLibrary
+namespace Yuni::DynamicLibrary
 {
 /*!
 ** \brief Exported Symbol from a dynamic library
@@ -70,7 +69,6 @@ private:
 
 }; // class Symbol
 
-} // namespace DynamicLibrary
-} // namespace Yuni
+} // namespace Yuni::DynamicLibrary
 
 #include "symbol.hxx"

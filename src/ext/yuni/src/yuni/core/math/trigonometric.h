@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "math.h"
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 //! \name Standard trigonometric functions
 //@{
@@ -77,7 +76,6 @@ template<typename T>
 inline T ATanH(T x);
 //@}
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math
 
 #include "trigonometric.hxx"

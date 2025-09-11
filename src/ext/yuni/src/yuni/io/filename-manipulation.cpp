@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #include "filename-manipulation.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 template<class StringT>
 static inline void NormalizeImpl(StringT& out, const AnyString& input, bool replaceSlashes)
@@ -396,5 +395,4 @@ void Canonicalize(Clob& out, const AnyString& in, const AnyString& rootpath)
     CanonicalizeImpl(out, in, rootpath);
 }
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

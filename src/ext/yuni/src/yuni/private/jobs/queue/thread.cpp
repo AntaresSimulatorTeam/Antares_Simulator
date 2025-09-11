@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,11 +11,7 @@
 */
 #include "thread.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace QueueService
+namespace Yuni::Private::QueueService
 {
 inline void QueueThread::notifyEndOfWork()
 {
@@ -43,7 +40,9 @@ bool QueueThread::onExecute()
         // Cancellation point
         if (YUNI_UNLIKELY(
               shouldAbort())) // We have to stop as soon as possible, no need for hibernation
+        {
             return false;
+        }
 
     } // loop for retrieving jobs to execute
 
@@ -75,6 +74,4 @@ void QueueThread::onKill()
     notifyEndOfWork(); // we are done here !
 }
 
-} // namespace QueueService
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::QueueService

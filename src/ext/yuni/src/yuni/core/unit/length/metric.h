@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,15 +12,11 @@
 #ifndef __YUNI_CORE_UNIT_LENGTH_METRIC_H__
 #define __YUNI_CORE_UNIT_LENGTH_METRIC_H__
 
-#include "length.h"
-#include "../unit.h"
 #include "../define.h"
+#include "../unit.h"
+#include "length.h"
 
-namespace Yuni
-{
-namespace Unit
-{
-namespace Length
+namespace Yuni::Unit::Length
 {
 //! \brief Yottametre
 //! \ingroup UnitLength
@@ -87,9 +84,7 @@ YUNI_UNIT_IMPL(Zeptometre, "zeptometre", "zm,", double, 1e-21);
 //! \ingroup UnitLength
 YUNI_UNIT_IMPL(Yoctometre, "yoctometre", "ym,", double, 1e-24);
 
-} // namespace Length
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit::Length
 
 #include "../undef.h"
 

@@ -21,16 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_HXX__
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_HXX__
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 inline void PartRenewable::resizeAllTimeseriesNumbers(uint n)
 {
     list.resizeAllTimeseriesNumbers(n);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_HXX__

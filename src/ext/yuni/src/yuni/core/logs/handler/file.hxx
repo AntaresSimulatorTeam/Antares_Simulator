@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Logs
+namespace Yuni::Logs
 {
 template<class NextHandler>
 bool File<NextHandler>::logfile(const AnyString& filename)
@@ -78,5 +77,4 @@ void File<NextHandler>::internalDecoratorWriteWL(LoggerT& logger, const AnyStrin
     NextHandler::template internalDecoratorWriteWL<LoggerT, VerbosityType>(logger, s);
 }
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs

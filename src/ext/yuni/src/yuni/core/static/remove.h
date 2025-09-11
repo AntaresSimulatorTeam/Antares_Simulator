@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Static
+namespace Yuni::Static
 {
 /*!
 ** \brief Remove some part about a single type
@@ -27,61 +26,73 @@ struct Reference
 {
     typedef T Type;
 };
+
 template<typename T>
 struct Reference<T&>
 {
     typedef T Type;
 };
+
 template<typename T>
 struct Reference<volatile T&>
 {
     typedef volatile T Type;
 };
+
 template<typename T>
 struct Reference<T*>
 {
     typedef T Type;
 };
+
 template<typename T>
 struct Reference<T* const>
 {
     typedef T Type;
 };
+
 template<typename T>
 struct Reference<volatile T*>
 {
     typedef volatile T Type;
 };
+
 template<typename T, int N>
 struct Reference<T[N]>
 {
     typedef T Type;
 };
+
 template<typename T>
 struct Reference<const T*>
 {
     typedef const T Type;
 };
+
 template<typename T>
 struct Reference<const T* const>
 {
     typedef const T Type;
 };
+
 template<typename T>
 struct Reference<const volatile T*>
 {
     typedef const volatile T Type;
 };
+
 template<typename T, int N>
 struct Reference<const T[N]>
 {
     typedef const T Type;
 };
+
 template<typename T>
 struct Reference<const T&>
 {
     typedef const T Type;
 };
+
 template<typename T>
 struct Reference<const volatile T&>
 {
@@ -93,21 +104,25 @@ struct RefOnly
 {
     typedef T Type;
 };
+
 template<typename T>
 struct RefOnly<T&>
 {
     typedef T Type;
 };
+
 template<typename T>
 struct RefOnly<volatile T&>
 {
     typedef volatile T Type;
 };
+
 template<typename T>
 struct RefOnly<const T&>
 {
     typedef const T Type;
 };
+
 template<typename T>
 struct RefOnly<const volatile T&>
 {
@@ -119,36 +134,43 @@ struct PntOnly
 {
     typedef T Type;
 };
+
 template<typename T>
 struct PntOnly<T*>
 {
     typedef T Type;
 };
+
 template<typename T>
 struct PntOnly<volatile T*>
 {
     typedef volatile T Type;
 };
+
 template<typename T>
 struct PntOnly<const T*>
 {
     typedef const T Type;
 };
+
 template<typename T>
 struct PntOnly<const T* const>
 {
     typedef const T Type;
 };
+
 template<typename T>
 struct PntOnly<T* const>
 {
     typedef const T Type;
 };
+
 template<typename T>
 struct PntOnly<const volatile T*>
 {
     typedef const volatile T Type;
 };
+
 //@}
 
 //! \name Volatile
@@ -158,31 +180,37 @@ struct Volatile
 {
     typedef T Type;
 };
+
 template<typename T>
 struct Volatile<volatile T*>
 {
     typedef T* Type;
 };
+
 template<typename T>
 struct Volatile<const volatile T*>
 {
     typedef const T* Type;
 };
+
 template<typename T>
 struct Volatile<const volatile T* const>
 {
     typedef const T* const Type;
 };
+
 template<typename T>
 struct Volatile<volatile T&>
 {
     typedef T& Type;
 };
+
 template<typename T>
 struct Volatile<const volatile T&>
 {
     typedef const T& Type;
 };
+
 //@}
 
 //! \name Const
@@ -193,51 +221,61 @@ struct Const
 {
     typedef T Type;
 };
+
 template<typename T>
 struct Const<T*>
 {
     typedef T* Type;
 };
+
 template<typename T>
 struct Const<T* const>
 {
     typedef T* Type;
 };
+
 template<typename T>
 struct Const<T&>
 {
     typedef T& Type;
 };
+
 template<typename T, int N>
 struct Const<T[N]>
 {
     typedef T Type[N];
 };
+
 template<typename T>
 struct Const<const T>
 {
     typedef T Type;
 };
+
 template<typename T>
 struct Const<const T*>
 {
     typedef T* Type;
 };
+
 template<typename T>
 struct Const<const T* const>
 {
     typedef T* Type;
 };
+
 template<typename T>
 struct Const<const T&>
 {
     typedef T& Type;
 };
+
 template<typename T, int N>
 struct Const<const T[N]>
 {
     typedef T Type[N];
 };
+
 //@}
 
 template<typename T>
@@ -248,5 +286,4 @@ struct All
 };
 
 } // namespace Remove
-} // namespace Static
-} // namespace Yuni
+} // namespace Yuni::Static

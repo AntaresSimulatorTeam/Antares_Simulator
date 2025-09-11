@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,19 +12,15 @@
 #ifndef __YUNI_CORE_VALIDATOR_DEFAULT_H__
 #define __YUNI_CORE_VALIDATOR_DEFAULT_H__
 
-#include "validator.h"
 #include "default.private.h"
+#include "validator.h"
 
-namespace Yuni
-{
-namespace Validator
-{
-namespace Text
+namespace Yuni::Validator::Text
 {
 /*!
 ** \brief Allow all strings / char
 */
-class AllowAll : public IValidatorTmpl<AllowAll>
+class AllowAll: public IValidatorTmpl<AllowAll>
 {
 public:
     template<class U>
@@ -37,7 +34,7 @@ public:
 /*!
 ** \brief Deny all strings / char
 */
-class DenyAll : public IValidatorTmpl<DenyAll>
+class DenyAll: public IValidatorTmpl<DenyAll>
 {
 public:
     template<class U>
@@ -65,7 +62,7 @@ public:
 ** \see typedef DenyByDefauly
 */
 template<Yuni::Validator::DefaultPolicy DefaultPolicy>
-class ExceptionList final : public IValidatorTmpl<ExceptionList<DefaultPolicy>>
+class ExceptionList final: public IValidatorTmpl<ExceptionList<DefaultPolicy>>
 {
 public:
     //! \name Constructors
@@ -168,9 +165,7 @@ typedef ExceptionList<Validator::allowByDefault> AllowByDefault;
 */
 typedef ExceptionList<Validator::denyByDefault> DenyByDefault;
 
-} // namespace Text
-} // namespace Validator
-} // namespace Yuni
+} // namespace Yuni::Validator::Text
 
 #include "default.hxx"
 

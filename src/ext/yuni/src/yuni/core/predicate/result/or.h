@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Result
+namespace Yuni::Result
 {
 template<typename T>
 struct Or final
@@ -27,18 +26,24 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    Or() : pValue(false)
+    Or():
+        pValue(false)
     {
     }
-    Or(bool defaultValue) : pValue(defaultValue)
+
+    Or(bool defaultValue):
+        pValue(defaultValue)
     {
     }
+
     /*!
     ** \brief Copy constructor
     */
-    Or(const Or& rhs) : pValue(rhs.pValue)
+    Or(const Or& rhs):
+        pValue(rhs.pValue)
     {
     }
+
     //@}
 
     //! Take into account a new value
@@ -62,6 +67,7 @@ public:
     {
         pValue = false;
     }
+
     void reset(bool v)
     {
         pValue = v;
@@ -73,5 +79,4 @@ private:
 
 }; // class Or
 
-} // namespace Result
-} // namespace Yuni
+} // namespace Yuni::Result

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -17,7 +18,9 @@ template<class StringT>
 inline UUID::UUID(const StringT& string)
 {
     if (not assign(string))
+    {
         clear();
+    }
 }
 
 inline void UUID::clear()
@@ -60,7 +63,9 @@ template<class StringT>
 inline UUID& UUID::operator=(const StringT& string)
 {
     if (not assign(string))
+    {
         clear();
+    }
     return *this;
 }
 
@@ -110,11 +115,7 @@ inline bool UUID::operator>=(const UUID& rhs) const
 
 } // namespace Yuni
 
-namespace Yuni
-{
-namespace Private
-{
-namespace UUID
+namespace Yuni::Private::UUID
 {
 class Helper final
 {
@@ -125,15 +126,9 @@ public:
     }
 };
 
-} // namespace UUID
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::UUID
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT>
 class Append<CStringT, Yuni::UUID> final
@@ -156,6 +151,7 @@ class Into<Yuni::UUID> final
 {
 public:
     typedef Yuni::UUID TargetType;
+
     enum
     {
         valid = 1
@@ -175,9 +171,7 @@ public:
 
 }; // class Into
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
 
 // ostream
 std::ostream& operator<<(std::ostream& out, const Yuni::UUID& rhs);

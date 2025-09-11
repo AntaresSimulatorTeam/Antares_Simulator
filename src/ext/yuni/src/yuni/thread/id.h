@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "../yuni.h"
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 /*!
 ** \brief Get the Unique ID of the current thread
@@ -23,5 +22,4 @@ namespace Thread
 */
 YUNI_DECL uint64_t ID();
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread
