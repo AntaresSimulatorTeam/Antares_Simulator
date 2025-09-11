@@ -30,8 +30,6 @@
 #include <antares/study/study.h>
 #include "antares/study/simulation.h"
 
-class ISimulationTable;
-
 namespace Antares::Solver::Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,

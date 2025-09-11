@@ -32,8 +32,6 @@
 #include "antares/solver/variable/state.h"
 #include "antares/solver/variable/variable.h"
 
-class ISimulationTable;
-
 namespace Antares::Solver::Simulation
 {
 class Adequacy

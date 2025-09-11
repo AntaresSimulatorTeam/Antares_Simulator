@@ -96,6 +96,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
               {componentId, varName},
               Antares::Optimization::MCYearAndTime::MCYear{scenIdx.value_or(0)},
               timeStep);
+
             TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(
                                         *timeStep + fillContext.getGlobalFirstTimeStep(),
                                         timeConversionMode,
@@ -146,9 +147,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
 
 void handleDependingOnTimeIndex(
   const FillContext& fillContext,
-  std::optional<unsigned> scenario,
   TI idxType,
-  const std::function<void(std::optional<unsigned> ts, std::optional<unsigned> scenIdx)>& handle)
+  const std::function<void(std::optional<unsigned> ts)>& handle)
 {
     switch (idxType)
     {
@@ -157,23 +157,23 @@ void handleDependingOnTimeIndex(
              ts <= fillContext.getLocalLastTimeStep();
              ++ts)
         {
-            handle(ts, scenario);
+            handle(ts);
         }
         break;
     case TI::VARYING_IN_SCENARIO_ONLY:
-        handle(std::nullopt, scenario);
+        handle(std::nullopt);
         break;
     case TI::VARYING_IN_TIME_ONLY:
         for (unsigned ts = fillContext.getLocalFirstTimeStep();
              ts <= fillContext.getLocalLastTimeStep();
              ++ts)
         {
-            handle(ts, std::nullopt);
+            handle(ts);
         }
         break;
     case TI::CONSTANT_IN_TIME_AND_SCENARIO:
     default:
-        handle(std::nullopt, std::nullopt);
+        handle(std::nullopt);
         break;
     }
 }
@@ -196,7 +196,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                        .dispatch(modelConstr.expression().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
-        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+        auto handle = [&](std::optional<unsigned> ts)
         {
             std::string fullConstName = BuildModelerConstraintName(componentId, cname, ts);
             const auto* c = linearProblem.lookupConstraint(fullConstName);
@@ -207,18 +207,19 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                               : TimeBlock{.block = currentBlock + 1,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
+
             simulationTable.addEntry(
               {.block = tb.block,
                .component = componentId,
                .output = cname,
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
-               .scenario_index = scenIdx,
+               .scenario_index = scenario,
                .value = std::nullopt,
                .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
         };
 
-        handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+        handleDependingOnTimeIndex(fillContext, idxType, handle);
     }
 }
 
@@ -259,7 +260,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                    .dispatch(rootNode);
     idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
-    auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+    auto handle = [&](std::optional<unsigned> ts)
     {
         TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                    timeConversionMode,
@@ -273,11 +274,11 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                                   .output = outputName,
                                   .absolute_time_index = tb.absoluteTimeIndex,
                                   .block_time_index = tb.blockTimeIndex,
-                                  .scenario_index = scenIdx,
+                                  .scenario_index = scenario,
                                   .value = val,
                                   .status = MipBasisStatus::NOT_AVAILABLE});
     };
-    handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+    handleDependingOnTimeIndex(fillContext, idxType, handle);
 }
 
 void addPortEntries(ISimulationTable& simulationTable,
