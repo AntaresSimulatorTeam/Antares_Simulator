@@ -46,6 +46,8 @@ library:
           expression: spillage_cost * spillage
         - id: ens_cost_contribution
           expression: ens_cost * unsupplied_energy
+        - id: portfield_flow
+          expression: sum_connections(balance_port.flow)
 
     - id: load
       parameters:
