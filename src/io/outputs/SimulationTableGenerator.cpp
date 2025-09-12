@@ -87,60 +87,53 @@ void addVariableEntries(ISimulationTable& simulationTable,
     const bool isLp = linearProblem.isLP();
     for (const auto& [varName, modelVar]: component.getModel()->Variables())
     {
-        bool scenDep = modelVar.IsScenarioDependent();
-        bool timeDep = modelVar.isTimeDependent();
+        scenario = modelVar.IsScenarioDependent() ? scenario : std::nullopt;
 
-        auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
-        {
-            std::string fullVarName = Antares::Optimization::VariableDictionary::buildVariableName(
-              {componentId, varName},
-              Antares::Optimization::MCYearAndTime::MCYear{scenIdx.value_or(0)},
-              timeStep);
-
-            TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(
-                                        *timeStep + fillContext.getGlobalFirstTimeStep(),
-                                        timeConversionMode,
-                                        currentBlock)
-                                    : TimeBlock{.block = currentBlock + 1,
-                                                .blockTimeIndex = std::nullopt,
-                                                .absoluteTimeIndex = std::nullopt};
-            auto* var = linearProblem.lookupVariable(fullVarName);
-            simulationTable.addEntry(
-              {.block = tb.block,
-               .component = componentId,
-               .output = varName,
-               .absolute_time_index = tb.absoluteTimeIndex,
-               .block_time_index = tb.blockTimeIndex,
-               .scenario_index = scenIdx,
-               .value = var->solutionValue(),
-               .status = isLp ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
-        };
-
-        if (scenDep && timeDep)
+        if (modelVar.isTimeDependent())
         {
             for (unsigned ts = fillContext.getLocalFirstTimeStep();
                  ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
-                handle(ts, scenario);
-            }
-        }
-        else if (scenDep)
-        {
-            handle(std::nullopt, scenario);
-        }
-        else if (timeDep)
-        {
-            for (unsigned ts = fillContext.getLocalFirstTimeStep();
-                 ts <= fillContext.getLocalLastTimeStep();
-                 ++ts)
-            {
-                handle(ts, std::nullopt);
+                std::string fullVarName = Antares::Optimization::VariableDictionary::
+                  buildVariableName({componentId, varName},
+                                    Antares::Optimization::MCYearAndTime::MCYear{
+                                      scenario.value_or(0)},
+                                    ts);
+
+                unsigned global_ts = ts + fillContext.getGlobalFirstTimeStep();
+                TimeBlock tb = convertBlockTimeStepToAbsoluteTimeStep(global_ts,
+                                                                      timeConversionMode,
+                                                                      currentBlock);
+                auto* var = linearProblem.lookupVariable(fullVarName);
+                simulationTable.addEntry(
+                  {.block = tb.block,
+                   .component = componentId,
+                   .output = varName,
+                   .absolute_time_index = tb.absoluteTimeIndex,
+                   .block_time_index = tb.blockTimeIndex,
+                   .scenario_index = scenario,
+                   .value = var->solutionValue(),
+                   .status = isLp ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
             }
         }
         else
         {
-            handle(std::nullopt, std::nullopt);
+            std::string fullVarName = Antares::Optimization::VariableDictionary::buildVariableName(
+              {componentId, varName},
+              Antares::Optimization::MCYearAndTime::MCYear{scenario.value_or(0)},
+              std::nullopt);
+
+            auto* var = linearProblem.lookupVariable(fullVarName);
+            simulationTable.addEntry(
+              {.block = currentBlock + 1,
+               .component = componentId,
+               .output = varName,
+               .absolute_time_index = std::nullopt,
+               .block_time_index = std::nullopt,
+               .scenario_index = scenario,
+               .value = var->solutionValue(),
+               .status = isLp ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
         }
     }
 }
