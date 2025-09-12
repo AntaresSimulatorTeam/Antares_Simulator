@@ -145,25 +145,6 @@ void addVariableEntries(ISimulationTable& simulationTable,
     }
 }
 
-void handleDependingOnTimeIndex(const FillContext& fillContext,
-                                TI idxType,
-                                const std::function<void(std::optional<unsigned> ts)>& handle)
-{
-    if (isTimeDependant(idxType))
-    {
-        for (unsigned ts = fillContext.getLocalFirstTimeStep();
-             ts <= fillContext.getLocalLastTimeStep();
-             ++ts)
-        {
-            handle(ts);
-        }
-    }
-    else
-    {
-        handle(std::nullopt);
-    }
-}
-
 void addConstraintEntries(ISimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
@@ -184,30 +165,46 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 
         scenario = isScenarioDependant(idxType) ? scenario : std::nullopt;
 
-        auto handle = [&](std::optional<unsigned> ts)
+        if (isTimeDependant(idxType))
         {
-            std::string fullConstName = BuildModelerConstraintName(componentId, cname, ts);
-            const auto* c = linearProblem.lookupConstraint(fullConstName);
-            TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
-                                  *ts + fillContext.getGlobalFirstTimeStep(),
-                                  timeConversionMode,
-                                  currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
-                                          .blockTimeIndex = std::nullopt,
-                                          .absoluteTimeIndex = std::nullopt};
+            for (unsigned ts = fillContext.getLocalFirstTimeStep();
+                 ts <= fillContext.getLocalLastTimeStep();
+                 ++ts)
+            {
+                std::string fullConstName = BuildModelerConstraintName(componentId, cname, ts);
+                const auto* c = linearProblem.lookupConstraint(fullConstName);
+                TimeBlock tb = convertBlockTimeStepToAbsoluteTimeStep(
+                  ts + fillContext.getGlobalFirstTimeStep(),
+                  timeConversionMode,
+                  currentBlock);
 
+                simulationTable.addEntry(
+                  {.block = tb.block,
+                   .component = componentId,
+                   .output = cname,
+                   .absolute_time_index = tb.absoluteTimeIndex,
+                   .block_time_index = tb.blockTimeIndex,
+                   .scenario_index = scenario,
+                   .value = std::nullopt,
+                   .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
+            }
+        }
+        else
+        {
+            std::string fullConstName = BuildModelerConstraintName(componentId,
+                                                                   cname,
+                                                                   std::nullopt);
+            const auto* c = linearProblem.lookupConstraint(fullConstName);
             simulationTable.addEntry(
-              {.block = tb.block,
+              {.block = currentBlock + 1,
                .component = componentId,
                .output = cname,
-               .absolute_time_index = tb.absoluteTimeIndex,
-               .block_time_index = tb.blockTimeIndex,
+               .absolute_time_index = std::nullopt,
+               .block_time_index = std::nullopt,
                .scenario_index = scenario,
                .value = std::nullopt,
                .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
-        };
-
-        handleDependingOnTimeIndex(fillContext, idxType, handle);
+        }
     }
 }
 
