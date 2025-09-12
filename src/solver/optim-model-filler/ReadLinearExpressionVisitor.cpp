@@ -46,9 +46,9 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     evalContext_(evalContextProvider_.provide(component)),
     fillContext_(fillContext),
     component_(component),
-evalVisitor_(evalContext_, fillContext_),
-nbModelVariables_(nbModelVariables),
-variableStartColumn_(variableStartColumn)
+    evalVisitor_(evalContext_, fillContext_),
+    nbModelVariables_(nbModelVariables),
+    variableStartColumn_(variableStartColumn)
 {
     nbtimeSteps_ = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep() + 1;
 }
@@ -182,8 +182,9 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
 
     int idx = 0;
     // assume global nb timeStep == nbtimeSteps
-    const auto& parameters = evalContext_.getParameterValue(node->value(),
-                                                            fillContext_.getYear(),
+    const auto& parameters = evalContext_.getParameterValue(
+      node->value(),
+      fillContext_.getYear(),
       fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
       fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
     out.setOffset(Eigen::Map<const Eigen::VectorXd>(parameters.data(), parameters.size()));
@@ -236,7 +237,9 @@ Derived cyclicRowShiftPerm(const Derived& m, int shift)
 {
     int n = m.rows();
     if (n == 0)
+    {
         return Derived(m);
+    }
 
     int s = ((shift % n) + n) % n;
     Eigen::PermutationMatrix<Eigen::Dynamic> perm(n);
@@ -247,7 +250,6 @@ Derived cyclicRowShiftPerm(const Derived& m, int shift)
 
     return (perm * m).eval();
 }
-
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {

@@ -47,8 +47,8 @@ public:
     ReadLinearExpressionVisitor(const Optimisation::EvaluationContextProvider& evalContextProvider,
                                 const Optimisation::LinearProblemApi::FillContext& fillContext,
                                 const ModelerStudy::SystemModel::Component& component,
-      unsigned int nbModelVariables,
-      const std::vector<unsigned int>& variableStartColumn);
+                                unsigned int nbModelVariables,
+                                const std::vector<unsigned int>& variableStartColumn);
     std::string name() const override;
 
 private:

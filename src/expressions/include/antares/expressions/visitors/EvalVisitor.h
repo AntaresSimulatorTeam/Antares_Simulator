@@ -189,6 +189,7 @@ std::vector<double> computeBinaryOperation(double lhs, const std::vector<double>
     }
     return result;
 }
+
 class VectorsMismatchSize final: public std::runtime_error
 {
 public:

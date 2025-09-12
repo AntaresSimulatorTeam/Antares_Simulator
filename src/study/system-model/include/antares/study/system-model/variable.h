@@ -79,7 +79,6 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
-
 private:
     std::string id_;
     ValueType type_;

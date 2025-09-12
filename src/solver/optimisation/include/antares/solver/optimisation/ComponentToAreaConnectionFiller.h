@@ -41,8 +41,9 @@ namespace Antares::Optimization
 class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
-                                             const VariableContainer& variableContainer,
+    explicit ComponentToAreaConnectionFiller(
+      const PROBLEME_HEBDO* problemeHebdo,
+      const VariableContainer& variableContainer,
       const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
