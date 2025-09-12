@@ -81,8 +81,7 @@ private:
                              const Optimization::LinearConstraint& linear_constraint,
                              const std::string& constraint_id) const;
 
-    void addTimeDependentConstraints(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                      const Optimization::LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
                                      const Optimisation::LinearProblemApi::FillContext& ctx) const;
@@ -97,8 +96,7 @@ private:
 class VariablesBulkAddition
 {
 public:
-    VariablesBulkAddition(
-      Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
                           VariableContainer& variableDictionary);
 
     void addVariable(const std::string& compoId,

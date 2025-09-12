@@ -110,5 +110,5 @@ public:
 
 private:
     Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs_; // [nTimesteps × nVars]
-    Eigen::VectorXd offsets_; // [nTimesteps]
+    Eigen::VectorXd offsets_;                             // [nTimesteps]
 };

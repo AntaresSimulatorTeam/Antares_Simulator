@@ -359,9 +359,11 @@ library:
         BOOST_REQUIRE_EQUAL(model3.Ports().size(), 1);
         BOOST_REQUIRE_EQUAL(model3.PortFieldDefinitions().size(), 1);
         checkParameter(model3.Parameters().at("cost"), "cost", false, false);
-        const auto unsupplied_energy = std::ranges::find_if(
-          model3.Variables(),
-          [](const auto& v) { return v.Id() == "unsupplied_energy"; });
+        const auto unsupplied_energy = std::ranges::find_if(model3.Variables(),
+                                                            [](const auto& v) {
+                                                                return v.Id()
+                                                                       == "unsupplied_energy";
+                                                            });
 
         checkVariable(*unsupplied_energy,
                       "unsupplied_energy",
