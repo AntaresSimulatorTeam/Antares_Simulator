@@ -250,7 +250,7 @@ Feature: short tests
     And in area "WEST", during year 1, "sb" produces 79753394 MWh
     And in area "WEST", during year 1, "p" produces 6570858 MWh
 
-  @fast @short @bug
+  @fast @short
   Scenario: 020 Single mesh - DC law
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/020 Single mesh - DC law"
     When I run antares simulator
