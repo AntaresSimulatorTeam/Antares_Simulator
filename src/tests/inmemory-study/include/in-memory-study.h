@@ -246,7 +246,7 @@ template<class VCard>
 typename Variable::Storage<VCard>::ResultsType* OutputRetriever::retrieveAreaResults(Area* area)
 {
     typename Variable::Storage<VCard>::ResultsType* result = nullptr;
-    simulation_.variables.retrieveResultsForArea<VCard>(&result, area);
+    simulation_.variables->retrieveResultsForArea<VCard>(&result, area);
     return result;
 }
 
@@ -254,7 +254,7 @@ template<class VCard>
 typename Variable::Storage<VCard>::ResultsType* OutputRetriever::retrieveLinkResults(AreaLink* link)
 {
     typename Variable::Storage<VCard>::ResultsType* result = nullptr;
-    simulation_.variables.retrieveResultsForLink<VCard>(&result, link);
+    simulation_.variables->retrieveResultsForLink<VCard>(&result, link);
     return result;
 }
 
@@ -263,7 +263,7 @@ typename Variable::Storage<VCard>::ResultsType* OutputRetriever::retrieveResults
   ThermalCluster* cluster)
 {
     typename Variable::Storage<VCard>::ResultsType* result = nullptr;
-    simulation_.variables.retrieveResultsForThermalCluster<VCard>(&result, cluster);
+    simulation_.variables->retrieveResultsForThermalCluster<VCard>(&result, cluster);
     return result;
 }
 

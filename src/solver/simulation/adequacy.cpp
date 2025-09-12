@@ -339,7 +339,7 @@ bool Adequacy::year(Progression::Task& progression,
 
         updatingWeeklyFinalHydroLevel(study.areas, currentProblem);
 
-        variables.weekBegin(state);
+        variables->weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;
 
         for (uint hw = 0; hw != nbHoursInAWeek;
@@ -349,16 +349,16 @@ bool Adequacy::year(Progression::Task& progression,
 
             state.ntc = currentProblem.ValeursDeNTC[hw];
 
-            variables.hourBegin(state.hourInTheYear);
+            variables->hourBegin(state.hourInTheYear);
 
-            variables.hourForEachArea(state, numSpace);
+            variables->hourForEachArea(state, numSpace);
 
-            variables.hourEnd(state, state.hourInTheYear);
+            variables->hourEnd(state, state.hourInTheYear);
         }
 
         state.hourInTheYear = previousHourInTheYear;
-        variables.weekForEachArea(state, numSpace);
-        variables.weekEnd(state);
+        variables->weekForEachArea(state, numSpace);
+        variables->weekEnd(state);
 
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
@@ -400,7 +400,7 @@ void Adequacy::simulationEnd()
 {
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
-        auto balance = retrieveBalance(study, variables);
+        auto balance = retrieveBalance(study, *variables);
         ComputeFlowQuad(study,
                         pProblemesHebdo[0],
                         balance,

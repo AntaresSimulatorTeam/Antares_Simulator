@@ -380,7 +380,7 @@ private:
             auto end = set.end();
             for (auto i = set.begin(); i != end; ++i)
             {
-                allVars.template computeSpatialAggregateWith<
+                allVars->template computeSpatialAggregateWith<
                   typename VCardType::VCardForSpatialAggregate> //<typename VCardType::VCardOrigin>
                   (pValuesForTheCurrentYear[0], *i /* the current area */, 0);
             }
@@ -427,7 +427,7 @@ private:
             auto end = set.end();
             for (auto i = set.begin(); i != end; ++i)
             {
-                allVars.template computeSpatialAggregateWith<
+                allVars->template computeSpatialAggregateWith<
                   typename VCardType::VCardForSpatialAggregate> //<typename VCardType::VCardOrigin>
                   (pValuesForTheCurrentYear[numSpace], *i /* the current area */, numSpace);
             }

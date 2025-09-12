@@ -55,8 +55,13 @@ public:
     Adequacy(Data::Study& study,
              IResultWriter& resultWriter,
              Simulation::ISimulationObserver& simulationObserver);
+
     //! Destructor
-    ~Adequacy() = default;
+    ~Adequacy()
+    {
+        delete variables;
+    }
+
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
@@ -64,7 +69,8 @@ public:
     //! Current study
     Data::Study& study;
     //! All variables
-    Solver::Variable::Adequacy::AllVariables variables;
+    Solver::Variable::Adequacy::AllVariables* variables = new Solver::Variable::Adequacy::
+      AllVariables();
     //! Prepro only
     bool preproOnly = false;
 

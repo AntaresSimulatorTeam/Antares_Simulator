@@ -54,8 +54,13 @@ public:
     Economy(Data::Study& study,
             IResultWriter& resultWriter,
             Simulation::ISimulationObserver& simulationObserver);
+
     //! Destructor
-    ~Economy() = default;
+    ~Economy()
+    {
+        delete variables;
+    }
+
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
@@ -64,7 +69,8 @@ public:
     //! Current study
     Data::Study& study;
     //! All variables
-    Solver::Variable::Economy::AllVariables variables;
+    Solver::Variable::Economy::AllVariables* variables = new Solver::Variable::Economy::
+      AllVariables();
     //! Prepro only
     bool preproOnly;
 
