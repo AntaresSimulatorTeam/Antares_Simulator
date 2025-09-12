@@ -149,31 +149,18 @@ void handleDependingOnTimeIndex(const FillContext& fillContext,
                                 TI idxType,
                                 const std::function<void(std::optional<unsigned> ts)>& handle)
 {
-    switch (idxType)
+    if (isTimeDependant(idxType))
     {
-    case TI::VARYING_IN_TIME_AND_SCENARIO:
         for (unsigned ts = fillContext.getLocalFirstTimeStep();
              ts <= fillContext.getLocalLastTimeStep();
              ++ts)
         {
             handle(ts);
         }
-        break;
-    case TI::VARYING_IN_SCENARIO_ONLY:
+    }
+    else
+    {
         handle(std::nullopt);
-        break;
-    case TI::VARYING_IN_TIME_ONLY:
-        for (unsigned ts = fillContext.getLocalFirstTimeStep();
-             ts <= fillContext.getLocalLastTimeStep();
-             ++ts)
-        {
-            handle(ts);
-        }
-        break;
-    case TI::CONSTANT_IN_TIME_AND_SCENARIO:
-    default:
-        handle(std::nullopt);
-        break;
     }
 }
 
@@ -194,6 +181,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
                        .dispatch(modelConstr.expression().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+
+        scenario = isScenarioDependant(idxType) ? scenario : std::nullopt;
 
         auto handle = [&](std::optional<unsigned> ts)
         {
@@ -257,27 +246,43 @@ void addEntriesForNode(ISimulationTable& simulationTable,
 
     TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
                    .dispatch(rootNode);
+
     idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
-    auto handle = [&](std::optional<unsigned> ts)
+    scenario = isScenarioDependant(idxType) ? scenario : std::nullopt;
+
+    if (isTimeDependant(idxType))
     {
-        TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
-                                                                   timeConversionMode,
-                                                                   currentBlock)
-                          : TimeBlock{.block = currentBlock + 1,
-                                      .blockTimeIndex = std::nullopt,
-                                      .absoluteTimeIndex = std::nullopt};
-        auto val = ts.has_value() ? value.valuesAsVector()[ts.value()] : value.valueAsDouble();
-        simulationTable.addEntry({.block = tb.block,
+        for (unsigned ts = fillContext.getLocalFirstTimeStep();
+             ts <= fillContext.getLocalLastTimeStep();
+             ++ts)
+        {
+            TimeBlock tb = convertBlockTimeStepToAbsoluteTimeStep(ts,
+                                                                  timeConversionMode,
+                                                                  currentBlock);
+            auto val = value.valuesAsVector()[ts];
+            simulationTable.addEntry({.block = tb.block,
+                                      .component = componentId,
+                                      .output = outputName,
+                                      .absolute_time_index = tb.absoluteTimeIndex,
+                                      .block_time_index = tb.blockTimeIndex,
+                                      .scenario_index = scenario,
+                                      .value = val,
+                                      .status = MipBasisStatus::NOT_AVAILABLE});
+        }
+    }
+    else
+    {
+        double val = value.valueAsDouble();
+        simulationTable.addEntry({.block = currentBlock + 1,
                                   .component = componentId,
                                   .output = outputName,
-                                  .absolute_time_index = tb.absoluteTimeIndex,
-                                  .block_time_index = tb.blockTimeIndex,
+                                  .absolute_time_index = std::nullopt,
+                                  .block_time_index = std::nullopt,
                                   .scenario_index = scenario,
                                   .value = val,
                                   .status = MipBasisStatus::NOT_AVAILABLE});
-    };
-    handleDependingOnTimeIndex(fillContext, idxType, handle);
+    }
 }
 
 void addPortEntries(ISimulationTable& simulationTable,

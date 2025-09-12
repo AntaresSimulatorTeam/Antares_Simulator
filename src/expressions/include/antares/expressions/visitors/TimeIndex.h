@@ -54,4 +54,16 @@ constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
                                   | static_cast<unsigned int>(right));
 }
 
+constexpr bool isTimeDependant(const TimeIndex timeIndex)
+{
+    return timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
+           || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
+}
+
+constexpr bool isScenarioDependant(const TimeIndex timeIndex)
+{
+    return timeIndex == TimeIndex::VARYING_IN_SCENARIO_ONLY
+           || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
+}
+
 } // namespace Antares::Expressions::Visitors
