@@ -76,7 +76,6 @@ std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::str
     return {};
 }
 
-
 const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
 {
     try
