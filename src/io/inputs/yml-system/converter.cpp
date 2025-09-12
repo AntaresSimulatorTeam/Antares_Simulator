@@ -97,7 +97,7 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
 
 static SystemModel::Component createComponent(const YmlSystem::Component& c,
                                               const std::vector<SystemModel::Library>& libraries,
-                                              unsigned int& variableGlobalIndex)
+                                              unsigned int componentIndex)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -116,17 +116,10 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
                                            : Expressions::Visitors::ParameterType::CONSTANT,
                                  .value = value});
     }
-    std::vector<unsigned int> modelVariablesGlobalIndices(model.Variables().size(), 0);
-    for (auto variableLocalIndex(0); variableLocalIndex < model.Variables().size();
-         ++variableLocalIndex)
-    {
-        modelVariablesGlobalIndices[variableLocalIndex] = variableGlobalIndex;
-        ++variableGlobalIndex;
-    }
 
     auto component = component_builder.withId(c.id)
+                       .withIndex(componentIndex)
                        .withModel(&model)
-                       .withModelVariablesGlobalIndices(modelVariablesGlobalIndices)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
                        .build();
@@ -302,7 +295,7 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
 {
     // Create components from system
     std::vector<Component> components;
-    unsigned int variableGlobalIndex = 0;
+    unsigned int componentIndex = 0;
     for (const auto& c: ymlSystem.components)
     {
         auto it = std::ranges::find_if(std::as_const(components),
@@ -312,7 +305,8 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
             throw std::invalid_argument("System has at least two components with the same id ('"
                                         + c.id + "'), this is not supported");
         }
-        components.push_back(createComponent(c, libraries, variableGlobalIndex));
+        components.push_back(createComponent(c, libraries, componentIndex));
+        ++componentIndex;
         logs.debug() << "Loaded component `" << c.id << "`";
     }
 

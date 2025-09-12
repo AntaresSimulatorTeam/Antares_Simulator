@@ -67,6 +67,7 @@ public:
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         // All LP variables coordinates (component id, variable id, scenario, time step)
 
+        unsigned int variableGlobalIndex = 0;
         for (const auto& component: system_->Components())
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
@@ -74,6 +75,7 @@ public:
                                                                       *dataSeries,
                                                                       scenario_group_repository);
             fillers.push_back(std::move(cf));
+            variableContainer_.addFromSystemComponent(component, variableGlobalIndex);
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);

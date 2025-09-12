@@ -58,8 +58,7 @@ public:
       const Optimisation::EvaluationContextProvider& evalContextProvider,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const ModelerStudy::SystemModel::Component& component,
-      unsigned int nbModelVariables,
-      const std::vector<unsigned int>& variableStartColumn);
+      const VariableContainer& variableContainer);
 
     std::string name() const override;
 

@@ -36,13 +36,9 @@ ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
   const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const Component& component,
-  unsigned int nbModelVariables,
-  const std::vector<unsigned int>& variableStartColumn):
-    linear_expression_visitor_(evalContextProvider,
-                               fillContext,
-                               component,
-                               nbModelVariables,
-                               variableStartColumn)
+
+  const VariableContainer& variableContainer):
+    linear_expression_visitor_(evalContextProvider, fillContext, component, variableContainer)
 {
 }
 

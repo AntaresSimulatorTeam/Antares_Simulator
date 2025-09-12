@@ -144,8 +144,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
                                         ctx,
                                         component,
-                                        variableContainer_.getVariables().size(),
-                                        variableContainer_.getVariableStartColumn());
+                                        variableContainer_);
     auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }

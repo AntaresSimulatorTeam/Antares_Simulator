@@ -55,12 +55,6 @@ static void checkComponentDataValidity(const ComponentData& data)
         }
     }
 
-    if (data.modelVariablesGlobalIndices_.size() != data.model->Variables().size())
-    {
-        // TODO
-        throw std::runtime_error("Error in component " + data.id
-                                 + " has an invalid number of variables");
-    }
 }
 
 Component::Component(const ComponentData& component_data)
@@ -156,17 +150,9 @@ ComponentBuilder& ComponentBuilder::withModel(const Model* model)
     return *this;
 }
 
-ComponentBuilder& ComponentBuilder::withModelVariablesGlobalIndices(
-  const std::vector<unsigned>& modelVariablesGlobalIndices)
+ComponentBuilder& ComponentBuilder::withIndex(unsigned int index)
 {
-    data_.modelVariablesGlobalIndices_ = modelVariablesGlobalIndices;
-    const auto& modelVariables = data_.model->Variables();
-    auto index = 0;
-    for (auto& globalIndex: data_.modelVariablesGlobalIndices_)
-    {
-        data_.variableIndexMap_.emplace(modelVariables.at(index).Id(), globalIndex);
-        ++index;
-    }
+    data_.index = index;
     return *this;
 }
 

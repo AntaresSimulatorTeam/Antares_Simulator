@@ -40,15 +40,14 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const SystemModel::Component& component,
-  unsigned int nbModelVariables,
-  const std::vector<unsigned int>& variableStartColumn):
+  const VariableContainer& variableContainer):
     evalContextProvider_(evalContextProvider),
     evalContext_(evalContextProvider_.provide(component)),
     fillContext_(fillContext),
     component_(component),
-evalVisitor_(evalContext_, fillContext_),
-nbModelVariables_(nbModelVariables),
-variableStartColumn_(variableStartColumn)
+    evalVisitor_(evalContext_, fillContext_),
+    nbModelVariables_(variableContainer.variablesSize()),
+    variableContainer_(variableContainer)
 {
     nbtimeSteps_ = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep() + 1;
 }
@@ -115,11 +114,14 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     LinearExpressionEigen out(nbtimeSteps_, nbModelVariables_);
     out.reserve(nbtimeSteps_);
 
-    const auto globalIndex = component_.getVariableGlobalIndex(node->value());
-    const auto variableStart = variableStartColumn_.at(globalIndex);
-    const auto variableEnd = variableStart == *variableStartColumn_.rbegin()
+    const auto& optimComponent = variableContainer_.getOptimComponent(component_.Index());
+    const auto globalIndex = optimComponent.variableIndexMap.at(
+      node->value()); // the only time we search in a map
+    const auto& variableStartColumn = variableContainer_.getVariableStartColumn();
+    const auto variableStart = variableStartColumn.at(globalIndex);
+    const auto variableEnd = variableStart == *variableStartColumn.rbegin()
                                ? nbModelVariables_
-                               : variableStartColumn_.at(globalIndex + 1);
+                               : variableStartColumn.at(globalIndex + 1);
 
     auto localFirstTimeStep = fillContext_.getLocalFirstTimeStep();
     auto localLastTimeStep = fillContext_.getLocalLastTimeStep();
@@ -219,8 +221,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldSumNode*
         ReadLinearExpressionVisitor visitor(evalContextProvider_,
                                             fillContext_,
                                             *component,
-                                            nbModelVariables_,
-                                            variableStartColumn_);
+                                            variableContainer_);
 
         const Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);
@@ -262,7 +263,10 @@ LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
   const LinearExpressionEigen& expression,
   int timeIndex) const
 {
-    const auto& modelVariablesGlobalIndices = component_.ModelVariablesGlobalIndices();
+    const auto& modelVariablesGlobalIndices = variableContainer_
+                                                .getOptimComponent(component_.Index())
+                                                .modelVariablesGlobalIndices;
+    const auto& variableStartColumn = variableContainer_.getVariableStartColumn();
 
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
     to_return.reserve(modelVariablesGlobalIndices.size() * nbtimeSteps_);
@@ -271,10 +275,10 @@ LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
     const auto& expressionMatrix = expression.coefPerVar();
     for (auto globalIndex: modelVariablesGlobalIndices)
     {
-        const auto variableStart = variableStartColumn_.at(globalIndex);
-        const auto variableEnd = variableStart == *variableStartColumn_.rbegin()
+        const auto variableStart = variableStartColumn.at(globalIndex);
+        const auto variableEnd = variableStart == *variableStartColumn.rbegin()
                                    ? nbModelVariables_
-                                   : variableStartColumn_.at(globalIndex + 1);
+                                   : variableStartColumn.at(globalIndex + 1);
 
         if (variableEnd - variableStart > 1)
         {

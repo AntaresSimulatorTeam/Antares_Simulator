@@ -45,10 +45,7 @@ public:
     std::string scenario_group_id;
     unsigned index = 0;
 
-    std::vector<unsigned int> modelVariablesGlobalIndices_ = {};
-    std::unordered_map<std::string, unsigned int> variableIndexMap_;
 
-    // std::vector<unsigned int> modelVariablesLocalIndices_ = {};
 
     void reset()
     {
@@ -56,8 +53,6 @@ public:
         model = nullptr;
         parameter_values.clear();
         scenario_group_id.clear();
-        modelVariablesGlobalIndices_.clear();
-        // modelVariablesLocalIndices_.clear();
     }
 };
 
@@ -118,15 +113,6 @@ public:
         return data_.index;
     }
 
-    const std::vector<unsigned int>& ModelVariablesGlobalIndices() const
-    {
-        return data_.modelVariablesGlobalIndices_;
-    }
-
-    unsigned int getVariableGlobalIndex(const std::string& varId) const
-    {
-        return data_.variableIndexMap_.at(varId);
-    }
 
 private:
     // Only ComponentBuilder is allowed to build Component instances
@@ -144,8 +130,7 @@ class ComponentBuilder
 public:
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
-    ComponentBuilder& withModelVariablesGlobalIndices(
-      const std::vector<unsigned int>& modelVariablesGlobalIndices);
+    ComponentBuilder& withIndex(unsigned int index);
     ComponentBuilder& withParameterValues(
       std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);

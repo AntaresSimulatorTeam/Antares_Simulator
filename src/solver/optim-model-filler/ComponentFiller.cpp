@@ -73,7 +73,6 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               dim.isScenarioDependent(),
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
-            auto localIndex = s * dim.getNumberOfTimesteps() + t;
             variableContainer_.addVariable(
               linear_problem_.addVariable(lb,
                                           ub,
@@ -209,7 +208,7 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
                                  const LinearProblemApi::ILinearProblemData& data,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
-    solverVariables_(solverVariables),
+    variablesContainer_(solverVariables),
     evaluationContextProvider_(data, scenarioGroupRepository)
 {
 }
@@ -244,7 +243,6 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
     for (auto i = 0; i < variables.size(); ++i)
     {
         const auto& variable = variables.at(i);
-        const auto modelVariableGlobalIndex = component_.ModelVariablesGlobalIndices().at(i);
         namespace SM = ModelerStudy::SystemModel;
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == SM::ValueType::BOOL ? 0
@@ -264,7 +262,7 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
             std::visit(
               [&pb, &variable, this, &dim](const auto& lb_, const auto& ub_)
               {
-                  VariablesBulkAddition(pb, solverVariables_)
+                  VariablesBulkAddition(pb, variablesContainer_)
                     .addVariable(component_.Id(),
                                  variable.Id(),
                                  lb_,
@@ -280,7 +278,7 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
             // No time component
             const Optimization::Dimensions dim({}, {});
 
-            VariablesBulkAddition(pb, solverVariables_)
+            VariablesBulkAddition(pb, variablesContainer_)
               .addVariable(component_.Id(),
                            variable.Id(),
                            lb.valueAsDouble(),
@@ -298,7 +296,7 @@ void ComponentFiller::addStaticConstraint(LinearProblemApi::ILinearProblem& pb,
     auto* ct = pb.addConstraint(linear_constraint.lb(0),
                                 linear_constraint.ub(0),
                                 component_.Id() + "." + constraint_id);
-    const auto& solverVariables = solverVariables_.getVariables();
+    const auto& solverVariables = variablesContainer_.getVariables();
 
     for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
            it(linear_constraint.coef_per_var, 0);
@@ -318,7 +316,7 @@ void ComponentFiller::addTimeDependentConstraints(
     const Optimization::Dimensions dim(
       Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()}, /*TODO Handle range of year ? */
       Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
-    const auto& solverVariables = solverVariables_.getVariables();
+    const auto& solverVariables = variablesContainer_.getVariables();
 
     for (const auto s: dim.getScenarioIndices()) // TODO
     {
@@ -347,8 +345,7 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContextProvider_,
                                                       ctx,
                                                       component_,
-                                                      solverVariables_.getVariables().size(),
-                                                      solverVariables_.getVariableStartColumn());
+                                                      variablesContainer_);
     for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
@@ -379,12 +376,11 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
         return;
     }
 
-    const auto& solverVariables = solverVariables_.getVariables();
+    const auto& solverVariables = variablesContainer_.getVariables();
     Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
                                                       ctx,
                                                       component_,
-                                                      solverVariables.size(),
-                                                      solverVariables_.getVariableStartColumn());
+                                                      variablesContainer_);
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& offset = linearExpression.offset();

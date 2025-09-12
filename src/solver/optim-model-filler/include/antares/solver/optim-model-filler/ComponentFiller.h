@@ -90,7 +90,7 @@ private:
     bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const;
 
     const ModelerStudy::SystemModel::Component& component_;
-    VariableContainer& solverVariables_;
+    VariableContainer& variablesContainer_;
     const EvaluationContextProvider evaluationContextProvider_;
 };
 

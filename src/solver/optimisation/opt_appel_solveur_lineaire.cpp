@@ -78,6 +78,8 @@ static void fillModelerComponents(
   Modeler::Data* modelerData,
   VariableContainer& variablesContainer)
 {
+    unsigned int variableGlobalIndex = 0;
+
     for (const auto& component: modelerData->system->Components())
     {
         fillersCollection.push_back(
@@ -85,6 +87,8 @@ static void fillModelerComponents(
                                                           variablesContainer,
                                                           *modelerData->dataSeries,
                                                           modelerData->scenarioGroupRepository));
+
+        variablesContainer.addFromSystemComponent(component, variableGlobalIndex);
     }
 }
 

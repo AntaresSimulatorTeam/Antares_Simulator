@@ -30,6 +30,7 @@
 #include "antares/study/system-model/component.h"
 
 #include "EvaluationContextProvider.h"
+#include "VariableContainer.h"
 
 /**
  * Read Linear Expression Visitor
@@ -47,8 +48,7 @@ public:
     ReadLinearExpressionVisitor(const Optimisation::EvaluationContextProvider& evalContextProvider,
                                 const Optimisation::LinearProblemApi::FillContext& fillContext,
                                 const ModelerStudy::SystemModel::Component& component,
-      unsigned int nbModelVariables,
-      const std::vector<unsigned int>& variableStartColumn);
+                                const VariableContainer& variableContainer);
     std::string name() const override;
 
 private:
@@ -78,6 +78,6 @@ private:
     Expressions::Visitors::EvalVisitor evalVisitor_;
     unsigned int nbModelVariables_;
     unsigned int nbtimeSteps_;
-    const std::vector<unsigned int>& variableStartColumn_;
+    const VariableContainer& variableContainer_;
 };
 } // namespace Antares::Optimization
