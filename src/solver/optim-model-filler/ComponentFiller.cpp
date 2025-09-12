@@ -30,6 +30,7 @@
 #include <antares/study/system-model/variable.h>
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
+
 namespace
 {
 template<typename T>
@@ -55,7 +56,6 @@ VariablesBulkAddition::VariablesBulkAddition(
     variableContainer_(variableDictionary)
 {
 }
-
 
 void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::string& variableId,
@@ -363,8 +363,6 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
         }
     }
 }
-
-
 
 void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,

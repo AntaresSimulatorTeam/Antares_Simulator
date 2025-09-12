@@ -237,7 +237,9 @@ Derived cyclicRowShiftPerm(const Derived& m, int shift)
 {
     int n = m.rows();
     if (n == 0)
+    {
         return Derived(m);
+    }
 
     int s = ((shift % n) + n) % n;
     Eigen::PermutationMatrix<Eigen::Dynamic> perm(n);
@@ -248,7 +250,6 @@ Derived cyclicRowShiftPerm(const Derived& m, int shift)
 
     return (perm * m).eval();
 }
-
 
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const TimeShiftNode* node)
 {

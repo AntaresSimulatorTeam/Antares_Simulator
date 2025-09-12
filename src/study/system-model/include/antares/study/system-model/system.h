@@ -27,7 +27,6 @@
 namespace Antares::ModelerStudy::SystemModel
 {
 
-
 /**
  * Defines the simulated system.
  */

@@ -116,8 +116,7 @@ void Modeler::solve() const
           {
               return std::any_of(component.getModel()->Variables().cbegin(),
                                  component.getModel()->Variables().cend(),
-                                 [](const auto& variable)
-                                 {
+                                 [](const auto& variable) {
                                      return variable.Type()
                                             != ModelerStudy::SystemModel::ValueType::FLOAT;
                                  });

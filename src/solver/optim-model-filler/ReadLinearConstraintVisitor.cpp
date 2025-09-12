@@ -60,8 +60,7 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* n
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right());
 
-    return {
-      .coef_per_var = left.coefPerVar(),
+    return {.coef_per_var = left.coefPerVar(),
             .lb = Eigen::VectorXd::Constant(left.offset().rows(),
                                             -std::numeric_limits<double>::infinity()),
             .ub = -left.offset()};
