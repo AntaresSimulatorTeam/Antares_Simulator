@@ -29,7 +29,7 @@ Feature: hybrid (simulator+modeler) studies
       | block   | component | output                 | timestep  | scenario | value |
       |         | gen1      | generation.flow_field  | 1-24      | 0-4      | 100   |
       |         | gen1      | generation.flow_field  | 6184-6230 | 0-4      | 100   |
-#      | 0-52    | load1     | consumption.flow_field |           | 0-4      | -100  |
+      | 1-52    | load1     | consumption.flow_field |           | 0-4      | -100  |
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
