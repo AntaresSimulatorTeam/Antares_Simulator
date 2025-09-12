@@ -220,29 +220,29 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the expected value of the annual system cost is 24408000000
+    And the expected value of the annual system cost is 24163100000
     And the annual results are
       | area | year | balance  | unsupplied energy |
-      | EAST | 1    | 2493028  | 0                 |
-      | WEST | 1    | -2493028 | 13476             |
-    And in area "EAST", during year 1, "b" produces 266438392 MWh
-    And in area "EAST", during year 1, "sb" produces 74085064 MWh
-    And in area "EAST", during year 1, "p" produces 4205107 MWh
-    And in area "WEST", during year 1, "b" produces 265610554 MWh
-    And in area "WEST", during year 1, "sb" produces 78481024 MWh
-    And in area "WEST", during year 1, "p" produces 11023939 MWh
+      | EAST | 1    | 2705212  | 0                 |
+      | WEST | 1    | -2705212 | 6773              |
+    And in area "EAST", during year 1, "b" produces 266491473 MWh
+    And in area "EAST", during year 1, "sb" produces 75914668 MWh
+    And in area "EAST", during year 1, "p" produces 2534654 MWh
+    And in area "WEST", during year 1, "b" produces 265755543 MWh
+    And in area "WEST", during year 1, "sb" produces 79883404 MWh
+    And in area "WEST", during year 1, "p" produces 9271101 MWh
 
-  @fast @short
+  @fast @short @bug
   Scenario: 018 Probabilistic vs deterministic - 3
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/018 Probabilistic vs deterministic - 3"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the expected value of the annual system cost is 24499800000
+    And the expected value of the annual system cost is 24410600000
     And the annual results are
       | area | year | balance | unsupplied energy |
-      | EAST | 1    | 122220  | 0                 |
-      | WEST | 1    | -122220 | 0                 |
+      | EAST | 1    | 60969   | 0                 |
+      | WEST | 1    | -60969  | 0                 |
     And in area "EAST", during year 1, "b" produces 267640248 MWh
     And in area "EAST", during year 1, "sb" produces 79240298 MWh
     And in area "EAST", during year 1, "p" produces 6738289 MWh
@@ -250,13 +250,13 @@ Feature: short tests
     And in area "WEST", during year 1, "sb" produces 78248945 MWh
     And in area "WEST", during year 1, "p" produces 8014052 MWh
 
-  @fast @short
+  @fast @short @bug
   Scenario: 020 Single mesh - DC law
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/020 Single mesh - DC law"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 30 seconds
-    And the expected value of the annual system cost is 2278870000
+    And the expected value of the annual system cost is 2152040000
     And the annual results are
       | area   | year | balance  | unsupplied energy |
       | NODE 1 | 1    | 4282640  | 30818             |

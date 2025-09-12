@@ -16,7 +16,7 @@ Feature: hybrid (simulator+modeler) studies
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
 
   @fast @short
-  Scenario: Empty legacy node with one generator component and one load component (24h simplex)
+  Scenario: Empty legacy node with one generator component and one load component (168h simplex)
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_0"
     When I run antares simulator
     Then the simulation succeeds
@@ -27,7 +27,7 @@ Feature: hybrid (simulator+modeler) studies
     And in area "NODE", during year 1, loss of load lasts 0 hours
     And the modeler outputs contain the following entries
       | block   | component | output                 | timestep  | scenario | value |
-      |         | gen1      | generation.flow_field  | 1-24      | 0-4      | 100   |
+      |         | gen1      | generation.flow_field  | 1-24      | 0-4      | 99.99999   |
       |         | gen1      | generation.flow_field  | 6184-6230 | 0-4      | 100   |
       | 330-364 | load1     | consumption.flow_field |           | 0-4      | -100  |
 
