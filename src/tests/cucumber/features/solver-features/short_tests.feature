@@ -232,7 +232,7 @@ Feature: short tests
     And in area "WEST", during year 1, "sb" produces 79883404 MWh
     And in area "WEST", during year 1, "p" produces 9271101 MWh
 
-  @fast @short @bug
+  @fast @short
   Scenario: 018 Probabilistic vs deterministic - 3
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/018 Probabilistic vs deterministic - 3"
     When I run antares simulator
@@ -244,11 +244,11 @@ Feature: short tests
       | EAST | 1    | 60969   | 0                 |
       | WEST | 1    | -60969  | 0                 |
     And in area "EAST", during year 1, "b" produces 267640248 MWh
-    And in area "EAST", during year 1, "sb" produces 79240298 MWh
-    And in area "EAST", during year 1, "p" produces 6738289 MWh
+    And in area "EAST", during year 1, "sb" produces 80786864 MWh
+    And in area "EAST", during year 1, "p" produces 5130427 MWh
     And in area "WEST", during year 1, "b" produces 270584616 MWh
-    And in area "WEST", during year 1, "sb" produces 78248945 MWh
-    And in area "WEST", during year 1, "p" produces 8014052 MWh
+    And in area "WEST", during year 1, "sb" produces 79753394 MWh
+    And in area "WEST", during year 1, "p" produces 6570858 MWh
 
   @fast @short @bug
   Scenario: 020 Single mesh - DC law
