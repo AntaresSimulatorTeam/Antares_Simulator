@@ -27,6 +27,7 @@
 
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/EvalVisitorPostOptim.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
@@ -154,6 +155,11 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     auto linear_expression = timeDependentLinExpr.GetLinearExpressions().at(0);
     BOOST_CHECK_EQUAL(linear_expression.offset(), 0.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
+
+    Antares::Expressions::Visitors::EvalVisitorPostOptim
+      evalVisitorPostOptim(evaluationContextProvider(), fillContext, &generatorComponent);
+
+    BOOST_CHECK_EQUAL(evalVisitorPostOptim.name(), "EvalVisitorPostOptim");
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
