@@ -266,27 +266,27 @@ Feature: short tests
       | NODE 3 | 1    | -4050525 | 983190            |
       | NODE 3 | 2    | -4861632 | 861               |
     # Year 1
-    # And in area "NODE 1", during year 1, "aggregate 1" produces 2297944 MWh
-    # And in area "NODE 1", during year 1, "aggregate 2" produces 2152250 MWh
-    # And in area "NODE 1", during year 1, "aggregate 3" produces 1999683 MWh
-    # And in area "NODE 1", during year 1, "aggregate 4" produces 1664021 MWh
-    # And in area "NODE 1", during year 1, "aggregate 5" produces 1474884 MWh
-    # And in area "NODE 1", during year 1, "aggregate 6" produces 1053176 MWh
-    # And in area "NODE 2", during year 1, "ther 1" produces 9517886 MWh
-    # And in area "NODE 3", during year 1, "aggregate 1" produces 6294438 MWh
-    # And in area "NODE 3", during year 1, "aggregate 2" produces 4286418 MWh
-    # And in area "NODE 3", during year 1, "aggregate 3" produces 2193247 MWh
+    And in area "NODE 1", during year 1, "aggregate 1" produces 2302733 MWh
+    And in area "NODE 1", during year 1, "aggregate 2" produces 2160610 MWh
+    And in area "NODE 1", during year 1, "aggregate 3" produces 2012758 MWh
+    And in area "NODE 1", during year 1, "aggregate 4" produces 1694153 MWh
+    And in area "NODE 1", during year 1, "aggregate 5" produces 1505819 MWh
+    And in area "NODE 1", during year 1, "aggregate 6" produces 1031382 MWh
+    And in area "NODE 2", during year 1, "ther 1" produces 9538418 MWh
+    And in area "NODE 3", during year 1, "aggregate 1" produces 6342645 MWh
+    And in area "NODE 3", during year 1, "aggregate 2" produces 4356251 MWh
+    And in area "NODE 3", during year 1, "aggregate 3" produces 2118086 MWh
     # Year 2
-    # And in area "NODE 1", during year 2, "aggregate 1" produces 2321507 MWh
-    # And in area "NODE 1", during year 2, "aggregate 2" produces 2198175 MWh
-    # And in area "NODE 1", during year 2, "aggregate 3" produces 1912077 MWh
-    # And in area "NODE 1", during year 2, "aggregate 4" produces 1682688 MWh
-    # And in area "NODE 1", during year 2, "aggregate 5" produces 1508627 MWh
-    # And in area "NODE 1", during year 2, "aggregate 6" produces 1090488 MWh
-    # And in area "NODE 2", during year 2, "ther 1" produces 9184905 MWh
-    # And in area "NODE 3", during year 2, "aggregate 1" produces 6124886 MWh
-    # And in area "NODE 3", during year 2, "aggregate 2" produces 4436285 MWh
-    # And in area "NODE 3", during year 2, "aggregate 3" produces 2405222 MWh
+    And in area "NODE 1", during year 2, "aggregate 1" produces 2326765 MWh
+    And in area "NODE 1", during year 2, "aggregate 2" produces 2206198 MWh
+    And in area "NODE 1", during year 2, "aggregate 3" produces 1925707 MWh
+    And in area "NODE 1", during year 2, "aggregate 4" produces 1721061 MWh
+    And in area "NODE 1", during year 2, "aggregate 5" produces 1539711 MWh
+    And in area "NODE 1", during year 2, "aggregate 6" produces 1080035 MWh
+    And in area "NODE 2", during year 2, "ther 1" produces 9201040 MWh
+    And in area "NODE 3", during year 2, "aggregate 1" produces 6163469 MWh
+    And in area "NODE 3", during year 2, "aggregate 2" produces 4498661 MWh
+    And in area "NODE 3", during year 2, "aggregate 3" produces 2326009 MWh
 
   @fast @short
   Scenario: 021 Four areas - DC law
