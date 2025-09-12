@@ -30,8 +30,6 @@
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 
-#include "../../modeler/FileWriter.h"
-
 using namespace Antares::Optimisation::LinearProblemApi;
 using TI = Antares::Expressions::Visitors::TimeIndex;
 
@@ -267,7 +265,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                           : TimeBlock{.block = currentBlock + 1,
                                       .blockTimeIndex = std::nullopt,
                                       .absoluteTimeIndex = std::nullopt};
-        auto val = ts.has_value() ? value.valuesAsVector()[ts.value()] : value.valueAsDouble();
+        auto val = ts ? value.valuesAsVector()[ts.value()] : value.valueAsDouble();
         simulationTable.addEntry({.block = tb.block,
                                   .component = componentId,
                                   .output = outputName,
