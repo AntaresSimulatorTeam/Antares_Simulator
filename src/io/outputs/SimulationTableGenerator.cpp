@@ -34,6 +34,7 @@
 
 #include "../../modeler/FileWriter.h"
 
+using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 using TI = Antares::Expressions::Visitors::TimeIndex;
 

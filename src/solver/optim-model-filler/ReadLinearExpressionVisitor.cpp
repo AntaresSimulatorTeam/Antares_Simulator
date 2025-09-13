@@ -40,7 +40,7 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const SystemModel::Component& component,
-  const VariableContainer& variableContainer):
+  const Optimisation::VariableContainer& variableContainer):
     evalContextProvider_(evalContextProvider),
     evalContext_(evalContextProvider_.provide(component)),
     fillContext_(fillContext),

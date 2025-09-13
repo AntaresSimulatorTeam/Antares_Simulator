@@ -1396,34 +1396,7 @@ BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_NoOptionalParams)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(ExtractFromOptionalTests)
 
-// Test the template function used in SimulationTableCsv
-template<typename T>
-std::string extractFromOptional(const std::optional<T>& option)
-{
-    return option.has_value() ? std::to_string(option.value()) : "None";
-}
-
-BOOST_AUTO_TEST_CASE(ExtractFromOptional_HasValue)
-{
-    std::optional<int> value = 42;
-    BOOST_CHECK_EQUAL(extractFromOptional(value), "42");
-
-    std::optional<double> doubleValue = 3.14159;
-    BOOST_CHECK_EQUAL(extractFromOptional(doubleValue), "3.141590");
-}
-
-BOOST_AUTO_TEST_CASE(ExtractFromOptional_NoValue)
-{
-    std::optional<int> empty;
-    BOOST_CHECK_EQUAL(extractFromOptional(empty), "None");
-
-    std::optional<double> emptyDouble;
-    BOOST_CHECK_EQUAL(extractFromOptional(emptyDouble), "None");
-}
-
-BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(MockLinearProblemTests)
 

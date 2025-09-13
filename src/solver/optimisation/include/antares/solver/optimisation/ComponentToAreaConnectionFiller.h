@@ -24,9 +24,12 @@
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
 #include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 #include "antares/solver/optim-model-filler/LinearExpressionEigen.h"
-#include "antares/solver/optim-model-filler/VariableContainer.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
+namespace Antares::Optimisation
+{
+class VariableContainer;
+}
 
 namespace Antares::Optimization
 {
@@ -43,7 +46,7 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 public:
     explicit ComponentToAreaConnectionFiller(
       const PROBLEME_HEBDO* problemeHebdo,
-      const VariableContainer& variableContainer,
+      const Optimisation::VariableContainer& variableContainer,
       const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -59,7 +62,7 @@ public:
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-    const VariableContainer& variableContainer_;
+    const Optimisation::VariableContainer& variableContainer_;
     const Optimisation::EvaluationContextProvider evaluationContextProvider_;
 
     std::map<std::string, unsigned> areaIndices_;

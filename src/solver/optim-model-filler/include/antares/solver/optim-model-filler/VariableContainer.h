@@ -22,8 +22,11 @@
 #pragma once
 #include <vector>
 
+#include <antares/optimisation/linear-problem-api/mipVariable.h>
 #include <antares/study/system-model/component.h>
 
+namespace Antares::Optimisation
+{
 struct OptimComponent
 {
     unsigned int index = 0;
@@ -36,7 +39,7 @@ class VariableContainer
 public:
     VariableContainer() = default;
 
-    const std::vector<unsigned int>& getVariableStartColumn() const
+    [[nodiscard]] const std::vector<unsigned int>& getVariableStartColumn() const
     {
         return variableStartColumn_;
     }
@@ -46,8 +49,7 @@ public:
         variableStartColumn_.push_back(variables_.size());
     }
 
-    [[nodiscard]] const std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*>&
-    getVariables() const
+    [[nodiscard]] const std::vector<LinearProblemApi::IMipVariable*>& getVariables() const
     {
         return variables_;
     }
@@ -57,7 +59,7 @@ public:
         return variables_.size();
     }
 
-    void addVariable(Antares::Optimisation::LinearProblemApi::IMipVariable* variable)
+    void addVariable(LinearProblemApi::IMipVariable* variable)
     {
         variables_.push_back(variable);
     }
@@ -72,31 +74,12 @@ public:
         return optimComponents_;
     }
 
-    void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component,
-                                unsigned int& variableGlobalIndex)
-    {
-        const auto* model = component.getModel();
-        const auto& variables = model->Variables();
-        std::vector<unsigned int> modelVariablesGlobalIndices(variables.size(), 0);
-        std::unordered_map<std::string, unsigned int> variableIndexMap;
-        variableIndexMap.reserve(variables.size());
-
-        unsigned int variableLocalIndex = 0;
-        for (const auto& variable: variables)
-        {
-            modelVariablesGlobalIndices[variableLocalIndex] = variableGlobalIndex;
-            variableIndexMap[variable.Id()] = variableGlobalIndex; // used in
-            // ReadlinearExpressionVisitor
-            ++variableGlobalIndex;
-            ++variableLocalIndex;
-        }
-        optimComponents_.push_back({.index = component.Index(),
-                                    .modelVariablesGlobalIndices = modelVariablesGlobalIndices,
-                                    .variableIndexMap = variableIndexMap});
-    }
+    void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
 
 private:
     std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*> variables_;
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
+    unsigned int variableGlobalIndex_ = 0;
 };
+} // namespace Antares::Optimisation

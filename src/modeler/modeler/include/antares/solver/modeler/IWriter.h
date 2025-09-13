@@ -33,16 +33,19 @@ class OrtoolsLinearProblem;
 class OrtoolsMipSolution;
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::Optimisation
+{
+class VariableContainer;
+
+namespace LinearProblemApi
 {
 class IMipVariable;
 class ILinearProblem;
 class ILinearProblemData;
 class IMipSolution;
 class FillContext;
-} // namespace Antares::Optimisation::LinearProblemApi
-
-class VariableContainer;
+} // namespace LinearProblemApi
+} // namespace Antares::Optimisation
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -60,7 +63,7 @@ public:
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const Antares::Modeler::Data& modelerData,
-      const VariableContainer& variableContainer,
+      const Optimisation::VariableContainer& variableContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
 

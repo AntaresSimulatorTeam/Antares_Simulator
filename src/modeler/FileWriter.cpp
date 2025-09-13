@@ -55,7 +55,7 @@ void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
   const Data& modelerData,
-  const VariableContainer& variableContainer,
+  const Optimisation::VariableContainer& variableContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
     if (output)

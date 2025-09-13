@@ -38,6 +38,7 @@
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Optimization;
+using namespace Antares::Optimisation;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
 
@@ -67,7 +68,6 @@ public:
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         // All LP variables coordinates (component id, variable id, scenario, time step)
 
-        unsigned int variableGlobalIndex = 0;
         for (const auto& component: system_->Components())
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
@@ -75,7 +75,7 @@ public:
                                                                       *dataSeries,
                                                                       scenario_group_repository);
             fillers.push_back(std::move(cf));
-            variableContainer_.addFromSystemComponent(component, variableGlobalIndex);
+            variableContainer_.addFromSystemComponent(component);
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);
@@ -83,14 +83,14 @@ public:
         linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }
 
-    [[nodiscard]] const VariableContainer& getVariableContainer() const
+    [[nodiscard]] const Optimisation::VariableContainer& getVariableContainer() const
     {
         return variableContainer_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    VariableContainer variableContainer_;
+    Optimisation::VariableContainer variableContainer_;
 };
 
 void Modeler::solve() const

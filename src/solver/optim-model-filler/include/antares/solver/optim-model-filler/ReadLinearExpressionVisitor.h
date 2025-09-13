@@ -48,7 +48,7 @@ public:
     ReadLinearExpressionVisitor(const Optimisation::EvaluationContextProvider& evalContextProvider,
                                 const Optimisation::LinearProblemApi::FillContext& fillContext,
                                 const ModelerStudy::SystemModel::Component& component,
-                                const VariableContainer& variableContainer);
+                                const Optimisation::VariableContainer& variableContainer);
     std::string name() const override;
 
 private:
@@ -78,6 +78,6 @@ private:
     Expressions::Visitors::EvalVisitor evalVisitor_;
     unsigned int nbModelVariables_;
     unsigned int nbtimeSteps_;
-    const VariableContainer& variableContainer_;
+    const Optimisation::VariableContainer& variableContainer_;
 };
 } // namespace Antares::Optimization

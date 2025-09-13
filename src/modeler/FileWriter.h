@@ -19,11 +19,9 @@
 
 #pragma once
 #include <filesystem>
-#include <unordered_map>
 
 #include "modeler/include/antares/solver/modeler/IWriter.h"
 
-class VariableContainer;
 
 namespace Antares::Optimisation::LinearProblemApi
 {
@@ -53,7 +51,7 @@ public:
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const Data& modelerData,
-      const VariableContainer& variableContainer,
+      const Optimisation::VariableContainer& variableContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);
 

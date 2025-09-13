@@ -47,6 +47,7 @@
 #include "spx_constantes_externes.h"
 
 using namespace operations_research;
+using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
@@ -78,17 +79,16 @@ static void fillModelerComponents(
   Modeler::Data* modelerData,
   VariableContainer& variablesContainer)
 {
-    unsigned int variableGlobalIndex = 0;
 
     for (const auto& component: modelerData->system->Components())
     {
         fillersCollection.push_back(
-          std::make_unique<Optimisation::ComponentFiller>(component,
-                                                          variablesContainer,
-                                                          *modelerData->dataSeries,
-                                                          modelerData->scenarioGroupRepository));
+          std::make_unique<ComponentFiller>(component,
+                                            variablesContainer,
+                                            *modelerData->dataSeries,
+                                            modelerData->scenarioGroupRepository));
 
-        variablesContainer.addFromSystemComponent(component, variableGlobalIndex);
+        variablesContainer.addFromSystemComponent(component);
     }
 }
 

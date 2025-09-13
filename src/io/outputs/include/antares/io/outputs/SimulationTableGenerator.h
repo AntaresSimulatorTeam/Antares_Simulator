@@ -32,13 +32,18 @@
 
 #include "ISimulationTable.h"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::Optimisation
+{
+class VariableContainer;
+
+namespace LinearProblemApi
 {
 class ILinearProblem;
 
 class IMipSolution;
 class FillContext;
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace LinearProblemApi
+} // namespace Antares::Optimisation
 
 namespace Antares::Optimization
 {
@@ -80,6 +85,7 @@ void addVariableEntries(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   const Antares::ModelerStudy::SystemModel::Component& component,
+  const Antares::Optimisation::VariableContainer& variableContainer,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   std::optional<unsigned> scenario);
@@ -98,7 +104,7 @@ void addConstraintEntries(
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
-                    const VariableContainer& variableContainer,
+                    const Antares::Optimisation::VariableContainer& variableContainer,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
@@ -110,6 +116,7 @@ void addPortEntries(ISimulationTable& simulationTable,
  * @param simulationTable the simulation table to fill
  * @param linearProblem the linear problem containing the optimal solution
  * @param objectiveValue the overall objective value
+ * @param modelerData
  * @param variableContainer
  * @param components list of modeler components
  * @param dataSeries the input data series
@@ -124,7 +131,7 @@ void FillSimulationTable(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   double objectiveValue,
   const Antares::Modeler::Data& modelerData,
-  const VariableContainer& variableContainer,
+  const Antares::Optimisation::VariableContainer& variableContainer,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
