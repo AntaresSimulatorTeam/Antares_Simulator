@@ -24,7 +24,7 @@
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
 #include "antares/expressions/visitors/EvaluationContext.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "EvaluationContextProvider.h"
 #include "ReadLinearConstraintVisitor.h"
@@ -131,11 +131,6 @@ public:
     {
         using std::invalid_argument::invalid_argument;
     };
-
-    static std::string buildVariableName(const std::string& compoId,
-                                         const std::string& variableId,
-                                         std::optional<Optimization::MCYearAndTime::MCYear> mcyear,
-                                         std::optional<unsigned int> timestep);
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;

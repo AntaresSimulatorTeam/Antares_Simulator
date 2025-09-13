@@ -4,20 +4,16 @@ find_package(Eigen3 CONFIG REQUIRED)
 set(SRC_optim_model_filler
         ComponentFiller.cpp
         EvaluationContextProvider.cpp
-        FullKey.cpp
-        PartialKey.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
         VariableDictionary.cpp
         LinearExpressionEigen.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/EvaluationContextProvider.h
-        include/antares/solver/optim-model-filler/FullKey.h
-        include/antares/solver/optim-model-filler/PartialKey.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
         include/antares/solver/optim-model-filler/MCYearAndTime.h
-        include/antares/solver/optim-model-filler/VariableDictionary.h
+        include/antares/solver/optim-model-filler/Dimensions.h
         include/antares/solver/optim-model-filler/scenarioGroupRepo.h
         include/antares/solver/optim-model-filler/LinearExpressionEigen.h
         include/antares/solver/optim-model-filler/VariableContainer.h

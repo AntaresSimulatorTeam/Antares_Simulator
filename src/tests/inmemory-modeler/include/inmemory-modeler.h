@@ -28,7 +28,7 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/data.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 

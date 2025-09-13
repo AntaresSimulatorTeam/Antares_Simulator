@@ -42,7 +42,7 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/solver/optim-model-filler/PartialKey.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"

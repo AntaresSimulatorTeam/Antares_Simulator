@@ -22,7 +22,7 @@
 
 #include <optional>
 
-#include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include <antares/solver/optim-model-filler/Dimensions.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/logs/logs.h"

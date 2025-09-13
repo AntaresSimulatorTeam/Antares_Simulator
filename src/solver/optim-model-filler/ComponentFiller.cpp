@@ -185,24 +185,6 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
     }
 }
 
-std::string VariablesBulkAddition::buildVariableName(
-  const std::string& compoId,
-  const std::string& variableId,
-  std::optional<Optimization::MCYearAndTime::MCYear> mcyear,
-  std::optional<unsigned int> timestep)
-{
-    std::string ret = fmt::format("{}.{}", compoId, variableId);
-    if (mcyear.has_value())
-    {
-        ret += "_s" + std::to_string(format_as(mcyear.value()));
-    }
-    if (timestep.has_value())
-    {
-        ret += "_t" + std::to_string(*timestep);
-    }
-    return ret;
-}
-
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  VariableContainer& solverVariables,
                                  const LinearProblemApi::ILinearProblemData& data,
@@ -249,7 +231,6 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
                                                                                : -pb.infinity());
         const auto& ub = valueOrDefault(variable.UpperBound(),
                                         variable.Type() == SM::ValueType::BOOL ? 1 : pb.infinity());
-        const Optimization::PartialKey key(component_.Id(), variable.Id());
         if (variable.isTimeDependent())
         {
             const Optimization::Dimensions dim(

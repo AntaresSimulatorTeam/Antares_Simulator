@@ -24,7 +24,6 @@
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/solver/optim-model-filler/FullKey.h>
 #include <antares/solver/optim-model-filler/LinearExpressionEigen.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/study/system-model/component.h"

@@ -28,7 +28,7 @@
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/solver/modeler/data.h"
 #include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "ISimulationTable.h"
 

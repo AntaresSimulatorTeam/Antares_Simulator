@@ -25,7 +25,7 @@
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
-#include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include <antares/solver/optim-model-filler/Dimensions.h>
 #include <antares/study/system-model/component.h>
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"

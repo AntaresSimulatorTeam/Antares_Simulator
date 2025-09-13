@@ -25,9 +25,9 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -99,10 +99,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
-        std::string varName = Optimization::VariableDictionary::buildVariableName(
-          {component_->Id(), node->value()},
-          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
-          std::nullopt);
+        std::string varName = Optimization::buildVariableName(component_->Id(),
+                                                              node->value(),
+                                                              Optimization::MCYearAndTime::MCYear{
+                                                                fillContext_.getYear()},
+                                                              std::nullopt);
         return EvaluationResult(context_.getVariableValue(varName));
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
@@ -112,10 +113,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
          timeStep <= fillContext_.getLocalLastTimeStep();
          ++timeStep)
     {
-        std::string varName = Optimization::VariableDictionary::buildVariableName(
-          {component_->Id(), node->value()},
-          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
-          timeStep);
+        std::string varName = Optimization::buildVariableName(component_->Id(),
+                                                              node->value(),
+                                                              Optimization::MCYearAndTime::MCYear{
+                                                                fillContext_.getYear()},
+                                                              timeStep);
         varValues.emplace_back(context_.getVariableValue(varName));
     }
     return EvaluationResult{varValues};
