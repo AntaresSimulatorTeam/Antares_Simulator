@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -58,6 +58,26 @@ const WeeklyDataFromAntares& LpsFromAntares::weeklyData(WeeklyProblemId id) cons
 size_t LpsFromAntares::weekCount() const noexcept
 {
     return weeklyProblems.size();
+}
+
+size_t LpsFromAntares::dataSize() const
+{
+    size_t total = 0;
+    // Constantes
+    total += constantProblemData.ConstraintsMatrixCoeff.size() * sizeof(double);
+    total += constantProblemData.VariablesType.size() * sizeof(unsigned);
+    total += constantProblemData.Mdeb.size() * sizeof(unsigned);
+    total += constantProblemData.NotNullTermCount.size() * sizeof(unsigned);
+    total += constantProblemData.ColumnIndexes.size() * sizeof(unsigned);
+    // Données hebdomadaires
+    for (const auto& [_, weekData]: weeklyProblems)
+    {
+        total += weekData.Xmax.size() * sizeof(double);
+        total += weekData.Xmin.size() * sizeof(double);
+        total += weekData.LinearCost.size() * sizeof(double);
+        total += weekData.RHS.size() * sizeof(double);
+    }
+    return total;
 }
 
 } // namespace Antares::Solver

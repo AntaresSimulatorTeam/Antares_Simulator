@@ -1,6 +1,5 @@
-
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -140,6 +139,11 @@ public:
      * @brief Retrieves the number of weeks in the LpsFromAntares object.
      */
     [[nodiscard]] size_t weekCount() const noexcept;
+    /**
+     * @brief Returns the total memory size (in bytes) used by all weekly and constant data (double
+     * + unsigned).
+     */
+    size_t dataSize() const;
 
     ConstantDataFromAntares constantProblemData;
     WeeklyDataByYearWeek weeklyProblems;

@@ -1,6 +1,5 @@
-
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -62,7 +61,28 @@ void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
     {
         lps_.setConstantData(common_data.value());
     }
+    logs.info() << "Adding weekly problem for year " << year << ", week " << week
+                << ", variables: " << lps_.constantProblemData.VariablesCount
+                << ", constraints: " << lps_.constantProblemData.ConstraintesCount
+                << ", elements: " << lps_.constantProblemData.CoeffCount;
+    // Mémoire avant ajout
+    double mem_before = lps_.dataSize() / (1024.0 * 1024.0);
+    auto computeWeeklyMemoryMB = [](const Solver::WeeklyDataFromAntares& wd)
+    {
+        size_t mem = 0;
+        mem += wd.Xmax.size() * sizeof(double);
+        mem += wd.Xmin.size() * sizeof(double);
+        mem += wd.LinearCost.size() * sizeof(double);
+        mem += wd.RHS.size() * sizeof(double);
+        mem += wd.Direction.size() * sizeof(char);
+        return mem / (1024.0 * 1024.0);
+    };
+    double mem_weekly = computeWeeklyMemoryMB(weekly_data);
+    logs.info() << "LP memory before addWeeklyData: " << mem_before
+                << " MB, weekly data: " << mem_weekly << " MB";
     lps_.addWeeklyData({year, week}, std::move(weekly_data));
+    double mem_after = lps_.dataSize() / (1024.0 * 1024.0);
+    logs.info() << "New LP memory footprint: " << mem_after << " MB";
 }
 
 Solver::LpsFromAntares&& SimulationObserver::acquireLps() noexcept
