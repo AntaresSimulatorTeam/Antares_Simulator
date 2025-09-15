@@ -131,7 +131,7 @@ public:
     /*
      * @brief Adds weekly data to the LpsFromAntares object.
      */
-    void addWeeklyData(WeeklyProblemId id, const WeeklyDataFromAntares& data);
+    void addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data);
     /*
      * @brief Retrieves weekly data from the LpsFromAntares object.
      */

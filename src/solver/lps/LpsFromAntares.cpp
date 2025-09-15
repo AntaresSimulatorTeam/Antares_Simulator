@@ -37,9 +37,9 @@ void LpsFromAntares::setConstantData(const ConstantDataFromAntares& data)
     constantProblemData = data;
 }
 
-void LpsFromAntares::addWeeklyData(WeeklyProblemId id, const WeeklyDataFromAntares& data)
+void LpsFromAntares::addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data)
 {
-    weeklyProblems.emplace(id, data);
+    weeklyProblems.emplace(id, std::move(data));
 }
 
 const WeeklyDataFromAntares& LpsFromAntares::weeklyData(WeeklyProblemId id) const

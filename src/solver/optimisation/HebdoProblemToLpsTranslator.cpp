@@ -49,11 +49,11 @@ WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(
   const PROBLEME_ANTARES_A_RESOUDRE* problem,
   std::string_view name) const
 {
+    WeeklyDataFromAntares ret;
     if (problem == nullptr)
     {
-        return {};
+        return ret;
     }
-    auto ret = WeeklyDataFromAntares();
 
     copy(problem->CoutLineaire, ret.LinearCost);
     copy(problem->Xmax, ret.Xmax);

@@ -87,7 +87,7 @@ private:
     bool yearByYear;
     Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
-    std::reference_wrapper<ISimulationObserver> simulationObserver_;
+    ISimulationObserver& simulationObserver_;
     HydroManagement hydroManagement;
     std::mutex& aggregationMutex;
 
@@ -158,7 +158,7 @@ public:
         state.year = y;
 
         // 5 - Resetting all variables for the output
-        simulation_->variables.yearBegin(y, numSpace);
+        // simulation_->variables.yearBegin(y, numSpace);
 
         // 6 - The Solver itself
         std::list<uint> failedWeekList;
@@ -182,17 +182,17 @@ public:
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
-        simulation_->variables.yearEndBuild(state, y, numSpace);
+        // simulation_->variables.yearEndBuild(state, y, numSpace);
 
         // 7 - End of the year, this is the last stade where the variables can retrieve
         // their data for this year.
-        simulation_->variables.yearEnd(y, numSpace);
+        // simulation_->variables.yearEnd(y, numSpace);
 
         // 8 - Spatial clusters
         // Notifying all variables to perform spatial aggregates.
         // This must be done only when all variables have finished to compute their
         // data for the year.
-        simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
+        // simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
 
         // 9 - Write results for the current year
         if (yearByYear)
@@ -200,7 +200,7 @@ public:
             pDurationCollector("yby_export") << [this, &numSpace]
             {
                 // Before writing, some variable may require minor modifications
-                simulation_->variables.beforeYearByYearExport(y, numSpace);
+                // simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
             };
@@ -212,10 +212,11 @@ public:
         aggregationMutex.lock();
         yearsFailed[y] = yearFailed;
 
-        simulation_->variables.computeSummary(y, numSpace);
+        // simulation_->variables.computeSummary(y, numSpace);
 
         // Computing summary of spatial aggregations
-        simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables, y, numSpace);
+        // simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables, y,
+        // numSpace);
 
         // Computes statistics on annual (system and solution) costs, to be printed in output
         // into separate files
@@ -282,7 +283,7 @@ void ISimulation<ImplementationType>::run()
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
     // Initialize all data
-    ImplementationType::variables.initializeFromStudy(study);
+    // ImplementationType::variables.initializeFromStudy(study);
     // Computing the max number columns a report of any kind can contain.
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
@@ -291,7 +292,8 @@ void ISimulation<ImplementationType>::run()
     // Memory usage
     {
         Variable::PrintInfosStdCout c;
-        ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
+        // ImplementationType::variables.template
+        // provideInformations<Variable::PrintInfosStdCout>(c);
     }
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
@@ -319,7 +321,7 @@ void ISimulation<ImplementationType>::run()
             return;
         }
         // Allocating the memory
-        ImplementationType::variables.simulationBegin();
+        // ImplementationType::variables.simulationBegin();
 
         // For beauty
         logs.info();
@@ -349,13 +351,13 @@ void ISimulation<ImplementationType>::run()
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
-        ImplementationType::variables.simulationEnd();
+        // ImplementationType::variables.simulationEnd();
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
         // This must be done only when all variables have finished to compute their
         // own data.
-        ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
+        // ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
     }
 }
 
@@ -405,10 +407,10 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
         }
 
         // Dumping
-        ImplementationType::variables.exportSurveyResults(synthesis,
-                                                          newPath,
-                                                          numSpace,
-                                                          pResultWriter);
+        // ImplementationType::variables.exportSurveyResults(synthesis,
+        //                                                   newPath,
+        //                                                   numSpace,
+        //                                                   pResultWriter);
     }
 }
 
