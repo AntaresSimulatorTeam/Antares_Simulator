@@ -282,7 +282,7 @@ void ISimulation<ImplementationType>::run()
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
     // Initialize all data
-    // ImplementationType::variables.initializeFromStudy(study);
+    ImplementationType::variables.initializeFromStudy(study);
     // Computing the max number columns a report of any kind can contain.
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
@@ -349,13 +349,13 @@ void ISimulation<ImplementationType>::run()
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
-        // ImplementationType::variables.simulationEnd();
+        ImplementationType::variables.simulationEnd();
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
         // This must be done only when all variables have finished to compute their
         // own data.
-        // ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
+        ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
     }
 }
 
