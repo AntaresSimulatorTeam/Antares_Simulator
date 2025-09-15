@@ -35,7 +35,7 @@ system:
       parameters:
         - id: load
           time-dependent: true
-          scenario-dependent: false
+          scenario-dependent: true
           value : load_ts
 
     
