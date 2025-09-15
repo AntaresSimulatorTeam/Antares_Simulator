@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_ALL_AREAS_HXX__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_ALL_AREAS_HXX__
 
@@ -25,17 +25,12 @@
 #include "../../component.h"
 #include <antares/study/xcast/xcast.h>
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 template<enum Data::TimeSeriesType T>
-inline XCastAllAreas<T>::XCastAllAreas(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
- pControl(parent), pNotifier(notifier)
+inline XCastAllAreas<T>::XCastAllAreas(wxWindow* parent, Toolbox::InputSelector::Area* notifier):
+    pControl(parent),
+    pNotifier(notifier)
 {
     OnStudyAreaRename.connect(this, &XCastAllAreas<T>::onAreaRenamed);
 }
@@ -88,7 +83,9 @@ wxString XCastAllAreas<T>::rowCaption(int rowIndx) const
 {
     auto study = GetCurrentStudy();
     if (!study || (uint)rowIndx >= study->areas.size())
+    {
         return wxEmptyString;
+    }
     return wxStringFromUTF8(study->areas.byIndex[rowIndx]->name);
 }
 
@@ -97,12 +94,16 @@ IRenderer::CellStyle XCastAllAreas<T>::cellStyle(int x, int y) const
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return IRenderer::cellStyleDefaultCenterDisabled;
+    }
 
     auto& area = *(study->areas.byIndex[y]);
     auto& xcastData = *area.xcastData<T>();
     if (Yuni::Math::Zero(xcastData.capacity))
+    {
         return IRenderer::cellStyleDefaultCenterDisabled;
+    }
     switch (x)
     {
     case 0:
@@ -131,7 +132,9 @@ wxColour XCastAllAreas<T>::cellBackgroundColor(int, int y) const
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return wxColour(0, 0, 0);
+    }
     auto& area = *(study->areas.byIndex[y]);
     return wxColor(area.ui->color[0], area.ui->color[1], area.ui->color[2]);
 }
@@ -141,7 +144,9 @@ wxString XCastAllAreas<T>::cellValue(int x, int y) const
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return wxEmptyString;
+    }
 
     auto& area = *(study->areas.byIndex[y]);
     auto& xcastData = *area.xcastData<T>();
@@ -175,7 +180,9 @@ double XCastAllAreas<T>::cellNumericValue(int x, int y) const
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return 0.;
+    }
     auto& area = *(study->areas.byIndex[y]);
     auto& xcastData = *area.xcastData<T>();
     switch (x)
@@ -208,7 +215,9 @@ bool XCastAllAreas<T>::cellValue(int x, int y, const Yuni::String& value)
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return false;
+    }
 
     YString v = value;
     v.toLower();
@@ -223,7 +232,9 @@ bool XCastAllAreas<T>::cellValue(int x, int y, const Yuni::String& value)
         {
             xcastData.capacity = d;
             if (&area == pNotifier->lastArea())
+            {
                 pNotifier->reloadLastArea();
+            }
             return true;
         }
         break;
@@ -235,7 +246,9 @@ bool XCastAllAreas<T>::cellValue(int x, int y, const Yuni::String& value)
         {
             xcastData.distribution = d;
             if (&area == pNotifier->lastArea())
+            {
                 pNotifier->reloadLastArea();
+            }
             return true;
         }
         break;
@@ -247,7 +260,9 @@ bool XCastAllAreas<T>::cellValue(int x, int y, const Yuni::String& value)
         {
             xcastData.useConversion = b;
             if (&area == pNotifier->lastArea())
+            {
                 pNotifier->reloadLastArea();
+            }
             return true;
         }
         break;
@@ -259,7 +274,9 @@ bool XCastAllAreas<T>::cellValue(int x, int y, const Yuni::String& value)
         {
             xcastData.useTranslation = t;
             if (&area == pNotifier->lastArea())
+            {
                 pNotifier->reloadLastArea();
+            }
             return true;
         }
         break;
@@ -272,12 +289,11 @@ template<enum Data::TimeSeriesType T>
 void XCastAllAreas<T>::onAreaRenamed(Data::Area*)
 {
     if (pControl)
+    {
         pControl->Refresh();
+    }
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_ALL_AREAS_HXX__

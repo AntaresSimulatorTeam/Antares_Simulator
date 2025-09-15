@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,14 +12,11 @@
 #pragma once
 #include "io.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 inline bool Exists(const AnyString& filename)
 {
     return (Yuni::IO::typeUnknown != Yuni::IO::TypeOf(filename));
 }
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

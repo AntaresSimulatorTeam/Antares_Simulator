@@ -1,36 +1,30 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 
 #include "cell.h"
 #include <yuni/core/math.h>
 #include "application/study.h"
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 static bool convertToDouble(const String& value, double& valueDouble)
 {
@@ -50,7 +44,8 @@ static bool convertToDouble(const String& value, double& valueDouble)
 // -------------------
 // Base Cell class
 // -------------------
-Cell::Cell(TimeSeriesType ts) : tsKind_(ts)
+Cell::Cell(TimeSeriesType ts):
+    tsKind_(ts)
 {
     // We have to wait for the study to be loaded before initializing data members from study.
     // That's why constructor delegates to member function onStudyLoaded.
@@ -76,21 +71,26 @@ bool Cell::isTSgeneratorOn() const
 // ===================
 // Blank cell
 // ===================
-blankCell::blankCell() : Cell(timeSeriesLoad /*arbitrary, not used here anyway */)
+blankCell::blankCell():
+    Cell(timeSeriesLoad /*arbitrary, not used here anyway */)
 {
 }
+
 wxString blankCell::cellValue() const
 {
     return wxEmptyString;
 }
+
 double blankCell::cellNumericValue() const
 {
     return 0.;
 }
+
 bool blankCell::setCellValue(const String& /* value */)
 {
     return false;
 }
+
 IRenderer::CellStyle blankCell::cellStyle() const
 {
     return IRenderer::cellStyleDefaultDisabled;
@@ -99,8 +99,9 @@ IRenderer::CellStyle blankCell::cellStyle() const
 // ========================
 // Inactive cell
 // ========================
-inactiveCell::inactiveCell(wxString toPrintInCell) :
- Cell(timeSeriesLoad /*arbitrary, not used here anyway */), toBePrintedInCell_(toPrintInCell)
+inactiveCell::inactiveCell(wxString toPrintInCell):
+    Cell(timeSeriesLoad /*arbitrary, not used here anyway */),
+    toBePrintedInCell_(toPrintInCell)
 {
 }
 
@@ -108,14 +109,17 @@ wxString inactiveCell::cellValue() const
 {
     return toBePrintedInCell_;
 }
+
 double inactiveCell::cellNumericValue() const
 {
     return 0.;
 }
+
 bool inactiveCell::setCellValue(const String& /* value */)
 {
     return false;
 }
+
 IRenderer::CellStyle inactiveCell::cellStyle() const
 {
     return IRenderer::cellStyleDisabled;
@@ -124,7 +128,8 @@ IRenderer::CellStyle inactiveCell::cellStyle() const
 // ===================
 // Status cell
 // ===================
-readyMadeTSstatus::readyMadeTSstatus(TimeSeriesType ts) : Cell(ts)
+readyMadeTSstatus::readyMadeTSstatus(TimeSeriesType ts):
+    Cell(ts)
 {
 }
 
@@ -132,22 +137,31 @@ wxString readyMadeTSstatus::cellValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? wxT("Off") : wxT("On");
 }
+
 double readyMadeTSstatus::cellNumericValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 0 : 1.;
 }
+
 bool readyMadeTSstatus::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     if (not Math::Zero(valueDouble))
+    {
         study_->parameters.timeSeriesToGenerate &= ~tsKind_;
+    }
     else
+    {
         study_->parameters.timeSeriesToGenerate |= tsKind_;
+    }
     return true;
 }
+
 IRenderer::CellStyle readyMadeTSstatus::cellStyle() const
 {
     // Status READY made TS
@@ -158,7 +172,8 @@ IRenderer::CellStyle readyMadeTSstatus::cellStyle() const
 // ==========================
 // Generated TS status cell
 // ==========================
-generatedTSstatus::generatedTSstatus(TimeSeriesType ts) : Cell(ts)
+generatedTSstatus::generatedTSstatus(TimeSeriesType ts):
+    Cell(ts)
 {
 }
 
@@ -166,22 +181,31 @@ wxString generatedTSstatus::cellValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? wxT("On") : wxT("Off");
 }
+
 double generatedTSstatus::cellNumericValue() const
 {
     return (0 != (study_->parameters.timeSeriesToGenerate & tsKind_)) ? 1. : 0.;
 }
+
 bool generatedTSstatus::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     if (Math::Zero(valueDouble))
+    {
         study_->parameters.timeSeriesToGenerate &= ~tsKind_;
+    }
     else
+    {
         study_->parameters.timeSeriesToGenerate |= tsKind_;
+    }
     return true;
 }
+
 IRenderer::CellStyle generatedTSstatus::cellStyle() const
 {
     return isTSgeneratorOn() ? IRenderer::cellStyleConstraintWeight
@@ -191,7 +215,8 @@ IRenderer::CellStyle generatedTSstatus::cellStyle() const
 // ===================
 // Number TS Cell
 // ===================
-NumberTsCell::NumberTsCell(TimeSeriesType ts) : Cell(ts)
+NumberTsCell::NumberTsCell(TimeSeriesType ts):
+    Cell(ts)
 {
     OnStudyLoaded.connect(this, &NumberTsCell::onStudyLoaded);
 }
@@ -209,7 +234,9 @@ wxString NumberTsCell::cellValue() const
 {
     wxString to_return = wxEmptyString;
     if (tsToNumberTs_.find(tsKind_) != tsToNumberTs_.end())
+    {
         to_return = wxString() << *(tsToNumberTs_.at(tsKind_));
+    }
     return to_return;
 }
 
@@ -217,7 +244,9 @@ double NumberTsCell::cellNumericValue() const
 {
     uint to_return = 0.;
     if (tsToNumberTs_.find(tsKind_) != tsToNumberTs_.end())
+    {
         to_return = *(tsToNumberTs_.at(tsKind_));
+    }
     return to_return;
 }
 
@@ -225,11 +254,15 @@ bool NumberTsCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     uint nbTimeSeries = (uint)(Math::Round(valueDouble));
     if (not nbTimeSeries)
+    {
         nbTimeSeries = 1;
+    }
     else
     {
         if (nbTimeSeries > 1000)
@@ -257,7 +290,8 @@ IRenderer::CellStyle NumberTsCell::cellStyle() const
 // ===================
 // Refresh TS cell
 // ===================
-RefreshTsCell::RefreshTsCell(TimeSeriesType ts) : Cell(ts)
+RefreshTsCell::RefreshTsCell(TimeSeriesType ts):
+    Cell(ts)
 {
     OnStudyLoaded.connect(this, &RefreshTsCell::onStudyLoaded);
 }
@@ -276,7 +310,9 @@ bool RefreshTsCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     return true;
 }
@@ -290,7 +326,8 @@ IRenderer::CellStyle RefreshTsCell::cellStyle() const
 // ===================
 // Refresh Span cell
 // ===================
-RefreshSpanCell::RefreshSpanCell(TimeSeriesType ts) : Cell(ts)
+RefreshSpanCell::RefreshSpanCell(TimeSeriesType ts):
+    Cell(ts)
 {
     OnStudyLoaded.connect(this, &RefreshSpanCell::onStudyLoaded);
 }
@@ -303,7 +340,9 @@ wxString RefreshSpanCell::cellValue() const
 {
     wxString to_return = wxEmptyString;
     if (tsToRefreshSpan_.find(tsKind_) != tsToRefreshSpan_.end())
+    {
         to_return = wxString() << *(tsToRefreshSpan_.at(tsKind_));
+    }
     return to_return;
 }
 
@@ -311,7 +350,9 @@ double RefreshSpanCell::cellNumericValue() const
 {
     uint to_return = 0.;
     if (tsToRefreshSpan_.find(tsKind_) != tsToRefreshSpan_.end())
+    {
         to_return = *(tsToRefreshSpan_.at(tsKind_));
+    }
     return to_return;
 }
 
@@ -319,7 +360,9 @@ bool RefreshSpanCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     uint refreshSpan = std::max((int)std::round(valueDouble), 1);
 
@@ -336,10 +379,12 @@ IRenderer::CellStyle RefreshSpanCell::cellStyle() const
 {
     return IRenderer::cellStyleDefaultDisabled;
 }
+
 // ============================
 //  Seasonal correlation cell
 // ============================
-SeasonalCorrelationCell::SeasonalCorrelationCell(TimeSeriesType ts) : Cell(ts)
+SeasonalCorrelationCell::SeasonalCorrelationCell(TimeSeriesType ts):
+    Cell(ts)
 {
     OnStudyLoaded.connect(this, &SeasonalCorrelationCell::onStudyLoaded);
 }
@@ -355,11 +400,17 @@ wxString SeasonalCorrelationCell::cellValue() const
 {
     Data::Correlation::Mode mode = Data::Correlation::modeNone;
     if (tsToCorrelation_.find(tsKind_) != tsToCorrelation_.end())
+    {
         mode = tsToCorrelation_.at(tsKind_)->mode();
+    }
     else if (tsKind_ == Data::timeSeriesHydro)
+    {
         return wxT("annual");
+    }
     else
+    {
         return wxT("--");
+    }
     return (mode == Data::Correlation::modeAnnual) ? wxT("annual") : wxT("monthly");
 }
 
@@ -367,9 +418,13 @@ double SeasonalCorrelationCell::cellNumericValue() const
 {
     Data::Correlation::Mode mode = Data::Correlation::modeNone;
     if (tsToCorrelation_.find(tsKind_) != tsToCorrelation_.end())
+    {
         mode = tsToCorrelation_.at(tsKind_)->mode();
+    }
     else
+    {
         return 0.;
+    }
     return (mode == Data::Correlation::modeAnnual) ? 1. : -1.;
 }
 
@@ -383,18 +438,24 @@ bool SeasonalCorrelationCell::setCellValue(const String& value)
     s.trim(" \t");
     s.toLower();
     if ((convertToDoubleValid && Math::Equals(valueDouble, +1.)) || s == "annual" || s == "a")
+    {
         mode = Data::Correlation::modeAnnual;
+    }
     else
     {
         if ((convertToDoubleValid && Math::Equals(valueDouble, -1.)) || s == "monthly"
             || s == "month" || s == "m")
+        {
             mode = Data::Correlation::modeMonthly;
+        }
     }
 
     if (mode != Antares::Data::Correlation::modeNone)
     {
         if (tsToCorrelation_.find(tsKind_) != tsToCorrelation_.end())
+        {
             tsToCorrelation_.at(tsKind_)->mode(mode);
+        }
         return true;
     }
 
@@ -409,7 +470,8 @@ IRenderer::CellStyle SeasonalCorrelationCell::cellStyle() const
 // =====================
 // Store to input cell
 // =====================
-storeToInputCell::storeToInputCell(TimeSeriesType ts) : Cell(ts)
+storeToInputCell::storeToInputCell(TimeSeriesType ts):
+    Cell(ts)
 {
 }
 
@@ -427,12 +489,18 @@ bool storeToInputCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     if (Math::Zero(valueDouble))
+    {
         study_->parameters.exportTimeSeriesInInput &= ~tsKind_;
+    }
     else
+    {
         study_->parameters.exportTimeSeriesInInput |= tsKind_;
+    }
     return true;
 }
 
@@ -451,7 +519,8 @@ IRenderer::CellStyle storeToInputCell::cellStyle() const
 // ======================
 // Store to output cell
 // ======================
-storeToOutputCell::storeToOutputCell(TimeSeriesType ts) : Cell(ts)
+storeToOutputCell::storeToOutputCell(TimeSeriesType ts):
+    Cell(ts)
 {
 }
 
@@ -469,12 +538,18 @@ bool storeToOutputCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     if (Math::Zero(valueDouble))
+    {
         study_->parameters.timeSeriesToArchive &= ~tsKind_;
+    }
     else
+    {
         study_->parameters.timeSeriesToArchive |= tsKind_;
+    }
     return true;
 }
 
@@ -493,7 +568,8 @@ IRenderer::CellStyle storeToOutputCell::cellStyle() const
 // ======================
 // Intra modal cell
 // ======================
-intraModalCell::intraModalCell(TimeSeriesType ts) : Cell(ts)
+intraModalCell::intraModalCell(TimeSeriesType ts):
+    Cell(ts)
 {
 }
 
@@ -511,12 +587,18 @@ bool intraModalCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     if (Math::Zero(valueDouble))
+    {
         study_->parameters.intraModal &= ~tsKind_;
+    }
     else
+    {
         study_->parameters.intraModal |= tsKind_;
+    }
     return true;
 }
 
@@ -529,7 +611,8 @@ IRenderer::CellStyle intraModalCell::cellStyle() const
 // ======================
 // Inter modal cell
 // ======================
-interModalCell::interModalCell(TimeSeriesType ts) : Cell(ts)
+interModalCell::interModalCell(TimeSeriesType ts):
+    Cell(ts)
 {
 }
 
@@ -547,12 +630,18 @@ bool interModalCell::setCellValue(const String& value)
 {
     double valueDouble;
     if (not convertToDouble(value, valueDouble))
+    {
         return false;
+    }
 
     if (Math::Zero(valueDouble))
+    {
         study_->parameters.interModal &= ~tsKind_;
+    }
     else
+    {
         study_->parameters.interModal |= tsKind_;
+    }
     return true;
 }
 
@@ -566,17 +655,23 @@ IRenderer::CellStyle interModalCell::cellStyle() const
 // Thermal-specific cells
 // ======================
 // Constructors
-NumberTsCellThermal::NumberTsCellThermal() : NumberTsCell(timeSeriesThermal)
+NumberTsCellThermal::NumberTsCellThermal():
+    NumberTsCell(timeSeriesThermal)
 {
 }
-RefreshTsCellThermal::RefreshTsCellThermal() : RefreshTsCell(timeSeriesThermal)
+
+RefreshTsCellThermal::RefreshTsCellThermal():
+    RefreshTsCell(timeSeriesThermal)
 {
 }
-RefreshSpanCellThermal::RefreshSpanCellThermal() : RefreshSpanCell(timeSeriesThermal)
+
+RefreshSpanCellThermal::RefreshSpanCellThermal():
+    RefreshSpanCell(timeSeriesThermal)
 {
 }
-SeasonalCorrelationCellThermal::SeasonalCorrelationCellThermal() :
- SeasonalCorrelationCell(timeSeriesThermal)
+
+SeasonalCorrelationCellThermal::SeasonalCorrelationCellThermal():
+    SeasonalCorrelationCell(timeSeriesThermal)
 {
 }
 
@@ -609,7 +704,4 @@ wxString SeasonalCorrelationCellThermal::cellValue() const
 {
     return wxT("n/a");
 }
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

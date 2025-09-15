@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "edit.h"
 #include "../../application/study.h"
@@ -34,21 +34,19 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
-                                                         Data::BindingConstraint* constraint) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Binding constraint"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCLOSE_BOX | wxCAPTION | wxSYSTEM_MENU | wxCLIP_CHILDREN),
- pConstraint(constraint),
- pType(nullptr),
- pOperator(nullptr)
+                                                         Data::BindingConstraint* constraint):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Binding constraint"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCLOSE_BOX | wxCAPTION | wxSYSTEM_MENU | wxCLIP_CHILDREN),
+    pConstraint(constraint),
+    pType(nullptr),
+    pOperator(nullptr)
 {
     wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     wxFlexGridSizer* pGridSizer = new wxFlexGridSizer(2, 0, 0);
@@ -62,9 +60,13 @@ BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
 
         wxString s;
         if (pConstraint)
+        {
             s = wxStringFromUTF8(pConstraint->name());
+        }
         else
+        {
             s = wxT("New binding constraint");
+        }
         pCaption = new wxTextCtrl(this, wxID_ANY, s, wxDefaultPosition, wxDefaultSize);
         pGridSizer->Add(pCaption, 1, wxALL | wxEXPAND, 1);
     }
@@ -76,7 +78,9 @@ BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
 
         wxString s;
         if (pConstraint)
+        {
             s = wxStringFromUTF8(pConstraint->comments());
+        }
         pComments = new wxTextCtrl(this, wxID_ANY, s, wxDefaultPosition, wxDefaultSize);
         pGridSizer->Add(pComments, 1, wxALL | wxEXPAND, 1);
     }
@@ -91,12 +95,16 @@ BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
         pType = new wxChoice(this, wxID_ANY);
         wxArrayString types;
         if (!pConstraint)
+        {
             types.Add(wxT("Hourly"));
+        }
         types.Add(wxT("Daily"));
         types.Add(wxT("Weekly"));
         pType->Append(types);
         if (!pConstraint)
+        {
             pType->SetSelection(0);
+        }
         else
         {
             switch (pConstraint->type())
@@ -123,8 +131,12 @@ BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
 
     // Bounds
     {
-        auto* t = new wxStaticText(
-          this, wxID_ANY, wxT("Bounds "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
+        auto* t = new wxStaticText(this,
+                                   wxID_ANY,
+                                   wxT("Bounds "),
+                                   wxDefaultPosition,
+                                   wxDefaultSize,
+                                   wxALIGN_RIGHT);
         pGridSizer->Add(t, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
         pOperator = new wxChoice(this, wxID_ANY);
@@ -160,7 +172,9 @@ BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
             }
         }
         else
+        {
             pOperator->SetSelection(0);
+        }
 
         wxBoxSizer* splitter = new wxBoxSizer(wxHORIZONTAL);
         splitter->Add(pOperator, 2, wxALL | wxEXPAND);
@@ -170,15 +184,23 @@ BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
 
     // Enable / Disable
     {
-        auto* t = new wxStaticText(
-          this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
+        auto* t = new wxStaticText(this,
+                                   wxID_ANY,
+                                   wxT(""),
+                                   wxDefaultPosition,
+                                   wxDefaultSize,
+                                   wxALIGN_RIGHT);
         pGridSizer->Add(t, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
         pEnabled = new wxCheckBox(this, wxID_ANY, wxT("enabled"));
         if (pConstraint)
+        {
             pEnabled->SetValue(pConstraint->enabled());
+        }
         else
+        {
             pEnabled->SetValue(true);
+        }
         wxSizer* vs = new wxBoxSizer(wxVERTICAL);
         vs->AddSpacer(8);
         vs->Add(pEnabled, 0, wxALL | wxEXPAND, 1);
@@ -198,17 +220,19 @@ BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
     wxButton* btn;
 
     // Cancel
-    btn
-      = Component::CreateButton(this, wxT("Cancel"), this, &BindingConstraintInfoEditor::onCancel);
+    btn = Component::CreateButton(this,
+                                  wxT("Cancel"),
+                                  this,
+                                  &BindingConstraintInfoEditor::onCancel);
     pnlBtns->Add(btn);
     pnlBtns->AddSpacer(4);
 
     // Save !
-    btn = Component::CreateButton(
-      this,
-      ((pConstraint) ? wxT("Save and Close") : wxT("Create the binding constraint")),
-      this,
-      &BindingConstraintInfoEditor::onSave);
+    btn = Component::CreateButton(this,
+                                  ((pConstraint) ? wxT("Save and Close")
+                                                 : wxT("Create the binding constraint")),
+                                  this,
+                                  &BindingConstraintInfoEditor::onSave);
     btn->SetDefault();
     pnlBtns->Add(btn);
 
@@ -223,7 +247,9 @@ BindingConstraintInfoEditor::BindingConstraintInfoEditor(wxWindow* parent,
     wxSize p = GetSize();
     p.SetWidth(p.GetWidth() + 20);
     if (p.GetWidth() < 450)
+    {
         p.SetWidth(450);
+    }
     SetSize(p);
     Centre(wxBOTH);
 }
@@ -237,7 +263,9 @@ void BindingConstraintInfoEditor::onSave(void*)
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
 
     auto& study = *studyptr;
 
@@ -367,5 +395,4 @@ void BindingConstraintInfoEditor::onSave(void*)
     Dispatcher::GUI::Close(this);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

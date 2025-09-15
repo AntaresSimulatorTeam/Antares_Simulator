@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -14,13 +15,10 @@ namespace Yuni
 {
 class UUID;
 
-namespace Private
-{
-namespace UUID
+namespace Private::UUID
 {
 //! Class for accessing to internal methods of UUID
 class Helper;
 
-} // namespace UUID
-} // namespace Private
+} // namespace Private::UUID
 } // namespace Yuni

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -19,9 +20,7 @@
 #define YUNI_LOGS_COLORS_ALLOWED 1
 #endif
 
-namespace Yuni
-{
-namespace Logs
+namespace Yuni::Logs
 {
 /*!
 ** \brief Log Handler: The standard output (cout & cerr)
@@ -63,7 +62,6 @@ public:
 
 }; // class StdCout
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs
 
 #undef YUNI_LOGS_UNIX_COLORS_ALLOWED

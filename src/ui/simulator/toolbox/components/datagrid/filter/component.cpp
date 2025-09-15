@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "component.h"
 #include "../gridhelper.h"
@@ -26,18 +26,14 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Toolbox::Filter
 {
-namespace Toolbox
-{
-namespace Filter
-{
-Component::Component(wxWindow* parent, Date::Precision precision) :
- Antares::Component::Panel(parent),
- pGrid(nullptr),
- pGridHelper(nullptr),
- pRefreshBatchCount(0),
- pPrecision(precision)
+Component::Component(wxWindow* parent, Date::Precision precision):
+    Antares::Component::Panel(parent),
+    pGrid(nullptr),
+    pGridHelper(nullptr),
+    pRefreshBatchCount(0),
+    pPrecision(precision)
 {
     // Sizer
     SetSizer(new wxBoxSizer(wxVERTICAL));
@@ -73,12 +69,16 @@ Input* Component::add()
     {
         Input* p = pInputs.front();
         if (p)
+        {
             p->showBtnToRemoveFilter(pInputs.size() > 1);
+        }
     }
 
     // Force the resize of the parent layout
     if (GetParent() && GetParent()->GetSizer())
+    {
         GetParent()->GetSizer()->Layout();
+    }
     return input;
 }
 
@@ -86,7 +86,9 @@ bool Component::remove(Input* in)
 {
     // nullptr object, nothing to do and not considered as an error
     if (!in)
+    {
         return true;
+    }
 
     // The last input must not be deleted
     if (pInputs.size() == 1)
@@ -116,7 +118,9 @@ bool Component::remove(Input* in)
 
     // Hiding the last button to remove the input filter
     if (!pInputs.empty())
+    {
         pInputs.front()->showBtnToRemoveFilter(pInputs.size() > 1);
+    }
 
     // The whole grid must be refreshed
     // Because the columns and/or the rows might have changed
@@ -146,7 +150,9 @@ void Component::clear()
     // Detaching all children from the main sizer
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void Component::classifyFilters(InputVector& onRows, InputVector& onCols, InputVector& onCells)
@@ -158,11 +164,17 @@ void Component::classifyFilters(InputVector& onRows, InputVector& onCols, InputV
         if (f)
         {
             if (f->checkOnRowsLabels())
+            {
                 onRows.push_back(*i);
+            }
             if (f->checkOnColsLabels())
+            {
                 onCols.push_back(*i);
+            }
             if (f->checkOnCells())
+            {
                 onCells.push_back(*i);
+            }
         }
     }
 }
@@ -183,7 +195,9 @@ void Component::evtRefreshGrid()
 
         // Force the resize of the parent layout
         if (GetParent() && GetParent()->GetSizer())
+        {
             GetParent()->GetSizer()->Layout();
+        }
 
         pGrid->ForceRefresh();
         Refresh();
@@ -193,7 +207,9 @@ void Component::evtRefreshGrid()
 void Component::updateSearchResults()
 {
     if (!pGrid || !pGridHelper)
+    {
         return;
+    }
 
     pGrid->BeginBatch();
     InputVector onRows;
@@ -228,7 +244,9 @@ void Component::updateSearchResults()
                 {
                     (*i)->selected()->dataGridPrecision(pDataGridPrecision);
                     if (!(good = ((*i)->selected() && (*i)->selected()->rowIsValid(r))))
+                    {
                         break;
+                    }
                 }
                 if (good)
                 {
@@ -251,7 +269,9 @@ void Component::updateSearchResults()
                 {
                     (*i)->selected()->dataGridPrecision(pDataGridPrecision);
                     if (!(good = ((*i)->selected() && (*i)->selected()->colIsValid(c))))
+                    {
                         break;
+                    }
                 }
                 if (good)
                 {
@@ -270,10 +290,10 @@ void Component::updateSearchResults()
     // Invalidating the cache of the wxGrid
     wxGridTableBase* tbl = pGrid->GetTable();
     if (tbl)
+    {
         pGrid->SetTable(tbl, false);
+    }
     pGrid->EndBatch();
 }
 
-} // namespace Filter
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Filter

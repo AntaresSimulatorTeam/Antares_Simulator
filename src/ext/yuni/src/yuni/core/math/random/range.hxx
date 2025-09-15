@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "range.h"
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Random
+namespace Yuni::Math::Random
 {
 template<class D, int LoValue, int HiValue, typename T>
 inline Range<D, LoValue, HiValue, T>::Range()
@@ -94,6 +91,4 @@ inline const T Range<D, LoValue, HiValue, T>::next()
     return AlgorithmFromType<D, LoValue, HiValue, T>::Next(pDistribution);
 }
 
-} // namespace Random
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math::Random

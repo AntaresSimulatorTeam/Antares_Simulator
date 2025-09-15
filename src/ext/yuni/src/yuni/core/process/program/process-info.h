@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,17 +10,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "program.h"
-#include "../../noncopyable.h"
 #include "../../../thread/thread.h"
+#include "../../noncopyable.h"
+#include "program.h"
 #ifdef YUNI_OS_UNIX
 #include <sys/types.h>
 #endif
 #include <signal.h>
 
-namespace Yuni
-{
-namespace Process
+namespace Yuni::Process
 {
 /*!
 ** \brief Helper class for storing shared information on the program which is currently
@@ -27,7 +26,7 @@ namespace Process
 **
 ** \note This class may be shared by several threads
 */
-class Program::ProcessSharedInfo final : public Yuni::NonCopyable<Program::ProcessSharedInfo>
+class Program::ProcessSharedInfo final: public Yuni::NonCopyable<Program::ProcessSharedInfo>
 {
 public:
     //! Smart pointer
@@ -86,7 +85,6 @@ public:
 
 }; // class Program::ProcessSharedInfo
 
-} // namespace Process
-} // namespace Yuni
+} // namespace Yuni::Process
 
 #include "process-info.hxx"

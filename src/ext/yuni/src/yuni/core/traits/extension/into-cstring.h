@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,14 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../yuni.h"
 #include <string>
+
+#include "../../../yuni.h"
 #include "../../smartptr.h"
 #include "../cstring.h"
 
-namespace Yuni
-{
-namespace Extension
+namespace Yuni::Extension
 {
 template<>
 class IntoCString<char*> final
@@ -59,6 +59,7 @@ class IntoCString<Yuni::CString<ChunkSizeT, ExpandableT>> final
 {
 public:
     typedef Yuni::CString<ChunkSizeT, ExpandableT> CStringType;
+
     enum
     {
         valid = 1,
@@ -85,14 +86,14 @@ template<uint ChunkSizeT,
          template<class>
          class ConsP>
 class IntoCString<
-  Yuni::SmartPtr<Yuni::CString<ChunkSizeT, ExpandableT>, OwspP, ChckP, ConvP, StorP, ConsP>>
-  final
+  Yuni::SmartPtr<Yuni::CString<ChunkSizeT, ExpandableT>, OwspP, ChckP, ConvP, StorP, ConsP>> final
 {
 public:
     typedef Yuni::CString<ChunkSizeT, ExpandableT> CStringType;
     typedef Yuni::
       SmartPtr<Yuni::CString<ChunkSizeT, ExpandableT>, OwspP, ChckP, ConvP, StorP, ConsP>
         CStringTypePtr;
+
     enum
     {
         valid = 1,
@@ -112,6 +113,7 @@ class IntoCString<Yuni::CString<ChunkSizeT, ExpandableT>*> final
 {
 public:
     typedef typename Yuni::CString<ChunkSizeT, ExpandableT> CStringType;
+
     enum
     {
         valid = 1,
@@ -156,13 +158,13 @@ template<class T,
          template<class>
          class ConsP>
 class IntoCString<
-  Yuni::SmartPtr<std::basic_string<char, T, Alloc>, OwspP, ChckP, ConvP, StorP, ConsP>>
-  final
+  Yuni::SmartPtr<std::basic_string<char, T, Alloc>, OwspP, ChckP, ConvP, StorP, ConsP>> final
 {
 public:
     typedef std::basic_string<char, T, Alloc> StringType;
     typedef Yuni::SmartPtr<std::basic_string<char, T, Alloc>, OwspP, ChckP, ConvP, StorP, ConsP>
       StringTypePtr;
+
     enum
     {
         valid = 1,
@@ -213,5 +215,4 @@ public:
     }
 };
 
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension

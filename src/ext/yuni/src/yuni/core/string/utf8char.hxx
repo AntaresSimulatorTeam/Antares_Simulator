@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,19 +12,20 @@
 #pragma once
 #include "utf8char.h"
 
-namespace Yuni
+namespace Yuni::UTF8
 {
-namespace UTF8
-{
-inline Char::Char() : pValue()
-{
-}
-
-inline Char::Char(const Char& rhs) : pValue(rhs.pValue)
+inline Char::Char():
+    pValue()
 {
 }
 
-inline Char::Char(uint c) : pValue(c)
+inline Char::Char(const Char& rhs):
+    pValue(rhs.pValue)
+{
+}
+
+inline Char::Char(uint c):
+    pValue(c)
 {
 }
 
@@ -111,24 +113,38 @@ inline uint Char::Size(const void* p)
 
     const uchar lead = Mask8Bits(p);
     if (lead < 0x80) // the leas byte is zero, ascii
+    {
         return 1;
+    }
     if ((lead >> 5) == 0x6) // 110x xxxx
+    {
         return 2;
+    }
     if ((lead >> 4) == 0xe) // 1110 xxxx
+    {
         return 3;
+    }
     if ((lead >> 3) == 0x1e) // 1111 0xxx
+    {
         return 4;
+    }
     return 0;
 }
 
 inline uint Char::size() const
 {
     if (pValue < 0x80)
+    {
         return 1;
+    }
     if (pValue < 0x800)
+    {
         return 2;
+    }
     if (pValue < 0x10000)
+    {
         return 3;
+    }
     return 4;
 }
 
@@ -221,8 +237,7 @@ inline bool Char::operator>=(const Char& ch) const
     return pValue >= ch.pValue;
 }
 
-} // namespace UTF8
-} // namespace Yuni
+} // namespace Yuni::UTF8
 
 #ifdef YUNI_HAS_STL_HASH
 

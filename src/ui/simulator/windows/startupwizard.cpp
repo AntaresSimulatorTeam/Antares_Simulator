@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "startupwizard.h"
 #include <wx/sizer.h>
@@ -41,9 +41,7 @@
 #include "../toolbox/dispatcher/study.h"
 
 using namespace Yuni;
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 namespace // anonymous
 {
@@ -54,17 +52,20 @@ using OutputList = std::vector<PairStringString>;
 
 class ExampleProvider;
 
-class MyStudyFinder final : public Antares::Data::StudyFinder
+class MyStudyFinder final: public Antares::Data::StudyFinder
 {
 public:
-    MyStudyFinder(OutputList& list) : pOutputList(list)
+    MyStudyFinder(OutputList& list):
+        pOutputList(list)
     {
     }
 
     virtual ~MyStudyFinder()
     {
         foreach (auto& it, pList)
+        {
             pOutputList.push_back(PairStringString(it.first, it.second));
+        }
     }
 
     virtual void onStudyFound(const String& folder, const Data::StudyVersion&) override
@@ -84,7 +85,7 @@ public:
 
 }; // class MyStudyFinder
 
-class ExampleProvider final : public Antares::Component::Spotlight::IProvider
+class ExampleProvider final: public Antares::Component::Spotlight::IProvider
 {
 public:
     //! The spotlight component (alias)
@@ -107,6 +108,7 @@ public:
     virtual ~ExampleProvider()
     {
     }
+
     //@}
 
     void extractNumber(const String& title, String& newtitle, String& number)
@@ -180,7 +182,9 @@ public:
     virtual bool onSelect(Spotlight::IItem::Ptr& item) override
     {
         if (!item)
+        {
             return false;
+        }
 
         uint index = item->tag;
         if (index < pOutputs.size())
@@ -206,7 +210,9 @@ private:
 void StartupWizard::Show()
 {
     if (not globalWndStartupWizard)
+    {
         globalWndStartupWizard = new StartupWizard(Forms::ApplWnd::Instance());
+    }
 
     Dispatcher::GUI::Show(globalWndStartupWizard, true, true);
 }
@@ -220,18 +226,18 @@ void StartupWizard::Close()
     }
 }
 
-StartupWizard::StartupWizard(wxFrame* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Getting started"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCAPTION | wxCLIP_CHILDREN | wxWS_EX_BLOCK_EVENTS),
- pPanelButtonsID(-1),
- pLastSelected(nullptr),
- pAllowDisplaySelection(true),
- pMenuExamples(nullptr),
- pBtnExamples(nullptr)
+StartupWizard::StartupWizard(wxFrame* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Getting started"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCAPTION | wxCLIP_CHILDREN | wxWS_EX_BLOCK_EVENTS),
+    pPanelButtonsID(-1),
+    pLastSelected(nullptr),
+    pAllowDisplaySelection(true),
+    pMenuExamples(nullptr),
+    pBtnExamples(nullptr)
 {
     globalWndStartupWizard = this;
     WIP::Locker wip;
@@ -263,8 +269,11 @@ StartupWizard::StartupWizard(wxFrame* parent) :
 
         auto* hz2 = new wxBoxSizer(wxVERTICAL);
         hz2->AddSpacer(20);
-        wxStaticText* welcome
-          = Component::CreateLabel(this, wxT("Welcome to Antares Simulator"), true, false, +4);
+        wxStaticText* welcome = Component::CreateLabel(this,
+                                                       wxT("Welcome to Antares Simulator"),
+                                                       true,
+                                                       false,
+                                                       +4);
         welcome->SetForegroundColour(wxColour(0, 0, 0));
 
         hz2->Add(welcome, 0, wxALIGN_CENTER_VERTICAL | wxALL | wxALIGN_CENTER_HORIZONTAL);
@@ -332,7 +341,9 @@ StartupWizard::StartupWizard(wxFrame* parent) :
     else
     {
         if (not IO::Directory::Exists(pExFolder))
+        {
             pExFolder.clear();
+        }
     }
 
     // Open a example
@@ -350,8 +361,10 @@ StartupWizard::StartupWizard(wxFrame* parent) :
     boxAtStartup->AddSpacer(5);
 
     // Cancel
-    auto* btnCancel
-      = Component::CreateButton(pnlBtns, wxT("  Close  "), this, &StartupWizard::onClose);
+    auto* btnCancel = Component::CreateButton(pnlBtns,
+                                              wxT("  Close  "),
+                                              this,
+                                              &StartupWizard::onClose);
     btnCancel->SetDefault();
 
     boxAtStartup->Add(btnCancel, 0, wxALL | wxEXPAND);
@@ -366,11 +379,15 @@ StartupWizard::StartupWizard(wxFrame* parent) :
     wxSize p = GetSize();
     p.SetWidth(p.GetWidth() + 20);
     if (p.GetWidth() < 500)
+    {
         p.SetWidth(500);
+    }
     else
     {
         if (p.GetWidth() > 800)
+        {
             p.SetWidth(800);
+        }
     }
     SetSize(p);
     Centre(wxBOTH);
@@ -379,15 +396,20 @@ StartupWizard::StartupWizard(wxFrame* parent) :
     // This value will be used to reset the background colour of the main panels
     pDefaultBgColor.Set(255, 255, 255);
 
-    Connect(
-      GetId(), wxEVT_MOTION, wxMouseEventHandler(StartupWizard::onWindowMotion), nullptr, this);
+    Connect(GetId(),
+            wxEVT_MOTION,
+            wxMouseEventHandler(StartupWizard::onWindowMotion),
+            nullptr,
+            this);
 }
 
 StartupWizard::~StartupWizard()
 {
     // MakeModal(false);
     if (globalWndStartupWizard == this)
+    {
         globalWndStartupWizard = nullptr;
+    }
     Component::Spotlight::FrameClose();
 
     delete pMenuExamples;
@@ -402,18 +424,27 @@ void StartupWizard::loadRecentFiles()
 
     if (not lst->empty())
     {
-        addControls(
-          wxString(), "images/32x32/recent.png", wxT("Open a recent Study"), wxEmptyString, false);
+        addControls(wxString(),
+                    "images/32x32/recent.png",
+                    wxT("Open a recent Study"),
+                    wxEmptyString,
+                    false);
         if (sizer)
+        {
             sizer->AddSpacer(4);
+        }
 
         foreach (auto& it, *lst)
+        {
             addRecentItem(it.first, it.second, it.first);
+        }
     }
     else
     {
         if (sizer)
+        {
             sizer->AddSpacer(20);
+        }
     }
 }
 
@@ -453,15 +484,21 @@ void StartupWizard::addRecentItem(const wxString& mapping,
                       wxCommandEventHandler(StartupWizard::onClick),
                       nullptr,
                       this);
-    lblTitle->Connect(
-      lblTitle->GetId(), wxEVT_MOTION, wxMouseEventHandler(StartupWizard::onMotion), nullptr, this);
+    lblTitle->Connect(lblTitle->GetId(),
+                      wxEVT_MOTION,
+                      wxMouseEventHandler(StartupWizard::onMotion),
+                      nullptr,
+                      this);
     lblPath->Connect(lblPath->GetId(),
                      wxEVT_LEFT_DOWN,
                      wxCommandEventHandler(StartupWizard::onClick),
                      nullptr,
                      this);
-    lblPath->Connect(
-      lblPath->GetId(), wxEVT_MOTION, wxMouseEventHandler(StartupWizard::onMotion), nullptr, this);
+    lblPath->Connect(lblPath->GetId(),
+                     wxEVT_MOTION,
+                     wxMouseEventHandler(StartupWizard::onMotion),
+                     nullptr,
+                     this);
 
     wxSizer* s = new wxBoxSizer(wxHORIZONTAL);
     s->Add(25, 5);
@@ -504,13 +541,17 @@ void StartupWizard::addControls(const wxString& mapping,
     auto* topSizer = new wxBoxSizer(wxVERTICAL);
 
     if (not title.IsEmpty())
+    {
         topSizer->AddSpacer(6);
+    }
 
     auto* mainSizer = new wxBoxSizer(wxHORIZONTAL);
     topSizer->Add(mainSizer, 0, wxALL | wxEXPAND);
 
     if (not title.IsEmpty())
+    {
         mainSizer->Add(10, 5);
+    }
 
     // Icon
     if (image)
@@ -534,7 +575,9 @@ void StartupWizard::addControls(const wxString& mapping,
         }
     }
     else
+    {
         mainSizer->Add(50, 10);
+    }
 
     // Text
     {
@@ -605,7 +648,9 @@ void StartupWizard::addControls(const wxString& mapping,
     bigPanel->SetSizer(topSizer);
 
     if (useEvents and not title.IsEmpty())
+    {
         topSizer->AddSpacer(6);
+    }
 
     // Adding the big panel to the sizer
     auto* s = new wxBoxSizer(wxHORIZONTAL);
@@ -643,7 +688,9 @@ void StartupWizard::onClick(wxCommandEvent& evt)
 
     // Getting the top-level object
     while (obj and not dynamic_cast<wxDialog*>(obj->GetParent()))
+    {
         obj = obj->GetParent();
+    }
 
     pAllowDisplaySelection = false;
     // Resetting its color
@@ -723,12 +770,18 @@ void StartupWizard::onMotion(wxMouseEvent& evt)
 
     // Getting the top-level object
     while (obj and !dynamic_cast<wxDialog*>(obj->GetParent()))
+    {
         obj = obj->GetParent();
+    }
 
     if (dynamic_cast<wxPanel*>(obj))
+    {
         resetAllBackgroundColors(obj);
+    }
     else
+    {
         resetAllBackgroundColors(nullptr);
+    }
     evt.Skip();
 }
 
@@ -741,7 +794,9 @@ void StartupWizard::onClose(void*)
 void StartupWizard::onDropDownExamples(Component::Button&, wxMenu&, void*)
 {
     if (pBtnExamples)
+    {
         pBtnExamples->Enable(false);
+    }
     // Antares::License::displayStartupWizard = true;
     Dispatcher::GUI::Post(this, &StartupWizard::showAllExamples);
 }
@@ -756,10 +811,15 @@ void StartupWizard::showAllExamples()
         width = 320,
 #endif
     };
-    Component::Spotlight::FrameShow(
-      pBtnExamples, std::make_shared<ExampleProvider>(pExFolder), 0, width);
+
+    Component::Spotlight::FrameShow(pBtnExamples,
+                                    std::make_shared<ExampleProvider>(pExFolder),
+                                    0,
+                                    width);
     if (pBtnExamples)
+    {
         pBtnExamples->Enable(true);
+    }
 }
 
 void StartupWizard::onDisplayPopupMenu()
@@ -776,5 +836,4 @@ void StartupWizard::onDisplayPopupMenu()
     }
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

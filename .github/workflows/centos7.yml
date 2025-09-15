@@ -5,10 +5,10 @@ on:
     types: [ created ]
   push:
     branches:
-      - develop
-      - dependabot/*
+    - develop
+    - dependabot/**
   schedule:
-    - cron: '21 2 * * *'
+  - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
@@ -35,145 +35,145 @@ jobs:
     steps:
 
 
-      #sparse checkout -- only needed files
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-          sparse-checkout: |
-            docker
-            src/vcpkg.json
-          ref: ${{ env.REF }}
+    #sparse checkout -- only needed files
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+        sparse-checkout: |
+          docker
+          src/vcpkg.json
+        ref: ${{ env.REF }}
 
-      - name: set env variables -- DockerFiles
-        run: |
-          echo "DOCKERFILE=$(pwd)/docker/Dockerfile" >> $GITHUB_ENV
-          echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
-
-
-      - name: check if DockerFiles has changed
-        run: |
-          # Check for changes in the target path
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD -- docker/AntaresDeps)
-          if [ -n "$CHANGED_FILES" ]; then
-            echo "publish_image=true" >> $GITHUB_ENV
-          else
-            echo "publish_image=false" >> $GITHUB_ENV
-            echo "No changes in DockerFiles, skipping image build and push."
-          fi
-
-      - name: Log in to Docker Hub
-        if: ${{ env.publish_image  == 'true' }}
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          #TODO for security issues, create and use DOCKERHUB_TOKEN
-          #password: ${{ secrets.DOCKERHUB_TOKEN }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and push Docker image
-        if: ${{ env.publish_image  == 'true' }}
-        uses: docker/build-push-action@v6
-        with:
-          context: ${{ env.DOCKERDIR }}
-          file: ${{ env.DOCKERDIR }}/AntaresDeps
-          push: true
-          tags: antaresrte/antaressystemdeps:latest
+    - name: set env variables -- DockerFiles
+      run: |
+        echo "DOCKERFILE=$(pwd)/docker/Dockerfile" >> $GITHUB_ENV
+        echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
 
 
-      - name: create vcpkg cache dir
-        run: |
-          echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
-          mkdir -p ${{ github.workspace }}/vcpkg_cache
+    - name: check if DockerFiles has changed
+      run: |
+        # Check for changes in the target path
+        CHANGED_FILES=$(git diff --name-only HEAD^ HEAD -- docker/AntaresDeps)
+        if [ -n "$CHANGED_FILES" ]; then
+          echo "publish_image=true" >> $GITHUB_ENV
+        else
+          echo "publish_image=false" >> $GITHUB_ENV
+          echo "No changes in DockerFiles, skipping image build and push."
+        fi
+
+    - name: Log in to Docker Hub
+      if: ${{ env.publish_image  == 'true' }}
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        #TODO for security issues, create and use DOCKERHUB_TOKEN
+        #password: ${{ secrets.DOCKERHUB_TOKEN }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker image
+      if: ${{ env.publish_image  == 'true' }}
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ env.DOCKERDIR }}
+        file: ${{ env.DOCKERDIR }}/AntaresDeps
+        push: true
+        tags: antaresrte/antaressystemdeps:latest
 
 
-      - name: Restore vcpkg binary dir from cache
-        id: cache-vcpkg-binary
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ github.workspace }}/vcpkg_cache
-          key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
-          # Allows to restore a cache when deps have only partially changed (like adding a dependency)
-          restore-keys: vcpkg-cache-centos7-
+    - name: create vcpkg cache dir
+      run: |
+        echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
+        mkdir -p ${{ github.workspace }}/vcpkg_cache
 
 
-      - name: Install ccache
-        run: sudo apt-get install -y ccache
-
-      - name: Restore ccache cache
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ github.workspace }}/.ccache
-          key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
-          restore-keys: |
-            centos7-on-${{ runner.os }}-   
-
-      - name: Configure ccache
-        run: |
-          ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
-          ccache --set-config=max_size=500M
-          ccache --set-config=compression=true
-          ccache -p
-          ccache -z
-
-      - name: Build the image and Antares
-        run: |
-          ls -latr .ccache/ && \
-          docker build \
-          -t antares:centos7  \
-          --build-arg="BRANCH=${{ env.REF }}" \
-          --build-arg="NPROC=$(nproc)" \
-          --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
-          --build-arg CCACHE_DIR=./.ccache \
-          --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
-          -f ${{ env.DOCKERFILE }} . 
+    - name: Restore vcpkg binary dir from cache
+      id: cache-vcpkg-binary
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+        restore-keys: vcpkg-cache-centos7-
 
 
-      - name: create a container without starting it && retrieve the .tgz
-        run: |
-          container_id=$(docker create antares:centos7)
-          docker cp $container_id:/workspace/Antares_Simulator/_build/archive archive         
-          docker cp $container_id:/workspace/vcpkg_cache ${{ env.VCPKG_CACHE_DIR }}
-          docker cp $container_id:/workspace/.ccache/. .ccache
-          ls -la .ccache
-          docker rm $container_id
+    - name: Install ccache
+      run: sudo apt-get install -y ccache
 
-      - name: Push artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: centos-targz
-          path: archive/*.tar.gz
+    - name: Restore ccache cache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
+        restore-keys: |
+          centos7-on-${{ runner.os }}-   
 
-      - name: Publish assets
-        if: ${{ env.IS_RELEASE == 'true' }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          tag: ${{ github.event.inputs.release_tag }}
-        run: |
-          gh release upload "$tag" archive/*.tar.gz archive/*.rpm
+    - name: Configure ccache
+      run: |
+        ccache --set-config=cache_dir=${{ github.workspace }}/.ccache
+        ccache --set-config=max_size=500M
+        ccache --set-config=compression=true
+        ccache -p
+        ccache -z
 
-      - name: Update continuous-delivery release
-        if: github.ref == 'refs/heads/develop'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          mv archive/antares-*-CentOS-7.9.2009.tar.gz archive/antares-cd-CentOS-7.9.2009.tar.gz
-          mv archive/antares-*-CentOS-7.9.2009.rpm archive/antares-cd-CentOS-7.9.2009.rpm
-          gh release upload --clobber continuous-delivery archive/*.tar.gz archive/*.rpm
+    - name: Build the image and Antares
+      run: |
+        ls -latr .ccache/ && \
+        docker build \
+        -t antares:centos7  \
+        --build-arg="BRANCH=${{ env.REF }}" \
+        --build-arg="NPROC=$(nproc)" \
+        --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
+        --build-arg CCACHE_DIR=./.ccache \
+        --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
+        -f ${{ env.DOCKERFILE }} . 
 
-      - name: Cache vcpkg binary dir
-        if: always()
-        id: save-cache-vcpkg-binary
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ github.workspace }}/vcpkg_cache
-          key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
-      - name: Display ccache statistics
-        run: ccache -s
+    - name: create a container without starting it && retrieve the .tgz
+      run: |
+        container_id=$(docker create antares:centos7)
+        docker cp $container_id:/workspace/Antares_Simulator/_build/archive archive         
+        docker cp $container_id:/workspace/vcpkg_cache ${{ env.VCPKG_CACHE_DIR }}
+        docker cp $container_id:/workspace/.ccache/. .ccache
+        ls -la .ccache
+        docker rm $container_id
 
-      - name: Save ccache cache
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ github.workspace }}/.ccache
-          key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
+    - name: Push artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: centos-targz
+        path: archive/*.tar.gz
+
+    - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" archive/*.tar.gz archive/*.rpm
+
+    - name: Update continuous-delivery release
+      if: github.ref == 'refs/heads/develop'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mv archive/antares-*-CentOS-7.9.2009.tar.gz archive/antares-cd-CentOS-7.9.2009.tar.gz
+        mv archive/antares-*-CentOS-7.9.2009.rpm archive/antares-cd-CentOS-7.9.2009.rpm
+        gh release upload --clobber continuous-delivery archive/*.tar.gz archive/*.rpm
+
+    - name: Cache vcpkg binary dir
+      if: always()
+      id: save-cache-vcpkg-binary
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+    - name: Display ccache statistics
+      run: ccache -s
+
+    - name: Save ccache cache
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
 

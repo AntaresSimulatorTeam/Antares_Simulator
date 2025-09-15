@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "dailypower.h"
 #include "../../toolbox/components/datagrid/renderer/area/hydroprepro.h"
@@ -30,28 +30,28 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Window::Hydro
 {
-namespace Window
-{
-namespace Hydro
-{
-Dailypower::Dailypower(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
- Component::Panel(parent),
- pInputAreaSelector(notifier),
- pArea(nullptr),
- pComponentsAreReady(false),
- pSupport(nullptr)
+Dailypower::Dailypower(wxWindow* parent, Toolbox::InputSelector::Area* notifier):
+    Component::Panel(parent),
+    pInputAreaSelector(notifier),
+    pArea(nullptr),
+    pComponentsAreReady(false),
+    pSupport(nullptr)
 {
     OnStudyClosed.connect(this, &Dailypower::onStudyClosed);
     if (notifier)
+    {
         notifier->onAreaChanged.connect(this, &Dailypower::onAreaChanged);
+    }
 }
 
 void Dailypower::createComponents()
 {
     if (pComponentsAreReady)
+    {
         return;
+    }
     pComponentsAreReady = true;
 
     {
@@ -120,9 +120,13 @@ void Dailypower::onAreaChanged(Data::Area* area)
     {
         // create components on-demand
         if (!pComponentsAreReady)
+        {
             createComponents();
+        }
         else
+        {
             GetSizer()->Show(pSupport, true);
+        }
     }
 }
 
@@ -131,9 +135,9 @@ void Dailypower::onStudyClosed()
     pArea = nullptr;
 
     if (GetSizer())
+    {
         GetSizer()->Show(pSupport, false);
+    }
 }
 
-} // namespace Hydro
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Hydro

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "../../application/study.h"
 #include "../../application/main.h"
@@ -36,14 +36,14 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Toolbox::InputSelector
 {
-namespace Toolbox
-{
-namespace InputSelector
-{
-ThermalCluster::ThermalCluster(wxWindow* parent, InputSelector::Area* area) :
- AInput(parent), pArea(nullptr), pTotalMW(nullptr), pImageList(16, 16), pAreaNotifier(area)
+ThermalCluster::ThermalCluster(wxWindow* parent, InputSelector::Area* area):
+    AInput(parent),
+    pArea(nullptr),
+    pTotalMW(nullptr),
+    pImageList(16, 16),
+    pAreaNotifier(area)
 {
     SetSize(300, 330);
 
@@ -67,13 +67,15 @@ ThermalCluster::ThermalCluster(wxWindow* parent, InputSelector::Area* area) :
     OnStudyEndUpdate.connect(this, &ThermalCluster::onStudyEndUpdate);
 
     if (area)
+    {
         area->onAreaChanged.connect(this, &ThermalCluster::areaHasChanged);
+    }
 
     OnStudyThermalClusterRenamed.connect(this, &ThermalCluster::onStudyThermalClusterRenamed);
     OnStudyThermalClusterGroupChanged.connect(this,
                                               &ThermalCluster::onStudyThermalClusterGroupChanged);
-    OnStudyThermalClusterCommonSettingsChanged.connect(
-      this, &ThermalCluster::onStudyThermalClusterCommonSettingsChanged);
+    OnStudyThermalClusterCommonSettingsChanged
+      .connect(this, &ThermalCluster::onStudyThermalClusterCommonSettingsChanged);
 }
 
 ThermalCluster::~ThermalCluster()
@@ -114,8 +116,11 @@ void ThermalCluster::internalBuildSubControls()
     Antares::Component::AddVerticalSeparator(this, toolSZ);
 
     // Clone
-    btn = new Antares::Component::Button(
-      this, wxT("Clone"), "images/16x16/paste.png", this, &ThermalCluster::internalClonePlant);
+    btn = new Antares::Component::Button(this,
+                                         wxT("Clone"),
+                                         "images/16x16/paste.png",
+                                         this,
+                                         &ThermalCluster::internalClonePlant);
     toolSZ->Add(btn, 0, wxALIGN_CENTER_VERTICAL | wxALL);
 
     toolSZ->AddStretchSpacer();
@@ -160,7 +165,9 @@ void ThermalCluster::updateWhenGroupChanges()
     // Warn the selected data source (A-Z or Z-A sorting) that a cluster's group changed
     ClustersByOrder* dataSource = dynamic_cast<ClustersByOrder*>(pThListbox->datasource());
     if (dataSource)
+    {
         dataSource->hasGroupChanged(true);
+    }
 
     pThListbox->forceRedraw();
     onThermalClusterChanged(nullptr);
@@ -170,7 +177,9 @@ void ThermalCluster::updateWhenGroupChanges()
 void ThermalCluster::updateInnerValues()
 {
     if (pThListbox)
+    {
         pThListbox->updateHtmlContent();
+    }
 
     if (pArea)
     {
@@ -182,7 +191,9 @@ void ThermalCluster::updateInnerValues()
         pTotalMW->SetLabel(wxString() << unitCount << wxT(" units, ") << total << wxT(" MW"));
     }
     else
+    {
         pTotalMW->SetLabel(wxEmptyString);
+    }
 
     // The layout must be updated since the label has been changed
     GetSizer()->Layout();
@@ -195,17 +206,23 @@ void ThermalCluster::areaHasChanged(Antares::Data::Area* area)
         pArea = area;
         pLastSelectedThermalCluster = nullptr;
         if (pThListbox)
+        {
             pThListbox->forceUpdate();
+        }
         update();
         if (pThListbox)
+        {
             pThListbox->Refresh();
+        }
     }
 }
 
 void ThermalCluster::onStudyEndUpdate()
 {
     if (pThListbox)
+    {
         pThListbox->forceUpdate();
+    }
 }
 
 void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
@@ -223,7 +240,9 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
         MarkTheStudyAsModified();
     }
     if (broadcast)
+    {
         onThermalClusterChanged(cluster);
+    }
     OnStudyThermalClusterRenamed(cluster);
     Window::Inspector::Refresh();
 }
@@ -231,7 +250,9 @@ void ThermalCluster::renameAggregate(Antares::Data::ThermalCluster* cluster,
 void ThermalCluster::onStudyThermalClusterRenamed(Antares::Data::ThermalCluster* cluster)
 {
     if (cluster->parentArea == pArea)
+    {
         updateInnerValues();
+    }
 }
 
 void ThermalCluster::evtPopupDelete(wxCommandEvent&)
@@ -252,12 +273,16 @@ void ThermalCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
     if (!pArea || !pLastSelectedThermalCluster || not CurrentStudyIsValid())
+    {
         return;
+    }
 
     // The thermal cluster to delete
     auto* toDelete = pLastSelectedThermalCluster->thermalAggregate();
     if (not toDelete)
+    {
         return;
+    }
 
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
@@ -269,7 +294,9 @@ void ThermalCluster::internalDeletePlant(void*)
         messageText << selectedConstraintsCount;
         messageText << " Constraint";
         if (selectedConstraintsCount > 1)
+        {
             messageText << "s";
+        }
     }
 
     // If the pointer has been, it is guaranteed to be valid
@@ -325,9 +352,13 @@ void ThermalCluster::internalDeletePlant(void*)
                 for (int i = 0; i < BCListSize; i++)
                 {
                     if (Window::Inspector::isConstraintSelected((*BC)->name()))
+                    {
                         study->bindingConstraints.remove(BC->get());
+                    }
                     else
+                    {
                         ++BC;
+                    }
                 }
 
                 study->uiinfo->reloadBindingConstraints();
@@ -335,7 +366,9 @@ void ThermalCluster::internalDeletePlant(void*)
             }
         }
         else
+        {
             logs.error() << "Impossible to delete the cluster '" << toDelete->name() << "'";
+        }
 
         // The components are now allow to refresh themselves
         OnStudyEndUpdate();
@@ -346,7 +379,9 @@ void ThermalCluster::internalDeleteAll(void*)
 {
     // Nothing is/was selected. Aborting.
     if (!pArea)
+    {
         return;
+    }
 
     if (pArea->thermal.list.empty())
     {
@@ -360,12 +395,12 @@ void ThermalCluster::internalDeleteAll(void*)
     auto study = GetCurrentStudy();
 
     // If the pointer has been, it is guaranteed to be valid
-    Window::Message message(
-      &mainFrm,
-      wxT("Thermal cluster"),
-      wxT("Delete all thermal clusters"),
-      wxString() << wxT("Do you really want to delete all thermal clusters from the area '")
-                 << wxStringFromUTF8(pArea->name) << wxT("' ?"));
+    Window::Message message(&mainFrm,
+                            wxT("Thermal cluster"),
+                            wxT("Delete all thermal clusters"),
+                            wxString() << wxT(
+                              "Do you really want to delete all thermal clusters from the area '")
+                                       << wxStringFromUTF8(pArea->name) << wxT("' ?"));
     message.add(Window::Message::btnYes);
     message.add(Window::Message::btnCancel, true);
     if (message.showModal() == Window::Message::btnYes)
@@ -459,7 +494,9 @@ void ThermalCluster::internalClonePlant(void*)
 {
     // Nothing is/was selected. Aborting.
     if (!pArea || !pLastSelectedThermalCluster)
+    {
         return;
+    }
 
     if (!pArea->thermal.list.findInAll(pLastSelectedThermalCluster->thermalAggregate()->id()))
     {
@@ -471,8 +508,8 @@ void ThermalCluster::internalClonePlant(void*)
     }
 
     WIP::Locker wip;
-    const Antares::Data::ThermalCluster& selectedPlant
-      = *pLastSelectedThermalCluster->thermalAggregate();
+    const Antares::Data::ThermalCluster& selectedPlant = *pLastSelectedThermalCluster
+                                                            ->thermalAggregate();
 
     auto study = GetCurrentStudy();
     if (!(!study) && pArea)
@@ -585,7 +622,9 @@ void ThermalCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr i
             auto constraint = *i;
 
             if (constraint->contains(cluster))
+            {
                 constraintlist.insert(constraint);
+            }
         }
         Window::Inspector::AddBindingConstraints(constraintlist);
     }
@@ -595,8 +634,10 @@ void ThermalCluster::onDeleteDropdown(Antares::Component::Button&, wxMenu& menu,
 {
     wxMenuItem* it;
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Delete the selected cluster"), "images/16x16/thermal_remove.png");
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Delete the selected cluster"),
+                          "images/16x16/thermal_remove.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(ThermalCluster::evtPopupDelete),
@@ -627,6 +668,4 @@ void ThermalCluster::onStudyThermalClusterCommonSettingsChanged()
     Refresh();
 }
 
-} // namespace InputSelector
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::InputSelector

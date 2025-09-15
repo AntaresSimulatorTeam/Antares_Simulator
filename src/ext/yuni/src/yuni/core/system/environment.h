@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,11 +13,7 @@
 #include "../../yuni.h"
 #include "../string.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace Environment
+namespace Yuni::System::Environment
 {
 /*!
 ** \brief Get a value from the current environment and convert it as a bool
@@ -62,6 +59,4 @@ YUNI_DECL bool Read(const AnyString& name, String& out, bool emptyBefore = true)
 */
 YUNI_DECL bool Read(const AnyString& name, Clob& out, bool emptyBefore = true);
 
-} // namespace Environment
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Environment

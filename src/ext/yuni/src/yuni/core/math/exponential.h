@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "math.h"
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 /*!
 ** \brief The exponential function
@@ -21,7 +20,6 @@ namespace Math
 template<class T>
 YUNI_DECL T Exp(T x);
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math
 
 #include "exponential.hxx"

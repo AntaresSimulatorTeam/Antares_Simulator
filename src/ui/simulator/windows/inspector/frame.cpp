@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "frame.h"
 #include "constants.h"
@@ -49,11 +49,7 @@ using namespace Yuni;
 
 #define P_ENUM(CAPTION, ID, FILTER) page->Append(new wxEnumProperty(wxT(CAPTION), wxT(ID), FILTER));
 
-namespace Antares
-{
-namespace Window
-{
-namespace Inspector
+namespace Antares::Window::Inspector
 {
 // Singleton
 // FIXME Singleton should not be used in any programs !
@@ -112,7 +108,9 @@ void Frame::onSelectAllLinks(wxCommandEvent&)
             auto& area = *(*i);
             auto end = area.links.end();
             for (auto i = area.links.begin(); i != end; ++i)
+            {
                 data->links.insert(i->second);
+            }
         }
         data->areas.clear();
         data->ThClusters.clear();
@@ -145,10 +143,14 @@ void Frame::onSelectAllLinksFromArea(wxCommandEvent& evt)
         data->links.clear();
         auto* area = (Data::Area*)mapIDPointer[evt.GetId()];
         if (!area)
+        {
             return;
+        }
         const auto end = area->links.end();
         for (auto i = area->links.begin(); i != end; ++i)
+        {
             data->links.insert(i->second);
+        }
         data->areas.clear();
         data->ThClusters.clear();
         data->RnClusters.clear();
@@ -168,8 +170,10 @@ void Frame::onSelectAllPlants(wxCommandEvent&)
         for (auto i = data->areas.begin(); i != areaEnd; ++i)
         {
             Data::Area& area = *(*i);
-            for (auto c : area.thermal.list.all())
+            for (auto c: area.thermal.list.all())
+            {
                 data->ThClusters.insert(c.get());
+            }
         }
         data->areas.clear();
         data->links.clear();
@@ -193,12 +197,12 @@ void Frame::onSelectPlant(wxCommandEvent& evt)
     }
 }
 
-Frame::Frame(wxWindow* parent, bool allowAnyObject) :
- Antares::Component::Panel(parent),
- pNotes(nullptr),
- pAllowAnyObject(allowAnyObject),
- pBtnInspector(nullptr),
- pAlreadyConnectedToSimulationChangesEvent(false)
+Frame::Frame(wxWindow* parent, bool allowAnyObject):
+    Antares::Component::Panel(parent),
+    pNotes(nullptr),
+    pAllowAnyObject(allowAnyObject),
+    pBtnInspector(nullptr),
+    pAlreadyConnectedToSimulationChangesEvent(false)
 {
     // Registering out custom editors for the property grid
     // The registration must only be done once !
@@ -208,7 +212,8 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
         {
             alreadyRegistered = true;
             wxPGEditor_StudyCalendarBtnEditor = wxPropertyGrid::DoRegisterEditorClass(
-              new StudyCalendarBtnEditor(), "StudyCalendarBtnEditor");
+              new StudyCalendarBtnEditor(),
+              "StudyCalendarBtnEditor");
         }
     }
 
@@ -247,8 +252,11 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
         pBtnInspector = btn;
         sizerToolbar->Add(btn, 0, wxALL | wxEXPAND, margin);
         // User's notes Selector
-        btn = new Component::Button(
-          pMainPanel, wxT("notes"), "images/16x16/notes.png", this, &Frame::onSelectNotes);
+        btn = new Component::Button(pMainPanel,
+                                    wxT("notes"),
+                                    "images/16x16/notes.png",
+                                    this,
+                                    &Frame::onSelectNotes);
         sizerToolbar->Add(btn, 0, wxALL | wxEXPAND, margin);
 
         sizer->Add(sizerToolbar, 0, wxALL | wxEXPAND, 2);
@@ -295,10 +303,10 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     {
         Group(pg, wxT("STUDY"), wxT("study.title"));
         Category(pg, wxT("General"), wxT("study.general"));
-        pPGCommonStudyName
-          = page->Append(new wxStringProperty(wxT("name"), wxT("common.study.name"), wxT("")));
-        pPGCommonStudyAuthor
-          = page->Append(new wxStringProperty(wxT("author"), wxT("common.study.author"), wxT("")));
+        pPGCommonStudyName = page->Append(
+          new wxStringProperty(wxT("name"), wxT("common.study.name"), wxT("")));
+        pPGCommonStudyAuthor = page->Append(
+          new wxStringProperty(wxT("author"), wxT("common.study.author"), wxT("")));
     }
     else
     {
@@ -333,8 +341,9 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGStudyOutputProfile = Category(pg, wxT("Output profile"), wxT("study.output_profile"));
     pPGStudySimulationSynthesis = P_BOOL("Simulation synthesis", "study.simsynthesis");
     pPGStudyYearByYear = P_BOOL("Year-by-year", "study.yearbyyear");
-    pPGGeographicTrimming
-      = P_ENUM("Geographic trimming", "study.geographictrimming", geographicTrimming);
+    pPGGeographicTrimming = P_ENUM("Geographic trimming",
+                                   "study.geographictrimming",
+                                   geographicTrimming);
     pPGThematicTrimming = P_ENUM("Thematic trimming", "study.thematictrimming", thematicTrimming);
     pPGStudyUseMCScenarios = P_BOOL("MC Scenarios", "study.scenarios");
 
@@ -343,62 +352,82 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGAreaTitle = Group(pg, wxT("AREAS"), wxT("area.title"));
     pPGAreaGeneral = Category(pg, wxT("General"), wxT("area.general"));
     pPGAreaName = P_STRING("Name", "area.name");
-    pPGAreaColor
-      = page->Append(new wxColourProperty(wxT("color"), wxT("area.color"), wxColour(0, 0, 0)));
+    pPGAreaColor = page->Append(
+      new wxColourProperty(wxT("color"), wxT("area.color"), wxColour(0, 0, 0)));
 
     pPGAreaOptimization = Category(pg, wxT("Nodal optimization"), wxT("area.optimization"));
     lid = page->Append(
       new wxStringProperty(wxT("Energy cost (\u20AC/Wh)"), wxT("area.energy"), wxT("<composed>")));
-    pPGUnsupplied
-      = page->AppendIn(lid, new wxFloatProperty(wxT("unsupplied"), wxT("unsupplied"), 1.));
+    pPGUnsupplied = page->AppendIn(lid,
+                                   new wxFloatProperty(wxT("unsupplied"), wxT("unsupplied"), 1.));
     pPGSpilled = page->AppendIn(lid, new wxFloatProperty(wxT("spilled"), wxT("spilled"), 1.));
 
-    pPGAreaResort = page->Append(new wxStringProperty(
-      wxT("Last resort shedding status"), wxT("area.resort"), wxT("<composed>")));
-    pPGAreaResortNon = page->AppendIn(
-      pPGAreaResort,
-      new wxBoolProperty(wxT("non dispatch. power"), wxT("area.non_dispatch_power"), false));
-    pPGAreaResortHydroPower = page->AppendIn(
-      pPGAreaResort,
-      new wxBoolProperty(wxT("dispatch. hydropower"), wxT("area.dispatch_hydropower"), false));
-    pPGAreaResortOther = page->AppendIn(
-      pPGAreaResort,
-      new wxBoolProperty(wxT("other dispatch. power"), wxT("area.other_dispatch_power"), false));
+    pPGAreaResort = page->Append(new wxStringProperty(wxT("Last resort shedding status"),
+                                                      wxT("area.resort"),
+                                                      wxT("<composed>")));
+    pPGAreaResortNon = page->AppendIn(pPGAreaResort,
+                                      new wxBoolProperty(wxT("non dispatch. power"),
+                                                         wxT("area.non_dispatch_power"),
+                                                         false));
+    pPGAreaResortHydroPower = page->AppendIn(pPGAreaResort,
+                                             new wxBoolProperty(wxT("dispatch. hydropower"),
+                                                                wxT("area.dispatch_hydropower"),
+                                                                false));
+    pPGAreaResortOther = page->AppendIn(pPGAreaResort,
+                                        new wxBoolProperty(wxT("other dispatch. power"),
+                                                           wxT("area.other_dispatch_power"),
+                                                           false));
 
-    pPGAreaAdequacyPatchTitle
-      = Category(pg, wxT("Adequacy Patch"), wxT("area.adequacy_patch_title"));
-    pPGAreaAdequacyPatchMode = page->Append(new wxEnumProperty(
-      wxT("adequacy patch mode"), wxT("area.adequacy_patch_mode"), adequacyPatchMode));
+    pPGAreaAdequacyPatchTitle = Category(pg,
+                                         wxT("Adequacy Patch"),
+                                         wxT("area.adequacy_patch_title"));
+    pPGAreaAdequacyPatchMode = page->Append(new wxEnumProperty(wxT("adequacy patch mode"),
+                                                               wxT("area.adequacy_patch_mode"),
+                                                               adequacyPatchMode));
 
     pPGAreaLocalization = Category(pg, wxT("Localization"), wxT("area.localization"));
     P_INT("x", "area.x");
     P_INT("y", "area.y");
 
     pPGAreaFilteringStatus = Category(pg, wxT("Output print status"), wxT("area.filtering"));
-    lid = page->Append(new wxStringProperty(
-      wxT("Output synthesis"), wxT("area.filtering-synthesis"), wxT("<composed>")));
-    pPGAreaFilteringSynthesis[0]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("hourly"), wxT("hourly"), true));
-    pPGAreaFilteringSynthesis[1]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("daily"), wxT("daily"), true));
-    pPGAreaFilteringSynthesis[2]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("weekly"), wxT("weekly"), true));
-    pPGAreaFilteringSynthesis[3]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("monthly"), wxT("monthly"), true));
-    pPGAreaFilteringSynthesis[4]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("annual"), wxT("annual"), true));
-    lid = page->Append(new wxStringProperty(
-      wxT("Output Year-by-year"), wxT("area.filtering-year-by-year"), wxT("<composed>")));
-    pPGAreaFilteringYbY[0]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("hourly"), wxT("hourly"), true));
-    pPGAreaFilteringYbY[1]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("daily"), wxT("daily"), true));
-    pPGAreaFilteringYbY[2]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("weekly"), wxT("weekly"), true));
-    pPGAreaFilteringYbY[3]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("monthly"), wxT("monthly"), true));
-    pPGAreaFilteringYbY[4]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("annual"), wxT("annual"), true));
+    lid = page->Append(new wxStringProperty(wxT("Output synthesis"),
+                                            wxT("area.filtering-synthesis"),
+                                            wxT("<composed>")));
+    pPGAreaFilteringSynthesis[0] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("hourly"),
+                                                                     wxT("hourly"),
+                                                                     true));
+    pPGAreaFilteringSynthesis[1] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("daily"),
+                                                                     wxT("daily"),
+                                                                     true));
+    pPGAreaFilteringSynthesis[2] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("weekly"),
+                                                                     wxT("weekly"),
+                                                                     true));
+    pPGAreaFilteringSynthesis[3] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("monthly"),
+                                                                     wxT("monthly"),
+                                                                     true));
+    pPGAreaFilteringSynthesis[4] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("annual"),
+                                                                     wxT("annual"),
+                                                                     true));
+    lid = page->Append(new wxStringProperty(wxT("Output Year-by-year"),
+                                            wxT("area.filtering-year-by-year"),
+                                            wxT("<composed>")));
+    pPGAreaFilteringYbY[0] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("hourly"), wxT("hourly"), true));
+    pPGAreaFilteringYbY[1] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("daily"), wxT("daily"), true));
+    pPGAreaFilteringYbY[2] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("weekly"), wxT("weekly"), true));
+    pPGAreaFilteringYbY[3] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("monthly"),
+                                                               wxT("monthly"),
+                                                               true));
+    pPGAreaFilteringYbY[4] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("annual"), wxT("annual"), true));
 
     pPGAreaDeps = Category(pg, wxT("Dependencies"), wxT("area.deps"));
     pPGAreaLinks = P_UINT("links", "area.link_count");
@@ -423,8 +452,8 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     P_STRING("Caption", "link.comments");
 
     Category(pg, wxT("Style"), wxT("link.styles"));
-    pPGLinkColor
-      = page->Append(new wxColourProperty(wxT("Color"), wxT("link.color"), wxColour(0, 0, 0)));
+    pPGLinkColor = page->Append(
+      new wxColourProperty(wxT("Color"), wxT("link.color"), wxColour(0, 0, 0)));
 
     wxPGChoices arrStyle;
     arrStyle.Add(wxT("Plain"), Data::stPlain);
@@ -434,30 +463,44 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGLinkStyle = pg->Append(new wxEnumProperty(wxT("Style"), wxT("link.style"), arrStyle));
     pPGLinkWidth = P_INT("Width", "link.width");
     pPGLinkFilteringStatus = Category(pg, wxT("Output print status"), wxT("link.filtering"));
-    lid = page->Append(new wxStringProperty(
-      wxT("Output synthesis"), wxT("link.filtering-synthesis"), wxT("<composed>")));
-    pPGLinkFilteringSynthesis[0]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("hourly"), wxT("hourly"), true));
-    pPGLinkFilteringSynthesis[1]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("daily"), wxT("daily"), true));
-    pPGLinkFilteringSynthesis[2]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("weekly"), wxT("weekly"), true));
-    pPGLinkFilteringSynthesis[3]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("monthly"), wxT("monthly"), true));
-    pPGLinkFilteringSynthesis[4]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("annual"), wxT("annual"), true));
-    lid = page->Append(new wxStringProperty(
-      wxT("Output Year-by-year"), wxT("link.filtering-year-by-year"), wxT("<composed>")));
-    pPGLinkFilteringYbY[0]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("hourly"), wxT("hourly"), true));
-    pPGLinkFilteringYbY[1]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("daily"), wxT("daily"), true));
-    pPGLinkFilteringYbY[2]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("weekly"), wxT("weekly"), true));
-    pPGLinkFilteringYbY[3]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("monthly"), wxT("monthly"), true));
-    pPGLinkFilteringYbY[4]
-      = page->AppendIn(lid, new wxBoolProperty(wxT("annual"), wxT("annual"), true));
+    lid = page->Append(new wxStringProperty(wxT("Output synthesis"),
+                                            wxT("link.filtering-synthesis"),
+                                            wxT("<composed>")));
+    pPGLinkFilteringSynthesis[0] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("hourly"),
+                                                                     wxT("hourly"),
+                                                                     true));
+    pPGLinkFilteringSynthesis[1] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("daily"),
+                                                                     wxT("daily"),
+                                                                     true));
+    pPGLinkFilteringSynthesis[2] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("weekly"),
+                                                                     wxT("weekly"),
+                                                                     true));
+    pPGLinkFilteringSynthesis[3] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("monthly"),
+                                                                     wxT("monthly"),
+                                                                     true));
+    pPGLinkFilteringSynthesis[4] = page->AppendIn(lid,
+                                                  new wxBoolProperty(wxT("annual"),
+                                                                     wxT("annual"),
+                                                                     true));
+    lid = page->Append(new wxStringProperty(wxT("Output Year-by-year"),
+                                            wxT("link.filtering-year-by-year"),
+                                            wxT("<composed>")));
+    pPGLinkFilteringYbY[0] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("hourly"), wxT("hourly"), true));
+    pPGLinkFilteringYbY[1] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("daily"), wxT("daily"), true));
+    pPGLinkFilteringYbY[2] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("weekly"), wxT("weekly"), true));
+    pPGLinkFilteringYbY[3] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("monthly"),
+                                                               wxT("monthly"),
+                                                               true));
+    pPGLinkFilteringYbY[4] = page->AppendIn(lid,
+                                            new wxBoolProperty(wxT("annual"), wxT("annual"), true));
 
     // --- THERMAL CLUSTERS ---
     // gp : all thermal property names should be renamed "th-cluster.<something>" instead of
@@ -469,7 +512,9 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
 
     wxPGChoices ThGroupChoices;
     for (uint i = 0; i != arrayClusterGroupCount; ++i)
+    {
         ThGroupChoices.Add(arrayClusterGroup[i], i);
+    }
     pPGThClusterGroup = page->Append(
       new wxEditEnumProperty(wxT("group"), wxT("cluster.group"), ThGroupChoices, wxEmptyString));
 
@@ -495,18 +540,22 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterCO2 = P_FLOAT("CO2 (Tons/MWh)", "cluster.co2");
 
     pPGThClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
-    pPGThClusterCostGeneration = P_ENUM("Cost generation", "cluster.costgeneration", costgeneration);  
+    pPGThClusterCostGeneration = P_ENUM("Cost generation",
+                                        "cluster.costgeneration",
+                                        costgeneration);
     pPGThClusterMarginalCost = P_FLOAT("Marginal (\u20AC/MWh)", "cluster.opcost_marginal");
     pPGThClusterFixedCost = P_FLOAT("Fixed (\u20AC/hour)", "cluster.opcost_fixed");
     pPGThClusterStartupCost = P_FLOAT("Startup (\u20AC/startup)", "cluster.opcost_startup");
     pPGThClusterOperatingCost = P_FLOAT("Market bid (\u20AC/MWh)", "cluster.opcost_marketbid");
     pPGThClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
-    pPGThClusterVariableOMcost = P_FLOAT("Variable Operation\u0026Maintenance cost (\u20AC/MWh)", "cluster.variableomcost");
+    pPGThClusterVariableOMcost = P_FLOAT("Variable Operation\u0026Maintenance cost (\u20AC/MWh)",
+                                         "cluster.variableomcost");
     pPGThClusterEfficiency = P_FLOAT("Fuel Efficiency (%)", "cluster.efficiency");
     pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MAX, 100.00);
 
-    pPGThClusterReliabilityModel
-      = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
+    pPGThClusterReliabilityModel = Category(pg,
+                                            wxT("Timeseries generation"),
+                                            wxT("cluster.reliabilitymodel"));
     pPGThClusterDoGenerateTS = P_ENUM("Generate timeseries", "cluster.gen-ts", localGenTS);
     pPGThClusterVolatilityForced = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
@@ -521,7 +570,9 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
 
     wxPGChoices RnGroupChoices;
     for (uint i = 0; i != arrayRnClusterGroupCount; ++i)
+    {
         RnGroupChoices.Add(arrayRnClusterGroup[i], i);
+    }
     pPGRnClusterGroup = page->Append(
       new wxEditEnumProperty(wxT("group"), wxT("rn-cluster.group"), RnGroupChoices, wxEmptyString));
 
@@ -550,7 +601,9 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     SetSizer(s);
     // User's notes
     if (pAllowAnyObject)
+    {
         Dispatcher::GUI::Post(this, &Frame::onLoadUserNotes);
+    }
 
     OnInspectorRefresh.connect(this, &Frame::onInternalRefresh);
 }
@@ -572,7 +625,9 @@ Frame::~Frame()
 void Frame::onInternalRefresh(const void* sender)
 {
     if (sender != this)
+    {
         delayApply();
+    }
 }
 
 void Frame::detachFromTheMainForm()
@@ -580,7 +635,9 @@ void Frame::detachFromTheMainForm()
     auto* mainFrm = Antares::Forms::ApplWnd::Instance();
     assert(mainFrm and "Invalid main frame");
     if (mainFrm)
+    {
         mainFrm->AUIManager().DetachPane(this);
+    }
 }
 
 void Frame::attachToTheMainForm()
@@ -615,7 +672,9 @@ void Frame::onSelectProperties(void*)
 
         wxSizer* sizer = pMainPanel->GetSizer();
         if (pNotes)
+        {
             sizer->Show(pNotes, false, false);
+        }
         sizer->Show(pPropertyGrid, true, false);
         sizer->Layout();
         mainFrm.AUIManager().Update();
@@ -631,7 +690,9 @@ void Frame::onSelectNotes(void*)
         pnl.Caption(wxT("Notes"));
 
         if (pNotes)
+        {
             pMainPanel->GetSizer()->Show(pNotes, true, false);
+        }
         pMainPanel->GetSizer()->Show(pPropertyGrid, false, false);
         pMainPanel->GetSizer()->Layout();
         mainFrm.AUIManager().Update();
@@ -642,7 +703,9 @@ void Frame::apply(const InspectorData::Ptr& data)
 {
 #define PROPERTY(X) (pPropertyGrid->GetPropertyByName(wxT(X)))
     if (pAllowAnyObject and not IsShown())
+    {
         return;
+    }
 
     // Temporary Revoke the current selection in the property grid
     // to prevent any changes
@@ -739,9 +802,13 @@ void Frame::apply(const InspectorData::Ptr& data)
     if (!hide)
     {
         if (!multiple)
+        {
             pPGAreaTitle->SetLabel(wxT("AREA"));
+        }
         else
+        {
             pPGAreaTitle->SetLabel(wxString() << data->areas.size() << wxT(" AREAS"));
+        }
     }
 
     // -----
@@ -755,7 +822,9 @@ void Frame::apply(const InspectorData::Ptr& data)
         pPGAreaName->Hide(multiple);
         // Name of the area
         if (!multiple)
+        {
             pPGAreaName->SetValueFromString(wxStringFromUTF8((*(data->areas.begin()))->name));
+        }
         // Area color
         Accumulator<PAreaColor>::Apply(pPGAreaColor, data->areas);
         // Adequacy patch
@@ -826,9 +895,13 @@ void Frame::apply(const InspectorData::Ptr& data)
     if (!hide)
     {
         if (!multiple)
+        {
             p->SetLabel(wxT("LINK"));
+        }
         else
+        {
             p->SetLabel(wxString() << data->links.size() << wxT(" LINKS"));
+        }
         Accumulator<PLinkArea<true>>::Apply(PROPERTY("link.from"), data->links);
         Accumulator<PLinkArea<false>>::Apply(PROPERTY("link.to"), data->links);
         Accumulator<PLinkHurdlesCost>::Apply(PROPERTY("link.hurdles_cost"), data->links);
@@ -885,7 +958,9 @@ void Frame::apply(const InspectorData::Ptr& data)
               wxStringFromUTF8((*(data->ThClusters.begin()))->name()));
         }
         else
+        {
             p->SetLabel(wxString() << data->ThClusters.size() << wxT(" THERMAL CLUSTERS"));
+        }
 
         // Parent Area
         Accumulator<PClusterArea>::Apply(pPGThClusterArea, data->ThClusters);
@@ -971,7 +1046,9 @@ void Frame::apply(const InspectorData::Ptr& data)
               wxStringFromUTF8((*(data->RnClusters.begin()))->name()));
         }
         else
+        {
             p->SetLabel(wxString() << data->RnClusters.size() << wxT(" RENEWABLE CLUSTERS"));
+        }
 
         // Parent Area
         Accumulator<PClusterArea>::Apply(pPGRnClusterArea, data->RnClusters);
@@ -1035,9 +1112,9 @@ void Frame::apply(const InspectorData::Ptr& data)
 void Frame::onLoadUserNotes()
 {
     if (pNotes and CurrentStudyIsValid())
+    {
         pNotes->loadFromStudy();
+    }
 }
 
-} // namespace Inspector
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Inspector

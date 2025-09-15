@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "job.h"
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 inline enum Job::State IJob::state() const
 {
@@ -79,5 +78,4 @@ inline String IJob::caption() const
     return nullptr;
 }
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job

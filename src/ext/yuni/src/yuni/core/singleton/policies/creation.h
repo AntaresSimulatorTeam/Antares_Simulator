@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -15,9 +16,7 @@
 ** \brief Singleton creation policies
 */
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \brief Creation policies
@@ -50,5 +49,4 @@ public:
 };
 
 } // namespace Creation
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include "data.h"
 
 #include "data.h"
@@ -28,21 +28,13 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer::BindingConstraint
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-namespace BindingConstraint
-{
-Data::Data(wxWindow* control, const Antares::Data::BindingConstraint::Operator op) :
- pOperator(op),
- pControl(control),
- pZero(wxT("0.")),
- pType(Antares::Data::BindingConstraint::typeHourly)
+Data::Data(wxWindow* control, const Antares::Data::BindingConstraint::Operator op):
+    pOperator(op),
+    pControl(control),
+    pZero(wxT("0.")),
+    pType(Antares::Data::BindingConstraint::typeHourly)
 {
     switch (pOperator)
     {
@@ -81,17 +73,23 @@ int Data::height() const
 wxString Data::rowCaption(int row) const
 {
     if (!study)
+    {
         return wxEmptyString;
+    }
     switch (pType)
     {
     case Antares::Data::BindingConstraint::typeHourly:
         if (row < study->calendar.maxHoursInYear)
+        {
             return wxStringFromUTF8(study->calendar.text.hours[row]);
+        }
         break;
     case Antares::Data::BindingConstraint::typeDaily:
     case Antares::Data::BindingConstraint::typeWeekly:
         if (row < study->calendar.maxDaysInYear)
+        {
             return wxStringFromUTF8(study->calendar.text.daysYear[row]);
+        }
         break;
     case Antares::Data::BindingConstraint::typeUnknown:
     case Antares::Data::BindingConstraint::typeMax:
@@ -120,7 +118,7 @@ double Data::cellNumericValue(int x, [[maybe_unused]] int y) const
         assert(bindingconstraint);
         if (bindingconstraint)
         {
-            //Deleted some code. UI is deprecated but not yet removed
+            // Deleted some code. UI is deprecated but not yet removed
             return 0;
         }
     }
@@ -135,7 +133,9 @@ wxString Data::cellValue(int x, int y) const
 wxString Data::columnCaption(int x) const
 {
     if (!study)
+    {
         return wxEmptyString;
+    }
     auto constraint = (study->uiinfo->byOperator[pOperator][pType][x]);
     return constraint ? wxStringFromUTF8(constraint->name()) : wxString();
 }
@@ -146,8 +146,7 @@ void Data::applyLayerFiltering(size_t layerID, VGridHelper* gridHelper)
     for (int x = 0; x < gridHelper->virtualSize.x; ++x)
     {
         // The current constraint
-        auto constraint
-          = study->uiinfo->byOperator[pOperator][pType][x];
+        auto constraint = study->uiinfo->byOperator[pOperator][pType][x];
 
         if (constraint->hasAllWeightedLinksOnLayer(layerID))
         {
@@ -179,10 +178,12 @@ IRenderer::CellStyle Data::cellStyle(int, int y) const
     return ((y % 2) ? IRenderer::cellStyleDefaultAlternate : IRenderer::cellStyleDefault);
 }
 
-bool Data::cellValue(int x, [[maybe_unused]]int y, const String& value)
+bool Data::cellValue(int x, [[maybe_unused]] int y, const String& value)
 {
     if (!study)
+    {
         return false;
+    }
 
     auto constraint = (study->uiinfo->byOperator[pOperator][pType][x]);
     if (constraint)
@@ -190,7 +191,7 @@ bool Data::cellValue(int x, [[maybe_unused]]int y, const String& value)
         double v;
         if (value.to(v))
         {
-            //Deleted some code. UI is deprecated but not yet removed
+            // Deleted some code. UI is deprecated but not yet removed
             return true;
         }
     }
@@ -217,15 +218,15 @@ wxColour Data::horizontalBorderColor(int x, int y) const
         auto& hourinfo = study->calendar.hours[y + 1];
 
         if (hourinfo.firstHourInMonth)
+        {
             return Default::BorderMonthSeparator();
+        }
         if (hourinfo.firstHourInDay)
+        {
             return Default::BorderDaySeparator();
+        }
     }
     return IRenderer::verticalBorderColor(x, y);
 }
 
-} // namespace BindingConstraint
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer::BindingConstraint

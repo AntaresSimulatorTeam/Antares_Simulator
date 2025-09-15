@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "dbgrid.h"
 #include "component.h"
@@ -33,11 +33,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
+namespace Antares::Component::Datagrid
 {
 static const wxColour borderColor = wxColour(179, 179, 182);
 static const wxColour borderDarkColor = wxColour(139, 139, 152);
@@ -49,6 +45,7 @@ enum
     plus = 120,
     moins = 90,
 };
+
 static const wxColour gradientColStart = wxColour(103 + plus, 111 + plus, 126 + plus);
 static const wxColour gradientColEnd = wxColour(99 + moins, 107 + moins, 122 + moins);
 
@@ -60,6 +57,7 @@ enum
 {
     fontSize = 8,
 };
+
 static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
 BEGIN_EVENT_TABLE(DBGrid, wxGrid)
@@ -73,15 +71,15 @@ EVT_SCROLLWIN(DBGrid::onScroll)
 EVT_KILL_FOCUS(DBGrid::onGridLeave)
 END_EVENT_TABLE()
 
-DBGrid::DBGrid(Component* parent) :
- wxGrid(parent,
-        wxID_ANY,
-        wxDefaultPosition,
-        wxDefaultSize,
-        wxTAB_TRAVERSAL | wxWANTS_CHARS | wxBORDER_NONE),
- pParentComponent(parent),
- pAllowRefresh(true),
- pColorMappingRowLabels(true)
+DBGrid::DBGrid(Component* parent):
+    wxGrid(parent,
+           wxID_ANY,
+           wxDefaultPosition,
+           wxDefaultSize,
+           wxTAB_TRAVERSAL | wxWANTS_CHARS | wxBORDER_NONE),
+    pParentComponent(parent),
+    pAllowRefresh(true),
+    pColorMappingRowLabels(true)
 {
     DisableDragRowSize();
     SetColMinimalAcceptableWidth(20);
@@ -99,10 +97,14 @@ DBGrid::DBGrid(Component* parent) :
                                         wxPaintEventHandler(DBGrid::evtCornerPaint),
                                         nullptr,
                                         GetGridCornerLabelWindow());
-    GetGridColLabelWindow()->Connect(
-      wxEVT_PAINT, wxPaintEventHandler(DBGrid::onDrawColLabels), nullptr, GetGridColLabelWindow());
-    GetGridRowLabelWindow()->Connect(
-      wxEVT_PAINT, wxPaintEventHandler(DBGrid::onDrawRowLabels), nullptr, GetGridRowLabelWindow());
+    GetGridColLabelWindow()->Connect(wxEVT_PAINT,
+                                     wxPaintEventHandler(DBGrid::onDrawColLabels),
+                                     nullptr,
+                                     GetGridColLabelWindow());
+    GetGridRowLabelWindow()->Connect(wxEVT_PAINT,
+                                     wxPaintEventHandler(DBGrid::onDrawRowLabels),
+                                     nullptr,
+                                     GetGridRowLabelWindow());
 
     // Erase background
     GetGridCornerLabelWindow()->Connect(wxEVT_ERASE_BACKGROUND,
@@ -123,7 +125,9 @@ DBGrid::~DBGrid()
     // Remove any remaining reference
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->disableGridOperatorIfGrid(this);
+    }
 
     pParentComponent = nullptr;
     otherGrid_ = nullptr;
@@ -135,13 +139,17 @@ void DBGrid::onGridSelectCell(wxGridEvent& evt)
 
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->gridOperatorSelectedCellsUpdateResult(this);
+    }
     pCurrentPosition.x = evt.GetCol();
     pCurrentPosition.y = evt.GetRow();
 
     auto* r = ((Component*)GetParent())->renderer();
     if (r)
+    {
         r->onSelectCell((unsigned)pCurrentPosition.x, (unsigned)pCurrentPosition.y);
+    }
 
     evt.Skip();
 }
@@ -152,9 +160,13 @@ void DBGrid::onGridRangeSelect(wxGridRangeSelectEvent& evt)
 
     Forms::ApplWnd* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->gridOperatorSelectedCellsUpdateResult(this);
+    }
     if (GetGridWindow())
+    {
         GetGridWindow()->SetFocus();
+    }
     evt.Skip();
 }
 
@@ -162,7 +174,9 @@ void DBGrid::onGridLeave(wxFocusEvent& evt)
 {
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->gridOperatorSelectedCellsUpdateResult(nullptr);
+    }
     evt.Skip();
 }
 
@@ -203,10 +217,14 @@ void DBGrid::onDraw(wxPaintEvent& evt)
 void DBGrid::ensureDataAreLoaded()
 {
     if (!pAllowRefresh)
+    {
         return;
+    }
     Component* parent = dynamic_cast<Component*>(GetParent());
     if (!parent)
+    {
         return;
+    }
 
     // avoid useless memory flush
     MemoryFlushLocker memflushlocker;
@@ -219,12 +237,16 @@ void DBGrid::ensureDataAreLoaded()
 
         Forms::ApplWnd* mainFrm = Forms::ApplWnd::Instance();
         if (mainFrm)
+        {
             mainFrm->disableGridOperatorIfGrid(this);
+        }
 
         assert(pAllowRefresh == true);
         parent->forceRefresh();
         if (GetTable())
+        {
             SetTable(GetTable(), false);
+        }
         Refresh();
     }
 }
@@ -251,7 +273,9 @@ void DBGrid::onKeyUp(wxKeyEvent& evt)
             else
             {
                 if (c == 'v' || c == 'V')
+                {
                     Dispatcher::GUI::Post(pParentComponent, &Component::pasteFromClipboard);
+                }
                 // pParentComponent->pasteFromClipboard();
             }
         }
@@ -262,19 +286,25 @@ void DBGrid::onKeyUp(wxKeyEvent& evt)
 void DBGrid::copyToClipboard()
 {
     if (pParentComponent)
+    {
         pParentComponent->copyToClipboard();
+    }
 }
 
 void DBGrid::copyAllToClipboard()
 {
     if (pParentComponent)
+    {
         pParentComponent->copyAllToClipboard();
+    }
 }
 
 void DBGrid::pasteFromClipboard()
 {
     if (pParentComponent)
+    {
         pParentComponent->pasteFromClipboard();
+    }
 }
 
 void DBGrid::resizeAllHeaders(bool nodelay)
@@ -330,14 +360,18 @@ void DBGrid::resizeAllHeaders(bool nodelay)
                         {
                             tmp = r->rowCaption(i);
                             if (tmp.size() > s.size())
+                            {
                                 s = tmp;
+                            }
                         }
                     }
                     wxClientDC dc(GetGridRowLabelWindow());
                     dc.SetFont(font);
                     wxSize p = dc.GetTextExtent(s);
                     if (p.GetWidth() > rowLabelWidth)
+                    {
                         rowLabelWidth = p.GetWidth();
+                    }
                 }
                 SetRowLabelSize(rowLabelWidth + 25);
                 m_defaultRowHeight = 18;
@@ -372,7 +406,9 @@ void DBGrid::resizeAllHeaders(bool nodelay)
                                 wxSize p = dc.GetMultiLineTextExtent(text);
                                 p.SetWidth(p.GetWidth() + 15);
                                 if (p.GetHeight() > colLabelHeight)
+                                {
                                     colLabelHeight = p.GetHeight();
+                                }
 
                                 if (p.GetWidth() < 70)
                                 {
@@ -402,7 +438,9 @@ void DBGrid::resizeAllHeaders(bool nodelay)
                             wxSize p = dc.GetMultiLineTextExtent(text);
                             p.SetWidth(p.GetWidth() + 15);
                             if (p.GetHeight() > colLabelHeight)
+                            {
                                 colLabelHeight = p.GetHeight();
+                            }
 
                             if (p.GetWidth() < 70)
                             {
@@ -434,7 +472,9 @@ void DBGrid::evtOnResizeHeaders(wxCommandEvent&)
 void DBGrid::DrawColLabel(wxDC& dc, int col, uint& offset)
 {
     if (GetColWidth(col) <= 0 || m_colLabelHeight <= 0 || col < 0)
+    {
         return;
+    }
 
     wxRect rect;
     const int colLeft = GetColLeft(col);
@@ -445,7 +485,9 @@ void DBGrid::DrawColLabel(wxDC& dc, int col, uint& offset)
     {
         const uint m = rect.x + rect.width;
         if (m > offset)
+        {
             offset = m;
+        }
     }
 
     dc.GradientFillLinear(rect, gradientColStart, gradientColEnd, wxSOUTH);
@@ -461,9 +503,13 @@ void DBGrid::DrawColLabel(wxDC& dc, int col, uint& offset)
     // Separator
     dc.SetPen(wxPen(gradientColEnd, 1, wxPENSTYLE_SOLID));
     if (col < GetNumberCols() - 1)
+    {
         dc.DrawLine(colRight - 1, 4, colRight - 1, m_colLabelHeight - 4);
+    }
     else
+    {
         dc.DrawLine(colRight - 1, 0, colRight - 1, m_colLabelHeight - 1);
+    }
 
     // text
     dc.SetBackgroundMode(wxTRANSPARENT);
@@ -485,7 +531,9 @@ void DBGrid::DrawColLabel(wxDC& dc, int col, uint& offset)
 void DBGrid::DrawRowLabel(wxDC& dc, int row, uint& offset)
 {
     if (GetRowHeight(row) <= 0 || m_rowLabelWidth <= 0 || row < 0)
+    {
         return;
+    }
 
     wxRect rect;
     rect.x = 0;
@@ -496,11 +544,15 @@ void DBGrid::DrawRowLabel(wxDC& dc, int row, uint& offset)
     {
         const uint m = rect.y + rect.height;
         if (m > offset)
+        {
             offset = m;
+        }
     }
 
     if (pColorMappingRowLabels)
+    {
         dc.GradientFillLinear(rect, gradientRowStart, gradientRowEnd, wxEAST);
+    }
 
     // borders
     {
@@ -539,13 +591,17 @@ void DBGrid::DrawCellHighlight(wxDC& dc, const wxGridCellAttr* attr)
 {
     // don't show highlight when the grid doesn't have focus
     if (wxWindow::FindFocus() != GetGridWindow())
+    {
         return;
+    }
 
     const int row = m_currentCellCoords.GetRow();
     const int col = m_currentCellCoords.GetCol();
 
     if (GetColWidth(col) <= 0 || GetRowHeight(row) <= 0)
+    {
         return;
+    }
 
     if (!attr->IsReadOnly() && !IsInSelection(row, col))
     {
@@ -565,8 +621,10 @@ void DBGrid::evtCornerPaint(wxPaintEvent&)
     int client_width = 0;
     GetClientSize(&client_width, &client_height);
 
-    dc.GradientFillLinear(
-      wxRect(0, 0, client_width, client_height), gradientColStart, gradientColEnd, wxSOUTH);
+    dc.GradientFillLinear(wxRect(0, 0, client_width, client_height),
+                          gradientColStart,
+                          gradientColEnd,
+                          wxSOUTH);
 
     dc.SetPen(wxPen(borderColor, 1, wxPENSTYLE_SOLID));
     dc.DrawLine(client_width - 1, client_height - 1, client_width - 1, 0);
@@ -594,7 +652,9 @@ void DBGrid::onDrawColLabels(wxPaintEvent&)
     // alias to the parent window
     DBGrid* parent = dynamic_cast<DBGrid*>(GetParent());
     if (!parent)
+    {
         return;
+    }
 
     wxPaintDC dc(this);
     // NO - don't do this because it will set both the x and y origin
@@ -606,9 +666,13 @@ void DBGrid::onDrawColLabels(wxPaintEvent&)
         parent->CalcUnscrolledPosition(0, 0, &x, &y);
         const wxPoint pt = dc.GetDeviceOrigin();
         if (GetLayoutDirection() == wxLayout_RightToLeft)
+        {
             dc.SetDeviceOrigin(pt.x + x, pt.y);
+        }
         else
+        {
             dc.SetDeviceOrigin(pt.x - x, pt.y);
+        }
     }
     // Drawing each column
     uint offset = 0;
@@ -616,14 +680,18 @@ void DBGrid::onDrawColLabels(wxPaintEvent&)
         const wxArrayInt cols = parent->CalcColLabelsExposed(GetUpdateRegion());
         uint count = (uint)cols.GetCount();
         for (uint i = 0; i != count; ++i)
+        {
             parent->DrawColLabel(dc, cols[i], offset);
+        }
     }
 
     const wxRect rect = GetRect();
     dc.SetPen(wxPen(GetBackgroundColour(), 1, wxPENSTYLE_SOLID));
     dc.SetBrush(wxBrush(GetBackgroundColour(), wxBRUSHSTYLE_SOLID));
     if (static_cast<int>(offset) < rect.width)
+    {
         dc.DrawRectangle(offset, 0, rect.width - offset, rect.height);
+    }
 }
 
 void DBGrid::onDrawRowLabels(wxPaintEvent&)
@@ -631,7 +699,9 @@ void DBGrid::onDrawRowLabels(wxPaintEvent&)
     // alias to the parent window
     DBGrid* parent = dynamic_cast<DBGrid*>(GetParent());
     if (!parent)
+    {
         return;
+    }
 
     wxPaintDC dc(this);
     // NO - don't do this because it will set both the x and y origin
@@ -650,7 +720,9 @@ void DBGrid::onDrawRowLabels(wxPaintEvent&)
         const wxArrayInt cols = parent->CalcRowLabelsExposed(GetUpdateRegion());
         uint count = (uint)cols.GetCount();
         for (uint i = 0; i != count; ++i)
+        {
             parent->DrawRowLabel(dc, cols[i], offset);
+        }
     }
 
     const wxColour& background = GetBackgroundColour();
@@ -658,14 +730,18 @@ void DBGrid::onDrawRowLabels(wxPaintEvent&)
     dc.SetBrush(wxBrush(background, wxBRUSHSTYLE_SOLID));
     const wxRect rect = GetRect();
     if (static_cast<int>(offset) < rect.height)
+    {
         dc.DrawRectangle(0, offset, rect.width, rect.height - offset);
+    }
 }
 
 void DBGrid::onScroll(wxScrollWinEvent& evt)
 {
     Renderer::IRenderer* r = ((Component*)GetParent())->renderer();
     if (r)
+    {
         r->onScroll();
+    }
 
     // Synchronize scrolling with another grid
     if (otherGrid_ != nullptr)
@@ -681,6 +757,4 @@ void DBGrid::setOtherGrid(DBGrid* otherGrid)
     otherGrid_ = otherGrid;
 }
 
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid

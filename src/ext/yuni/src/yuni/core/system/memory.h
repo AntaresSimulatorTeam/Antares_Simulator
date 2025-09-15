@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "../../yuni.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace Memory
+namespace Yuni::System::Memory
 {
 /*!
 ** \brief Get the amount of total physical memory
@@ -79,8 +76,6 @@ public:
 
 }; // class Usage
 
-} // namespace Memory
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Memory
 
 #include "memory.hxx"

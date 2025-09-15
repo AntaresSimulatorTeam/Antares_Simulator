@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,15 +12,14 @@
 #pragma once
 #include "../null.h"
 
-namespace Yuni
-{
-namespace Logs
+namespace Yuni::Logs
 {
 template<class LeftType = NullDecorator>
-class YUNI_DECL ApplicationName : public LeftType
+class YUNI_DECL ApplicationName: public LeftType
 {
 public:
-    ApplicationName() : pAppName("noname")
+    ApplicationName():
+        pAppName("noname")
     {
     }
 
@@ -40,6 +40,7 @@ public:
     {
         pAppName = s;
     }
+
     //@}
 
     template<class Handler, class VerbosityType, class O>
@@ -59,5 +60,4 @@ private:
 
 }; // class ApplicationName
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs

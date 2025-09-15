@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,12 +12,10 @@
 #ifndef __YUNI_CORE_UNIT_TIME_H__
 #define __YUNI_CORE_UNIT_TIME_H__
 
-#include "unit.h"
 #include "define.h"
+#include "unit.h"
 
-namespace Yuni
-{
-namespace Unit
+namespace Yuni::Unit
 {
 /*!
 ** \defgroup UnitTime  Time
@@ -101,7 +100,7 @@ YUNI_UNIT_IMPL(Centisecond, "centisecond", "cs", double, 1e-2);
 YUNI_UNIT_IMPL(Millisecond, "millisecond", "ms", double, 1e-3);
 //! \brief Microsecond
 //! \ingroup UnitTime
-YUNI_UNIT_IMPL(Microsecond, "microsecond", "µs,", double, 1e-6);
+YUNI_UNIT_IMPL(Microsecond, "microsecond", "ï¿½s,", double, 1e-6);
 //! \brief Nanosecond
 //! \ingroup UnitTime
 YUNI_UNIT_IMPL(Nanosecond, "nanosecond", "ns,", double, 1e-9);
@@ -122,8 +121,7 @@ YUNI_UNIT_IMPL(Zeptosecond, "zeptosecond", "zs,", double, 1e-21);
 YUNI_UNIT_IMPL(Yoctosecond, "yoctosecond", "ys,", double, 1e-24);
 
 } // namespace Time
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit
 
 #include "../undef.h"
 

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,16 +10,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "service.h"
+
 #include "../../core/system/cpu.h"
-#include "../../thread/array.h"
 #include "../../private/jobs/queue/thread.h"
+#include "../../thread/array.h"
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #endif
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 enum
 {
@@ -31,25 +31,33 @@ static inline uint OptimalCPUCount()
 {
     uint count = System::CPU::Count();
     if (count < 1)
+    {
         return 1;
+    }
     return count;
 }
 
-QueueService::QueueService() : pStatus(sStopped), pThreads(nullptr)
+QueueService::QueueService():
+    pStatus(sStopped),
+    pThreads(nullptr)
 {
     uint count = OptimalCPUCount();
     pMinimumThreadCount = count;
     pMaximumThreadCount = count;
 }
 
-QueueService::QueueService(bool autostart) : pStatus(sStopped), pThreads(nullptr)
+QueueService::QueueService(bool autostart):
+    pStatus(sStopped),
+    pThreads(nullptr)
 {
     uint count = OptimalCPUCount();
     pMinimumThreadCount = count;
     pMaximumThreadCount = count;
 
     if (autostart)
+    {
         start();
+    }
 }
 
 QueueService::~QueueService()
@@ -61,15 +69,21 @@ QueueService::~QueueService()
 bool QueueService::maximumThreadCount(uint count)
 {
     if (count > maxNumberOfThreads) // hard-coded value
+    {
         return false;
+    }
     if (0 == count) // default value
+    {
         count = OptimalCPUCount();
+    }
 
     MutexLocker locker(*this);
 
     // checking for the lower bound
     if (pMinimumThreadCount > count)
+    {
         pMinimumThreadCount = count;
+    }
     // reseting the upper bound
     pMaximumThreadCount = count;
     return true;
@@ -84,15 +98,21 @@ uint QueueService::maximumThreadCount() const
 bool QueueService::minimumThreadCount(uint count)
 {
     if (count > maxNumberOfThreads) // hard-coded value
+    {
         return false;
+    }
     if (0 == count)
+    {
         count = OptimalCPUCount();
+    }
 
     MutexLocker locker(*this);
 
     // checking for the upper bound
     if (pMaximumThreadCount < count)
+    {
         pMaximumThreadCount = count;
+    }
     // reseting the lower bound
     pMinimumThreadCount = count;
     return true;
@@ -114,10 +134,14 @@ bool QueueService::minmaxThreadCount(const std::pair<uint, uint>& values)
 {
     uint maxv = values.second;
     if (maxv > maxNumberOfThreads)
+    {
         return false;
+    }
     uint minv = values.first;
     if (minv > maxv)
+    {
         minv = maxv;
+    }
     if (maxv == 0)
     {
         maxv = OptimalCPUCount();
@@ -148,7 +172,9 @@ bool QueueService::start()
         // adding the minimum number of threads
         array.clear();
         for (uint i = 0; i != pMinimumThreadCount; ++i)
+        {
             array += new Yuni::Private::QueueService::QueueThread(*this);
+        }
 
         // Start all threads at once
         array.start();
@@ -167,7 +193,9 @@ void QueueService::stop(uint timeout)
     {
         MutexLocker locker(*this);
         if (pStatus != sRunning)
+        {
             return;
+        }
 
         threads = (ThreadArray*)pThreads;
         pThreads = nullptr;
@@ -197,7 +225,9 @@ void QueueService::registerWorker(void* threadself)
     assert(threadself != nullptr);
     MutexLocker locker(*this);
     if (pWorkerSet.count(threadself) == 0)
+    {
         pWorkerSet.insert(threadself);
+    }
 }
 
 void QueueService::unregisterWorker(void* threadself)
@@ -212,7 +242,9 @@ void QueueService::unregisterWorker(void* threadself)
         if (pWorkerSet.empty())
         {
             if (pStatus == sStopping)
+            {
                 pStatus = sStopped;
+            }
             pSignalAllThreadHaveStopped.notify();
         }
     }
@@ -250,7 +282,9 @@ inline bool QueueService::waitForAllThreads(uint timeout)
         else
         {
             if (not pSignalAllThreadHaveStopped.wait(timeout))
+            {
                 return false;
+            }
         }
 
         MutexLocker locker(*this);
@@ -276,7 +310,9 @@ void QueueService::wait(QServiceEvent event)
     {
         MutexLocker locker(*this);
         if (pStatus == sStopped)
+        {
             return;
+        }
     }
 
     switch (event)
@@ -309,7 +345,9 @@ bool QueueService::wait(QServiceEvent event, uint timeout)
     {
         MutexLocker locker(*this);
         if (pStatus == sStopped)
+        {
             return true;
+        }
     }
 
     switch (event)
@@ -318,7 +356,9 @@ bool QueueService::wait(QServiceEvent event, uint timeout)
     {
         // waiting for being terminated
         if (not pSignalShouldStop.wait(timeout))
+        {
             return false;
+        }
 
         waitForAllThreads(0);
         break;
@@ -326,7 +366,9 @@ bool QueueService::wait(QServiceEvent event, uint timeout)
     case qseIdle:
     {
         if (not waitForAllThreads(timeout))
+        {
             return false;
+        }
         break;
     }
     default:
@@ -341,7 +383,9 @@ inline void QueueService::wakeupWorkers()
 {
     MutexLocker locker(*this);
     if (pWorkerSet.size() < pMaximumThreadCount and pThreads)
+    {
         ((ThreadArray*)pThreads)->wakeUp();
+    }
 }
 
 void QueueService::add(const IJob::Ptr& job)
@@ -379,7 +423,8 @@ public:
     typedef ThreadInfoType::Vector VectorType;
 
 public:
-    QueueActivityPredicate(VectorType* out) : pList(out)
+    QueueActivityPredicate(VectorType* out):
+        pList(out)
     {
         pList->clear();
     }
@@ -420,8 +465,9 @@ void QueueService::activitySnapshot(QueueService::ThreadInfo::Vector& out)
     QueueActivityPredicate predicate(&out);
     MutexLocker locker(*this);
     if (pThreads)
+    {
         ((ThreadArray*)pThreads)->foreachThread(predicate);
+    }
 }
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <mutex>
 #include <yuni/yuni.h>
@@ -54,11 +54,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Toolbox
-{
-namespace Jobs
+namespace Antares::Toolbox::Jobs
 {
 namespace // anonymous
 {
@@ -102,7 +98,9 @@ END_EVENT_TABLE()
 class Part final
 {
 public:
-    Part() : weight(), value()
+    Part():
+        weight(),
+        value()
     {
     }
 
@@ -110,7 +108,7 @@ public:
     uint value;
 };
 
-class PartList final : public Yuni::Policy::ObjectLevelLockableNotRecursive<PartList>
+class PartList final: public Yuni::Policy::ObjectLevelLockableNotRecursive<PartList>
 {
 public:
     using ThreadingPolicy = Yuni::Policy::ObjectLevelLockableNotRecursive<PartList>;
@@ -118,26 +116,45 @@ public:
     static Solver::Progression::Section CStrToSection(const AnyString& section)
     {
         if (section == "mc")
+        {
             return Solver::Progression::sectYear;
+        }
         if (section == "output")
+        {
             return Solver::Progression::sectOutput;
+        }
         if (section == "thermal")
+        {
             return Solver::Progression::sectTSGThermal;
+        }
         if (section == "wind")
+        {
             return Solver::Progression::sectTSGWind;
+        }
         if (section == "hydro")
+        {
             return Solver::Progression::sectTSGHydro;
+        }
         if (section == "load")
+        {
             return Solver::Progression::sectTSGLoad;
+        }
         if (section == "solar")
+        {
             return Solver::Progression::sectTSGSolar;
+        }
         if (section == "import timeseries")
+        {
             return Solver::Progression::sectImportTS;
+        }
         return Solver::Progression::sectYear;
     }
 
 public:
-    PartList() : pGlobalValue(0), pMaxValue(1), pCurrentTaskPercent(0.)
+    PartList():
+        pGlobalValue(0),
+        pMaxValue(1),
+        pCurrentTaskPercent(0.)
     {
     }
 
@@ -153,7 +170,9 @@ public:
         pGlobalValue -= (uint64_t)part.value;
         pCurrentTaskPercent = value;
         if (pCurrentTaskPercent >= 100.)
+        {
             pCurrentTaskPercent = 0.;
+        }
         part.value = (uint)((double)part.weight * (value / 100.));
         pGlobalValue += (uint64_t)part.value;
 
@@ -185,16 +204,22 @@ public:
                 p = line.find(' ');
 
                 if (p >= line.size() - 1)
+                {
                     continue;
+                }
 
                 str.assign(line.c_str() + p + 1, line.size() - p - 1);
                 line.resize(p);
                 if (line == "post")
+                {
                     year = (uint)-1;
+                }
                 else
                 {
                     if (!line.to<uint>(year))
+                    {
                         continue;
+                    }
                 }
                 addWL(year, str);
             }
@@ -202,7 +227,9 @@ public:
 
         // Avoid division by 0
         if (!pMaxValue)
+        {
             pMaxValue = (uint64_t)-1;
+        }
     }
 
 protected:
@@ -236,10 +263,11 @@ private:
     std::map<uint, std::map<Solver::Progression::Section, Part>> pParts;
 };
 
-class JobThread final : public Yuni::Thread::IThread
+class JobThread final: public Yuni::Thread::IThread
 {
 public:
-    JobThread(Job& job) : pJob(job)
+    JobThread(Job& job):
+        pJob(job)
     {
     }
 
@@ -256,7 +284,9 @@ protected:
         {
             // waite while the task is being executed
             while (not pJob.executeTask())
+            {
                 suspend(300); // arbitrary value
+            }
 
             pJob.pMutex.lock();
             pJob.pGUICanUpdate = 0;
@@ -288,16 +318,16 @@ private:
 
 }; // class JobThread
 
-class TimerElapsedTime final : public Yuni::Thread::Timer
+class TimerElapsedTime final: public Yuni::Thread::Timer
 {
 public:
-    TimerElapsedTime(Job& j, PartList& p) :
-     Yuni::Thread::Timer(850),
-     pElapsedTime(0),
-     pPercent(0),
-     pUseProgression(false),
-     pJob(j),
-     pParts(p)
+    TimerElapsedTime(Job& j, PartList& p):
+        Yuni::Thread::Timer(850),
+        pElapsedTime(0),
+        pPercent(0),
+        pUseProgression(false),
+        pJob(j),
+        pParts(p)
     {
         pStartTime = wxDateTime::Now();
     }
@@ -351,7 +381,9 @@ protected:
             }
         }
         else
+        {
             pMutex.unlock();
+        }
 
         // Sending event
         Bind<void()> callback;
@@ -374,11 +406,13 @@ private:
 
 }; // class TimerElapsedTime
 
-class TimerRemainingTime final : public Yuni::Thread::Timer
+class TimerRemainingTime final: public Yuni::Thread::Timer
 {
 public:
-    TimerRemainingTime(Job& j, TimerElapsedTime* elapsedTime) :
-     Yuni::Thread::Timer(5500), pJob(j), pTimerElapsedTime(elapsedTime)
+    TimerRemainingTime(Job& j, TimerElapsedTime* elapsedTime):
+        Yuni::Thread::Timer(5500),
+        pJob(j),
+        pTimerElapsedTime(elapsedTime)
     {
     }
 
@@ -408,16 +442,24 @@ protected:
             if (remaining < 60.)
             {
                 if (remaining < 30.)
+                {
                     tmp << "less than 30 seconds";
+                }
                 else
+                {
                     tmp << "less than one minute";
+                }
             }
             else
             {
                 if (percent > 0.3)
+                {
                     tmp << "around ";
+                }
                 else
+                {
                     tmp << "probably around ";
+                }
                 if (remaining < 3600.)
                 {
                     const uint min = (int)(remaining / 60.);
@@ -442,9 +484,13 @@ protected:
                             if (hr)
                             {
                                 if (hr == 1)
+                                {
                                     tmp << " and one hour";
+                                }
                                 else
+                                {
                                     tmp << " and " << hr << " hours";
+                                }
                             }
                         }
                         else
@@ -472,14 +518,16 @@ private:
 
 }; // class TimerRemainingTime
 
-class MessageFlusherTimer final : public wxTimer
+class MessageFlusherTimer final: public wxTimer
 {
 public:
-    MessageFlusherTimer(const wxString& messageBuffer, wxStaticText* label, std::mutex& mutex) :
-     wxTimer(), pMessageBuffer(messageBuffer), pLabel(label), pMutex(mutex)
+    MessageFlusherTimer(const wxString& messageBuffer, wxStaticText* label, std::mutex& mutex):
+        wxTimer(),
+        pMessageBuffer(messageBuffer),
+        pLabel(label),
+        pMutex(mutex)
     {
         assert(pLabel);
-
     }
 
     virtual ~MessageFlusherTimer()
@@ -492,7 +540,9 @@ public:
             std::lock_guard locker(pMutex);
             // We use .c_str() here to force the copy of the string
             if (pStrCopy == pMessageBuffer)
+            {
                 return;
+            }
             pStrCopy = pMessageBuffer.c_str();
         }
         pLabel->SetLabel(pStrCopy);
@@ -509,13 +559,14 @@ private:
 
 }; // class MessageFlusherTimer
 
-class ReadWriteStatsFlusherTimer final : public wxTimer
+class ReadWriteStatsFlusherTimer final: public wxTimer
 {
 public:
-    ReadWriteStatsFlusherTimer(wxStaticText* label) : wxTimer(), pLabel(label)
+    ReadWriteStatsFlusherTimer(wxStaticText* label):
+        wxTimer(),
+        pLabel(label)
     {
         assert(pLabel);
-
     }
 
     virtual ~ReadWriteStatsFlusherTimer()
@@ -547,13 +598,19 @@ public:
                     tmp = v;
                     tmp.trimRight('0');
                     if (tmp.last() == '.')
+                    {
                         tmp.removeLast();
+                    }
                     pText << wxStringFromUTF8(tmp);
                 }
                 if (hasW)
+                {
                     pText << wxT(" Mo,  ");
+                }
                 else
+                {
                     pText << wxT(" Mo");
+                }
             }
             if (hasW)
             {
@@ -568,7 +625,9 @@ public:
                     tmp = v;
                     tmp.trimRight('0');
                     if (tmp.last() == '.')
+                    {
                         tmp.removeLast();
+                    }
                     pText << wxStringFromUTF8(tmp);
                 }
                 pText << wxT(" Mo");
@@ -577,7 +636,9 @@ public:
             pLabel->SetLabel(pText);
         }
         else
+        {
             pLabel->SetLabel(wxEmptyString);
+        }
     }
 
 private:
@@ -587,38 +648,38 @@ private:
 
 }; // class MessageFlusherTimer
 
-Job::Job(const wxString& title, const wxString& subTitle, const char* icon) :
- wxDialog(Forms::ApplWnd::Instance(),
-          wxID_ANY,
-          title,
-          wxDefaultPosition,
-          wxSize(530, 100),
-          wxCAPTION | wxCLIP_CHILDREN),
- pTitle(title),
- pSubTitle(subTitle),
- pIcon(icon),
- pDisplayProgression(false),
- pCanCancel(false),
- pResult(false),
- pGaugeSizer(nullptr),
- pGaugeParentSizer(nullptr),
- pRemainingSizer(nullptr),
- pGauge(nullptr),
- pCancelSizer(nullptr),
- pProgrText(nullptr),
- pProgrSubText(nullptr),
- pJobIsRunning(0),
- pGUICanUpdate(0),
- pTimerElapsedTime(nullptr),
- pTimerRemainingTime(nullptr),
- pThread(nullptr),
- pAnim(nullptr),
- pLblErrors(nullptr),
- pLogRegex(wxT("\\[([0-9 :-]+)\\]\\[([a-zA-Z0-9 "
-               "-]+)\\](\\[[a-z0-9;]+){0,2}\\[([a-z]+)\\](\\[[a-z0-9;]+){0,2} "
-               "(\\[[a-z0-9;]+){0,2}([^]*)(\\[[a-z0-9;]+){0,2}")),
- pCatchLogEvents(true),
- pWndCancelOperation(nullptr)
+Job::Job(const wxString& title, const wxString& subTitle, const char* icon):
+    wxDialog(Forms::ApplWnd::Instance(),
+             wxID_ANY,
+             title,
+             wxDefaultPosition,
+             wxSize(530, 100),
+             wxCAPTION | wxCLIP_CHILDREN),
+    pTitle(title),
+    pSubTitle(subTitle),
+    pIcon(icon),
+    pDisplayProgression(false),
+    pCanCancel(false),
+    pResult(false),
+    pGaugeSizer(nullptr),
+    pGaugeParentSizer(nullptr),
+    pRemainingSizer(nullptr),
+    pGauge(nullptr),
+    pCancelSizer(nullptr),
+    pProgrText(nullptr),
+    pProgrSubText(nullptr),
+    pJobIsRunning(0),
+    pGUICanUpdate(0),
+    pTimerElapsedTime(nullptr),
+    pTimerRemainingTime(nullptr),
+    pThread(nullptr),
+    pAnim(nullptr),
+    pLblErrors(nullptr),
+    pLogRegex(wxT("\\[([0-9 :-]+)\\]\\[([a-zA-Z0-9 "
+                  "-]+)\\](\\[[a-z0-9;]+){0,2}\\[([a-z]+)\\](\\[[a-z0-9;]+){0,2} "
+                  "(\\[[a-z0-9;]+){0,2}([^]*)(\\[[a-z0-9;]+){0,2}")),
+    pCatchLogEvents(true),
+    pWndCancelOperation(nullptr)
 {
     // Do no longer display the logs to the user
     Forms::ApplWnd::Instance()->beginUpdateLogs();
@@ -645,11 +706,15 @@ Job::Job(const wxString& title, const wxString& subTitle, const char* icon) :
 
     pTimerMessageUpdater = new MessageFlusherTimer(pSubMessage, pProgrSubText, pMutex);
     if (not pTimerMessageUpdater->Start(180, wxTIMER_CONTINUOUS))
+    {
         logs.error() << "impossible to start internal timer";
+    }
 
     pTimerReadWriteStats = new ReadWriteStatsFlusherTimer(pReadWriteStats);
     if (not pTimerReadWriteStats->Start(1600, wxTIMER_CONTINUOUS))
+    {
         logs.error() << "impossible to start internal timer";
+    }
 }
 
 void Job::deleteAllThreads()
@@ -676,7 +741,9 @@ void Job::deleteAllThreads()
 
     auto thread = pThread;
     if (!(!thread))
+    {
         thread->gracefulStop();
+    }
 }
 
 Job::~Job()
@@ -703,7 +770,9 @@ Job::~Job()
 
     // Stopping Timer if not already done
     if (pAnim)
+    {
         pAnim->Stop();
+    }
 
     // Stopping all threads at once
     deleteAllThreads();
@@ -727,14 +796,18 @@ Job::~Job()
     {
         auto end = pWarningList.cend();
         for (auto i = pWarningList.cbegin(); i != end; ++i)
+        {
             logs.warning() << *(*i);
+        }
     }
 
     if (not pErrorList.empty())
     {
         auto end = pErrorList.cend();
         for (auto i = pErrorList.cbegin(); i != end; ++i)
+        {
             logs.error() << *(*i);
+        }
     }
     pErrorMutex.unlock();
 
@@ -751,7 +824,9 @@ void Job::recomputeWindowSize()
 
     wxSize p = GetSize();
     if (p.GetWidth() < 500)
+    {
         p.SetWidth(500);
+    }
     SetSize(p);
     GetSizer()->Layout();
 
@@ -765,7 +840,9 @@ void Job::displayGauge(const bool visible)
     if (pGaugeSizer and pGaugeParentSizer and pGUICanUpdate)
     {
         if (pTimerElapsedTime)
+        {
             pTimerElapsedTime->progression(visible);
+        }
 
         // Making the gauge visible (or not)
         pDisplayProgression = visible;
@@ -776,14 +853,20 @@ void Job::displayGauge(const bool visible)
         if (pTimerRemainingTime)
         {
             if (visible)
+            {
                 pTimerRemainingTime->start();
+            }
             else
+            {
                 pTimerRemainingTime->stop();
+            }
         }
         // The label used to display the remaining time should be hidden
         // if the progression is not available
         if (not visible)
+        {
             pRemainingTimeText->SetLabel(wxEmptyString);
+        }
 
         // Rebuilding the layout
         recomputeWindowSize();
@@ -793,7 +876,9 @@ void Job::displayGauge(const bool visible)
 void Job::onLogMessage(int level, const std::string& message)
 {
     if (message.empty() or message[0] == ' ')
+    {
         return;
+    }
     switch (level)
     {
     case Yuni::Logs::Verbosity::Info::level:
@@ -820,7 +905,9 @@ void Job::manageLogLevelMessage(enum LogLevel lvl, const wxString& msg)
 {
     // Avoid useless messages
     if (msg.empty() or msg[0] == ' ' or msg[0] == '[')
+    {
         return;
+    }
 
     switch (lvl)
     {
@@ -838,42 +925,60 @@ void Job::manageLogLevelMessage(enum LogLevel lvl, const wxString& msg)
 
         String::Size p = line.find(',');
         if (!p or p >= line.size() - 1)
+        {
             break;
+        }
         --p;
         String::Size p2 = line.rfind(' ', p);
         if (!p2 or p2 >= p)
+        {
             break;
+        }
         section.assign(line.c_str() + p2 + 1, p - p2);
 
         p += 3;
         if (!p or p >= line.size() - 1)
+        {
             break;
+        }
         p2 = line.find(',', p);
         if (p2 >= line.size() - 1)
+        {
             break;
+        }
         tmp.assign(line.c_str() + p, p2 - p);
 
         uint year;
         if (tmp == "post")
+        {
             year = (uint)-1;
+        }
         else
         {
             p = tmp.rfind(' ', p2);
             if (!p or p >= p2)
+            {
                 break;
+            }
             ++p;
             tmp.consume(p);
             if (!tmp.to(year))
+            {
                 break;
+            }
         }
 
         p2 += 2;
         if (p2 >= line.size() - 1)
+        {
             break;
+        }
         tmp.assign(line.c_str() + p2, line.size() - p2);
         double percent;
         if (!tmp.to(percent))
+        {
             break;
+        }
         updateTheProgressValue(pPartList->set(year, section, percent));
         break;
     }
@@ -947,7 +1052,9 @@ void Job::onUIUpdateLabelErrors()
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
     if (not pGUICanUpdate)
+    {
         return;
+    }
     pErrorMutex.lock();
     const uint warns = (uint)pWarningList.size();
     const uint errs = (uint)pErrorList.size();
@@ -975,7 +1082,9 @@ void Job::onUIUpdateLabelErrors()
     if (warns)
     {
         if (!m.empty())
+        {
             m << wxT(", ");
+        }
         switch (warns)
         {
         case 0:
@@ -993,7 +1102,9 @@ void Job::onUIUpdateLabelErrors()
 void Job::displayMessage(const wxString& line)
 {
     if (not pGUICanUpdate or line.IsEmpty()) // Aborting now
+    {
         return;
+    }
 
     if (pLogRegex.Matches(line))
     {
@@ -1002,7 +1113,9 @@ void Job::displayMessage(const wxString& line)
 
         // Avoid empty or stranges logs
         if (pLogEntryTmp.IsEmpty() or pLogEntryTmp.GetChar(0) == wxT(' '))
+        {
             return;
+        }
 
         if (pLogEntryTmp.StartsWith(wxT(LOG_UI)))
         {
@@ -1099,8 +1212,12 @@ wxSizer* Job::createMainPnl(wxWindow* parent)
     ;
 
     // The TOP panel
-    pPanelHeader = Toolbox::Components::WizardHeader::Create(
-      parent, pTitle, pIcon, pSubTitle, GetClientSize().GetWidth() - 50, false);
+    pPanelHeader = Toolbox::Components::WizardHeader::Create(parent,
+                                                             pTitle,
+                                                             pIcon,
+                                                             pSubTitle,
+                                                             GetClientSize().GetWidth() - 50,
+                                                             false);
     ss->Add(pPanelHeader, 0, wxALL | wxEXPAND);
     ss->AddSpacer(15);
 
@@ -1121,8 +1238,11 @@ wxSizer* Job::createPnlLoading(wxWindow* parent)
 
 // Animation
 #ifdef wxUSE_ANIMATIONCTRL
-        pAnim
-          = new wxAnimationCtrl(parent, wxID_ANY, wxAnimation(), wxDefaultPosition, wxSize(20, 20));
+        pAnim = new wxAnimationCtrl(parent,
+                                    wxID_ANY,
+                                    wxAnimation(),
+                                    wxDefaultPosition,
+                                    wxSize(20, 20));
         if (pAnim)
         {
             pAnim->LoadFile(Resources::WxFindFile("animations/loading.gif"));
@@ -1145,7 +1265,9 @@ wxSizer* Job::createPnlLoading(wxWindow* parent)
         pProgrSubText = Component::CreateLabel(parent, wxEmptyString);
         spp->Add(pProgrSubText, 1, wxALL | wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
         if (System::windows)
+        {
             s->AddSpacer(4);
+        }
         s->Add(spp, 0, wxALL | wxEXPAND);
     }
 
@@ -1247,12 +1369,18 @@ void Job::stop()
 
         // Exiting the modal mode
         if (!pWndCancelOperation)
+        {
             Antares::Dispatcher::GUI::Close(this);
+        }
         else
+        {
             Antares::Dispatcher::GUI::Close(pWndCancelOperation);
+        }
     }
     else
+    {
         pMutex.unlock();
+    }
 }
 
 void Job::stopAllGuiComponents()
@@ -1261,7 +1389,9 @@ void Job::stopAllGuiComponents()
     // if (pAnim)
     //	pAnim->Stop();
     if (pTimerElapsedTime)
+    {
         pTimerElapsedTime->stop();
+    }
 }
 
 void Job::disableAllComponents()
@@ -1296,12 +1426,16 @@ bool Job::run()
 
         // Default message
         if (pProgrText)
+        {
             pProgrText->SetLabel(wxT("Preparing..."));
+        }
         pMutex.lock();
         pSubMessage.clear();
         pMutex.unlock();
         if (pProgrSubText)
+        {
             pProgrSubText->SetLabel(wxEmptyString);
+        }
 
         this->GetSizer()->Show(pCancelSizer, pCanCancel, false);
         if (pCanCancel)
@@ -1310,7 +1444,9 @@ bool Job::run()
             pPanelHeader->SetBackgroundColour(wxColour(255, 255, 255));
             pPanelButtons->SetBackgroundColour(pDefaultBGColor);
             if (pAnim)
+            {
                 pAnim->SetBackgroundColour(wxColour(255, 255, 255));
+            }
         }
 
         // Hide the gauge
@@ -1333,7 +1469,9 @@ bool Job::run()
 
         // Starting the animation
         if (pAnim)
+        {
             pAnim->Play();
+        }
 
         // Positionate the window on the screen
         recomputeWindowSize();
@@ -1363,13 +1501,15 @@ void Job::updateTheProgressValue(double progress)
     if (progress >= 0.)
     {
         if (progress > 100.)
+        {
             progress = 100.;
+        }
         // The event
         // The new percent
-        const int v = Yuni::Math::MinMax<int>(
-          (int)Yuni::Math::Trunc((progress / 100.) * PROGRESSBAR_MAX_RANGE_F),
-          0,
-          PROGRESSBAR_MAX_RANGE);
+        const int v = Yuni::Math::MinMax<int>((int)Yuni::Math::Trunc((progress / 100.)
+                                                                     * PROGRESSBAR_MAX_RANGE_F),
+                                              0,
+                                              PROGRESSBAR_MAX_RANGE);
 
         // Broadcast the event
         Yuni::Bind<void()> callback;
@@ -1381,12 +1521,16 @@ void Job::updateTheProgressValue(double progress)
 void Job::onUIUpdateProgression(uint value)
 {
     if (!pDisplayProgression)
+    {
         displayGauge(true);
+    }
     if (pGauge and pGUICanUpdate)
     {
         const double v = (value * 100.) / PROGRESSBAR_MAX_RANGE_F;
         if (pGauge->value() < v)
+        {
             pGauge->value(v);
+        }
     }
 }
 
@@ -1395,9 +1539,13 @@ void Job::updateTheMessage(const wxString& msg, bool mustBeInterpreted)
     if (!msg.IsEmpty())
     {
         if (mustBeInterpreted)
+        {
             displayMessage(msg);
+        }
         else
+        {
             Dispatcher::GUI::Post(this, &Job::onUIUpdateMessage);
+        }
     }
 }
 
@@ -1435,7 +1583,9 @@ void Job::onCancel(void*)
             pErrorMutex.lock();
             pMutex.lock();
             if (s)
+            {
                 pWarningList.push_back(s);
+            }
             pResult = false;
             pErrorMutex.unlock();
             pMutex.unlock();
@@ -1471,9 +1621,13 @@ void Job::evtOnClose(wxCloseEvent& evt)
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
     if (pJobIsRunning and evt.CanVeto())
+    {
         evt.Veto();
+    }
     else
+    {
         stopAllGuiComponents();
+    }
     evt.Skip();
 }
 
@@ -1485,15 +1639,17 @@ void Job::evtOnInit(wxInitDialogEvent&)
 
     // We will flush all pending before displaying the window
     while (wxTheApp->Pending())
+    {
         wxTheApp->Dispatch();
+    }
 
     // Starting all threads
     auto thread = pThread;
     if (!(!thread))
+    {
         thread->start();
+    }
     pTimerElapsedTime->start();
 }
 
-} // namespace Jobs
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Jobs

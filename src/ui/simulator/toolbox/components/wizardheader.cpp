@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include "wizardheader.h"
@@ -28,11 +28,7 @@
 #include <wx/dcbuffer.h>
 #include <ui/common/component/panel.h>
 
-namespace Antares
-{
-namespace Toolbox
-{
-namespace Components
+namespace Antares::Toolbox::Components
 {
 BEGIN_EVENT_TABLE(WizardHeader, Panel)
 EVT_PAINT(WizardHeader::onDraw)
@@ -46,6 +42,7 @@ enum
 {
     fontSize = 8,
 };
+
 const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 const wxFont fontSmall(wxFontInfo(fontSize - 1).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
@@ -54,8 +51,10 @@ const wxFont fontSmall(wxFontInfo(fontSize - 1).Family(wxFONTFAMILY_SWISS).FaceN
 WizardHeader::WizardHeader(wxWindow* parent,
                            const char* icon,
                            const wxString& text,
-                           const wxString& sub) :
- Antares::Component::Panel(parent), pText(text), pSubText(sub)
+                           const wxString& sub):
+    Antares::Component::Panel(parent),
+    pText(text),
+    pSubText(sub)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by Windows
     SetSize(100, 100);
@@ -71,7 +70,9 @@ WizardHeader::~WizardHeader()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void WizardHeader::onDraw(wxPaintEvent&)
@@ -107,7 +108,9 @@ void WizardHeader::onDraw()
     // offset
     int offset = rect.height >> 1;
     if (!pSubText.IsEmpty())
+    {
         offset -= ((size.GetHeight()) >> 1);
+    }
     sizeNeeded = (size.GetHeight() >> 1);
     offset -= sizeNeeded;
 
@@ -147,10 +150,14 @@ void WizardHeader::onDraw()
 
     // -- Icon --
     if (pIcon)
+    {
         dc.DrawBitmap(*pIcon, 25, (rect.GetHeight() >> 1) - (pIcon->GetHeight() >> 1), true);
+    }
 
     if (sizeNeeded < 40)
+    {
         sizeNeeded = 40;
+    }
     sizeNeeded += size.GetHeight();
 }
 
@@ -180,8 +187,10 @@ Antares::Component::Panel* WizardHeader::Create(wxWindow* parent,
         s->AddSpacer(14);
 
         // The Image
-        s->Add(
-          Resources::StaticBitmapLoadFromFile(p, wxID_ANY, img), 0, wxALL | wxALIGN_CENTER, 10);
+        s->Add(Resources::StaticBitmapLoadFromFile(p, wxID_ANY, img),
+               0,
+               wxALL | wxALIGN_CENTER,
+               10);
 
         // The Text
         if (help.IsEmpty())
@@ -218,6 +227,4 @@ Antares::Component::Panel* WizardHeader::Create(wxWindow* parent,
     return p;
 }
 
-} // namespace Components
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Components

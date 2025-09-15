@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "bindingconstraint.h"
 #include <wx/sizer.h>
@@ -39,19 +39,15 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Toolbox::InputSelector
 {
-namespace Toolbox
-{
-namespace InputSelector
-{
-class SpotlightProviderConstraint final : public Component::Spotlight::IProvider
+class SpotlightProviderConstraint final: public Component::Spotlight::IProvider
 {
 public:
     using Spotlight = Antares::Component::Spotlight;
 
-    SpotlightProviderConstraint(Toolbox::InputSelector::BindingConstraint* component) :
-     pComponent(component)
+    SpotlightProviderConstraint(Toolbox::InputSelector::BindingConstraint* component):
+        pComponent(component)
     {
         assert(pComponent);
 
@@ -87,7 +83,9 @@ public:
                         const Yuni::String& text)
     {
         if (not CurrentStudyIsValid())
+        {
             return;
+        }
 
         String tmp;
         auto& study = *GetCurrentStudy();
@@ -145,7 +143,9 @@ public:
                     }
                 }
                 if (!go)
+                {
                     continue;
+                }
             }
 
             auto item = std::make_shared<Toolbox::Spotlight::ItemConstraint>(&constraint);
@@ -153,12 +153,16 @@ public:
                 && (constraint.linkCount() > 0 || constraint.clusterCount() > 0))
             {
                 if (pBmpOn)
+                {
                     item->image(*pBmpOn);
+                }
             }
             else
             {
                 if (pBmpOff)
+                {
                     item->image(*pBmpOff);
+                }
             }
             out.push_back(item);
         }
@@ -167,7 +171,9 @@ public:
     virtual bool onSelect(Spotlight::IItem::Ptr& item)
     {
         if (not CurrentStudyIsValid())
+        {
             return false;
+        }
 
         GUILocker locker;
         auto itemconstraint = std::dynamic_pointer_cast<Toolbox::Spotlight::ItemConstraint>(item);
@@ -183,7 +189,9 @@ public:
     virtual bool onDoubleClickSelect(Spotlight::IItem::Ptr& item)
     {
         if (not CurrentStudyIsValid())
+        {
             return false;
+        }
 
         GUILocker locker;
         using ItemConstraint = Toolbox::Spotlight::ItemConstraint;
@@ -237,7 +245,9 @@ protected:
             component()->resetSearchInput();
         }
         else
+        {
             redoResearch(); // automatically called by resetSearchInput
+        }
     }
 
     void onStudyLinkUpdate(Data::AreaLink*)
@@ -257,8 +267,9 @@ private:
 
 }; // class SpotlightProviderConstraint
 
-BindingConstraint::BindingConstraint(wxWindow* parent) :
- AInput(parent), Yuni::IEventObserver<BindingConstraint>()
+BindingConstraint::BindingConstraint(wxWindow* parent):
+    AInput(parent),
+    Yuni::IEventObserver<BindingConstraint>()
 {
     SetSize(300, 350);
     this->internalBuildSubControls();
@@ -293,8 +304,9 @@ void BindingConstraint::internalBuildSubControls()
     SetSizer(sizer);
 
     {
-        Component::Spotlight* spotlight
-          = new Component::Spotlight(this, 0); // Component::Spotlight::optGroups);
+        Component::Spotlight* spotlight = new Component::Spotlight(
+          this,
+          0); // Component::Spotlight::optGroups);
         OnMapLayerChanged.connect(spotlight, &Component::Spotlight::onMapLayerChanged);
         OnMapLayerAdded.connect(spotlight, &Component::Spotlight::onMapLayerAdded);
         OnMapLayerRemoved.connect(spotlight, &Component::Spotlight::onMapLayerRemoved);
@@ -350,6 +362,4 @@ void BindingConstraint::clear()
     onBindingConstraintChanged(nullptr);
 }
 
-} // namespace InputSelector
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::InputSelector

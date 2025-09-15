@@ -1,45 +1,41 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "area-link-renderer.h"
 #include "../../../toolbox/components/datagrid/component.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Private
-{
-namespace OutputViewerData
+namespace Antares::Private::OutputViewerData
 {
 // convenient alias
 using IRenderer = Antares::Component::Datagrid::Renderer::IRenderer;
 
 AreaLinkRenderer::AreaLinkRenderer(OutputViewerComponent* component,
-                                   const Antares::Matrix<CellType>* matrix) :
- pComponent(component),
- pGrid(nullptr),
- pMatrix(matrix),
- pSelectionCellX((uint)-1),
- pSelectionCellY((uint)-1)
+                                   const Antares::Matrix<CellType>* matrix):
+    pComponent(component),
+    pGrid(nullptr),
+    pMatrix(matrix),
+    pSelectionCellX((uint)-1),
+    pSelectionCellY((uint)-1)
 {
     assert(pMatrix && "invalid matrix");
 
@@ -55,11 +51,17 @@ AreaLinkRenderer::AreaLinkRenderer(OutputViewerComponent* component,
         pWidth = pMatrix->width;
         pHeight = pMatrix->height;
         if (pWidth > 2)
+        {
             pWidth -= 2;
+        }
         if (pHeight > 4 + 3)
+        {
             pHeight -= 4 + 3;
+        }
         else
+        {
             pHeight = 0;
+        }
 
         if (pWidth && pHeight)
         {
@@ -71,7 +73,9 @@ AreaLinkRenderer::AreaLinkRenderer(OutputViewerComponent* component,
                 for (uint x = 0; x != pWidth; ++x)
                 {
                     if (x + 2 >= pMatrix->width)
+                    {
                         continue;
+                    }
                     wxString& caption = pColNames[x];
                     uint countNonEmpty = 0;
 
@@ -100,9 +104,13 @@ AreaLinkRenderer::AreaLinkRenderer(OutputViewerComponent* component,
                         {
                             ++countNonEmpty;
                             if (cell != "EXP")
+                            {
                                 caption << wxStringFromUTF8(cell);
+                            }
                             else
+                            {
                                 caption << wxT("exp");
+                            }
                         }
                     }
 
@@ -124,17 +132,25 @@ AreaLinkRenderer::AreaLinkRenderer(OutputViewerComponent* component,
                     copy = (*pMatrix)[x][4];
                     copy.trim();
                     if (!copy)
+                    {
                         --rW;
+                    }
                     else
+                    {
                         break;
+                    }
                 }
                 if (rW != pMatrix->width)
                 {
                     const uint diff = pMatrix->width - rW;
                     if (pWidth >= diff)
+                    {
                         pWidth -= diff;
+                    }
                     else
+                    {
                         pWidth = 0;
+                    }
                 }
             }
         }
@@ -180,7 +196,9 @@ bool AreaLinkRenderer::valid() const
 wxString AreaLinkRenderer::columnCaption(int colIndx) const
 {
     if (static_cast<uint>(colIndx) < pColNames.size())
+    {
         return pColNames[colIndx];
+    }
     return wxEmptyString;
 }
 
@@ -188,13 +206,17 @@ wxString AreaLinkRenderer::rowCaption(int y) const
 {
     y += 4 + 3;
     if (!pMatrix || (uint)y >= pMatrix->height || pMatrix->width < 2)
+    {
         return wxEmptyString;
+    }
     wxString s;
     for (uint i = 2; i < pColToUseForRowCaption.size(); ++i)
     {
         assert(i < pMatrix->width);
         if (!pColToUseForRowCaption[i])
+        {
             break;
+        }
         s << wxStringFromUTF8((*pMatrix)[i][y]) << wxT(' ');
     }
     s << wxT("  ") << wxStringFromUTF8((*pMatrix)[1][y]);
@@ -209,7 +231,9 @@ IRenderer::CellStyle AreaLinkRenderer::cellStyle(int, int) const
 wxColour AreaLinkRenderer::cellBackgroundColor(int x, int y) const
 {
     if (!pMatrix || ((uint)x == pSelectionCellX && (uint)y == pSelectionCellY))
+    {
         return wxColour(229, 206, 206);
+    }
 
     x += 2;
     y += 4 + 3;
@@ -217,7 +241,9 @@ wxColour AreaLinkRenderer::cellBackgroundColor(int x, int y) const
     {
         auto& text = (*pMatrix)[x][y];
         if (not text.empty() && text[0] == '-' && not text.startsWith("-0"))
+        {
             return wxColour(235, 235, 245);
+        }
     }
 
     return wxColour(245, 245, 245);
@@ -226,7 +252,9 @@ wxColour AreaLinkRenderer::cellBackgroundColor(int x, int y) const
 wxColour AreaLinkRenderer::cellTextColor(int x, int y) const
 {
     if (!pMatrix || ((uint)x == pSelectionCellX && (uint)y == pSelectionCellY))
+    {
         return wxColour(0, 0, 0);
+    }
 
     x += 2;
     y += 4 + 3;
@@ -235,7 +263,9 @@ wxColour AreaLinkRenderer::cellTextColor(int x, int y) const
         auto& text = (*pMatrix)[x][y];
 
         if (text == "NaN" || text == "+inf" || text == "-inf")
+        {
             return wxColour(245, 240, 240);
+        }
 
         if (not text.empty())
         {
@@ -254,24 +284,32 @@ wxColour AreaLinkRenderer::cellTextColor(int x, int y) const
 wxColour AreaLinkRenderer::verticalBorderColor(int x, int y) const
 {
     if ((uint)x == pSelectionCellX && (uint)y == pSelectionCellY)
+    {
         return wxColour(206, 185, 185);
+    }
     return IRenderer::verticalBorderColor(x, y);
 }
 
 wxString AreaLinkRenderer::cellValue(int x, int y) const
 {
     if (!pMatrix)
+    {
         return wxEmptyString;
+    }
 
     // recompute the good offset
     x += 2;
     y += 4 + 3;
     if ((uint)x >= pMatrix->width || (uint)y >= pMatrix->height)
+    {
         return wxEmptyString;
+    }
 
     auto& text = (*pMatrix)[x][y];
     if (!text)
+    {
         return wxEmptyString;
+    }
     return wxStringFromUTF8(text);
 }
 
@@ -283,20 +321,28 @@ int AreaLinkRenderer::cellAlignment(int, int) const
 double AreaLinkRenderer::cellNumericValue(int x, int y) const
 {
     if (!pMatrix)
+    {
         return 0.;
+    }
     // recompute the good offset
     x += 2;
     y += 4 + 3;
     if ((uint)x >= pMatrix->width || (uint)y >= pMatrix->height)
+    {
         return 0.;
+    }
 
     auto& text = (*pMatrix)[x][y];
     if (!text)
+    {
         return 0.;
+    }
 
     double d;
     if (text.to(d))
+    {
         return d;
+    }
     return std::numeric_limits<double>::quiet_NaN();
 }
 
@@ -308,13 +354,17 @@ bool AreaLinkRenderer::cellValue(int /*x*/, int /*y*/, const String& /*value*/)
 void AreaLinkRenderer::onScroll()
 {
     if (pComponent && pGrid)
+    {
         pComponent->scrollAllPanels(pGrid->gridAsScrolledWindow());
+    }
 }
 
 void AreaLinkRenderer::onSelectCell(unsigned x, unsigned y)
 {
     if (pComponent)
+    {
         pComponent->selectCellAllPanels(x, y);
+    }
 }
 
 void AreaLinkRenderer::onExternalSelectCell(unsigned x, unsigned y)
@@ -322,9 +372,9 @@ void AreaLinkRenderer::onExternalSelectCell(unsigned x, unsigned y)
     pSelectionCellX = x;
     pSelectionCellY = y;
     if (pGrid)
+    {
         pGrid->Refresh();
+    }
 }
 
-} // namespace OutputViewerData
-} // namespace Private
-} // namespace Antares
+} // namespace Antares::Private::OutputViewerData

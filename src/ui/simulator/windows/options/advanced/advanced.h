@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADVANCED_PARAMETERS_H__
 #define __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADVANCED_PARAMETERS_H__
 
@@ -26,18 +26,14 @@
 #include <wx/textctrl.h>
 #include <antares/study/fwd.h>
 
-namespace Antares
-{
-namespace Window
-{
-namespace Options
+namespace Antares::Window::Options
 {
 extern Yuni::Event<void(bool)> OnRenewableGenerationModellingChanged;
 
 /*!
 ** \brief Startup Wizard User Interface
 */
-class AdvancedParameters final : public wxDialog
+class AdvancedParameters final: public wxDialog
 {
 public:
     //! \name Constructor & Destructor
@@ -69,7 +65,7 @@ private:
     void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeriesType ts);
     void onSelectNumericQualityStandard(wxCommandEvent& evt);
     void onSelectNumericQualityHigh(wxCommandEvent& evt);
-    
+
     void onHydroHeuristicPolicy(Component::Button&, wxMenu& menu, void*);
     void onSelectAccomodateRuleCurves(wxCommandEvent& evt);
     void onSelectMaximizeGeneration(wxCommandEvent& evt);
@@ -123,8 +119,6 @@ private:
 
 }; // class AdvancedParameters
 
-} // namespace Options
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Options
 
 #endif // __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADVANCED_PARAMETERS_H__

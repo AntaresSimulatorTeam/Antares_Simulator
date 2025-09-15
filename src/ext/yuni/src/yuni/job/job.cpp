@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "job.h"
+
 #include "../core/math.h"
 
-namespace Yuni
+namespace Yuni::Job
 {
-namespace Job
-{
-IJob::IJob() : pThread(nullptr)
+IJob::IJob():
+    pThread(nullptr)
 {
 }
 
@@ -75,5 +76,4 @@ void IJob::execute(Thread::IThread* t)
     pProgression = 100;
 }
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job

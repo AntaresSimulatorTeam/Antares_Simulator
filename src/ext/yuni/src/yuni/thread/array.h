@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,14 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../yuni.h"
-#include "thread.h"
-#include "../core/static/inherit.h"
 #include <vector>
 
-namespace Yuni
-{
-namespace Thread
+#include "../core/static/inherit.h"
+#include "../yuni.h"
+#include "thread.h"
+
+namespace Yuni::Thread
 {
 /*!
 ** \brief Container for thread
@@ -30,7 +30,7 @@ namespace Thread
 **   lot of time.
 */
 template<class T>
-class YUNI_DECL Array : public Policy::ObjectLevelLockableNotRecursive<Array<T>>
+class YUNI_DECL Array: public Policy::ObjectLevelLockableNotRecursive<Array<T>>
 {
 public:
     //! Itself
@@ -49,6 +49,7 @@ public:
                        ThreadArray_T_MustInheritFrom_IThread);
     //! Thread list
     typedef std::vector<typename T::Ptr> ThreadList;
+
     enum
     {
         //! A hard limit value for the number of threads in the pool
@@ -272,7 +273,6 @@ private:
 
 }; // class Array<T>
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread
 
 #include "array.hxx"

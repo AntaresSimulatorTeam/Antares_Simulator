@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -8,28 +9,26 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include <sys/stat.h>
 #include "../file.h"
-#include "../directory.h"
+
 #include <cctype>
 #include <cstring>
-#include "../../core/string/wstring.h"
-
-#ifndef YUNI_OS_WINDOWS
-#include <unistd.h>
-#endif
-
-#ifndef YUNI_OS_WINDOWS
-#include <sys/types.h>
 #include <sys/stat.h>
+
+#include "../../core/string/wstring.h"
+#include "../directory.h"
+
+#ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #endif
 
-namespace Yuni
-{
-namespace IO
-{
-namespace File
+#ifndef YUNI_OS_WINDOWS
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif
+
+namespace Yuni::IO::File
 {
 bool CreateEmptyFile(const AnyString& filename)
 {
@@ -51,7 +50,9 @@ bool Size(const AnyString& filename, uint64_t& value)
     const char* const p = filename.c_str();
 
     if (p[len - 1] == '\\' or p[len - 1] == '/')
+    {
         --len;
+    }
 
     // Driver letters
     if (len == 2 and p[1] == ':')
@@ -70,8 +71,13 @@ bool Size(const AnyString& filename, uint64_t& value)
         return false;
     }
 
-    HANDLE hndl = CreateFileW(
-      wstr.c_str(), 0, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    HANDLE hndl = CreateFileW(wstr.c_str(),
+                              0,
+                              FILE_SHARE_READ,
+                              nullptr,
+                              OPEN_EXISTING,
+                              FILE_ATTRIBUTE_NORMAL,
+                              nullptr);
     if (hndl == INVALID_HANDLE_VALUE)
     {
         value = 0u;
@@ -112,7 +118,9 @@ Yuni::IO::Error Delete(const AnyString& filename)
     // with Visual Studio. Consequently we can not use the word DeleteFile.....
 
     if (filename.empty())
+    {
         return Yuni::IO::errUnknown;
+    }
 
 #ifndef YUNI_OS_WINDOWS
 
@@ -124,11 +132,15 @@ Yuni::IO::Error Delete(const AnyString& filename)
     uint len = filename.size();
 
     if (p[len - 1] == '\\' or p[len - 1] == '/')
+    {
         --len;
+    }
 
     // Driver letters
     if (len == 2 and p[1] == ':')
+    {
         return Yuni::IO::errBadFilename;
+    }
 
     String norm;
     Yuni::IO::Normalize(norm, AnyString(p, len));
@@ -136,7 +148,9 @@ Yuni::IO::Error Delete(const AnyString& filename)
     // Conversion into wchar_t
     WString wstr(norm, true);
     if (wstr.empty())
+    {
         return Yuni::IO::errUnknown;
+    }
     wstr.replace('/', '\\');
 
     return (DeleteFileW(wstr.c_str())) ? Yuni::IO::errNone : Yuni::IO::errUnknown;
@@ -185,7 +199,9 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
     out.clear();
     Yuni::IO::File::Stream f(filename);
     if (not f.opened())
+    {
         return errNotFound;
+    }
 
     // retrieve the file size in bytes
     f.seekFromEndOfFile(0);
@@ -204,6 +220,7 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
         {
             smallFragment = 512 * 1024
         };
+
         uint64_t offset = 0;
         do
         {
@@ -216,7 +233,9 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
             }
             offset += smallFragment;
             if (offset >= hardlimit)
+            {
                 return errMemoryLimit;
+            }
         } while (true);
 
 #endif
@@ -224,7 +243,9 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
     }
 
     if (filesize > hardlimit or filesize > (uint)-10)
+    {
         return errMemoryLimit;
+    }
 
     // resize the buffer accordingly
     out.resize((typename StringT::size_type)filesize);
@@ -236,6 +257,7 @@ static inline IO::Error LoadFromFileImpl(StringT& out,
     {
         fragment = 4 * 1024 * 1024
     };
+
     if (filesize < fragment)
     {
         uint64_t numread = f.read((char*)out.data(), filesize);
@@ -290,6 +312,4 @@ IO::Error LoadFromFile(Clob& out, const AnyString& filename, uint64_t hardlimit)
     return LoadFromFileImpl(out, filename, hardlimit);
 }
 
-} // namespace File
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::File

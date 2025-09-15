@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "panel.h"
 #include <antares/date/date.h>
@@ -36,11 +36,7 @@ using namespace Yuni;
 
 #define DEFAULT_RULESET_NAME "New Ruleset"
 
-namespace Antares
-{
-namespace Window
-{
-namespace ScenarioBuilder
+namespace Antares::Window::ScenarioBuilder
 {
 namespace // anonymous
 {
@@ -50,7 +46,9 @@ inline wxString RulesetCaption(const Data::ScenarioBuilder::Rules::Ptr& rules,
     wxString str = wxStringFromUTF8(rules->name());
     str << wxT("   "); // for beauty
     if (selected)
+    {
         str << wxT("(active)   ");
+    }
     return str;
 }
 
@@ -61,7 +59,8 @@ inline const char* RulesetImage(bool selected = false)
 
 } // anonymous namespace
 
-Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
+Panel::Panel(wxWindow* parent):
+    Antares::Component::Panel(parent)
 {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -120,7 +119,9 @@ Panel::~Panel()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void Panel::scenarioBuilderDataAreLoaded()
@@ -138,7 +139,9 @@ void Panel::scenarioBuilderDataAreLoaded()
 void Panel::update()
 {
     if (not CurrentStudyIsValid()) // should never happen here
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
     if (!study.scenarioRules)
     {
@@ -157,7 +160,9 @@ void Panel::update()
         Data::RulesScenarioName id = pRules->name();
         id.toLower();
         if (!sets.exists(id))
+        {
             pRules = nullptr;
+        }
     }
 
     // If the current ruleset is not defined, we will have to find the default one
@@ -182,15 +187,23 @@ void Panel::update()
     // Refresh
     // Updating the caption
     if (!pRules)
+    {
         pBtnActive->caption(wxT("(none)"));
+    }
     else
+    {
         pBtnActive->caption(wxStringFromUTF8(pRules->name()));
+    }
 
     // Building rules
     if (sets.size() > 1)
+    {
         pBtnFile->caption(wxString() << sets.size() << wxT(" building rules"));
+    }
     else
+    {
         pBtnFile->caption(wxT("Building rules"));
+    }
 
     // Force the refresh
     Dispatcher::GUI::Refresh(this);
@@ -214,7 +227,9 @@ void Panel::onStudyChanged(Data::Study& study)
     pRenameList.clear();
 
     if (!study.scenarioRules)
+    {
         pRules = nullptr;
+    }
 
     Dispatcher::GUI::Post(this, &Panel::update, 20);
 }
@@ -250,7 +265,9 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
     auto& sets = *study.scenarioRules;
 
     if (sets.empty())
+    {
         return;
+    }
 
     const uint rulesetCount = sets.size();
 
@@ -260,8 +277,12 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
     if (rulesetCount and !(!pRules))
     {
         s << wxT("Rename  '") << wxStringFromUTF8(pRules->name()) << wxT("'...    ");
-        wxMenuItem* itRename = Menu::CreateItem(
-          &menu, wxNewId(), s, "images/16x16/rename.png", wxEmptyString, wxITEM_NORMAL);
+        wxMenuItem* itRename = Menu::CreateItem(&menu,
+                                                wxNewId(),
+                                                s,
+                                                "images/16x16/rename.png",
+                                                wxEmptyString,
+                                                wxITEM_NORMAL);
         menu.Connect(itRename->GetId(),
                      wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(Panel::onFileRename),
@@ -275,8 +296,12 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
     {
         s.clear();
         s << wxT("Delete  '") << wxStringFromUTF8(pRules->name()) << wxT("'...    ");
-        wxMenuItem* itDelete = Menu::CreateItem(
-          &menu, wxNewId(), s, "images/16x16/cancel.png", wxEmptyString, wxITEM_NORMAL);
+        wxMenuItem* itDelete = Menu::CreateItem(&menu,
+                                                wxNewId(),
+                                                s,
+                                                "images/16x16/cancel.png",
+                                                wxEmptyString,
+                                                wxITEM_NORMAL);
         menu.Connect(itDelete->GetId(),
                      wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(Panel::onFileDelete),
@@ -325,8 +350,12 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
             // Delete
             s.clear();
             s << wxT("Rename  '") << wxStringFromUTF8(rules->name()) << wxT("'...    ");
-            wxMenuItem* itRename
-              = Menu::CreateItem(&menu, wxNewId(), s, nullptr, wxEmptyString, wxITEM_NORMAL);
+            wxMenuItem* itRename = Menu::CreateItem(&menu,
+                                                    wxNewId(),
+                                                    s,
+                                                    nullptr,
+                                                    wxEmptyString,
+                                                    wxITEM_NORMAL);
             menu.Connect(itRename->GetId(),
                          wxEVT_COMMAND_MENU_SELECTED,
                          wxCommandEventHandler(Panel::onFileRename),
@@ -356,8 +385,12 @@ void Panel::onFileMenu(Antares::Component::Button&, wxMenu& menu, void*)
             // Delete
             s.clear();
             s << wxT("Delete  '") << wxStringFromUTF8(rules->name()) << wxT("'...    ");
-            wxMenuItem* itDelete
-              = Menu::CreateItem(&menu, wxNewId(), s, nullptr, wxEmptyString, wxITEM_NORMAL);
+            wxMenuItem* itDelete = Menu::CreateItem(&menu,
+                                                    wxNewId(),
+                                                    s,
+                                                    nullptr,
+                                                    wxEmptyString,
+                                                    wxITEM_NORMAL);
             menu.Connect(itDelete->GetId(),
                          wxEVT_COMMAND_MENU_SELECTED,
                          wxCommandEventHandler(Panel::onFileDelete),
@@ -428,8 +461,13 @@ void Panel::onActiveMenu(Antares::Component::Button&, wxMenu& menu, void*)
         const wxString& str = RulesetCaption(rules, selected);
 
         // New
-        wxMenuItem* it
-          = Menu::CreateItem(&menu, wxID_ANY, str, img, wxEmptyString, wxITEM_NORMAL, selected);
+        wxMenuItem* it = Menu::CreateItem(&menu,
+                                          wxID_ANY,
+                                          str,
+                                          img,
+                                          wxEmptyString,
+                                          wxITEM_NORMAL,
+                                          selected);
         // Mapping
         pActiveList[it->GetId()] = rules;
 
@@ -497,7 +535,9 @@ void Panel::onFileDelete(wxCommandEvent& evt)
 {
     Data::ScenarioBuilder::Rules::Ptr rules = pDeleteList[evt.GetId()];
     if (!rules)
+    {
         return;
+    }
 
     if (not CurrentStudyIsValid())
     {
@@ -514,7 +554,9 @@ void Panel::onFileDelete(wxCommandEvent& evt)
 
     Data::ScenarioBuilder::Sets& sets = *study.scenarioRules;
     if (sets.size() == 1)
+    {
         return;
+    }
 
     Data::RulesScenarioName& active = study.parameters.activeRulesScenario;
 
@@ -522,16 +564,18 @@ void Panel::onFileDelete(wxCommandEvent& evt)
     id.toLower();
 
     {
-        Window::Message message(
-          this,
-          wxT("Delete a ruleset"),
-          wxEmptyString,
-          wxString() << wxT("Do you really want to delete ") << wxStringFromUTF8(rules->name()),
-          "images/misc/book.png");
+        Window::Message message(this,
+                                wxT("Delete a ruleset"),
+                                wxEmptyString,
+                                wxString() << wxT("Do you really want to delete ")
+                                           << wxStringFromUTF8(rules->name()),
+                                "images/misc/book.png");
         message.add(Window::Message::btnYes);
         message.add(Window::Message::btnCancel, true);
         if (message.showModal() != Window::Message::btnYes)
+        {
             return;
+        }
     }
 
     logs.info() << "[scenario-builder] deleting '" << rules->name() << "'";
@@ -551,7 +595,9 @@ void Panel::onFileRename(wxCommandEvent& evt)
 {
     Data::ScenarioBuilder::Rules::Ptr rules = pRenameList[evt.GetId()];
     if (!rules)
+    {
         return;
+    }
 
     if (not CurrentStudyIsValid())
     {
@@ -582,7 +628,9 @@ void Panel::onFileRename(wxCommandEvent& evt)
                                  wxOK | wxCANCEL);
 
         if (dialog.ShowModal() != wxID_OK)
+        {
             return;
+        }
         wxStringToString(dialog.GetValue(), newname);
         newname.trim(" \t\r\n");
         if (!newname)
@@ -614,7 +662,9 @@ void Panel::onFileRename(wxCommandEvent& evt)
         Data::RulesScenarioName newid = newname;
         newid.toLower();
         if (newid == id)
+        {
             return;
+        }
         if (sets.exists(newid))
         {
             Window::Message message(this,
@@ -644,7 +694,9 @@ void Panel::onFileRename(wxCommandEvent& evt)
     }
 
     if (newrules == pRules)
+    {
         active = newrules->name();
+    }
 
     MarkTheStudyAsModified();
     Dispatcher::GUI::Post(this, &Panel::update, 20);
@@ -654,7 +706,9 @@ void Panel::onActiveRuleset(wxCommandEvent& evt)
 {
     Data::ScenarioBuilder::Rules::Ptr rules = pActiveList[evt.GetId()];
     if (!rules)
+    {
         return;
+    }
 
     if (not CurrentStudyIsValid())
     {
@@ -677,6 +731,4 @@ void Panel::onActiveRuleset(wxCommandEvent& evt)
     Dispatcher::GUI::Post(this, &Panel::update, 20);
 }
 
-} // namespace ScenarioBuilder
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::ScenarioBuilder

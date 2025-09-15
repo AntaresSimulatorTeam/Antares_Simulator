@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "../static/types.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace MathImpl
+namespace Yuni::Private::MathImpl
 {
 template<typename T, bool IsDecimal = Static::Type::IsDecimal<T>::Yes>
 struct Distance2D
@@ -56,13 +53,9 @@ struct Distance3D<T, 0>
     }
 };
 
-} // namespace MathImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::MathImpl
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 template<typename T>
 inline T Distance2D(T x1, T y1, T x2, T y2)
@@ -76,5 +69,4 @@ inline T Distance3D(T x1, T y1, T z1, T x2, T y2, T z2)
     return Private::MathImpl::Distance3D<T>::Compute(x1, y1, z1, x2, y2, z2);
 }
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math
