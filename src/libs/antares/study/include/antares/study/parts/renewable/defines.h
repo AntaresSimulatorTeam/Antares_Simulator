@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -21,14 +21,11 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_DEFINES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_DEFINES_H__
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 // Forward declaration
 class RenewableCluster;
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_DEFINES_H__

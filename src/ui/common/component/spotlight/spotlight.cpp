@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "spotlight.h"
 #include "listbox-panel.h"
@@ -38,9 +38,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 namespace // anonymous
 {
@@ -50,16 +48,16 @@ static Antares::Component::Spotlight* globalSpotlight = nullptr;
 
 } // anonymous namespace
 
-Spotlight::Spotlight(wxWindow* parent, uint flags) :
- Antares::Component::Panel(parent),
- pFlags(flags),
- pLayerFilter(nullptr),
- pEdit(nullptr),
- pListbox(nullptr),
- pItemHeight(18),
- pDisplayHandle(wxNOT_FOUND),
- pLayoutParent(nullptr),
- pAllowFrameResize(true)
+Spotlight::Spotlight(wxWindow* parent, uint flags):
+    Antares::Component::Panel(parent),
+    pFlags(flags),
+    pLayerFilter(nullptr),
+    pEdit(nullptr),
+    pListbox(nullptr),
+    pItemHeight(18),
+    pDisplayHandle(wxNOT_FOUND),
+    pLayoutParent(nullptr),
+    pAllowFrameResize(true)
 {
     createComponents(this, (0 == (flags & optNoSearchInput)), (0 == (flags & optResultsInAPopup)));
 }
@@ -88,7 +86,9 @@ Spotlight::~Spotlight()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void Spotlight::createComponents(Spotlight* parent, bool input, bool results)
@@ -173,9 +173,13 @@ void Spotlight::createComponents(Spotlight* parent, bool input, bool results)
         // Changing the background colour for the edit
         pEdit->SetBackgroundColour(inputPanel->GetBackgroundColour());
         if (0 != (pFlags & optAutoResizeParent))
+        {
             Antares::Component::PanelGroup::SetLighterBackgroundColor(pEdit, +40);
+        }
         else
+        {
             Antares::Component::PanelGroup::SetLighterBackgroundColor(pEdit);
+        }
 
         inputPanel->SetSizer(vz);
         parentSizer->Add(inputPanel, 0, wxALL | wxEXPAND);
@@ -199,7 +203,9 @@ void Spotlight::createComponents(Spotlight* parent, bool input, bool results)
 
         auto* panel = new ListboxPanel(parent, pFlags);
         if (0 != (pFlags & Spotlight::optBkgWhite))
+        {
             panel->SetBackgroundColour(GetBackgroundColour());
+        }
 
         onUpdateItems.connect(panel, &ListboxPanel::updateItems);
         parentSizer->Add(panel, 1, wxALL | wxEXPAND);
@@ -217,7 +223,9 @@ void Spotlight::provider(IProvider::Ptr provider)
     if (current != provider)
     {
         if (!(!current))
+        {
             current->pSpotlightComponent = nullptr;
+        }
 
         if (!provider)
         {
@@ -251,12 +259,16 @@ void Spotlight::redoResearch()
 void Spotlight::search(const String& text)
 {
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     // Keeping the trace somewhere of the last query, to redo it later
     // if the provider is changed
     if (&pLastResearch != &text) // avoid undefined behavior
+    {
         pLastResearch = text;
+    }
 
     // Keeping a reference to the data provider
     IProvider::Ptr provider = pDataProvider;
@@ -270,11 +282,15 @@ void Spotlight::search(const String& text)
         // Extract all tokens
         auto tokens = std::make_shared<SearchToken::Vector>();
         if (not text.empty())
+        {
             convertRawTextIntoSearchTokenVector(*tokens, text);
+        }
 
         String layerName = "";
         if (pLayerFilter)
+        {
             layerName = std::string(pLayerFilter->GetValue().mb_str());
+        }
         // Results
         auto results = std::make_shared<IItem::Vector>();
         provider->search(*results, *tokens, layerName);
@@ -296,7 +312,9 @@ void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
     String::Vector ts;
     text.split(ts, " \t|'\"()[]{}:;.?");
     if (ts.empty())
+    {
         return;
+    }
 
     float weight = 1.f;
     const String::Vector::const_iterator end = ts.end();
@@ -305,7 +323,9 @@ void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
         // alias to the current token
         const String& tok = *i;
         if (!tok)
+        {
             continue;
+        }
 
         // Looking for prefix modifiers, such as '-' and '+'
         uint offset = 0;
@@ -328,7 +348,9 @@ void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
         }
         // The string obviously only contains '-' and '+'
         if (offset >= tok.size())
+        {
             continue;
+        }
 
         // Adding a new search token
         auto searchToken = std::make_shared<SearchToken>();
@@ -344,10 +366,14 @@ void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
 void Spotlight::updateResults()
 {
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     if (0 != (pFlags & optAutoResizeParent))
+    {
         resizeParentWindow();
+    }
 
     SearchToken::VectorPtr tokens = pTokens;
     IItem::VectorPtr results = pResults;
@@ -359,14 +385,18 @@ void Spotlight::resizeParentWindow()
 {
     auto* parent = GetParent();
     if (not parent || not pLayoutParent)
+    {
         return;
+    }
 
     if (pAllowFrameResize)
     {
         // the relative position of the listbox
         int ltop = 0;
         if (pListbox)
+        {
             pListbox->GetPosition(nullptr, &ltop);
+        }
 
         // About the component itself
         wxPoint parentPos = pLayoutParent->GetScreenPosition();
@@ -389,7 +419,9 @@ void Spotlight::resizeParentWindow()
         {
             int newhandle = wxDisplay::GetFromPoint(parentPos);
             if (newhandle != wxNOT_FOUND)
+            {
                 pDisplayHandle = newhandle;
+            }
         }
         wxDisplay monitor(pDisplayHandle);
         wxRect display = monitor.GetClientArea();
@@ -397,7 +429,9 @@ void Spotlight::resizeParentWindow()
         // re-calculate the good size
         int idealH = (!pResults) ? 0 : (int)(pItemHeight * pResults->size());
         if (!(pFlags & optNoSearchInput))
+        {
             idealH += (int)ListboxPanel::searchResultTextHeight;
+        }
         idealH += ltop;
         idealH += 6; // arbitrary value, for additional spaces due to borders
 
@@ -405,6 +439,7 @@ void Spotlight::resizeParentWindow()
         {
             marginY = 28 // minimum required for Window 7's task bar
         };
+
         int maxHeight = display.GetHeight() - (parentPos.y) - marginY;
         if (idealH > maxHeight)
         {
@@ -415,7 +450,9 @@ void Spotlight::resizeParentWindow()
             {
                 maxHeight = newMaxHeight;
                 if (idealH > maxHeight)
+                {
                     idealH = maxHeight;
+                }
                 parent->Move(parentPos.x, parentPos.y - idealH);
                 // The frame has been moved to the top of the original control
                 // As a consequence, we should no longer update the height
@@ -423,7 +460,9 @@ void Spotlight::resizeParentWindow()
                 pAllowFrameResize = false;
             }
             else
+            {
                 idealH = maxHeight;
+            }
         }
 
         parent->SetSize(parent->GetSize().GetWidth(), idealH);
@@ -447,7 +486,9 @@ void Spotlight::resetSearchInput()
     // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
     // event
     if (pEdit)
+    {
         pEdit->ChangeValue(wxEmptyString);
+    }
 
     redoResearch();
 }
@@ -460,7 +501,9 @@ void Spotlight::onMapLayerAdded(const wxString* text)
     {
         pLayerFilter->AppendString(*text);
         if (pLayerFilter->GetCount() > 1 && !vz->IsShown(hzCombo))
+        {
             vz->Show(hzCombo);
+        }
     }
     // wxStringToString(*text, pLastResearch);
     // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
@@ -479,7 +522,9 @@ void Spotlight::onMapLayerRemoved(const wxString* text)
             pLayerFilter->Select(0);
         }
         if (pLayerFilter->GetCount() == 1 && vz->IsShown(hzCombo))
+        {
             vz->Hide(hzCombo);
+        }
     }
     /*wxStringToString(*text, pLastResearch);*/
     Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
@@ -490,7 +535,9 @@ void Spotlight::onMapLayerChanged(const wxString* text)
     // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
     // event
     if (pLayerFilter)
+    {
         pLayerFilter->SetValue(*text);
+    }
 
     // wxStringToString(*text, pLastResearch);
     Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
@@ -501,7 +548,9 @@ void Spotlight::onMapLayerRenamed(const wxString* text)
     // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
     // event
     if (pLayerFilter)
+    {
         pLayerFilter->SetString(pLayerFilter->GetSelection(), *text);
+    }
 
     // wxStringToString(*text, pLastResearch);
     Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
@@ -510,7 +559,9 @@ void Spotlight::onMapLayerRenamed(const wxString* text)
 void Spotlight::onInputUpdated(wxCommandEvent& evt)
 {
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     const wxString textinput = evt.GetString();
     wxStringToString(textinput, pLastResearch);
@@ -520,7 +571,9 @@ void Spotlight::onInputUpdated(wxCommandEvent& evt)
 void Spotlight::onComboUpdated(wxCommandEvent& /* evt */)
 {
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
     wxString temp = pLayerFilter->GetValue();
     OnMapLayerChanged(&temp);
     Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
@@ -539,7 +592,9 @@ public:
     static void ReExecute(const Ptr& data)
     {
         if (!(!data))
+        {
             Spotlight::FrameShow(data->parent, data->provider, data->flags, data->width);
+        }
     }
 
 public:
@@ -558,7 +613,9 @@ void Spotlight::FrameShow(wxWindow* parent,
     using FrameType = Antares::Private::Spotlight::SpotlightMiniFrame;
 
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     GUILocker locker;
 
@@ -584,9 +641,13 @@ void Spotlight::FrameShow(wxWindow* parent,
     {
         uint spotflags = Antares::Component::Spotlight::optAutoResizeParent;
         if (flags & Spotlight::optGroups)
+        {
             spotflags |= Spotlight::optGroups;
+        }
         if (flags & Spotlight::optNoSearchInput)
+        {
             spotflags |= Spotlight::optNoSearchInput;
+        }
 
         // Finding the parent frame
         wxWindow* parentFrame = parent;
@@ -596,11 +657,17 @@ void Spotlight::FrameShow(wxWindow* parent,
             if (parentFrame)
             {
                 if (dynamic_cast<wxFrame*>(parentFrame))
+                {
                     break;
+                }
                 if (dynamic_cast<wxDialog*>(parentFrame))
+                {
                     break;
+                }
                 if (dynamic_cast<wxMiniFrame*>(parentFrame))
+                {
                     break;
+                }
             }
         }
 
@@ -633,11 +700,13 @@ void Spotlight::FrameShow(wxWindow* parent,
 
     int offset = flags == optNoSearchInput ? 5 : 65;
     if (globalSpotlight->pResults)
-        frame->SetSize(
-          (int)width,
-          std::min(
-            (int)(globalSpotlight->pResults->size() * globalSpotlight->itemHeight()) + offset,
-            330));
+    {
+        frame->SetSize((int)width,
+                       std::min((int)(globalSpotlight->pResults->size()
+                                      * globalSpotlight->itemHeight())
+                                  + offset,
+                                330));
+    }
     // Display the toolbar
     if (parent)
     {
@@ -647,7 +716,9 @@ void Spotlight::FrameShow(wxWindow* parent,
         frame->Move(pt.x, pt.y + sz.GetHeight());
     }
     else
+    {
         frame->Move(0, 0);
+    }
 
     // Display the window
     Dispatcher::GUI::Layout(frame->GetSizer());
@@ -667,5 +738,4 @@ void Spotlight::FrameClose()
     }
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component

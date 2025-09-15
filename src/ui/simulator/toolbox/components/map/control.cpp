@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <algorithm>
 #include "antares/utils/utils.h"
@@ -40,9 +40,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 BEGIN_EVENT_TABLE(Control, wxScrolledWindow)
 
@@ -66,19 +64,19 @@ EVT_SIZE(Control::onSize)
 
 END_EVENT_TABLE()
 
-Control::Control(wxWindow* parent, Component& component) :
- wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize),
- nodes(*Manager::Instance()),
- pComponent(component),
- pCachedBoxSize(0, 0),
- pCachedOrigin(0, 0),
- pOffsetForSelectedNodes(0, 0),
- pCurrentScroll(0, 0),
- pCurrentMousePosition(INT_MAX, INT_MAX),
- pCurrentMousePositionGraph(INT_MAX, INT_MAX),
- pCurrentClientSize(0, 0),
- pLastMousePosition(INT_MAX, INT_MAX),
- uid(newUID++)
+Control::Control(wxWindow* parent, Component& component):
+    wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize),
+    nodes(*Manager::Instance()),
+    pComponent(component),
+    pCachedBoxSize(0, 0),
+    pCachedOrigin(0, 0),
+    pOffsetForSelectedNodes(0, 0),
+    pCurrentScroll(0, 0),
+    pCurrentMousePosition(INT_MAX, INT_MAX),
+    pCurrentMousePositionGraph(INT_MAX, INT_MAX),
+    pCurrentClientSize(0, 0),
+    pLastMousePosition(INT_MAX, INT_MAX),
+    uid(newUID++)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // GTK
     SetBackgroundColour(pBackgroundColor);
@@ -91,22 +89,24 @@ Control::Control(wxWindow* parent, Component& component) :
     SetScrollRate(12, 12);
 }
 
-Control::Control(wxWindow* parent, Component& component, size_t uID) :
- wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize),
- nodes(*Manager::Instance()),
- pComponent(component),
- pCachedBoxSize(0, 0),
- pCachedOrigin(0, 0),
- pOffsetForSelectedNodes(0, 0),
- pCurrentScroll(0, 0),
- pCurrentMousePosition(INT_MAX, INT_MAX),
- pCurrentMousePositionGraph(INT_MAX, INT_MAX),
- pCurrentClientSize(0, 0),
- pLastMousePosition(INT_MAX, INT_MAX),
- uid(uID)
+Control::Control(wxWindow* parent, Component& component, size_t uID):
+    wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize),
+    nodes(*Manager::Instance()),
+    pComponent(component),
+    pCachedBoxSize(0, 0),
+    pCachedOrigin(0, 0),
+    pOffsetForSelectedNodes(0, 0),
+    pCurrentScroll(0, 0),
+    pCurrentMousePosition(INT_MAX, INT_MAX),
+    pCurrentMousePositionGraph(INT_MAX, INT_MAX),
+    pCurrentClientSize(0, 0),
+    pLastMousePosition(INT_MAX, INT_MAX),
+    uid(uID)
 {
     while (newUID <= uID)
+    {
         newUID++;
+    }
 
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // GTK
     SetBackgroundColour(pBackgroundColor);
@@ -186,7 +186,9 @@ wxBitmap Control::getRenderedMapImage(const MapRenderOptions& mapOptions)
     tmpDC.SelectObject(bmp);
 
     if (!mapOptions.transparentBackground)
+    {
         pBackgroundColor = mapOptions.backgroundColor;
+    }
 
     paintGraph(tmpDC, true);
 
@@ -194,8 +196,10 @@ wxBitmap Control::getRenderedMapImage(const MapRenderOptions& mapOptions)
 
     if (mapOptions.transparentBackground
         && mapOptions.fileFormat != Antares::Map::mapImageFormat::mfJPG)
+    {
         bmp.SetMask(
           new wxMask(bmp, pBackgroundColor)); // suppress the background color to let it transparent
+    }
 
     pBackgroundColor = Settings::background; // reset the color to the default
 
@@ -208,14 +212,22 @@ void Control::drawGrid(wxDC& dc)
     dc.SetPen(wxPen(Settings::grid, 1, wxPENSTYLE_DOT));
     // Horizontal lines
     for (int y = pCachedOrigin.y - gridSize; y > 0; y -= gridSize)
+    {
         dc.DrawLine(0, y, pCachedRealSize.x, y);
+    }
     for (int y = pCachedOrigin.y + gridSize; y < (pCachedOrigin.y << 1); y += gridSize)
+    {
         dc.DrawLine(0, y, pCachedRealSize.x, y);
+    }
     // Vertical lines
     for (int x = pCachedOrigin.x - gridSize; x > 0; x -= gridSize)
+    {
         dc.DrawLine(x, 0, x, pCachedRealSize.y);
+    }
     for (int x = pCachedOrigin.x + gridSize; x < (pCachedOrigin.y << 1); x += gridSize)
+    {
         dc.DrawLine(x, 0, x, pCachedRealSize.y);
+    }
 
     // Major lines
     dc.SetPen(wxPen(Settings::gridCenter, 1, wxPENSTYLE_SOLID));
@@ -234,7 +246,9 @@ void Control::drawSelectionBox(wxDC& dc)
         if (nodes.selectedItemsCount())
         {
             if (not pSelectionBox.second.x)
+            {
                 computeBoundingBoxOfSelectedNodes();
+            }
             preDrawBoundingBoxOfSelectedNodes(dc, pSelectionBox);
         }
         break;
@@ -267,10 +281,12 @@ void Control::drawTools(DrawingContext& drawingContext)
         bool mouseDown = (mouseActionTool == pMouseAction);
         auto end = pTools.end();
         for (auto i = pTools.begin(); i != end; ++i)
+        {
             (*i)->draw(drawingContext,
                        mouseDown && (pLastSelectedTool == *i),
                        pCurrentMousePositionGraph,
                        pCurrentMousePosition);
+        }
     }
 }
 
@@ -291,7 +307,9 @@ void Control::paintGraph(wxDC& dc, bool inFile)
     nodes.refreshCacheForAllNodes(dc);
 
     if (pInvalidated) // Cache update
+    {
         refreshCache();
+    }
 
     // To have the size of the control : (wxPoint)GetClientSize()
     wxRect windowRect(nullPoint, pCachedBoxSize);
@@ -302,7 +320,9 @@ void Control::paintGraph(wxDC& dc, bool inFile)
     // current version of wxSVGFileDC doesn't support the Clear() function!
 
     if (dynamic_cast<wxSVGFileDC*>(&dc) == nullptr)
+    {
         dc.Clear();
+    }
 
     // We need to shift the client rectangle to take into account
     // scrolling, converting device to logical coordinates
@@ -310,7 +330,9 @@ void Control::paintGraph(wxDC& dc, bool inFile)
 
     // Fill the background
     if (pBackgroundColor != wxNullColour)
+    {
         dc.DrawRectangle(wxRect(nullPoint, pCachedRealSize));
+    }
 
     // Fixing the drawing zone coordinates
     wxPoint cxtOrigin;
@@ -369,7 +391,9 @@ void Control::paintGraph(wxDC& dc, bool inFile)
 
     // draw tools
     if (not inFile)
+    {
         drawTools(drawingContext);
+    }
 }
 
 void Control::refreshCache()
@@ -457,6 +481,7 @@ void Control::computeBoundingBoxOfSelectedNodes()
     {
         space = 7,
     };
+
     pSelectionBox = nodes.boundingBoxOfSelectedNodes(getUid());
     if (pSelectionBox == emptyBB)
     {
@@ -504,7 +529,9 @@ Tool::Tool* Control::findTool(const int x, const int y)
     for (Tool::List::iterator i = pTools.begin(); i != end; ++i)
     {
         if ((*i)->contains(x, y))
+        {
             return *i;
+        }
     }
     return nullptr;
 }
@@ -515,7 +542,9 @@ void Control::removeTools()
     {
         auto end = pTools.end();
         for (auto i = pTools.begin(); i != end; ++i)
+        {
             delete *i;
+        }
         pTools.clear();
     }
 }
@@ -523,7 +552,8 @@ void Control::removeTools()
 class RemovalToolPredicate
 {
 public:
-    RemovalToolPredicate(Tool::LifeSpan p) : pFilter(p)
+    RemovalToolPredicate(Tool::LifeSpan p):
+        pFilter(p)
     {
     }
 
@@ -553,7 +583,9 @@ void Control::removeTools(const Tool::LifeSpan filter)
 void Control::updateMouseInfosFromEvent(wxMouseEvent& evt)
 {
     if (pInvalidated)
+    {
         refreshCache();
+    }
 
     // Computing the new Mouse pCurrentMousePositionGraph with the map's referencial
     GetViewStart(&pCurrentScroll.x, &pCurrentScroll.y);
@@ -641,7 +673,9 @@ void Control::mouseLeftDown(wxMouseEvent&)
                 if (!pKeyShift)
                 {
                     if (!item->selected())
+                    {
                         nodes.selectOnly(item);
+                    }
                 }
                 else
                 {
@@ -685,7 +719,9 @@ void Control::mouseLeftUp(wxMouseEvent&)
     if (pLastSelectedTool)
     {
         if (pLastSelectedTool->actionIsImmediate())
+        {
             performActionForSelectedTool();
+        }
     }
     else
     {
@@ -1009,14 +1045,18 @@ void Control::addNewVirtualNodeWhereTheMouseIs()
 void Control::addNewNode(uint count)
 {
     if (!count)
+    {
         return;
+    }
 
     reset();
     uint offsetX = 0;
     uint offsetY = 0;
     uint nbreak = 0;
     if (count > 2)
+    {
         nbreak = count / 2;
+    }
 
     GetViewStart(&pCurrentScroll.x, &pCurrentScroll.y);
     GetClientSize(&pCurrentClientSize.x, &pCurrentClientSize.y);
@@ -1029,12 +1069,16 @@ void Control::addNewNode(uint count)
     {
         Data::AreaName newName = nodes.findNewCaption();
         if (newName.empty())
+        {
             continue;
+        }
 
         Data::AreaName id;
         TransformNameIntoID(newName, id);
-        auto* newNode = nodes.addNode(
-          wxStringFromUTF8(id), wxStringFromUTF8(newName), x + offsetX, y + offsetY);
+        auto* newNode = nodes.addNode(wxStringFromUTF8(id),
+                                      wxStringFromUTF8(newName),
+                                      x + offsetX,
+                                      y + offsetY);
 
         newNode->addLayerVisibility(getUid());
         // select the new node
@@ -1046,7 +1090,9 @@ void Control::addNewNode(uint count)
             offsetX = 0;
         }
         else
+        {
             offsetX += 70;
+        }
     }
     nodes.selectOnly(selection);
     refresh();
@@ -1142,7 +1188,9 @@ void Control::rightClick(wxMouseEvent& evt)
 {
     // Do nothing
     if (nodes.selectedItemsCount() > 0)
+    {
         onPopupEvent(evt.GetX(), evt.GetY());
+    }
 }
 
 void Control::mouseLeftWindow(wxMouseEvent&)
@@ -1191,7 +1239,9 @@ void Control::keyPressed(wxKeyEvent& evt)
     default:
     {
         if (keyCode >= 256 || keyCode < 0)
+        {
             break;
+        }
         if (pKeyCtrl)
         {
             switch (keyCode)
@@ -1203,7 +1253,9 @@ void Control::keyPressed(wxKeyEvent& evt)
                 logs.debug() << "[map] 'ctrl+c': copy to clipboard";
                 auto* mainFrm = Antares::Forms::ApplWnd::Instance();
                 if (mainFrm)
+                {
                     mainFrm->copyToClipboard();
+                }
                 break;
             }
             case 'v':
@@ -1213,14 +1265,18 @@ void Control::keyPressed(wxKeyEvent& evt)
                 logs.debug() << "[map] 'ctrl+v': paste from clipboard";
                 auto* mainFrm = Antares::Forms::ApplWnd::Instance();
                 if (mainFrm)
+                {
                     mainFrm->pasteFromClipboard();
+                }
                 break;
             }
             }
             break;
         }
         if (pKeyShift)
+        {
             break;
+        }
         switch (keyCode)
         {
         case 'n':
@@ -1409,5 +1465,4 @@ void Control::onSize(wxSizeEvent& evt)
 
 size_t Control::newUID = 0;
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map

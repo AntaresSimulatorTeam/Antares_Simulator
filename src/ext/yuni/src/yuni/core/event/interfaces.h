@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,16 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
-#include <map>
 #include <cassert>
-#include "../../thread/policy.h"
+#include <map>
 
-namespace Yuni
-{
-namespace Private
-{
-namespace EventImpl
+#include "../../thread/policy.h"
+#include "../../yuni.h"
+
+namespace Yuni::Private::EventImpl
 {
 // Forward declaration
 template<class BindT>
@@ -28,9 +26,7 @@ class PredicateRemoveObserverBase;
 template<class BindT>
 class PredicateRemoveWithoutChecks;
 
-} // namespace EventImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::EventImpl
 
 namespace Yuni
 {
@@ -52,6 +48,7 @@ public:
     IEvent()
     {
     }
+
     virtual ~IEvent()
     {
     }
@@ -79,6 +76,7 @@ public:
     IEventObserverBase()
     {
     }
+
     virtual ~IEventObserverBase()
     {
     }
@@ -121,7 +119,7 @@ protected:
 ** \brief Base class for implementating an Observer class, able to connect to an event
 */
 template<class Derived, template<class> class TP = Policy::ObjectLevelLockable>
-class YUNI_DECL IEventObserver : public IEventObserverBase, public TP<IEventObserver<Derived, TP>>
+class YUNI_DECL IEventObserver: public IEventObserverBase, public TP<IEventObserver<Derived, TP>>
 {
 public:
     //! Type of the Event observer

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,16 +11,13 @@
 */
 #pragma once
 #include <stdlib.h>
+
 #include "../traits/cstring.h"
 #ifndef YUNI_OS_WINDOWS
 #include "environment.h"
 #endif
 
-namespace Yuni
-{
-namespace Private
-{
-namespace System
+namespace Yuni::Private::System
 {
 #ifdef YUNI_OS_WINDOWS
 /*!
@@ -28,13 +26,9 @@ namespace System
 YUNI_DECL uint WindowsUsername(char* cstring, uint size);
 #endif
 
-} // namespace System
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::System
 
-namespace Yuni
-{
-namespace System
+namespace Yuni::System
 {
 template<class StringT>
 bool Username(StringT& out, bool emptyBefore)
@@ -45,7 +39,9 @@ bool Username(StringT& out, bool emptyBefore)
 #ifdef YUNI_OS_WINDOWS
     {
         if (emptyBefore)
+        {
             out.clear();
+        }
 
         // The maximum size for a username is 256 on any platform
         // We will reserve enough space for that size
@@ -56,7 +52,9 @@ bool Username(StringT& out, bool emptyBefore)
         // Since it may be any string (like a static one), we may have less than 256 chars
         uint size = out.capacity() - out.size();
         if (!size)
+        {
             return false; // not enough rooms
+        }
 
         // Appending the username to our buffer and retrieving the size of
         // the username
@@ -77,5 +75,4 @@ bool Username(StringT& out, bool emptyBefore)
 #endif
 }
 
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System

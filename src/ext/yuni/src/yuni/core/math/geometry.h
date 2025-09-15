@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include "geometry/point3D.h"
 #include "geometry/vector3D.h"
 
-namespace Yuni
-{
-namespace Geometry
+namespace Yuni::Geometry
 {
 /*!
 ** \brief Intersection point of a line and a plane
@@ -122,7 +121,6 @@ static Point3D<T> PointToPlaneProjection(const Point3D<T>& point,
 template<typename T>
 static T VectorAngle(const Vector3D<T>& start, const Vector3D<T>& destination);
 
-} // namespace Geometry
-} // namespace Yuni
+} // namespace Yuni::Geometry
 
 #include "geometry.hxx"

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "main.h"
 
@@ -31,22 +31,22 @@ using namespace Yuni;
 
 #define ANTARES_MAGIC_CLIPBOARD "antares.study.clipboard;"
 
-namespace Antares
-{
-namespace Forms
+namespace Antares::Forms
 {
 namespace
 {
 /*!
 ** \brief Job for performing the paste operation
 */
-class JobPasteFromClipboard final : public Yuni::Job::IJob
+class JobPasteFromClipboard final: public Yuni::Job::IJob
 {
 public:
-    JobPasteFromClipboard(String::Ptr text, bool forceDialog = false) :
-     pText(text), pForceDialog(forceDialog)
+    JobPasteFromClipboard(String::Ptr text, bool forceDialog = false):
+        pText(text),
+        pForceDialog(forceDialog)
     {
     }
+
     virtual ~JobPasteFromClipboard()
     {
     }
@@ -88,7 +88,9 @@ void PreparePasteFromClipboard(const String& text, bool forceDialog)
         // skipping the first semicolon, because the first value is only some magic dust
         auto begin = text.find(';');
         if (begin == String::npos or line == String::npos or line < begin)
+        {
             return;
+        }
         ++begin;
 
         // iterating through all parameters
@@ -105,7 +107,9 @@ void PreparePasteFromClipboard(const String& text, bool forceDialog)
                 stop = true;
             }
             if (end < begin)
+            {
                 break;
+            }
             const String::Size equal = text.find('=', begin);
             // note: end will always be > 0 here
             if (equal < end - 1 && equal > begin)
@@ -115,19 +119,25 @@ void PreparePasteFromClipboard(const String& text, bool forceDialog)
                 value.assign(text, end - equal - 1, equal + 1);
                 value.trim(" \r\n");
                 if (not key.empty())
+                {
                     map[key] = value;
+                }
             }
             begin = end + 1;
         } while (!stop);
 
         if (map.empty())
+        {
             return;
+        }
     }
 
     // Retrieving the handler
     const Antares::ExtSource::Handler::Value& handler = map["handler"];
     if (handler.empty())
+    {
         return;
+    }
 
     // Performing the paste operation according to the handler name
     // The following routines are located in 'toolbox/ext-source/handler'
@@ -138,7 +148,9 @@ void PreparePasteFromClipboard(const String& text, bool forceDialog)
     {
         auto study = GetCurrentStudy();
         if (!(!study))
+        {
             Antares::ExtSource::Handler::AntaresStudy(study, text, line + 1, map, forceDialog);
+        }
         return;
     }
 }
@@ -157,8 +169,11 @@ void ApplWnd::pasteFromClipboard(bool showDialog)
 
     // Performing the paste (delayed operation)
     if (!s->empty())
+    {
         Antares::Dispatcher::GUI::Post(
-          (const Yuni::Job::IJob::Ptr&)new JobPasteFromClipboard(s, showDialog), 50 /*ms*/);
+          (const Yuni::Job::IJob::Ptr&)new JobPasteFromClipboard(s, showDialog),
+          50 /*ms*/);
+    }
 }
 
 void ApplWnd::evtOnEditPaste(wxCommandEvent&)
@@ -183,5 +198,4 @@ void ApplWnd::pasteFromClipboard(const String& text, bool showDialog)
     }
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "trigonometric.h"
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 template<typename T>
 inline T Cos(T x)
@@ -231,5 +230,4 @@ inline long double ATanH<long double>(long double x)
 #endif
 }
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math

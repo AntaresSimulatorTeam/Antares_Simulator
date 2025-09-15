@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "slist.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace LinkedListImpl
+namespace Yuni::Private::LinkedListImpl
 {
 template<int ComparePointer>
 struct Compare final
@@ -37,28 +34,33 @@ struct Compare<0> final
     }
 };
 
-} // namespace LinkedListImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::LinkedListImpl
 
 namespace Yuni
 {
 template<class T, class Alloc>
-inline LinkedList<T, Alloc>::LinkedList() : pHead(NULL), pLast(NULL), pCount(0)
+inline LinkedList<T, Alloc>::LinkedList():
+    pHead(NULL),
+    pLast(NULL),
+    pCount(0)
 {
 }
 
 template<class T, class Alloc>
-inline LinkedList<T, Alloc>::LinkedList(const LinkedList<T, Alloc>& rhs) :
- pHead(NULL), pLast(NULL), pCount(0)
+inline LinkedList<T, Alloc>::LinkedList(const LinkedList<T, Alloc>& rhs):
+    pHead(NULL),
+    pLast(NULL),
+    pCount(0)
 {
     push_back(rhs);
 }
 
 #ifdef YUNI_HAS_CPP_MOVE
 template<class T, class Alloc>
-inline LinkedList<T, Alloc>::LinkedList(LinkedList<T, Alloc>&& rhs) :
- pHead(rhs.pHead), pLast(rhs.pLast), pCount(rhs.pCount)
+inline LinkedList<T, Alloc>::LinkedList(LinkedList<T, Alloc>&& rhs):
+    pHead(rhs.pHead),
+    pLast(rhs.pLast),
+    pCount(rhs.pCount)
 {
     rhs.pHead = nullptr;
     rhs.pLast = nullptr;
@@ -68,24 +70,30 @@ inline LinkedList<T, Alloc>::LinkedList(LinkedList<T, Alloc>&& rhs) :
 
 template<class T, class Alloc>
 template<class U, class A>
-inline LinkedList<T, Alloc>::LinkedList(const LinkedList<U, A>& rhs) :
- pHead(NULL), pLast(NULL), pCount(0)
+inline LinkedList<T, Alloc>::LinkedList(const LinkedList<U, A>& rhs):
+    pHead(NULL),
+    pLast(NULL),
+    pCount(0)
 {
     push_back(rhs);
 }
 
 template<class T, class Alloc>
 template<class U, class A>
-inline LinkedList<T, Alloc>::LinkedList(const std::list<U, A>& rhs) :
- pHead(NULL), pLast(NULL), pCount(0)
+inline LinkedList<T, Alloc>::LinkedList(const std::list<U, A>& rhs):
+    pHead(NULL),
+    pLast(NULL),
+    pCount(0)
 {
     push_back(rhs);
 }
 
 template<class T, class Alloc>
 template<class U, class A>
-inline LinkedList<T, Alloc>::LinkedList(const std::vector<U, A>& rhs) :
- pHead(NULL), pLast(NULL), pCount(0)
+inline LinkedList<T, Alloc>::LinkedList(const std::vector<U, A>& rhs):
+    pHead(NULL),
+    pLast(NULL),
+    pCount(0)
 {
     push_back(rhs);
 }
@@ -95,7 +103,9 @@ inline LinkedList<T, Alloc>::~LinkedList()
 {
     // Destroy all items if not empty
     if (pHead)
+    {
         doClear();
+    }
 }
 
 template<class T, class Alloc>
@@ -158,7 +168,9 @@ typename LinkedList<T, Alloc>::iterator LinkedList<T, Alloc>::find(
     while (it)
     {
         if (Private::LinkedListImpl::Compare<comparePointer>::Perform(value, it->data))
+        {
             return iterator(it);
+        }
         it = it->next;
     }
     return iterator();
@@ -172,7 +184,9 @@ typename LinkedList<T, Alloc>::iterator LinkedList<T, Alloc>::find(const U& valu
     while (it)
     {
         if (Private::LinkedListImpl::Compare<comparePointer>::Perform(value, it->data))
+        {
             return iterator(it);
+        }
         it = it->next;
     }
     return iterator();
@@ -186,7 +200,9 @@ typename LinkedList<T, Alloc>::const_iterator LinkedList<T, Alloc>::find(const U
     while (it)
     {
         if (Private::LinkedListImpl::Compare<comparePointer>::Perform(value, it->data))
+        {
             return iterator(it);
+        }
         it = it->next;
     }
     return iterator();
@@ -200,7 +216,9 @@ typename LinkedList<T, Alloc>::const_iterator LinkedList<T, Alloc>::find(
     while (it)
     {
         if (Private::LinkedListImpl::Compare<comparePointer>::Perform(value, it->data))
+        {
             return iterator(it);
+        }
         it = it->next;
     }
     return iterator();
@@ -277,7 +295,9 @@ void LinkedList<T, Alloc>::push_back(const std::list<U, A>& rhs)
     typedef std::list<U, A> L;
     typename L::const_iterator end = rhs.end();
     for (typename L::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         push_back(*i);
+    }
 }
 
 template<class T, class Alloc>
@@ -287,7 +307,9 @@ void LinkedList<T, Alloc>::push_back(const std::vector<U, A>& rhs)
     typedef std::vector<U, A> L;
     typename L::const_iterator end = rhs.end();
     for (typename L::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         push_back(*i);
+    }
 }
 
 template<class T, class Alloc>
@@ -358,7 +380,9 @@ void LinkedList<T, Alloc>::push_front(const std::list<U, A>& rhs)
     typedef std::list<U, A> L;
     typename L::const_iterator end = rhs.end();
     for (typename L::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         push_back(*i);
+    }
 }
 
 template<class T, class Alloc>
@@ -368,7 +392,9 @@ void LinkedList<T, Alloc>::push_front(const std::vector<U, A>& rhs)
     typedef std::vector<U, A> L;
     typename L::const_iterator end = rhs.end();
     for (typename L::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         push_back(*i);
+    }
 }
 
 template<class T, class Alloc>
@@ -380,7 +406,9 @@ void LinkedList<T, Alloc>::pop_front()
         pHead = it->next;
         delete it;
         if (!pHead)
+        {
             pLast = NULL;
+        }
         --pCount;
     }
 }
@@ -390,7 +418,9 @@ void LinkedList<T, Alloc>::erase(iterator& i)
 {
     // Make sure the list is not empty
     if (not pHead)
+    {
         return;
+    }
 
     // If we are erasing the first item
     if (pHead == i.pCurrent)
@@ -447,7 +477,9 @@ typename LinkedList<T, Alloc>::Size LinkedList<T, Alloc>::remove(const U& value)
                 previous->next = cursor; // the same than itemToDelete->next
                 // The reference to the previous item may need an update
                 if (pLast == itemToDelete)
+                {
                     pLast = previous;
+                }
                 --pCount;
             }
             else
@@ -513,7 +545,9 @@ typename LinkedList<T, Alloc>::Size LinkedList<T, Alloc>::remove(reference_type 
                 previous->next = cursor; // the same than itemToDelete->next
                 // The reference to the previous item may need an update
                 if (pLast == itemToDelete)
+                {
                     pLast = previous;
+                }
                 --pCount;
             }
             else
@@ -573,7 +607,9 @@ typename LinkedList<T, Alloc>::Size LinkedList<T, Alloc>::remove(const std::list
 
     typename L::const_iterator end = rhs.end();
     for (typename L::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         removeCount += this->remove(*i);
+    }
     return removeCount;
 }
 
@@ -586,7 +622,9 @@ typename LinkedList<T, Alloc>::Size LinkedList<T, Alloc>::remove(const std::vect
 
     typename L::const_iterator end = rhs.end();
     for (typename L::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         removeCount += this->remove(*i);
+    }
     return removeCount;
 }
 

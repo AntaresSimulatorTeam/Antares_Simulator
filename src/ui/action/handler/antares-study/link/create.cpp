@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <action/handler/antares-study/link/create.h>
 #include <antares/study/study.h>
@@ -32,16 +32,11 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Action::AntaresStudy::Link
 {
-namespace Action
-{
-namespace AntaresStudy
-{
-namespace Link
-{
-Create::Create(const Data::AreaName& fromarea, const Data::AreaName& toarea) :
- pOriginalFromAreaName(fromarea), pOriginalToAreaName(toarea)
+Create::Create(const Data::AreaName& fromarea, const Data::AreaName& toarea):
+    pOriginalFromAreaName(fromarea),
+    pOriginalToAreaName(toarea)
 {
     pInfos.behavior = bhOverwrite;
 }
@@ -49,11 +44,11 @@ Create::Create(const Data::AreaName& fromarea, const Data::AreaName& toarea) :
 Create::Create(const Data::AreaName& fromarea,
                const Data::AreaName& targetfromarea,
                const Data::AreaName& toarea,
-               const Data::AreaName& targettoarea) :
- pOriginalFromAreaName(fromarea),
- pTargetFromAreaName(targetfromarea),
- pOriginalToAreaName(toarea),
- pTargetToAreaName(targettoarea)
+               const Data::AreaName& targettoarea):
+    pOriginalFromAreaName(fromarea),
+    pTargetFromAreaName(targetfromarea),
+    pOriginalToAreaName(toarea),
+    pTargetToAreaName(targettoarea)
 {
     pInfos.behavior = bhOverwrite;
 }
@@ -86,9 +81,13 @@ bool Create::prepareWL(Context& ctx)
     }
 
     if (!from)
+    {
         from = pOriginalFromAreaName;
+    }
     if (!to)
+    {
         to = pOriginalToAreaName;
+    }
 
     pInfos.message.clear();
     pInfos.caption.clear() << "Link " << from << " / " << to;
@@ -127,7 +126,9 @@ bool Create::prepareWL(Context& ctx)
         }
     }
     else
+    {
         pInfos.message.clear() << "The link " << from << " / " << to << " will be created";
+    }
     return true;
 }
 
@@ -136,9 +137,13 @@ bool Create::performWL(Context& ctx)
     Data::AreaName from = pTargetFromAreaName;
     Data::AreaName to = pTargetToAreaName;
     if (!from)
+    {
         from = pOriginalFromAreaName;
+    }
     if (!to)
+    {
         to = pOriginalToAreaName;
+    }
 
     ctx.message.clear() << "Updating the link " << from << " / " << to;
     ctx.updateMessageUI(ctx.message);
@@ -156,13 +161,17 @@ bool Create::performWL(Context& ctx)
     {
         ctx.link = areaFrom->findLinkByID(areaTo->id);
         if (!ctx.link)
+        {
             ctx.link = areaTo->findLinkByID(areaFrom->id);
+        }
         if (!ctx.link)
         {
             logs.debug() << "[study-action] The link " << areaFrom->id << " - " << areaTo->id
                          << " has been created";
-            ctx.link = AreaListAddLink(
-              &(ctx.study->areas), areaFrom->id.c_str(), areaTo->id.c_str(), false);
+            ctx.link = AreaListAddLink(&(ctx.study->areas),
+                                       areaFrom->id.c_str(),
+                                       areaTo->id.c_str(),
+                                       false);
             ctx.link->resetToDefaultValues();
             ctx.autoselectLinks.push_back(ctx.link);
             return true;
@@ -204,7 +213,4 @@ void Create::createActionsForAStandardLinkCopy(Context&)
     *this += new Filtering(pOriginalFromAreaName, pOriginalToAreaName);
 }
 
-} // namespace Link
-} // namespace AntaresStudy
-} // namespace Action
-} // namespace Antares
+} // namespace Antares::Action::AntaresStudy::Link

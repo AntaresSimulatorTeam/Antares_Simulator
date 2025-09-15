@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "job.h"
 #include "antares/utils/utils.h"
@@ -30,11 +30,7 @@ using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
 
-namespace Antares
-{
-namespace Private
-{
-namespace OutputViewerData
+namespace Antares::Private::OutputViewerData
 {
 template<class MapT>
 static inline void Browse(const AnyString& path, MapT& content)
@@ -61,23 +57,25 @@ static inline bool TryAreaListFileExtraction(const AnyString& path, MapT& conten
 
     typename MapT::key_type name; // temporary name
 
-    return (IO::File::ReadLineByLine(filename, [&](const String& line) {
-        if (line.first() != '@')
-        {
-            // This is an area
-            name.clear();
-            TransformNameIntoID(line, name);
-            content.insert(name);
-        }
-        else
-        {
-            // This is a group
-            name = line;
-            name.trim();
-            name.toLower();
-            content.insert(name);
-        }
-    }));
+    return (IO::File::ReadLineByLine(filename,
+                                     [&](const String& line)
+                                     {
+                                         if (line.first() != '@')
+                                         {
+                                             // This is an area
+                                             name.clear();
+                                             TransformNameIntoID(line, name);
+                                             content.insert(name);
+                                         }
+                                         else
+                                         {
+                                             // This is a group
+                                             name = line;
+                                             name.trim();
+                                             name.toLower();
+                                             content.insert(name);
+                                         }
+                                     }));
 }
 
 template<class MapT>
@@ -90,34 +88,40 @@ static inline bool TryLinkListFileExtraction(const AnyString& path, MapT& conten
     typename MapT::key_type target_name; // temporary name
     typename MapT::key_type link_name;   // temporary name
 
-    return (IO::File::ReadLineByLine(filename, [&](const String& line) {
-        if (line.first() != '\t')
-        {
-            // This is the first area of a link
-            source_name.clear();
-            TransformNameIntoID(line, source_name);
-        }
-        else
-        {
-            // This is the other area of a link previously initialized with an area
-            // ... Retrieving target area name from file's line
-            target_name.clear();
-            String trimmedLine = line;
-            trimmedLine.trim();
-            TransformNameIntoID(trimmedLine, target_name);
+    return (IO::File::ReadLineByLine(filename,
+                                     [&](const String& line)
+                                     {
+                                         if (line.first() != '\t')
+                                         {
+                                             // This is the first area of a link
+                                             source_name.clear();
+                                             TransformNameIntoID(line, source_name);
+                                         }
+                                         else
+                                         {
+                                             // This is the other area of a link previously
+                                             // initialized with an area
+                                             // ... Retrieving target area name from file's line
+                                             target_name.clear();
+                                             String trimmedLine = line;
+                                             trimmedLine.trim();
+                                             TransformNameIntoID(trimmedLine, target_name);
 
-            // ... Building link name
-            link_name.clear();
-            link_name = source_name;
-            link_name += " - ";
-            link_name += target_name;
-            content.insert(link_name);
-        }
-    }));
+                                             // ... Building link name
+                                             link_name.clear();
+                                             link_name = source_name;
+                                             link_name += " - ";
+                                             link_name += target_name;
+                                             content.insert(link_name);
+                                         }
+                                     }));
 }
 
-Job::Job(Antares::Window::OutputViewer::Component& component, const AnyString& path) :
- Yuni::Job::IJob(), pComponent(component), pPath(path), pContent(nullptr)
+Job::Job(Antares::Window::OutputViewer::Component& component, const AnyString& path):
+    Yuni::Job::IJob(),
+    pComponent(component),
+    pPath(path),
+    pContent(nullptr)
 {
 }
 
@@ -131,7 +135,9 @@ void Job::onExecute()
     // It is important to check from time to time if the job is still valid to stop
     // as soon as possible
     if (canceling())
+    {
         return;
+    }
 
     // Temporary variables
     logs.info() << "[output-viewer] running analyzis on " << pPath;
@@ -157,7 +163,9 @@ void Job::onExecute()
             }
 
             if (canceling())
+            {
                 return;
+            }
 
             // Trying to use the file about-the-study/links.txt first,
             // otherwise we will analyze the directory structure
@@ -185,7 +193,9 @@ void Job::onExecute()
             }
 
             if (canceling())
+            {
                 return;
+            }
 
             pathTmp.clear() << i.filename() << SEP << "mc-all" << SEP << "links";
             Browse(pathTmp, pContent->adequacy.links);
@@ -198,11 +208,15 @@ void Job::onExecute()
             break;
         }
         if (canceling())
+        {
             return;
+        }
     }
 
     if (canceling() or shouldAbort())
+    {
         return;
+    }
 
     // Write the results into the cache
     pComponent.pMutex.lock();
@@ -217,7 +231,9 @@ void Job::onExecute()
         if (0 == --pComponent.pJobsRemaining)
         {
             if (not canceling())
+            {
                 Antares::Dispatcher::GUI::Post(&pComponent, &Component::treeDataUpdate);
+            }
         }
     }
     pComponent.pMutex.unlock();
@@ -239,7 +255,9 @@ void Job::gatherInfosAboutThermalClusters(const AnyString& path)
     if (matrix.loadFromCSVFile(filename, 1, 0, options) and matrix.width > 2)
     {
         for (uint y = 1; y < matrix.height; ++y)
+        {
             pContent->clusters[matrix[0][y]].insert(matrix[1][y]);
+        }
     }
 }
 
@@ -253,7 +271,9 @@ void Job::gatherInfosAboutYearByYearData(const AnyString& path)
     pContent->ybyInterval[1] = 0;
 
     if (canceling() or pContent->empty() or path.empty())
+    {
         return;
+    }
 
     // Since v3.7, the individual years can be found in the folder `mc-ind/<number>`.
     // Before 3.7, it was in the folder `Economy`, at the same level than `mc-all`.
@@ -274,9 +294,13 @@ void Job::gatherInfosAboutYearByYearData(const AnyString& path)
             {
                 pContent->hasYearByYear = true;
                 if (year < pContent->ybyInterval[0])
+                {
                     pContent->ybyInterval[0] = year;
+                }
                 if (year > pContent->ybyInterval[1])
+                {
                     pContent->ybyInterval[1] = year;
+                }
             }
         }
     }
@@ -311,6 +335,4 @@ void Job::gatherInfosAboutYearByYearData(const AnyString& path)
 #endif
 }
 
-} // namespace OutputViewerData
-} // namespace Private
-} // namespace Antares
+} // namespace Antares::Private::OutputViewerData

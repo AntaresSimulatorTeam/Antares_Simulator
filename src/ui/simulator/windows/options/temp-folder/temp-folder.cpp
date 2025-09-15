@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "temp-folder.h"
 #include <wx/sizer.h>
@@ -39,29 +39,25 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Options
+namespace Antares::Window::Options
 {
 BEGIN_EVENT_TABLE(ConfigureTempFolder, wxDialog)
 EVT_CHECKBOX(mnIDDefault, ConfigureTempFolder::evtDefault)
 END_EVENT_TABLE()
 
-ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Options"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
- pBtnCancel(nullptr),
- pBtnGo(nullptr),
- pBtnBrowse(nullptr),
- pPath(nullptr),
- pDefaults(nullptr),
- pText(nullptr)
+ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Options"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
+    pBtnCancel(nullptr),
+    pBtnGo(nullptr),
+    pBtnBrowse(nullptr),
+    pPath(nullptr),
+    pDefaults(nullptr),
+    pText(nullptr)
 {
     assert(parent);
     auto* config = new wxConfig(wxT(LOG_APPLICATION_NAME), wxT(LOG_APPLICATION_VENDOR));
@@ -73,11 +69,12 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
     auto* sizer = new wxBoxSizer(wxVERTICAL);
 
     // Header
-    sizer->Add(
-      Toolbox::Components::WizardHeader::Create(
-        this, wxT("Options"), "images/32x32/settings.png", wxT("Configure the temporary folder")),
-      0,
-      wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    sizer->Add(Toolbox::Components::WizardHeader::Create(this,
+                                                         wxT("Options"),
+                                                         "images/32x32/settings.png",
+                                                         wxT("Configure the temporary folder")),
+               0,
+               wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
     // Space
     sizer->AddSpacer(5);
@@ -100,13 +97,18 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
 
     if (not readonly)
     {
-        pDefaults = new wxCheckBox(
-          this, mnIDDefault, wxT(" Use the default settings (System Temporary Directory) *"));
+        pDefaults = new wxCheckBox(this,
+                                   mnIDDefault,
+                                   wxT(" Use the default settings (System Temporary Directory) *"));
         bool b;
         if (config->Read(wxT("tmp/usedefaults"), &b, true))
+        {
             pDefaults->SetValue(b);
+        }
         else
+        {
             pDefaults->SetValue(true);
+        }
 
         s->Add(pDefaults, 0, wxRIGHT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     }
@@ -119,13 +121,19 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
         wxString pth;
         bool b;
         if (config->Read(wxT("tmp/usedefaults"), &b, true))
+        {
             pth = config->Read(wxT("tmp/path"), wxEmptyString);
+        }
         if (pth.empty())
+        {
             pth = wxStringFromUTF8(Antares::memory.cacheFolder());
+        }
 
         pPath = new wxTextCtrl(this, wxID_ANY, pth, wxDefaultPosition);
-        pBtnBrowse = Antares::Component::CreateButton(
-          this, wxT("Browse"), this, &ConfigureTempFolder::onBrowse);
+        pBtnBrowse = Antares::Component::CreateButton(this,
+                                                      wxT("Browse"),
+                                                      this,
+                                                      &ConfigureTempFolder::onBrowse);
         wxSizer* sz = new wxBoxSizer(wxHORIZONTAL);
         sz->Add(pBtnBrowse, 0, wxEXPAND | wxALL);
         sz->AddSpacer(4);
@@ -141,7 +149,10 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
         wxSizer* hs = new wxBoxSizer(wxHORIZONTAL);
         hs->Add(20, 5);
         wxStaticText* info = Component::CreateLabel(
-          this, wxT("* Antares must be restarted for the changes to take effect"), false, true);
+          this,
+          wxT("* Antares must be restarted for the changes to take effect"),
+          false,
+          true);
         hs->Add(info, 1, wxALL | wxEXPAND);
         hs->Add(20, 5);
         sizer->Add(hs, 0, wxALL | wxEXPAND);
@@ -150,27 +161,35 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
     // Buttons
     auto* pnlBtns = new wxBoxSizer(wxHORIZONTAL);
     pnlBtns->AddStretchSpacer();
-    pBtnCancel = Antares::Component::CreateButton(
-      this, (readonly) ? wxT("  Close  ") : wxT("Cancel"), this, &ConfigureTempFolder::onCancel);
+    pBtnCancel = Antares::Component::CreateButton(this,
+                                                  (readonly) ? wxT("  Close  ") : wxT("Cancel"),
+                                                  this,
+                                                  &ConfigureTempFolder::onCancel);
     pBtnCancel->SetDefault();
     pnlBtns->Add(pBtnCancel);
 
     if (not readonly)
     {
         pnlBtns->AddSpacer(5);
-        pBtnGo = Antares::Component::CreateButton(
-          this, wxT(" Save and Close "), this, &ConfigureTempFolder::onSave);
+        pBtnGo = Antares::Component::CreateButton(this,
+                                                  wxT(" Save and Close "),
+                                                  this,
+                                                  &ConfigureTempFolder::onSave);
         pnlBtns->Add(pBtnGo, 0, wxALL | wxEXPAND);
     }
     pnlBtns->Add(25, 5);
 
     if (not readonly)
+    {
         sizer->Add(new wxStaticLine(this, wxID_ANY), 0, wxALL | wxEXPAND, 8);
+    }
     sizer->Add(pnlBtns, 0, wxALL | wxEXPAND);
     sizer->AddSpacer(8);
 
     if (pDefaults)
+    {
         reset(pDefaults->GetValue());
+    }
 
     SetSizer(sizer);
     sizer->Layout();
@@ -182,7 +201,9 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
         wxSize p = GetSize();
         const int wantedSize = 500;
         if (p.GetWidth() != wantedSize)
+        {
             p.SetWidth(wantedSize);
+        }
         SetSize(p);
     }
     Centre(wxBOTH);
@@ -197,7 +218,9 @@ ConfigureTempFolder::~ConfigureTempFolder()
 void ConfigureTempFolder::onSave(void*)
 {
     if (!pDefaults or !pPath)
+    {
         return;
+    }
 
     auto* config = new wxConfig(wxT(LOG_APPLICATION_NAME), wxT(LOG_APPLICATION_VENDOR));
     if (not pDefaults->GetValue())
@@ -218,7 +241,9 @@ void ConfigureTempFolder::onSave(void*)
             Dispatcher::GUI::Close(this);
         }
         else
+        {
             logs.error() << "The directory must exist";
+        }
     }
     else
     {
@@ -243,10 +268,14 @@ void ConfigureTempFolder::onBrowse(void*)
     if (pPath)
     {
         const wxString& path = pPath->GetValue();
-        wxDirDialog* dlg = new wxDirDialog(
-          this, wxT("Temporary folder"), path, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+        wxDirDialog* dlg = new wxDirDialog(this,
+                                           wxT("Temporary folder"),
+                                           path,
+                                           wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
         if (wxID_OK == dlg->ShowModal())
+        {
             pPath->SetValue(dlg->GetPath());
+        }
         delete dlg;
     }
 }
@@ -261,6 +290,4 @@ void ConfigureTempFolder::reset(bool useDefault)
     }
 }
 
-} // namespace Options
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Options

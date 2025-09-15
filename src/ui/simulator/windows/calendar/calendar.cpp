@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include <yuni/core/system/memory.h>
@@ -36,19 +36,17 @@
 using namespace Yuni;
 #include "view-standard.hxx"
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 BEGIN_EVENT_TABLE(CalendarSelect, wxDialog)
 EVT_SHOW(CalendarSelect::evtOnShow)
 END_EVENT_TABLE()
 
-CalendarSelect::CalendarSelect(wxWindow* parent) :
- wxDialog(parent, wxID_ANY, wxT("Calendar"), wxDefaultPosition, wxDefaultSize),
- pButtonSelect(nullptr),
- pApplyButton(nullptr),
- pCalendarView(nullptr)
+CalendarSelect::CalendarSelect(wxWindow* parent):
+    wxDialog(parent, wxID_ANY, wxT("Calendar"), wxDefaultPosition, wxDefaultSize),
+    pButtonSelect(nullptr),
+    pApplyButton(nullptr),
+    pCalendarView(nullptr)
 {
     selectionDayRange[0] = (uint)-1;
     selectionDayRange[1] = (uint)-1;
@@ -86,8 +84,9 @@ void CalendarSelect::evtOnShow(wxShowEvent& evt)
 
             if (not allowQuickSelect)
             {
-                auto* btn = new Component::Button(
-                  standardview, wxT("(invalid)"), "images/16x16/calendar_month.png");
+                auto* btn = new Component::Button(standardview,
+                                                  wxT("(invalid)"),
+                                                  "images/16x16/calendar_month.png");
                 btn->menu(true);
                 btn->onPopupMenu(this, &CalendarSelect::onPopupMenu);
                 btn->caption();
@@ -124,15 +123,19 @@ void CalendarSelect::evtOnShow(wxShowEvent& evt)
 
                 // Close button
                 {
-                    auto* btn = Antares::Component::CreateButton(
-                      panel, wxT("Cancel"), this, &CalendarSelect::onClose);
+                    auto* btn = Antares::Component::CreateButton(panel,
+                                                                 wxT("Cancel"),
+                                                                 this,
+                                                                 &CalendarSelect::onClose);
                     sizerBar->Add(btn, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL);
                     sizerBar->Add(5, 2);
 
                     if (not allowQuickSelect)
                     {
-                        btn = Antares::Component::CreateButton(
-                          panel, wxT("  Apply the new date  "), this, &CalendarSelect::onProceed);
+                        btn = Antares::Component::CreateButton(panel,
+                                                               wxT("  Apply the new date  "),
+                                                               this,
+                                                               &CalendarSelect::onProceed);
                         pApplyButton = btn;
                         sizerBar->Add(btn, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL);
                     }
@@ -184,7 +187,9 @@ void CalendarSelect::updateSelectionText(const YString& text)
         pButtonSelect->Refresh();
     }
     if (pApplyButton)
+    {
         pApplyButton->Enable((selectionDayRange[0] != (uint)-1));
+    }
 }
 
 void CalendarSelect::onPopupMenu(Component::Button&, wxMenu& menu, void*)
@@ -210,14 +215,18 @@ void CalendarSelect::onSelectWholeYear(wxCommandEvent&)
 {
     auto* calendarView = dynamic_cast<CalendarViewStandard*>(pCalendarView);
     if (calendarView)
+    {
         calendarView->selectWholeYear();
+    }
 }
 
 void CalendarSelect::onSelectNone(wxCommandEvent&)
 {
     auto* calendarView = dynamic_cast<CalendarViewStandard*>(pCalendarView);
     if (calendarView)
+    {
         calendarView->selectNone();
+    }
 }
 
 bool CalendarSelect::modified() const
@@ -225,5 +234,4 @@ bool CalendarSelect::modified() const
     return pHasBeenModified && (not pCanceled);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

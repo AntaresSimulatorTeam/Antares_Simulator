@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -14,13 +15,10 @@
 #include <stdlib.h>
 #endif
 #include <string.h>
+
 #include "../../math/math.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace CStringImpl
+namespace Yuni::Private::CStringImpl
 {
 // Const qualifier from the adapter mode
 template<bool AdapterT, class C>
@@ -28,6 +26,7 @@ struct QualifierFromAdapterMode
 {
     typedef C* Type;
 };
+
 template<class C>
 struct QualifierFromAdapterMode<true, C>
 {
@@ -87,9 +86,13 @@ struct Consume final
     static inline void Perform(StringT& out, typename StringT::Size count)
     {
         if (count >= out.size())
+        {
             out.clear();
+        }
         else
+        {
             out.decalOffset(count);
+        }
     }
 };
 
@@ -108,6 +111,7 @@ class Data
 public:
     typedef char C;
     typedef uint Size;
+
     enum
     {
         chunkSize = ChunkSizeT,
@@ -147,12 +151,16 @@ public:
         // Making sure that we have enough space
         reserve(blockSize + static_cast<uint>(zeroTerminated));
         // Raw copy
-        YUNI_MEMCPY(
-          const_cast<char*>(data), static_cast<uint>(capacity), block, sizeof(C) * blockSize);
+        YUNI_MEMCPY(const_cast<char*>(data),
+                    static_cast<uint>(capacity),
+                    block,
+                    sizeof(C) * blockSize);
         // New size
         size = blockSize;
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[size] = C();
+        }
         return blockSize;
     }
 
@@ -168,7 +176,9 @@ public:
         // New size
         size += blockSize;
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[size] = C();
+        }
         return blockSize;
     }
 
@@ -181,7 +191,9 @@ public:
         // New size
         size = 1;
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[1] = C();
+        }
         return 1;
     }
 
@@ -194,14 +206,18 @@ public:
         // New size
         ++size;
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[size] = C();
+        }
         return 1;
     }
 
     Size assign(const C* const block, const Size blockSize)
     {
         if (block and blockSize)
+        {
             return assignWithoutChecking(block, blockSize);
+        }
         clear();
         return 0;
     }
@@ -241,6 +257,7 @@ class Data<ChunkSizeT, false>
 public:
     typedef char C;
     typedef uint Size;
+
     enum
     {
         chunkSize = ChunkSizeT,
@@ -250,14 +267,18 @@ public:
     };
 
 public:
-    Data() : size(0)
+    Data():
+        size(0)
     {
         // The buffer must be properly initialized
         if (static_cast<uint>(zeroTerminated))
+        {
             data[0] = C();
+        }
     }
 
-    Data(const Data& rhs) : size(rhs.size)
+    Data(const Data& rhs):
+        size(rhs.size)
     {
         YUNI_MEMCPY(data,
                     sizeof(C) * (static_cast<uint>(capacity) + static_cast<uint>(zeroTerminated)),
@@ -266,7 +287,8 @@ public:
     }
 
 #ifdef YUNI_HAS_CPP_MOVE
-    Data(Data&& rhs) : size(rhs.size)
+    Data(Data&& rhs):
+        size(rhs.size)
     {
         // it is impossible to perform a real move in this case
         YUNI_MEMCPY(data,
@@ -275,7 +297,9 @@ public:
                     sizeof(C) * (size + static_cast<uint>(zeroTerminated)));
         rhs.size = 0;
         if (static_cast<uint>(zeroTerminated))
+        {
             rhs.data[0] = C();
+        }
     }
 #endif
 
@@ -283,7 +307,9 @@ public:
     {
         size = 0;
         if (static_cast<uint>(zeroTerminated))
+        {
             data[0] = C();
+        }
     }
 
     static bool null()
@@ -302,7 +328,9 @@ public:
     Size assign(const C* const block, const Size blockSize)
     {
         if (block and blockSize)
+        {
             return assignWithoutChecking(block, blockSize);
+        }
         clear();
         return 0;
     }
@@ -330,7 +358,9 @@ public:
                         sizeof(C) * (static_cast<uint>(capacity) - offset));
             size = static_cast<uint>(capacity);
             if (static_cast<uint>(zeroTerminated))
+            {
                 data[static_cast<uint>(capacity)] = C();
+            }
             return;
         }
         if (size + len <= static_cast<uint>(capacity))
@@ -340,13 +370,17 @@ public:
                             data + sizeof(C) * (offset),
                             sizeof(C) * (size - offset));
             // Copying the given buffer
-            YUNI_MEMCPY(
-              data + sizeof(C) * (offset), static_cast<uint>(capacity), buffer, sizeof(C) * len);
+            YUNI_MEMCPY(data + sizeof(C) * (offset),
+                        static_cast<uint>(capacity),
+                        buffer,
+                        sizeof(C) * len);
             // Updating the size
             size += len;
             // zero-terminated
             if (static_cast<uint>(zeroTerminated))
+            {
                 data[size] = C();
+            }
         }
         else
         {
@@ -355,13 +389,17 @@ public:
                             data + sizeof(C) * (offset),
                             sizeof(C) * (static_cast<uint>(capacity) - offset - len));
             // Copying the given buffer
-            YUNI_MEMCPY(
-              data + sizeof(C) * (offset), static_cast<uint>(capacity), buffer, sizeof(C) * len);
+            YUNI_MEMCPY(data + sizeof(C) * (offset),
+                        static_cast<uint>(capacity),
+                        buffer,
+                        sizeof(C) * len);
             // Updating the size
             size = static_cast<uint>(capacity);
             // zero-terminated
             if (static_cast<uint>(zeroTerminated))
+            {
                 data[static_cast<uint>(capacity)] = C();
+            }
         }
     }
 
@@ -383,7 +421,9 @@ public:
 
         rhs.size = 0;
         if (static_cast<uint>(zeroTerminated))
+        {
             rhs.data[0] = C();
+        }
         return *this;
     }
 #endif
@@ -404,8 +444,6 @@ protected:
 
 }; // class Data;
 
-} // namespace CStringImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::CStringImpl
 
 #include "traits.hxx"

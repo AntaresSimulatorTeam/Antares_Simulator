@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,18 +10,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "environment.h"
-#include "windows.hdr.h"
+
 #include "../../string.h"
+#include "windows.hdr.h"
 #ifdef YUNI_HAS_STDLIB_H
 #include <stdlib.h>
 #endif
 #include "../string/wstring.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace Environment
+namespace Yuni::System::Environment
 {
 namespace // anonymous
 {
@@ -28,7 +26,9 @@ template<class StringT>
 inline bool ReadImpl(const AnyString& name, StringT& out, bool emptyBefore)
 {
     if (emptyBefore)
+    {
         out.clear();
+    }
 
 #ifdef YUNI_OS_WINDOWS
     {
@@ -44,8 +44,14 @@ inline bool ReadImpl(const AnyString& name, StringT& out, bool emptyBefore)
                 GetEnvironmentVariableW(nameUTF16.c_str(), buffer, size);
                 if (size != 0)
                 {
-                    int sizeRequired
-                      = WideCharToMultiByte(CP_UTF8, 0, buffer, (int)size - 1, nullptr, 0, nullptr, nullptr);
+                    int sizeRequired = WideCharToMultiByte(CP_UTF8,
+                                                           0,
+                                                           buffer,
+                                                           (int)size - 1,
+                                                           nullptr,
+                                                           0,
+                                                           nullptr,
+                                                           nullptr);
                     if (sizeRequired > 0)
                     {
                         out.reserve(out.size() + sizeRequired);
@@ -96,14 +102,18 @@ bool ReadAsBool(const AnyString& name)
         String out;
         ReadImpl(name, out, false);
         if (not out.empty())
+        {
             return out.to<bool>();
+        }
     }
 #else
     {
 #ifdef YUNI_HAS_STDLIB_H
         AnyString value = ::getenv(name.c_str());
         if (not value.empty())
+        {
             return value.to<bool>();
+        }
 #else
 #error not implemented
 #endif
@@ -119,14 +129,18 @@ int64_t ReadAsInt64(const AnyString& name, int64_t defvalue)
         String out;
         ReadImpl(name, out, false);
         if (not out.empty())
+        {
             return out.to<int64_t>();
+        }
     }
 #else
     {
 #ifdef YUNI_HAS_STDLIB_H
         AnyString value = ::getenv(name.c_str());
         if (not value.empty())
+        {
             return value.to<int64_t>();
+        }
 #else
 #error not implemented
 #endif
@@ -165,6 +179,4 @@ bool Read(const AnyString& name, String& out, bool emptyBefore)
     return ReadImpl(name, out, emptyBefore);
 }
 
-} // namespace Environment
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Environment

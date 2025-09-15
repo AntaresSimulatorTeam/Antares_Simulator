@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "exportmap.h"
 #include <yuni/io/directory.h>
@@ -42,9 +42,7 @@ using namespace Yuni;
 static const char* formatNames[Antares::Map::mfFormatCount] = {"PNG", "JPEG", "SVG"};
 static const char* formatExt[Antares::Map::mfFormatCount] = {".png", ".jpg", ".svg"};
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 namespace // anonymous
 {
@@ -80,53 +78,53 @@ SaveResult ExportMap::Execute(wxFrame* parent, Data::Study::Ptr study)
     return result;
 }
 
-ExportMap::ExportMap(wxFrame* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Export Map"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
- pStudy(GetCurrentStudy()),
- pGridSizer(nullptr),
- pParentProperties(nullptr),
- pMapName(nullptr),
- pMapFolderName(nullptr),
- pMapFolderPath(nullptr),
- pCustomMapFolderName(false),
- pMapFormat(Antares::Map::mfPNG),
- pLayers(nullptr),
- pSplit(nullptr),
- pSplitNumberChoice(nullptr),
- pUseBackgroundColor(nullptr),
- pBackgroundColor(nullptr),
- pResult(svsCancel)
+ExportMap::ExportMap(wxFrame* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Export Map"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
+    pStudy(GetCurrentStudy()),
+    pGridSizer(nullptr),
+    pParentProperties(nullptr),
+    pMapName(nullptr),
+    pMapFolderName(nullptr),
+    pMapFolderPath(nullptr),
+    pCustomMapFolderName(false),
+    pMapFormat(Antares::Map::mfPNG),
+    pLayers(nullptr),
+    pSplit(nullptr),
+    pSplitNumberChoice(nullptr),
+    pUseBackgroundColor(nullptr),
+    pBackgroundColor(nullptr),
+    pResult(svsCancel)
 {
     assert(parent);
     internalCreateComponents();
 }
 
-ExportMap::ExportMap(wxFrame* parent, Data::Study::Ptr study) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Export Map"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
- pStudy(study),
- pGridSizer(nullptr),
- pParentProperties(nullptr),
- pMapName(nullptr),
- pMapFolderName(nullptr),
- pMapFolderPath(nullptr),
- pCustomMapFolderName(false),
- pMapFormat(Antares::Map::mfPNG),
- pLayers(nullptr),
- pSplit(nullptr),
- pSplitNumberChoice(nullptr),
- pUseBackgroundColor(nullptr),
- pBackgroundColor(nullptr),
- pResult(svsCancel)
+ExportMap::ExportMap(wxFrame* parent, Data::Study::Ptr study):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Export Map"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
+    pStudy(study),
+    pGridSizer(nullptr),
+    pParentProperties(nullptr),
+    pMapName(nullptr),
+    pMapFolderName(nullptr),
+    pMapFolderPath(nullptr),
+    pCustomMapFolderName(false),
+    pMapFormat(Antares::Map::mfPNG),
+    pLayers(nullptr),
+    pSplit(nullptr),
+    pSplitNumberChoice(nullptr),
+    pUseBackgroundColor(nullptr),
+    pBackgroundColor(nullptr),
+    pResult(svsCancel)
 {
     assert(parent);
     internalCreateComponents();
@@ -139,7 +137,9 @@ ExportMap::~ExportMap()
     // we should destroy all children as soon as possible.
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 wxString ExportMap::getFormatAsString(Antares::Map::mapImageFormat format)
@@ -193,8 +193,13 @@ wxTextCtrl* ExportMap::propEdit(const wxString& defaultValue,
                                 const wxTextValidator& validator,
                                 int id)
 {
-    wxTextCtrl* edit = new wxTextCtrl(
-      pParentProperties, id, defaultValue, wxDefaultPosition, wxDefaultSize, 0, validator);
+    wxTextCtrl* edit = new wxTextCtrl(pParentProperties,
+                                      id,
+                                      defaultValue,
+                                      wxDefaultPosition,
+                                      wxDefaultSize,
+                                      0,
+                                      validator);
     pGridSizer->Add(edit, 1, wxALL | wxEXPAND, borderSize);
     return edit;
 }
@@ -205,8 +210,10 @@ void ExportMap::internalCreateComponents()
     auto* sizer = new wxBoxSizer(wxVERTICAL);
 
     // Header
-    auto* header = Toolbox::Components::WizardHeader::Create(
-      this, wxT("Export map options..."), "images/32x32/exportmap.png", wxT(""));
+    auto* header = Toolbox::Components::WizardHeader::Create(this,
+                                                             wxT("Export map options..."),
+                                                             "images/32x32/exportmap.png",
+                                                             wxT(""));
     sizer->Add(header, 0, wxALL | wxEXPAND);
     sizer->SetItemMinSize(header, 550, header->GetSize().GetHeight());
 
@@ -225,8 +232,12 @@ void ExportMap::internalCreateComponents()
         wxBoxSizer* pnlSizer = new wxBoxSizer(wxHORIZONTAL);
         pnl->SetSizer(pnlSizer);
         //
-        wxButton* btnBrowse = new wxButton(
-          pnl, mnIDBrowse, wxT(" Browse "), wxDefaultPosition, wxSize(-1, 22), wxBU_EXACTFIT);
+        wxButton* btnBrowse = new wxButton(pnl,
+                                           mnIDBrowse,
+                                           wxT(" Browse "),
+                                           wxDefaultPosition,
+                                           wxSize(-1, 22),
+                                           wxBU_EXACTFIT);
         pnlSizer->Add(btnBrowse);
         btnBrowse->Connect(btnBrowse->GetId(),
                            wxEVT_COMMAND_BUTTON_CLICKED,
@@ -234,8 +245,12 @@ void ExportMap::internalCreateComponents()
                            nullptr,
                            this);
 
-        pMapFolderPath = new wxTextCtrl(
-          pnl, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
+        pMapFolderPath = new wxTextCtrl(pnl,
+                                        wxID_ANY,
+                                        wxEmptyString,
+                                        wxDefaultPosition,
+                                        wxDefaultSize,
+                                        wxTE_READONLY);
         if (not pStudy->folder.empty() && defaultPath == wxEmptyString)
         {
             // Get the parent folder
@@ -273,8 +288,11 @@ void ExportMap::internalCreateComponents()
     formatsList.Add(wxStringFromUTF8(formatNames[Antares::Map::mfJPG]));
     formatsList.Add(wxStringFromUTF8(formatNames[Antares::Map::mfSVG]));
 
-    pMapFormatChoice = new wxChoice(
-      pParentProperties, mnIDMapFormat, wxDefaultPosition, wxSize(-1, 22), formatsList);
+    pMapFormatChoice = new wxChoice(pParentProperties,
+                                    mnIDMapFormat,
+                                    wxDefaultPosition,
+                                    wxSize(-1, 22),
+                                    formatsList);
     pMapFormatChoice->SetSelection(0);
     pMapFormatChoice->Connect(pMapFormatChoice->GetId(),
                               wxEVT_COMMAND_CHOICE_SELECTED,
@@ -291,8 +309,9 @@ void ExportMap::internalCreateComponents()
     //
     // More Options
     //
-    auto* colPanl
-      = new wxCollapsiblePane(pParentProperties, mnIDCollapsePanel, wxT("More options"));
+    auto* colPanl = new wxCollapsiblePane(pParentProperties,
+                                          mnIDCollapsePanel,
+                                          wxT("More options"));
     pParentProperties = colPanl->GetPane();
     pGridSizer = new wxFlexGridSizer(2, 0, 0);
     pGridSizer->AddGrowableCol(1, 1);
@@ -335,8 +354,10 @@ void ExportMap::internalCreateComponents()
     pPnlButtonsSizer->AddStretchSpacer();
 
     // Export - Default button
-    auto* btnExportMap
-      = Component::CreateButton(this, wxT("Export"), this, &ExportMap::onExportMap);
+    auto* btnExportMap = Component::CreateButton(this,
+                                                 wxT("Export"),
+                                                 this,
+                                                 &ExportMap::onExportMap);
     btnExportMap->SetDefault();
     pPnlButtonsSizer->Add(btnExportMap, 0, wxALL | wxEXPAND);
     pPnlButtonsSizer->AddSpacer(3);
@@ -410,7 +431,9 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
 
     // replace " " by "_"
     if (currentMapName.find(" "))
+    {
         currentMapName.replace(" ", "_");
+    }
 
     mapNameWithoutExtension = baseMapFileName << "-" << currentMapName;
     mapFileName = mapNameWithoutExtension + formatExt[Antares::Map::mfDefaultFormat];
@@ -433,7 +456,9 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
             String offsetStr = mapNameWithoutExtension;
             offsetStr.consume(posOfsep + 1);
             if (offsetStr.to<int>())
+            {
                 baseMapFileName = Yuni::String(mapNameWithoutExtension, 0, posOfsep);
+            }
         }
     }
 
@@ -456,9 +481,13 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
             offsetStr.consume(posOfsep + 1);
 
             if (offsetStr.to(offsetIndex))
+            {
                 offsetIndex++;
+            }
             else
+            {
                 offsetIndex = 1;
+            }
         }
 
         mapNameWithoutExtension = baseMapFileName + "-" << String(offsetIndex);
@@ -506,8 +535,8 @@ void ExportMap::onExportMap(void*)
     // The user data and the output can only be copied if it is not
     // a fresh study
     bool srcFolderNotEmpty = not pStudy->folder.empty();
-    int nbSplitParts
-      = srcFolderNotEmpty and pSplitNumberChoice and pSplitNumberChoice->GetSelection();
+    int nbSplitParts = srcFolderNotEmpty and pSplitNumberChoice
+                       and pSplitNumberChoice->GetSelection();
     std::list<uint16_t> layers(1, 1); // list of the layers ID to save on disk
     bool transparentBackground = !pUseBackgroundColor->GetValue();
     wxColor backgroundColor = pBackgroundColor->GetColour();
@@ -597,9 +626,8 @@ void ExportMap::onExportMap(void*)
     // Closing the Window
     Dispatcher::GUI::Close(this);
 
-    mainFrm.exportMap(
-      path, transparentBackground, backgroundColor, layers, nbSplitParts, pMapFormat);
+    mainFrm
+      .exportMap(path, transparentBackground, backgroundColor, layers, nbSplitParts, pMapFormat);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

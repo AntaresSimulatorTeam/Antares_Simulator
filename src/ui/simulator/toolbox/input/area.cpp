@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include "area.h"
@@ -34,11 +34,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Toolbox
-{
-namespace InputSelector
+namespace Antares::Toolbox::InputSelector
 {
 // static variables
 wxPanel* Area::pSharedSupport = nullptr;
@@ -47,13 +43,14 @@ Yuni::Event<void(Data::Area*)> Area::onAreaChanged;
 //! Reference to the last area
 static Data::Area* gLastArea = nullptr;
 
-class SpotlightProviderArea final : public Component::Spotlight::IProvider
+class SpotlightProviderArea final: public Component::Spotlight::IProvider
 {
 public:
     using Spotlight = Antares::Component::Spotlight;
 
 public:
-    SpotlightProviderArea() : pAutoTriggerSelection(true)
+    SpotlightProviderArea():
+        pAutoTriggerSelection(true)
     {
         OnStudyAreaRename.connect(this, &SpotlightProviderArea::onStudyAreaRename);
         OnStudyEndUpdate.connect(this, &SpotlightProviderArea::onStudyEndUpdate);
@@ -76,10 +73,14 @@ public:
                         const Yuni::String& text) override
     {
         if (not CurrentStudyIsValid())
+        {
             return;
+        }
         auto& study = *GetCurrentStudy();
         if (study.areas.empty())
+        {
             return;
+        }
 
         std::vector<Antares::Data::Area*> layerFilteredItems;
         if (!text.empty())
@@ -94,10 +95,14 @@ public:
                     {
                         auto* area = i->second;
                         if (!area)
+                        {
                             continue;
+                        }
 
                         if (area->isVisibleOnLayer(layerIt->first))
+                        {
                             layerFilteredItems.push_back(area);
+                        }
                     }
 
                     if (gLastArea && !gLastArea->isVisibleOnLayer(layerIt->first))
@@ -119,15 +124,21 @@ public:
                         std::vector<Antares::Data::Area*>& in)
     {
         if (not CurrentStudyIsValid())
+        {
             return;
+        }
         auto& study = *GetCurrentStudy();
         if (study.areas.empty())
+        {
             return;
+        }
 
         uint currentEquipment = 0;
         auto* mainFrm = Forms::ApplWnd::Instance();
         if (mainFrm)
+        {
             currentEquipment = mainFrm->mainNotebookCurrentEquipmentPage();
+        }
 
         if (tokens.empty())
         {
@@ -135,7 +146,9 @@ public:
             {
                 auto* area = *i;
                 if (area)
+                {
                     pushArea(out, area, currentEquipment);
+                }
             }
         }
         else
@@ -146,13 +159,17 @@ public:
             {
                 auto* area = *i;
                 if (!area)
+                {
                     continue;
+                }
 
                 for (auto ti = tokens.begin(); ti != tend; ++ti)
                 {
                     const String& text = (*ti)->text;
                     if (area->name.icontains(text))
+                    {
                         pushArea(out, area, currentEquipment);
+                    }
                 }
             }
         }
@@ -168,7 +185,9 @@ public:
     virtual bool onSelect(Spotlight::IItem::Ptr& item) override
     {
         if (!CurrentStudyIsValid() || GUIIsLock())
+        {
             return false;
+        }
         GUILocker locker;
         auto itemarea = std::dynamic_pointer_cast<Toolbox::Spotlight::ItemArea>(item);
         if (!(!itemarea))
@@ -198,7 +217,9 @@ public:
     virtual bool onSelect(const Spotlight::IItem::Vector&) override
     {
         if (!CurrentStudyIsValid() || GUIIsLock())
+        {
             return false;
+        }
         GUILocker locker;
         return true;
     }
@@ -215,7 +236,9 @@ protected:
 
         auto item = std::make_shared<Toolbox::Spotlight::ItemArea>(area);
         if (area->id == pLastAreaID)
+        {
             item->select();
+        }
 
         if (0 != (equipment & Data::timeSeriesThermal))
         {
@@ -228,9 +251,13 @@ protected:
                 const uint8_t B_COLOR = 216;
                 item->addRightTag(text, R_COLOR, G_COLOR, B_COLOR);
                 if (area->thermal.hasForcedTimeseriesGeneration())
+                {
                     item->addRightTag(wxT("G"), R_COLOR, G_COLOR, B_COLOR);
+                }
                 if (area->thermal.hasForcedNoTimeseriesGeneration())
+                {
                     item->addRightTag(wxT("NG"), R_COLOR, G_COLOR, B_COLOR);
+                }
             }
         }
         if (0 != (equipment & Data::timeSeriesRenewable))
@@ -300,7 +327,9 @@ protected:
         GUILocker locker;
         pAutoTriggerSelection = true;
         if (gLastArea == area)
+        {
             pLastAreaID = area->id;
+        }
         redoResearch();
     }
 
@@ -316,7 +345,9 @@ protected:
             component()->resetSearchInput();
         }
         else
+        {
             redoResearch(); // automatically called by resetSearchInput
+        }
     }
 
 private:
@@ -331,7 +362,8 @@ BEGIN_EVENT_TABLE(Area, Component::Panel)
 EVT_PAINT(Area::onDraw)
 END_EVENT_TABLE()
 
-Area::Area(wxWindow* parent) : AInput(parent)
+Area::Area(wxWindow* parent):
+    AInput(parent)
 {
     SetSize(300, 300);
     // sizer
@@ -350,7 +382,9 @@ Area::Area(wxWindow* parent) : AInput(parent)
 Area::~Area()
 {
     if (pSharedSupport && pSharedSupport->GetParent() == dynamic_cast<wxWindow*>(this))
+    {
         pSharedSupport = nullptr;
+    }
 
     onAreaChanged(nullptr);
     destroyBoundEvents();
@@ -365,7 +399,9 @@ Data::Area* Area::lastArea()
 void Area::internalBuildSubControls()
 {
     if (pSharedSupport)
+    {
         return;
+    }
 
     // alias to the sizer of the panel
     wxSizer* sizer = GetSizer();
@@ -376,8 +412,9 @@ void Area::internalBuildSubControls()
     wxSizer* subsizer = new wxBoxSizer(wxVERTICAL);
 
     {
-        Component::Spotlight* spotlight
-          = new Component::Spotlight(pSharedSupport, 0); // Component::Spotlight::optGroups);
+        Component::Spotlight* spotlight = new Component::Spotlight(
+          pSharedSupport,
+          0); // Component::Spotlight::optGroups);
         OnLayerNodeUIChanged.connect(spotlight, &Component::Spotlight::redoResearch);
         OnMapLayerChanged.connect(spotlight, &Component::Spotlight::onMapLayerChanged);
         OnMapLayerAdded.connect(spotlight, &Component::Spotlight::onMapLayerAdded);
@@ -432,7 +469,9 @@ void Area::reloadLastArea()
         onAreaChanged(gLastArea);
     }
     else
+    {
         onAreaChanged(nullptr);
+    }
 }
 
 void Area::onStudyEndUpdate()
@@ -466,13 +505,17 @@ void Area::onDraw(wxPaintEvent& evt)
 
             wxSizer* srcSizer = pSharedSupport->GetContainingSizer();
             if (srcSizer)
+            {
                 srcSizer->Detach(pSharedSupport);
+            }
 
             // parent
             pSharedSupport->Reparent(this);
 
             if (srcSizer)
+            {
                 srcSizer->Layout();
+            }
             wxSizer* localSizer = GetSizer();
             assert(localSizer);
             localSizer->Add(pSharedSupport, 1, wxALL | wxEXPAND);
@@ -487,6 +530,4 @@ void Area::update()
 {
 }
 
-} // namespace InputSelector
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::InputSelector

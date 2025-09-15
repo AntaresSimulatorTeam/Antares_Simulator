@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "handler.h"
 #include "../apply.h"
@@ -39,11 +39,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace ExtSource
-{
-namespace Handler
+namespace Antares::ExtSource::Handler
 {
 namespace // anonymous
 {
@@ -68,10 +64,14 @@ static bool AppendCommand(BuildContext& ctx, const AnyString& command, const Any
         YString to;
         String s = value;
         if (s.size() < 3)
+        {
             return false;
+        }
         String::Size p = s.find('@');
         if (!p || p > s.size() - 2)
+        {
             return false;
+        }
         from.assign(s, p);
         to.assign(s, s.size() - p - 1, p + 1);
         ctx.cluster[from][to] = true;
@@ -85,10 +85,14 @@ static bool AppendCommand(BuildContext& ctx, const AnyString& command, const Any
         Data::AreaName to;
         String s = value;
         if (s.size() < 3)
+        {
             return false;
+        }
         String::Size p = s.find('@');
         if (!p || p > s.size() - 2)
+        {
             return false;
+        }
         from.assign(s, p);
         to.assign(s, s.size() - p - 1, p + 1);
         ctx.link[from][to] = true;
@@ -118,7 +122,9 @@ bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context::
     {
         auto bc = context->extStudy->bindingConstraints.findByName(*i);
         if (!bc)
+        {
             continue;
+        }
 
         Data::BindingConstraint::iterator endWeights = bc->end();
         uint count = bc->linkCount();
@@ -126,7 +132,9 @@ bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context::
         {
             auto* areaLink = j->first;
             if (!areaLink)
+            {
                 continue;
+            }
 
             auto from = ctx->link.find(areaLink->from->name);
             if (from != ctx->link.end())
@@ -142,7 +150,9 @@ bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context::
             {
                 if (Antares::Window::Inspector::IsLinkSelected(areaLink->from->name,
                                                                areaLink->with->name))
+                {
                     --count;
+                }
             }
         }
 
@@ -221,7 +231,9 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
             stop = true;
         }
         if (end - 1 <= begin)
+        {
             continue;
+        }
 
         rawCommand.assign(text, end - begin, begin);
 
@@ -232,8 +244,10 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
             param.assign(rawCommand, rawCommand.size() - point - 1, point + 1);
 
             if (!AppendCommand(ctx, command, param))
+            {
                 logs.warning() << "paste from clipboard: invalid command: " << command
                                << ", value = " << param;
+            }
         }
 
         // logs.info() << "rawCommand :: " << rawCommand;
@@ -248,13 +262,19 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
     }
 
     if (not ctx.checkIntegrity(forceDialog))
+    {
         return;
+    }
 
     if (not checkConstraintSupportingElementsIntegrity(context, &ctx))
+    {
         return;
+    }
 
     if (not checkLinkSupportingElementsIntegrity(&ctx))
+    {
         return;
+    }
 
     bool copyPosition = !ctx.shouldOverwriteArea;
 
@@ -268,7 +288,9 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
     else
     {
         if (ctx.checkIdentity())
+        {
             return;
+        }
     }
 
     // Settings
@@ -313,17 +335,22 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
         for (auto i = ctx.cluster.begin(); i != end; ++i)
         {
             if (i->second.empty())
+            {
                 continue;
+            }
             const Data::AreaName& wantedName = ctx.forceAreaName[i->first];
             Antares::Action::AntaresStudy::Area::Create* create;
             if (!wantedName)
+            {
                 create = new Antares::Action::AntaresStudy::Area::Create(i->first);
+            }
             else
+            {
                 create = new Antares::Action::AntaresStudy::Area::Create(i->first, wantedName);
+            }
 
             std::map<YString, bool>::const_iterator send = i->second.end();
-            for (std::map<YString, bool>::const_iterator j = i->second.begin(); j != send;
-                 ++j)
+            for (std::map<YString, bool>::const_iterator j = i->second.begin(); j != send; ++j)
             {
                 *create += Antares::Action::AntaresStudy::Area::Create::
                   StandardActionsToCopyThermalCluster(i->first, j->first);
@@ -346,7 +373,9 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
 
             Data::AreaName fromWantedName = ctx.forceAreaName[i->first];
             if (!fromWantedName)
+            {
                 fromWantedName = i->first;
+            }
 
             for (std::map<Data::AreaName, bool>::const_iterator j = i->second.begin(); j != send;
                  ++j)
@@ -355,14 +384,19 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
 
                 Data::AreaName toWantedName = ctx.forceAreaName[j->first];
                 if (!toWantedName)
+                {
                     toWantedName = j->first;
+                }
 
                 // check wheither there is a selected link with the same name
-                auto* create
-                  = (not Antares::Window::Inspector::IsLinkSelected(fromWantedName, toWantedName))
-                      ? new Antares::Action::AntaresStudy::Link::Create(i->first, j->first)
-                      : new Antares::Action::AntaresStudy::Link::Create(
-                        i->first, fromWantedName, j->first, toWantedName);
+                auto* create = (not Antares::Window::Inspector::IsLinkSelected(fromWantedName,
+                                                                               toWantedName))
+                                 ? new Antares::Action::AntaresStudy::Link::Create(i->first,
+                                                                                   j->first)
+                                 : new Antares::Action::AntaresStudy::Link::Create(i->first,
+                                                                                   fromWantedName,
+                                                                                   j->first,
+                                                                                   toWantedName);
 
                 create->createActionsForAStandardLinkCopy(*context);
                 *linkNode += create;
@@ -370,9 +404,13 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
         }
 
         if (!empty)
+        {
             *root += linkNode;
+        }
         else
+        {
             delete linkNode;
+        }
     }
 
     // Constraints
@@ -387,13 +425,20 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
             auto* sourceConstraint = context->extStudy->bindingConstraints.findByName(*i);
             if (!sourceConstraint
                 || (sourceConstraint->clusterCount() == 0 && sourceConstraint->linkCount() == 0))
+            {
                 continue;
+            }
             // check wheither there is a selected binding constraint with the same name
             auto* create = (not Antares::Window::Inspector::isConstraintSelected(*i))
                              ? new Antares::Action::AntaresStudy::Constraint::Create(
-                               *i, sourceConstraint->type(), sourceConstraint->operatorType())
+                                 *i,
+                                 sourceConstraint->type(),
+                                 sourceConstraint->operatorType())
                              : new Antares::Action::AntaresStudy::Constraint::Create(
-                               *i, *i, sourceConstraint->type(), sourceConstraint->operatorType());
+                                 *i,
+                                 *i,
+                                 sourceConstraint->type(),
+                                 sourceConstraint->operatorType());
 
             create->createActionsForAStandardConstraintCopy(*context);
             *constraintNode += create;
@@ -408,17 +453,18 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
     Apply(context, root, forceDialog);
 }
 
-class JobOpenStudy final : public Toolbox::Jobs::Job
+class JobOpenStudy final: public Toolbox::Jobs::Job
 {
 public:
-    JobOpenStudy(const wxString& folder) :
-     Toolbox::Jobs::Job(wxT("Opening a study"),
-                        wxT("Gathering informations about the study"),
-                        "images/32x32/open.png"),
-     pFolder(folder),
-     pStudy(nullptr)
+    JobOpenStudy(const wxString& folder):
+        Toolbox::Jobs::Job(wxT("Opening a study"),
+                           wxT("Gathering informations about the study"),
+                           "images/32x32/open.png"),
+        pFolder(folder),
+        pStudy(nullptr)
     {
     }
+
     //! Destructor
     virtual ~JobOpenStudy()
     {
@@ -499,7 +545,9 @@ void AntaresStudy(Data::Study::Ptr target,
     Map::Component* mainMap = Antares::Forms::ApplWnd::Instance()->map();
     size_t targetLayerID = 0;
     if (mainMap)
+    {
         targetLayerID = mainMap->getActiveLayerID();
+    }
 
     // Context for all actions
     auto context = std::make_shared<Antares::Action::Context>(target, targetLayerID);
@@ -531,9 +579,9 @@ void AntaresStudy(Data::Study::Ptr target,
 
     // update area name id set for the external study too
     if (context->extStudy)
+    {
         context->extStudy->areas.updateNameIDSet();
+    }
 }
 
-} // namespace Handler
-} // namespace ExtSource
-} // namespace Antares
+} // namespace Antares::ExtSource::Handler

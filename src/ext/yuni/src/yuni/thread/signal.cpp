@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,22 +10,22 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "signal.h"
+
 #include <cassert>
 
 #ifndef YUNI_NO_THREAD_SAFE
 #ifdef YUNI_OS_WINDOWS
 #include "../core/system/windows.hdr.h"
 #else
-#include <time.h>
-#include <sys/time.h>
 #include <errno.h>
+#include <sys/time.h>
+#include <time.h>
+
 #include "../core/system/gettimeofday.h"
 #endif
 #endif
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 Signal::Signal()
 {
@@ -34,8 +35,8 @@ Signal::Signal()
     assert(sizeof(HANDLE) >= sizeof(void*) and "Invalid type for Signal::pHandle");
 
     pHandle = (void*)CreateEvent(nullptr,  // default security attributes
-                                 TRUE,  // manual-reset event
-                                 FALSE, // initial state is nonsignaled
+                                 TRUE,     // manual-reset event
+                                 FALSE,    // initial state is nonsignaled
                                  nullptr); // unamed
 
 #else
@@ -54,8 +55,8 @@ Signal::Signal(const Signal&)
     assert(sizeof(HANDLE) >= sizeof(void*) and "Invalid type for Signal::pHandle");
 
     pHandle = (void*)CreateEvent(nullptr,  // default security attributes
-                                 TRUE,  // manual-reset event
-                                 FALSE, // initial state is nonsignaled
+                                 TRUE,     // manual-reset event
+                                 FALSE,    // initial state is nonsignaled
                                  nullptr); // unamed
 
 #else
@@ -102,7 +103,9 @@ void Signal::wait()
 #ifdef YUNI_OS_WINDOWS
 
     if (pHandle)
+    {
         WaitForSingleObject(pHandle, INFINITE);
+    }
 
 #else
 
@@ -177,7 +180,9 @@ bool Signal::wait(uint timeout)
     if (pHandle)
     {
         if (WAIT_OBJECT_0 == WaitForSingleObject(pHandle, (DWORD)timeout))
+        {
             return true;
+        }
     }
     return false;
 #else
@@ -212,7 +217,7 @@ bool Signal::wait(uint timeout)
     } while (
       not pSignalled         // Condition not verified
       and error != ETIMEDOUT // We have not timedout
-      and error != EINVAL);  // When t is in the past, we got EINVAL. We consider this as a timeout.
+      and error != EINVAL); // When t is in the past, we got EINVAL. We consider this as a timeout.
 
     bool result = (pSignalled != false);
     ::pthread_mutex_unlock(&pMutex);
@@ -247,5 +252,4 @@ bool Signal::notify()
 #endif
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

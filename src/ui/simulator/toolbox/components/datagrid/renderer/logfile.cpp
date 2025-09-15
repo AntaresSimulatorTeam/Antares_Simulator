@@ -1,38 +1,34 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "logfile.h"
 #include <yuni/core/math.h>
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-LogEntry::LogEntry() : line(0), highlight(false)
+LogEntry::LogEntry():
+    line(0),
+    highlight(false)
 {
 }
 
@@ -91,10 +87,13 @@ void LogEntry::assignVerbosity(const AnyString& pS)
 LogEntryContainer::~LogEntryContainer()
 {
     for (uint i = 0; i != entries.size(); ++i)
+    {
         delete entries[i];
+    }
 }
 
-LogFile::LogFile() : pControl(nullptr)
+LogFile::LogFile():
+    pControl(nullptr)
 {
 }
 
@@ -128,7 +127,9 @@ wxString LogFile::rowCaption(int rowIndx) const
     {
         uint line = static_cast<uint>(logs->entries[rowIndx]->line);
         if (line)
+        {
             return wxString() << logs->entries[rowIndx]->line;
+        }
     }
     return wxEmptyString;
 }
@@ -146,7 +147,9 @@ double LogFile::cellNumericValue(int, int) const
 wxString LogFile::cellValue(int x, int y) const
 {
     if (!logs || (uint)y >= logs->entries.size())
+    {
         return wxEmptyString;
+    }
     LogEntry& entry = *(logs->entries[y]);
     switch (x)
     {
@@ -169,7 +172,9 @@ IRenderer::CellStyle LogFile::cellStyle(int, int) const
 wxColour LogFile::cellBackgroundColor(int x, int y) const
 {
     if (!logs || static_cast<uint>(y) >= logs->entries.size())
+    {
         return wxEmptyString;
+    }
     LogEntry& entry = *(logs->entries[y]);
     switch (entry.verbosityType)
     {
@@ -192,7 +197,9 @@ wxColour LogFile::cellBackgroundColor(int x, int y) const
 wxColour LogFile::cellTextColor(int x, int y) const
 {
     if (!logs || static_cast<uint>(y) >= logs->entries.size())
+    {
         return wxEmptyString;
+    }
     LogEntry& entry = *(logs->entries[y]);
     switch (entry.verbosityType)
     {
@@ -216,12 +223,18 @@ wxColour LogFile::cellTextColor(int x, int y) const
 wxColour LogFile::verticalBorderColor(int x, int y) const
 {
     if (!logs || static_cast<uint>(y) >= logs->entries.size())
+    {
         return wxColour();
+    }
     LogEntry& entry = *(logs->entries[y]);
     if (!entry.line)
+    {
         return wxColour(240, 240, 240);
+    }
     if (x == 1 && entry.verbosityType == LogEntry::vtInfo)
+    {
         return wxColour(197, 202, 217);
+    }
     return IRenderer::verticalBorderColor(x, y);
 }
 
@@ -249,11 +262,10 @@ void LogFile::hintForColumnWidth(int x, wxString& out) const
         return;
     }
     if (!logs || logs->longestLine >= logs->entries.size())
+    {
         return;
+    }
     out << logs->entries[logs->longestLine]->message;
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

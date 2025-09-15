@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,11 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
-#include "../../core/string.h"
 #include "../../core/bind.h"
+#include "../../core/string.h"
+#include "../../yuni.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 /*
 ** \brief Directory manipulation functions
@@ -34,6 +33,7 @@ namespace Directory
 ** \return True if it exists, false otherwise
 */
 bool Exists(const AnyString& path);
+
 //@}
 
 /*!
@@ -98,6 +98,7 @@ bool Create(const AnyString& path, unsigned int mode = 0755);
 ** \return True if the operation succeeded False otherwise
 */
 bool Remove(const AnyString& path);
+
 //@}
 
 //! \name Copy a directory
@@ -107,7 +108,9 @@ enum CopyState
     cpsGatheringInformation,
     cpsCopying
 };
-typedef Yuni::Bind<bool(CopyState, const String&, const String&, uint64_t, uint64_t)> CopyOnUpdateBind;
+
+typedef Yuni::Bind<bool(CopyState, const String&, const String&, uint64_t, uint64_t)>
+  CopyOnUpdateBind;
 
 /*!
 ** \brief Copy a directory
@@ -151,8 +154,7 @@ bool Copy(const AnyString& source,
 //@}
 
 } // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO
 
 #include "../io.h"
 #include "directory.hxx"

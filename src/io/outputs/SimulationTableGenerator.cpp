@@ -30,8 +30,6 @@
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 
-#include "../../modeler/FileWriter.h"
-
 using namespace Antares::Optimisation::LinearProblemApi;
 using TI = Antares::Expressions::Visitors::TimeIndex;
 

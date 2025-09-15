@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "../directory.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 /*!
 ** \brief Special folders
@@ -74,6 +71,4 @@ bool Fonts(String& out, bool emptyBefore = true);
 bool Fonts(Clob& out, bool emptyBefore = true);
 
 } // namespace System
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

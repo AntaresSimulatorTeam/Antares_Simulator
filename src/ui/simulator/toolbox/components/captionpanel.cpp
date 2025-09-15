@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "captionpanel.h"
 #include <wx/dcbuffer.h>
@@ -28,9 +28,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 BEGIN_EVENT_TABLE(CaptionPanel, Panel)
 EVT_PAINT(CaptionPanel::onDraw)
@@ -44,17 +42,21 @@ enum
 {
     fontSize = 8,
 };
+
 const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 } // anonymous namespace
 
-CaptionPanel::CaptionPanel(wxWindow* parent) : Panel(parent), pCaption()
+CaptionPanel::CaptionPanel(wxWindow* parent):
+    Panel(parent),
+    pCaption()
 {
     SetSize(100, 20);
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by Windows
 }
 
-CaptionPanel::CaptionPanel(wxWindow* parent, const wxString& caption) :
- Panel(parent), pCaption(caption)
+CaptionPanel::CaptionPanel(wxWindow* parent, const wxString& caption):
+    Panel(parent),
+    pCaption(caption)
 {
     SetMinSize(wxSize(100, 20));
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by Windows
@@ -97,11 +99,15 @@ void CaptionPanel::onDraw(wxPaintEvent&)
     double u = (ori.Blue() - y) * 0.565;
     double v = (ori.Red() - y) * 0.713;
     if (y < 50.)
+    {
         y = 50.;
+    }
     else
     {
         if (y > 225.)
+        {
             y = 225.;
+        }
     }
 
     const int r = Math::MinMax<int>((int)(y + 1.403 * v), 0, 255);
@@ -124,7 +130,10 @@ void CaptionPanel::onDraw(wxPaintEvent&)
     // Gradient inside
     dc.GradientFillLinear(wxRect(pRect.x, pRect.y, pRect.width, pRect.height / 2), a1, b1, wxSOUTH);
     dc.GradientFillLinear(
-      wxRect(pRect.x, pRect.y + pRect.height / 2, pRect.width, pRect.height / 2), a2, b2, wxSOUTH);
+      wxRect(pRect.x, pRect.y + pRect.height / 2, pRect.width, pRect.height / 2),
+      a2,
+      b2,
+      wxSOUTH);
     dc.SetPen(wxPen(a2, 1, wxPENSTYLE_SOLID));
     dc.DrawLine(0, pRect.height - 1, pRect.width, pRect.height - 1);
 
@@ -147,5 +156,4 @@ void CaptionPanel::onResize(wxSizeEvent& evt)
     evt.Skip();
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component

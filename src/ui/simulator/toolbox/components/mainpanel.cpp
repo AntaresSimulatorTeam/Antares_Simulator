@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "mainpanel.h"
 #include <wx/dcbuffer.h>
@@ -30,17 +30,18 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 BEGIN_EVENT_TABLE(MainPanel, Panel)
 EVT_PAINT(MainPanel::onDraw)
 EVT_ERASE_BACKGROUND(MainPanel::onEraseBackground)
 END_EVENT_TABLE()
 
-MainPanel::MainPanel(wxWindow* parent) :
- Panel(parent), pCachedSizeY(50), pBeta(nullptr), pRC(nullptr)
+MainPanel::MainPanel(wxWindow* parent):
+    Panel(parent),
+    pCachedSizeY(50),
+    pBeta(nullptr),
+    pRC(nullptr)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
     SetSize(100, 50);
@@ -75,7 +76,7 @@ void MainPanel::author(const wxString& s)
     Dispatcher::GUI::Refresh(this);
 }
 
-    void MainPanel::editor(const wxString& s)
+void MainPanel::editor(const wxString& s)
 {
     pEditor = s;
     Dispatcher::GUI::Refresh(this);
@@ -108,6 +109,7 @@ void MainPanel::onDraw(wxPaintEvent&)
     {
         fontSize = 8,
     };
+
     static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
     // The DC
@@ -128,11 +130,15 @@ void MainPanel::onDraw(wxPaintEvent&)
 
 #ifdef ANTARES_BETA
     if (pBeta)
+    {
         dc.DrawBitmap(*pBeta, 0, 0, true);
+    }
 #endif
 #if ANTARES_RC != 0
     if (pRC)
+    {
         dc.DrawBitmap(*pRC, 0, 0, true);
+    }
 #endif
 
     // Getting the size of the longest property name
@@ -155,17 +161,22 @@ void MainPanel::onDraw(wxPaintEvent&)
             {
                 wxString s;
                 if (StudyHasBeenModified())
+                {
                     s << wxT("(*) ");
-                s << pStudyCaption << wxT(" (v")
-                  << study->header.version.toString() << wxT(")");
+                }
+                s << pStudyCaption << wxT(" (v") << study->header.version.toString() << wxT(")");
                 addProperty(dc, name, s, size, posY);
             }
             else
             {
                 if (not StudyHasBeenModified())
+                {
                     addProperty(dc, name, pStudyCaption, size, posY);
+                }
                 else
+                {
                     addProperty(dc, name, wxString() << wxT("(*) ") << pStudyCaption, size, posY);
+                }
             }
             f.SetWeight(wxFONTWEIGHT_LIGHT);
             dc.SetFont(f);
@@ -173,9 +184,13 @@ void MainPanel::onDraw(wxPaintEvent&)
 
         // Property: The folder
         if (study->folder.empty())
+        {
             addProperty(dc, wxT("from "), wxT("<memory>"), size, posY);
+        }
         else
+        {
             addProperty(dc, wxT("from "), wxStringFromUTF8(study->folder.string()), size, posY);
+        }
     }
 
     // Checking if the actual height of the control is the good one
@@ -212,12 +227,16 @@ void MainPanel::onDraw(wxPaintEvent&)
             newRect.y -= newRect.GetHeight() >> 1;
 
             dc.SetPen(wxPen(wxColour(70, 70, 70)));
-            dc.DrawRectangle(
-              newRect.x - 1, newRect.y - 1, newRect.GetWidth() + 3, newRect.GetHeight() + 3);
+            dc.DrawRectangle(newRect.x - 1,
+                             newRect.y - 1,
+                             newRect.GetWidth() + 3,
+                             newRect.GetHeight() + 3);
 
             dc.SetPen(wxPen(wxColour(0, 0, 0)));
-            dc.DrawRectangle(
-              newRect.x - 1, newRect.y - 1, newRect.GetWidth() + 2, newRect.GetHeight() + 2);
+            dc.DrawRectangle(newRect.x - 1,
+                             newRect.y - 1,
+                             newRect.GetWidth() + 2,
+                             newRect.GetHeight() + 2);
 
             dc.GradientFillLinear(newRect, wxColour(255, 100, 0), wxColour(183, 0, 0), wxSOUTH);
 
@@ -274,20 +293,27 @@ void MainPanel::refreshFromStudy()
 
         // Author
         if (study.header.author.empty())
+        {
             pAuthor.clear();
+        }
         else
+        {
             pAuthor = wxStringFromUTF8(study.header.author);
+        }
 
         // Editor
         if (study.header.editor.empty())
+        {
             pEditor.clear();
+        }
         else
+        {
             pEditor = wxStringFromUTF8(study.header.editor);
+        }
     }
 
     // Refresh
     Dispatcher::GUI::Refresh(this);
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component

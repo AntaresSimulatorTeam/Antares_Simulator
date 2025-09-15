@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #pragma once
 
@@ -26,18 +26,12 @@
 #include <list>
 // #include "../item/renewable-cluster-item.h"
 
-namespace Antares
-{
-namespace Component
-{
-namespace HTMLListbox
-{
-namespace Datasource
+namespace Antares::Component::HTMLListbox::Datasource
 {
 using RenewableClusterList = std::list<Data::RenewableCluster*>;
 using RenewableClusterMap = std::map<wxString, RenewableClusterList>;
 
-class RenewableClustersByOrder : public ClustersByOrder
+class RenewableClustersByOrder: public ClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -56,7 +50,7 @@ private:
 
 }; // RenewableClustersByOrder
 
-class RenewableClustersByAlphaOrder : public RenewableClustersByOrder
+class RenewableClustersByAlphaOrder: public RenewableClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -65,6 +59,7 @@ public:
     RenewableClustersByAlphaOrder(HTMLListbox::Component& parent);
     //! Destructor
     virtual ~RenewableClustersByAlphaOrder();
+
     //@}
 
     virtual wxString name() const override
@@ -82,7 +77,7 @@ private:
 
 }; // class RenewableClustersByAlphaOrder
 
-class RenewableClustersByAlphaReverseOrder : public RenewableClustersByOrder
+class RenewableClustersByAlphaReverseOrder: public RenewableClustersByOrder
 {
 public:
     //! \name Constructor & Destructor
@@ -91,6 +86,7 @@ public:
     RenewableClustersByAlphaReverseOrder(HTMLListbox::Component& parent);
     //! Destructor
     virtual ~RenewableClustersByAlphaReverseOrder();
+
     //@}
 
     virtual wxString name() const
@@ -108,7 +104,4 @@ private:
 
 }; // class RenewableClustersByAlphaReverseOrder
 
-} // namespace Datasource
-} // namespace HTMLListbox
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::HTMLListbox::Datasource
