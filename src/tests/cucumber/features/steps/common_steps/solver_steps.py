@@ -247,7 +247,7 @@ def should_check(row, key):
 def run_simulation(context):
     command = build_antares_solver_command(context)
     print(f"Running command: {command}")
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     if out:
         context.logs_out = out.decode("utf-8")
