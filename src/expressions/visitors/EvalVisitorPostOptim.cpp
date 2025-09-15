@@ -50,9 +50,8 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
     auto idxType = Antares::Expressions::Visitors::TimeIndexVisitor(*component_, contextProvider_)
                      .dispatch(node);
 
-    auto forEachConnection = [this](const std::string& portId,
-                                    const std::string& fieldId,
-                                    std::function<void(const EvaluationResult&)> processor)
+    auto forEachConnection =
+      [this](const std::string& portId, const std::string& fieldId, EvaluationResult& result)
     {
         for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))
         {
@@ -61,35 +60,24 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
             EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
             const auto* node = component->nodeAtPortField(port->Id(), fieldId);
             auto dispatchResult = visitor.dispatch(node);
-            processor(dispatchResult);
+            result += dispatchResult;
         }
     };
 
     if (idxType == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         EvaluationResult result(0.);
-        forEachConnection(portId,
-                          fieldId,
-                          [&result](const auto& dispatchResult) { result += dispatchResult; });
+        forEachConnection(portId, fieldId, result);
         return result;
     }
 
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
-    std::vector<double> results;
-    results.resize(fillContext_.getLocalNumberOfTimeSteps());
-    forEachConnection(portId,
-                      fieldId,
-                      [this, &results](const auto& dispatchResult)
-                      {
-                          auto r = dispatchResult.valuesAsVector();
-                          for (auto timeStep = fillContext_.getGlobalFirstTimeStep();
-                               timeStep <= fillContext_.getGlobalLastTimeStep();
-                               ++timeStep)
-                          {
-                              results[timeStep] += r[timeStep];
-                          }
-                      });
-    return EvaluationResult{results};
+    std::vector<double> v;
+    v.resize(fillContext_.getLocalNumberOfTimeSteps());
+    EvaluationResult results(v);
+
+    forEachConnection(portId, fieldId, results);
+    return results;
 }
 
 } // namespace Antares::Expressions::Visitors
