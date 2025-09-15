@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -158,7 +158,7 @@ public:
         state.year = y;
 
         // 5 - Resetting all variables for the output
-        // simulation_->variables.yearBegin(y, numSpace);
+        simulation_->variables.yearBegin(y, numSpace);
 
         // 6 - The Solver itself
         std::list<uint> failedWeekList;
@@ -182,17 +182,17 @@ public:
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
-        // simulation_->variables.yearEndBuild(state, y, numSpace);
+        simulation_->variables.yearEndBuild(state, y, numSpace);
 
         // 7 - End of the year, this is the last stade where the variables can retrieve
         // their data for this year.
-        // simulation_->variables.yearEnd(y, numSpace);
+        simulation_->variables.yearEnd(y, numSpace);
 
         // 8 - Spatial clusters
         // Notifying all variables to perform spatial aggregates.
         // This must be done only when all variables have finished to compute their
         // data for the year.
-        // simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
+        simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
 
         // 9 - Write results for the current year
         if (yearByYear)
@@ -200,7 +200,7 @@ public:
             pDurationCollector("yby_export") << [this, &numSpace]
             {
                 // Before writing, some variable may require minor modifications
-                // simulation_->variables.beforeYearByYearExport(y, numSpace);
+                simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
             };
@@ -212,11 +212,10 @@ public:
         aggregationMutex.lock();
         yearsFailed[y] = yearFailed;
 
-        // simulation_->variables.computeSummary(y, numSpace);
+        simulation_->variables.computeSummary(y, numSpace);
 
         // Computing summary of spatial aggregations
-        // simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables, y,
-        // numSpace);
+        simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables, y, numSpace);
 
         // Computes statistics on annual (system and solution) costs, to be printed in output
         // into separate files
@@ -292,8 +291,7 @@ void ISimulation<ImplementationType>::run()
     // Memory usage
     {
         Variable::PrintInfosStdCout c;
-        // ImplementationType::variables.template
-        // provideInformations<Variable::PrintInfosStdCout>(c);
+        ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
     }
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
@@ -321,7 +319,7 @@ void ISimulation<ImplementationType>::run()
             return;
         }
         // Allocating the memory
-        // ImplementationType::variables.simulationBegin();
+        ImplementationType::variables.simulationBegin();
 
         // For beauty
         logs.info();
@@ -407,10 +405,10 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
         }
 
         // Dumping
-        // ImplementationType::variables.exportSurveyResults(synthesis,
-        //                                                   newPath,
-        //                                                   numSpace,
-        //                                                   pResultWriter);
+        ImplementationType::variables.exportSurveyResults(synthesis,
+                                                          newPath,
+                                                          numSpace,
+                                                          pResultWriter);
     }
 }
 
