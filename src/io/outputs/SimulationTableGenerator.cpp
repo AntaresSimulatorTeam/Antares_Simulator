@@ -243,6 +243,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
 
     if (isTimeDependant(idxType))
     {
+        auto values = value.valuesAsVector();
         for (unsigned ts = fillContext.getLocalFirstTimeStep();
              ts <= fillContext.getLocalLastTimeStep();
              ++ts)
@@ -250,7 +251,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
             TimeBlock tb = convertBlockTimeStepToAbsoluteTimeStep(ts,
                                                                   timeConversionMode,
                                                                   currentBlock);
-            auto val = value.valuesAsVector()[ts];
+            auto val = values[ts];
             simulationTable.addEntry({.block = tb.block,
                                       .component = componentId,
                                       .output = outputName,
