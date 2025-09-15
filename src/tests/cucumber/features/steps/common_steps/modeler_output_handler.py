@@ -31,7 +31,7 @@ class modeler_output_handler:
         else:
             df = df[df["scenario_index"] == scenario]
         if len(df) != 1:
-            raise LookupError(f"Simulation table does not contain exactly 1 row for component '{component}', output '{output}', block '{block}', timestep '{timestep}', scenario '{scenario}'")
+            raise LookupError(f"Simulation table contains {len(df)} row(s) (expected 1) for component '{component}', output '{output}', block '{block}', timestep '{timestep}', scenario '{scenario}'")
         return df["value"].iloc[0]
 
     def get_objective_value(self):
