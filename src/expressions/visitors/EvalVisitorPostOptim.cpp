@@ -50,34 +50,17 @@ EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node
     auto idxType = Antares::Expressions::Visitors::TimeIndexVisitor(*component_, contextProvider_)
                      .dispatch(node);
 
-    auto forEachConnection =
-      [this](const std::string& portId, const std::string& fieldId, EvaluationResult& result)
+    EvaluationResult result(0.);
+    for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))
     {
-        for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))
-        {
-            auto* component = connectionEnd.component();
-            auto* port = connectionEnd.port();
-            EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
-            const auto* node = component->nodeAtPortField(port->Id(), fieldId);
-            auto dispatchResult = visitor.dispatch(node);
-            result += dispatchResult;
-        }
-    };
-
-    if (idxType == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
-    {
-        EvaluationResult result(0.);
-        forEachConnection(portId, fieldId, result);
-        return result;
+        auto* component = connectionEnd.component();
+        auto* port = connectionEnd.port();
+        EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
+        const auto* node = component->nodeAtPortField(port->Id(), fieldId);
+        auto dispatchResult = visitor.dispatch(node);
+        result += dispatchResult;
     }
-
-    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
-    std::vector<double> v;
-    v.resize(fillContext_.getLocalNumberOfTimeSteps());
-    EvaluationResult results(v);
-
-    forEachConnection(portId, fieldId, results);
-    return results;
+    return result;
 }
 
 } // namespace Antares::Expressions::Visitors
