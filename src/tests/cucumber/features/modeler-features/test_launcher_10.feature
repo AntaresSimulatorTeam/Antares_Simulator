@@ -36,7 +36,8 @@ Feature: 10 - Modeler extra outputs
       | block | component         | output                  | timestep | scenario | value |
       | 1     | base_zone         | spill_cost_contribution | 1-5      | 0        | 0     |
       | 1     | base_zone         | ens_cost_contribution   | 1-5      | 0        | 0     |
-      | 1     | load_base_zone    | load_parameter          | 1-5      | 0        | 120   |
+      | 1     | load_base_zone    | load_parameter          | 1-4      | 0        | 120   |
+      | 1     | load_base_zone    | load_parameter          | 5        | 0        | 20    |
       | 1     | gas_base_zone     | generation_cost         | 1-5      | 0        | 200   |
       | 1     | gas_base_zone     | squared_generation_cost | 1-5      | 0        | 40000 |
       | 1     | gas_base_zone     | total_generation_cost   |          | 0        | 1000  |
@@ -57,7 +58,8 @@ Feature: 10 - Modeler extra outputs
       | block | component         | output                  | timestep | scenario | value |
       | 1     | base_zone         | spill_cost_contribution | 1-5      | 0        | 0     |
       | 1     | base_zone         | ens_cost_contribution   | 1-5      | 0        | 0     |
-      | 1     | load_base_zone    | load_parameter          | 1-5      | 0        | 120   |
+      | 1     | load_base_zone    | load_parameter          | 1-4      | 0        | 120   |
+      | 1     | load_base_zone    | load_parameter          | 5        | 0        | 20    |
       | 1     | gas_base_zone     | generation_cost         | 1-5      | 0        | 200   |
       | 1     | gas_base_zone     | squared_generation_cost | 1-5      | 0        | 40000 |
       | 1     | gas_base_zone     | total_generation_cost   |          | 0        | 1000  |
