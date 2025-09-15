@@ -24,12 +24,18 @@
 
 #include <antares/solver/optim-model-filler/LinearExpressionEigen.h>
 
-LinearExpressionEigen::LinearExpressionEigen(int nRows, int nCols):
+LinearExpressionEigen::LinearExpressionEigen(int nRows,
+                                             int nCols,
+                                             const ComponentBlocks& componentBlocks):
     coeffs_(nRows, nCols),
-    offsets_(nRows)
+    offsets_(componentBlocks.blockSize, Eigen::VectorXd(nRows)),
+    componentBlocks_(componentBlocks)
 {
     // TODO
-    offsets_.setZero();
+    for (auto& offset: offsets_)
+    {
+        offset.setZero();
+    }
     // coeffs_.reserve(std::min(nRows * 2, nRows * nCols / 10));
 }
 
@@ -40,7 +46,8 @@ void LinearExpressionEigen::print() const
 
 LinearExpressionEigen::LinearExpressionEigen(
   const Eigen::SparseMatrix<double, Eigen::RowMajor>& coeffs,
-  const Eigen::VectorXd& offsets)
+  const std::vector<Eigen::VectorXd>& offsets,
+  const ComponentBlocks& componentBlocks)
 {
     if (coeffs.rows() != offsets.size())
     {
@@ -49,12 +56,15 @@ LinearExpressionEigen::LinearExpressionEigen(
     }
     coeffs_ = coeffs;
     offsets_ = offsets;
+    componentBlocks_ = componentBlocks;
 }
 
 LinearExpressionEigen::LinearExpressionEigen(Eigen::SparseMatrix<double, Eigen::RowMajor>&& coeffs,
-                                             Eigen::VectorXd&& offsets):
+std::vector<Eigen::VectorXd>&& offsets,
+                                             ComponentBlocks&& componentBlocks):
     coeffs_(std::move(coeffs)),
-    offsets_(std::move(offsets))
+    offsets_(std::move(offsets)),
+    componentBlocks_(std::move(componentBlocks))
 {
     if (coeffs_.rows() != offsets_.size())
     {
@@ -87,7 +97,10 @@ LinearExpressionEigen& LinearExpressionEigen::operator+=(const LinearExpressionE
 {
     CheckLinearExpressionSize(*this, b);
     coeffs_ += b.coeffs_;
-    offsets_ += b.offsets_;
+    for (int i = 0; i < offsets_.size(); ++i)
+    {
+        offsets_[i] += b.offsets_.at(i);
+    }
     return *this;
 }
 
@@ -102,13 +115,21 @@ LinearExpressionEigen& LinearExpressionEigen::operator-=(const LinearExpressionE
 {
     CheckLinearExpressionSize(*this, b);
     coeffs_ -= b.coeffs_;
-    offsets_ -= b.offsets_;
+    for (int i = 0; i < offsets_.size(); ++i)
+    {
+        offsets_[i] -= b.offsets_.at(i);
+    }
     return *this;
 }
 
 LinearExpressionEigen LinearExpressionEigen::operator-() const
 {
-    return {-coeffs_, -offsets_};
+    auto negateOffsets = offsets_;
+    for (auto& val: negateOffsets)
+    {
+        val = -val;
+    }
+    return {-coeffs_, std::move(negateOffsets), componentBlocks_};
 }
 
 LinearExpressionEigen LinearExpressionEigen::operator*(const LinearExpressionEigen& b) const
@@ -116,6 +137,18 @@ LinearExpressionEigen LinearExpressionEigen::operator*(const LinearExpressionEig
     auto out = *this;
     out *= b;
     return out;
+}
+
+int LinearExpressionEigen::getCompoIndex(int col) const
+{
+    return (col - componentBlocks_.blockFirstColumn) / componentBlocks_.componentColsSize;
+}
+
+int LinearExpressionEigen::computeStartColumn(int col) const
+{
+    int intervalIndex = getCompoIndex(col);
+
+    return componentBlocks_.blockFirstColumn + intervalIndex * componentBlocks_.componentColsSize;
 }
 
 LinearExpressionEigen& LinearExpressionEigen::operator*=(const LinearExpressionEigen& b)
@@ -140,7 +173,13 @@ LinearExpressionEigen& LinearExpressionEigen::operator*=(const LinearExpressionE
             for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coeffs_, k); it;
                  ++it)
             {
-                it.valueRef() *= offsets_[it.row()];
+                const auto col = it.col();
+                if (const auto compoIndex = getCompoIndex(col);
+                    componentBlocks_.blockFirstColumn <= col
+                    && col <= componentBlocks_.blockLastColumn)
+                {
+                    it.valueRef() *= offsets_.at(compoIndex)(it.row());
+                }
             }
         }
     }
@@ -151,13 +190,21 @@ LinearExpressionEigen& LinearExpressionEigen::operator*=(const LinearExpressionE
             for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coeffs_, k); it;
                  ++it)
             {
-                it.valueRef() *= b.offsets_[it.row()];
+                if (const auto compoIndex = getCompoIndex(it.col());
+                    componentBlocks_.blockFirstColumn <= compoIndex
+                    && compoIndex <= componentBlocks_.blockLastColumn)
+                {
+                    it.valueRef() *= b.offsets_.at(compoIndex)(it.row());
+                }
             }
         }
     }
 
     // offsets_ = offsets_.cwiseProduct(b.offsets_);
-    offsets_.array() *= b.offsets_.array();
+    for (int compoNum = 0; compoNum < b.offsets_.size(); ++compoNum)
+    {
+        offsets_[compoNum].array() *= b.offsets_.at(compoNum).array();
+    }
     return *this;
 }
 
@@ -184,7 +231,12 @@ LinearExpressionEigen& LinearExpressionEigen::operator/=(const LinearExpressionE
     {
         for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coeffs_, k); it; ++it)
         {
-            it.valueRef() /= b.offsets_[it.row()];
+            if (const auto compoIndex = getCompoIndex(it.col());
+                componentBlocks_.blockFirstColumn <= compoIndex
+                && compoIndex <= componentBlocks_.blockLastColumn)
+            {
+                it.valueRef() /= b.offsets_.at(compoIndex)(it.row());
+            }
         }
     }
 
@@ -230,7 +282,7 @@ void LinearExpressionEigen::setCol(size_t col, double value)
     }
 }
 
-void LinearExpressionEigen::setOffset(size_t row, double value)
+void LinearExpressionEigen::setOffset(int compoNum, size_t row, double value)
 {
     if (row >= static_cast<size_t>(coeffs_.rows()) || row >= static_cast<size_t>(coeffs_.cols()))
     {
@@ -238,24 +290,24 @@ void LinearExpressionEigen::setOffset(size_t row, double value)
     }
     if (std::abs(value) < 1e-16) // TODO
     {
-        offsets_(row) = value;
+        offsets_[compoNum](row) = value;
     }
 }
 
-void LinearExpressionEigen::setOffset(const std::vector<double>& values)
+void LinearExpressionEigen::setOffset(int compoNum, const std::vector<double>& values)
 {
     for (size_t t = 0; t < values.size(); ++t)
     {
-        setOffset(t, values[t]);
+        setOffset(compoNum, t, values[t]);
     }
 }
 
-void LinearExpressionEigen::setOffset(double value)
+void LinearExpressionEigen::setOffset(int compoNum, double value)
 {
     // TODO add in one shot
-    for (size_t t = 0; t < offsets_.size(); ++t)
+    for (size_t t = 0; t < offsets_.at(0).size(); ++t)
     {
-        setOffset(t, value);
+        setOffset(compoNum, t, value);
     }
 }
 

@@ -107,9 +107,16 @@ public:
         return extraOutputs_;
     }
 
+    [[nodiscard]] unsigned int Index() const
+    {
+        return index_;
+    }
+
 private:
     friend class ModelBuilder;
     std::string id_;
+    unsigned int index_;
+
     Expression objective_;
 
     std::map<std::string, Parameter> parameters_;
@@ -137,6 +144,7 @@ class ModelBuilder
 {
 public:
     ModelBuilder& withId(std::string_view id);
+    ModelBuilder& withIndex(unsigned int index);
     ModelBuilder& withObjective(Expression&& objective);
     ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
     ModelBuilder& withVariables(std::vector<Variable>&& variables);

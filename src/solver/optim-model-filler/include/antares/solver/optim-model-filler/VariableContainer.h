@@ -30,8 +30,16 @@ namespace Antares::Optimisation
 struct OptimComponent
 {
     unsigned int index = 0;
+    const ModelerStudy::SystemModel::Component* component;
     std::vector<unsigned int> modelVariablesGlobalIndices = {};
     std::unordered_map<std::string, unsigned int> variableIndexMap;
+};
+
+struct OptimModel
+{
+    unsigned int index = 0;
+    const ModelerStudy::SystemModel::Model* model;
+    std::vector<OptimComponent> optimComponents{};
 };
 
 class VariableContainer
@@ -75,11 +83,18 @@ public:
     }
 
     void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
+    void reserveOptimModels(const std::vector<ModelerStudy::SystemModel::Model*>& models);
+
+    [[nodiscard]] const std::vector<OptimModel>& getOptimModels() const
+    {
+        return optimModels_;
+    }
 
 private:
     std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*> variables_;
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
+    std::vector<OptimModel> optimModels_;
     unsigned int variableGlobalIndex_ = 0;
 };
 } // namespace Antares::Optimisation

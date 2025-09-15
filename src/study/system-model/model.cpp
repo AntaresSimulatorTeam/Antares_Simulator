@@ -125,6 +125,12 @@ ModelBuilder& ModelBuilder::withId(std::string_view id)
     return *this;
 }
 
+ModelBuilder& ModelBuilder::withIndex(unsigned int index)
+{
+    model_.index_ = index;
+    return *this;
+}
+
 /**
  * \brief Sets the objective of the model.
  *

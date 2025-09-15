@@ -46,7 +46,7 @@ public:
     ReadLinearExpressionVisitor() = delete;
     ReadLinearExpressionVisitor(const Optimisation::EvaluationContextProvider& evalContextProvider,
                                 const Optimisation::LinearProblemApi::FillContext& fillContext,
-                                const ModelerStudy::SystemModel::Component& component,
+                                const Optimisation::OptimModel& optimModel,
                                 const Optimisation::VariableContainer& variableContainer);
     std::string name() const override;
 
@@ -59,6 +59,7 @@ private:
     LinearExpressionEigen visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
     LinearExpressionEigen visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
     LinearExpressionEigen visit(const Expressions::Nodes::NegationNode* node) override;
+    void SetComponentBlocks();
     LinearExpressionEigen visit(const Expressions::Nodes::VariableNode* node) override;
     LinearExpressionEigen visit(const Expressions::Nodes::ParameterNode* node) override;
     LinearExpressionEigen visit(const Expressions::Nodes::LiteralNode* node) override;
@@ -71,12 +72,12 @@ private:
     LinearExpressionEigen visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
     const Optimisation::EvaluationContextProvider& evalContextProvider_;
-    const Expressions::Visitors::EvaluationContext evalContext_;
+
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
-    const ModelerStudy::SystemModel::Component& component_;
-    Expressions::Visitors::EvalVisitor evalVisitor_;
+    const Optimisation::OptimModel& optimModel_;
     unsigned int nbModelVariables_;
     unsigned int nbtimeSteps_;
     const Optimisation::VariableContainer& variableContainer_;
+    ComponentBlocks componentBlocks_;
 };
 } // namespace Antares::Optimization

@@ -185,11 +185,11 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
     }
 }
 
-ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+ComponentFiller::ComponentFiller(const OptimModel& optimModel,
                                  VariableContainer& solverVariables,
                                  const LinearProblemApi::ILinearProblemData& data,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
-    component_(component),
+    optimModel_(optimModel),
     variablesContainer_(solverVariables),
     evaluationContextProvider_(data, scenarioGroupRepository)
 {
@@ -209,63 +209,68 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
         // exception?
         return;
     }
-
-    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_.provide(
-      component_);
-    Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
-    auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
+    for (const auto& [_, component, modelVariablesGlobalIndices, variableIndexMap]:
+         optimModel_.optimComponents)
     {
-        if (node.Empty())
+        Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_
+                                                                       .provide(*component);
+        Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
+        auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
         {
-            return Expressions::Visitors::EvaluationResult(defaultValue);
-        }
-        return evaluator.dispatch(node.RootNode());
-    };
-    const auto& variables = component_.getModel()->Variables();
-    for (auto i = 0; i < variables.size(); ++i)
-    {
-        const auto& variable = variables.at(i);
-        namespace SM = ModelerStudy::SystemModel;
-        const auto& lb = valueOrDefault(variable.LowerBound(),
-                                        variable.Type() == SM::ValueType::BOOL ? 0
-                                                                               : -pb.infinity());
-        const auto& ub = valueOrDefault(variable.UpperBound(),
-                                        variable.Type() == SM::ValueType::BOOL ? 1 : pb.infinity());
-        if (variable.isTimeDependent())
+            if (node.Empty())
+            {
+                return Expressions::Visitors::EvaluationResult(defaultValue);
+            }
+            return evaluator.dispatch(node.RootNode());
+        };
+        const auto& variables = component->getModel()->Variables();
+        for (auto i = 0; i < variables.size(); ++i)
         {
-            const Optimization::Dimensions dim(
-              Optimization::IntegerInterval{ctx.getYear(),
-                                            ctx.getYear()}, /*TODO Handle range of year ? */
-              Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
-                                            ctx.getLocalLastTimeStep()));
-            // std::visit to handle the 4 cases: double/double, vector/double,
-            // double/vector and vector/vector.
-            std::visit(
-              [&pb, &variable, this, &dim](const auto& lb_, const auto& ub_)
-              {
-                  VariablesBulkAddition(pb, variablesContainer_)
-                    .addVariable(component_.Id(),
-                                 variable.Id(),
-                                 lb_,
-                                 ub_,
-                                 variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
-                                 dim);
-              },
-              lb.value(),
-              ub.value());
-        }
-        else
-        {
-            // No time component
-            const Optimization::Dimensions dim({}, {});
+            const auto& variable = variables.at(i);
+            namespace SM = ModelerStudy::SystemModel;
+            const auto& lb = valueOrDefault(variable.LowerBound(),
+                                            variable.Type() == SM::ValueType::BOOL
+                                              ? 0
+                                              : -pb.infinity());
+            const auto& ub = valueOrDefault(variable.UpperBound(),
+                                            variable.Type() == SM::ValueType::BOOL ? 1
+                                                                                   : pb.infinity());
+            if (variable.isTimeDependent())
+            {
+                const Optimization::Dimensions dim(
+                  Optimization::IntegerInterval{ctx.getYear(),
+                                                ctx.getYear()}, /*TODO Handle range of year ? */
+                  Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
+                                                ctx.getLocalLastTimeStep()));
+                // std::visit to handle the 4 cases: double/double, vector/double,
+                // double/vector and vector/vector.
+                std::visit(
+                  [&pb, &variable, this, &dim, &component](const auto& lb_, const auto& ub_)
+                  {
+                      VariablesBulkAddition(pb, variablesContainer_)
+                        .addVariable(component->Id(),
+                                     variable.Id(),
+                                     lb_,
+                                     ub_,
+                                     variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
+                                     dim);
+                  },
+                  lb.value(),
+                  ub.value());
+            }
+            else
+            {
+                // No time component
+                const Optimization::Dimensions dim({}, {});
 
-            VariablesBulkAddition(pb, variablesContainer_)
-              .addVariable(component_.Id(),
-                           variable.Id(),
-                           lb.valueAsDouble(),
-                           ub.valueAsDouble(),
-                           variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
-                           dim);
+                VariablesBulkAddition(pb, variablesContainer_)
+                  .addVariable(component->Id(),
+                               variable.Id(),
+                               lb.valueAsDouble(),
+                               ub.valueAsDouble(),
+                               variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
+                               dim);
+            }
         }
     }
 }
@@ -325,7 +330,7 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
 {
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContextProvider_,
                                                       ctx,
-                                                      component_,
+                                                      optimModel_,
                                                       variablesContainer_);
     for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
     {
@@ -349,7 +354,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                    Optimisation::LinearProblemApi::ILinearProblemData& data,
                                    const Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    auto model = component_.getModel();
+    const auto* model = optimModel_.model;
     if (model->Objective().Empty())
     {
         return;
@@ -358,7 +363,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     const auto& solverVariables = variablesContainer_.getVariables();
     Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
                                                       ctx,
-                                                      component_,
+                                                      optimModel_,
                                                       variablesContainer_);
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());

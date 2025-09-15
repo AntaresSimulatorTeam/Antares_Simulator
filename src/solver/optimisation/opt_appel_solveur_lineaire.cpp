@@ -82,13 +82,15 @@ static void fillModelerComponents(
 
     for (const auto& component: modelerData->system->Components())
     {
+        variablesContainer.addFromSystemComponent(component);
+    }
+    for (const auto& optimModel: variablesContainer.getOptimModels())
+    {
         fillersCollection.push_back(
-          std::make_unique<ComponentFiller>(component,
+          std::make_unique<ComponentFiller>(optimModel,
                                             variablesContainer,
                                             *modelerData->dataSeries,
                                             modelerData->scenarioGroupRepository));
-
-        variablesContainer.addFromSystemComponent(component);
     }
 }
 

@@ -22,18 +22,30 @@
 #include <Eigen/Sparse>
 #pragma once
 
+struct ComponentBlocks
+{
+    size_t blockSize;
+    size_t componentColsSize; // for each member of the block
+    unsigned int blockFirstColumn;
+    unsigned int
+      blockLastColumn; // = componentBlocks_.blockFirstColumn
+                       //    + componentBlocks_.blockSize * componentBlocks_.componentColsSize - 1
+};
+
 class LinearExpressionEigen
 {
 public:
-    LinearExpressionEigen(int nRows, int nCols);
+    LinearExpressionEigen(int nRows, int nCols, const ComponentBlocks& componentBlocks);
     void print() const;
     LinearExpressionEigen(const Eigen::SparseMatrix<double, Eigen::RowMajor>& coeffs,
-                          const Eigen::VectorXd& offsets);
+                          const std::vector<Eigen::VectorXd>& offsets,
+                          const ComponentBlocks& componentBlocks);
     LinearExpressionEigen(LinearExpressionEigen&&) = default;
     LinearExpressionEigen& operator=(LinearExpressionEigen&&) = default;
     LinearExpressionEigen(const LinearExpressionEigen& other) = default;
     LinearExpressionEigen(Eigen::SparseMatrix<double, Eigen::RowMajor>&& coeffs,
-                          Eigen::VectorXd&& offsets);
+                          std::vector<Eigen::VectorXd>&& offsets,
+                          ComponentBlocks&& componentBlocks);
 
     LinearExpressionEigen operator+(const LinearExpressionEigen& b) const;
     inline static void CheckLinearExpressionSize(const LinearExpressionEigen& a,
@@ -51,6 +63,8 @@ public:
 
     // --- Multiplication ---
     LinearExpressionEigen operator*(const LinearExpressionEigen& b) const;
+    int getCompoIndex(int col) const;
+    int computeStartColumn(int col) const;
     LinearExpressionEigen& operator*=(const LinearExpressionEigen& b);
 
     // --- Division ---
@@ -59,29 +73,29 @@ public:
     void setCoeff(size_t row, size_t col, double value);
     void setCol(size_t colIndex, const std::vector<double>& values);
     void setCol(size_t col, double value);
-    void setOffset(size_t t, double value);
-    void setOffset(const std::vector<double>& values);
-    void setOffset(double value);
+    void setOffset(int compoNum, double value);
+    void setOffset(int compoNum, size_t row, double value);
+    void setOffset(int compoNum, const std::vector<double>& values);
 
     // --- Getters ---
-    const Eigen::VectorXd& offset() const
+    const std::vector<Eigen::VectorXd>& offset() const
     {
         return offsets_;
     }
 
-    Eigen::VectorXd& offset()
+    std::vector<Eigen::VectorXd>& offset()
     {
         return offsets_;
     }
 
-    void setOffset(const Eigen::VectorXd& offsets)
+    void setOffset(const std::vector<Eigen::VectorXd>& offsets)
     {
         offsets_ = offsets;
     }
 
-    void setOffset(Eigen::VectorXd&& offsets)
+    void setOffset(int compoNum, Eigen::VectorXd&& offsets)
     {
-        offsets_ = std::move(offsets);
+        offsets_[compoNum] = std::move(offsets);
     }
 
     const Eigen::SparseMatrix<double, Eigen::RowMajor>& coefPerVar() const
@@ -110,5 +124,6 @@ public:
 
 private:
     Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs_; // [nTimesteps × nVars]
-    Eigen::VectorXd offsets_;                             // [nTimesteps]
+    std::vector<Eigen::VectorXd> offsets_;                // [nTimesteps × nbCompo]
+    ComponentBlocks componentBlocks_;
 };
