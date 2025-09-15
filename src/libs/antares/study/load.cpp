@@ -232,8 +232,7 @@ void Study::loadModelerComponents()
     }
     catch (const Error::LoadingError& e)
     {
-        logs.error() << "Error while loading modeler components:";
-        logs.error() << e.what();
+        logs.error() << "Error while loading modeler components: " << e.what();
     }
     catch (const std::exception& e)
     {
