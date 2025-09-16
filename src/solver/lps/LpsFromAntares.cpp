@@ -69,7 +69,14 @@ size_t LpsFromAntares::dataSize() const
     total += constantProblemData.Mdeb.size() * sizeof(unsigned);
     total += constantProblemData.NotNullTermCount.size() * sizeof(unsigned);
     total += constantProblemData.ColumnIndexes.size() * sizeof(unsigned);
-    // Données hebdomadaires
+    for (const auto& s: constantProblemData.VariablesMeaning)
+    {
+        total += sizeof(std::string) + s.capacity();
+    }
+    for (const auto& s: constantProblemData.ConstraintsMeaning)
+    {
+        total += sizeof(std::string) + s.capacity();
+    }
     for (const auto& [_, weekData]: weeklyProblems)
     {
         total += weekData.Xmax.size() * sizeof(double);
