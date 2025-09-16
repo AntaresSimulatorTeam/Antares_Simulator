@@ -86,13 +86,15 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
         throw LibraryNotFound(libraryId);
     }
 
-    auto search = lib->Models().find(modelId);
+    auto search = std::ranges::find_if(lib->Models(),
+                                       [&modelId](const SystemModel::Model& model)
+                                       { return model.Id() == modelId; });
     if (search == lib->Models().end())
     {
         throw ModelNotFound(modelId);
     }
 
-    return search->second;
+    return *search;
 }
 
 static SystemModel::Component createComponent(const YmlSystem::Component& c,
@@ -328,7 +330,18 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
 
     // Build system from components and connections
     SystemModel::SystemBuilder builder;
-    return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
+    std::vector<const Model*> models;
+    for (const auto& lib: libraries)
+    {
+        for (const auto& model: lib.Models())
+        {
+            models.push_back(&model);
+        }
+    }
+    return builder.withId(ymlSystem.id)
+      .withComponents(std::move(components))
+      .withModels(std::move(models))
+      .build();
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter

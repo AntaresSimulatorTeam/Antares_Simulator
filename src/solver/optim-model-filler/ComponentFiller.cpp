@@ -276,12 +276,13 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
 }
 
 void ComponentFiller::addStaticConstraint(LinearProblemApi::ILinearProblem& pb,
+                                          const ModelerStudy::SystemModel::Component& component,
                                           const Optimization::LinearConstraint& linear_constraint,
                                           const std::string& constraint_id) const
 {
     auto* ct = pb.addConstraint(linear_constraint.lb(0),
                                 linear_constraint.ub(0),
-                                component_.Id() + "." + constraint_id);
+                                component.Id() + "." + constraint_id);
     const auto& solverVariables = variablesContainer_.getVariables();
 
     for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
@@ -295,6 +296,7 @@ void ComponentFiller::addStaticConstraint(LinearProblemApi::ILinearProblem& pb,
 
 void ComponentFiller::addTimeDependentConstraints(
   Optimisation::LinearProblemApi::ILinearProblem& pb,
+  const ModelerStudy::SystemModel::Component& component,
   const Optimization::LinearConstraint& linear_constraints,
   const std::string& constraint_id,
   const Optimisation::LinearProblemApi::FillContext& ctx) const
@@ -310,7 +312,7 @@ void ComponentFiller::addTimeDependentConstraints(
         {
             auto* ct = pb.addConstraint(linear_constraints.lb(t),
                                         linear_constraints.ub(t),
-                                        component_.Id() + "." + constraint_id + '_'
+                                        component.Id() + "." + constraint_id + '_'
                                           + std::to_string(t));
 
             for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
@@ -332,19 +334,28 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
                                                       ctx,
                                                       optimModel_,
                                                       variablesContainer_);
-    for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
+    for (const auto& constraint: optimModel_.model->Constraints() | std::views::values)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
         if (checkTimeSteps(ctx))
         {
-            if (IsThisConstraintTimeDependent(root_node))
+            for (int compoLocalId = 0; compoLocalId < linear_constraints.size(); ++compoLocalId)
             {
-                addTimeDependentConstraints(pb, linear_constraints, constraint.Id(), ctx);
-            }
-            else
-            {
-                addStaticConstraint(pb, linear_constraints, constraint.Id());
+                const auto& linearConstraint = linear_constraints.at(compoLocalId);
+                const auto& component = optimModel_.optimComponents.at(compoLocalId).component;
+                if (IsThisConstraintTimeDependent(root_node, *component))
+                {
+                    addTimeDependentConstraints(pb,
+                                                *component,
+                                                linearConstraint,
+                                                constraint.Id(),
+                                                ctx);
+                }
+                else
+                {
+                    addStaticConstraint(pb, *component, linearConstraint, constraint.Id());
+                }
             }
         }
     }
@@ -366,43 +377,50 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                                       optimModel_,
                                                       variablesContainer_);
 
-    const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
-    const auto& offset = linearExpression.offset();
-    // this is the simplest way to check if any entry of the offset is zero
-    // Eigen::VectorXd returns the number of non-zero elements in the vector, based on the internal
-    // storage. It does not use a tolerance for floating-point comparisons by default.
-    for (auto i = 0; i < offset.size(); ++i)
+    const auto linearExpressions = visitor.dispatch(model->Objective().RootNode());
+    for (int compoLocalId = 0; compoLocalId < linearExpressions.size(); ++compoLocalId)
     {
-        if (std::abs(offset[i]) > 1e-10)
+        const auto& linearExpression = linearExpressions.at(compoLocalId);
+        const auto& component = optimModel_.optimComponents.at(compoLocalId).component;
+        const auto& offset = linearExpression.offset();
+        // this is the simplest way to check if any entry of the offset is zero
+        // Eigen::VectorXd returns the number of non-zero elements in the vector, based on the
+        // internal storage. It does not use a tolerance for floating-point comparisons by default.
+        for (auto i = 0; i < offset.size(); ++i)
         {
-            throw std::invalid_argument(
-              "Antares does not support objective offsets (found in model '" + model->Id()
-              + "' of component '" + component_.Id() + "').");
-        }
-    }
-
-    const auto& coefPerVars = linearExpression.coefPerVar();
-    const Optimization::Dimensions dim(Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()},
-                                       Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
-                                                                     ctx.getLocalLastTimeStep()));
-
-    for (const auto s: dim.getScenarioIndices())
-    {
-        for (const auto t: dim.getTimesteps())
-        {
-            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVars, t); it;
-                 ++it)
+            if (std::abs(offset[i]) > 1e-10)
             {
-                pb.setObjectiveCoefficient(solverVariables.at(it.col()), it.value());
+                throw std::invalid_argument(
+                  "Antares does not support objective offsets (found in model '" + model->Id()
+                  + "' of component '" + component->Id() + "').");
+            }
+        }
+
+        const auto& coefPerVars = linearExpression.coefPerVar();
+        const Optimization::Dimensions dim(
+          Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()},
+          Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
+
+        for (const auto s: dim.getScenarioIndices())
+        {
+            for (const auto t: dim.getTimesteps())
+            {
+                for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVars, t);
+                     it;
+                     ++it)
+                {
+                    pb.setObjectiveCoefficient(solverVariables.at(it.col()), it.value());
+                }
             }
         }
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const
+bool ComponentFiller::IsThisConstraintTimeDependent(
+  const Expressions::Nodes::Node* node,
+  const ModelerStudy::SystemModel::Component& component) const
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_,
-                                                             evaluationContextProvider_);
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component, evaluationContextProvider_);
     const auto ret = timeIndexVisitor.dispatch(node);
     return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
            || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;

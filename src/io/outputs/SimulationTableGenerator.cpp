@@ -92,7 +92,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
 
     const auto& variableStart = variableContainer.getVariableStartColumn();
     const auto& solverVariables = variableContainer.getVariables();
-    const auto& optimComponent = variableContainer.getOptimComponent(component.Index());
+    const auto& optimComponent = variableContainer.getOptimComponent(component.Index(),
+                                                                     component.getModel()->Index());
     const auto& modelVariablesGlobalIndices = optimComponent.modelVariablesGlobalIndices;
     unsigned variableLocalIndex = 0;
     for (const auto& modelVar: component.getModel()->Variables())

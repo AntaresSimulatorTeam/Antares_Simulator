@@ -75,9 +75,9 @@ void VariableContainer::addFromSystemComponent(
 }
 
 void VariableContainer::reserveOptimModels(
-  const std::vector<ModelerStudy::SystemModel::Model*>& models)
+  const std::vector<const ModelerStudy::SystemModel::Model*>& models)
 {
-    optimModels_.reserve(models.size());
+    optimModels_.assign(models.size(), {});
     for (const auto& model: models)
     {
         auto& [index, targetModel, _] = optimModels_[model->Index()];

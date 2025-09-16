@@ -140,26 +140,38 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
-  const std::string& areaId)
+  const std::string& areaId,
+  const Optimisation::OptimModel& optimModel)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
     ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
                                         ctx,
-                                        component,
+                                        optimModel,
                                         variableContainer_);
-    auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
-    addExpressionToConstraint(pb, linearExpression, ctx, areaId);
+    auto linearExpressions = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
+    for (const auto& linearExpression: linearExpressions)
+    {
+        addExpressionToConstraint(pb, linearExpression, ctx, areaId);
+    }
 }
 
 void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
                                                      ILinearProblemData& data,
                                                      const FillContext& ctx)
 {
+    const auto& optimModels = variableContainer_.getOptimModels();
     for (const auto& component: modelerSystem_->Components())
     {
+        const Optimisation::OptimModel& optimModelAtModel = optimModels.at(
+          component.getModel()->Index());
+
+        Optimisation::OptimModel optimModel;
+        optimModel.optimComponents.push_back(
+          optimModelAtModel.optimComponents.at(component.Index()));
+
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            addComponentPortContributionToArea(pb, ctx, component, portId, areaId);
+            addComponentPortContributionToArea(pb, ctx, component, portId, areaId, optimModel);
         }
     }
 }

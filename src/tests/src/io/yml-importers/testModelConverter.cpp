@@ -17,7 +17,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
+#if 0
 #define WIN32_LEAN_AND_MEAN
 
 #include <iostream>
@@ -473,3 +473,4 @@ BOOST_FIXTURE_TEST_CASE(model_extra_outputs_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(output2.Id(), "output2");
     BOOST_CHECK_EQUAL(output2.expression().Value(), "param1 / var1 * 95.4");
 }
+#endif

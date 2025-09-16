@@ -40,7 +40,8 @@
 namespace Antares::Optimization
 {
 
-class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<LinearExpressionEigen>
+class ReadLinearExpressionVisitor
+    : public Expressions::Visitors::NodeVisitor<std::vector<LinearExpressionEigen>>
 {
 public:
     ReadLinearExpressionVisitor() = delete;
@@ -51,26 +52,38 @@ public:
     std::string name() const override;
 
 private:
-    LinearExpressionEigen visit(const Expressions::Nodes::SumNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::SubtractionNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::MultiplicationNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::DivisionNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::EqualNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::NegationNode* node) override;
-    void SetComponentBlocks();
-    LinearExpressionEigen visit(const Expressions::Nodes::VariableNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::ParameterNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::LiteralNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::PortFieldNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::TimeShiftNode* node) override;
-    LinearExpressionEigen TimeIndex(const LinearExpressionEigen& expression, int timeIndex) const;
-    LinearExpressionEigen visit(const Expressions::Nodes::TimeIndexNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::TimeSumNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::AllTimeSumNode* node) override;
+    std::vector<LinearExpressionEigen> visit(const Expressions::Nodes::SumNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::SubtractionNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::MultiplicationNode* node) override;
+    std::vector<LinearExpressionEigen> visit(const Expressions::Nodes::DivisionNode* node) override;
+    std::vector<LinearExpressionEigen> visit(const Expressions::Nodes::EqualNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::LessThanOrEqualNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
+    std::vector<LinearExpressionEigen> visit(const Expressions::Nodes::NegationNode* node) override;
+    std::vector<LinearExpressionEigen> visit(const Expressions::Nodes::VariableNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::ParameterNode* node) override;
+    std::vector<LinearExpressionEigen> visit(const Expressions::Nodes::LiteralNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::PortFieldNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::PortFieldSumNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::TimeShiftNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::TimeIndexNode* node) override;
+    std::vector<LinearExpressionEigen> visit(const Expressions::Nodes::TimeSumNode* node) override;
+    std::vector<LinearExpressionEigen> visit(
+      const Expressions::Nodes::AllTimeSumNode* node) override;
 
+    [[nodiscard]] LinearExpressionEigen TimeIndex(
+      const LinearExpressionEigen& expression,
+      int timeIndex,
+      const Optimisation::OptimComponent& optimComponent) const;
     const Optimisation::EvaluationContextProvider& evalContextProvider_;
 
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
@@ -78,6 +91,5 @@ private:
     unsigned int nbModelVariables_;
     unsigned int nbtimeSteps_;
     const Optimisation::VariableContainer& variableContainer_;
-    ComponentBlocks componentBlocks_;
 };
 } // namespace Antares::Optimization

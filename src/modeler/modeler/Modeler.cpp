@@ -67,15 +67,20 @@ public:
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         // All LP variables coordinates (component id, variable id, scenario, time step)
-
+        variableContainer_.reserveOptimModels(system_->Models());
         for (const auto& component: system_->Components())
         {
-            auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      variableContainer_,
-                                                                      *dataSeries,
-                                                                      scenario_group_repository);
-            fillers.push_back(std::move(cf));
             variableContainer_.addFromSystemComponent(component);
+        }
+        for (const auto& optimModel: variableContainer_.getOptimModels())
+        {
+            if (!optimModel.optimComponents.empty())
+            {
+                fillers.push_back(std::make_unique<ComponentFiller>(optimModel,
+                                                                    variableContainer_,
+                                                                    *dataSeries,
+                                                                    scenario_group_repository));
+            }
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);

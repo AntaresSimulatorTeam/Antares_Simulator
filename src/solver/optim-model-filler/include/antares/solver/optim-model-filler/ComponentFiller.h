@@ -70,7 +70,6 @@ public:
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         Optimisation::LinearProblemApi::ILinearProblemData& data,
                         const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    const std::vector<unsigned int>& getVariableStartColumn() const;
 
     void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       Optimisation::LinearProblemApi::ILinearProblemData& data,
@@ -78,15 +77,18 @@ public:
 
 private:
     void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                             const ModelerStudy::SystemModel::Component& component,
                              const Optimization::LinearConstraint& linear_constraint,
                              const std::string& constraint_id) const;
 
     void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+                                     const ModelerStudy::SystemModel::Component& component,
                                      const Optimization::LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
                                      const Optimisation::LinearProblemApi::FillContext& ctx) const;
 
-    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const;
+    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node,
+                                       const ModelerStudy::SystemModel::Component& component) const;
 
     const OptimModel& optimModel_;
     VariableContainer& variablesContainer_;

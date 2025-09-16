@@ -48,12 +48,20 @@ public:
         return components_;
     }
 
+    const std::vector<const Model*>& Models() const
+    {
+        return models_;
+    }
+
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
-    System(std::string_view id, std::vector<Component>&& components);
+    System(std::string_view id,
+           std::vector<Component>&& components,
+           std::vector<const Model*>&& models);
     std::string id_;
     std::vector<Component> components_;
+    std::vector<const Model*> models_;
 };
 
 class SystemBuilder
@@ -61,12 +69,14 @@ class SystemBuilder
 public:
     SystemBuilder& withId(std::string_view id);
     SystemBuilder& withComponents(std::vector<Component>&& components);
+    SystemBuilder& withModels(std::vector<const Model*>&&);
     System build();
 
 private:
     std::string id_;
 
     std::vector<Component> components_;
+    std::vector<const Model*> models_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

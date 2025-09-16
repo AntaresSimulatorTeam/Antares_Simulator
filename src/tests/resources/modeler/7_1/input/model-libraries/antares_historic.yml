@@ -177,63 +177,63 @@ library:
           expression: sum(t-d_min_down + 1 .. t, nb_stopping) <= nb_units_max[t-d_min_down] - nb_units_on + sum(t-d_min_down + 1 .. t, nb_units_max_variation_backward)
       objective: sum(generation_cost * generation + startup_cost * nb_starting + fixed_cost * nb_units_on)
 
-    - id: short-term-storage
-      parameters:
-        - id: reservoir_capacity
-          time-dependent: false
-          scenario-dependent: false
-        - id: injection_nominal_capacity
-          time-dependent: false
-          scenario-dependent: false
-        - id: withdrawal_nominal_capacity
-          time-dependent: false
-          scenario-dependent: false
-        - id: efficiency_injection
-          time-dependent: false
-          scenario-dependent: false
-        - id: efficiency_withdrawal
-          time-dependent: false
-          scenario-dependent: false
-        - id: lower_rule_curve
-          time-dependent: true
-          scenario-dependent: true
-        - id: upper_rule_curve
-          time-dependent: true
-          scenario-dependent: true
-        - id: p_max_injection_modulation  # Read in p_max_injection
-          time-dependent: true
-          scenario-dependent: true
-        - id: p_max_withdrawal_modulation # Read in p_max_withdrawal
-          time-dependent: true
-          scenario-dependent: true
-        - id: inflows
-          time-dependent: true
-          scenario-dependent: true
-        - id: initial_level
-          time-dependent: false
-          scenario-dependent: true
-      variables:
-        - id: p_injection
-          lower-bound: 0
-          upper-bound: p_max_injection_modulation * injection_nominal_capacity # p_max_injection_modulation is a timeseries with adimensional values between 0 and 1
-          variable-type: continuous
-        - id: p_withdrawal
-          lower-bound: 0
-          upper-bound: p_max_withdrawal_modulation * withdrawal_nominal_capacity # p_max_withdrawal_modulation is a timeseries with adimensional values between 0 and 1
-          variable-type: continuous
-        - id: level
-          lower-bound: lower_rule_curve * reservoir_capacity
-          upper-bound: upper_rule_curve * reservoir_capacity
-          variable-type: continuous
-      ports:
-        - id: injection_port
-          type: flow
-      port-field-definitions:
-        - port: injection_port
-          field: flow
-          definition: p_withdrawal - p_injection
-      constraints:
-        - id: initial_level_constraint
-          expression: level[0] = initial_level * reservoir_capacity
-        - id: Level equation
-          expression: level[t+1] = level + efficiency_injection * p_injection - efficiency_withdrawal * p_withdrawal + inflows
+#    - id: short-term-storage
+#      parameters:
+#        - id: reservoir_capacity
+#          time-dependent: false
+#          scenario-dependent: false
+#        - id: injection_nominal_capacity
+#          time-dependent: false
+#          scenario-dependent: false
+#        - id: withdrawal_nominal_capacity
+#          time-dependent: false
+#          scenario-dependent: false
+#        - id: efficiency_injection
+#          time-dependent: false
+#          scenario-dependent: false
+#        - id: efficiency_withdrawal
+#          time-dependent: false
+#          scenario-dependent: false
+#        - id: lower_rule_curve
+#          time-dependent: true
+#          scenario-dependent: true
+#        - id: upper_rule_curve
+#          time-dependent: true
+#          scenario-dependent: true
+#        - id: p_max_injection_modulation  # Read in p_max_injection
+#          time-dependent: true
+#          scenario-dependent: true
+#        - id: p_max_withdrawal_modulation # Read in p_max_withdrawal
+#          time-dependent: true
+#          scenario-dependent: true
+#        - id: inflows
+#          time-dependent: true
+#          scenario-dependent: true
+#        - id: initial_level
+#          time-dependent: false
+#          scenario-dependent: true
+#      variables:
+#        - id: p_injection
+#          lower-bound: 0
+#          upper-bound: p_max_injection_modulation * injection_nominal_capacity # p_max_injection_modulation is a timeseries with adimensional values between 0 and 1
+#          variable-type: continuous
+#        - id: p_withdrawal
+#          lower-bound: 0
+#          upper-bound: p_max_withdrawal_modulation * withdrawal_nominal_capacity # p_max_withdrawal_modulation is a timeseries with adimensional values between 0 and 1
+#          variable-type: continuous
+#        - id: level
+#          lower-bound: lower_rule_curve * reservoir_capacity
+#          upper-bound: upper_rule_curve * reservoir_capacity
+#          variable-type: continuous
+#      ports:
+#        - id: injection_port
+#          type: flow
+#      port-field-definitions:
+#        - port: injection_port
+#          field: flow
+#          definition: p_withdrawal - p_injection
+#      constraints:
+#        - id: initial_level_constraint
+#          expression: level[0] = initial_level * reservoir_capacity
+#        - id: Level equation
+#          expression: level[t+1] = level + efficiency_injection * p_injection - efficiency_withdrawal * p_withdrawal + inflows

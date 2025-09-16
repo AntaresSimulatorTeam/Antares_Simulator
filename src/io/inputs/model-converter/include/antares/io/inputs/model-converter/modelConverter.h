@@ -45,7 +45,8 @@ class Node;
 namespace Antares::IO::Inputs::ModelConverter
 {
 
-ModelerStudy::SystemModel::Library convert(const YmlModel::Library& library);
+ModelerStudy::SystemModel::Library convert(const YmlModel::Library& library,
+                                           unsigned int& modelIndex);
 
 // EXCEPTIONS
 class UnknownTypeException: public std::runtime_error

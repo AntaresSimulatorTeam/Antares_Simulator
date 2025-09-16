@@ -33,7 +33,8 @@ namespace Antares::Solver::LoadFiles
 {
 using namespace IO::Inputs;
 
-static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
+static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& filePath,
+                                                            unsigned int& modelIndex)
 {
     std::string libraryStr;
     try
@@ -61,7 +62,7 @@ static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& file
 
     try
     {
-        return ModelConverter::convert(libraryObj);
+        return ModelConverter::convert(libraryObj, modelIndex);
     }
     catch (const std::runtime_error& e)
     {
@@ -84,8 +85,8 @@ std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& st
                         << " ignored, only files having the `.yml` extension are loaded";
             continue;
         }
-
-        libraries.push_back(loadSingleLibrary(entry.path()));
+        unsigned int modelIndex = 0;
+        libraries.push_back(loadSingleLibrary(entry.path(), modelIndex));
         logs.info() << "Library loaded: " << libraries.back().Id();
     }
     return libraries;

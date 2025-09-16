@@ -28,6 +28,7 @@
 #include "antares/study/system-model/system.h"
 namespace Antares::Optimisation
 {
+struct OptimModel;
 class VariableContainer;
 }
 
@@ -79,7 +80,8 @@ private:
                                             const Optimisation::LinearProblemApi::FillContext& ctx,
                                             const ModelerStudy::SystemModel::Component& component,
                                             const std::string& portId,
-                                            const std::string& areaId);
+                                            const std::string& areaId,
+                                            const Optimisation::OptimModel& optimModel);
 };
 
 } // namespace Antares::Optimization

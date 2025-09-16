@@ -25,9 +25,12 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
-System::System(const std::string_view id, std::vector<Component>&& components):
+System::System(const std::string_view id,
+               std::vector<Component>&& components,
+               std::vector<const Model*>&& models):
     id_(id),
-    components_(std::move(components))
+    components_(std::move(components)),
+    models_(std::move(models))
 {
     // Check that mandatory attributes are not empty
     if (id.empty())
@@ -64,6 +67,12 @@ SystemBuilder& SystemBuilder::withComponents(std::vector<Component>&& components
     return *this;
 }
 
+SystemBuilder& SystemBuilder::withModels(std::vector<const Model*>&& models)
+{
+    models_ = std::move(models);
+    return *this;
+}
+
 /**
  * \brief Builds and returns the System object.
  *
@@ -71,6 +80,6 @@ SystemBuilder& SystemBuilder::withComponents(std::vector<Component>&& components
  */
 System SystemBuilder::build()
 {
-    return System(id_, std::move(components_));
+    return System(id_, std::move(components_), std::move(models_));
 }
 } // namespace Antares::ModelerStudy::SystemModel

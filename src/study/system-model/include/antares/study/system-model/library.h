@@ -51,7 +51,7 @@ public:
         return portTypes_;
     }
 
-    const std::unordered_map<std::string, Model>& Models() const
+    const std::vector<Model>& Models() const
     {
         return *models_;
     }
@@ -63,8 +63,7 @@ private:
     std::string description_;
 
     std::unordered_map<std::string, PortType> portTypes_;
-    std::shared_ptr<std::unordered_map<std::string, Model>>
-      models_ = std::make_shared<std::unordered_map<std::string, Model>>();
+    std::shared_ptr<std::vector<Model>> models_ = std::make_shared<std::vector<Model>>();
 };
 
 /**

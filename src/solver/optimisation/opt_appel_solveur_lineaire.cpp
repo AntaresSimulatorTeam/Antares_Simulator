@@ -79,18 +79,21 @@ static void fillModelerComponents(
   Modeler::Data* modelerData,
   VariableContainer& variablesContainer)
 {
-
+    variablesContainer.reserveOptimModels(modelerData->system->Models());
     for (const auto& component: modelerData->system->Components())
     {
         variablesContainer.addFromSystemComponent(component);
     }
     for (const auto& optimModel: variablesContainer.getOptimModels())
     {
-        fillersCollection.push_back(
-          std::make_unique<ComponentFiller>(optimModel,
-                                            variablesContainer,
-                                            *modelerData->dataSeries,
-                                            modelerData->scenarioGroupRepository));
+        if (!optimModel.optimComponents.empty())
+        {
+            fillersCollection.push_back(
+              std::make_unique<ComponentFiller>(optimModel,
+                                                variablesContainer,
+                                                *modelerData->dataSeries,
+                                                modelerData->scenarioGroupRepository));
+        }
     }
 }
 

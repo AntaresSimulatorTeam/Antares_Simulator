@@ -324,7 +324,8 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
  */
 std::vector<ModelerStudy::SystemModel::Model> convertModels(
   const IO::Inputs::YmlModel::Library& library,
-  const std::vector<ModelerStudy::SystemModel::PortType>& portTypes)
+  const std::vector<ModelerStudy::SystemModel::PortType>& portTypes,
+  unsigned int& modelIndex)
 {
     std::vector<ModelerStudy::SystemModel::Model> models;
     models.reserve(library.models.size());
@@ -352,8 +353,10 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
                           .withConstraints(std::move(constraints))
                           .withPortFieldDefinitions(std::move(portFieldDefinitions))
                           .withExtraOutputs(std::move(extraOutputs))
+                          .withIndex(modelIndex)
                           .build();
         models.emplace_back(std::move(modelObj));
+        ++modelIndex;
     }
     return models;
 }
@@ -362,12 +365,16 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
  * \brief Converts a YmlModel::Library object to an SystemModel::Library object.
  *
  * \param library The YmlModel::Library object to convert.
+ * \param modelIndex
  * \return The corresponding SystemModel::Library object.
  */
-ModelerStudy::SystemModel::Library convert(const IO::Inputs::YmlModel::Library& library)
+ModelerStudy::SystemModel::Library convert(const IO::Inputs::YmlModel::Library& library,
+                                           unsigned int& modelIndex)
 {
     std::vector<ModelerStudy::SystemModel::PortType> portTypes = convertTypes(library);
-    std::vector<ModelerStudy::SystemModel::Model> models = convertModels(library, portTypes);
+    std::vector<ModelerStudy::SystemModel::Model> models = convertModels(library,
+                                                                         portTypes,
+                                                                         modelIndex);
 
     ModelerStudy::SystemModel::LibraryBuilder builder;
     ModelerStudy::SystemModel::Library lib = builder.withId(library.id)

@@ -72,18 +72,25 @@ public:
         variables_.push_back(variable);
     }
 
-    [[nodiscard]] const OptimComponent& getOptimComponent(size_t index) const
+    [[nodiscard]] const OptimComponent& getOptimComponent(size_t index, unsigned modelIndex) const
     {
-        return optimComponents_.at(index);
+        const auto& optimModel = optimModels_.at(modelIndex);
+        auto it = std::ranges::find_if(optimModel.optimComponents,
+                                       [&index](const OptimComponent& optimComponent)
+                                       { return optimComponent.index == index; });
+        if (it != optimModel.optimComponents.end())
+        {
+            return *it;
+        }
+        else
+        {
+            throw std::invalid_argument("OptimComponent not found");
+        }
     }
 
-    [[nodiscard]] const std::vector<OptimComponent>& getOptimComponents() const
-    {
-        return optimComponents_;
-    }
 
     void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
-    void reserveOptimModels(const std::vector<ModelerStudy::SystemModel::Model*>& models);
+    void reserveOptimModels(const std::vector<const ModelerStudy::SystemModel::Model*>& models);
 
     [[nodiscard]] const std::vector<OptimModel>& getOptimModels() const
     {
