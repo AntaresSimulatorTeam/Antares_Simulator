@@ -31,7 +31,11 @@
 #include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 
 using namespace Antares::Optimization;
+using namespace Antares::Optimisation;
+using namespace Antares::Expressions;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::ModelerStudy::SystemModel;
+
 using TI = Antares::Expressions::Visitors::TimeIndex;
 
 TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
@@ -54,7 +58,7 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
     }
 }
 
-TI updateTimeIndexIfShouldForceScenario(TI timeIndex, bool forceExportForScenarioIndex)
+TI makeScenarioDependent(TI timeIndex, bool forceExportForScenarioIndex)
 {
     return forceExportForScenarioIndex ? timeIndex | TI::VARYING_IN_SCENARIO_ONLY : timeIndex;
 }
@@ -74,10 +78,58 @@ std::string BuildModelerConstraintName(const std::string& componentId,
     return key;
 }
 
+class ExpressionDependency
+{
+public:
+    ExpressionDependency(const Expression& e,
+                         const Component& c,
+                         const EvaluationContextProvider& contextProvider,
+                         bool shiftToScenarioDependent);
+
+    bool inTime();
+    std::optional<unsigned> inScenario(unsigned scenario);
+
+private:
+    const Expression& expr_;
+    const Component& component_;
+    const EvaluationContextProvider& contextProvider_;
+    bool shiftToScenarioDependent_ = false;
+
+    TI timeIndex_ = TI::CONSTANT_IN_TIME_AND_SCENARIO;
+};
+
+ExpressionDependency::ExpressionDependency(const Expression& e,
+                                           const Component& c,
+                                           const EvaluationContextProvider& contextProvider,
+                                           bool shiftToScenarioDependent):
+    expr_(e),
+    component_(c),
+    contextProvider_(contextProvider),
+    shiftToScenarioDependent_(shiftToScenarioDependent)
+{
+    timeIndex_ = Visitors::TimeIndexVisitor(component_, contextProvider).dispatch(expr_.RootNode());
+    timeIndex_ = makeScenarioDependent(timeIndex_, shiftToScenarioDependent_);
+}
+
+bool ExpressionDependency::inTime()
+{
+    return isTimeDependant(timeIndex_);
+}
+
+std::optional<unsigned> ExpressionDependency::inScenario(unsigned scenario)
+{
+    std::optional<unsigned> scenario_opt;
+    if (isScenarioDependant(timeIndex_))
+    {
+        scenario_opt = scenario;
+    }
+    return scenario_opt;
+}
+
 void addVariableEntries(ISimulationTable& simulationTable,
                         const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
-                        const Antares::ModelerStudy::SystemModel::Component& component,
+                        const Component& component,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
                         unsigned scenario)
@@ -140,28 +192,25 @@ void addVariableEntries(ISimulationTable& simulationTable,
 void addConstraintEntries(ISimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
-                          const Antares::ModelerStudy::SystemModel::Component& component,
+                          const Component& component,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           unsigned scenario,
                           bool forceExportForScenarioIndex,
-                          const Antares::Optimisation::EvaluationContextProvider& contextProvider)
+                          const EvaluationContextProvider& contextProvider)
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
     for (const auto& [cname, modelConstr]: component.getModel()->Constraints())
     {
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
-                       .dispatch(modelConstr.expression().RootNode());
-        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+        ExpressionDependency expressionDependency(modelConstr.expression(),
+                                                  component,
+                                                  contextProvider,
+                                                  forceExportForScenarioIndex);
 
-        std::optional<unsigned> scenario_opt;
-        if (isScenarioDependant(idxType))
-        {
-            scenario_opt = scenario;
-        }
+        auto scenario_opt = expressionDependency.inScenario(scenario);
 
-        if (isTimeDependant(idxType))
+        if (expressionDependency.inTime())
         {
             for (unsigned ts = fillContext.getLocalFirstTimeStep();
                  ts <= fillContext.getLocalLastTimeStep();
@@ -222,31 +271,30 @@ void addObjectiveValue(ISimulationTable& simulation,
 
 void addEntriesForNode(ISimulationTable& simulationTable,
                        const FillContext& fillContext,
-                       const Antares::ModelerStudy::SystemModel::Component& component,
+                       const Component& component,
                        unsigned currentBlock,
                        const TimeConversionMode& timeConversionMode,
                        unsigned scenario,
                        bool forceExportForScenarioIndex,
-                       const Antares::Optimisation::EvaluationContextProvider& contextProvider,
+                       const EvaluationContextProvider& contextProvider,
                        const std::string& componentId,
                        const std::string& outputName,
-                       const Antares::Expressions::Nodes::Node* rootNode)
+                       const Nodes::Node* rootNode)
 {
-    Antares::Expressions::Visitors::EvalVisitorPostOptim evalVisitor(contextProvider,
-                                                                     fillContext,
-                                                                     &component);
+    Visitors::EvalVisitorPostOptim evalVisitor(contextProvider, fillContext, &component);
     auto value = evalVisitor.dispatch(rootNode);
 
-    TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
-                   .dispatch(rootNode);
+    /*
+    TI idxType = Visitors::TimeIndexVisitor(component, contextProvider).dispatch(rootNode);
 
-    idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+    idxType = makeScenarioDependent(idxType, forceExportForScenarioIndex);
 
     std::optional<unsigned> scenario_opt;
     if (isScenarioDependant(idxType))
     {
         scenario_opt = scenario;
     }
+    */
 
     if (isTimeDependant(idxType))
     {
@@ -285,12 +333,12 @@ void addEntriesForNode(ISimulationTable& simulationTable,
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const FillContext& fillContext,
-                    const Antares::ModelerStudy::SystemModel::Component& component,
+                    const Component& component,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     unsigned scenario,
                     bool forceExportForScenarioIndex,
-                    const Antares::Optimisation::EvaluationContextProvider& contextProvider)
+                    const EvaluationContextProvider& contextProvider)
 {
     const auto& componentId = component.Id();
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
@@ -313,12 +361,12 @@ void addPortEntries(ISimulationTable& simulationTable,
 
 void addExtraOutputEntries(ISimulationTable& simulationTable,
                            const FillContext& fillContext,
-                           const Antares::ModelerStudy::SystemModel::Component& component,
+                           const Component& component,
                            unsigned currentBlock,
                            const TimeConversionMode& timeConversionMode,
                            unsigned scenario,
                            bool forceExportForScenarioIndex,
-                           const Antares::Optimisation::EvaluationContextProvider& contextProvider)
+                           const EvaluationContextProvider& contextProvider)
 {
     const auto& componentId = component.Id();
     for (const auto& [extraOutputId, extraOutput]: component.getModel()->ExtraOutputs())
@@ -357,8 +405,9 @@ void FillSimulationTable(ISimulationTable& simulationTable,
     }
     for (const auto& component: modelerData.system->Components() | std::views::values)
     {
-        Antares::Optimisation::EvaluationContextProvider
-          contextProvider(*modelerData.dataSeries, modelerData.scenarioGroupRepository, solutions);
+        EvaluationContextProvider contextProvider(*modelerData.dataSeries,
+                                                  modelerData.scenarioGroupRepository,
+                                                  solutions);
 
         addVariableEntries(simulationTable,
                            linearProblem,
