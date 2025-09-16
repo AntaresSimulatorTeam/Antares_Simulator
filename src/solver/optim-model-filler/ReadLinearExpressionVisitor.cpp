@@ -136,8 +136,9 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     }
     // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd -
     // variableStart+1
-    if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
-        || node->timeIndex() == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
+    else if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
+             || node->timeIndex()
+                  == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
     {
         auto variableIndex = variableStart;
         for (auto localTimeStep = localFirstTimeStep; localTimeStep <= localLastTimeStep;
@@ -184,8 +185,9 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
 
     int idx = 0;
     // assume global nb timeStep == nbtimeSteps
-    const auto& parameters = evalContext_.getParameterValue(node->value(),
-                                                            fillContext_.getYear(),
+    const auto& parameters = evalContext_.getParameterValue(
+      node->value(),
+      fillContext_.getYear(),
       fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
       fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
     out.setOffset(Eigen::Map<const Eigen::VectorXd>(parameters.data(), parameters.size()));
