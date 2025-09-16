@@ -161,9 +161,7 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
         return;
     }
 
-    Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_.provide(
-      component_);
-    Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
+    Expressions::Visitors::EvalVisitor evaluator(evaluationContextProvider_, ctx, component_);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())

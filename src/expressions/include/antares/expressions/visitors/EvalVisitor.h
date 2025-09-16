@@ -24,10 +24,9 @@
 #include <sstream>
 #include <variant>
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include "antares/expressions/IEvaluationContextProvider.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
@@ -261,18 +260,16 @@ public:
      * @param context The evaluation context.
      * @param fillContext
      */
-    explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext);
-    explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext,
-                         const ModelerStudy::SystemModel::Component* component);
+    explicit EvalVisitor(const IEvaluationContextProvider& contextProvider,
+                         const Optimisation::LinearProblemApi::FillContext& fillContext,
+                         const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
 protected:
     const EvaluationContext context_;
-    Optimisation::LinearProblemApi::FillContext fillContext_;
-    const ModelerStudy::SystemModel::Component* component_ = nullptr;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
+    const ModelerStudy::SystemModel::Component& component_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

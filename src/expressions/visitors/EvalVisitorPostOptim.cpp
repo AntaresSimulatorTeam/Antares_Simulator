@@ -28,15 +28,15 @@
 namespace Antares::Expressions::Visitors
 {
 
-EvalVisitorPostOptim::EvalVisitorPostOptim(const IEvaluationContextProvider& contextProvider,
-                                           Optimisation::LinearProblemApi::FillContext fillContext,
-                                           const ModelerStudy::SystemModel::Component* component):
-    EvalVisitor(contextProvider.provide(*component), // TODO perf: avoid this copy
-                fillContext,
-                component),
-    contextProvider_(contextProvider)
-{
-}
+/*EvalVisitorPostOptim::EvalVisitorPostOptim(const IEvaluationContextProvider& contextProvider,*/
+/*                                           Optimisation::LinearProblemApi::FillContext fillContext,*/
+/*                                           const ModelerStudy::SystemModel::Component* component):*/
+/*    EvalVisitor(contextProvider.provide(*component), // TODO perf: avoid this copy*/
+/*                fillContext,*/
+/*                component),*/
+/*    contextProvider_(contextProvider)*/
+/*{*/
+/*}*/
 
 std::string EvalVisitorPostOptim::name() const
 {
@@ -45,21 +45,21 @@ std::string EvalVisitorPostOptim::name() const
 
 EvaluationResult EvalVisitorPostOptim::visit(const Nodes::PortFieldSumNode* node)
 {
-    std::string portId = node->getPortName();
-    std::string fieldId = node->getFieldName();
-    auto idxType = Antares::Expressions::Visitors::TimeIndexVisitor(*component_, contextProvider_)
-                     .dispatch(node);
+    /*std::string portId = node->getPortName();*/
+    /*std::string fieldId = node->getFieldName();*/
+    /*auto idxType = Antares::Expressions::Visitors::TimeIndexVisitor(*component_, contextProvider_)*/
+    /*                 .dispatch(node);*/
 
     EvaluationResult result(0.);
-    for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))
-    {
-        auto* component = connectionEnd.component();
-        auto* port = connectionEnd.port();
-        EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
-        const auto* node = component->nodeAtPortField(port->Id(), fieldId);
-        auto dispatchResult = visitor.dispatch(node);
-        result += dispatchResult;
-    }
+    /*for (const auto connectionEnd: component_->componentConnectionsViaPort(portId))*/
+    /*{*/
+    /*    auto* component = connectionEnd.component();*/
+    /*    auto* port = connectionEnd.port();*/
+    /*    EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);*/
+    /*    const auto* node = component->nodeAtPortField(port->Id(), fieldId);*/
+    /*    auto dispatchResult = visitor.dispatch(node);*/
+    /*    result += dispatchResult;*/
+    /*}*/
     return result;
 }
 

@@ -26,25 +26,18 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
-#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
 
 namespace Antares::Expressions::Visitors
 {
-EvalVisitor::EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext):
-    context_(std::move(context)),
-    fillContext_(std::move(fillContext))
-{
-}
 
-EvalVisitor::EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext,
-                         const ModelerStudy::SystemModel::Component* component):
+EvalVisitor::EvalVisitor(const IEvaluationContextProvider& contextProvider,
+                         const Optimisation::LinearProblemApi::FillContext& fillContext,
+                         const ModelerStudy::SystemModel::Component& component):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
-    context_(std::move(context)),
+    context_(contextProvider.provide(component)),
     fillContext_(std::move(fillContext)),
     component_(component)
 {
@@ -92,15 +85,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (!component_)
-    {
-        throw Error::RuntimeError("Component null. Cannot evaluate VariableNode.");
-    }
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
         std::string varName = Optimization::VariableDictionary::buildVariableName(
-          {component_->Id(), node->value()},
+          {component_.Id(), node->value()},
           Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
           std::nullopt);
         return EvaluationResult(context_.getVariableValue(varName));
@@ -113,7 +102,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
          ++timeStep)
     {
         std::string varName = Optimization::VariableDictionary::buildVariableName(
-          {component_->Id(), node->value()},
+          {component_.Id(), node->value()},
           Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
           timeStep);
         varValues.emplace_back(context_.getVariableValue(varName));
@@ -164,7 +153,22 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+    auto idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component_, contextProvider_)
+                     .dispatch(node);
+
+    EvaluationResult result(0.);
+    for (const auto connectionEnd: component_.componentConnectionsViaPort(portId))
+    {
+        auto* component = connectionEnd.component();
+        auto* port = connectionEnd.port();
+        EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
+        const auto* node = component->nodeAtPortField(port->Id(), fieldId);
+        auto dispatchResult = visitor.dispatch(node);
+        result += dispatchResult;
+    }
+    return result;
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)

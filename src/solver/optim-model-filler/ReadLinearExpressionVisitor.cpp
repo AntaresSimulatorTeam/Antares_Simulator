@@ -19,16 +19,14 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <numeric>
-
 #include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
-#include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/study/system-model/component.h"
+
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy;
@@ -44,7 +42,7 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     evalContext_(evalContextProvider_.provide(component)),
     fillContext_(fillContext),
     component_(component),
-    evalVisitor_(evalContext_, fillContext_)
+    evalVisitor_(evalContextProvider_, fillContext_, component_)
 {
 }
 
