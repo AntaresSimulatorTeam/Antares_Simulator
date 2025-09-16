@@ -139,6 +139,7 @@ public:
      * @brief Retrieves the number of weeks in the LpsFromAntares object.
      */
     [[nodiscard]] size_t weekCount() const noexcept;
+    void constantDataSize(size_t& total) const;
     /**
      * @brief Returns the total memory size (in bytes) used by all weekly and constant data (double
      * + unsigned).

@@ -60,23 +60,33 @@ size_t LpsFromAntares::weekCount() const noexcept
     return weeklyProblems.size();
 }
 
+void LpsFromAntares::constantDataSize(size_t& total) const
+{
+    static size_t size = 0;
+    if (size == 0)
+    {
+        size += constantProblemData.ConstraintsMatrixCoeff.size() * sizeof(double);
+        size += constantProblemData.VariablesType.size() * sizeof(unsigned);
+        size += constantProblemData.Mdeb.size() * sizeof(unsigned);
+        size += constantProblemData.NotNullTermCount.size() * sizeof(unsigned);
+        size += constantProblemData.ColumnIndexes.size() * sizeof(unsigned);
+        for (const auto& s: constantProblemData.VariablesMeaning)
+        {
+            size += sizeof(std::string) + s.capacity();
+        }
+        for (const auto& s: constantProblemData.ConstraintsMeaning)
+        {
+            size += sizeof(std::string) + s.capacity();
+        }
+    }
+    total += size;
+}
+
 size_t LpsFromAntares::dataSize() const
 {
     size_t total = 0;
     // Constantes
-    total += constantProblemData.ConstraintsMatrixCoeff.size() * sizeof(double);
-    total += constantProblemData.VariablesType.size() * sizeof(unsigned);
-    total += constantProblemData.Mdeb.size() * sizeof(unsigned);
-    total += constantProblemData.NotNullTermCount.size() * sizeof(unsigned);
-    total += constantProblemData.ColumnIndexes.size() * sizeof(unsigned);
-    for (const auto& s: constantProblemData.VariablesMeaning)
-    {
-        total += sizeof(std::string) + s.capacity();
-    }
-    for (const auto& s: constantProblemData.ConstraintsMeaning)
-    {
-        total += sizeof(std::string) + s.capacity();
-    }
+    constantDataSize(total);
     for (const auto& [_, weekData]: weeklyProblems)
     {
         total += weekData.Xmax.size() * sizeof(double);
