@@ -18,7 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#if 0
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <filesystem>
@@ -42,7 +42,6 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
-#include "antares/solver/optim-model-filler/PartialKey.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
@@ -433,34 +432,37 @@ BOOST_AUTO_TEST_SUITE(VariableDictionaryTests)
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_AllParameters)
 {
-    PartialKey key("component1", "variable1");
-    std::string result = Antares::Optimization::VariableDictionary::buildVariableName(
-      key,
-      MCYearAndTime::MCYear{5u},
-      10u);
+    std::string result = Antares::Optimization::buildVariableName("component1",
+                                                                  "variable1",
+                                                                  MCYearAndTime::MCYear{5u},
+                                                                  10u);
     BOOST_CHECK_EQUAL(result, "component1.variable1_s5_t10");
 }
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_OnlyScenario)
 {
-    PartialKey key("component1", "variable1");
-    std::string result = VariableDictionary::buildVariableName(key,
-                                                               MCYearAndTime::MCYear{5u},
-                                                               std::nullopt);
+    std::string result = Antares::Optimization::buildVariableName("component1",
+                                                                  "variable1",
+                                                                  MCYearAndTime::MCYear{5u},
+                                                                  std::nullopt);
     BOOST_CHECK_EQUAL(result, "component1.variable1_s5");
 }
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_OnlyTimestep)
 {
-    PartialKey key("component1", "variable1");
-    std::string result = VariableDictionary::buildVariableName(key, std::nullopt, 10u);
+    std::string result = Antares::Optimization::buildVariableName("component1",
+                                                                  "variable1",
+                                                                  std::nullopt,
+                                                                  10u);
     BOOST_CHECK_EQUAL(result, "component1.variable1_t10");
 }
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_NoOptionalParams)
 {
-    PartialKey key("component1", "variable1");
-    std::string result = VariableDictionary::buildVariableName(key, std::nullopt, std::nullopt);
+    std::string result = Antares::Optimization::buildVariableName("component1",
+                                                                  "variable1",
+                                                                  std::nullopt,
+                                                                  std::nullopt);
     BOOST_CHECK_EQUAL(result, "component1.variable1");
 }
 
@@ -788,7 +790,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             static MockMipVariable mockVar(123.45, MipBasisStatus::FREE);
             return &mockVar;
         };
-        for (const auto& [compoId, compo]: components)
+        for (const auto& compo: components)
         {
             const auto* model = compo.getModel();
             if (linearProblem)
@@ -796,7 +798,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
                 for (const auto& constraintId: model->Constraints() | views::keys)
                 {
                     // Set up some constraints to exist
-                    linearProblem->setConstraintExists(compoId + '.' + constraintId, true);
+                    linearProblem->setConstraintExists(compo.Id() + '.' + constraintId, true);
                 }
             }
         }
@@ -950,11 +952,13 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
     MockLinearProblem linearProblem(true);
     build();
     const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
-
+    Antares::Optimisation::VariableContainer variableContainer;
+    variableContainer.addFromSystemComponent(components.front());
     addVariableEntries(table,
                        linearProblem,
                        fillContext,
-                       components.begin()->second,
+                       components.front(),
+                       variableContainer,
                        1,
                        TimeConversionMode::SingleBlock,
                        0);
@@ -1104,10 +1108,15 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 
     build(fillContext, &linearProblem);
     MockMipSolution solution;
+    const auto& modelerData = getModelerData();
+    Antares::Optimisation::VariableContainer variableContainer;
+    variableContainer.addFromSystemComponent(modelerData.system->Components().front());
+
     BOOST_CHECK_NO_THROW(FillSimulationTable(table,
                                              linearProblem,
                                              45.0,
-                                             getModelerData(),
+                                             modelerData,
+                                             variableContainer,
                                              fillContext,
                                              1,
                                              TimeConversionMode::SingleBlock););
@@ -1396,8 +1405,6 @@ BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_NoOptionalParams)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-
-
 BOOST_AUTO_TEST_SUITE(MockLinearProblemTests)
 
 // Test the mock implementations
@@ -1588,4 +1595,3 @@ inline std::ostream& operator<<(std::ostream& os, const TimeConversionMode& mode
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-#endif
