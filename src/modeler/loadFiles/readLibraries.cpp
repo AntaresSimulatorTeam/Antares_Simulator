@@ -75,7 +75,7 @@ static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& file
 std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& studyPath)
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;
-
+    unsigned int modelIndex = 0;
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
     for (const auto& entry: fs::directory_iterator(directoryPath))
     {
@@ -85,7 +85,7 @@ std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& st
                         << " ignored, only files having the `.yml` extension are loaded";
             continue;
         }
-        unsigned int modelIndex = 0;
+
         libraries.push_back(loadSingleLibrary(entry.path(), modelIndex));
         logs.info() << "Library loaded: " << libraries.back().Id();
     }
