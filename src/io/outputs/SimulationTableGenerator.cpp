@@ -30,6 +30,7 @@
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 
+using namespace Antares::Optimization;
 using namespace Antares::Optimisation::LinearProblemApi;
 using TI = Antares::Expressions::Visitors::TimeIndex;
 
@@ -79,31 +80,31 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const Antares::ModelerStudy::SystemModel::Component& component,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
-                        std::optional<unsigned> scenario)
+                        unsigned scenario)
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
     for (const auto& [varName, modelVar]: component.getModel()->Variables())
     {
-        scenario = modelVar.IsScenarioDependent() ? scenario : std::nullopt;
-
         if (modelVar.isTimeDependent())
         {
             for (unsigned ts = fillContext.getLocalFirstTimeStep();
                  ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
-                std::string fullVarName = Antares::Optimization::VariableDictionary::
-                  buildVariableName({componentId, varName},
-                                    Antares::Optimization::MCYearAndTime::MCYear{
-                                      scenario.value_or(0)},
-                                    ts);
+                // Get variable
+                // question : why the enum MCYear ?
+                std::string fullVarName = VariableDictionary::buildVariableName(
+                  {componentId, varName},
+                  MCYearAndTime::MCYear{scenario},
+                  ts);
+                auto* var = linearProblem.lookupVariable(fullVarName);
 
+                // Get time block info
                 unsigned global_ts = ts + fillContext.getGlobalFirstTimeStep();
                 TimeBlock tb = convertBlockTimeStepToAbsoluteTimeStep(global_ts,
                                                                       timeConversionMode,
                                                                       currentBlock);
-                auto* var = linearProblem.lookupVariable(fullVarName);
                 simulationTable.addEntry(
                   {.block = tb.block,
                    .component = componentId,
@@ -117,10 +118,10 @@ void addVariableEntries(ISimulationTable& simulationTable,
         }
         else
         {
-            std::string fullVarName = Antares::Optimization::VariableDictionary::buildVariableName(
-              {componentId, varName},
-              Antares::Optimization::MCYearAndTime::MCYear{scenario.value_or(0)},
-              std::nullopt);
+            std::string fullVarName = VariableDictionary::buildVariableName({componentId, varName},
+                                                                            MCYearAndTime::MCYear{
+                                                                              scenario},
+                                                                            std::nullopt);
 
             auto* var = linearProblem.lookupVariable(fullVarName);
             simulationTable.addEntry(
@@ -142,7 +143,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const Antares::ModelerStudy::SystemModel::Component& component,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario,
+                          unsigned scenario,
                           bool forceExportForScenarioIndex,
                           const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
@@ -154,7 +155,11 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                        .dispatch(modelConstr.expression().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
-        scenario = isScenarioDependant(idxType) ? scenario : std::nullopt;
+        std::optional<unsigned> scenario_opt;
+        if (isScenarioDependant(idxType))
+        {
+            scenario_opt = scenario;
+        }
 
         if (isTimeDependant(idxType))
         {
@@ -175,7 +180,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                    .output = cname,
                    .absolute_time_index = tb.absoluteTimeIndex,
                    .block_time_index = tb.blockTimeIndex,
-                   .scenario_index = scenario,
+                   .scenario_index = scenario_opt,
                    .value = std::nullopt,
                    .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
             }
@@ -192,7 +197,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                .output = cname,
                .absolute_time_index = std::nullopt,
                .block_time_index = std::nullopt,
-               .scenario_index = scenario,
+               .scenario_index = scenario_opt,
                .value = std::nullopt,
                .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
         }
@@ -220,7 +225,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        const Antares::ModelerStudy::SystemModel::Component& component,
                        unsigned currentBlock,
                        const TimeConversionMode& timeConversionMode,
-                       std::optional<unsigned> scenario,
+                       unsigned scenario,
                        bool forceExportForScenarioIndex,
                        const Antares::Optimisation::EvaluationContextProvider& contextProvider,
                        const std::string& componentId,
@@ -237,7 +242,11 @@ void addEntriesForNode(ISimulationTable& simulationTable,
 
     idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
-    scenario = isScenarioDependant(idxType) ? scenario : std::nullopt;
+    std::optional<unsigned> scenario_opt;
+    if (isScenarioDependant(idxType))
+    {
+        scenario_opt = scenario;
+    }
 
     if (isTimeDependant(idxType))
     {
@@ -255,7 +264,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                                       .output = outputName,
                                       .absolute_time_index = tb.absoluteTimeIndex,
                                       .block_time_index = tb.blockTimeIndex,
-                                      .scenario_index = scenario,
+                                      .scenario_index = scenario_opt,
                                       .value = val,
                                       .status = MipBasisStatus::NOT_AVAILABLE});
         }
@@ -268,7 +277,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                                   .output = outputName,
                                   .absolute_time_index = std::nullopt,
                                   .block_time_index = std::nullopt,
-                                  .scenario_index = scenario,
+                                  .scenario_index = scenario_opt,
                                   .value = val,
                                   .status = MipBasisStatus::NOT_AVAILABLE});
     }
@@ -279,7 +288,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::ModelerStudy::SystemModel::Component& component,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
-                    std::optional<unsigned> scenario,
+                    unsigned scenario,
                     bool forceExportForScenarioIndex,
                     const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
@@ -307,7 +316,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
                            const Antares::ModelerStudy::SystemModel::Component& component,
                            unsigned currentBlock,
                            const TimeConversionMode& timeConversionMode,
-                           std::optional<unsigned> scenario,
+                           unsigned scenario,
                            bool forceExportForScenarioIndex,
                            const Antares::Optimisation::EvaluationContextProvider& contextProvider)
 {
@@ -348,7 +357,6 @@ void FillSimulationTable(ISimulationTable& simulationTable,
     }
     for (const auto& component: modelerData.system->Components() | std::views::values)
     {
-        EmptyScenario emptyScenario;
         Antares::Optimisation::EvaluationContextProvider
           contextProvider(*modelerData.dataSeries, modelerData.scenarioGroupRepository, solutions);
 

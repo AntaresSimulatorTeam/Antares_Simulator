@@ -82,7 +82,7 @@ void addVariableEntries(
   const Antares::ModelerStudy::SystemModel::Component& component,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
-  std::optional<unsigned> scenario);
+  unsigned scenario);
 
 void addConstraintEntries(
   ISimulationTable& simulationTable,
@@ -91,7 +91,7 @@ void addConstraintEntries(
   const Antares::ModelerStudy::SystemModel::Component& component,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
-  std::optional<unsigned> scenario,
+  unsigned scenario,
   bool forceExportForScenarioIndex,
   const Antares::Optimisation::EvaluationContextProvider& contextProvider);
 
@@ -100,7 +100,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::ModelerStudy::SystemModel::Component& component,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
-                    std::optional<unsigned> scenario,
+                    unsigned scenario,
                     bool forceExportForScenarioIndex,
                     const Antares::Optimisation::EvaluationContextProvider& contextProvider);
 
@@ -109,7 +109,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
                            const Antares::ModelerStudy::SystemModel::Component& component,
                            unsigned currentBlock,
                            const TimeConversionMode& timeConversionMode,
-                           std::optional<unsigned> scenario,
+                           unsigned scenario,
                            bool forceExportForScenarioIndex,
                            const Antares::Optimisation::EvaluationContextProvider& contextProvider);
 
@@ -118,7 +118,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        const Antares::ModelerStudy::SystemModel::Component& component,
                        unsigned currentBlock,
                        const TimeConversionMode& timeConversionMode,
-                       std::optional<unsigned> scenario,
+                       unsigned scenario,
                        bool forceExportForScenarioIndex,
                        const Antares::Optimisation::EvaluationContextProvider& contextProvider,
                        const std::string& componentId,
