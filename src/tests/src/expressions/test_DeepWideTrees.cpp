@@ -29,7 +29,7 @@
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
-#include "MockEvaluationContextProvider.h"
+#include "../modeler/mockModelerObjects.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -50,24 +50,12 @@ static Node* deepNegationTree(Registry<Node>& registry, double litValue, size_t 
 
 struct MyDummyFixture: Registry<Node>
 {
-    Model model = createModelWithParameters();
-    ComponentBuilder component_builder;
-    Component component = component_builder.withId("component")
-                            .withModel(&model)
-                            .withParameterValues({build_context_parameter_with("param1", "5"),
-                                                  build_context_parameter_with("param2", "3")})
-                            .withScenarioGroupId("scenario_group")
-                            .build();
-
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
     MockEvaluationContextProvider contextProvider = MockEvaluationContextProvider(
       evaluationContext);
-    EvalVisitor evalVisitor{
-      contextProvider,
-      {0, 0, 0, 0, 0},
-    };
+    EvalVisitor evalVisitor{contextProvider, {0, 0, 0, 0, 0}, createComponent()};
 };
 
 BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)

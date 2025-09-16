@@ -50,6 +50,8 @@ struct modelerObjectsFixture
 
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
 Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
+Antares::ModelerStudy::SystemModel::Component createComponent();
+
 
 std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,

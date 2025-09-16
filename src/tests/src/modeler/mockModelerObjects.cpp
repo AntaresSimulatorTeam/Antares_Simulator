@@ -18,36 +18,44 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include <utility>
+
 #include "antares/expressions/IEvaluationContextProvider.h"
 #include "antares/study/system-model/component.h"
 
-static Antares::ModelerStudy::SystemModel::Model createModelWithParameters()
+using namespace Antares::ModelerStudy::SystemModel;
+
+static Model createModelWithParameters()
 {
-    Antares::ModelerStudy::SystemModel::ModelBuilder model_builder;
+    ModelBuilder model_builder;
     return model_builder.withId("model")
-      .withParameters({Antares::ModelerStudy::SystemModel::Parameter(
-                         "param1",
-                         Antares::ModelerStudy::SystemModel::TimeDependent::NO,
-                         Antares::ModelerStudy::SystemModel::ScenarioDependent::NO),
-                       Antares::ModelerStudy::SystemModel::Parameter(
-                         "param2",
-                         Antares::ModelerStudy::SystemModel::TimeDependent::NO,
-                         Antares::ModelerStudy::SystemModel::ScenarioDependent::NO)})
+      .withParameters({Parameter("param1", TimeDependent::NO, ScenarioDependent::NO),
+                       Parameter("param2", TimeDependent::NO, ScenarioDependent::NO)})
       .build();
 }
 
-static Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters()
+static Model createModelWithoutParameters()
 {
-    Antares::ModelerStudy::SystemModel::ModelBuilder model_builder;
+    ModelBuilder model_builder;
     return model_builder.withId("model").build();
 }
 
 static std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,
                              const std::string& value,
-                             const Antares::Expressions::Visitors::ParameterType& type)
+                             const Antares::Expressions::Visitors::ParameterType& type = Antares::
+                               Expressions::Visitors::ParameterType::CONSTANT)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
 
+static Component createComponent(const std::string& id = "component")
+{
+    Model model = createModelWithParameters();
+    ComponentBuilder component_builder;
+    return component_builder.withId(id)
+      .withModel(&model)
+      .withParameterValues(
+        {build_context_parameter_with("param1", "5"), build_context_parameter_with("param2", "3")})
+      .withScenarioGroupId("scenario_group")
+      .build();
+}
