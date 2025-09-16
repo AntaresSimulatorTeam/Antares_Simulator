@@ -26,6 +26,7 @@
 #include "antares/solver/optim-model-filler/LinearExpressionEigen.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
+
 namespace Antares::Optimisation
 {
 class VariableContainer;

@@ -72,7 +72,6 @@ void SimulationTableCsv::writeHeader()
 
 const std::string NONE = "None";
 
-
 void SimulationTableCsv::write()
 {
     const size_t row_count = storage_.rowCount();

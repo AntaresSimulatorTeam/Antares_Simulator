@@ -45,8 +45,6 @@ public:
     std::string scenario_group_id;
     unsigned index = 0;
 
-
-
     void reset()
     {
         id.clear();
@@ -112,7 +110,6 @@ public:
     {
         return data_.index;
     }
-
 
 private:
     // Only ComponentBuilder is allowed to build Component instances

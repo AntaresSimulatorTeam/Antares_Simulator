@@ -25,7 +25,6 @@
 #include <optional>
 #include <string>
 
-
 #include "MCYearAndTime.h"
 
 namespace Antares::Optimisation::LinearProblemApi
@@ -85,6 +84,7 @@ private:
     std::optional<IntegerInterval> mcyearInterval;
     std::optional<IntegerInterval> timeInterval;
 };
+
 // TODO Move me
 std::string buildVariableName(const std::string& compoId,
                               const std::string& variableId,

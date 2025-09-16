@@ -79,7 +79,6 @@ static void fillModelerComponents(
   Modeler::Data* modelerData,
   VariableContainer& variablesContainer)
 {
-
     for (const auto& component: modelerData->system->Components())
     {
         fillersCollection.push_back(
