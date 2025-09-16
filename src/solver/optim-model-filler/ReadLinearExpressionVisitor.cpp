@@ -269,8 +269,9 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Port
                                                     optimModel,
                                                     variableContainer_);
 
-                const Node* node = connectedComponent->nodeAtPortField(port->Id(), fieldId);
-                linearExpressionMatrix += visitor.dispatch(node).at(0);
+                const Node* connectedNode = connectedComponent->nodeAtPortField(port->Id(),
+                                                                                fieldId);
+                linearExpressionMatrix += visitor.dispatch(connectedNode).at(0);
             }
         }
     }
