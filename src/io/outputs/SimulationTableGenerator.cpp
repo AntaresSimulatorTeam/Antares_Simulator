@@ -23,7 +23,7 @@
 #include <optional>
 
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
-#include "antares/expressions/visitors/EvalVisitorPostOptim.h"
+#include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
@@ -248,9 +248,9 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        const std::string& outputName,
                        const Antares::Expressions::Nodes::Node* rootNode)
 {
-    Antares::Expressions::Visitors::EvalVisitorPostOptim evalVisitor(contextProvider,
-                                                                     fillContext,
-                                                                     &component);
+    Antares::Expressions::Visitors::EvalVisitor evalVisitor(contextProvider,
+                                                            fillContext,
+                                                            component);
     auto value = evalVisitor.dispatch(rootNode);
 
     TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)

@@ -20,11 +20,13 @@
 */
 
 #include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 #include <numeric>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/optim-model-filler/EvaluationContextProvider.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/ShiftVector.h"
 
@@ -38,7 +40,8 @@ EvalVisitor::EvalVisitor(const IEvaluationContextProvider& contextProvider,
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
     context_(contextProvider.provide(component)),
-    fillContext_(std::move(fillContext)),
+    contextProvider_(contextProvider),
+    fillContext_(fillContext),
     component_(component)
 {
 }
@@ -163,7 +166,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     {
         auto* component = connectionEnd.component();
         auto* port = connectionEnd.port();
-        EvalVisitorPostOptim visitor(contextProvider_, fillContext_, component);
+        EvalVisitor visitor(contextProvider_, fillContext_, *component);
         const auto* node = component->nodeAtPortField(port->Id(), fieldId);
         auto dispatchResult = visitor.dispatch(node);
         result += dispatchResult;

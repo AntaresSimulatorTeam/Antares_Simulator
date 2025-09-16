@@ -268,6 +268,7 @@ public:
 
 protected:
     const EvaluationContext context_;
+    const IEvaluationContextProvider& contextProvider_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
 
