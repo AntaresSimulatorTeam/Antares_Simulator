@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE hydro remix
+#define BOOST_TEST_MODULE multi storage remix
 
 #define WIN32_LEAN_AND_MEAN
 
