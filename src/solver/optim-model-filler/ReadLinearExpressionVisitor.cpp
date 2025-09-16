@@ -206,7 +206,6 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Para
         linearExpressionMatrix.setOffset(
           Eigen::Map<const Eigen::VectorXd>(parameters.data(), parameters.size()));
 
-        ++compoLocalId;
     }
     return ret;
 }
@@ -221,7 +220,6 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Lite
     {
         auto& linearExpressionMatrix = ret.at(compoLocalId);
         linearExpressionMatrix.setOffset(Eigen::VectorXd::Constant(nbtimeSteps_, node->value()));
-        ++compoLocalId;
     }
     return ret;
 }
