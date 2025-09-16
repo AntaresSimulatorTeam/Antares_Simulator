@@ -279,24 +279,19 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        const EvaluationContextProvider& contextProvider,
                        const std::string& componentId,
                        const std::string& outputName,
-                       const Nodes::Node* rootNode)
+                       const Expression& expression)
 {
     Visitors::EvalVisitorPostOptim evalVisitor(contextProvider, fillContext, &component);
-    auto value = evalVisitor.dispatch(rootNode);
+    auto value = evalVisitor.dispatch(expression.RootNode());
 
-    /*
-    TI idxType = Visitors::TimeIndexVisitor(component, contextProvider).dispatch(rootNode);
+    ExpressionDependency expressionDependency(expression,
+                                              component,
+                                              contextProvider,
+                                              forceExportForScenarioIndex);
 
-    idxType = makeScenarioDependent(idxType, forceExportForScenarioIndex);
+    auto scenario_opt = expressionDependency.inScenario(scenario);
 
-    std::optional<unsigned> scenario_opt;
-    if (isScenarioDependant(idxType))
-    {
-        scenario_opt = scenario;
-    }
-    */
-
-    if (isTimeDependant(idxType))
+    if (expressionDependency.inTime())
     {
         auto values = value.valuesAsVector();
         for (unsigned ts = fillContext.getLocalFirstTimeStep();
@@ -343,7 +338,7 @@ void addPortEntries(ISimulationTable& simulationTable,
     const auto& componentId = component.Id();
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
-        const auto& rootNode = portFieldDef.Definition().RootNode();
+        const auto& expression = portFieldDef.Definition();
         std::string outputName = portFieldKey.portId + "." + portFieldKey.fieldId;
         addEntriesForNode(simulationTable,
                           fillContext,
@@ -355,7 +350,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                           contextProvider,
                           componentId,
                           outputName,
-                          rootNode);
+                          expression);
     }
 }
 
@@ -371,7 +366,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
     const auto& componentId = component.Id();
     for (const auto& [extraOutputId, extraOutput]: component.getModel()->ExtraOutputs())
     {
-        const auto& rootNode = extraOutput.expression().RootNode();
+        const auto& expression = extraOutput.expression();
         std::string outputName = extraOutputId;
         addEntriesForNode(simulationTable,
                           fillContext,
@@ -383,7 +378,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
                           contextProvider,
                           componentId,
                           outputName,
-                          rootNode);
+                          expression);
     }
 }
 
