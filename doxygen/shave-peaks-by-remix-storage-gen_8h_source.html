@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/simulation/include/antares/solver/simulation/shave-peaks-by-remix-storage-gen.h Source File</title>
+<title>Antares Simulator: src/solver/simulation/include/antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -127,35 +127,33 @@ $(document).ready(function(){initNavTree('shave-peaks-by-remix-storage-gen_8h_so
 <div class="title">shave-peaks-by-remix-storage-gen.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;hydro-for-remix.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;storage-for-remix.h&quot;</span> <span class="comment">// gp : will be removed (needed by common-hydro-remix.cpp)</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Simulation</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keywordtype">void</span> shavePeaksByRemixingStorageGen(<span class="keyword">const</span> std::vector&lt;double&gt;&amp; Load,</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;                                    std::vector&lt;double&gt;&amp; UnsupE,</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;                                    <span class="keyword">const</span> std::vector&lt;double&gt;&amp; Spillage,</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;                                    <span class="keyword">const</span> std::vector&lt;double&gt;&amp; DTG_MRG,</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;                                    std::shared_ptr&lt;StorageForRemix&gt; storage);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> checkInput(<span class="keyword">const</span> std::vector&lt;double&gt;&amp; Load,</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                <span class="keyword">const</span> std::vector&lt;double&gt;&amp; UnsupE,</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                <span class="keyword">const</span> std::vector&lt;double&gt;&amp; Spillage,</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                <span class="keyword">const</span> std::vector&lt;double&gt;&amp; DTG_MRG,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                <span class="keyword">const</span> std::vector&lt;double&gt;&amp; storageGen);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;storage-for-remix-interface.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Simulation</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keywordtype">void</span> shavePeaksByRemixingStorageGen(<span class="keyword">const</span> std::vector&lt;double&gt;&amp; Load,</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;                                    std::vector&lt;double&gt;&amp; UnsupE,</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;                                    <span class="keyword">const</span> std::vector&lt;double&gt;&amp; Spillage,</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;                                    <span class="keyword">const</span> std::vector&lt;double&gt;&amp; DTG_MRG,</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;                                    ListStorageForRemix&amp; storagesForRemix);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keywordtype">void</span> checkInput(<span class="keyword">const</span> std::vector&lt;double&gt;&amp; Load,</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                <span class="keyword">const</span> std::vector&lt;double&gt;&amp; UnsupE,</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                <span class="keyword">const</span> std::vector&lt;double&gt;&amp; Spillage,</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                <span class="keyword">const</span> std::vector&lt;double&gt;&amp; DTG_MRG,</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                <span class="keyword">const</span> std::vector&lt;double&gt;&amp; storageGen);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_44f9bd718728581550ea4fab84861031.html">simulation</a></li><li class="navelem"><a class="el" href="dir_46b36ea6fa9d77f27ee93d1bc566d14a.html">include</a></li><li class="navelem"><a class="el" href="dir_d37629c657dd31246671cde783e0428b.html">antares</a></li><li class="navelem"><a class="el" href="dir_fd28d3366d3b8c3567af53eb90468272.html">solver</a></li><li class="navelem"><a class="el" href="dir_a5026c306b85c4d4525ccae1c833a895.html">simulation</a></li><li class="navelem"><b>shave-peaks-by-remix-storage-gen.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_44f9bd718728581550ea4fab84861031.html">simulation</a></li><li class="navelem"><a class="el" href="dir_46b36ea6fa9d77f27ee93d1bc566d14a.html">include</a></li><li class="navelem"><a class="el" href="dir_d37629c657dd31246671cde783e0428b.html">antares</a></li><li class="navelem"><a class="el" href="dir_fd28d3366d3b8c3567af53eb90468272.html">solver</a></li><li class="navelem"><a class="el" href="dir_a5026c306b85c4d4525ccae1c833a895.html">simulation</a></li><li class="navelem"><a class="el" href="dir_66196e33e56bb8d37cb00ad17a3f6094.html">remix-storage</a></li><li class="navelem"><b>shave-peaks-by-remix-storage-gen.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

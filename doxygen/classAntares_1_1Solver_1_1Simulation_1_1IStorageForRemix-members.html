@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Solver::Simulation::HydroForRemix Class Reference</title>
+<title>Antares Simulator: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Simulation_1_1HydroForRemix.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,78 +123,22 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Simulation_1
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="classAntares_1_1Solver_1_1Simulation_1_1HydroForRemix-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Solver::Simulation::HydroForRemix Class Reference</div>  </div>
+<div class="title">Antares::Solver::Simulation::IStorageForRemix Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for Antares::Solver::Simulation::HydroForRemix:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classAntares_1_1Solver_1_1Simulation_1_1HydroForRemix.png" usemap="#Antares::Solver::Simulation::HydroForRemix_map" alt=""/>
-  <map id="Antares::Solver::Simulation::HydroForRemix_map" name="Antares::Solver::Simulation::HydroForRemix_map">
-<area href="classAntares_1_1Solver_1_1Simulation_1_1StorageForRemix.html" alt="Antares::Solver::Simulation::StorageForRemix" shape="rect" coords="0,0,317,24"/>
-<area href="classAntares_1_1Solver_1_1Simulation_1_1HydroForRemixWithLevels.html" alt="Antares::Solver::Simulation::HydroForRemixWithLevels" shape="rect" coords="0,112,317,136"/>
-  </map>
-</div></div>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a6ae9f60baed639e8b7ffc57f05e91208"><td class="memItemLeft" align="right" valign="top"><a id="a6ae9f60baed639e8b7ffc57f05e91208"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>HydroForRemix</b> (std::vector&lt; double &gt; &amp;generation, std::vector&lt; double &gt; &amp;unsupE, const std::vector&lt; double &gt; &amp;Pmax, const std::vector&lt; double &gt; &amp;Pmin)</td></tr>
-<tr class="separator:a6ae9f60baed639e8b7ffc57f05e91208"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a678302450cd7cffda1d63f59ef961dde"><td class="memItemLeft" align="right" valign="top"><a id="a678302450cd7cffda1d63f59ef961dde"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>maxExchange</b> (unsigned hourOfMaxGen, unsigned hourOfMinGen) override</td></tr>
-<tr class="separator:a678302450cd7cffda1d63f59ef961dde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a640afd388a4e135c33e56266d411b636"><td class="memItemLeft" align="right" valign="top"><a id="a640afd388a4e135c33e56266d411b636"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> () override</td></tr>
-<tr class="separator:a640afd388a4e135c33e56266d411b636"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac34fe62c967faa5488c26f777eb5959a"><td class="memItemLeft" align="right" valign="top"><a id="ac34fe62c967faa5488c26f777eb5959a"></a>
-const std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>initialGen</b> () override</td></tr>
-<tr class="separator:ac34fe62c967faa5488c26f777eb5959a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9bfc193fb2d0b6e1958b3f7e5a23f41"><td class="memItemLeft" align="right" valign="top"><a id="ae9bfc193fb2d0b6e1958b3f7e5a23f41"></a>
-std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>generation</b> () override</td></tr>
-<tr class="separator:ae9bfc193fb2d0b6e1958b3f7e5a23f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:aa666d332dc4f8dcc48d8c26d121a4dab"><td class="memItemLeft" align="right" valign="top"><a id="aa666d332dc4f8dcc48d8c26d121a4dab"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>checkInput</b> (size_t size) override</td></tr>
-<tr class="separator:aa666d332dc4f8dcc48d8c26d121a4dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:a276e9f6ffc6a04272d6b1e163c2f2d65"><td class="memItemLeft" align="right" valign="top"><a id="a276e9f6ffc6a04272d6b1e163c2f2d65"></a>
-std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>generation_</b></td></tr>
-<tr class="separator:a276e9f6ffc6a04272d6b1e163c2f2d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2e3cad93d1a96f7af645511ac463cee"><td class="memItemLeft" align="right" valign="top"><a id="af2e3cad93d1a96f7af645511ac463cee"></a>
-const std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>initialGen_</b></td></tr>
-<tr class="separator:af2e3cad93d1a96f7af645511ac463cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77fbb9a3f291b961dae7614761e0792f"><td class="memItemLeft" align="right" valign="top"><a id="a77fbb9a3f291b961dae7614761e0792f"></a>
-std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>unsupE_</b></td></tr>
-<tr class="separator:a77fbb9a3f291b961dae7614761e0792f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e64596b7f3a13cd42737fd87747b1df"><td class="memItemLeft" align="right" valign="top"><a id="a8e64596b7f3a13cd42737fd87747b1df"></a>
-const std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>pmax_</b></td></tr>
-<tr class="separator:a8e64596b7f3a13cd42737fd87747b1df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d404e5857d0f1b4d1161a20f478b5eb"><td class="memItemLeft" align="right" valign="top"><a id="a7d404e5857d0f1b4d1161a20f478b5eb"></a>
-const std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>pmin_</b></td></tr>
-<tr class="separator:a7d404e5857d0f1b4d1161a20f478b5eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/solver/simulation/include/antares/solver/simulation/<a class="el" href="hydro-for-remix_8h_source.html">hydro-for-remix.h</a></li>
-<li>src/solver/simulation/hydro-for-remix.cpp</li>
-</ul>
-</div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a>, including all inherited members.</p>
+<table class="directory">
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>initWithdrawal</b>() const =0 (defined in <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>maxExchange</b>(unsigned hourOfMaxGen, unsigned hourOfMinGen) const =0 (defined in <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>update</b>()=0 (defined in <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>withdrawal</b>()=0 (defined in <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+</table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Simulation</b></li><li class="navelem"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1HydroForRemix.html">HydroForRemix</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
