@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#if 0
+
 #define BOOST_TEST_MODULE testE2EModeler
 #include <fmt/format.h>
 
@@ -37,7 +37,8 @@ class ConstantDataSeries: public Antares::Optimisation::LinearProblemApi::ILinea
 {
 public:
     explicit ConstantDataSeries(double value):
-        value_(value)
+        value_(value),
+        singleValue_(value)
     {
     }
 
@@ -48,20 +49,18 @@ public:
         return value_;
     }
 
+    std::span<const double> getData(const std::string& dataSetId,
+                                    unsigned timeSeriesNumber,
+                                    unsigned firstHour,
+                                    unsigned lastHour) const override
+    {
+        return singleValue_;
+    }
+
 private:
     double value_{0.};
+    std::vector<double> singleValue_{0.};
 };
-
-class EmptyDataSeries: public ConstantDataSeries
-{
-public:
-    EmptyDataSeries():
-        ConstantDataSeries(0.0)
-    {
-    }
-};
-
-EmptyDataSeries emptyDataSeries;
 
 Antares::ModelerStudy::SystemModel::Component copyComponent(
   const Antares::ModelerStudy::SystemModel::Component& c)
@@ -144,10 +143,9 @@ public:
                 .scenarioGroupRepository = std::move(scenarioGroupRepository)};
     }
 
-    void setComponents(
-      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& compos)
+    void setComponents(const std::vector<Antares::ModelerStudy::SystemModel::Component>& in)
     {
-        components = compos;
+        components = in;
     }
 
     void setModels(Models&& map)
@@ -179,10 +177,10 @@ public:
     }
 
     Models models;
-    std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
+    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
     Fixture fixture;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblemData>
-      data = std::make_unique<EmptyDataSeries>();
+      data = std::make_unique<ConstantDataSeries>(0.0);
     Antares::Expressions::Nodes::Node* lower_bound = fixture.literal(0.0);
     bool timeDependent{false};
     std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameters{};
@@ -213,11 +211,13 @@ public:
     {
     }
 
-    void writeSimulationTable(
+    virtual void writeSimulationTable(
       const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
       const Antares::Modeler::Data& modelerData,
-      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override
+      const Antares::Optimisation::VariableContainer& variableContainer,
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const
+
     {
         solution_.objectiveValue = solution.getObjectiveValue();
     }
@@ -327,4 +327,3 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
     modeler.solve();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 3);
 }
-#endif

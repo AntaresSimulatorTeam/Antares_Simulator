@@ -28,7 +28,7 @@
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
-#if 0
+
 using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Test::Modeler
@@ -49,18 +49,18 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::LinearProblemFiller>>
       fillers;
     // All LP variables coordinates (component id, variable id, scenario, time step)
-    Antares::Optimization::VariableDictionary variableDictionary;
+    Antares::Optimisation::VariableContainer solverVariables;
     Antares::Optimisation::ScenarioGroupRepository scenario_group_repository;
     for (auto& scenario: scenarios)
     {
         auto name = scenario->group();
         scenario_group_repository.addScenario(name, std::move(scenario));
     }
-    for (auto& component: components | std::views::values)
+    for (auto& component: components)
     {
         auto cf = std::make_unique<Antares::Optimisation::ComponentFiller>(
           component,
-          variableDictionary,
+          solverVariables,
           dummy_data,
           scenario_group_repository);
         fillers.push_back(std::move(cf));
@@ -98,7 +98,7 @@ void LinearProblemBuildingFixture::createComponent(
                        .withScenarioGroupId(scenarioGroupId)
                        .withParameterValues(std::move(parameterValues))
                        .build();
-    components.emplace(component.Id(), std::move(component));
+    components.emplace_back(std::move(component));
 }
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::literal(double value)
@@ -211,4 +211,3 @@ void LinearProblemBuildingFixture::createModelWithOneFloatVar(
                 objective);
 }
 } // namespace Test::Modeler
-#endif
