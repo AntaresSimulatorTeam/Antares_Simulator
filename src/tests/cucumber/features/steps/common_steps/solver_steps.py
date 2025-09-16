@@ -367,7 +367,7 @@ def check_thermal_cluster_min_gen_for_hour(context, area, cluster_name, hour, ye
 
 @step('the message "{log}" is reported in the logs')
 def ckeck_log_exists(context, log):
-    for log_line in context.logs_out.splitlines():
+    for log_line in context.logs_err.splitlines():
         if log in log_line:
             return
     raise AssertionError(f"Log '{log}' is not reported in the logs")
