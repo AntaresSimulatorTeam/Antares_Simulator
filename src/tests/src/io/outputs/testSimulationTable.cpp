@@ -196,26 +196,25 @@ private:
 
 BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
-BOOST_AUTO_TEST_CASE(TestUpdateTimeIndexIfShouldForceScenario)
+BOOST_AUTO_TEST_CASE(Test_make_timeindex_scenario_dependent)
 {
     using TI = Antares::Expressions::Visitors::TimeIndex;
     // bool = false => no value should change
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
+    BOOST_CHECK(makeScenarioDependent(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
                 == TI::CONSTANT_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_SCENARIO_ONLY, false)
+    BOOST_CHECK(makeScenarioDependent(TI::VARYING_IN_SCENARIO_ONLY, false)
                 == TI::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_TIME_ONLY, false)
-                == TI::VARYING_IN_TIME_ONLY);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_TIME_AND_SCENARIO, false)
+    BOOST_CHECK(makeScenarioDependent(TI::VARYING_IN_TIME_ONLY, false) == TI::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK(makeScenarioDependent(TI::VARYING_IN_TIME_AND_SCENARIO, false)
                 == TI::VARYING_IN_TIME_AND_SCENARIO);
     // bool = true => scenario dependency should be added
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, true)
+    BOOST_CHECK(makeScenarioDependent(TI::CONSTANT_IN_TIME_AND_SCENARIO, true)
                 == TI::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_SCENARIO_ONLY, true)
+    BOOST_CHECK(makeScenarioDependent(TI::VARYING_IN_SCENARIO_ONLY, true)
                 == TI::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_TIME_ONLY, true)
+    BOOST_CHECK(makeScenarioDependent(TI::VARYING_IN_TIME_ONLY, true)
                 == TI::VARYING_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_TIME_AND_SCENARIO, true)
+    BOOST_CHECK(makeScenarioDependent(TI::VARYING_IN_TIME_AND_SCENARIO, true)
                 == TI::VARYING_IN_TIME_AND_SCENARIO);
 }
 BOOST_AUTO_TEST_SUITE_END()

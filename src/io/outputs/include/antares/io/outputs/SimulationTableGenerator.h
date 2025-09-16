@@ -67,7 +67,7 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  unsigned currentBlock);
 
-Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
+Antares::Expressions::Visitors::TimeIndex makeScenarioDependent(
   Antares::Expressions::Visitors::TimeIndex timeIndex,
   bool forceExportForScenarioIndex);
 
