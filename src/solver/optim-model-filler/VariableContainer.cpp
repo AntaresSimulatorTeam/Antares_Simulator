@@ -22,56 +22,17 @@
 
 namespace Antares::Optimisation
 {
-// void VariableContainer::addFromSystemComponent(
-//   const Antares::ModelerStudy::SystemModel::Component& component)
-// {
-//     const auto* model = component.getModel();
-//     const auto& variables = model->Variables();
-//     std::vector<unsigned int> modelVariablesGlobalIndices(variables.size(), 0);
-//     std::unordered_map<std::string, unsigned int> variableIndexMap;
-//     variableIndexMap.reserve(variables.size());
-//
-//     unsigned int variableLocalIndex = 0;
-//     for (const auto& variable: variables)
-//     {
-//         modelVariablesGlobalIndices[variableLocalIndex] = variableGlobalIndex_;
-//         variableIndexMap[variable.Id()] = variableGlobalIndex_; // used in
-//         // ReadlinearExpressionVisitor
-//         ++variableGlobalIndex_;
-//         ++variableLocalIndex;
-//     }
-//     optimComponents_.push_back({.index = component.Index(),
-//                                 .modelVariablesGlobalIndices = modelVariablesGlobalIndices,
-//                                 .variableIndexMap = variableIndexMap});
-// }
+
 void VariableContainer::addFromSystemComponent(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
     const auto* model = component.getModel();
-    const auto& variables = model->Variables();
-    std::vector<unsigned int> modelVariablesGlobalIndices(variables.size(), 0);
-    std::unordered_map<std::string, unsigned int> variableIndexMap;
-    variableIndexMap.reserve(variables.size());
-
-    unsigned int variableLocalIndex = 0;
-    for (const auto& variable: variables)
-    {
-        modelVariablesGlobalIndices[variableLocalIndex] = variableGlobalIndex_;
-        variableIndexMap[variable.Id()] = variableGlobalIndex_; // used in
-        // ReadlinearExpressionVisitor
-        ++variableGlobalIndex_;
-        ++variableLocalIndex;
-    }
     unsigned int modelIndex = model->Index();
-
-    // optimComponents_.push_back({.index = component.Index(),
-    //                             .modelVariablesGlobalIndices = modelVariablesGlobalIndices,
-    //                             .variableIndexMap = variableIndexMap});
     optimModels_[modelIndex].optimComponents.push_back(
       {.index = component.Index(),
        .component = &component,
-       .modelVariablesGlobalIndices = modelVariablesGlobalIndices,
-       .variableIndexMap = variableIndexMap});
+                                                        .modelVariablesGlobalIndices = {},
+                                                        .variableIndexMap = {}});
 }
 
 void VariableContainer::reserveOptimModels(

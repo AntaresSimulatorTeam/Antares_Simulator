@@ -84,7 +84,7 @@ static void fillModelerComponents(
     {
         variablesContainer.addFromSystemComponent(component);
     }
-    for (const auto& optimModel: variablesContainer.getOptimModels())
+    for ( auto& optimModel: variablesContainer.getOptimModels())
     {
         if (!optimModel.optimComponents.empty())
         {

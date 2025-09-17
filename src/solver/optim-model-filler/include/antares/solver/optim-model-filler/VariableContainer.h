@@ -97,6 +97,21 @@ public:
         return optimModels_;
     }
 
+    [[nodiscard]] std::vector<OptimModel>& getOptimModels()
+    {
+        return optimModels_;
+    }
+
+    unsigned int GLobalIndex() const
+    {
+        return variableGlobalIndex_;
+    }
+
+    void IncrementGLobalIndex()
+    {
+        ++variableGlobalIndex_;
+    }
+
 private:
     std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*> variables_;
     std::vector<unsigned int> variableStartColumn_;

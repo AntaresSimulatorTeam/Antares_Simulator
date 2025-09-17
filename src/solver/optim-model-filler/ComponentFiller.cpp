@@ -185,7 +185,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
     }
 }
 
-ComponentFiller::ComponentFiller(const OptimModel& optimModel,
+ComponentFiller::ComponentFiller(OptimModel& optimModel,
                                  VariableContainer& solverVariables,
                                  const LinearProblemApi::ILinearProblemData& data,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
@@ -204,14 +204,14 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
                                    LinearProblemApi::ILinearProblemData& data,
                                    const LinearProblemApi::FillContext& ctx)
 {
-    if (!checkTimeSteps(ctx))
-    {
-        // exception?
-        return;
-    }
-    for (const auto& [_, component, modelVariablesGlobalIndices, variableIndexMap]:
+    for (auto& [_, component, modelVariablesGlobalIndices, variableIndexMap]:
          optimModel_.optimComponents)
     {
+        const auto& variables = component->getModel()->Variables();
+        size_t varsSize = variables.size();
+        modelVariablesGlobalIndices.resize(varsSize, 0);
+        variableIndexMap.reserve(varsSize);
+
         Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_
                                                                        .provide(*component);
         Expressions::Visitors::EvalVisitor evaluator(evaluationContext, ctx);
@@ -223,10 +223,15 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
             }
             return evaluator.dispatch(node.RootNode());
         };
-        const auto& variables = component->getModel()->Variables();
-        for (auto i = 0; i < variables.size(); ++i)
+        for (auto i = 0; i < varsSize; ++i)
         {
             const auto& variable = variables.at(i);
+            const auto gLobalIndex = variablesContainer_.GLobalIndex();
+            modelVariablesGlobalIndices[i] = gLobalIndex;
+            variableIndexMap[variable.Id()] = gLobalIndex; // used in
+            // ReadlinearExpressionVisitor
+            variablesContainer_.IncrementGLobalIndex();
+
             namespace SM = ModelerStudy::SystemModel;
             const auto& lb = valueOrDefault(variable.LowerBound(),
                                             variable.Type() == SM::ValueType::BOOL

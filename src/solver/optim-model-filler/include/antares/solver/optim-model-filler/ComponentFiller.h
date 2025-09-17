@@ -58,7 +58,7 @@ public:
     ComponentFiller(ComponentFiller& other) = delete;
 
     /// Create a ComponentFiller for a Component
-    explicit ComponentFiller(const OptimModel& optimModel,
+    explicit ComponentFiller(OptimModel& optimModel,
                              VariableContainer& solverVariables,
                              const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
@@ -90,7 +90,7 @@ private:
     bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node,
                                        const ModelerStudy::SystemModel::Component& component) const;
 
-    const OptimModel& optimModel_;
+    OptimModel& optimModel_;
     VariableContainer& variablesContainer_;
     const EvaluationContextProvider evaluationContextProvider_;
 };

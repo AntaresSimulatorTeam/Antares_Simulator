@@ -72,7 +72,7 @@ public:
         {
             variableContainer_.addFromSystemComponent(component);
         }
-        for (const auto& optimModel: variableContainer_.getOptimModels())
+        for ( auto& optimModel: variableContainer_.getOptimModels())
         {
             if (!optimModel.optimComponents.empty())
             {
