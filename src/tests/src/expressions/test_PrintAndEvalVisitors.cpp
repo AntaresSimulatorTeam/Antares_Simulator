@@ -585,10 +585,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     const std::string value = "221.3";
     auto param = build_context_parameter_with("my-param", value);
-    EvaluationContext context({param},
-                              {},
-                              data,
-                              emptyScenario);
+    EvaluationContext context({param}, {}, data, emptyScenario);
 
     MockEvaluationContextProvider evalContextProvider{context};
     EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
