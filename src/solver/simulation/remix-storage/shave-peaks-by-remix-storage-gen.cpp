@@ -18,11 +18,11 @@ void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,
                 const std::vector<double>& Spillage,
                 const std::vector<double>& DTG_MRG,
-                const const ListStorageForRemix& storagesForRemix)
+                const ListStorageForRemix& storagesForRemix)
 {
     // Arrays sizes must be identical
     std::vector<size_t> sizes = {Load.size(), UnsupE.size(), Spillage.size(), DTG_MRG.size()};
-    for (const auto& s : storagesForRemix)
+    for (const auto& s: storagesForRemix)
     {
         sizes.push_back(s->initWithdrawal().size());
     }
