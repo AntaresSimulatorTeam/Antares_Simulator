@@ -91,5 +91,6 @@ private:
     unsigned int nbModelVariables_;
     unsigned int nbtimeSteps_;
     const Optimisation::VariableContainer& variableContainer_;
+    std::vector<Expressions::Visitors::EvaluationContext> evaluationContextPerComponent_;
 };
 } // namespace Antares::Optimization

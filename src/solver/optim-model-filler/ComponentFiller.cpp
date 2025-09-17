@@ -109,7 +109,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
             variableContainer_.addVariable(
-              linear_problem_.addVariable(lb.at(t), /*use localIndex*/
+              linear_problem_.addVariable(lb[t], /*use localIndex*/
                                           ub,
                                           integer,
                                           buildVariableName(compoId, variableId, year, ts)));
@@ -144,7 +144,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
 
             variableContainer_.addVariable(
               linear_problem_.addVariable(lb,
-                                          ub.at(t), /*use localIndex*/
+                                          ub[t], /*use localIndex*/
                                           integer,
                                           buildVariableName(compoId, variableId, year, ts)));
         }
@@ -177,8 +177,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
             variableContainer_.addVariable(
-              linear_problem_.addVariable(lb.at(t), /*use localIndex*/
-                                          ub.at(t), /*use localIndex*/
+              linear_problem_.addVariable(lb[t], /*use localIndex*/
+                                          ub[t], /*use localIndex*/
                                           integer,
                                           buildVariableName(compoId, variableId, year, ts)));
         }
@@ -226,7 +226,7 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
         };
         for (auto i = 0; i < varsSize; ++i)
         {
-            const auto& variable = variables.at(i);
+            const auto& variable = variables[i];
             const auto gLobalIndex = variablesContainer_.GLobalIndex();
             modelVariablesGlobalIndices[i] = gLobalIndex;
             variableIndexMap[variable.Id()] = gLobalIndex; // used in
@@ -296,7 +296,7 @@ void ComponentFiller::addStaticConstraint(LinearProblemApi::ILinearProblem& pb,
          it;
          ++it)
     {
-        ct->setCoefficient(solverVariables.at(it.col()), it.value());
+        ct->setCoefficient(solverVariables[it.col()], it.value());
     }
 }
 
@@ -326,7 +326,7 @@ void ComponentFiller::addTimeDependentConstraints(
                  it;
                  ++it)
             {
-                ct->setCoefficient(solverVariables.at(it.col()), it.value());
+                ct->setCoefficient(solverVariables[it.col()], it.value());
             }
         }
     }
@@ -348,8 +348,8 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
         {
             for (int compoLocalId = 0; compoLocalId < linear_constraints.size(); ++compoLocalId)
             {
-                const auto& linearConstraint = linear_constraints.at(compoLocalId);
-                const auto& component = optimModel_.optimComponents.at(compoLocalId).component;
+                const auto& linearConstraint = linear_constraints[compoLocalId];
+                const auto& component = optimModel_.optimComponents[compoLocalId].component;
                 if (IsThisConstraintTimeDependent(root_node, *component))
                 {
                     addTimeDependentConstraints(pb,
@@ -386,8 +386,8 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
     const auto linearExpressions = visitor.dispatch(model->Objective().RootNode());
     for (int compoLocalId = 0; compoLocalId < linearExpressions.size(); ++compoLocalId)
     {
-        const auto& linearExpression = linearExpressions.at(compoLocalId);
-        const auto& component = optimModel_.optimComponents.at(compoLocalId).component;
+        const auto& linearExpression = linearExpressions[compoLocalId];
+        const auto& component = optimModel_.optimComponents[compoLocalId].component;
         const auto& offset = linearExpression.offset();
         // this is the simplest way to check if any entry of the offset is zero
         // Eigen::VectorXd returns the number of non-zero elements in the vector, based on the
@@ -415,7 +415,7 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                      it;
                      ++it)
                 {
-                    pb.setObjectiveCoefficient(solverVariables.at(it.col()), it.value());
+                    pb.setObjectiveCoefficient(solverVariables[it.col()], it.value());
                 }
             }
         }
