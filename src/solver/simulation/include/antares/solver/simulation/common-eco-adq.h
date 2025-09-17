@@ -87,8 +87,7 @@ void ComputeFlowQuad(Data::Study& study,
 */
 void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
-                           Data::SheddingPolicy sheddingPolicy,
-                           Data::SimplexOptimization splxOptimization,
+                           const Data::Parameters& params,
                            uint numSpace,
                            uint hourInYear);
 

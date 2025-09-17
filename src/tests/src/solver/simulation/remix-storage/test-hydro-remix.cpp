@@ -8,8 +8,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/simulation/remix-utils.h"
-#include "antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
+#include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
+#include "antares/solver/simulation/remix-storage/remix-utils.h"
+#include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
 using namespace Antares::Solver::Simulation;
 
@@ -32,31 +33,33 @@ struct InputFixture
         DTG_MRG.assign(size, 0.);
     }
 
-    std::shared_ptr<StorageForRemix> createHydroForRemix()
+    std::shared_ptr<IStorageForRemix> createHydroForRemix()
     {
-        return std::make_shared<HydroForRemixWithLevels>(HydroGen,
-                                                         UnsupE,
-                                                         levels,
-                                                         HydroPmax,
-                                                         HydroPmin,
-                                                         inflows,
-                                                         ovf,
-                                                         pump,
-                                                         init_level,
-                                                         capacity,
-                                                         pumpEff);
+        return makeHydroForRemix(HydroGen,
+                                 UnsupE,
+                                 levels,
+                                 HydroPmax,
+                                 HydroPmin,
+                                 inflows,
+                                 ovf,
+                                 pump,
+                                 init_level,
+                                 capacity,
+                                 pumpEff,
+                                 reservoirManagement);
     }
 
     void callRemixStorageAlgorithm()
     {
-        hydroForRemix = createHydroForRemix();
         Load = TotalGenNoHydro + UnsupE + HydroGen;
-        shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, hydroForRemix);
+        storagesForRemix.clear();
+        storagesForRemix.push_back(createHydroForRemix());
+        shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
     }
 
     std::vector<double> TotalGenNoHydro, Load, HydroGen, UnsupE, levels, HydroPmax, HydroPmin,
       inflows, ovf, pump, Spillage, DTG_MRG;
-    std::shared_ptr<StorageForRemix> hydroForRemix;
+    ListStorageForRemix storagesForRemix;
     double init_level = 0.;
     double capacity = std::numeric_limits<double>::max();
     const double pumpEff = 1.;
@@ -94,7 +97,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, Input
     HydroPmax = {2., 2., 2., 4., 5.};
     init_level = 0.;
     capacity = 1.;
-    err_msg = "Remix hydro input : Hydro generation not smaller than Pmax everywhere";
+    err_msg = "Remix hydro input : Storage withdrawal not smaller than Pmax everywhere";
     BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
@@ -104,7 +107,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, Input
     HydroPmin = {0., 0., 4., 0., 0.};
     init_level = 0.;
     capacity = 1.;
-    err_msg = "Remix hydro input : Hydro generation not greater than Pmin everywhere";
+    err_msg = "Remix hydro input : Storage withdrawal not greater than Pmin everywhere";
     BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
@@ -114,9 +117,9 @@ BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1
     capacity = 1.;
     Load = TotalGenNoHydro + UnsupE + HydroGen;
 
-    BOOST_CHECK_NO_THROW(hydroForRemix = createHydroForRemix());
+    BOOST_CHECK_NO_THROW(storagesForRemix.push_back(createHydroForRemix()));
     BOOST_CHECK_NO_THROW(
-      shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, hydroForRemix));
+      shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix));
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -333,7 +336,7 @@ BOOST_FIXTURE_TEST_CASE(lowering_capacity_too_low_leads_to_suboptimal_solution_f
     init_level = 100.;
 
     // HydroGen and inflows lead to have :
-    // input_levels = {105, 120, 125, 140, 145, 140, 125, 120, 105,100}
+    // input_levels = {105, 120, 125, 140, 145, 140, 125, 120, 105, 100}
     // Note sup(input_levels) = 145
 
     // Case 1 : capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is
@@ -514,8 +517,3 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
                                              4.,   45.55, 6.55, 25.55, 41.55, 25.};
     BOOST_TEST(HydroGen == expected_HydroGen, boost::test_tools::per_element());
 }
-
-// Possible simplifications / clarifications of the algorithm itself :
-// - the algo is flat, it's C (not C++), it should be divided in a small number of steps
-// - they are 3 while loops. Could 2 loops be enough ? (the iteration loop and
-//   another one simply updating HydroGen and UnsupE)
