@@ -11,9 +11,7 @@ public:
     explicit VarFillerContext() = default;
     void addVariables(ILinearProblem& pb, const FillContext& ctx) override;
     void addConstraints(ILinearProblem& pb, const FillContext& ctx) override;
-    void addObjective(ILinearProblem& pb,
-                      ILinearProblemData& data,
-                      const FillContext& ctx) override;
+    void addObjective(ILinearProblem& pb, const FillContext& ctx) override;
 
     std::array<std::array<int, 3>, 5> timeseries = {
       {{1, 3, 5}, {2, 4, 6}, {7, 9, 11}, {8, 10, 12}, {13, 15, 17}}};
@@ -40,7 +38,6 @@ void VarFillerContext::addConstraints([[maybe_unused]] ILinearProblem& pb,
 }
 
 void VarFillerContext::addObjective([[maybe_unused]] ILinearProblem& pb,
-                                    [[maybe_unused]] ILinearProblemData& data,
                                     [[maybe_unused]] const FillContext& ctx)
 {
 }

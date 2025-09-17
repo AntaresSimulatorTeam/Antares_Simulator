@@ -47,7 +47,7 @@ void LegacyFiller::addConstraints(ILinearProblem& pb, const FillContext&)
     CopyMatrix(pb);
 }
 
-void LegacyFiller::addObjective(ILinearProblem&, ILinearProblemData&, const FillContext&)
+void LegacyFiller::addObjective(ILinearProblem&, const FillContext&)
 {
     // nothing to do: objective coefficients are set along with variables definition
 }

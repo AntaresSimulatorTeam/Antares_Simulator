@@ -51,7 +51,6 @@ public:
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:

@@ -146,9 +146,7 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb, const F
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&,
-                                                   ILinearProblemData&,
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&, const FillContext&)
 {
     // nothing to do
 }

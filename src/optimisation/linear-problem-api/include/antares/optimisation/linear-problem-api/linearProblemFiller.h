@@ -36,7 +36,7 @@ public:
       = 0;
     virtual void addConstraints(ILinearProblem& pb, const FillContext& ctx)
       = 0;
-    virtual void addObjective(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx)
+    virtual void addObjective(ILinearProblem& pb, const FillContext& ctx)
       = 0;
     virtual ~LinearProblemFiller() = default;
 };

@@ -11,9 +11,7 @@ public:
     explicit TwoVarsTwoConstraintsFiller() = default;
     void addVariables(ILinearProblem& pb, const FillContext& ctx) override;
     void addConstraints(ILinearProblem& pb, const FillContext& ctx) override;
-    void addObjective(ILinearProblem& pb,
-                      ILinearProblemData& data,
-                      const FillContext& ctx) override;
+    void addObjective(ILinearProblem& pb, const FillContext& ctx) override;
 };
 
 void TwoVarsTwoConstraintsFiller::addVariables(ILinearProblem& pb,
@@ -31,7 +29,6 @@ void TwoVarsTwoConstraintsFiller::addConstraints(ILinearProblem& pb,
 }
 
 void TwoVarsTwoConstraintsFiller::addObjective([[maybe_unused]] ILinearProblem& pb,
-                                               [[maybe_unused]] ILinearProblemData& data,
                                                [[maybe_unused]] const FillContext& ctx)
 {
 }
