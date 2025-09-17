@@ -142,7 +142,7 @@ BOOST_FIXTURE_TEST_CASE(
     BOOST_CHECK(UnsupE == expected_UnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(Pmax_does_not_impact_results_when_greater_than_40mwh, InputFixture<5>)
+BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, InputFixture<5>)
 {
     std::ranges::fill(pmax, 50.);
     std::ranges::fill(TotalGenNoHydro, 100.);
