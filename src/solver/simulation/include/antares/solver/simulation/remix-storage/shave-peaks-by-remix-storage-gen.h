@@ -16,6 +16,6 @@ void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,
                 const std::vector<double>& Spillage,
                 const std::vector<double>& DTG_MRG,
-                const std::vector<double>& storageGen);
+                const ListStorageForRemix& storagesForRemix);
 
 } // namespace Antares::Solver::Simulation

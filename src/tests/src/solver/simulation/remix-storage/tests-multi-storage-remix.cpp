@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <vector>
+#include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
@@ -80,6 +81,49 @@ struct InputFixture
 
     ListStorageForRemix storagesForRemix;
 };
+
+BOOST_FIXTURE_TEST_CASE(default_input_in_STS_setup_does_not_raise_exception, STS_setup<5>)
+{
+    std::vector<double> unsupE(5, 0.);
+    BOOST_CHECK_NO_THROW(createSTS(unsupE));
+}
+
+BOOST_AUTO_TEST_CASE(creating_an_STS_with_unsup_having_a_wrong_size_leads_to_exception)
+{
+    std::vector<double> unsupE(5, 0.);
+    STS_setup<4> sts_setup;
+    std::string err_msg = "Remix hydro input : arrays of different sizes";
+    BOOST_CHECK_EXCEPTION(sts_setup.createSTS(unsupE),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_CASE(creating_2_STS_of_different_sizes___checking_input_of_algo_leads_to_exception)
+{
+    std::vector<double> Load(5);
+    std::vector<double> TotaGenWithoutStorage(5);
+    std::vector<double> Spillage(5);
+    std::vector<double> DTG_MRG(5);
+    
+    // Creating sts_1 of size 5
+    std::vector<double> unsupE_1(5, 0.);
+    STS_setup<5> sts_setup_1;
+    auto sts_1 = sts_setup_1.createSTS(unsupE_1);
+
+    // Creating sts_1 of size 3
+    std::vector<double> unsupE_2(3, 0.);
+    STS_setup<3> sts_setup_2;
+    auto sts_2 = sts_setup_2.createSTS(unsupE_2);
+
+    ListStorageForRemix storagesForRemix;
+    storagesForRemix.push_back(sts_1);
+    storagesForRemix.push_back(sts_2);
+
+    std::string err_msg = "Remix storage input : arrays of different sizes";
+    BOOST_CHECK_EXCEPTION(checkInput(Load, unsupE_1, Spillage, DTG_MRG, storagesForRemix),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
 
 // ================================================
 // Note :
