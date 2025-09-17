@@ -164,10 +164,15 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
     {
         const Optimisation::OptimModel& optimModelAtModel = optimModels.at(
           component.getModel()->Index());
-
+        auto it = std::ranges::find_if(optimModelAtModel.optimComponents,
+                                       [&component](const auto& optCompo)
+                                       { return optCompo.component == &component; });
         Optimisation::OptimModel optimModel;
         optimModel.optimComponents.push_back(
-          optimModelAtModel.optimComponents.at(component.Index()));
+          {.index = component.Index(),
+           .component = &component,
+           .modelVariablesGlobalIndices = it->modelVariablesGlobalIndices,
+           .variableIndexMap = it->variableIndexMap});
 
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
