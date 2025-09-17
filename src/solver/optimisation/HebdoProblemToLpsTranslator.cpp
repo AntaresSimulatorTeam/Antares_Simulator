@@ -58,8 +58,6 @@ WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(
     copy(problem->CoutLineaire, ret.LinearCost);
     copy(problem->Xmax, ret.Xmax);
     copy(problem->Xmin, ret.Xmin);
-    // copy(problem->NomDesVariables, ret.variables);
-    // copy(problem->NomDesContraintes, ret.constraints);
     copy(problem->SecondMembre, ret.RHS);
     copy(problem->Sens, ret.Direction);
 
