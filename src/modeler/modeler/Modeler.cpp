@@ -78,7 +78,7 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers);
 
-        linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
+        linear_problem_builder.build(pb, timeScenarioCtx);
     }
 
     [[nodiscard]] const VariableDictionary& getVariableDictionary() const

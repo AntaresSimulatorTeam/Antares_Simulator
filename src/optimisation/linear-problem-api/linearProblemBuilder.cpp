@@ -33,9 +33,7 @@ LinearProblemBuilder::LinearProblemBuilder(
 {
 }
 
-void LinearProblemBuilder::build(ILinearProblem& pb,
-                                 ILinearProblemData& data,
-                                 const FillContext& ctx)
+void LinearProblemBuilder::build(ILinearProblem& pb, const FillContext& ctx)
 {
     std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addVariables(pb, ctx); });
     std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addConstraints(pb, ctx); });

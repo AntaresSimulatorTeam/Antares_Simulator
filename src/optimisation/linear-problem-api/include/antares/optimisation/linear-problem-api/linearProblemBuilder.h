@@ -32,7 +32,7 @@ class LinearProblemBuilder
 {
 public:
     explicit LinearProblemBuilder(std::vector<std::unique_ptr<LinearProblemFiller>>& fillers);
-    void build(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx);
+    void build(ILinearProblem& pb, const FillContext& ctx);
 
 private:
     const std::vector<std::unique_ptr<LinearProblemFiller>> fillers_;
