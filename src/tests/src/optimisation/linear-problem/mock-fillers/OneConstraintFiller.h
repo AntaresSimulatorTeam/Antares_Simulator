@@ -12,9 +12,7 @@ public:
     void addVariables(ILinearProblem& pb,
                       ILinearProblemData& data,
                       const FillContext& ctx) override;
-    void addConstraints(ILinearProblem& pb,
-                        ILinearProblemData& data,
-                        const FillContext& ctx) override;
+    void addConstraints(ILinearProblem& pb, const FillContext& ctx) override;
     void addObjective(ILinearProblem& pb,
                       ILinearProblemData& data,
                       const FillContext& ctx) override;
@@ -27,7 +25,6 @@ void OneConstraintFiller::addVariables([[maybe_unused]] ILinearProblem& pb,
 }
 
 void OneConstraintFiller::addConstraints(ILinearProblem& pb,
-                                         [[maybe_unused]] ILinearProblemData& data,
                                          [[maybe_unused]] const FillContext& ctx)
 {
     pb.addConstraint(1, 2, "constraint-by-OneConstraintFiller");

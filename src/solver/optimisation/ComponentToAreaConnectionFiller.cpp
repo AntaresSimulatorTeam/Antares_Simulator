@@ -137,9 +137,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     }
 }
 
-void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
-                                                     ILinearProblemData& data,
-                                                     const FillContext& ctx)
+void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb, const FillContext& ctx)
 {
     for (const auto& component: modelerSystem_->Components() | std::ranges::views::values)
     {

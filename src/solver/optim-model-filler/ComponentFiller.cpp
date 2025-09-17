@@ -259,7 +259,6 @@ void ComponentFiller::addTimeDependentConstraints(
 }
 
 void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
-                                     LinearProblemApi::ILinearProblemData& data,
                                      const LinearProblemApi::FillContext& ctx)
 {
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContextProvider_, ctx, component_);

@@ -40,7 +40,7 @@ void LegacyFiller::addVariables(ILinearProblem& pb, ILinearProblemData&, const F
     CopyVariables(pb);
 }
 
-void LegacyFiller::addConstraints(ILinearProblem& pb, ILinearProblemData&, const FillContext&)
+void LegacyFiller::addConstraints(ILinearProblem& pb, const FillContext&)
 {
     // Create constraints and set coefs
     CopyRows(pb);

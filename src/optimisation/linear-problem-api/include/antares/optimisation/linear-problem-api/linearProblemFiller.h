@@ -34,9 +34,7 @@ public:
     // / addObjective, and into the ctor because it is unique across the simulation
     virtual void addVariables(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx)
       = 0;
-    virtual void addConstraints(ILinearProblem& pb,
-                                ILinearProblemData& data,
-                                const FillContext& ctx)
+    virtual void addConstraints(ILinearProblem& pb, const FillContext& ctx)
       = 0;
     virtual void addObjective(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx)
       = 0;
