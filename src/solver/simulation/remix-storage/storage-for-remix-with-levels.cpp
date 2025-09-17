@@ -1,3 +1,24 @@
+/*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
 
 #include <stdexcept>
@@ -25,11 +46,11 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
     inflows_(inflows),
     overflow_(overflow),
     injection_(injection),
+    ruleCurveLow_(lowRuleCurve),
+    ruleCurveUp_(upRuleCurve),
     initLevel_(initLevel),
     withdrawalEff_(withdrawalEff),
-    injectionEff_(injectionEff),
-    ruleCurveLow_(lowRuleCurve),
-    ruleCurveUp_(upRuleCurve)
+    injectionEff_(injectionEff)
 {
     checkInput(unsupE_.size());
     update();
@@ -50,6 +71,26 @@ double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned ho
     else
     {
         return std::min(boundNoLevels, min_on_subrange(ruleCurveUp_ - levels_, hour, HOUR));
+    }
+}
+
+void StorageForRemixWithLevels::update()
+{
+    levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + injectionEff_ * injection_[0]
+                 - withdrawalEff_ * withdrawal_[0];
+    for (size_t h = 1; h < levels_.size(); ++h)
+    {
+        levels_[h] = levels_[h - 1] + inflows_[h] - overflow_[h] + injectionEff_ * injection_[h]
+                     - withdrawalEff_ * withdrawal_[h];
+    }
+}
+
+void StorageForRemixWithLevels::checkLevels()
+{
+    if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(levels_ >= -TOLERANCE))
+    {
+        throw std::invalid_argument(error_msg_start
+                                    + "levels computed from input don't respect reservoir bounds");
     }
 }
 
@@ -76,26 +117,6 @@ void StorageForRemixWithLevels::checkInput(size_t size)
     if (ruleCurveUp_ + TOLERANCE <= initLevel_)
     {
         throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
-    }
-}
-
-void StorageForRemixWithLevels::checkLevels()
-{
-    if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(levels_ >= -TOLERANCE))
-    {
-        throw std::invalid_argument(error_msg_start
-                                    + "levels computed from input don't respect reservoir bounds");
-    }
-}
-
-void StorageForRemixWithLevels::update()
-{
-    levels_[0] = initLevel_ + inflows_[0] - overflow_[0] + injectionEff_ * injection_[0]
-                 - withdrawalEff_ * withdrawal_[0];
-    for (size_t h = 1; h < levels_.size(); ++h)
-    {
-        levels_[h] = levels_[h - 1] + inflows_[h] - overflow_[h] + injectionEff_ * injection_[h]
-                     - withdrawalEff_ * withdrawal_[h];
     }
 }
 
