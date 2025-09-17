@@ -2,8 +2,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <vector>
 #include <unit_test_utils.h>
+#include <vector>
 
 #include <boost/test/unit_test.hpp>
 
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(creating_2_STS_of_different_sizes___checking_input_of_algo_
     std::vector<double> TotaGenWithoutStorage(5);
     std::vector<double> Spillage(5);
     std::vector<double> DTG_MRG(5);
-    
+
     // Creating sts_1 of size 5
     std::vector<double> unsupE_1(5, 0.);
     STS_setup<5> sts_setup_1;
