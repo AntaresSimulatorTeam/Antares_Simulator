@@ -50,7 +50,6 @@ Antares::ModelerStudy::SystemModel::Component createComponent(
   const std::string& id,
   std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameter_values);
 
-
 std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,
                              const std::string& value,
