@@ -82,13 +82,12 @@ struct InputFixture
 };
 
 // ================================================
-// Note : 
+// Note :
 //  G : Total generation without storage
 //  H : Total storage production (or withdrawal)
 // ================================================
 
-BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat,
-                        InputFixture<5>)
+BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat, InputFixture<5>)
 {
     std::ranges::fill(TotaGenWithoutStorage, 100.);
     UnsupE = {80., 60., 40., 20., 0.};
@@ -116,7 +115,6 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat,
     std::vector<double> expectedUnsupE = {60., 50., 40., 30., 20.};
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
-
 
 BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, InputFixture<5>)
 {
@@ -147,9 +145,7 @@ BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, 
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-
-BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat,
-                        InputFixture<5>)
+BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat, InputFixture<5>)
 {
     std::ranges::fill(TotaGenWithoutStorage, 100.);
     UnsupE = {0., 20., 40., 60., 80.};
