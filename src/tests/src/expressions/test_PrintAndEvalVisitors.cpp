@@ -590,8 +590,8 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
                               data,
                               emptyScenario);
 
-    Component c = createComponent("base_component", {param});
-    EvalVisitor evalVisitor(evalContextProvider, fillContext, c);
+    MockEvaluationContextProvider newEvalContextProvider{context};
+    EvalVisitor evalVisitor(newEvalContextProvider, fillContext, component);
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
@@ -609,7 +609,9 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
                               data,
                               emptyScenario);
 
-    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
+    MockEvaluationContextProvider newEvalContextProvider{context};
+
+    EvalVisitor evalVisitor(newEvalContextProvider, fillContext, component);
     BOOST_CHECK_THROW(evalVisitor.dispatch(&root), std::invalid_argument);
 }
 
@@ -636,6 +638,8 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
+
+    MockEvaluationContextProvider newEvalContextProvider{context};
 
     EvalVisitor evalVisitor(evalContextProvider,
                             {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
