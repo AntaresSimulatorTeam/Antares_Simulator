@@ -37,7 +37,7 @@ public:
     ~EvaluationContextProvider() override = default;
 
     [[nodiscard]] Expressions::Visitors::EvaluationContext provide(
-      const ModelerStudy::SystemModel::Component& component) const;
+      const ModelerStudy::SystemModel::Component& component) const override;
 
 private:
     const LinearProblemApi::ILinearProblemData& data_;
