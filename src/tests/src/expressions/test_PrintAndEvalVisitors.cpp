@@ -590,8 +590,8 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
                               data,
                               emptyScenario);
 
-    MockEvaluationContextProvider newEvalContextProvider{context};
-    EvalVisitor evalVisitor(newEvalContextProvider, fillContext, component);
+    MockEvaluationContextProvider evalContextProvider{context};
+    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
@@ -609,9 +609,9 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
                               data,
                               emptyScenario);
 
-    MockEvaluationContextProvider newEvalContextProvider{context};
+    MockEvaluationContextProvider evalContextProvider{context};
 
-    EvalVisitor evalVisitor(newEvalContextProvider, fillContext, component);
+    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
     BOOST_CHECK_THROW(evalVisitor.dispatch(&root), std::invalid_argument);
 }
 
@@ -639,7 +639,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
 
-    MockEvaluationContextProvider newEvalContextProvider{context};
+    MockEvaluationContextProvider evalContextProvider{context};
 
     EvalVisitor evalVisitor(evalContextProvider,
                             {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
@@ -1058,8 +1058,7 @@ BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, MyDummyFixture)
     std::vector<Node*> nodes = {create<EqualNode>(&literalNode, &literalNode),
                                 create<LessThanOrEqualNode>(&literalNode, &literalNode),
                                 create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
-                                create<PortFieldNode>(name, name),
-                                create<PortFieldSumNode>(name, name)};
+                                create<PortFieldNode>(name, name)};
     for (auto* node: nodes)
     {
         BOOST_CHECK_THROW(evalVisitor.dispatch(node).valueAsDouble(), EvalVisitorNotImplemented);
