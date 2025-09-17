@@ -204,13 +204,14 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
                                    LinearProblemApi::ILinearProblemData& data,
                                    const LinearProblemApi::FillContext& ctx)
 {
-    for (auto& [_, component, modelVariablesGlobalIndices, variableIndexMap]:
-         optimModel_.optimComponents)
+    for (auto& currentOptimCompo: optimModel_.optimComponents)
     {
+        auto& [_, component, modelVariablesGlobalIndices, variableIndexMap] = currentOptimCompo;
         const auto& variables = component->getModel()->Variables();
         size_t varsSize = variables.size();
         modelVariablesGlobalIndices.resize(varsSize, 0);
         variableIndexMap.reserve(varsSize);
+        variablesContainer_.updateOptimCompoLookUp(&currentOptimCompo);
 
         Expressions::Visitors::EvaluationContext evaluationContext = evaluationContextProvider_
                                                                        .provide(*component);

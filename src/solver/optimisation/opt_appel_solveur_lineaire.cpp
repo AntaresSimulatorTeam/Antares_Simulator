@@ -79,8 +79,10 @@ static void fillModelerComponents(
   Modeler::Data* modelerData,
   VariableContainer& variablesContainer)
 {
-    variablesContainer.reserveOptimModels(modelerData->system->Models());
-    for (const auto& component: modelerData->system->Components())
+    const auto& components = modelerData->system->Components();
+    variablesContainer.allocateOptimComponents(components.size());
+    variablesContainer.allocateOptimModels(modelerData->system->Models());
+    for (const auto& component: components)
     {
         variablesContainer.addFromSystemComponent(component);
     }

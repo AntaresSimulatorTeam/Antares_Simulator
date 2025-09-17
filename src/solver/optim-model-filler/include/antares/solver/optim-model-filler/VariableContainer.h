@@ -72,25 +72,15 @@ public:
         variables_.push_back(variable);
     }
 
-    [[nodiscard]] const OptimComponent& getOptimComponent(size_t index, unsigned modelIndex) const
+    [[nodiscard]] const OptimComponent& getOptimComponent(size_t index) const
     {
-        const auto& optimModel = optimModels_.at(modelIndex);
-        auto it = std::ranges::find_if(optimModel.optimComponents,
-                                       [&index](const OptimComponent& optimComponent)
-                                       { return optimComponent.index == index; });
-        if (it != optimModel.optimComponents.end())
-        {
-            return *it;
-        }
-        else
-        {
-            throw std::invalid_argument("OptimComponent not found");
-        }
+        return *optimComponents_.at(index);
     }
 
 
     void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
-    void reserveOptimModels(const std::vector<const ModelerStudy::SystemModel::Model*>& models);
+    void allocateOptimModels(const std::vector<const ModelerStudy::SystemModel::Model*>& models);
+    void allocateOptimComponents(size_t nbOptimComponents);
 
     [[nodiscard]] const std::vector<OptimModel>& getOptimModels() const
     {
@@ -112,10 +102,15 @@ public:
         ++variableGlobalIndex_;
     }
 
+    void updateOptimCompoLookUp(const OptimComponent* optim_component)
+    {
+        optimComponents_[optim_component->component->Index()] = optim_component;
+    }
+
 private:
     std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*> variables_;
     std::vector<unsigned int> variableStartColumn_;
-    std::vector<OptimComponent> optimComponents_;
+    std::vector<const OptimComponent*> optimComponents_;
     std::vector<OptimModel> optimModels_;
     unsigned int variableGlobalIndex_ = 0;
 };

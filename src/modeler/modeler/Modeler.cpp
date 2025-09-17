@@ -66,9 +66,11 @@ public:
                  const FillContext& timeScenarioCtx)
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
+        const auto& components = system_->Components();
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        variableContainer_.reserveOptimModels(system_->Models());
-        for (const auto& component: system_->Components())
+        variableContainer_.allocateOptimComponents(components.size());
+        variableContainer_.allocateOptimModels(system_->Models());
+        for (const auto& component: components)
         {
             variableContainer_.addFromSystemComponent(component);
         }

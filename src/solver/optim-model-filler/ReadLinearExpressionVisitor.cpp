@@ -248,31 +248,33 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Port
         {
             auto* connectedComponent = connexion_end.component();
             auto* port = connexion_end.port();
-            const Optimisation::OptimModel& optimModelAtModel = variableContainer_.getOptimModels()
-                                                                  .at(connectedComponent->getModel()
-                                                                        ->Index());
-            // const auto& optimComponentAtModel = optimModelAtModel.optimComponents.at(
-            //   component->Index());
-            auto it = std::ranges::find_if(optimModelAtModel.optimComponents,
-                                           [&connectedComponent](const auto& optCompo)
-                                           { return optCompo.component == connectedComponent; });
-            if (it != optimModelAtModel.optimComponents.end())
-            {
-                Optimisation::OptimModel optimModel;
-                optimModel.optimComponents.push_back(
-                  {.index = connectedComponent->Index(),
-                   .component = connectedComponent,
-                   .modelVariablesGlobalIndices = it->modelVariablesGlobalIndices,
-                   .variableIndexMap = it->variableIndexMap});
-                ReadLinearExpressionVisitor visitor(evalContextProvider_,
-                                                    fillContext_,
-                                                    optimModel,
-                                                    variableContainer_);
+            // const Optimisation::OptimModel& optimModelAtModel =
+            // variableContainer_.getOptimModels()
+            //                                                       .at(connectedComponent->getModel()
+            //                                                             ->Index());
+            // // const auto& optimComponentAtModel = optimModelAtModel.optimComponents.at(
+            // //   component->Index());
+            // auto it = std::ranges::find_if(optimModelAtModel.optimComponents,
+            //                                [&connectedComponent](const auto& optCompo)
+            //                                { return optCompo.component == connectedComponent; });
+            //  if (it != optimModelAtModel.optimComponents.end())
+            // {
+            const auto& connectedOptimComponent = variableContainer_.getOptimComponent(
+              connectedComponent->Index());
+            Optimisation::OptimModel optimModel;
+            optimModel.optimComponents.push_back(
+              {.index = connectedComponent->Index(),
+               .component = connectedComponent,
+               .modelVariablesGlobalIndices = connectedOptimComponent.modelVariablesGlobalIndices,
+               .variableIndexMap = connectedOptimComponent.variableIndexMap});
+            ReadLinearExpressionVisitor visitor(evalContextProvider_,
+                                                fillContext_,
+                                                optimModel,
+                                                variableContainer_);
 
-                const Node* connectedNode = connectedComponent->nodeAtPortField(port->Id(),
-                                                                                fieldId);
-                linearExpressionMatrix += visitor.dispatch(connectedNode).at(0);
-            }
+            const Node* connectedNode = connectedComponent->nodeAtPortField(port->Id(), fieldId);
+            linearExpressionMatrix += visitor.dispatch(connectedNode).at(0);
+            //}
         }
     }
 

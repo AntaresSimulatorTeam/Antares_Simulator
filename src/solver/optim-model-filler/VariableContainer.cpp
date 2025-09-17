@@ -28,14 +28,15 @@ void VariableContainer::addFromSystemComponent(
 {
     const auto* model = component.getModel();
     unsigned int modelIndex = model->Index();
-    optimModels_[modelIndex].optimComponents.push_back(
-      {.index = component.Index(),
-       .component = &component,
-                                                        .modelVariablesGlobalIndices = {},
-                                                        .variableIndexMap = {}});
+    auto& currentOptimModel = optimModels_[modelIndex];
+    auto& CurrentOptimComponents = currentOptimModel.optimComponents;
+    CurrentOptimComponents.push_back({.index = component.Index(),
+                                      .component = &component,
+                                      .modelVariablesGlobalIndices = {},
+                                      .variableIndexMap = {}});
 }
 
-void VariableContainer::reserveOptimModels(
+void VariableContainer::allocateOptimModels(
   const std::vector<const ModelerStudy::SystemModel::Model*>& models)
 {
     optimModels_.assign(models.size(), {});
@@ -45,5 +46,10 @@ void VariableContainer::reserveOptimModels(
         index = model->Index();
         targetModel = model;
     }
+}
+
+void VariableContainer::allocateOptimComponents(size_t nbOptimComponents)
+{
+    optimComponents_.assign(nbOptimComponents, {});
 }
 } // namespace Antares::Optimisation
