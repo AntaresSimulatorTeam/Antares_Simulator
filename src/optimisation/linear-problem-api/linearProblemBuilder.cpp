@@ -37,8 +37,7 @@ void LinearProblemBuilder::build(ILinearProblem& pb,
                                  ILinearProblemData& data,
                                  const FillContext& ctx)
 {
-    std::ranges::for_each(fillers_,
-                          [&](const auto& filler) { filler->addVariables(pb, data, ctx); });
+    std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addVariables(pb, ctx); });
     std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addConstraints(pb, ctx); });
     std::ranges::for_each(fillers_,
                           [&](const auto& filler) { filler->addObjective(pb, data, ctx); });

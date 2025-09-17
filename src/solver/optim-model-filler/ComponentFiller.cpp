@@ -152,7 +152,6 @@ bool checkTimeSteps(const LinearProblemApi::FillContext& ctx)
 }
 
 void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
-                                   LinearProblemApi::ILinearProblemData& data,
                                    const LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))

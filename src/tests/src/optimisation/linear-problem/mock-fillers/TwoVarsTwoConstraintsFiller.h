@@ -9,9 +9,7 @@ class TwoVarsTwoConstraintsFiller: public LinearProblemFiller
 {
 public:
     explicit TwoVarsTwoConstraintsFiller() = default;
-    void addVariables(ILinearProblem& pb,
-                      ILinearProblemData& data,
-                      const FillContext& ctx) override;
+    void addVariables(ILinearProblem& pb, const FillContext& ctx) override;
     void addConstraints(ILinearProblem& pb, const FillContext& ctx) override;
     void addObjective(ILinearProblem& pb,
                       ILinearProblemData& data,
@@ -19,7 +17,6 @@ public:
 };
 
 void TwoVarsTwoConstraintsFiller::addVariables(ILinearProblem& pb,
-                                               [[maybe_unused]] ILinearProblemData& data,
                                                [[maybe_unused]] const FillContext& ctx)
 {
     pb.addNumVariable(0, 1, "var-1-by-TwoVarsTwoConstraintsFiller");

@@ -9,9 +9,7 @@ class OneVarFiller: public LinearProblemFiller
 {
 public:
     explicit OneVarFiller() = default;
-    void addVariables(ILinearProblem& pb,
-                      ILinearProblemData& data,
-                      const FillContext& ctx) override;
+    void addVariables(ILinearProblem& pb, const FillContext& ctx) override;
     void addConstraints(ILinearProblem& pb, const FillContext& ctx) override;
     void addObjective(ILinearProblem& pb,
                       ILinearProblemData& data,
@@ -21,9 +19,7 @@ private:
     std::string added_var_name_ = "var-by-OneVarFiller";
 };
 
-void OneVarFiller::addVariables(ILinearProblem& pb,
-                                [[maybe_unused]] ILinearProblemData& data,
-                                [[maybe_unused]] const FillContext& ctx)
+void OneVarFiller::addVariables(ILinearProblem& pb, [[maybe_unused]] const FillContext& ctx)
 {
     pb.addNumVariable(0, 1, added_var_name_);
 }

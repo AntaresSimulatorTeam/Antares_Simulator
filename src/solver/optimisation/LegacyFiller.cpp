@@ -34,7 +34,7 @@ LegacyFiller::LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool namedProble
 {
 }
 
-void LegacyFiller::addVariables(ILinearProblem& pb, ILinearProblemData&, const FillContext&)
+void LegacyFiller::addVariables(ILinearProblem& pb, const FillContext&)
 {
     // Create the variables and set objective cost.
     CopyVariables(pb);

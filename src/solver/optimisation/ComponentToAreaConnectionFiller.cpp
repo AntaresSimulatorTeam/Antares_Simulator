@@ -50,9 +50,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&,
-                                                   ILinearProblemData&,
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&, const FillContext&)
 {
     // nothing to do
 }

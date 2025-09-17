@@ -32,7 +32,7 @@ class LinearProblemFiller
 public:
     // TODO it may be better to move the LinearProblemData out of the addVariables / addConstraints
     // / addObjective, and into the ctor because it is unique across the simulation
-    virtual void addVariables(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx)
+    virtual void addVariables(ILinearProblem& pb, const FillContext& ctx)
       = 0;
     virtual void addConstraints(ILinearProblem& pb, const FillContext& ctx)
       = 0;
