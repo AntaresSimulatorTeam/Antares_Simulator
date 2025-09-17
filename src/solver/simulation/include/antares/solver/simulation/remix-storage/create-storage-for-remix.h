@@ -16,7 +16,6 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                     const std::vector<double>& pump,
                                                     const double initLevel,
                                                     const double reservoirCapacity,
-                                                    const double pumpEfficiency,
                                                     bool reservoirManagement);
 
 std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawal,

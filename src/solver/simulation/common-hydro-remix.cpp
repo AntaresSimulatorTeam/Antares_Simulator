@@ -283,7 +283,6 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              pump,
                              initLevel,
                              capacity,
-                             efficiency,
                              reservoirManagement);
 }
 

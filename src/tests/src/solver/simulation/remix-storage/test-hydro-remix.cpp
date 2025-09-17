@@ -45,7 +45,6 @@ struct InputFixture
                                  pump,
                                  init_level,
                                  capacity,
-                                 pumpEff,
                                  reservoirManagement);
     }
 
