@@ -37,7 +37,7 @@ public:
     }
 
     Antares::Expressions::Visitors::EvaluationContext provide(
-      const Antares::ModelerStudy::SystemModel::Component& component) const
+      [[maybe_unused]] const Antares::ModelerStudy::SystemModel::Component& component) const
     {
         return context_;
     }
@@ -50,8 +50,7 @@ struct modelerObjectsFixture
 
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
 Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
-Antares::ModelerStudy::SystemModel::Component createComponent();
-
+Antares::ModelerStudy::SystemModel::Component createComponent(const std::string& id = "component");
 
 std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,

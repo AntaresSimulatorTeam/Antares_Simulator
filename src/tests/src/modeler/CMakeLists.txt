@@ -12,3 +12,12 @@ target_link_libraries(mock-modeler-objects
         expressions
         expressions-iterators
     )
+
+target_include_directories(
+        mock-modeler-objects
+                PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        )
+
+set_target_properties(mock-modeler-objects PROPERTIES FOLDER Unit-tests)
+

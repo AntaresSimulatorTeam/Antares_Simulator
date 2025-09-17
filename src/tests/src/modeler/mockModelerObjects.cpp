@@ -19,12 +19,11 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/expressions/IEvaluationContextProvider.h"
 #include "antares/study/system-model/component.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 
-static Model createModelWithParameters()
+Model createModelWithParameters()
 {
     ModelBuilder model_builder;
     return model_builder.withId("model")
@@ -33,13 +32,13 @@ static Model createModelWithParameters()
       .build();
 }
 
-static Model createModelWithoutParameters()
+Model createModelWithoutParameters()
 {
     ModelBuilder model_builder;
     return model_builder.withId("model").build();
 }
 
-static std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
+std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,
                              const std::string& value,
                              const Antares::Expressions::Visitors::ParameterType& type = Antares::
@@ -48,7 +47,7 @@ build_context_parameter_with(const std::string& id,
     return {id, {.id = id, .type = type, .value = value}};
 }
 
-static Component createComponent(const std::string& id = "component")
+Component createComponent(const std::string& id = "component")
 {
     Model model = createModelWithParameters();
     ComponentBuilder component_builder;

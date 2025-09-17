@@ -21,6 +21,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <mockModelerObjects.h>
 #include <stdexcept>
 
 #include <boost/mpl/list.hpp>
@@ -403,8 +404,10 @@ struct MyDummyFixture: Registry<Node>
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
+    MockEvaluationContextProvider evalContextProvider{evaluationContext};
     Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0, 0, 0, 0};
-    EvalVisitor evalVisitor{evaluationContext, fillContext};
+    Component component = createComponent();
+    EvalVisitor evalVisitor{evalContextProvider, fillContext, component};
 };
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
@@ -594,7 +597,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
                               data,
                               emptyScenario);
 
-    EvalVisitor evalVisitor(context, fillContext);
+    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
@@ -612,7 +615,7 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
                               data,
                               emptyScenario);
 
-    EvalVisitor evalVisitor(context, fillContext);
+    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
     BOOST_CHECK_THROW(evalVisitor.dispatch(&root), std::invalid_argument);
 }
 
@@ -639,7 +642,10 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0});
+
+    EvalVisitor evalVisitor(evalContextProvider,
+                            {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
+                            component);
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0);
@@ -669,9 +675,12 @@ EvaluationResult CreateAndEvaluateTimeNode(const right& p)
       dummy_data,
       emptyScenario);
 
+    MockEvaluationContextProvider evalContextProvider{context};
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/, first, last, 0});
+    EvalVisitor evalVisitor(evalContextProvider,
+                            {first, last /*three hours*/, first, last, 0},
+                            createComponent());
     return evalVisitor.dispatch(&root);
 }
 
@@ -710,9 +719,12 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
       dummy_data,
       emptyScenario);
 
+    MockEvaluationContextProvider evalContextProvider{context};
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/, first, last, 0});
+    EvalVisitor evalVisitor(evalContextProvider,
+                            {first, last /*three hours*/, first, last, 0},
+                            createComponent());
     return evalVisitor.dispatch(&root);
 }
 
@@ -741,9 +753,12 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
       dummy_data,
       emptyScenario);
 
+    MockEvaluationContextProvider evalContextProvider{context};
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(context, {first, last /*three hours*/, first, last, 0});
+    EvalVisitor evalVisitor(evalContextProvider,
+                            {first, last /*three hours*/, first, last, 0},
+                            createComponent());
     return evalVisitor.dispatch(&root);
 }
 
@@ -770,9 +785,12 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
       dummy_data,
       emptyScenario);
 
+    MockEvaluationContextProvider evalContextProvider{context};
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0});
+    EvalVisitor evalVisitor(evalContextProvider,
+                            {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
+                            createComponent());
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -821,9 +839,12 @@ void evaluate_time_dependent_operation()
       {},
       dummy_data,
       emptyScenario);
+    MockEvaluationContextProvider evalContextProvider{context};
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(context, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0});
+    EvalVisitor evalVisitor(evalContextProvider,
+                            {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
+                            createComponent());
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(hour_0, literal.value()));
@@ -848,10 +869,11 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
       dummy_data,
       emptyScenario);
 
+    MockEvaluationContextProvider evalContextProvider{context};
     std::vector<unsigned int> hours = {0, 1};
-
-    EvalVisitor evalVisitor(context,
-                            {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0});
+    EvalVisitor evalVisitor(evalContextProvider,
+                            {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
+                            createComponent());
     const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
 
     std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(hours.at(0),
@@ -884,10 +906,12 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
       dummy_data,
       emptyScenario);
 
+    MockEvaluationContextProvider evalContextProvider{context};
     std::vector<unsigned int> hours = {0, 1};
+    EvalVisitor evalVisitor(evalContextProvider,
+                            {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
+                            createComponent());
 
-    EvalVisitor evalVisitor(context,
-                            {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0});
     const auto eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     std::vector<double> result_before_timeIndex = {evalExpected<BinaryNode>(hours.at(0),
@@ -1262,7 +1286,8 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
                                          {"my_component.my_non_const_variable_s0_t2", 714.5}},
                                         data,
                                         emptyScenario};
-    EvalVisitor evalVisitor{evaluationContext, fillContext, &component};
+    MockEvaluationContextProvider evalContextProvider{evaluationContext};
+    EvalVisitor evalVisitor{evalContextProvider, fillContext, component};
 
     Node* root = create<VariableNode>("my_const_variable",
                                       TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
