@@ -220,17 +220,17 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the expected value of the annual system cost is 24408000000
+    And the expected value of the annual system cost is 24163100000
     And the annual results are
       | area | year | balance  | unsupplied energy |
-      | EAST | 1    | 2493028  | 0                 |
-      | WEST | 1    | -2493028 | 13476             |
-    And in area "EAST", during year 1, "b" produces 266438392 MWh
-    And in area "EAST", during year 1, "sb" produces 74085064 MWh
-    And in area "EAST", during year 1, "p" produces 4205107 MWh
-    And in area "WEST", during year 1, "b" produces 265610554 MWh
-    And in area "WEST", during year 1, "sb" produces 78481024 MWh
-    And in area "WEST", during year 1, "p" produces 11023939 MWh
+      | EAST | 1    | 2705212  | 0                 |
+      | WEST | 1    | -2705212 | 6773              |
+    And in area "EAST", during year 1, "b" produces 266491473 MWh
+    And in area "EAST", during year 1, "sb" produces 75914668 MWh
+    And in area "EAST", during year 1, "p" produces 2534654 MWh
+    And in area "WEST", during year 1, "b" produces 265755543 MWh
+    And in area "WEST", during year 1, "sb" produces 79883404 MWh
+    And in area "WEST", during year 1, "p" produces 9271101 MWh
 
   @fast @short
   Scenario: 018 Probabilistic vs deterministic - 3
@@ -238,17 +238,17 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
-    And the expected value of the annual system cost is 24499800000
+    And the expected value of the annual system cost is 24410600000
     And the annual results are
       | area | year | balance | unsupplied energy |
-      | EAST | 1    | 122220  | 0                 |
-      | WEST | 1    | -122220 | 0                 |
+      | EAST | 1    | 60969   | 0                 |
+      | WEST | 1    | -60969  | 0                 |
     And in area "EAST", during year 1, "b" produces 267640248 MWh
-    And in area "EAST", during year 1, "sb" produces 79240298 MWh
-    And in area "EAST", during year 1, "p" produces 6738289 MWh
+    And in area "EAST", during year 1, "sb" produces 80786864 MWh
+    And in area "EAST", during year 1, "p" produces 5130427 MWh
     And in area "WEST", during year 1, "b" produces 270584616 MWh
-    And in area "WEST", during year 1, "sb" produces 78248945 MWh
-    And in area "WEST", during year 1, "p" produces 8014052 MWh
+    And in area "WEST", during year 1, "sb" produces 79753394 MWh
+    And in area "WEST", during year 1, "p" produces 6570858 MWh
 
   @fast @short
   Scenario: 020 Single mesh - DC law
@@ -256,37 +256,37 @@ Feature: short tests
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 30 seconds
-    And the expected value of the annual system cost is 2278870000
+    And the expected value of the annual system cost is 2152040000
     And the annual results are
       | area   | year | balance  | unsupplied energy |
-      | NODE 1 | 1    | 4282640  | 30818             |
-      | NODE 1 | 2    | 4490071  | 169257            |
-      | NODE 2 | 1    | -302569  | 0                 |
-      | NODE 2 | 2    | 393074   | 1034763           |
-      | NODE 3 | 1    | -3980074 | 1096455           |
-      | NODE 3 | 2    | -4883187 | 1053              |
+      | NODE 1 | 1    | 4332147  | 13519             |
+      | NODE 1 | 2    | 4580019  | 169257            |
+      | NODE 2 | 1    | -282003  | 0                 |
+      | NODE 2 | 2    | 281614   | 907083            |
+      | NODE 3 | 1    | -4050525 | 983190            |
+      | NODE 3 | 2    | -4861632 | 861               |
     # Year 1
-    And in area "NODE 1", during year 1, "aggregate 1" produces 2297944 MWh
-    And in area "NODE 1", during year 1, "aggregate 2" produces 2152250 MWh
-    And in area "NODE 1", during year 1, "aggregate 3" produces 1999683 MWh
-    And in area "NODE 1", during year 1, "aggregate 4" produces 1664021 MWh
-    And in area "NODE 1", during year 1, "aggregate 5" produces 1474884 MWh
-    And in area "NODE 1", during year 1, "aggregate 6" produces 1053176 MWh
-    And in area "NODE 2", during year 1, "ther 1" produces 9517886 MWh
-    And in area "NODE 3", during year 1, "aggregate 1" produces 6294438 MWh
-    And in area "NODE 3", during year 1, "aggregate 2" produces 4286418 MWh
-    And in area "NODE 3", during year 1, "aggregate 3" produces 2193247 MWh
+    And in area "NODE 1", during year 1, "aggregate 1" produces 2302733 MWh
+    And in area "NODE 1", during year 1, "aggregate 2" produces 2160610 MWh
+    And in area "NODE 1", during year 1, "aggregate 3" produces 2012758 MWh
+    And in area "NODE 1", during year 1, "aggregate 4" produces 1694153 MWh
+    And in area "NODE 1", during year 1, "aggregate 5" produces 1505819 MWh
+    And in area "NODE 1", during year 1, "aggregate 6" produces 1031382 MWh
+    And in area "NODE 2", during year 1, "ther 1" produces 9538418 MWh
+    And in area "NODE 3", during year 1, "aggregate 1" produces 6342645 MWh
+    And in area "NODE 3", during year 1, "aggregate 2" produces 4356251 MWh
+    And in area "NODE 3", during year 1, "aggregate 3" produces 2118086 MWh
     # Year 2
-    And in area "NODE 1", during year 2, "aggregate 1" produces 2321507 MWh
-    And in area "NODE 1", during year 2, "aggregate 2" produces 2198175 MWh
-    And in area "NODE 1", during year 2, "aggregate 3" produces 1912077 MWh
-    And in area "NODE 1", during year 2, "aggregate 4" produces 1682688 MWh
-    And in area "NODE 1", during year 2, "aggregate 5" produces 1508627 MWh
-    And in area "NODE 1", during year 2, "aggregate 6" produces 1090488 MWh
-    And in area "NODE 2", during year 2, "ther 1" produces 9184905 MWh
-    And in area "NODE 3", during year 2, "aggregate 1" produces 6124886 MWh
-    And in area "NODE 3", during year 2, "aggregate 2" produces 4436285 MWh
-    And in area "NODE 3", during year 2, "aggregate 3" produces 2405222 MWh
+    And in area "NODE 1", during year 2, "aggregate 1" produces 2326765 MWh
+    And in area "NODE 1", during year 2, "aggregate 2" produces 2206198 MWh
+    And in area "NODE 1", during year 2, "aggregate 3" produces 1925707 MWh
+    And in area "NODE 1", during year 2, "aggregate 4" produces 1721061 MWh
+    And in area "NODE 1", during year 2, "aggregate 5" produces 1539711 MWh
+    And in area "NODE 1", during year 2, "aggregate 6" produces 1080035 MWh
+    And in area "NODE 2", during year 2, "ther 1" produces 9201040 MWh
+    And in area "NODE 3", during year 2, "aggregate 1" produces 6163469 MWh
+    And in area "NODE 3", during year 2, "aggregate 2" produces 4498661 MWh
+    And in area "NODE 3", during year 2, "aggregate 3" produces 2326009 MWh
 
   @fast @short
   Scenario: 021 Four areas - DC law
