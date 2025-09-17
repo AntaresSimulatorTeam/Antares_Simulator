@@ -27,6 +27,7 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/IEvaluationContextProvider.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
+#include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
