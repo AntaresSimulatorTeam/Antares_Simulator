@@ -32,9 +32,8 @@
 #include <antares/expressions/visitors/TimeIndexVisitor.h>
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
-#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 
-#include "MockEvaluationContextProvider.h"
+#include "mockModelerObjects.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
