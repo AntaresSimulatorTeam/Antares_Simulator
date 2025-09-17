@@ -267,7 +267,7 @@ public:
 
     std::string name() const override;
 
-protected:
+private:
     const EvaluationContext context_;
     const IEvaluationContextProvider& contextProvider_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
