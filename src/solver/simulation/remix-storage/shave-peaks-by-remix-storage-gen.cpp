@@ -22,10 +22,9 @@ void checkInput(const std::vector<double>& Load,
 {
     // Arrays sizes must be identical
     std::vector<size_t> sizes = {Load.size(), UnsupE.size(), Spillage.size(), DTG_MRG.size()};
-    for (const auto& s: storagesForRemix)
-    {
-        sizes.push_back(s->initWithdrawal().size());
-    }
+    std::ranges::transform(storagesForRemix,
+                           std::back_inserter(sizes),
+                           [&](auto& s) { return s->initWithdrawal().size(); });
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
