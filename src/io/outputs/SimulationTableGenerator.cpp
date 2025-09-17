@@ -257,6 +257,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                    .dispatch(rootNode);
     idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
+    const auto values = value.valuesAsVector();
     auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
     {
         TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
@@ -265,7 +266,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                           : TimeBlock{.block = currentBlock + 1,
                                       .blockTimeIndex = std::nullopt,
                                       .absoluteTimeIndex = std::nullopt};
-        auto val = ts ? value.valuesAsVector()[ts.value()] : value.valueAsDouble();
+        auto val = ts ? values[ts.value()] : value.valueAsDouble();
         simulationTable.addEntry({.block = tb.block,
                                   .component = componentId,
                                   .output = outputName,
