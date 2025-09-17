@@ -43,11 +43,6 @@ public:
     }
 };
 
-struct modelerObjectsFixture
-{
-    Antares::ModelerStudy::SystemModel::ComponentBuilder component_builder;
-};
-
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
 Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
 Antares::ModelerStudy::SystemModel::Component createComponent(const std::string& id = "component");
