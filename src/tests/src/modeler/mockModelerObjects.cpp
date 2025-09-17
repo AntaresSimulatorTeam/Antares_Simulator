@@ -23,13 +23,10 @@
 
 using namespace Antares::ModelerStudy::SystemModel;
 
-Model createModelWithParameters()
+Model createModelWithParameters(std::vector<Parameter>& params)
 {
     ModelBuilder model_builder;
-    return model_builder.withId("model")
-      .withParameters({Parameter("param1", TimeDependent::NO, ScenarioDependent::NO),
-                       Parameter("param2", TimeDependent::NO, ScenarioDependent::NO)})
-      .build();
+    return model_builder.withId("model").withParameters(std::move(params)).build();
 }
 
 Model createModelWithoutParameters()
@@ -47,14 +44,33 @@ build_context_parameter_with(const std::string& id,
     return {id, {.id = id, .type = type, .value = value}};
 }
 
+/*{build_context_parameter_with("param1", "5"), build_context_parameter_with("param2", "3")})*/
 Component createComponent(const std::string& id = "component")
 {
-    Model model = createModelWithParameters();
+    Model model = createModelWithoutParameters();
     ComponentBuilder component_builder;
     return component_builder.withId(id)
       .withModel(&model)
-      .withParameterValues(
-        {build_context_parameter_with("param1", "5"), build_context_parameter_with("param2", "3")})
+      .withParameterValues({})
+      .withScenarioGroupId("scenario_group")
+      .build();
+}
+
+Component createComponent(
+  const std::string& id,
+  std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameter_values)
+{
+    std::vector<Parameter> params;
+    for (const auto& [param_id, _]: parameter_values)
+    {
+        params.emplace_back(param_id, TimeDependent::NO, ScenarioDependent::NO);
+    }
+
+    Model model = createModelWithParameters(params);
+    ComponentBuilder component_builder;
+    return component_builder.withId(id)
+      .withModel(&model)
+      .withParameterValues(parameter_values)
       .withScenarioGroupId("scenario_group")
       .build();
 }

@@ -580,24 +580,18 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
 
-std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
-  const std::string& id,
-  const std::string& value,
-  const ParameterType& type = ParameterType::CONSTANT)
-{
-    return {id, {.id = id, .type = type, .value = value}};
-}
-
 BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
 {
     ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     const std::string value = "221.3";
-    EvaluationContext context({build_context_parameter_with("my-param", value)},
+    auto param = build_context_parameter_with("my-param", value);
+    EvaluationContext context({param},
                               {},
                               data,
                               emptyScenario);
 
-    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
+    Component c = createComponent("base_component", {param});
+    EvalVisitor evalVisitor(evalContextProvider, fillContext, c);
     const double eval = evalVisitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
