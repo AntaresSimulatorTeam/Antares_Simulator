@@ -27,7 +27,6 @@
 
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/EvalVisitorPostOptim.h>
 #include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
