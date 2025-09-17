@@ -106,10 +106,8 @@ bool Economy::simulationBegin()
               &pProblemesHebdo[numSpace],
               numSpace,
               study.areas,
-              study.parameters.shedding.policy,
-              study.parameters.simplexOptimizationRange,
-              study.calendar,
-              study.parameters.optOptions);
+              study.parameters,
+              study.calendar);
         }
     }
 

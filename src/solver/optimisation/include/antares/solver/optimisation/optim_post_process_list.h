@@ -31,8 +31,7 @@ public:
     OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                        uint numSpace,
                        AreaList& areas,
-                       SheddingPolicy sheddingPolicy,
-                       SimplexOptimization splxOptimization,
+                       const Data::Parameters& params,
                        Calendar& calendar);
 
     virtual ~OptPostProcessList() = default;

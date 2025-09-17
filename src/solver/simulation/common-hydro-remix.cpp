@@ -27,7 +27,9 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/common-eco-adq.h"
-#include "antares/solver/simulation/shave-peaks-by-remix-storage-gen.h"
+#include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
+#include "antares/solver/simulation/remix-storage/remix-utils.h"
+#include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 #include "antares/study/simulation.h"
 
 #define EPSILON 1e-6
@@ -225,11 +227,11 @@ static bool Remix(const Data::AreaList& areas,
 }
 
 std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
-                                              const unsigned int year,
-                                              const unsigned int firstHourOfWeek)
+                                              const unsigned year,
+                                              const unsigned firstHourOfWeek)
 {
     std::vector<double> load_to_return(HOURS_IN_WEEK, 0.);
-    for (unsigned int h = 0; h < HOURS_IN_WEEK; ++h)
+    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
     {
         load_to_return[h] = area.load.series.getColumn(year)[h + firstHourOfWeek];
     }
@@ -237,80 +239,204 @@ std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
 }
 
 std::vector<double> extractHydroPmin(const Data::Area& area,
-                                     const unsigned int year,
-                                     const unsigned int firstHourOfWeek)
+                                     const unsigned year,
+                                     const unsigned firstHourOfWeek)
 {
-    // area->hydro.series->mingen.timeSeries
-    std::vector<double> hydroPmin(HOURS_IN_WEEK, 0.);
-    for (unsigned int h = 0; h < HOURS_IN_WEEK; ++h)
+    const double* hydroPmin = area.hydro.series->mingen.getColumn(year);
+    return {hydroPmin + firstHourOfWeek, hydroPmin + firstHourOfWeek + HOURS_IN_WEEK};
+}
+
+std::vector<double> extractDTG_MRG(const Data::Area& area, uint numSpace)
+{
+    const double* dtgMrg = area.scratchpad[numSpace].dispatchableGenerationMargin;
+    return {dtgMrg, dtgMrg + HOURS_IN_WEEK};
+}
+
+std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
+                                                       PROBLEME_HEBDO& problem,
+                                                       unsigned firstHourOfWeek)
+{
+    auto& weeklyResults = problem.ResultatsHoraires[area.index];
+
+    auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
+    auto& hydroGen = weeklyResults.TurbinageHoraire;
+    auto& levels = weeklyResults.niveauxHoraires;
+    const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
+                              .ContrainteDePmaxHydrauliqueHoraire;
+    const auto hydroPmin = extractHydroPmin(area, problem.year, firstHourOfWeek);
+    const double initLevel = problem.CaracteristiquesHydrauliques[area.index]
+                               .NiveauInitialReservoir;
+    const double capacity = area.hydro.reservoirCapacity;
+    const double efficiency = area.hydro.pumpingEfficiency;
+    const bool reservoirManagement = area.hydro.reservoirManagement;
+    const auto& inflows = problem.CaracteristiquesHydrauliques[area.index].ApportNaturelHoraire;
+    const auto& ovf = weeklyResults.debordementsHoraires;
+    const auto& pump = weeklyResults.PompageHoraire;
+
+    return makeHydroForRemix(hydroGen,
+                             unsupE,
+                             levels,
+                             hydroPmax,
+                             hydroPmin,
+                             inflows,
+                             ovf,
+                             pump,
+                             initLevel,
+                             capacity,
+                             efficiency,
+                             reservoirManagement);
+}
+
+std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
+{
+    return {v.begin() + firstHourOfWeek, v.begin() + firstHourOfWeek + HOURS_IN_WEEK};
+}
+
+std::vector<double> extractSTSpmax(const ShortTermStorage::PROPERTIES& sts_properties,
+                                   const unsigned firstHourOfWeek)
+{
+    auto subrange = weekSubRange(sts_properties.series->maxWithdrawalModulation, firstHourOfWeek);
+    return subrange * sts_properties.withdrawalEfficiency;
+}
+
+std::vector<double> extractSTSlowRuleCurve(const ShortTermStorage::PROPERTIES& sts_properties,
+                                           const unsigned firstHourOfWeek)
+{
+    auto subrange = weekSubRange(sts_properties.series->lowerRuleCurve, firstHourOfWeek);
+    return subrange * sts_properties.reservoirCapacity;
+}
+
+std::vector<double> extractSTSupRuleCurve(const ShortTermStorage::PROPERTIES& sts_properties,
+                                          const unsigned firstHourOfWeek)
+{
+    auto subrange = weekSubRange(sts_properties.series->upperRuleCurve, firstHourOfWeek);
+    return subrange * sts_properties.reservoirCapacity;
+}
+
+std::vector<double> extractSTSinflows(const ShortTermStorage::PROPERTIES& sts_properties,
+                                      const unsigned firstHourOfWeek,
+                                      const unsigned year)
+{
+    std::vector<double> to_return(HOURS_IN_WEEK, 0.);
+    for (unsigned h = 0; h < HOURS_IN_WEEK; ++h)
     {
-        hydroPmin[h] = area.hydro.series->mingen.getColumn(year)[h + firstHourOfWeek];
+        to_return[h] = sts_properties.series->inflows.getCoefficient(year, firstHourOfWeek + h);
     }
-    return hydroPmin;
+    return to_return;
+}
+
+std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
+                                                     PROBLEME_HEBDO& problem,
+                                                     unsigned stsIndex,
+                                                     unsigned firstHourOfWeek)
+{
+    const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
+    auto& weeklyResults = problem.ResultatsHoraires[area.index];
+    auto& stsResults = weeklyResults.ShortTermStorage;
+
+    auto& withdrawal = stsResults[stsIndex].withdrawal;
+    const auto& injection = stsResults[stsIndex].injection;
+    auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
+    auto& levels = stsResults[stsIndex].level;
+
+    const auto& pmax = extractSTSpmax(stsProperties, firstHourOfWeek);
+    const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
+    const auto lowRuleCurve = extractSTSlowRuleCurve(stsProperties, firstHourOfWeek);
+    const auto upRuleCurve = extractSTSupRuleCurve(stsProperties, firstHourOfWeek);
+    const double initLevel = levels[0];
+    const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
+    const double withdrawalEff = stsProperties.withdrawalEfficiency;
+    const double injectionEff = stsProperties.injectionEfficiency;
+
+    return makeSTSforRemix(withdrawal,
+                           unsupE,
+                           levels,
+                           pmax,
+                           inflows,
+                           injection,
+                           lowRuleCurve,
+                           upRuleCurve,
+                           initLevel,
+                           withdrawalEff,
+                           injectionEff);
+}
+
+ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
+                                           PROBLEME_HEBDO& problem,
+                                           const unsigned firstHourOfWeek)
+{
+    StorageListSort stsListSort;
+
+    for (unsigned stsIndex{0}; stsIndex < area.shortTermStorage.count(); ++stsIndex)
+    {
+        const auto& stsProperties = problem.ShortTermStorage[area.index][stsIndex];
+        const double withdrawalCapacity = stsProperties.withdrawalNominalCapacity;
+
+        stsListSort.add(withdrawalCapacity,
+                        extractSTSforRemix(area, problem, stsIndex, firstHourOfWeek));
+    }
+
+    return stsListSort.makeSortedList();
 }
 
 static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   PROBLEME_HEBDO& problem,
                                   uint numSpace,
-                                  uint firstHourOfWeek)
+                                  uint firstHourOfWeek,
+                                  bool includeSTS)
 {
     areas.each(
       [&](const Data::Area& area)
       {
           auto& weeklyResults = problem.ResultatsHoraires[area.index];
 
+          // Arguments of remix algorithm that are invariant whatever the storage
           const auto load = extractLoadForCurrentWeek(area, problem.year, firstHourOfWeek);
           auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
-          auto& hydroGen = weeklyResults.TurbinageHoraire;
-          auto& levels = weeklyResults.niveauxHoraires;
-          const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
-                                    .ContrainteDePmaxHydrauliqueHoraire;
-          const auto hydroPmin = extractHydroPmin(area, problem.year, firstHourOfWeek);
-          const double initLevel = problem.CaracteristiquesHydrauliques[area.index]
-                                     .NiveauInitialReservoir;
-          const double capacity = area.hydro.reservoirCapacity;
-          const double efficiency = area.hydro.pumpingEfficiency;
-          const bool reservoirManagement = area.hydro.reservoirManagement;
-          const auto& inflows = problem.CaracteristiquesHydrauliques[area.index]
-                                  .ApportNaturelHoraire;
-          const auto& ovf = weeklyResults.debordementsHoraires;
-          const auto& pump = weeklyResults.PompageHoraire;
           const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
+          const auto dtgMrg = extractDTG_MRG(area, numSpace);
 
-          const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
-          const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
+          auto hydroStorage = extractHydroForRemix(area, problem, firstHourOfWeek);
 
-          auto hydroStorage = makeHydroForRemix(hydroGen,
-                                                unsupE,
-                                                levels,
-                                                hydroPmax,
-                                                hydroPmin,
-                                                inflows,
-                                                ovf,
-                                                pump,
-                                                initLevel,
-                                                capacity,
-                                                efficiency,
-                                                reservoirManagement);
+          checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initWithdrawal());
 
-          checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initialGen());
+          ListStorageForRemix listStorage = {hydroStorage};
 
-          shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, hydroStorage);
+          if (includeSTS)
+          {
+              auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
+
+              // Checking input data is missing for all STS. To be done.
+
+              listStorage.insert(listStorage.end(), stsForRemix.begin(), stsForRemix.end());
+          }
+
+          try
+          {
+              shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage);
+          }
+          catch (std::exception& e)
+          {
+              std::string msg = "(year, area, week) = (" + std::to_string(problem.year) + ", "
+                                + area.id.to<std::string>() + ", "
+                                + std::to_string((firstHourOfWeek + 1) / HOURS_IN_WEEK)
+                                + ") : " + e.what();
+              logs.warning(msg);
+          }
       });
 }
 
 void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
-                           Data::SheddingPolicy sheddingPolicy,
-                           Data::SimplexOptimization simplexOptimizationRange,
+                           const Data::Parameters& params,
                            uint numSpace,
                            uint hourInYear)
 {
-    if (sheddingPolicy == Data::shpShavePeaks)
+    if (params.shedding.policy == Data::shpShavePeaks)
     {
         bool result = true;
 
-        switch (simplexOptimizationRange)
+        switch (params.simplexOptimizationRange)
         {
         case Data::sorWeek:
             result = Remix<HOURS_IN_WEEK>(areas, problem, numSpace, hourInYear);
@@ -329,11 +455,12 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
               "Error in simplex optimisation. Check logs for more details.");
         }
     }
-    else if (sheddingPolicy == Data::shpAccurateShavePeaks)
+    else if (params.shedding.policy == Data::shpAccurateShavePeaks)
     {
+        bool includeSTS = params.accurateShavePeaksIncludeShortTermStorage;
         try
         {
-            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear);
+            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear, includeSTS);
         }
         catch (std::invalid_argument& invalidArgExc)
         {

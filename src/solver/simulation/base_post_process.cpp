@@ -45,10 +45,8 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
   PROBLEME_HEBDO* problemeHebdo,
   uint numSpace,
   AreaList& areas,
-  SheddingPolicy sheddingPolicy,
-  SimplexOptimization splxOptimization,
-  Calendar& calendar,
-  const OptimizationOptions& solverOptions)
+  const Data::Parameters& params,
+  Calendar& calendar)
 {
     if (adqPatchParams.enabled)
     {
@@ -56,18 +54,15 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
                                                          problemeHebdo,
                                                          numSpace,
                                                          areas,
-                                                         sheddingPolicy,
-                                                         splxOptimization,
-                                                         calendar,
-                                                         solverOptions);
+                                                         params,
+                                                         calendar);
     }
     else
     {
         return std::make_unique<OptPostProcessList>(problemeHebdo,
                                                     numSpace,
                                                     areas,
-                                                    sheddingPolicy,
-                                                    splxOptimization,
+                                                    params,
                                                     calendar);
     }
 }

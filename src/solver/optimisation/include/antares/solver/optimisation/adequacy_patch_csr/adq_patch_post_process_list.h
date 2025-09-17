@@ -36,10 +36,8 @@ public:
                             PROBLEME_HEBDO* problemeHebdo,
                             uint numSpace,
                             AreaList& areas,
-                            SheddingPolicy sheddingPolicy,
-                            SimplexOptimization splxOptimization,
-                            Calendar& calendar,
-                            const OptimizationOptions& solverOptions);
+                            const Data::Parameters& params,
+                            Calendar& calendar);
 
     virtual ~AdqPatchPostProcessList() = default;
 };

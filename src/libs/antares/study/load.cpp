@@ -19,11 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <fmt/format.h>
-#include <fstream>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
-#include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
@@ -231,6 +229,10 @@ void Study::loadModelerComponents()
     {
         modelerInput_ = std::make_unique<Modeler::Data>(Solver::LoadFiles::loadAll(folder));
         checkModelerDataCompatibility();
+    }
+    catch (const Error::LoadingError& e)
+    {
+        logs.error() << "Error while loading modeler components: " << e.what();
     }
     catch (const std::exception& e)
     {
