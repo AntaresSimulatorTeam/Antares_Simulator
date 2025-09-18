@@ -290,7 +290,7 @@ void addPortEntries(ISimulationTable& simulationTable,
     const auto& componentId = component.Id();
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
-        const auto& rootNode = portFieldDef.Definition().RootNode();
+        const auto* rootNode = portFieldDef.Definition().RootNode();
         std::string outputName = portFieldKey.portId + "." + portFieldKey.fieldId;
         addEntriesForNode(simulationTable,
                           fillContext,
@@ -318,7 +318,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
     const auto& componentId = component.Id();
     for (const auto& [extraOutputId, extraOutput]: component.getModel()->ExtraOutputs())
     {
-        const auto& rootNode = extraOutput.expression().RootNode();
+        const auto* rootNode = extraOutput.expression().RootNode();
         std::string outputName = extraOutputId;
         addEntriesForNode(simulationTable,
                           fillContext,

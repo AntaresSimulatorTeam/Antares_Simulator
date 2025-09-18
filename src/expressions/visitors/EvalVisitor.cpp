@@ -158,8 +158,6 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
-    auto idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component_, contextProvider_)
-                     .dispatch(node);
 
     EvaluationResult result(0.);
     for (const auto connectionEnd: component_.componentConnectionsViaPort(portId))
@@ -167,8 +165,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connectionEnd.component();
         auto* port = connectionEnd.port();
         EvalVisitor visitor(contextProvider_, fillContext_, *component);
-        const auto* node = component->nodeAtPortField(port->Id(), fieldId);
-        auto dispatchResult = visitor.dispatch(node);
+        const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
+        auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;
     }
     return result;
