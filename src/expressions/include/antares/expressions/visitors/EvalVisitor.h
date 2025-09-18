@@ -140,6 +140,15 @@ public:
         return std::get<std::vector<double>>(value_);
     }
 
+    [[nodiscard]] double getValueInVector(unsigned index) const
+    {
+        if (!std::holds_alternative<std::vector<double>>(value_))
+        {
+            throw EvalResultTypeError("Expected a vector but found a double.");
+        }
+        return std::get<std::vector<double>>(value_)[index];
+    }
+
     EvaluationResult operator[](int timeIndex) const;
     EvaluationResult timeShift(int time_shift) const;
     EvaluationResult timeSum(int from, int to) const;
