@@ -1,8 +1,8 @@
 var dir_1911e97f812e1ff2d7b011ec6c5377a1 =
 [
-    [ "expressions", "dir_b9f52dda46a48f80beb5a93d1c59ae9d.html", "dir_b9f52dda46a48f80beb5a93d1c59ae9d" ],
     [ "io", "dir_1576b8b2060652e8326373c2526f8269.html", "dir_1576b8b2060652e8326373c2526f8269" ],
     [ "libs", "dir_f0800fc495482c581e54bbff12fc1fa1.html", "dir_f0800fc495482c581e54bbff12fc1fa1" ],
+    [ "modeler", "dir_dc0fd9a41eb2038316ee0294b7a7656c.html", "dir_dc0fd9a41eb2038316ee0294b7a7656c" ],
     [ "optimisation", "dir_15769cc3c5512b1cbc906c282827a221.html", "dir_15769cc3c5512b1cbc906c282827a221" ],
     [ "solver", "dir_f79765f3437c4702a0e5b207c4086495.html", "dir_f79765f3437c4702a0e5b207c4086495" ],
     [ "utils", "dir_949eeb996e64d85b7e389d62753a0540.html", "dir_949eeb996e64d85b7e389d62753a0540" ]

@@ -148,12 +148,9 @@ Inheritance diagram for Antares::Expressions::Visitors::EvalVisitor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2603c896087c20b7cb3472108eeff23a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#a2603c896087c20b7cb3472108eeff23a">EvalVisitor</a> (<a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">EvaluationContext</a> context, <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> fillContext)</td></tr>
-<tr class="memdesc:a2603c896087c20b7cb3472108eeff23a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an evaluation visitor with the specified context.  <a href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#a2603c896087c20b7cb3472108eeff23a">More...</a><br /></td></tr>
-<tr class="separator:a2603c896087c20b7cb3472108eeff23a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4118b354b69320659915390f96622412"><td class="memItemLeft" align="right" valign="top"><a id="a4118b354b69320659915390f96622412"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>EvalVisitor</b> (<a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">EvaluationContext</a> context, <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> fillContext, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a> *component)</td></tr>
-<tr class="separator:a4118b354b69320659915390f96622412"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71fef613982165c3aaddf37386f25bdc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#a71fef613982165c3aaddf37386f25bdc">EvalVisitor</a> (const <a class="el" href="classAntares_1_1Expressions_1_1IEvaluationContextProvider.html">IEvaluationContextProvider</a> &amp;contextProvider, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a> &amp;component)</td></tr>
+<tr class="memdesc:a71fef613982165c3aaddf37386f25bdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an evaluation visitor with the specified context.  <a href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#a71fef613982165c3aaddf37386f25bdc">More...</a><br /></td></tr>
+<tr class="separator:a71fef613982165c3aaddf37386f25bdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5d5e66923473c4a0797e502057c7dba"><td class="memItemLeft" align="right" valign="top"><a id="aa5d5e66923473c4a0797e502057c7dba"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const override</td></tr>
 <tr class="separator:aa5d5e66923473c4a0797e502057c7dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,8 +216,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a visitor for evaluating expressions within a given context. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2603c896087c20b7cb3472108eeff23a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2603c896087c20b7cb3472108eeff23a">&#9670;&nbsp;</a></span>EvalVisitor()</h2>
+<a id="a71fef613982165c3aaddf37386f25bdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71fef613982165c3aaddf37386f25bdc">&#9670;&nbsp;</a></span>EvalVisitor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,14 +228,20 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
         <tr>
           <td class="memname">Antares::Expressions::Visitors::EvalVisitor::EvalVisitor </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">EvaluationContext</a>&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Expressions_1_1IEvaluationContextProvider.html">IEvaluationContextProvider</a> &amp;&#160;</td>
+          <td class="paramname"><em>contextProvider</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a>&#160;</td>
-          <td class="paramname"><em>fillContext</em>&#160;</td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;&#160;</td>
+          <td class="paramname"><em>fillContext</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a> &amp;&#160;</td>
+          <td class="paramname"><em>component</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
