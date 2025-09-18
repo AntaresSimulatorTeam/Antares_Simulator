@@ -14,18 +14,18 @@
 using namespace Antares::Solver::Simulation;
 
 template<unsigned int nb_hours>
-struct STS_setup
+struct STS_holder
 {
-    STS_setup():
+    STS_holder():
         withdrawal(nb_hours, 0),
         injection(nb_hours, 0),
         levels(nb_hours, 0.),
         pmax(nb_hours, std::numeric_limits<double>::max()),
         inflows(nb_hours, 0.),
         ovf(nb_hours, 0.),
-        lowRuleCurve(nb_hours, 0.),
-        upRuleCurve(nb_hours, capacity)
+        lowRuleCurve(nb_hours, 0.)
     {
+        upRuleCurve.assign(nb_hours, capacity);
     }
 
     std::shared_ptr<IStorageForRemix> createSTS(std::vector<double>& unsupE)
@@ -74,15 +74,15 @@ struct InputFixture
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
     }
 
-    STS_setup<nb_hours> sts_1;
-    STS_setup<nb_hours> sts_2;
+    STS_holder<nb_hours> sts_1;
+    STS_holder<nb_hours> sts_2;
 
     std::vector<double> Load, TotaGenWithoutStorage, UnsupE, Spillage, DTG_MRG;
 
     ListStorageForRemix storagesForRemix;
 };
 
-BOOST_FIXTURE_TEST_CASE(default_input_in_STS_setup_does_not_raise_exception, STS_setup<5>)
+BOOST_FIXTURE_TEST_CASE(default_input_in_STS_setup_does_not_raise_exception, STS_holder<5>)
 {
     std::vector<double> unsupE(5, 0.);
     BOOST_CHECK_NO_THROW(createSTS(unsupE));
@@ -91,9 +91,9 @@ BOOST_FIXTURE_TEST_CASE(default_input_in_STS_setup_does_not_raise_exception, STS
 BOOST_AUTO_TEST_CASE(creating_an_STS_with_unsup_having_a_wrong_size_leads_to_exception)
 {
     std::vector<double> unsupE(5, 0.);
-    STS_setup<4> sts_setup;
+    STS_holder<4> sts_holder;
     std::string err_msg = "Remix hydro input : arrays of different sizes";
-    BOOST_CHECK_EXCEPTION(sts_setup.createSTS(unsupE),
+    BOOST_CHECK_EXCEPTION(sts_holder.createSTS(unsupE),
                           std::invalid_argument,
                           checkMessage(err_msg));
 }
@@ -107,13 +107,13 @@ BOOST_AUTO_TEST_CASE(creating_2_STS_of_different_sizes___checking_input_of_algo_
 
     // Creating sts_1 for 5 hours
     std::vector<double> unsupE_1(5, 0.);
-    STS_setup<5> sts_setup_1;
-    auto sts_1 = sts_setup_1.createSTS(unsupE_1);
+    STS_holder<5> sts_holder_1;
+    auto sts_1 = sts_holder_1.createSTS(unsupE_1);
 
     // Creating sts_1 for 3 hours
     std::vector<double> unsupE_2(3, 0.);
-    STS_setup<3> sts_setup_2;
-    auto sts_2 = sts_setup_2.createSTS(unsupE_2);
+    STS_holder<3> sts_holder_2;
+    auto sts_2 = sts_holder_2.createSTS(unsupE_2);
 
     ListStorageForRemix storagesForRemix;
     storagesForRemix.push_back(sts_1);
