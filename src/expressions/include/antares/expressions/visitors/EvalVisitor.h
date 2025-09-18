@@ -133,20 +133,20 @@ public:
 
     [[nodiscard]] std::vector<double> valuesAsVector() const
     {
-        if (!std::holds_alternative<std::vector<double>>(value_))
+        if (const auto* v = std::get_if<std::vector<double>>(&value_); v)
         {
-            throw EvalResultTypeError("Expected a vector but found a double.");
+            return *v;
         }
-        return std::get<std::vector<double>>(value_);
+        throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
     [[nodiscard]] double getValueInVector(unsigned index) const
     {
-        if (!std::holds_alternative<std::vector<double>>(value_))
+        if (const auto* v = std::get_if<std::vector<double>>(&value_); v)
         {
-            throw EvalResultTypeError("Expected a vector but found a double.");
+            return (*v)[index];
         }
-        return std::get<std::vector<double>>(value_)[index];
+        throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
     EvaluationResult operator[](int timeIndex) const;
