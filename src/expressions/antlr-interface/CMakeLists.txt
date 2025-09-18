@@ -15,8 +15,11 @@ Set(SRCS
 
 add_library(${PROJ} ${SRCS})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
-target_compile_options(${PROJ} PRIVATE
-        "-Wno-unused-parameter")
+if (NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    target_compile_options(${PROJ} PRIVATE
+            "-Wno-unused-parameter")
+endif ()
+
 link_antlr4(${PROJ})
 
 target_include_directories(${PROJ}
