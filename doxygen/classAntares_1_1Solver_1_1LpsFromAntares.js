@@ -1,6 +1,6 @@
 var classAntares_1_1Solver_1_1LpsFromAntares =
 [
-    [ "addWeeklyData", "classAntares_1_1Solver_1_1LpsFromAntares.html#a359ebee38d1e808e36c3bcce971362e3", null ],
+    [ "addWeeklyData", "classAntares_1_1Solver_1_1LpsFromAntares.html#a96daec75bcb681e9ad3d0ecf345a37b6", null ],
     [ "empty", "classAntares_1_1Solver_1_1LpsFromAntares.html#a4099993dc454842b148c95c91ae4b6d2", null ],
     [ "setConstantData", "classAntares_1_1Solver_1_1LpsFromAntares.html#abf72becaad22acbc854f032be30d713c", null ],
     [ "weekCount", "classAntares_1_1Solver_1_1LpsFromAntares.html#a915c29d388fcad89e726f5c1ab6e5914", null ],
