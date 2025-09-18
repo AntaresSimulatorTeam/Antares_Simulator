@@ -13,19 +13,19 @@
 
 using namespace Antares::Solver::Simulation;
 
-template<unsigned int size>
+template<unsigned int nb_hours>
 struct STS_setup
 {
     STS_setup()
     {
-        withdrawal.assign(size, 0);
-        injection.assign(size, 0);
-        levels.assign(size, 0.);
-        pmax.assign(size, std::numeric_limits<double>::max());
-        inflows.assign(size, 0.);
-        ovf.assign(size, 0.);
-        lowRuleCurve.assign(size, 0.);
-        upRuleCurve.assign(size, capacity);
+        withdrawal.assign(nb_hours, 0);
+        injection.assign(nb_hours, 0);
+        levels.assign(nb_hours, 0.);
+        pmax.assign(nb_hours, std::numeric_limits<double>::max());
+        inflows.assign(nb_hours, 0.);
+        ovf.assign(nb_hours, 0.);
+        lowRuleCurve.assign(nb_hours, 0.);
+        upRuleCurve.assign(nb_hours, capacity);
     }
 
     std::shared_ptr<IStorageForRemix> createSTS(std::vector<double>& unsupE)
@@ -52,16 +52,16 @@ struct STS_setup
     const double injectionEff = 1.;
 };
 
-template<unsigned int size>
+template<unsigned int nb_hours>
 struct InputFixture
 {
     InputFixture()
     {
-        Load.assign(size, 0.);
-        TotaGenWithoutStorage.assign(size, 0.);
-        UnsupE.assign(size, 0.);
-        Spillage.assign(size, 0.);
-        DTG_MRG.assign(size, 0.);
+        Load.assign(nb_hours, 0.);
+        TotaGenWithoutStorage.assign(nb_hours, 0.);
+        UnsupE.assign(nb_hours, 0.);
+        Spillage.assign(nb_hours, 0.);
+        DTG_MRG.assign(nb_hours, 0.);
     }
 
     void runRemixStorageAlgorithm()
@@ -74,8 +74,8 @@ struct InputFixture
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
     }
 
-    STS_setup<size> sts_1;
-    STS_setup<size> sts_2;
+    STS_setup<nb_hours> sts_1;
+    STS_setup<nb_hours> sts_2;
 
     std::vector<double> Load, TotaGenWithoutStorage, UnsupE, Spillage, DTG_MRG;
 
@@ -105,12 +105,12 @@ BOOST_AUTO_TEST_CASE(creating_2_STS_of_different_sizes___checking_input_of_algo_
     std::vector<double> Spillage(5);
     std::vector<double> DTG_MRG(5);
 
-    // Creating sts_1 of size 5
+    // Creating sts_1 for 5 hours
     std::vector<double> unsupE_1(5, 0.);
     STS_setup<5> sts_setup_1;
     auto sts_1 = sts_setup_1.createSTS(unsupE_1);
 
-    // Creating sts_1 of size 3
+    // Creating sts_1 for 3 hours
     std::vector<double> unsupE_2(3, 0.);
     STS_setup<3> sts_setup_2;
     auto sts_2 = sts_setup_2.createSTS(unsupE_2);
