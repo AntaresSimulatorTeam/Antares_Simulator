@@ -59,7 +59,7 @@ public:
 
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(OptimModel& optimModel,
-                             OptimEntityContainer& solverVariables,
+                             OptimEntityContainer& optimEntityContainer,
                              const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
@@ -87,11 +87,12 @@ private:
                                      const std::string& constraint_id,
                                      const Optimisation::LinearProblemApi::FillContext& ctx) const;
 
-    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node,
-                                       const ModelerStudy::SystemModel::Component& component) const;
+    Expressions::Visitors::TimeIndex getConstraintTimeIndex(
+      const Expressions::Nodes::Node* node,
+      const ModelerStudy::SystemModel::Component& component) const;
 
     OptimModel& optimModel_;
-    OptimEntityContainer& variablesContainer_;
+    OptimEntityContainer& optimEntityContainer_;
     const EvaluationContextProvider evaluationContextProvider_;
 };
 
