@@ -28,7 +28,7 @@
 
 #include "EvaluationContextProvider.h"
 #include "ReadLinearConstraintVisitor.h"
-#include "VariableContainer.h"
+#include "OptimEntityContainer.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -59,7 +59,7 @@ public:
 
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             VariableContainer& solverVariables,
+                             OptimEntityContainer& solverVariables,
                              const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
@@ -89,7 +89,7 @@ private:
     bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const;
 
     const ModelerStudy::SystemModel::Component& component_;
-    VariableContainer& variablesContainer_;
+    OptimEntityContainer& variablesContainer_;
     const EvaluationContextProvider evaluationContextProvider_;
 };
 
@@ -97,7 +97,7 @@ class VariablesBulkAddition
 {
 public:
     VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          VariableContainer& variableDictionary);
+                          OptimEntityContainer& optimEntityContainer);
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
@@ -134,6 +134,6 @@ public:
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    VariableContainer& variableContainer_;
+    OptimEntityContainer& optimEntityContainer_;
 };
 } // namespace Antares::Optimisation

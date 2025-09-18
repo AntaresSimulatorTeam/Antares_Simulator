@@ -34,10 +34,10 @@ struct OptimComponent
     std::unordered_map<std::string, unsigned int> variableIndexMap;
 };
 
-class VariableContainer
+class OptimEntityContainer
 {
 public:
-    VariableContainer() = default;
+    OptimEntityContainer() = default;
 
     [[nodiscard]] const std::vector<unsigned int>& getVariableStartColumn() const
     {

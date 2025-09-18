@@ -27,7 +27,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
-#include "antares/solver/optim-model-filler/VariableContainer.h"
+#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Optimisation;
@@ -37,12 +37,12 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const VariableContainer& variableContainer,
+  const OptimEntityContainer& variableContainer,
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
-    variableContainer_(variableContainer),
+    optimEntityContainer_(variableContainer),
     evaluationContextProvider_(linearProblemData, scenarioGroupRepository)
 {
     int i = 0;
@@ -102,7 +102,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     // legacy constraint is in "gen<0, load>0" convention
     std::string lowerAreaId = areaId;
     boost::algorithm::to_lower(lowerAreaId);
-    const auto& solverVariables = variableContainer_.getVariables();
+    const auto& solverVariables = optimEntityContainer_.getVariables();
     const auto& coeffPerVar = linearExpression.coefPerVar();
 
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
@@ -146,7 +146,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
                                         ctx,
                                         component,
-                                        variableContainer_);
+                                        optimEntityContainer_);
     auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }

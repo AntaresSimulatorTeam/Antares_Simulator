@@ -71,11 +71,11 @@ public:
         for (const auto& component: system_->Components())
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      variableContainer_,
+                                                                      optimEntityContainer_,
                                                                       *dataSeries,
                                                                       scenario_group_repository);
             fillers.push_back(std::move(cf));
-            variableContainer_.addFromSystemComponent(component);
+            optimEntityContainer_.addFromSystemComponent(component);
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);
@@ -83,14 +83,14 @@ public:
         linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }
 
-    [[nodiscard]] const Optimisation::VariableContainer& getVariableContainer() const
+    [[nodiscard]] const Optimisation::OptimEntityContainer& getOptimEntityContainer() const
     {
-        return variableContainer_;
+        return optimEntityContainer_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    Optimisation::VariableContainer variableContainer_;
+    Optimisation::OptimEntityContainer optimEntityContainer_;
 };
 
 void Modeler::solve() const
@@ -155,7 +155,7 @@ void Modeler::solve() const
             writer_.writeSimulationTable(ortools_linear_problem,
                                          *solution,
                                          data,
-                                         system_linear_problem.getVariableContainer(),
+                                         system_linear_problem.getOptimEntityContainer(),
                                          timeScenarioCtx);
             break;
         default:

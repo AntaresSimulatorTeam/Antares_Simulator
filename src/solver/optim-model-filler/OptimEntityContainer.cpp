@@ -18,11 +18,11 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "antares/solver/optim-model-filler/VariableContainer.h"
+#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
 
 namespace Antares::Optimisation
 {
-void VariableContainer::addFromSystemComponent(
+void OptimEntityContainer::addFromSystemComponent(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
     const auto* model = component.getModel();
