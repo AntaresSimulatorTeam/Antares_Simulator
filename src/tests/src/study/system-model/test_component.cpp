@@ -340,6 +340,9 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").value(), "area1");
     BOOST_CHECK_EQUAL(component.portToAreaConnections().size(), 1);
     BOOST_CHECK_EQUAL(component.portToAreaConnections().at("portACDef"), "area1");
+
+    BOOST_CHECK_THROW(component.nodeAtPortField("wrong port", "field"), std::invalid_argument);
 }
+
 
 BOOST_AUTO_TEST_SUITE_END()
