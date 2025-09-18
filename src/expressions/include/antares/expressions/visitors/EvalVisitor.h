@@ -133,7 +133,7 @@ public:
 
     [[nodiscard]] std::vector<double> valuesAsVector() const
     {
-        if (const auto* v = std::get_if<std::vector<double>>(&value_); v)
+        if (const auto* v = std::get_if<std::vector<double>>(&value_))
         {
             return *v;
         }
@@ -142,7 +142,7 @@ public:
 
     [[nodiscard]] double getValueInVector(unsigned index) const
     {
-        if (const auto* v = std::get_if<std::vector<double>>(&value_); v)
+        if (const auto* v = std::get_if<std::vector<double>>(&value_))
         {
             return (*v)[index];
         }
