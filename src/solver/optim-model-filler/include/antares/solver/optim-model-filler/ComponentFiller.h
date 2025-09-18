@@ -59,7 +59,7 @@ public:
 
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             OptimEntityContainer& solverVariables,
+                             OptimEntityContainer& optimEntityContainer,
                              const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
@@ -79,17 +79,19 @@ public:
 private:
     void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                              const Optimization::LinearConstraint& linear_constraint,
-                             const std::string& constraint_id) const;
+                             const std::string& constraint_id) ;
 
     void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                      const Optimization::LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
-                                     const Optimisation::LinearProblemApi::FillContext& ctx) const;
+                                     const Optimisation::LinearProblemApi::FillContext& ctx) ;
 
-    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const;
+      Expressions::Visitors::TimeIndex getConstraintTimeIndex(
+      const Expressions::Nodes::Node* node,
+      const ModelerStudy::SystemModel::Component& component) const;
 
     const ModelerStudy::SystemModel::Component& component_;
-    OptimEntityContainer& variablesContainer_;
+    OptimEntityContainer& optimEntityContainer_;
     const EvaluationContextProvider evaluationContextProvider_;
 };
 

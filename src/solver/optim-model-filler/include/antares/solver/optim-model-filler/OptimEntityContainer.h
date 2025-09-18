@@ -22,8 +22,10 @@
 #pragma once
 #include <vector>
 
+#include <antares/optimisation/linear-problem-api/mipConstraint.h>
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
 #include <antares/study/system-model/component.h>
+#include <antares/expressions/visitors/TimeIndex.h>
 
 namespace Antares::Optimisation
 {
@@ -32,6 +34,8 @@ struct OptimComponent
     unsigned int index = 0;
     std::vector<unsigned int> modelVariablesGlobalIndices = {};
     std::unordered_map<std::string, unsigned int> variableIndexMap;
+    std::vector<unsigned int> modelConstraintsGlobalIndices = {};
+    std::vector<Expressions::Visitors::TimeIndex> modelConstraintsTimeIndex = {};
 };
 
 class OptimEntityContainer
@@ -44,9 +48,20 @@ public:
         return variableStartColumn_;
     }
 
+    [[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
+    {
+        return constraintStartLine_;
+    }
+
+
     void addStartColumn()
     {
         variableStartColumn_.push_back(variables_.size());
+    }
+
+    void addStartLine()
+    {
+        constraintStartLine_.push_back(constraints_.size());
     }
 
     [[nodiscard]] const std::vector<LinearProblemApi::IMipVariable*>& getVariables() const
@@ -54,17 +69,36 @@ public:
         return variables_;
     }
 
+    [[nodiscard]] const std::vector<LinearProblemApi::IMipConstraint*>& getConstraints() const
+    {
+        return constraints_;
+    }
+
     [[nodiscard]] size_t variablesSize() const
     {
         return variables_.size();
     }
 
-    void addVariable(LinearProblemApi::IMipVariable* variable)
+  [[nodiscard]] size_t constraintsSize() const
+    {
+        return constraints_.size();
+    }
+
+    void registerVariable(LinearProblemApi::IMipVariable* variable)
     {
         variables_.push_back(variable);
     }
 
+      void registerConstraint(LinearProblemApi::IMipConstraint* constraint)
+    {
+        constraints_.push_back(constraint);
+    }
+
     [[nodiscard]] const OptimComponent& getOptimComponent(size_t index) const
+    {
+        return optimComponents_.at(index);
+    }
+    [[nodiscard]]  OptimComponent& getOptimComponent(size_t index) 
     {
         return optimComponents_.at(index);
     }
@@ -76,10 +110,35 @@ public:
 
     void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
 
+    
+    // unsigned int VariableGLobalIndex() const
+    // {
+    //     return variableGlobalIndex_;
+    // }
+
+    unsigned int ConstraintGLobalIndex() const
+    {
+        return constraintGlobalIndex_;
+    }
+
+    // void IncrementVariableGLobalIndex()
+    // {
+    //     ++variableGlobalIndex_;
+    // }
+
+    void IncrementConstraintGLobalIndex()
+    {
+        ++constraintGlobalIndex_;
+    }
+
 private:
-    std::vector<Antares::Optimisation::LinearProblemApi::IMipVariable*> variables_;
+    std::vector<LinearProblemApi::IMipVariable*> variables_;
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
     unsigned int variableGlobalIndex_ = 0;
+    //---
+    std::vector<LinearProblemApi::IMipConstraint*> constraints_;
+    std::vector<unsigned int> constraintStartLine_;
+    unsigned int constraintGlobalIndex_ = 0;
 };
 } // namespace Antares::Optimisation

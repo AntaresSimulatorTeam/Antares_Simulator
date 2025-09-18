@@ -95,6 +95,7 @@ void addConstraintEntries(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   const Antares::ModelerStudy::SystemModel::Component& component,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   std::optional<unsigned> scenario,

@@ -194,6 +194,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
                           const Antares::ModelerStudy::SystemModel::Component& component,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           std::optional<unsigned> scenario,
@@ -202,17 +203,25 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 {
     const auto& cid = component.Id();
     const bool isLp = linearProblem.isLP();
+    const auto& constraintStart = optimEntityContainer.getConstraintStartLine();
+    const auto& solverConstraints = optimEntityContainer.getConstraints();
+    const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
+    const auto& modelConstraintsGlobalIndices = optimComponent.modelConstraintsGlobalIndices;
+    unsigned constraintLocalIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
         const auto& cname = modelConstr.Id();
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
-                       .dispatch(modelConstr.expression().RootNode());
+        
+        auto constraintGlobalIndex = modelConstraintsGlobalIndices.at(constraintLocalIndex);
+        TI idxType = optimComponent.modelConstraintsTimeIndex[constraintLocalIndex];
+        ++constraintLocalIndex;
+        
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
-            std::string fullConstName = BuildModelerConstraintName(cid, cname, ts);
-            const auto* c = linearProblem.lookupConstraint(fullConstName);
+           const auto* c = solverConstraints[constraintStart.at(constraintGlobalIndex)
+                                              + ts.value_or(0)];
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
                                   timeConversionMode,
@@ -338,7 +347,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
         addConstraintEntries(simulationTable,
                              linearProblem,
                              fillContext,
-                             component,
+                             component,optimEntityContainer,
                              currentBlock,
                              timeConversionMode,
                              scenario,
