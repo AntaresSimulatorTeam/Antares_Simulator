@@ -27,8 +27,8 @@
 #include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "EvaluationContextProvider.h"
+#include "OptimEntityContainer.h"
 #include "ReadLinearConstraintVisitor.h"
-#include "VariableContainer.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -59,7 +59,7 @@ public:
 
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(OptimModel& optimModel,
-                             VariableContainer& solverVariables,
+                             OptimEntityContainer& solverVariables,
                              const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
@@ -91,7 +91,7 @@ private:
                                        const ModelerStudy::SystemModel::Component& component) const;
 
     OptimModel& optimModel_;
-    VariableContainer& variablesContainer_;
+    OptimEntityContainer& variablesContainer_;
     const EvaluationContextProvider evaluationContextProvider_;
 };
 
@@ -99,7 +99,7 @@ class VariablesBulkAddition
 {
 public:
     VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          VariableContainer& variableDictionary);
+                          OptimEntityContainer& variableDictionary);
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
@@ -136,6 +136,6 @@ public:
 
 private:
     Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    VariableContainer& variableContainer_;
+    OptimEntityContainer& optimEntityContainer_;
 };
 } // namespace Antares::Optimisation

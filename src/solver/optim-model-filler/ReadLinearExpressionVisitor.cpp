@@ -40,12 +40,12 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const Optimisation::OptimModel& optimModel,
-  const Optimisation::VariableContainer& variableContainer):
+  const Optimisation::OptimEntityContainer& optimEntityContainer):
     evalContextProvider_(evalContextProvider),
     fillContext_(fillContext),
     optimModel_(optimModel),
-    nbModelVariables_(variableContainer.variablesSize()),
-    variableContainer_(variableContainer)
+    nbModelVariables_(optimEntityContainer.variablesSize()),
+    optimEntityContainer_(optimEntityContainer)
 {
     nbtimeSteps_ = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep() + 1;
     size_t nbCompo = optimModel.optimComponents.size();
@@ -123,7 +123,7 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Vari
     size_t compoNumber = optimComponents.size();
     std::vector<LinearExpressionEigen> ret;
     ret.reserve(compoNumber);
-    const auto& variableStartColumn = variableContainer_.getVariableStartColumn();
+    const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
 
     for (int compoLocalId = 0; compoLocalId < compoNumber; ++compoLocalId)
     {
@@ -265,7 +265,7 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Port
             auto* connectedComponent = connexion_end.component();
             auto* port = connexion_end.port();
             // const Optimisation::OptimModel& optimModelAtModel =
-            // variableContainer_.getOptimModels()
+            // optimEntityContainer_.getOptimModels()
             //                                                       .at(connectedComponent->getModel()
             //                                                             ->Index());
             // // const auto& optimComponentAtModel = optimModelAtModel.optimComponents.at(
@@ -275,7 +275,7 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Port
             //                                { return optCompo.component == connectedComponent; });
             //  if (it != optimModelAtModel.optimComponents.end())
             // {
-            const auto& connectedOptimComponent = variableContainer_.getOptimComponent(
+            const auto& connectedOptimComponent = optimEntityContainer_.getOptimComponent(
               connectedComponent->Index());
             Optimisation::OptimModel optimModel;
             optimModel.optimComponents.push_back(
@@ -286,7 +286,7 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Port
             ReadLinearExpressionVisitor visitor(evalContextProvider_,
                                                 fillContext_,
                                                 optimModel,
-                                                variableContainer_);
+                                                optimEntityContainer_);
 
             const Node* connectedNode = connectedComponent->nodeAtPortField(port->Id(), fieldId);
             linearExpressionMatrix += visitor.dispatch(connectedNode)[0];
@@ -351,7 +351,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::TimeIndex(
   const Optimisation::OptimComponent& optimComponent) const
 {
     const auto& modelVariablesGlobalIndices = optimComponent.modelVariablesGlobalIndices;
-    const auto& variableStartColumn = variableContainer_.getVariableStartColumn();
+    const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
 
     LinearExpressionEigen to_return(nbtimeSteps_, nbModelVariables_);
     to_return.reserve(modelVariablesGlobalIndices.size() * nbtimeSteps_);

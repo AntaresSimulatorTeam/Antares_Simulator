@@ -55,7 +55,7 @@ void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
   const Data& modelerData,
-  const Optimisation::VariableContainer& variableContainer,
+  const Optimisation::OptimEntityContainer& optimEntityContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
     if (output)
@@ -65,7 +65,7 @@ void FileWriter::writeSimulationTable(
                             linearProblem,
                             solution.getObjectiveValue(),
                             modelerData,
-                            variableContainer,
+                            optimEntityContainer,
                             fillContext,
                             0,
                             TimeConversionMode::SingleBlock);

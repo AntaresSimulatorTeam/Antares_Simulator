@@ -167,10 +167,9 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
-    // fillMapFrom(model_.variables_, variables, uniqueIdChecker_);
-    for (const auto& v: variables)
+    for (const auto& variable: variables)
     {
-        uniqueIdChecker_.add(v.Id());
+        uniqueIdChecker_.add(variable.Id());
     }
     model_.variables_ = std::move(variables);
 
@@ -201,7 +200,11 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
  */
 ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraints)
 {
-    fillMapFrom(model_.constraints_, constraints, uniqueIdChecker_);
+    for (const auto& constraint: constraints)
+    {
+        uniqueIdChecker_.add(constraint.Id());
+    }
+    model_.constraints_ = std::move(constraints);
     return *this;
 }
 

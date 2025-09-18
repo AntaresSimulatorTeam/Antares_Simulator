@@ -25,7 +25,6 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_utils.h>
-#include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/io/outputs/ISimulationTable.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
@@ -77,22 +76,22 @@ static void logProblemSize(const MPSolver* mpSolver)
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Modeler::Data* modelerData,
-  VariableContainer& variablesContainer)
+  OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
-    variablesContainer.allocateOptimComponents(components.size());
-    variablesContainer.allocateOptimModels(modelerData->system->Models());
+    optimEntityContainer.allocateOptimComponents(components.size());
+    optimEntityContainer.allocateOptimModels(modelerData->system->Models());
     for (const auto& component: components)
     {
-        variablesContainer.addFromSystemComponent(component);
+        optimEntityContainer.addFromSystemComponent(component);
     }
-    for ( auto& optimModel: variablesContainer.getOptimModels())
+    for (auto& optimModel: optimEntityContainer.getOptimModels())
     {
         if (!optimModel.optimComponents.empty())
         {
             fillersCollection.push_back(
               std::make_unique<ComponentFiller>(optimModel,
-                                                variablesContainer,
+                                                optimEntityContainer,
                                                 *modelerData->dataSeries,
                                                 modelerData->scenarioGroupRepository));
         }
@@ -132,7 +131,7 @@ static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optim
 MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                              FillContext& fillCtx,
                              const PROBLEME_HEBDO* problemeHebdo,
-                             VariableContainer& variableContainer,
+                             OptimEntityContainer& optimEntityContainer,
                              bool namedProblems)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
@@ -141,13 +140,13 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, variableContainer);
+        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, optimEntityContainer);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
         fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
           problemeHebdo,
-          variableContainer,
+          optimEntityContainer,
           *problemeHebdo->modelerData->dataSeries,
           problemeHebdo->modelerData->scenarioGroupRepository));
     }
@@ -194,12 +193,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-    VariableContainer variableContainer;
+    OptimEntityContainer optimEntityContainer;
 
     solver = fillAndGetMpSolver(ortoolsProblem,
                                 fillCtx,
                                 problemeHebdo,
-                                variableContainer,
+                                optimEntityContainer,
                                 problemeHebdo->NamedProblems);
 
     std::call_once(logProblemSizeFlag, logProblemSize, solver);
@@ -261,7 +260,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
                             *problemeHebdo->modelerData,
-                            variableContainer,
+                            optimEntityContainer,
                             fillCtx,
                             currentBlock,
                             timeConversionMode,
@@ -342,9 +341,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                                      options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-        VariableContainer variableContainer;
+        OptimEntityContainer OptimEntityContainer;
         std::unique_ptr<MPSolver> MPproblem(
-          fillAndGetMpSolver(infeasibleProblem, fillCtx, problemeHebdo, variableContainer, true));
+          fillAndGetMpSolver(infeasibleProblem, fillCtx, problemeHebdo, OptimEntityContainer, true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

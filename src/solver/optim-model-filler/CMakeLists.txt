@@ -16,10 +16,10 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/Dimensions.h
         include/antares/solver/optim-model-filler/scenarioGroupRepo.h
         include/antares/solver/optim-model-filler/LinearExpressionEigen.h
-        include/antares/solver/optim-model-filler/VariableContainer.h
+        include/antares/solver/optim-model-filler/OptimEntityContainer.h
         scenarioGroupRepo.cpp
         scenarioGroupRepoExceptions.cpp
-        VariableContainer.cpp
+        OptimEntityContainer.cpp
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})

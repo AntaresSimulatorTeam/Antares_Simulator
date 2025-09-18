@@ -35,7 +35,7 @@ class OrtoolsMipSolution;
 
 namespace Antares::Optimisation
 {
-class VariableContainer;
+class OptimEntityContainer;
 
 namespace LinearProblemApi
 {
@@ -63,7 +63,7 @@ public:
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const Antares::Modeler::Data& modelerData,
-      const Optimisation::VariableContainer& variableContainer,
+      const Optimisation::OptimEntityContainer& optimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
 

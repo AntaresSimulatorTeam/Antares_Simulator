@@ -59,7 +59,7 @@ public:
       const Optimisation::EvaluationContextProvider& evalContextProvider,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const Optimisation::OptimModel& optimModel,
-      const Optimisation::VariableContainer& variableContainer);
+      const Optimisation::OptimEntityContainer& optimEntityContainer);
 
     std::string name() const override;
 

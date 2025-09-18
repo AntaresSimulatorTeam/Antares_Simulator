@@ -26,8 +26,8 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
-#include "antares/solver/optim-model-filler/VariableContainer.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Optimisation;
@@ -37,12 +37,12 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const VariableContainer& variableContainer,
+  const OptimEntityContainer& optimEntityContainer,
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
-    variableContainer_(variableContainer),
+    optimEntityContainer_(optimEntityContainer),
     evaluationContextProvider_(linearProblemData, scenarioGroupRepository)
 {
     int i = 0;
@@ -102,7 +102,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     // legacy constraint is in "gen<0, load>0" convention
     std::string lowerAreaId = areaId;
     boost::algorithm::to_lower(lowerAreaId);
-    const auto& solverVariables = variableContainer_.getVariables();
+    const auto& solverVariables = optimEntityContainer_.getVariables();
     const auto& coeffPerVar = linearExpression.coefPerVar();
 
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
@@ -147,7 +147,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
                                         ctx,
                                         optimModel,
-                                        variableContainer_);
+                                        optimEntityContainer_);
     auto linearExpressions = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
     for (const auto& linearExpression: linearExpressions)
     {
@@ -159,10 +159,10 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
                                                      ILinearProblemData& data,
                                                      const FillContext& ctx)
 {
-    const auto& optimModels = variableContainer_.getOptimModels();
+    const auto& optimModels = optimEntityContainer_.getOptimModels();
     for (const auto& component: modelerSystem_->Components())
     {
-        const auto& connectedOptimComponent = variableContainer_.getOptimComponent(
+        const auto& connectedOptimComponent = optimEntityContainer_.getOptimComponent(
           component.Index());
         Optimisation::OptimModel optimModel;
         optimModel.optimComponents.push_back(

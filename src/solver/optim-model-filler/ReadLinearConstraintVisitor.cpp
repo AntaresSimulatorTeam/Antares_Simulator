@@ -36,8 +36,8 @@ ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
   const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const Optimisation::OptimModel& optimModel,
-  const Optimisation::VariableContainer& variableContainer):
-    linear_expression_visitor_(evalContextProvider, fillContext, optimModel, variableContainer)
+  const Optimisation::OptimEntityContainer& optimEntityContainer):
+    linear_expression_visitor_(evalContextProvider, fillContext, optimModel, optimEntityContainer)
 {
 }
 

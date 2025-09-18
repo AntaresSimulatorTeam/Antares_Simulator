@@ -29,8 +29,8 @@
 namespace Antares::Optimisation
 {
 struct OptimModel;
-class VariableContainer;
-}
+class OptimEntityContainer;
+} // namespace Antares::Optimisation
 
 namespace Antares::Optimization
 {
@@ -47,7 +47,7 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 public:
     explicit ComponentToAreaConnectionFiller(
       const PROBLEME_HEBDO* problemeHebdo,
-      const Optimisation::VariableContainer& variableContainer,
+      const Optimisation::OptimEntityContainer& optimEntityContainer,
       const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
@@ -63,7 +63,7 @@ public:
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-    const Optimisation::VariableContainer& variableContainer_;
+    const Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Optimisation::EvaluationContextProvider evaluationContextProvider_;
 
     std::map<std::string, unsigned> areaIndices_;

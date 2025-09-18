@@ -42,10 +42,10 @@ struct OptimModel
     std::vector<OptimComponent> optimComponents{};
 };
 
-class VariableContainer
+class OptimEntityContainer
 {
 public:
-    VariableContainer() = default;
+    OptimEntityContainer() = default;
 
     [[nodiscard]] const std::vector<unsigned int>& getVariableStartColumn() const
     {

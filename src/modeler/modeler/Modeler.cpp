@@ -68,18 +68,18 @@ public:
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         const auto& components = system_->Components();
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        variableContainer_.allocateOptimComponents(components.size());
-        variableContainer_.allocateOptimModels(system_->Models());
+        optimEntityContainer_.allocateOptimComponents(components.size());
+        optimEntityContainer_.allocateOptimModels(system_->Models());
         for (const auto& component: components)
         {
-            variableContainer_.addFromSystemComponent(component);
+            optimEntityContainer_.addFromSystemComponent(component);
         }
-        for ( auto& optimModel: variableContainer_.getOptimModels())
+        for (auto& optimModel: optimEntityContainer_.getOptimModels())
         {
             if (!optimModel.optimComponents.empty())
             {
                 fillers.push_back(std::make_unique<ComponentFiller>(optimModel,
-                                                                    variableContainer_,
+                                                                    optimEntityContainer_,
                                                                     *dataSeries,
                                                                     scenario_group_repository));
             }
@@ -90,14 +90,14 @@ public:
         linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
     }
 
-    [[nodiscard]] const Optimisation::VariableContainer& getVariableContainer() const
+    [[nodiscard]] const Optimisation::OptimEntityContainer& getOptimEntityContainer() const
     {
-        return variableContainer_;
+        return optimEntityContainer_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    Optimisation::VariableContainer variableContainer_;
+    Optimisation::OptimEntityContainer optimEntityContainer_;
 };
 
 void Modeler::solve() const
@@ -162,7 +162,7 @@ void Modeler::solve() const
             writer_.writeSimulationTable(ortools_linear_problem,
                                          *solution,
                                          data,
-                                         system_linear_problem.getVariableContainer(),
+                                         system_linear_problem.getOptimEntityContainer(),
                                          timeScenarioCtx);
             break;
         default:

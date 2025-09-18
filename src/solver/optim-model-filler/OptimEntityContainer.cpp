@@ -18,12 +18,12 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "antares/solver/optim-model-filler/VariableContainer.h"
+#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
 
 namespace Antares::Optimisation
 {
 
-void VariableContainer::addFromSystemComponent(
+void OptimEntityContainer::addFromSystemComponent(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
     const auto* model = component.getModel();
@@ -36,7 +36,7 @@ void VariableContainer::addFromSystemComponent(
                                       .variableIndexMap = {}});
 }
 
-void VariableContainer::allocateOptimModels(
+void OptimEntityContainer::allocateOptimModels(
   const std::vector<const ModelerStudy::SystemModel::Model*>& models)
 {
     optimModels_.assign(models.size(), {});
@@ -48,7 +48,7 @@ void VariableContainer::allocateOptimModels(
     }
 }
 
-void VariableContainer::allocateOptimComponents(size_t nbOptimComponents)
+void OptimEntityContainer::allocateOptimComponents(size_t nbOptimComponents)
 {
     optimComponents_.assign(nbOptimComponents, {});
 }

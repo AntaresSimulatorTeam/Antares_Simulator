@@ -34,7 +34,7 @@
 
 namespace Antares::Optimisation
 {
-class VariableContainer;
+class OptimEntityContainer;
 
 namespace LinearProblemApi
 {
@@ -85,7 +85,7 @@ void addVariableEntries(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   const Antares::ModelerStudy::SystemModel::Component& component,
-  const Antares::Optimisation::VariableContainer& variableContainer,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   std::optional<unsigned> scenario);
@@ -104,7 +104,7 @@ void addConstraintEntries(
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
-                    const Antares::Optimisation::VariableContainer& variableContainer,
+                    const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
@@ -117,7 +117,7 @@ void addPortEntries(ISimulationTable& simulationTable,
  * @param linearProblem the linear problem containing the optimal solution
  * @param objectiveValue the overall objective value
  * @param modelerData
- * @param variableContainer
+ * @param optimEntityContainer
  * @param components list of modeler components
  * @param dataSeries the input data series
  * @param fillContext the fill context used to fill the linear problem
@@ -131,7 +131,7 @@ void FillSimulationTable(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   double objectiveValue,
   const Antares::Modeler::Data& modelerData,
-  const Antares::Optimisation::VariableContainer& variableContainer,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,

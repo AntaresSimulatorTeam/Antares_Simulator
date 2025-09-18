@@ -51,9 +51,9 @@ namespace Antares::Optimisation
 {
 VariablesBulkAddition::VariablesBulkAddition(
   Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-  VariableContainer& variableDictionary):
+  OptimEntityContainer& variableDictionary):
     linear_problem_(linear_problem),
-    variableContainer_(variableDictionary)
+    optimEntityContainer_(variableDictionary)
 {
 }
 
@@ -64,7 +64,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         bool integer,
                                         const Optimization::Dimensions& dim) const
 {
-    variableContainer_.addStartColumn();
+    optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -73,7 +73,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               dim.isScenarioDependent(),
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
-            variableContainer_.addVariable(
+            optimEntityContainer_.addVariable(
               linear_problem_.addVariable(lb,
                                           ub,
                                           integer,
@@ -97,7 +97,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but lb size = " << lb.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableContainer_.addStartColumn();
+    optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -108,7 +108,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            variableContainer_.addVariable(
+            optimEntityContainer_.addVariable(
               linear_problem_.addVariable(lb[t], /*use localIndex*/
                                           ub,
                                           integer,
@@ -131,7 +131,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableContainer_.addStartColumn();
+    optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -142,7 +142,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            variableContainer_.addVariable(
+            optimEntityContainer_.addVariable(
               linear_problem_.addVariable(lb,
                                           ub[t], /*use localIndex*/
                                           integer,
@@ -166,7 +166,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                    << " and ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableContainer_.addStartColumn();
+    optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -176,7 +176,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            variableContainer_.addVariable(
+            optimEntityContainer_.addVariable(
               linear_problem_.addVariable(lb[t], /*use localIndex*/
                                           ub[t], /*use localIndex*/
                                           integer,
@@ -186,7 +186,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
 }
 
 ComponentFiller::ComponentFiller(OptimModel& optimModel,
-                                 VariableContainer& solverVariables,
+                                 OptimEntityContainer& solverVariables,
                                  const LinearProblemApi::ILinearProblemData& data,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
     optimModel_(optimModel),
@@ -340,30 +340,26 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
                                                       ctx,
                                                       optimModel_,
                                                       variablesContainer_);
-    for (const auto& constraint: optimModel_.model->Constraints() | std::views::values)
+    for (const auto& constraint: optimModel_.model->Constraints())
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        if (checkTimeSteps(ctx))
+        // if (checkTimeSteps(ctx))
+        // {
+        for (int compoLocalId = 0; compoLocalId < linear_constraints.size(); ++compoLocalId)
         {
-            for (int compoLocalId = 0; compoLocalId < linear_constraints.size(); ++compoLocalId)
+            const auto& linearConstraint = linear_constraints[compoLocalId];
+            const auto& component = optimModel_.optimComponents[compoLocalId].component;
+            if (IsThisConstraintTimeDependent(root_node, *component))
             {
-                const auto& linearConstraint = linear_constraints[compoLocalId];
-                const auto& component = optimModel_.optimComponents[compoLocalId].component;
-                if (IsThisConstraintTimeDependent(root_node, *component))
-                {
-                    addTimeDependentConstraints(pb,
-                                                *component,
-                                                linearConstraint,
-                                                constraint.Id(),
-                                                ctx);
-                }
-                else
-                {
-                    addStaticConstraint(pb, *component, linearConstraint, constraint.Id());
-                }
+                addTimeDependentConstraints(pb, *component, linearConstraint, constraint.Id(), ctx);
+            }
+            else
+            {
+                addStaticConstraint(pb, *component, linearConstraint, constraint.Id());
             }
         }
+        //}
     }
 }
 
