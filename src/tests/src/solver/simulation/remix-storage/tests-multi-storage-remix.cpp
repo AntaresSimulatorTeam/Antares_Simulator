@@ -16,16 +16,16 @@ using namespace Antares::Solver::Simulation;
 template<unsigned int nb_hours>
 struct STS_setup
 {
-    STS_setup()
+    STS_setup():
+        withdrawal(nb_hours, 0),
+        injection(nb_hours, 0),
+        levels(nb_hours, 0.),
+        pmax(nb_hours, std::numeric_limits<double>::max()),
+        inflows(nb_hours, 0.),
+        ovf(nb_hours, 0.),
+        lowRuleCurve(nb_hours, 0.),
+        upRuleCurve(nb_hours, capacity)
     {
-        withdrawal.assign(nb_hours, 0);
-        injection.assign(nb_hours, 0);
-        levels.assign(nb_hours, 0.);
-        pmax.assign(nb_hours, std::numeric_limits<double>::max());
-        inflows.assign(nb_hours, 0.);
-        ovf.assign(nb_hours, 0.);
-        lowRuleCurve.assign(nb_hours, 0.);
-        upRuleCurve.assign(nb_hours, capacity);
     }
 
     std::shared_ptr<IStorageForRemix> createSTS(std::vector<double>& unsupE)
@@ -55,13 +55,13 @@ struct STS_setup
 template<unsigned int nb_hours>
 struct InputFixture
 {
-    InputFixture()
+    InputFixture():
+        Load(nb_hours, 0.),
+        TotaGenWithoutStorage(nb_hours, 0.),
+        UnsupE(nb_hours, 0.),
+        Spillage(nb_hours, 0.),
+        DTG_MRG(nb_hours, 0.)
     {
-        Load.assign(nb_hours, 0.);
-        TotaGenWithoutStorage.assign(nb_hours, 0.);
-        UnsupE.assign(nb_hours, 0.);
-        Spillage.assign(nb_hours, 0.);
-        DTG_MRG.assign(nb_hours, 0.);
     }
 
     void runRemixStorageAlgorithm()
