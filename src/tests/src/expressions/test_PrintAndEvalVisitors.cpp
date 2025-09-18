@@ -276,6 +276,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket_one_value)
 
     BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
     BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].getValueInVector(0), EvaluationResult::EvalResultTypeError);
     BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[10].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[2000].valueAsDouble(), 2025.03);
