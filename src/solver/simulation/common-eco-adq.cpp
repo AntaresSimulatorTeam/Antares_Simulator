@@ -93,14 +93,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
     try
     {
-        NullResultWriter resultWriter;
-        NullSimulationObserver simulationObserver;
-
-        OPT_OptimisationHebdomadaire(study.parameters.optOptions,
-                                     &problem,
-                                     resultWriter,
-                                     simulationObserver,
-                                     simulationTables);
+        OPT_OptimisationHebdomadaireQuadratique(study.parameters.optOptions, &problem);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -157,7 +150,6 @@ void ComputeFlowQuad(Data::Study& study,
     {
         logs.info() << "Post-processing... (quadratic optimisation)";
 
-        problem.TypeDOptimisation = OPTIMISATION_QUADRATIQUE;
         problem.LeProblemeADejaEteInstancie = false;
         for (uint w = 0; w != nbWeeks; ++w)
         {
