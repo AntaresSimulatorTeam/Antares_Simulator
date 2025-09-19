@@ -27,7 +27,6 @@
 #include <antares/study/system-model/component.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/solver/modeler/data.h"
-#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "ISimulationTable.h"
@@ -72,8 +71,8 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  unsigned currentBlock);
 
-Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
-  Antares::Expressions::Visitors::TimeIndex timeIndex,
+Antares::Optimisation::TimeIndex updateTimeIndexIfShouldForceScenario(
+  Antares::Optimisation::TimeIndex timeIndex,
   bool forceExportForScenarioIndex);
 
 std::string BuildModelerConstraintName(const std::string& cid,
@@ -99,8 +98,7 @@ void addConstraintEntries(
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   std::optional<unsigned> scenario,
-  bool forceExportForScenarioIndex,
-  const Antares::Optimisation::EvaluationContextProvider& contextProvider);
+  bool forceExportForScenarioIndex);
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
@@ -109,8 +107,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
-                    bool forceExportForScenarioIndex,
-                    const Antares::Optimisation::EvaluationContextProvider& contextProvider);
+                    bool forceExportForScenarioIndex);
 
 /**
  * Fill modeler outputs in the simulation table

@@ -26,9 +26,8 @@
 #include "antares/expressions/visitors/EvaluationContext.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 
-#include "EvaluationContextProvider.h"
 #include "ReadLinearConstraintVisitor.h"
-#include "OptimEntityContainer.h"
+"antares/modeler-optimisation-container/OptimEntityContainer.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -63,36 +62,34 @@ public:
                              const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
-    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
+    void addVariables(
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Optimisation::LinearProblemApi::ILinearProblemData& data,
+    void addConstraints(
                         const Optimisation::LinearProblemApi::FillContext& ctx) override;
     const std::vector<unsigned int>& getVariableStartColumn() const;
 
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
+    void addObjective(
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addStaticConstraint(
                              const Optimization::LinearConstraint& linear_constraint,
                              const std::string& constraint_id) ;
 
-    void addTimeDependentConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
+    void addTimeDependentConstraints(
                                      const Optimization::LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
                                      const Optimisation::LinearProblemApi::FillContext& ctx) ;
 
-      Expressions::Visitors::TimeIndex getConstraintTimeIndex(
+      TimeIndex getConstraintTimeIndex(
       const Expressions::Nodes::Node* node,
       const ModelerStudy::SystemModel::Component& component) const;
 
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
-    const EvaluationContextProvider evaluationContextProvider_;
+    const LinearProblemApi::ILinearProblemData& data_;
+    const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
 class VariablesBulkAddition

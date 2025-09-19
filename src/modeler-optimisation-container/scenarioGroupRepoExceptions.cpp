@@ -19,7 +19,7 @@
 
 #include <string>
 
-#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 
 namespace Antares::Optimisation
 {

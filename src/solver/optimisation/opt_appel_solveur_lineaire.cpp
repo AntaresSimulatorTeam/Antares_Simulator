@@ -129,7 +129,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                              bool namedProblems)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
-    fillersCollection.push_back(std::make_unique<LegacyFiller>(problemeHebdo, namedProblems));
+    fillersCollection.push_back(std::make_unique<LegacyFiller>(optimEntityContainer.Problem(),problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -151,9 +151,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
     // TODO try to make this cleaner
-    linearProblemBuilder.build(ortoolsProblem,
-                               problemeHebdo->modelerData ? *problemeHebdo->modelerData->dataSeries
-                                                          : dummy_data,
+    linearProblemBuilder.build(
                                fillCtx);
 
     measure.tick();
@@ -187,7 +185,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-    OptimEntityContainer optimEntityContainer;
+    OptimEntityContainer optimEntityContainer(ortoolsProblem,
+                                              *problemeHebdo->modelerData->dataSeries,
+                                              problemeHebdo->modelerData->scenarioGroupRepository);
 
     solver = fillAndGetMpSolver(ortoolsProblem,
                                 fillCtx,
@@ -335,9 +335,15 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                                      options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-        OptimEntityContainer variableContainer;
-        std::unique_ptr<MPSolver> MPproblem(
-          fillAndGetMpSolver(infeasibleProblem, fillCtx, problemeHebdo, variableContainer, true));
+       optimEntityContainer(
+          infeasibleProblem,
+          *problemeHebdo->modelerData->dataSeries,
+          problemeHebdo->modelerData->scenarioGroupRepository);
+        std::unique_ptr<MPSolver> MPproblem(fillAndGetMpSolver(infeasibleProblem,
+                                                               fillCtx,
+                                                               problemeHebdo,
+                                                               optimEntityContainer,
+                                                               true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

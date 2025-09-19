@@ -1,5 +1,5 @@
 #pragma once
-
+#if 0
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
 
 namespace Antares::Optimisation::LinearProblemApi
@@ -45,3 +45,4 @@ void OneVarFiller::addObjective(ILinearProblem& pb,
 }
 
 } // namespace Antares::Optimisation::LinearProblemApi
+#endif

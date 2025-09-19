@@ -3,7 +3,7 @@
 #include <string>
 
 #include <antares/expressions/nodes/Leaf.h>
-#include "antares/expressions/visitors/TimeIndex.h"
+#include <antares/modeler-optimisation-container/TimeIndex.h>
 
 namespace Antares::Expressions::Visitors
 {
@@ -20,7 +20,7 @@ class ParameterNode final: public Leaf<std::string>
 public:
     explicit ParameterNode(
       const std::string& value,
-      Visitors::TimeIndex time_index = Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
+      Optimisation::TimeIndex time_index = Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
         time_index_(time_index)
     {
@@ -31,12 +31,12 @@ public:
         return "ParameterNode";
     }
 
-    Visitors::TimeIndex timeIndex() const
+    Optimisation::TimeIndex timeIndex() const
     {
         return time_index_;
     }
 
 private:
-    Visitors::TimeIndex time_index_;
+    Optimisation::TimeIndex time_index_;
 };
 } // namespace Antares::Expressions::Nodes

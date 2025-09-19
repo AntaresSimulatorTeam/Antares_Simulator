@@ -33,16 +33,15 @@ LinearProblemBuilder::LinearProblemBuilder(
 {
 }
 
-void LinearProblemBuilder::build(ILinearProblem& pb,
-                                 ILinearProblemData& data,
+void LinearProblemBuilder::build(
                                  const FillContext& ctx)
 {
     std::ranges::for_each(fillers_,
-                          [&](const auto& filler) { filler->addVariables(pb, data, ctx); });
+                          [&](const auto& filler) { filler->addVariables( ctx); });
     std::ranges::for_each(fillers_,
-                          [&](const auto& filler) { filler->addConstraints(pb, data, ctx); });
+                          [&](const auto& filler) { filler->addConstraints( ctx); });
     std::ranges::for_each(fillers_,
-                          [&](const auto& filler) { filler->addObjective(pb, data, ctx); });
+                          [&](const auto& filler) { filler->addObjective( ctx); });
 }
 
 } // namespace Antares::Optimisation::LinearProblemApi

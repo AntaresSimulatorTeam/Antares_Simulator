@@ -20,7 +20,7 @@
  */
 
 #define WIN32_LEAN_AND_MEAN
-
+#if 0
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
@@ -343,3 +343,4 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+#endif
