@@ -27,7 +27,7 @@ namespace Antares
 {
 
 //! Prepare minimum generation scaling for each area
-class MinGenerationScaling
+class MinGenerationScaling final
 {
 public:
     MinGenerationScaling(Data::AreaList& areas, const Date::Calendar& calendar);

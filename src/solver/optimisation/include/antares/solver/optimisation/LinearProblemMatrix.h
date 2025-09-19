@@ -37,7 +37,7 @@
 
 using namespace Antares::Data;
 
-class LinearProblemMatrix: public ProblemMatrixEssential
+class LinearProblemMatrix final: public ProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder);

@@ -23,7 +23,7 @@
 #include "ConstraintGroup.h"
 #include "MaxPumping.h"
 
-class MaxPumpingGroup: public ConstraintGroup
+class MaxPumpingGroup final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

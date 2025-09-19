@@ -115,7 +115,7 @@ uint PathList::internalDeleteAllFiles()
     return count;
 }
 
-class PathListIterator: public IO::Directory::IIterator<true>
+class PathListIterator final: public IO::Directory::IIterator<true>
 {
 public:
     using IteratorType = IO::Directory::IIterator<true>;

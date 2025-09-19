@@ -28,7 +28,7 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class LinearProblemBuilder
+class LinearProblemBuilder final
 {
 public:
     explicit LinearProblemBuilder(std::vector<std::unique_ptr<LinearProblemFiller>>& fillers);

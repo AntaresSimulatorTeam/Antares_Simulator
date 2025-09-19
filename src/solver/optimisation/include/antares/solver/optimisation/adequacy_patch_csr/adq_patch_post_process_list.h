@@ -27,7 +27,7 @@
 namespace Antares::Solver::Simulation
 {
 
-class AdqPatchPostProcessList: public interfacePostProcessList
+class AdqPatchPostProcessList final: public interfacePostProcessList
 {
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 

@@ -25,7 +25,7 @@
 
 namespace Antares::Error
 {
-class RuntimeError: public std::runtime_error
+class RuntimeError final: public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;

@@ -30,7 +30,7 @@ namespace Benchmarking
 {
 class FileContent;
 
-class StudyInfoCollector
+class StudyInfoCollector final
 {
 public:
     StudyInfoCollector(const Antares::Data::Study& study):
@@ -63,7 +63,7 @@ struct OptimizationInfo
     unsigned int nbConstraints = 0;
 };
 
-class SimulationInfoCollector
+class SimulationInfoCollector final
 {
 public:
     SimulationInfoCollector(const OptimizationInfo& optInfo):

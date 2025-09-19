@@ -25,7 +25,7 @@
 
 namespace FSWalker
 {
-class Statistics
+class Statistics final
 {
 public:
     Statistics():

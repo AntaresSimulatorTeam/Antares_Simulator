@@ -32,7 +32,7 @@ namespace Antares::Data
 ** \ingroup study
 ** \see CHANGELOG.txt
 */
-class StudyVersion
+class StudyVersion final
 {
 public:
     /// allows automatic members comparison

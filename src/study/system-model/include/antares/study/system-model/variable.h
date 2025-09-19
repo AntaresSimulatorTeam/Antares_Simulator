@@ -31,7 +31,7 @@ namespace Antares::ModelerStudy::SystemModel
 {
 
 /// A decision variable of the model
-class Variable
+class Variable final
 {
 public:
     Variable(std::string id,

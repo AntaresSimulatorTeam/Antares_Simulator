@@ -35,7 +35,7 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-class PublicStudy: public Study
+class PublicStudy final: public Study
 {
 public:
     bool internalLoadBindingConstraints(const StudyLoadOptions& options) override

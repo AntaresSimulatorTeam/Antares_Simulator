@@ -41,7 +41,7 @@ private:
 
 using ListStorageForRemix = std::vector<std::shared_ptr<IStorageForRemix>>;
 
-class StorageListSort
+class StorageListSort final
 {
 public:
     void add(const double capacity, const std::shared_ptr<IStorageForRemix> sts);

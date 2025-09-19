@@ -25,7 +25,7 @@
 
 namespace Antares::Solver::Initialization::Error
 {
-class NoQueueService: public std::runtime_error
+class NoQueueService final: public std::runtime_error
 {
 public:
     NoQueueService():

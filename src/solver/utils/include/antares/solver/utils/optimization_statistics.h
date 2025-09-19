@@ -25,7 +25,7 @@
 #include <cmath>
 #include <string>
 
-class OptimizationStatistics
+class OptimizationStatistics final
 {
 private:
     std::atomic<long long> totalSolveTime;

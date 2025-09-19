@@ -33,7 +33,7 @@ namespace Antares::ModelerStudy::SystemModel
  * When the model is instantiated as a component, a value must be provided for
  * parameters, either as constant values or timeseries-based values.
  */
-class Parameter
+class Parameter final
 {
 public:
     explicit Parameter(std::string id,

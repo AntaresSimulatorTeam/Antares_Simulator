@@ -27,7 +27,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class Properties
+class Properties final
 {
 public:
     bool validate();

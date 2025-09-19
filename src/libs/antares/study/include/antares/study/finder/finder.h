@@ -36,7 +36,7 @@ namespace Antares::Data
 /*!
 ** \brief Look for study folders asynchronously
 */
-class StudyFinder
+class StudyFinder final
 {
 public:
     enum

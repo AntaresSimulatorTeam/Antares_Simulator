@@ -34,7 +34,7 @@ namespace Antares::IO::Inputs::ModelConverter
 using namespace Antares::Expressions::Nodes;
 
 /// Visitor to convert ANTLR expressions to Antares::Expressions::Nodes
-class ConvertorVisitor: public ExprVisitor
+class ConvertorVisitor final: public ExprVisitor
 {
 public:
     ConvertorVisitor(Expressions::Registry<Node>& registry, const YmlModel::Model& model);
@@ -116,7 +116,7 @@ std::any ConvertorVisitor::visit(antlr4::tree::ParseTree* tree)
     return tree->accept(this);
 }
 
-class NoParameterOrVariableWithThisName: public std::runtime_error
+class NoParameterOrVariableWithThisName final: public std::runtime_error
 {
 public:
     explicit NoParameterOrVariableWithThisName(const std::string& name):
@@ -225,7 +225,7 @@ std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
                        : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
 }
 
-class NotImplemented: public std::runtime_error
+class NotImplemented final: public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;

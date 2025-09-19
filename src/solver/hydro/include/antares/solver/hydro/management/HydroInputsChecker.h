@@ -29,7 +29,7 @@
 namespace Antares
 {
 
-class HydroInputsChecker
+class HydroInputsChecker final
 {
 public:
     explicit HydroInputsChecker(Antares::Data::Study& study);

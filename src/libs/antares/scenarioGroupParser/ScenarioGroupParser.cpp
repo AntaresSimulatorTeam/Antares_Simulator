@@ -30,7 +30,7 @@
 
 namespace Antares
 {
-class ScenarioBuilderImplVisitor: public ScenarioBuilderBaseVisitor
+class ScenarioBuilderImplVisitor final: public ScenarioBuilderBaseVisitor
 {
 public:
     std::any visitRules(ScenarioBuilderParser::RulesContext* ctx) override

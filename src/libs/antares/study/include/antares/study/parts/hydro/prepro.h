@@ -31,7 +31,7 @@ namespace Antares::Data
 ** \brief Data for the hydro preprocessor
 ** \ingroup hydroprepro
 */
-class PreproHydro
+class PreproHydro final
 {
 public:
     enum

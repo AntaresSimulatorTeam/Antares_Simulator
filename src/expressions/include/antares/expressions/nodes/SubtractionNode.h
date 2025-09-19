@@ -27,7 +27,7 @@ namespace Antares::Expressions::Nodes
 /**
  * @brief Represents a subtraction node in a syntax tree.
  */
-class SubtractionNode: public BinaryNode
+class SubtractionNode final: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;

@@ -27,7 +27,7 @@ namespace Antares::Expressions::Nodes
 /**
  * @brief Represents a division node in a syntax tree.
  */
-class DivisionNode: public BinaryNode
+class DivisionNode final: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;

@@ -23,7 +23,7 @@
 #include "AreaHydroLevel.h"
 #include "ConstraintGroup.h"
 
-class AreaHydroLevelGroup: public ConstraintGroup
+class AreaHydroLevelGroup final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

@@ -32,7 +32,7 @@ struct BindingConstraintHourData
 /*!
  * represent 'Hourly Binding Constraint' type
  */
-class BindingConstraintHour: private ConstraintFactory
+class BindingConstraintHour final: private ConstraintFactory
 {
 public:
     BindingConstraintHour(ConstraintBuilder& builder, BindingConstraintHourData& data):

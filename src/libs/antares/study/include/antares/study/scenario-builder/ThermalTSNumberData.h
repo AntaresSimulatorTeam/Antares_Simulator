@@ -28,7 +28,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class thermalTSNumberData: public TSNumberData
+class thermalTSNumberData final: public TSNumberData
 {
 public:
     thermalTSNumberData() = default;

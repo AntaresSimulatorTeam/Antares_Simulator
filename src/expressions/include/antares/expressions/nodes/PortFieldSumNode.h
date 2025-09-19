@@ -29,7 +29,7 @@ namespace Antares::Expressions::Nodes
 /**
  * @brief Represents a port field node where the expression is a sum.
  */
-class PortFieldSumNode: public Node, public Hashable
+class PortFieldSumNode final: public Node, public Hashable
 {
 public:
     /**

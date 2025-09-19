@@ -31,7 +31,7 @@
 
 namespace Antares::Solver
 {
-class InMemoryWriter: public IResultWriter
+class InMemoryWriter final: public IResultWriter
 {
 public:
     using MapType = std::map<std::string, std::string, std::less<>>;

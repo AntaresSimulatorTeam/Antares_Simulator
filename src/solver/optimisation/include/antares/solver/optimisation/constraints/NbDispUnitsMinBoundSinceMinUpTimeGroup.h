@@ -29,7 +29,7 @@
  *
  */
 
-class NbDispUnitsMinBoundSinceMinUpTimeGroup: public AbstractStartUpCostsGroup
+class NbDispUnitsMinBoundSinceMinUpTimeGroup final: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;

@@ -45,7 +45,7 @@ void CustomErrorListener::syntaxError(antlr4::Recognizer*,
     throw ShortTermStorageAdditionalConstraintsError(os.str());
 }
 
-class GroupsHours
+class GroupsHours final
 {
 public:
     explicit GroupsHours(const std::string& hoursField):

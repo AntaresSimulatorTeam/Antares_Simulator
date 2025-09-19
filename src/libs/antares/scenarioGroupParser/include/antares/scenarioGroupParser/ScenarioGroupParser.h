@@ -24,7 +24,7 @@
 
 namespace Antares
 {
-class ScenarioGroupParser
+class ScenarioGroupParser final
 {
 public:
     struct Line

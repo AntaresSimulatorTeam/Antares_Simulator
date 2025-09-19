@@ -258,7 +258,7 @@ private:
     mutable bool pModified = false;
 }; // class Sets
 
-class SetHandlerAreas
+class SetHandlerAreas final
 {
 public:
     explicit SetHandlerAreas(AreaList& areas);

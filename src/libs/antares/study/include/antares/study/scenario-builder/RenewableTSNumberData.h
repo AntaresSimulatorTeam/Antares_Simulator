@@ -28,7 +28,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class renewableTSNumberData: public TSNumberData
+class renewableTSNumberData final: public TSNumberData
 {
 public:
     renewableTSNumberData() = default;

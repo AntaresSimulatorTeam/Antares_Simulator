@@ -26,7 +26,7 @@
 #include "ProblemMatrixEssential.h"
 #include "constraints/ExchangeBalanceGroup.h"
 
-class QuadraticProblemMatrix: public ProblemMatrixEssential
+class QuadraticProblemMatrix final: public ProblemMatrixEssential
 {
 public:
     QuadraticProblemMatrix(PROBLEME_HEBDO* problem_hebdo, ConstraintBuilder& builder):

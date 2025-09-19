@@ -32,7 +32,7 @@ namespace Antares::Data
 ** \brief List of clusters
 ** \ingroup thermalclusters
 */
-class ThermalClusterList: public ClusterList<ThermalCluster>
+class ThermalClusterList final: public ClusterList<ThermalCluster>
 {
 public:
     std::string typeID() const override;

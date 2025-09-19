@@ -32,7 +32,7 @@
 #include "API.h"
 #include "in-memory-study.h"
 
-class InMemoryStudyLoader: public IStudyLoader
+class InMemoryStudyLoader final: public IStudyLoader
 {
 public:
     explicit InMemoryStudyLoader(bool success = true):

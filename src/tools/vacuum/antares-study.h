@@ -24,7 +24,7 @@
 #include <fswalker/fswalker.h>
 #include <mutex>
 
-class AntaresStudy: public FSWalker::IExtension
+class AntaresStudy final: public FSWalker::IExtension
 {
 public:
     AntaresStudy(int64_t dateLimit);

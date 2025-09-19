@@ -36,7 +36,7 @@ struct AreaBalanceData
  * represent 'Area Balance' constraint type
  */
 
-class AreaBalance: public ConstraintFactory
+class AreaBalance final: public ConstraintFactory
 {
 public:
     AreaBalance(ConstraintBuilder& builder, AreaBalanceData& data):

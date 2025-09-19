@@ -33,7 +33,7 @@ struct MinHydroPowerData
  * represent 'Min Hydraulic Power' constraint type
  */
 
-class MinHydroPower: private ConstraintFactory
+class MinHydroPower final: private ConstraintFactory
 {
 public:
     MinHydroPower(ConstraintBuilder& builder, MinHydroPowerData& data):

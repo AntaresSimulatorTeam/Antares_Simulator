@@ -28,7 +28,7 @@
 namespace Antares::Data
 {
 
-class Pollutant
+class Pollutant final
 {
 public:
     enum PollutantEnum

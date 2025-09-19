@@ -30,7 +30,7 @@ class STStorageCluster;
 
 namespace Antares::Data::ScenarioBuilder
 {
-class ShortTermInflowsTSNumberData: public TSNumberData
+class ShortTermInflowsTSNumberData final: public TSNumberData
 {
 public:
     bool apply(Study& study) override;

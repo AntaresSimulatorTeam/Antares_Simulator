@@ -32,7 +32,7 @@ struct MaxPumpingData
  * represent 'Max Pumping' constraint type
  */
 
-class MaxPumping: private ConstraintFactory
+class MaxPumping final: private ConstraintFactory
 {
 public:
     MaxPumping(ConstraintBuilder& builder, MaxPumpingData& data):

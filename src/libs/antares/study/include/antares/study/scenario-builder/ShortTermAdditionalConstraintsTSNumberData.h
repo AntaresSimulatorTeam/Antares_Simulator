@@ -30,7 +30,7 @@ class AdditionalConstraints;
 
 namespace Antares::Data::ScenarioBuilder
 {
-class ShortTermAdditionalConstraintsTSNumberData: public TSNumberData
+class ShortTermAdditionalConstraintsTSNumberData final: public TSNumberData
 {
 public:
     bool apply(Study& study) override;

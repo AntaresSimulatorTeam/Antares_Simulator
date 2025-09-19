@@ -32,7 +32,7 @@ struct MinDownTimeData
 /*!
  * represent 'MinDownTime' Constraint type
  */
-class MinDownTime: private ConstraintFactory
+class MinDownTime final: private ConstraintFactory
 {
 public:
     MinDownTime(ConstraintBuilder& builder, MinDownTimeData& data):

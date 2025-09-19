@@ -31,7 +31,7 @@ struct CsrBindingConstraintHourData
     std::map<int, int>& numberOfConstraintCsrHourlyBinding;
 };
 
-class CsrBindingConstraintHour: private ConstraintFactory
+class CsrBindingConstraintHour final: private ConstraintFactory
 {
 public:
     CsrBindingConstraintHour(ConstraintBuilder& builder, CsrBindingConstraintHourData& data):

@@ -29,7 +29,7 @@ class OptimisationsSimulationTable;
 namespace Antares::Solver::Optimization
 {
 
-class WeeklyOptimization
+class WeeklyOptimization final
 {
 public:
     WeeklyOptimization(const OptimizationOptions& options,

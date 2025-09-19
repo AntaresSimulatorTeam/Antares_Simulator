@@ -33,7 +33,7 @@ namespace Antares
 {
 namespace // anonymous
 {
-class ScenarioBuilderUpdater
+class ScenarioBuilderUpdater final
 {
 public:
     ScenarioBuilderUpdater(Data::Study& study):

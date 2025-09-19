@@ -23,7 +23,7 @@
 #include "BindingConstraintWeek.h"
 #include "ConstraintGroup.h"
 
-class BindingConstraintWeekGroup: public ConstraintGroup
+class BindingConstraintWeekGroup final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

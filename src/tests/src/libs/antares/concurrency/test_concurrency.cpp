@@ -51,7 +51,7 @@ Task failingTask()
     return []() { throw Exc(); };
 }
 
-class TestException
+class TestException final
 {
 };
 
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(test_future_set)
 }
 
 template<int N>
-class TestExceptionN
+class TestExceptionN final
 {
 };
 

@@ -65,7 +65,7 @@ struct LinkVariable
 
 struct PROBLEME_HEBDO;
 
-class HourlyCSRProblem
+class HourlyCSRProblem final
 {
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 

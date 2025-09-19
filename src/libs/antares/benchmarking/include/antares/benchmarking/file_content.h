@@ -26,7 +26,7 @@
 
 namespace Benchmarking
 {
-class FileContent
+class FileContent final
 {
 public:
     FileContent() = default;

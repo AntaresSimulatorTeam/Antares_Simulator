@@ -37,7 +37,7 @@
 namespace Antares::Data
 {
 
-class BindingConstraintGroupRepository
+class BindingConstraintGroupRepository final
 {
 public:
     [[nodiscard]] unsigned size() const;

@@ -24,7 +24,7 @@
 #include "FinalStockEquivalent.h"
 #include "FinalStockExpression.h"
 
-class FinalStockGroup: public ConstraintGroup
+class FinalStockGroup final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

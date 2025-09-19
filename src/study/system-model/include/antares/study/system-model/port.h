@@ -27,7 +27,7 @@
 namespace Antares::ModelerStudy::SystemModel
 {
 
-class Port
+class Port final
 {
 public:
     Port(const std::string& id, const PortType& type):

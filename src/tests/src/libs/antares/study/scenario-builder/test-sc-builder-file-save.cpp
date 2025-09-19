@@ -41,7 +41,7 @@ const string referenceScBuilderFileName = "scenariobuilder-reference.dat";
 // ===========================================
 // Reference scenario builder file handler
 // ===========================================
-class referenceScBuilderFile
+class referenceScBuilderFile final
 {
 public:
     referenceScBuilderFile() = default;
@@ -123,7 +123,7 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 // ======================================
 // Scenario builder common fixture
 // ======================================
-struct commonFixture
+struct commonFixture final
 {
     commonFixture(const commonFixture& f) = delete;
     commonFixture(const commonFixture&& f) = delete;

@@ -36,7 +36,7 @@ namespace Antares::ModelerStudy::SystemModel
 {
 
 /// A constraint linking variables and parameters of a model together
-class Constraint
+class Constraint final
 {
 public:
     Constraint(std::string id, Expression expression):
