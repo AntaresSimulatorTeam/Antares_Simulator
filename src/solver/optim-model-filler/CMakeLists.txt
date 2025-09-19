@@ -19,7 +19,7 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/OptimEntityContainer.h
         scenarioGroupRepo.cpp
         scenarioGroupRepoExceptions.cpp
-        optimEntityContainer.cpp
+        OptimEntityContainer.cpp
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})
