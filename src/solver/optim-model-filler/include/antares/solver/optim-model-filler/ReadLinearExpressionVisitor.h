@@ -21,15 +21,13 @@
 
 #pragma once
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/LinearExpressionEigen.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
-#include "EvaluationContextProvider.h"
-#include "OptimEntityContainer.h"
 
 /**
  * Read Linear Expression Visitor
@@ -45,8 +43,7 @@ class ReadLinearExpressionVisitor
 {
 public:
     ReadLinearExpressionVisitor() = delete;
-    ReadLinearExpressionVisitor(const Optimisation::EvaluationContextProvider& evalContextProvider,
-                                const Optimisation::LinearProblemApi::FillContext& fillContext,
+    ReadLinearExpressionVisitor(const Optimisation::LinearProblemApi::FillContext& fillContext,
                                 const Optimisation::OptimModel& optimModel,
                                 const Optimisation::OptimEntityContainer& optimEntityContainer);
     std::string name() const override;
@@ -84,13 +81,11 @@ private:
       const LinearExpressionEigen& expression,
       int timeIndex,
       const Optimisation::OptimComponent& optimComponent) const;
-    const Optimisation::EvaluationContextProvider& evalContextProvider_;
 
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const Optimisation::OptimModel& optimModel_;
     unsigned int nbModelVariables_;
     unsigned int nbtimeSteps_;
     const Optimisation::OptimEntityContainer& optimEntityContainer_;
-    std::vector<Expressions::Visitors::EvaluationContext> evaluationContextPerComponent_;
 };
 } // namespace Antares::Optimization

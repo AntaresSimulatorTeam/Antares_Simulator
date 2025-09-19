@@ -159,7 +159,7 @@ public:
     {
         lower_bound = fixture.parameter(
           parameterId,
-          Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+          Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY);
     }
 
     void addParameter(const std::string& str,

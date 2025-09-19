@@ -23,11 +23,9 @@
 
 #include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
-#include "antares/expressions/RotateIndex.h"
 #include "antares/study/system-model/component.h"
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
@@ -37,24 +35,17 @@ namespace Antares::Optimization
 {
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  const Optimisation::EvaluationContextProvider& evalContextProvider,
+
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const Optimisation::OptimModel& optimModel,
   const Optimisation::OptimEntityContainer& optimEntityContainer):
-    evalContextProvider_(evalContextProvider),
+
     fillContext_(fillContext),
     optimModel_(optimModel),
     nbModelVariables_(optimEntityContainer.variablesSize()),
     optimEntityContainer_(optimEntityContainer)
 {
     nbtimeSteps_ = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep() + 1;
-    size_t nbCompo = optimModel.optimComponents.size();
-    evaluationContextPerComponent_.reserve(nbCompo);
-    for (auto compoLocalId = 0; compoLocalId < nbCompo; ++compoLocalId)
-    {
-        evaluationContextPerComponent_.emplace_back(std::move(
-          evalContextProvider_.provide(*optimModel.optimComponents[compoLocalId].component)));
-    }
 }
 
 std::string ReadLinearExpressionVisitor::name() const
@@ -123,7 +114,7 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Vari
     size_t compoNumber = optimComponents.size();
     std::vector<LinearExpressionEigen> ret;
     ret.reserve(compoNumber);
-    const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
+    //  const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
 
     for (int compoLocalId = 0; compoLocalId < compoNumber; ++compoLocalId)
     {
@@ -132,14 +123,15 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Vari
         //        auto& linearExpressionMatrix = ret.at(compoLocalId);
         linearExpressionMatrix.reserve(nbtimeSteps_);
 
-        const auto globalIndex = optimComponent.variableIndexMap.at(
-          node->value()); // the only time we search in a map
-        const auto variableStart = variableStartColumn[globalIndex];
-
+        // const auto globalIndex = optimComponent.variableIndexMap.at(
+        //   node->value()); // the only time we search in a map
+        // const auto variableStart = variableStartColumn[globalIndex];
+        const auto variableStart = optimEntityContainer_
+                                     .getVariableStartColumn(optimComponent.index, node->value());
         auto localFirstTimeStep = fillContext_.getLocalFirstTimeStep();
         auto localLastTimeStep = fillContext_.getLocalLastTimeStep();
 
-        if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+        if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
         {
             for (auto localTimeStep = localFirstTimeStep; localTimeStep <= localLastTimeStep;
                  ++localTimeStep)
@@ -148,9 +140,10 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Vari
             }
         }
 
-        else if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
+        else if (node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
                  || node->timeIndex()
-                      == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
+                      == Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not
+                                                                                   handled !*/
         {
             auto variableIndex = variableStart;
             for (auto localTimeStep = localFirstTimeStep; localTimeStep <= localLastTimeStep;
@@ -187,10 +180,10 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Para
     {
         const auto& optimComponent = optimComponents[compoLocalId];
         const auto& component = optimComponent.component;
-        const auto& evaluationContext = evaluationContextPerComponent_[compoLocalId];
+        const auto& evaluationContext = optimComponent.evaluationContext;
         const auto systemParameter = evaluationContext.getParameter(node->value());
-        if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-            && systemParameter.type != ParameterType::CONSTANT)
+        if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+            && systemParameter.type != SystemModel::ParameterType::CONSTANT)
         {
             throw Error::InvalidArgumentError(
               "Parameter " + node->value()
@@ -199,7 +192,7 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Para
 
         LinearExpressionEigen linearExpressionMatrix(nbtimeSteps_, nbModelVariables_);
 
-        if (systemParameter.type == ParameterType::CONSTANT)
+        if (systemParameter.type == SystemModel::ParameterType::CONSTANT)
         {
             linearExpressionMatrix.setOffset(Eigen::VectorXd::Constant(
               nbtimeSteps_,
@@ -282,11 +275,9 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Port
               {.index = connectedComponent->Index(),
                .component = connectedComponent,
                .modelVariablesGlobalIndices = connectedOptimComponent.modelVariablesGlobalIndices,
-               .variableIndexMap = connectedOptimComponent.variableIndexMap});
-            ReadLinearExpressionVisitor visitor(evalContextProvider_,
-                                                fillContext_,
-                                                optimModel,
-                                                optimEntityContainer_);
+               .variableIndexMap = connectedOptimComponent.variableIndexMap,
+               .evaluationContext = connectedOptimComponent.evaluationContext});
+            ReadLinearExpressionVisitor visitor(fillContext_, optimModel, optimEntityContainer_);
 
             const Node* connectedNode = connectedComponent->nodeAtPortField(port->Id(), fieldId);
             linearExpressionMatrix += visitor.dispatch(connectedNode)[0];
@@ -331,8 +322,8 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Time
     {
         const auto& optimComponent = optimComponents[compoLocalId];
         const auto& component = optimComponent.component;
-        const auto& evaluationContext = evaluationContextPerComponent_[compoLocalId];
-        EvalVisitor visitor(evaluationContext, fillContext_);
+        const auto& evaluationContext = optimComponent.evaluationContext;
+        EvalVisitor visitor(optimEntityContainer_, evaluationContext, fillContext_);
         // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
         const auto timeShift = static_cast<int>(visitor.dispatch(node->right()).valueAsDouble());
         LinearExpressionEigen linearExpressionMatrix(nbtimeSteps_, nbModelVariables_);
@@ -396,8 +387,8 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Time
     {
         const auto& optimComponent = optimComponents[compoLocalId];
         const auto& component = optimComponent.component;
-        const auto& evaluationContext = evaluationContextPerComponent_[compoLocalId];
-        EvalVisitor visitor(evaluationContext, fillContext_);
+        const auto& evaluationContext = optimComponent.evaluationContext;
+        EvalVisitor visitor(optimEntityContainer_, evaluationContext, fillContext_);
         // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
         const auto timeIndex = static_cast<int>(visitor.dispatch(node->right()).valueAsDouble());
         auto linearExpressMatrix = TimeIndex(expression[compoLocalId], timeIndex, optimComponent);
@@ -418,8 +409,8 @@ std::vector<LinearExpressionEigen> ReadLinearExpressionVisitor::visit(const Time
     {
         const auto& optimComponent = optimComponents.at(compoLocalId);
         const auto& component = optimComponent.component;
-        const auto evaluationContext = evalContextProvider_.provide(*component);
-        EvalVisitor visitor(evaluationContext, fillContext_);
+        const auto evaluationContext = optimComponent.evaluationContext;
+        EvalVisitor visitor(optimEntityContainer_, evaluationContext, fillContext_);
         // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
         const auto from = static_cast<int>(visitor.dispatch(node->from()).valueAsDouble());
 

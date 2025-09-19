@@ -23,10 +23,15 @@
 
 #include <limits>
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 
 #include "ReadLinearExpressionVisitor.h"
+
+namespace Antares::Optimisation
+{
+class OptimEntityContainer;
+struct OptimModel;
+} // namespace Antares::Optimisation
 
 /**
  * Read Linear Constraint Visitor
@@ -56,7 +61,6 @@ class ReadLinearConstraintVisitor
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
-      const Optimisation::EvaluationContextProvider& evalContextProvider,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
       const Optimisation::OptimModel& optimModel,
       const Optimisation::OptimEntityContainer& optimEntityContainer);

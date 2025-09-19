@@ -357,7 +357,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
 {
     // var1 <= 3
     auto var_node = variable("var1",
-                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+                             Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
 
@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
 {
     // 5 - var1 <= 3
     auto var_node = variable("var1",
-                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+                             Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
                                                                                    var_node),
@@ -425,8 +425,8 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
       {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
       {{"var1",
         ValueType::BOOL,
-        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
-        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", Optimisation::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", Optimisation::TimeIndex::VARYING_IN_TIME_ONLY),
         true,
         false}},
       {{"ct1", ct_node}});
@@ -470,7 +470,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
 BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
 {
     auto var_node = variable("var1",
-                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+                             Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
                                                                                    var_node),
@@ -481,8 +481,8 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
       {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
       {{"var1",
         ValueType::BOOL,
-        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
-        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", Optimisation::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", Optimisation::TimeIndex::VARYING_IN_TIME_ONLY),
         true,
         false}},
       {{"ct1", ct_node}});
@@ -697,7 +697,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_objective)
 
 BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
 {
-    auto objective = variable("x", Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto objective = variable("x", Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY);
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
     createComponent("model", "componentA", {});

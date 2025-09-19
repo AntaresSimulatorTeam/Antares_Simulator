@@ -26,7 +26,6 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
-#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -37,13 +36,12 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const OptimEntityContainer& optimEntityContainer,
+  OptimEntityContainer& optimEntityContainer,
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
-    optimEntityContainer_(optimEntityContainer),
-    evaluationContextProvider_(linearProblemData, scenarioGroupRepository)
+    optimEntityContainer_(optimEntityContainer)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
@@ -52,9 +50,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&,
-                                                   ILinearProblemData&,
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addVariables(const FillContext&)
 {
     // nothing to do
 }
@@ -144,10 +140,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const Optimisation::OptimModel& optimModel)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
-                                        ctx,
-                                        optimModel,
-                                        optimEntityContainer_);
+    ReadLinearExpressionVisitor visitor(ctx, optimModel, optimEntityContainer_);
     auto linearExpressions = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
     for (const auto& linearExpression: linearExpressions)
     {
@@ -155,9 +148,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     }
 }
 
-void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
-                                                     ILinearProblemData& data,
-                                                     const FillContext& ctx)
+void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
 {
     const auto& optimModels = optimEntityContainer_.getOptimModels();
     for (const auto& component: modelerSystem_->Components())
@@ -169,18 +160,23 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
           {.index = component.Index(),
            .component = &component,
            .modelVariablesGlobalIndices = connectedOptimComponent.modelVariablesGlobalIndices,
-           .variableIndexMap = connectedOptimComponent.variableIndexMap});
+          .variableIndexMap = connectedOptimComponent.variableIndexMap,
+          .evaluationContext = connectedOptimComponent.evaluationContext,
+        });
 
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            addComponentPortContributionToArea(pb, ctx, component, portId, areaId, optimModel);
+            addComponentPortContributionToArea(optimEntityContainer_.Problem(),
+                                               ctx,
+                                               component,
+                                               portId,
+                                               areaId,
+                                               optimModel);
         }
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&,
-                                                   ILinearProblemData&,
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addObjective(const FillContext&)
 {
     // nothing to do
 }

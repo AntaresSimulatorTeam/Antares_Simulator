@@ -22,12 +22,16 @@
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
-#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 #include "antares/solver/optim-model-filler/LinearExpressionEigen.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
 namespace Antares::Optimisation
 {
+namespace LinearProblemApi
+{
+class ILinearProblem;
+class IMipConstraint;
+} // namespace LinearProblemApi
 struct OptimModel;
 class OptimEntityContainer;
 } // namespace Antares::Optimisation
@@ -47,24 +51,17 @@ class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::Li
 public:
     explicit ComponentToAreaConnectionFiller(
       const PROBLEME_HEBDO* problemeHebdo,
-      const Optimisation::OptimEntityContainer& optimEntityContainer,
+      Optimisation::OptimEntityContainer& optimEntityContainer,
       const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
-    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Optimisation::LinearProblemApi::ILinearProblemData& data,
-                        const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-    const Optimisation::OptimEntityContainer& optimEntityContainer_;
-    const Optimisation::EvaluationContextProvider evaluationContextProvider_;
+    Optimisation::OptimEntityContainer& optimEntityContainer_;
 
     std::map<std::string, unsigned> areaIndices_;
 

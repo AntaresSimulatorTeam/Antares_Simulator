@@ -20,9 +20,9 @@
 */
 #pragma once
 
-#include "antares/expressions/IEvaluationContextProvider.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
-#include "antares/expressions/visitors/TimeIndex.h"
+#include "antares/modeler-optimisation-container/EvaluationContext.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
@@ -31,37 +31,37 @@ namespace Antares::Expressions::Visitors
  * @brief Represents a visitor for determining the time and scenario dependency of nodes in a syntax
  * tree.
  */
-class TimeIndexVisitor: public NodeVisitor<TimeIndex>
+class TimeIndexVisitor: public NodeVisitor<Optimisation::TimeIndex>
 {
 public:
-    explicit TimeIndexVisitor(const ModelerStudy::SystemModel::Component& component,
-                              const IEvaluationContextProvider& contextProvider);
+    explicit TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
+                              const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
 private:
-    TimeIndex visit(const Nodes::SumNode* add) override;
-    TimeIndex visit(const Nodes::SubtractionNode* add) override;
-    TimeIndex visit(const Nodes::MultiplicationNode* add) override;
-    TimeIndex visit(const Nodes::DivisionNode* add) override;
-    TimeIndex visit(const Nodes::EqualNode* add) override;
-    TimeIndex visit(const Nodes::LessThanOrEqualNode* add) override;
-    TimeIndex visit(const Nodes::GreaterThanOrEqualNode* add) override;
-    TimeIndex visit(const Nodes::NegationNode* neg) override;
-    TimeIndex visit(const Nodes::VariableNode* param) override;
-    TimeIndex visit(const Nodes::ParameterNode* param) override;
-    TimeIndex visit(const Nodes::LiteralNode* lit) override;
-    TimeIndex visit(const Nodes::PortFieldNode* port_field_node) override;
-    TimeIndex visit(const Nodes::PortFieldSumNode* port_field_node) override;
-    TimeIndex visit(const Nodes::TimeShiftNode* timeShiftNode) override;
-    TimeIndex visit(const Nodes::TimeIndexNode* timeIndexNode) override;
-    TimeIndex visit(const Nodes::TimeSumNode* timeSumNode) override;
-    TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
+    Optimisation::TimeIndex visit(const Nodes::SumNode* add) override;
+    Optimisation::TimeIndex visit(const Nodes::SubtractionNode* add) override;
+    Optimisation::TimeIndex visit(const Nodes::MultiplicationNode* add) override;
+    Optimisation::TimeIndex visit(const Nodes::DivisionNode* add) override;
+    Optimisation::TimeIndex visit(const Nodes::EqualNode* add) override;
+    Optimisation::TimeIndex visit(const Nodes::LessThanOrEqualNode* add) override;
+    Optimisation::TimeIndex visit(const Nodes::GreaterThanOrEqualNode* add) override;
+    Optimisation::TimeIndex visit(const Nodes::NegationNode* neg) override;
+    Optimisation::TimeIndex visit(const Nodes::VariableNode* param) override;
+    Optimisation::TimeIndex visit(const Nodes::ParameterNode* param) override;
+    Optimisation::TimeIndex visit(const Nodes::LiteralNode* lit) override;
+    Optimisation::TimeIndex visit(const Nodes::PortFieldNode* port_field_node) override;
+    Optimisation::TimeIndex visit(const Nodes::PortFieldSumNode* port_field_node) override;
+    Optimisation::TimeIndex visit(const Nodes::TimeShiftNode* timeShiftNode) override;
+    Optimisation::TimeIndex visit(const Nodes::TimeIndexNode* timeIndexNode) override;
+    Optimisation::TimeIndex visit(const Nodes::TimeSumNode* timeSumNode) override;
+    Optimisation::TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
 
     std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
 
+    const Optimisation::OptimEntityContainer& optimEntityContainer_;
     const ModelerStudy::SystemModel::Component& component_;
-    const IEvaluationContextProvider& contextProvider_;
-    const EvaluationContext context_;
+    const Optimisation::EvaluationContext& context_;
 };
 } // namespace Antares::Expressions::Visitors

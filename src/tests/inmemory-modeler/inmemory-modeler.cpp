@@ -16,7 +16,7 @@
 //
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-
+#if 0
 #include "inmemory-modeler.h"
 
 #include <map>
@@ -28,7 +28,7 @@
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
-#if 0
+
 using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Test::Modeler
@@ -70,7 +70,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
       "sirius");
     Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
 
-    linear_problem_builder.build(*pb, dummy_data, time_scenario_ctx);
+    linear_problem_builder.build(time_scenario_ctx);
 }
 
 void LinearProblemBuildingFixture::buildLinearProblem(
@@ -108,14 +108,14 @@ Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::literal(double 
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::parameter(
   const std::string& paramId,
-  const Antares::Expressions::Visitors::TimeIndex& timeIndex)
+  const Antares::Optimisation::TimeIndex& timeIndex)
 {
     return nodes.create<Antares::Expressions::Nodes::ParameterNode>(paramId, timeIndex);
 }
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::variable(
   const std::string& varId,
-  const Antares::Expressions::Visitors::TimeIndex& timeIndex)
+  const Antares::Optimisation::TimeIndex& timeIndex)
 {
     return nodes.create<Antares::Expressions::Nodes::VariableNode>(varId, timeIndex);
 }

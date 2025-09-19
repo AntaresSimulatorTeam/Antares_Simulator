@@ -22,10 +22,14 @@
 #pragma once
 #include <vector>
 
-#include <antares/expressions/visitors/TimeIndex.h>
 #include <antares/optimisation/linear-problem-api/mipConstraint.h>
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
 #include <antares/study/system-model/component.h>
+#include "antares/optimisation/linear-problem-api/linearProblem.h"
+
+#include "EvaluationContext.h"
+#include "TimeIndex.h"
+#include "scenarioGroupRepo.h"
 
 namespace Antares::Optimisation
 {
@@ -37,7 +41,8 @@ struct OptimComponent
     std::vector<unsigned int> modelVariablesGlobalIndices = {};
     std::unordered_map<std::string, unsigned int> variableIndexMap;
     std::vector<unsigned int> modelConstraintsGlobalIndices = {};
-    std::vector<Expressions::Visitors::TimeIndex> modelConstraintsTimeIndex = {};
+    std::vector<TimeIndex> modelConstraintsTimeIndex = {};
+    EvaluationContext evaluationContext;
 };
 
 struct OptimModel
@@ -50,11 +55,20 @@ struct OptimModel
 class OptimEntityContainer
 {
 public:
-    OptimEntityContainer() = default;
+    OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
+                         const LinearProblemApi::ILinearProblemData& data,
+                         const ScenarioGroupRepository& scenarioGroupRepository);
 
     [[nodiscard]] const std::vector<unsigned int>& getVariableStartColumn() const
     {
         return variableStartColumn_;
+    }
+
+    [[nodiscard]] unsigned int getVariableStartColumn(size_t compoIndex,
+                                                      const std::string& varName) const
+    {
+        const auto& optimComponent = optimComponents_[compoIndex];
+        return variableStartColumn_[optimComponent->variableIndexMap.at(varName)];
     }
 
     [[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
@@ -147,6 +161,11 @@ public:
         optimComponents_[optim_component->component->Index()] = optim_component;
     }
 
+    LinearProblemApi::ILinearProblem& Problem()
+    {
+        return linearProblem_;
+    }
+
 private:
     std::vector<LinearProblemApi::IMipVariable*> variables_;
     std::vector<unsigned int> variableStartColumn_;
@@ -157,5 +176,8 @@ private:
     std::vector<LinearProblemApi::IMipConstraint*> constraints_;
     std::vector<unsigned int> constraintStartLine_;
     unsigned int constraintGlobalIndex_ = 0;
+    LinearProblemApi::ILinearProblem& linearProblem_;
+    const LinearProblemApi::ILinearProblemData& data_;
+    const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 } // namespace Antares::Optimisation

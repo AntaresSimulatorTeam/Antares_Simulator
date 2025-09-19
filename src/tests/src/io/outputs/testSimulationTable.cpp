@@ -41,8 +41,8 @@
 #include "antares/optimisation/linear-problem-api/mipVariable.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
-#include "antares/solver/optim-model-filler/PartialKey.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
+#include "antares/solver/optim-model-filler/PartialKey.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
 BOOST_AUTO_TEST_CASE(TestUpdateTimeIndexIfShouldForceScenario)
 {
-    using TI = Antares::Expressions::Visitors::TimeIndex;
+    using TI = Antares::Optimisation::TimeIndex;
     // bool = false => no value should change
     BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
                 == TI::CONSTANT_IN_TIME_AND_SCENARIO);

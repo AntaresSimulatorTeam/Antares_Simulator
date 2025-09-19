@@ -10,6 +10,7 @@ target_sources(modeler-lib
 )
 
 target_link_libraries(modeler-lib
+        Antares::modeler-optimisation-container
         Antares::modeler-parameters
         Antares::optim-model-filler
         Antares::linear-problem-api

@@ -25,7 +25,7 @@
 #include <memory>
 #include <vector>
 
-#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/optimization_statistics.h"

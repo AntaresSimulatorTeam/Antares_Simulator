@@ -1,5 +1,6 @@
 #pragma once
 
+#include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -10,27 +11,22 @@ namespace Antares::Optimization
 class LegacyFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool namedProblems);
-    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Optimisation::LinearProblemApi::ILinearProblemData& data,
-                        const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    explicit LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+                          const PROBLEME_HEBDO* problemeHebdo,
+                          bool namedProblems);
+    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre_;
     const bool useNamedProblems_;
-
-    void CreateVariable(unsigned idxVar, Optimisation::LinearProblemApi::ILinearProblem& pb) const;
-    void CopyVariables(Optimisation::LinearProblemApi::ILinearProblem& pb) const;
-    void UpdateContraints(unsigned idxRow,
-                          Optimisation::LinearProblemApi::ILinearProblem& pb) const;
-    void CopyRows(Optimisation::LinearProblemApi::ILinearProblem& pb) const;
-    void CopyMatrix(Optimisation::LinearProblemApi::ILinearProblem& pb) const;
+    Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
+    void CreateVariable(unsigned idxVar) const;
+    void CopyVariables() const;
+    void UpdateContraints(unsigned idxRow) const;
+    void CopyRows() const;
+    void CopyMatrix() const;
     std::string GetVariableName(unsigned index) const;
     std::string GetConstraintName(unsigned index) const;
 };

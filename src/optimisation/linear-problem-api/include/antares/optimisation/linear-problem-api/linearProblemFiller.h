@@ -22,7 +22,6 @@
 #pragma once
 
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/optimisation/linear-problem-api/linearProblem.h>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
@@ -32,14 +31,9 @@ class LinearProblemFiller
 public:
     // TODO it may be better to move the LinearProblemData out of the addVariables / addConstraints
     // / addObjective, and into the ctor because it is unique across the simulation
-    virtual void addVariables(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx)
-      = 0;
-    virtual void addConstraints(ILinearProblem& pb,
-                                ILinearProblemData& data,
-                                const FillContext& ctx)
-      = 0;
-    virtual void addObjective(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx)
-      = 0;
+    virtual void addVariables(const FillContext& ctx) = 0;
+    virtual void addConstraints(const FillContext& ctx) = 0;
+    virtual void addObjective(const FillContext& ctx) = 0;
     virtual ~LinearProblemFiller() = default;
 };
 

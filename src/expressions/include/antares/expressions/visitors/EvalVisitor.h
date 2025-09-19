@@ -24,9 +24,10 @@
 #include <sstream>
 #include <variant>
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
+#include "antares/modeler-optimisation-container/EvaluationContext.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 
@@ -266,18 +267,21 @@ public:
      * @param context The evaluation context.
      * @param fillContext
      */
-    explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext);
-    explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext,
+    explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
+                         const Optimisation::EvaluationContext& context,
+                         const Optimisation::LinearProblemApi::FillContext& fillContext);
+    explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
+                         const Optimisation::EvaluationContext& context,
+                         const Optimisation::LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component* component);
 
     std::string name() const override;
 
 private:
-    const EvaluationContext context_;
-    Optimisation::LinearProblemApi::FillContext fillContext_;
+    const Optimisation::EvaluationContext& context_;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component* component_ = nullptr;
+    const Optimisation::OptimEntityContainer& optimContainer_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

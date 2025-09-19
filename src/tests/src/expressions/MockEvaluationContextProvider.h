@@ -27,15 +27,15 @@
 class MockEvaluationContextProvider: public Antares::Expressions::IEvaluationContextProvider
 {
 private:
-    Antares::Expressions::Visitors::EvaluationContext context_;
+    Antares::Optimisation::EvaluationContext context_;
 
 public:
-    MockEvaluationContextProvider(Antares::Expressions::Visitors::EvaluationContext context):
+    MockEvaluationContextProvider(Antares::Optimisation::EvaluationContext context):
         context_(std::move(context))
     {
     }
 
-    Antares::Expressions::Visitors::EvaluationContext provide(
+    Antares::Optimisation::EvaluationContext provide(
       const Antares::ModelerStudy::SystemModel::Component& component) const
     {
         return context_;
