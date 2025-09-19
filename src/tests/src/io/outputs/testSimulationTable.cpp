@@ -375,7 +375,7 @@ BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
     tables.firstOptimSimulationTable().addEntry(entry2);
     tables.write();
 
-    auto buffers = tables.buffers();
+    auto buffers = tables.moveBuffers();
     // Should contain data from both writes
     BOOST_CHECK(buffers.first.find("1,comp1,var1") != std::string::npos);
     BOOST_CHECK(buffers.first.find("2,comp2,var2") != std::string::npos);
@@ -1283,7 +1283,7 @@ BOOST_AUTO_TEST_SUITE(OptimisationsSimulationTableTests)
 BOOST_AUTO_TEST_CASE(Constructor_InitializesEmptyTables)
 {
     OptimisationsSimulationTable tables;
-    auto buffers = tables.buffers();
+    auto buffers = tables.moveBuffers();
 
     // Both buffers should contain only headers initially
     BOOST_CHECK(buffers.first.empty());
@@ -1317,7 +1317,7 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
 
     tables.write();
 
-    auto buffers = tables.buffers();
+    auto buffers = tables.moveBuffers();
     BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
     BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
 }
@@ -1341,7 +1341,7 @@ BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
 
     tables.clear();
 
-    auto [fst, snd] = tables.buffers();
+    auto [fst, snd] = tables.moveBuffers();
     BOOST_CHECK(fst.empty());
     BOOST_CHECK(snd.empty());
 }

@@ -174,8 +174,7 @@ public:
                                              scratchmap);
         auto& simTable = simulation_->getSimulationTable(numSpace);
 
-        auto buffers = simTable.buffers();
-        simTable.clear();
+        auto buffers = simTable.moveBuffers();
 
         simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
 
