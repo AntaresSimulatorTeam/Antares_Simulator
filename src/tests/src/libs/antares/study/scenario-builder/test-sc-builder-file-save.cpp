@@ -123,7 +123,7 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 // ======================================
 // Scenario builder common fixture
 // ======================================
-struct commonFixture final
+struct commonFixture
 {
     commonFixture(const commonFixture& f) = delete;
     commonFixture(const commonFixture&& f) = delete;
