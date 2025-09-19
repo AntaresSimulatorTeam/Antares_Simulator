@@ -22,5 +22,4 @@ XXL:
   name: size/XXL
   lines: 1000
   color: E50009
-  comment: |
-    This PR is too big. Please break it up into smaller PRs.  
+  comment: This PR is too big. Please break it up into smaller PRs.
