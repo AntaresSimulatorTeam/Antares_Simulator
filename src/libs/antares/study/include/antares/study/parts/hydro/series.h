@@ -46,7 +46,6 @@ public:
     //@}
 
     void copyGenerationTS(const DataSeriesHydro& source);
-    void copyMaxPowerTS(const DataSeriesHydro& source);
 
     //! \name Data
     //@{

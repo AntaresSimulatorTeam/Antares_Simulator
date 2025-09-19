@@ -100,15 +100,6 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     source.mingen.unloadFromMemory();
 }
 
-void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
-{
-    maxHourlyGenPower.timeSeries = source.maxHourlyGenPower.timeSeries;
-    maxHourlyPumpPower.timeSeries = source.maxHourlyPumpPower.timeSeries;
-
-    source.maxHourlyGenPower.unloadFromMemory();
-    source.maxHourlyPumpPower.unloadFromMemory();
-}
-
 void DataSeriesHydro::reset()
 {
     resizeTS(1);
