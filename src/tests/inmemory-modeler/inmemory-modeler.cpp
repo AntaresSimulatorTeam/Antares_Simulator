@@ -49,7 +49,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::LinearProblemFiller>>
       fillers;
     // All LP variables coordinates (component id, variable id, scenario, time step)
-    Antares::Optimization::VariableDictionary variableDictionary;
+    Antares::Optimization::VariableDictionary optimEntityContainer;
     Antares::Optimisation::ScenarioGroupRepository scenario_group_repository;
     for (auto& scenario: scenarios)
     {
@@ -60,7 +60,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     {
         auto cf = std::make_unique<Antares::Optimisation::ComponentFiller>(
           component,
-          variableDictionary,
+          optimEntityContainer,
           dummy_data,
           scenario_group_repository);
         fillers.push_back(std::move(cf));

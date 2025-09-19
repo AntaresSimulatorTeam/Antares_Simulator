@@ -30,7 +30,7 @@
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
-#include "antares/solver/optim-model-filler/VariableContainer.h"
+#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
 
 #include "../../modeler/FileWriter.h"
 
@@ -82,7 +82,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
                         const Antares::ModelerStudy::SystemModel::Component& component,
-                        const VariableContainer& variableContainer,
+                        const OptimEntityContainer& optimEntityContainer,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
                         std::optional<unsigned> scenario)
@@ -90,9 +90,9 @@ void addVariableEntries(ISimulationTable& simulationTable,
     const auto& cid = component.Id();
     const bool isLp = linearProblem.isLP();
 
-    const auto& variableStart = variableContainer.getVariableStartColumn();
-    const auto& solverVariables = variableContainer.getVariables();
-    const auto& optimComponent = variableContainer.getOptimComponent(component.Index());
+    const auto& variableStart = optimEntityContainer.getVariableStartColumn();
+    const auto& solverVariables = optimEntityContainer.getVariables();
+    const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
     const auto& modelVariablesGlobalIndices = optimComponent.modelVariablesGlobalIndices;
     unsigned variableLocalIndex = 0;
     for (const auto& modelVar: component.getModel()->Variables())
@@ -194,6 +194,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
                           const Antares::ModelerStudy::SystemModel::Component& component,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           std::optional<unsigned> scenario,
@@ -202,16 +203,25 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 {
     const auto& cid = component.Id();
     const bool isLp = linearProblem.isLP();
-    for (const auto& [cname, modelConstr]: component.getModel()->Constraints())
+    const auto& constraintStart = optimEntityContainer.getConstraintStartLine();
+    const auto& solverConstraints = optimEntityContainer.getConstraints();
+    const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
+    const auto& modelConstraintsGlobalIndices = optimComponent.modelConstraintsGlobalIndices;
+    unsigned constraintLocalIndex = 0;
+    for (const auto& modelConstr: component.getModel()->Constraints())
     {
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
-                       .dispatch(modelConstr.expression().RootNode());
+        const auto& cname = modelConstr.Id();
+        
+        auto constraintGlobalIndex = modelConstraintsGlobalIndices.at(constraintLocalIndex);
+        TI idxType = optimComponent.modelConstraintsTimeIndex[constraintLocalIndex];
+        ++constraintLocalIndex;
+        
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
-            std::string fullConstName = BuildModelerConstraintName(cid, cname, ts);
-            const auto* c = linearProblem.lookupConstraint(fullConstName);
+           const auto* c = solverConstraints[constraintStart.at(constraintGlobalIndex)
+                                              + ts.value_or(0)];
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
                                   timeConversionMode,
@@ -306,7 +316,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
                          const Antares::Modeler::Data& modelerData,
-                         const VariableContainer& variableContainer,
+                         const OptimEntityContainer& optimEntityContainer,
                          const FillContext& fillContext,
                          unsigned currentBlock,
                          const TimeConversionMode& timeConversionMode,
@@ -329,7 +339,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                            linearProblem,
                            fillContext,
                            component,
-                           variableContainer,
+                           optimEntityContainer,
                            currentBlock,
                            timeConversionMode,
                            scenario);
@@ -337,7 +347,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
         addConstraintEntries(simulationTable,
                              linearProblem,
                              fillContext,
-                             component,
+                             component,optimEntityContainer,
                              currentBlock,
                              timeConversionMode,
                              scenario,

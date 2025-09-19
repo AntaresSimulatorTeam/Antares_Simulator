@@ -51,9 +51,9 @@ namespace Antares::Optimisation
 {
 VariablesBulkAddition::VariablesBulkAddition(
   Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-  VariableContainer& variableDictionary):
+  OptimEntityContainer& optimEntityContainer):
     linear_problem_(linear_problem),
-    variableContainer_(variableDictionary)
+    optimEntityContainer_(optimEntityContainer)
 {
 }
 
@@ -64,7 +64,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         bool integer,
                                         const Optimization::Dimensions& dim) const
 {
-    variableContainer_.addStartColumn();
+    optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -73,7 +73,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               dim.isScenarioDependent(),
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
-            variableContainer_.addVariable(
+            optimEntityContainer_.registerVariable(
               linear_problem_.addVariable(lb,
                                           ub,
                                           integer,
@@ -97,7 +97,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but lb size = " << lb.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableContainer_.addStartColumn();
+    optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -108,8 +108,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            variableContainer_.addVariable(
-              linear_problem_.addVariable(lb.at(t), /*use localIndex*/
+            optimEntityContainer_.registerVariable(
+              linear_problem_.addVariable(lb[t], /*use localIndex*/
                                           ub,
                                           integer,
                                           buildVariableName(compoId, variableId, year, ts)));
@@ -131,7 +131,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         errMessage << "requested " << count << " variables but ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableContainer_.addStartColumn();
+    optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -142,9 +142,9 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            variableContainer_.addVariable(
+            optimEntityContainer_.registerVariable(
               linear_problem_.addVariable(lb,
-                                          ub.at(t), /*use localIndex*/
+                                          ub[t], /*use localIndex*/
                                           integer,
                                           buildVariableName(compoId, variableId, year, ts)));
         }
@@ -166,7 +166,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                    << " and ub size = " << ub.size();
         throw BoundsSizeMismatch(errMessage.str());
     }
-    variableContainer_.addStartColumn();
+    optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())
@@ -176,9 +176,9 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            variableContainer_.addVariable(
-              linear_problem_.addVariable(lb.at(t), /*use localIndex*/
-                                          ub.at(t), /*use localIndex*/
+            optimEntityContainer_.registerVariable(
+              linear_problem_.addVariable(lb[t], /*use localIndex*/
+                                          ub[t], /*use localIndex*/
                                           integer,
                                           buildVariableName(compoId, variableId, year, ts)));
         }
@@ -186,11 +186,11 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
 }
 
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                                 VariableContainer& solverVariables,
+                                 OptimEntityContainer& optimEntityContainer,
                                  const LinearProblemApi::ILinearProblemData& data,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
-    variablesContainer_(solverVariables),
+    optimEntityContainer_(optimEntityContainer),
     evaluationContextProvider_(data, scenarioGroupRepository)
 {
 }
@@ -224,7 +224,7 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
     const auto& variables = component_.getModel()->Variables();
     for (auto i = 0; i < variables.size(); ++i)
     {
-        const auto& variable = variables.at(i);
+        const auto& variable = variables[i];
         namespace SM = ModelerStudy::SystemModel;
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == SM::ValueType::BOOL ? 0
@@ -243,7 +243,7 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
             std::visit(
               [&pb, &variable, this, &dim](const auto& lb_, const auto& ub_)
               {
-                  VariablesBulkAddition(pb, variablesContainer_)
+                  VariablesBulkAddition(pb, optimEntityContainer_)
                     .addVariable(component_.Id(),
                                  variable.Id(),
                                  lb_,
@@ -259,7 +259,7 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
             // No time component
             const Optimization::Dimensions dim({}, {});
 
-            VariablesBulkAddition(pb, variablesContainer_)
+            VariablesBulkAddition(pb, optimEntityContainer_)
               .addVariable(component_.Id(),
                            variable.Id(),
                            lb.valueAsDouble(),
@@ -272,19 +272,22 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
 
 void ComponentFiller::addStaticConstraint(LinearProblemApi::ILinearProblem& pb,
                                           const Optimization::LinearConstraint& linear_constraint,
-                                          const std::string& constraint_id) const
+                                          const std::string& constraint_id) 
 {
+    
     auto* ct = pb.addConstraint(linear_constraint.lb(0),
                                 linear_constraint.ub(0),
                                 component_.Id() + "." + constraint_id);
-    const auto& solverVariables = variablesContainer_.getVariables();
+
+                                optimEntityContainer_.registerConstraint(ct);
+    const auto& solverVariables = optimEntityContainer_.getVariables();
 
     for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
            it(linear_constraint.coef_per_var, 0);
          it;
          ++it)
     {
-        ct->setCoefficient(solverVariables.at(it.col()), it.value());
+        ct->setCoefficient(solverVariables[it.col()], it.value());
     }
 }
 
@@ -292,13 +295,13 @@ void ComponentFiller::addTimeDependentConstraints(
   Optimisation::LinearProblemApi::ILinearProblem& pb,
   const Optimization::LinearConstraint& linear_constraints,
   const std::string& constraint_id,
-  const Optimisation::LinearProblemApi::FillContext& ctx) const
+  const Optimisation::LinearProblemApi::FillContext& ctx) 
 {
     const Optimization::Dimensions dim(
       Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()}, /*TODO Handle range of year ? */
       Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
-    const auto& solverVariables = variablesContainer_.getVariables();
 
+        const auto& solverVariables = optimEntityContainer_.getVariables();
     for (const auto s: dim.getScenarioIndices()) // TODO
     {
         for (const auto t: dim.getTimesteps())
@@ -307,13 +310,14 @@ void ComponentFiller::addTimeDependentConstraints(
                                         linear_constraints.ub(t),
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(t));
+                optimEntityContainer_.registerConstraint(ct);
 
             for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
                    it(linear_constraints.coef_per_var, t);
                  it;
                  ++it)
             {
-                ct->setCoefficient(solverVariables.at(it.col()), it.value());
+                ct->setCoefficient(solverVariables[it.col()], it.value());
             }
         }
     }
@@ -326,14 +330,25 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
     Optimization::ReadLinearConstraintVisitor visitor(evaluationContextProvider_,
                                                       ctx,
                                                       component_,
-                                                      variablesContainer_);
-    for (const auto& constraint: component_.getModel()->Constraints() | std::views::values)
+                                                      optimEntityContainer_);
+
+     const auto& modelConstraints = component_.getModel()->Constraints();
+    for (auto constraintLocalIndex = 0; constraintLocalIndex < modelConstraints.size();
+         ++constraintLocalIndex)
     {
+        const auto& constraint = modelConstraints[constraintLocalIndex];
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        if (checkTimeSteps(ctx))
-        {
-            if (IsThisConstraintTimeDependent(root_node))
+     const auto gLobalIndex = optimEntityContainer_.ConstraintGLobalIndex();
+     auto& optimComponent = optimEntityContainer_.getOptimComponent(component_.Index());
+     optimComponent.modelConstraintsGlobalIndices.push_back(gLobalIndex);
+      const auto timeIndex = getConstraintTimeIndex(root_node, component_);
+            optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);
+
+            optimEntityContainer_.IncrementConstraintGLobalIndex();
+            optimEntityContainer_.addStartLine();
+            if (timeIndex == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
+                || timeIndex == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
             {
                 addTimeDependentConstraints(pb, linear_constraints, constraint.Id(), ctx);
             }
@@ -341,7 +356,7 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
             {
                 addStaticConstraint(pb, linear_constraints, constraint.Id());
             }
-        }
+        
     }
 }
 
@@ -355,11 +370,11 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
         return;
     }
 
-    const auto& solverVariables = variablesContainer_.getVariables();
+    const auto& solverVariables = optimEntityContainer_.getVariables();
     Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
                                                       ctx,
                                                       component_,
-                                                      variablesContainer_);
+                                                      optimEntityContainer_);
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
     const auto& offset = linearExpression.offset();
@@ -388,18 +403,16 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
             for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVars, t); it;
                  ++it)
             {
-                pb.setObjectiveCoefficient(solverVariables.at(it.col()), it.value());
+                pb.setObjectiveCoefficient(solverVariables[it.col()], it.value());
             }
         }
     }
 }
-
-bool ComponentFiller::IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node) const
+Expressions::Visitors::TimeIndex ComponentFiller::getConstraintTimeIndex(
+  const Expressions::Nodes::Node* node,
+  const ModelerStudy::SystemModel::Component& component) const
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component_,
-                                                             evaluationContextProvider_);
-    const auto ret = timeIndexVisitor.dispatch(node);
-    return ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
-           || ret == Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(component, evaluationContextProvider_);
+    return timeIndexVisitor.dispatch(node);
 }
 } // namespace Antares::Optimisation

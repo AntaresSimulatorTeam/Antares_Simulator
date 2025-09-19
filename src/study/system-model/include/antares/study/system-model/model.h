@@ -76,7 +76,7 @@ public:
         return objective_;
     }
 
-    const std::map<std::string, Constraint>& Constraints() const
+    const std::vector<Constraint>& Constraints() const
     {
         return constraints_;
     }
@@ -114,7 +114,7 @@ private:
 
     std::map<std::string, Parameter> parameters_;
     std::vector<Variable> variables_;
-    std::map<std::string, Constraint> constraints_;
+    std::vector<Constraint> constraints_;
     std::map<std::string, Port> ports_;
     std::map<std::string, ExtraOutput> extraOutputs_;
 
