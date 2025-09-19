@@ -32,7 +32,7 @@ class OptimisationsSimulationTable
 public:
     void clear();
 
-    std::pair<std::string, std::string> buffers() const;
+    std::pair<std::string, std::string> buffers();
 
     void write();
 
