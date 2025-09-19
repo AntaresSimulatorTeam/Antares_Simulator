@@ -28,7 +28,6 @@
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
-#include "antares/solver/optim-model-filler/Dimensions.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -119,16 +118,13 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     unsigned nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
                           + 1;
     std::vector<double> varValues(nbTimeStep, 0.0);
-    varValues.reserve(fillContext_.getLocalNumberOfTimeSteps());
-    for (auto timeStep = fillContext_.getLocalFirstTimeStep();
-         timeStep <= fillContext_.getLocalLastTimeStep();
-         ++timeStep)
-    {
+
+    
         for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
         {
             varValues[varInd] = solverVariables[startColumn + varInd]->solutionValue();
         }
-    }
+    
     return EvaluationResult{varValues};
 }
 

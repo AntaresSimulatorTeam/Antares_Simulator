@@ -5,10 +5,6 @@
 #include <antares/expressions/nodes/Leaf.h>
 #include <antares/modeler-optimisation-container/TimeIndex.h>
 
-namespace Antares::Optimisation
-{
-enum class TimeIndex : unsigned int;
-}
 
 namespace Antares::Expressions::Nodes
 {

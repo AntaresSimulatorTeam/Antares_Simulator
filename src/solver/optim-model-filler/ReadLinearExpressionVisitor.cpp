@@ -38,7 +38,7 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const SystemModel::Component& component,
   const Optimisation::OptimEntityContainer& optimEntityContainer):
-    evalContext_(optimEntityContainer_.getOptimComponent(component.Index()).evaluationContext),
+    evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
     fillContext_(fillContext),
     component_(component),
     evalVisitor_(optimEntityContainer, evalContext_, fillContext_),
