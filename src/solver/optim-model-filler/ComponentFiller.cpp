@@ -210,9 +210,8 @@ void ComponentFiller::addVariables(
         return;
     }
 
-
+const auto& evaluationContext = optimEntityContainer_.getOptimComponent(component_.Index()).evaluationContext;
     Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, evaluationContext, ctx);
-     auto& pb = optimEntityContainer_.getLinearProblem();
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())
@@ -370,7 +369,7 @@ void ComponentFiller::addObjective(
     }
 
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
+    Optimization::ReadLinearExpressionVisitor visitor(
                                                       ctx,
                                                       component_,
                                                       optimEntityContainer_);
@@ -394,7 +393,7 @@ void ComponentFiller::addObjective(
     const Optimization::Dimensions dim(Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()},
                                        Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
                                                                      ctx.getLocalLastTimeStep()));
-    auto& pb = optimEntityContainer_.Problem()
+    auto& pb = optimEntityContainer_.Problem();
     for (const auto s: dim.getScenarioIndices())
     {
         for (const auto t: dim.getTimesteps())

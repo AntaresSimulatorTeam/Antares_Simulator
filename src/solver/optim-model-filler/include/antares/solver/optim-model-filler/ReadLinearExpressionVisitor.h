@@ -68,10 +68,10 @@ private:
     LinearExpressionEigen visit(const Expressions::Nodes::TimeSumNode* node) override;
     LinearExpressionEigen visit(const Expressions::Nodes::AllTimeSumNode* node) override;
 
-    const Expressions::Visitors::EvaluationContext& evalContext_;
+    const Optimisation::EvaluationContext& evalContext_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
-    const Expressions::Visitors::EvalVisitor evalVisitor_;
+     Expressions::Visitors::EvalVisitor evalVisitor_;
     unsigned int nbModelVariables_;
     unsigned int nbtimeSteps_;
     const Optimisation::OptimEntityContainer& optimEntityContainer_;

@@ -23,14 +23,12 @@
 
 #include <limits>
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 
 #include "ReadLinearExpressionVisitor.h"
 namespace Antares::Optimisation
 {
 class OptimEntityContainer;
-struct OptimModel;
 } // 
 /**
  * Read Linear Constraint Visitor

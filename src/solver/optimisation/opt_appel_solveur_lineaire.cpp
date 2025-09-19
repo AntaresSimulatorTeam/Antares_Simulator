@@ -335,7 +335,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                                      options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-       optimEntityContainer(
+       OptimEntityContainer optimEntityContainer(
           infeasibleProblem,
           *problemeHebdo->modelerData->dataSeries,
           problemeHebdo->modelerData->scenarioGroupRepository);

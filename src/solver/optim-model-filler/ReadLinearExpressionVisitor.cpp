@@ -42,8 +42,8 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     fillContext_(fillContext),
     component_(component),
     evalVisitor_(optimEntityContainer, evalContext_, fillContext_),
-    nbModelVariables_(variableContainer.variablesSize()),
-    optimEntityContainer_(variableContainer)
+    nbModelVariables_(optimEntityContainer.variablesSize()),
+    optimEntityContainer_(optimEntityContainer)
 {
     nbtimeSteps_ = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep() + 1;
 }
@@ -113,7 +113,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     const auto& optimComponent = optimEntityContainer_.getOptimComponent(component_.Index());
     const auto globalIndex = optimComponent.variableIndexMap.at(
       node->value()); // the only time we search in a map
-    //const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
+    const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
     // const auto variableStart = variableStartColumn.at(globalIndex);
     // const auto globalIndex = optimComponent.variableIndexMap.at(
     //   node->value()); // the only time we search in a map
@@ -163,8 +163,8 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != ParameterType::CONSTANT)
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        && systemParameter.type != Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         throw Error::InvalidArgumentError(
           "Parameter " + node->value()

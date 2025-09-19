@@ -63,7 +63,7 @@ public:
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-    const Optimisation::OptimEntityContainer& optimEntityContainer_;
+     Optimisation::OptimEntityContainer& optimEntityContainer_;
 
     std::map<std::string, unsigned> areaIndices_;
 

@@ -278,7 +278,7 @@ void addPortEntries(ISimulationTable& simulationTable,
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
 
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
+        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(optimEntityContainer, component)
                        .dispatch(portFieldDef.Definition().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port

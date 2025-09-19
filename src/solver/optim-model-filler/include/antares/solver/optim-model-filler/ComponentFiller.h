@@ -23,11 +23,10 @@
 
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
-#include "antares/expressions/visitors/EvaluationContext.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "ReadLinearConstraintVisitor.h"
-"antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {

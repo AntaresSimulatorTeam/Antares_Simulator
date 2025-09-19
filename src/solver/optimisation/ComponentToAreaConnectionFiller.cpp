@@ -69,7 +69,7 @@ static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Compone
     return field.value();
 }
 
-IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem& pb,
+IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                                                       const std::string& areaId,
                                                                       unsigned ts) const
 {
@@ -89,7 +89,7 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
 }
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
-  ILinearProblem& pb,
+  Optimisation::LinearProblemApi::ILinearProblem& pb,
   const LinearExpressionEigen& linearExpression,
   const FillContext& ctx,
   const std::string& areaId) const
@@ -133,7 +133,7 @@ public:
 };
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
-  
+    ILinearProblem& pb,
   const FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
