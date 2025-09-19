@@ -8,7 +8,7 @@ void OptimisationsSimulationTable::clear()
     secondOptimBuffer_.clear();
 }
 
-OptimisationsSimulationTable::moveBuffers()
+std::pair<std::string, std::string> OptimisationsSimulationTable::moveBuffers()
 {
     std::pair<std::string, std::string> result{std::move(firstOptimBuffer_),
                                                std::move(secondOptimBuffer_)};
