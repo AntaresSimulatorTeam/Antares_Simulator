@@ -36,12 +36,12 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-   OptimEntityContainer& variableContainer,
+   OptimEntityContainer& optimEntityContainer,
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
-    optimEntityContainer_(variableContainer)
+    optimEntityContainer_(optimEntityContainer)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
