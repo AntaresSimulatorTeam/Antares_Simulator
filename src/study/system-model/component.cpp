@@ -164,7 +164,7 @@ ComponentBuilder& ComponentBuilder::withIndex(unsigned int index)
  * \return Reference to the ComponentBuilder object.
  */
 ComponentBuilder& ComponentBuilder::withParameterValues(
-  std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values)
+  std::map<std::string, ParameterTypeAndValue> parameter_values)
 {
     data_.parameter_values = std::move(parameter_values);
     return *this;

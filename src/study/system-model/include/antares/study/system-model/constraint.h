@@ -27,10 +27,7 @@
 
 #include "parameter.h"
 
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-}
+
 
 namespace Antares::ModelerStudy::SystemModel
 {

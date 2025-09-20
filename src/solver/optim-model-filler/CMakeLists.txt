@@ -3,23 +3,16 @@ find_package(Eigen3 CONFIG REQUIRED)
 
 set(SRC_optim_model_filler
         ComponentFiller.cpp
-        EvaluationContextProvider.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
         VariableDictionary.cpp
         LinearExpressionEigen.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
-        include/antares/solver/optim-model-filler/EvaluationContextProvider.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
         include/antares/solver/optim-model-filler/MCYearAndTime.h
         include/antares/solver/optim-model-filler/Dimensions.h
-        include/antares/solver/optim-model-filler/scenarioGroupRepo.h
         include/antares/solver/optim-model-filler/LinearExpressionEigen.h
-        include/antares/solver/optim-model-filler/OptimEntityContainer.h
-        scenarioGroupRepo.cpp
-        scenarioGroupRepoExceptions.cpp
-        OptimEntityContainer.cpp
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})
@@ -29,6 +22,7 @@ set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(${PROJ}
         PRIVATE
+        Antares::modeler-optimisation-container
         Antares::expressions
         Antares::exception
         Antares::antares-study-system-model
