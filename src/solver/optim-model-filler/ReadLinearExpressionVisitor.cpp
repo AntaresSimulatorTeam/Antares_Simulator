@@ -184,7 +184,6 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
     }
     // only dependent
 
-    int idx = 0;
     // assume global nb timeStep == nbtimeSteps
     const auto& parameters = evalContext_.getParameterValue(
       node->value(),

@@ -150,7 +150,7 @@ public:
         }
     }
 
-    auto begin()
+    SingleTimeExpr* begin()
     {
         if (auto* expr = std::get_if<SingleTimeExpr>(&v_))
         {
@@ -163,7 +163,7 @@ public:
         throw std::runtime_error("Invalid variant");
     }
 
-    auto begin() const
+    const SingleTimeExpr* begin() const
     {
         if (const auto* expr = std::get_if<SingleTimeExpr>(&v_))
         {
@@ -176,7 +176,7 @@ public:
         throw std::runtime_error("Invalid variant");
     }
 
-    auto end()
+    SingleTimeExpr* end()
     {
         if (auto* expr = std::get_if<SingleTimeExpr>(&v_))
         {
@@ -189,7 +189,7 @@ public:
         throw std::runtime_error("Invalid variant");
     }
 
-    auto end() const
+    const SingleTimeExpr* end() const
     {
         if (const auto* expr = std::get_if<SingleTimeExpr>(&v_))
         {
@@ -413,7 +413,34 @@ public:
 
     AllTimeExpr visit(const Nodes::ParameterNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        const auto systemParameter = evalContext_.getParameter(node->value());
+        if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+            && systemParameter.type != Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
+        {
+            throw std::runtime_error(
+              "Parameter " + node->value()
+              + " is declared constant in time and scenario in library but not in system");
+        }
+
+        if (systemParameter.type == Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
+        {
+            double value = evalContext_.getSystemParameterValueAsDouble(node->value());
+            return AllTimeExpr(SingleTimeExpr({}, value));
+        }
+        // only dependent
+
+        // assume global nb timeStep == nbtimeSteps
+        const auto& parameters = evalContext_.getParameterValue(
+          node->value(),
+          fillContext_.getYear(),
+          fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
+          fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
+        AllTimeExpr out(nbtimeSteps_);
+        for (int idx = 0; idx < nbtimeSteps_; idx++)
+        {
+            out[idx].constant = parameters[idx];
+        }
+        return out;
     }
 
     AllTimeExpr visit(const Nodes::LiteralNode* node) override
@@ -473,7 +500,7 @@ public:
         // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
         const auto timeIndex = static_cast<int>(
           evalVisitor_.dispatch(node->right()).valueAsDouble());
-        return AllTimeExpr(std::move(*(expression.begin() + timeIndex)));
+        return AllTimeExpr(std::move(expression[timeIndex]));
     }
 
     AllTimeExpr visit(const Nodes::TimeSumNode* node) override
