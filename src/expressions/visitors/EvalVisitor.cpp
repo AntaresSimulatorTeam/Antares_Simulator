@@ -28,7 +28,6 @@
 #include <antares/solver/optim-model-filler/EvaluationContextProvider.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/ShiftVector.h"
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
