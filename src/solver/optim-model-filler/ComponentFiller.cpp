@@ -396,8 +396,7 @@ public:
 
     AllTimeExpr visit(const Nodes::LiteralNode* node) override
     {
-        SingleTimeExpr ret; // Constant expr
-        ret.constant = node->value();
+        SingleTimeExpr ret({}, node->value()); // Constant expr
         return AllTimeExpr(std::move(ret));
     }
 
