@@ -75,7 +75,7 @@ struct SingleTimeExpr final
         {
             // Multiplying two symbolic expressions would give quadratic terms,
             // which this representation cannot hold.
-            throw 42;
+            throw std::runtime_error("Quadratic term detected");
         }
         else if (!hasCoefs() && !other.hasCoefs())
         {
