@@ -26,10 +26,12 @@
 #include <antares/expressions/visitors/NodeVisitor.h>
 
 #include "ReadLinearExpressionVisitor.h"
+
 namespace Antares::Optimisation
 {
 class OptimEntityContainer;
-} //
+} // namespace Antares::Optimisation
+
 /**
  * Read Linear Constraint Visitor
  * Visits a Node and produces a Linear Constraint (defined by its Linear Expression and bounds).

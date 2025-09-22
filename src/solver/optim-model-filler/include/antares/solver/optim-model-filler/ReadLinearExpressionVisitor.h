@@ -21,13 +21,12 @@
 
 #pragma once
 
-
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/LinearExpressionEigen.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
-#include "antares/study/system-model/component.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/study/system-model/component.h"
 
 /**
  * Read Linear Expression Visitor
@@ -43,8 +42,7 @@ class ReadLinearExpressionVisitor final
 {
 public:
     ReadLinearExpressionVisitor() = delete;
-    ReadLinearExpressionVisitor(
-                                const Optimisation::LinearProblemApi::FillContext& fillContext,
+    ReadLinearExpressionVisitor(const Optimisation::LinearProblemApi::FillContext& fillContext,
                                 const ModelerStudy::SystemModel::Component& component,
                                 const Optimisation::OptimEntityContainer& variableContainer);
     std::string name() const override;
@@ -72,7 +70,7 @@ private:
     const Optimisation::EvaluationContext& evalContext_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
-     Expressions::Visitors::EvalVisitor evalVisitor_;
+    Expressions::Visitors::EvalVisitor evalVisitor_;
     unsigned int nbModelVariables_;
     unsigned int nbtimeSteps_;
     const Optimisation::OptimEntityContainer& optimEntityContainer_;

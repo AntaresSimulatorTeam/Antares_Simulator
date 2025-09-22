@@ -27,8 +27,6 @@
 
 #include "parameter.h"
 
-
-
 namespace Antares::ModelerStudy::SystemModel
 {
 

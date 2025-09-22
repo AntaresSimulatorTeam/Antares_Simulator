@@ -25,15 +25,16 @@
 #include "antares/solver/optim-model-filler/LinearExpressionEigen.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
+
 namespace Antares::Optimisation
 {
-  namespace LinearProblemApi
+namespace LinearProblemApi
 {
 class ILinearProblem;
 class IMipConstraint;
 } // namespace LinearProblemApi
 class OptimEntityContainer;
-}
+} // namespace Antares::Optimisation
 
 namespace Antares::Optimization
 {
@@ -51,20 +52,17 @@ class ComponentToAreaConnectionFiller final
 public:
     explicit ComponentToAreaConnectionFiller(
       const PROBLEME_HEBDO* problemeHebdo,
-       Optimisation::OptimEntityContainer& variableContainer,
+      Optimisation::OptimEntityContainer& variableContainer,
       const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
-    void addVariables(
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addConstraints(
-                        const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-     Optimisation::OptimEntityContainer& optimEntityContainer_;
+    Optimisation::OptimEntityContainer& optimEntityContainer_;
 
     std::map<std::string, unsigned> areaIndices_;
 

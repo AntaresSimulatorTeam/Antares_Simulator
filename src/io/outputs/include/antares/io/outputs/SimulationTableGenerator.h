@@ -25,6 +25,7 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/component.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
+
 #include "ISimulationTable.h"
 
 namespace Antares::Modeler

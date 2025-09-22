@@ -28,27 +28,29 @@ using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::Optimization
 {
 
-LegacyFiller::LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,const PROBLEME_HEBDO* problemeHebdo, bool namedProblems):
+LegacyFiller::LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+                           const PROBLEME_HEBDO* problemeHebdo,
+                           bool namedProblems):
     linearProblem_(linearProblem),
     problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
     useNamedProblems_(namedProblems)
 {
 }
 
-void LegacyFiller::addVariables( const FillContext&)
+void LegacyFiller::addVariables(const FillContext&)
 {
     // Create the variables and set objective cost.
     CopyVariables();
 }
 
-void LegacyFiller::addConstraints( const FillContext&)
+void LegacyFiller::addConstraints(const FillContext&)
 {
     // Create constraints and set coefs
     CopyRows();
     CopyMatrix();
 }
 
-void LegacyFiller::addObjective( const FillContext&)
+void LegacyFiller::addObjective(const FillContext&)
 {
     // nothing to do: objective coefficients are set along with variables definition
 }
@@ -83,7 +85,10 @@ void LegacyFiller::CreateVariable(unsigned idxVar) const
                      : bMax;
     const bool isIntegerVariable = problemeAResoudre_->VariablesEntieres[idxVar];
 
-    auto* var = linearProblem_.addVariable(min_l, max_l, isIntegerVariable, GetVariableName(idxVar));
+    auto* var = linearProblem_.addVariable(min_l,
+                                           max_l,
+                                           isIntegerVariable,
+                                           GetVariableName(idxVar));
     linearProblem_.setObjectiveCoefficient(var, problemeAResoudre_->CoutLineaire[idxVar]);
 }
 

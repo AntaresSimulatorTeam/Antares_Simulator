@@ -44,6 +44,7 @@ struct ParameterTypeAndValue
     ParameterType type;
     std::string value;
 };
+
 /**
  * Defines the attributes of the Component class
  * Made into a struct to avoid duplication in ComponentBuilder
@@ -56,8 +57,6 @@ public:
     std::map<std::string, ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
     unsigned index = 0;
-
-
 
     void reset()
     {
@@ -87,8 +86,7 @@ public:
         return data_.model;
     }
 
-    const std::map<std::string, ParameterTypeAndValue>& getParameterValues()
-      const
+    const std::map<std::string, ParameterTypeAndValue>& getParameterValues() const
     {
         return data_.parameter_values;
     }
@@ -124,7 +122,6 @@ public:
     {
         return data_.index;
     }
-
 
 private:
     // Only ComponentBuilder is allowed to build Component instances

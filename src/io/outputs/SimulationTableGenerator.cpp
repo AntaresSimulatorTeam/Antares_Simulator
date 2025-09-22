@@ -193,7 +193,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
                           const Antares::ModelerStudy::SystemModel::Component& component,
-  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                          const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           std::optional<unsigned> scenario,
@@ -218,7 +218,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
-           const auto* c = solverConstraints[constraintStart.at(constraintGlobalIndex)
+            const auto* c = solverConstraints[constraintStart.at(constraintGlobalIndex)
                                               + ts.value_or(0)];
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
@@ -310,7 +310,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     bool forceExportForScenarioIndex)
 {
     const auto& cid = component.Id();
-    const auto& evalContext =  optimEntityContainer.getOptimComponent(component.Index())
+    const auto& evalContext = optimEntityContainer.getOptimComponent(component.Index())
                                 .evaluationContext;
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
@@ -321,7 +321,8 @@ void addPortEntries(ISimulationTable& simulationTable,
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
 
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(optimEntityContainer, component)
+        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(optimEntityContainer,
+                                                                      component)
                        .dispatch(portFieldDef.Definition().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
@@ -409,7 +410,8 @@ void FillSimulationTable(ISimulationTable& simulationTable,
         addConstraintEntries(simulationTable,
                              linearProblem,
                              fillContext,
-                             component,optimEntityContainer,
+                             component,
+                             optimEntityContainer,
                              currentBlock,
                              timeConversionMode,
                              scenario,

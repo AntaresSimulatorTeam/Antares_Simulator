@@ -84,6 +84,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
+
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
     const auto& solverVariables = optimContainer_.getVariables();
@@ -112,7 +113,6 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 
     return EvaluationResult{varValues};
 }
-
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {

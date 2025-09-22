@@ -118,8 +118,8 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     // const auto globalIndex = optimComponent.variableIndexMap.at(
     //   node->value()); // the only time we search in a map
     // const auto variableStart = variableStartColumn[globalIndex];
-        const auto variableStart = optimEntityContainer_
-                                     .getVariableStartColumn(optimComponent.index, node->value());
+    const auto variableStart = optimEntityContainer_.getVariableStartColumn(optimComponent.index,
+                                                                            node->value());
     const auto variableEnd = variableStart == *variableStartColumn.rbegin()
                                ? nbModelVariables_
                                : variableStartColumn.at(globalIndex + 1);
@@ -138,7 +138,8 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd -
     // variableStart+1
     if (node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
-        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
+        || node->timeIndex()
+             == Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
     {
         auto variableIndex = variableStart;
         for (auto localTimeStep = localFirstTimeStep; localTimeStep <= localLastTimeStep;
@@ -185,8 +186,9 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
 
     int idx = 0;
     // assume global nb timeStep == nbtimeSteps
-    const auto& parameters = evalContext_.getParameterValue(node->value(),
-                                                            fillContext_.getYear(),
+    const auto& parameters = evalContext_.getParameterValue(
+      node->value(),
+      fillContext_.getYear(),
       fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
       fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
     out.setOffset(Eigen::Map<const Eigen::VectorXd>(parameters.data(), parameters.size()));
@@ -219,10 +221,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldSumNode*
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        ReadLinearExpressionVisitor visitor(
-                                            fillContext_,
-                                            *component,
-                                            optimEntityContainer_);
+        ReadLinearExpressionVisitor visitor(fillContext_, *component, optimEntityContainer_);
 
         const Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);
@@ -331,42 +330,42 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const AllTimeSumNode* n
 {
     auto expression = dispatch(node->child());
 
-     Eigen::VectorXd offsets = Eigen::VectorXd::Zero(nbtimeSteps_);
-        for (int t = fillContext_.getLocalFirstTimeStep(); t <= fillContext_.getLocalLastTimeStep();
-             ++t)
-        {
-            offsets.array() += expression.offset()[t];
-        }
+    Eigen::VectorXd offsets = Eigen::VectorXd::Zero(nbtimeSteps_);
+    for (int t = fillContext_.getLocalFirstTimeStep(); t <= fillContext_.getLocalLastTimeStep();
+         ++t)
+    {
+        offsets.array() += expression.offset()[t];
+    }
 
-        std::vector<double> colSums(nbModelVariables_, 0.0);
-        for (int row = 0; row < nbtimeSteps_; ++row)
+    std::vector<double> colSums(nbModelVariables_, 0.0);
+    for (int row = 0; row < nbtimeSteps_; ++row)
+    {
+        for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(expression.coefPerVar(),
+                                                                            row);
+             it;
+             ++it)
         {
-            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
-                   it(expression.coefPerVar(), row);
-                 it;
-                 ++it)
+            colSums[it.col()] += it.value();
+        }
+    }
+
+    std::vector<Eigen::Triplet<double>> triplets;
+    for (int col = 0; col < nbModelVariables_; ++col)
+    {
+        const double sum = colSums[col];
+        if (std::abs(sum) > 1e-16)
+        {
+            for (int row = 0; row < nbtimeSteps_; ++row)
             {
-                colSums[it.col()] += it.value();
+                triplets.emplace_back(row, col, sum);
             }
         }
+    }
 
-        std::vector<Eigen::Triplet<double>> triplets;
-        for (int col = 0; col < nbModelVariables_; ++col)
-        {
-            const double sum = colSums[col];
-            if (std::abs(sum) > 1e-16)
-            {
-                for (int row = 0; row < nbtimeSteps_; ++row)
-                {
-                    triplets.emplace_back(row, col, sum);
-                }
-            }
-        }
+    Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs(nbtimeSteps_, nbModelVariables_);
+    coeffs.setFromTriplets(triplets.begin(), triplets.end());
 
-        Eigen::SparseMatrix<double, Eigen::RowMajor> coeffs(nbtimeSteps_, nbModelVariables_);
-        coeffs.setFromTriplets(triplets.begin(), triplets.end());
-
-        return LinearExpressionEigen(coeffs, offsets);
+    return LinearExpressionEigen(coeffs, offsets);
 }
 
 } // namespace Antares::Optimization

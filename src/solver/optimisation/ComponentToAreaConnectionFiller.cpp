@@ -36,7 +36,7 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-   OptimEntityContainer& optimEntityContainer,
+  OptimEntityContainer& optimEntityContainer,
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
@@ -50,8 +50,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addVariables(const FillContext&)
 {
     // nothing to do
 }
@@ -69,9 +68,10 @@ static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Compone
     return field.value();
 }
 
-IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                                                      const std::string& areaId,
-                                                                      unsigned ts) const
+IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
+  Optimisation::LinearProblemApi::ILinearProblem& pb,
+  const std::string& areaId,
+  unsigned ts) const
 {
     auto pdt = ts % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
     if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end())
@@ -133,35 +133,34 @@ public:
 };
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
-    ILinearProblem& pb,
+  ILinearProblem& pb,
   const FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    ReadLinearExpressionVisitor visitor(
-                                        ctx,
-                                        component,
-                                        optimEntityContainer_);
+    ReadLinearExpressionVisitor visitor(ctx, component, optimEntityContainer_);
     auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }
 
-void ComponentToAreaConnectionFiller::addConstraints(
-                                                     const FillContext& ctx)
+void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
 {
     for (const auto& component: modelerSystem_->Components())
     {
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            addComponentPortContributionToArea(optimEntityContainer_.Problem(), ctx, component, portId, areaId);
+            addComponentPortContributionToArea(optimEntityContainer_.Problem(),
+                                               ctx,
+                                               component,
+                                               portId,
+                                               areaId);
         }
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addObjective(const FillContext&)
 {
     // nothing to do
 }

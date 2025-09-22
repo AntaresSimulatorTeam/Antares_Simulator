@@ -22,7 +22,6 @@
 
 #include "modeler/include/antares/solver/modeler/IWriter.h"
 
-
 namespace Antares::Optimisation::LinearProblemApi
 {
 class ILinearProblem;

@@ -79,7 +79,6 @@ static void fillModelerComponents(
   Modeler::Data* modelerData,
   OptimEntityContainer& optimEntityContainer)
 {
-
     for (const auto& component: modelerData->system->Components())
     {
         fillersCollection.push_back(
@@ -129,7 +128,8 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                              bool namedProblems)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
-    fillersCollection.push_back(std::make_unique<LegacyFiller>(optimEntityContainer.Problem(),problemeHebdo, namedProblems));
+    fillersCollection.push_back(
+      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -151,8 +151,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
     // TODO try to make this cleaner
-    linearProblemBuilder.build(
-                               fillCtx);
+    linearProblemBuilder.build(fillCtx);
 
     measure.tick();
 
@@ -335,7 +334,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                                      options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-       OptimEntityContainer optimEntityContainer(
+        OptimEntityContainer optimEntityContainer(
           infeasibleProblem,
           *problemeHebdo->modelerData->dataSeries,
           problemeHebdo->modelerData->scenarioGroupRepository);
