@@ -1,6 +1,5 @@
 var NAVTREEINDEX63 =
 {
-"ui_2simulator_2application_2study_8cpp.html#a1fed533848155ad17e1abb4abdc791e5":[7,0,0,131],
 "ui_2simulator_2application_2study_8cpp.html#a2c811230a9e92bf526265d384c0b3e3d":[7,0,0,138],
 "ui_2simulator_2application_2study_8cpp.html#a3d08cf43a52bdc3cb68f848989acab2f":[7,0,0,137],
 "ui_2simulator_2application_2study_8cpp.html#a4403d4bc9cf5929cc6575e97f659d535":[7,0,0,153],
@@ -249,5 +248,6 @@ var NAVTREEINDEX63 =
 "xcast-conversion_8h_source.html":[9,0,0,11,2,1,1,1,1,0,20],
 "xcast-conversion_8hxx_source.html":[9,0,0,11,2,1,1,1,1,0,21],
 "xcast-k_8h_source.html":[9,0,0,11,2,1,1,1,1,0,22],
-"xcast-k_8hxx_source.html":[9,0,0,11,2,1,1,1,1,0,23]
+"xcast-k_8hxx_source.html":[9,0,0,11,2,1,1,1,1,0,23],
+"xcast-translation_8h_source.html":[9,0,0,11,2,1,1,1,1,0,24]
 };

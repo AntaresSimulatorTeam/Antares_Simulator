@@ -72,7 +72,6 @@ var structPROBLEME__HEBDO =
     [ "SoldeMoyenHoraire", "structPROBLEME__HEBDO.html#a85edb54aeb2aa706a159ea2296d239b9", null ],
     [ "timeMeasure", "structPROBLEME__HEBDO.html#a6c856b8bc8967e66aea8ebef29169834", null ],
     [ "TypeDeLissageHydraulique", "structPROBLEME__HEBDO.html#ae8023267ef14d9f85f29abc6a8ef65cc", null ],
-    [ "TypeDOptimisation", "structPROBLEME__HEBDO.html#ada76184d0b0162cab6f1187d7a2f8b0a", null ],
     [ "ValeursDeNTC", "structPROBLEME__HEBDO.html#a19a7297940be34f7abc2e07e15754e97", null ],
     [ "VariablesDualesDesContraintesDeNTC", "structPROBLEME__HEBDO.html#a4582a58e2e7ca2763e20453cb784fd13", null ],
     [ "WaterValueAccurate", "structPROBLEME__HEBDO.html#a52859336a85291b541b8563460b85aa8", null ],
