@@ -73,22 +73,32 @@ struct SingleTimeExpr final
     {
         if (hasCoefs() && other.hasCoefs())
         {
+            // Multiplying two symbolic expressions would give quadratic terms,
+            // which this representation cannot hold.
             throw 42;
         }
-        if (!hasCoefs() && !other.hasCoefs())
+        else if (!hasCoefs() && !other.hasCoefs())
         {
+            // constant * constant
             constant *= other.constant;
         }
-        if (hasCoefs() && !other.hasCoefs())
+        else if (hasCoefs() && !other.hasCoefs())
         {
-            constant *= other.constant;
+            // linear * constant
             for (auto& [idx, coef]: coefs)
             {
                 coef *= other.constant;
             }
+            constant *= other.constant;
         }
-        if (!hasCoefs() && other.hasCoefs())
+        else // (!hasCoefs() && other.hasCoefs())
         {
+            // constant * linear
+            coefs = other.coefs;
+            for (auto& [idx, coef]: coefs)
+            {
+                coef *= constant; // use this->constant as multiplier
+            }
             constant *= other.constant;
         }
         return *this;
@@ -349,8 +359,7 @@ public:
                                    ? optimEntityContainer_.variablesSize()
                                    : variableStartColumn.at(globalIndex + 1);
 
-        if (node->timeIndex()
-            == Antares::Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+        if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
         {
             SingleTimeExpr out;
             out.coefs.emplace_back(variableStart, 1);
@@ -358,11 +367,10 @@ public:
         }
         // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd
         // - variableStart+1
-        if (node->timeIndex() == Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
+        if (node->timeIndex() == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
             || node->timeIndex()
-                 == Antares::Expressions::Visitors::TimeIndex::
-                   VARYING_IN_TIME_AND_SCENARIO) /* scenario not
-                                               handled !*/
+                 == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not
+                                                                                  handled !*/
         {
             AllTimeExpr out(nbtimeSteps_);
 
@@ -751,33 +759,12 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
 
+    auto& pb = optimEntityContainer_.Problem();
     for (const auto& expr: linearExpression)
     {
         for (const auto& [index, value]: expr.coefs)
         {
             pb.setObjectiveCoefficient(solverVariables[index], value);
-        }
-    }
-    // const auto& coefPerVars = linearExpression.coefPerVar();
-    // const Optimization::Dimensions dim(Optimization::IntegerInterval{ctx.getYear(),
-    // ctx.getYear()},
-    //                                    Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
-    //                                                                  ctx.getLocalLastTimeStep()));
-
-    const auto& coefPerVars = linearExpression.coefPerVar();
-    const Optimization::Dimensions dim(Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()},
-                                       Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
-                                                                     ctx.getLocalLastTimeStep()));
-    auto& pb = optimEntityContainer_.Problem();
-    for (const auto s: dim.getScenarioIndices())
-    {
-        for (const auto t: dim.getTimesteps())
-        {
-            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coefPerVars, t); it;
-                 ++it)
-            {
-                pb.setObjectiveCoefficient(solverVariables[it.col()], it.value());
-            }
         }
     }
 }
