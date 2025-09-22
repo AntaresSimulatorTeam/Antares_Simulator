@@ -33,7 +33,7 @@ struct FictitiousLoadData
 /*!
  * represent 'Fictitious Load' constraint type
  */
-class FictitiousLoad: private ConstraintFactory
+class FictitiousLoad final: private ConstraintFactory
 {
 public:
     FictitiousLoad(ConstraintBuilder& builder, FictitiousLoadData& data):

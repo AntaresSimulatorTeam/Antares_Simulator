@@ -50,7 +50,7 @@ struct CmdLineOptimOptions
     bool solverLogs = false;
 };
 
-class OptimizationOptions
+class OptimizationOptions final
 {
 public:
     void initializeWith(const CmdLineOptimOptions& cmdLineOptimOptions);

@@ -27,7 +27,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class ntcTSNumberData: public TSNumberData
+class ntcTSNumberData final: public TSNumberData
 {
 public:
     ntcTSNumberData() = default;

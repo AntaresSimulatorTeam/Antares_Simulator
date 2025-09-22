@@ -41,11 +41,6 @@ bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions& options,
     {
         for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
         {
-#ifdef dbgInfos
-            printf("*********** Optimisation quadratique du pas de temps %ld ***********\n",
-                   pdtHebdo);
-#endif
-
             OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(problemeHebdo, pdtHebdo);
 
             OPT_InitialiserLeSecondMembreDuProblemeQuadratique(problemeHebdo, pdtHebdo);

@@ -32,7 +32,7 @@ struct AreaHydroLevelData
  * represent 'Area Hydraulic Level' constraint type
  */
 
-class AreaHydroLevel: private ConstraintFactory
+class AreaHydroLevel final: private ConstraintFactory
 {
 public:
     AreaHydroLevel(ConstraintBuilder& builder, AreaHydroLevelData& data):

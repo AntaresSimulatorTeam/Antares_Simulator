@@ -44,7 +44,7 @@ using PortFieldsRole = std::map<PortField, FieldRole>;
 
 class Component;
 
-class ConnectionEnd
+class ConnectionEnd final
 {
 public:
     ConnectionEnd(Component* component, const Port* port);

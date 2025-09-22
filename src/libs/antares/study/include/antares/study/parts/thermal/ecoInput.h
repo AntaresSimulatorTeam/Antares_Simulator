@@ -32,7 +32,7 @@ namespace Antares::Data
 /*!
 ** \brief Thermal
 */
-class EconomicInputData
+class EconomicInputData final
 {
 public:
     //! \name Constructor

@@ -37,7 +37,7 @@ using namespace Antares::Data::ScenarioBuilder;
 void initializeStudy(Data::Study* study);
 void configureLinkCapacities(AreaLink* link);
 
-class TimeSeriesConfigurer
+class TimeSeriesConfigurer final
 {
 public:
     TimeSeriesConfigurer() = default;
@@ -60,7 +60,7 @@ private:
     Matrix<>* ts_ = nullptr;
 };
 
-class ThermalClusterConfig
+class ThermalClusterConfig final
 {
 public:
     ThermalClusterConfig() = delete;
@@ -76,7 +76,7 @@ private:
     TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 
-class ShortTermStorageAddConstraintConfig
+class ShortTermStorageAddConstraintConfig final
 {
 public:
     ShortTermStorageAddConstraintConfig() = delete;
@@ -128,7 +128,7 @@ private:
     std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints> constraint;
 };
 
-class ShortTermStorageConfig
+class ShortTermStorageConfig final
 
 {
 public:
@@ -169,7 +169,7 @@ void addScratchpadToEachArea(Data::Study& study);
 // -------------------------------
 // Simulation results retrieval
 // -------------------------------
-class averageResults
+class averageResults final
 {
 public:
     averageResults(Variable::R::AllYears::AverageData& averageResults):
@@ -211,7 +211,7 @@ private:
     Variable::R::AllYears::AverageData& averageResults_;
 };
 
-class OutputRetriever
+class OutputRetriever final
 {
 public:
     OutputRetriever(ISimulation<Economy>& simulation):
@@ -267,7 +267,7 @@ typename Variable::Storage<VCard>::ResultsType* OutputRetriever::retrieveResults
     return result;
 }
 
-class ScenarioBuilderRule
+class ScenarioBuilderRule final
 {
 public:
     ScenarioBuilderRule(Data::Study& study);
@@ -301,7 +301,7 @@ private:
 // Simulation handler
 // =====================
 
-class TestingSimulationObserver: public Solver::Simulation::ISimulationObserver
+class TestingSimulationObserver final: public Solver::Simulation::ISimulationObserver
 {
 public:
     struct Variable
@@ -336,7 +336,7 @@ public:
                             std::string_view name) override;
 };
 
-class SimulationHandler
+class SimulationHandler final
 {
 public:
     SimulationHandler(Data::Study& study):

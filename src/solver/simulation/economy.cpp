@@ -111,11 +111,6 @@ bool Economy::simulationBegin()
         }
     }
 
-    for (auto& pb: pProblemesHebdo)
-    {
-        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
-    }
-
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
@@ -267,11 +262,7 @@ void Economy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study,
-                        pProblemesHebdo[0],
-                        balance,
-                        pNbWeeks,
-                        simulationTables_[0] /*TODO*/);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 

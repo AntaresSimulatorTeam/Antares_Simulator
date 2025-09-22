@@ -32,7 +32,7 @@ struct MaxHydroPowerData
 /*!
  * represent 'Max Hydraulic Power' constraint type
  */
-class MaxHydroPower: private ConstraintFactory
+class MaxHydroPower final: private ConstraintFactory
 {
 public:
     MaxHydroPower(ConstraintBuilder& builder, MaxHydroPowerData& data):

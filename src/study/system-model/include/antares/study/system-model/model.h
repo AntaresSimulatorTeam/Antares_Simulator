@@ -42,7 +42,7 @@ struct PortFieldKey
     auto operator<=>(const PortFieldKey&) const = default;
 };
 
-class PortFieldKeyHash
+class PortFieldKeyHash final
 {
 public:
     std::size_t operator()(const PortFieldKey& input) const;
@@ -55,7 +55,7 @@ using PortFieldMap = std::unordered_map<PortFieldKey, PortFieldDefinition, PortF
  * A model defines the behaviour of those components.
  */
 // TODO: add unit tests for this class
-class Model
+class Model final
 {
 public:
     Model() = default;
@@ -122,7 +122,7 @@ private:
 };
 
 // List of IDs used internally to check for uniqueness of IDs at component level
-class UniqueIDChecker
+class UniqueIDChecker final
 {
 public:
     void add(const std::string& id);
@@ -133,7 +133,7 @@ private:
     std::unordered_map<std::string, int> attribute_ids_;
 };
 
-class ModelBuilder
+class ModelBuilder final
 {
 public:
     ModelBuilder& withId(std::string_view id);

@@ -92,11 +92,6 @@ bool Adequacy::simulationBegin()
         }
     }
 
-    for (auto& pb: pProblemesHebdo)
-    {
-        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
-    }
-
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
@@ -219,11 +214,11 @@ bool Adequacy::year(Progression::Task& progression,
             try
             {
                 auto& currentSimTable = simulationTables_[numSpace];
-                OPT_OptimisationHebdomadaire(study.parameters.optOptions,
-                                             &currentProblem,
-                                             resultWriter,
-                                             simulationObserver_.get(),
-                                             currentSimTable);
+                OPT_OptimisationHebdomadaireLineaire(study.parameters.optOptions,
+                                                     &currentProblem,
+                                                     resultWriter,
+                                                     simulationObserver_.get(),
+                                                     currentSimTable);
                 currentSimTable.write();
 
                 RemixHydroForAllAreas(study.areas,
@@ -400,11 +395,7 @@ void Adequacy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study,
-                        pProblemesHebdo[0],
-                        balance,
-                        pNbWeeks,
-                        simulationTables_[0] /*TODO*/);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 

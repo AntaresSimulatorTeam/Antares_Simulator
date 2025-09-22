@@ -24,7 +24,7 @@
 
 namespace Antares::Expressions::Nodes
 {
-class TimeSumNode: public ParentNode
+class TimeSumNode final: public ParentNode
 {
 public:
     /**

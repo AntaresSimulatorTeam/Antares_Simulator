@@ -50,7 +50,7 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
 {
 }
 
-class SystemLinearProblemBuilder
+class SystemLinearProblemBuilder final
 {
 public:
     explicit SystemLinearProblemBuilder(

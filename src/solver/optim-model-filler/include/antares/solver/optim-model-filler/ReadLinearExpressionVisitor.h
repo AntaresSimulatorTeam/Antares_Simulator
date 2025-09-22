@@ -38,7 +38,8 @@
 namespace Antares::Optimization
 {
 
-class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<LinearExpressionEigen>
+class ReadLinearExpressionVisitor final
+    : public Expressions::Visitors::NodeVisitor<LinearExpressionEigen>
 {
 public:
     ReadLinearExpressionVisitor() = delete;

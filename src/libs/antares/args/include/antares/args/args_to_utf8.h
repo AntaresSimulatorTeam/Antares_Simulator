@@ -22,7 +22,7 @@
 
 #include <utility>
 
-class IntoUTF8ArgsTranslator
+class IntoUTF8ArgsTranslator final
 {
 public:
     IntoUTF8ArgsTranslator(int argc, const char** argv);

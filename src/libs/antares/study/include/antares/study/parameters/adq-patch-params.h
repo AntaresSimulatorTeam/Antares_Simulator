@@ -62,7 +62,7 @@ enum class AdqPatchPTO
 
 }; // enum AdqPatchPTO
 
-class CurtailmentSharing
+class CurtailmentSharing final
 {
 public:
     //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.

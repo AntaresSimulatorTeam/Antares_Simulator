@@ -34,7 +34,7 @@ class MPSolver;
 /*--------------------------------------------------------------------------------------*/
 
 /* Le probleme a resoudre */
-class PROBLEME_ANTARES_A_RESOUDRE
+class PROBLEME_ANTARES_A_RESOUDRE final
 {
 public:
     /* La matrice des contraintes */

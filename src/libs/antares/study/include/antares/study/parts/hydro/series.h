@@ -34,7 +34,7 @@ namespace Antares::Data
 /*!
 ** \brief Data series (Hydro)
 */
-class DataSeriesHydro
+class DataSeriesHydro final
 {
 public:
     //! \name Constructor

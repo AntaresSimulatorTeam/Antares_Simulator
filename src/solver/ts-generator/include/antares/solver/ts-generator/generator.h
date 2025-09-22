@@ -69,7 +69,7 @@ struct LinkTSgenerationParams
     bool hasValidData = true;
 };
 
-class AvailabilityTSGeneratorData
+class AvailabilityTSGeneratorData final
 {
 public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);

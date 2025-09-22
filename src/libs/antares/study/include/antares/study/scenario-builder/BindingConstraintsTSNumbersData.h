@@ -28,7 +28,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class BindingConstraintsTSNumberData: public TSNumberData
+class BindingConstraintsTSNumberData final: public TSNumberData
 {
 public:
     BindingConstraintsTSNumberData() = default;

@@ -31,7 +31,7 @@ struct FinalStockEquivalentData
 /*!
  * represent 'Final Stock Equivalent' constraint type
  */
-class FinalStockEquivalent: private ConstraintFactory
+class FinalStockEquivalent final: private ConstraintFactory
 {
 public:
     FinalStockEquivalent(ConstraintBuilder& builder, FinalStockEquivalentData& data):

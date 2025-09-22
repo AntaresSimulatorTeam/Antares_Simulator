@@ -35,7 +35,7 @@ using namespace Antares::ModelerStudy::SystemModel; // Mainly for type Connexion
 namespace Antares::IO::Inputs::SystemConverter
 {
 
-class ErrorWhileSplittingLibraryAndModel: public std::runtime_error
+class ErrorWhileSplittingLibraryAndModel final: public std::runtime_error
 {
 public:
     explicit ErrorWhileSplittingLibraryAndModel(const std::string& s):
@@ -44,7 +44,7 @@ public:
     }
 };
 
-class LibraryNotFound: public std::runtime_error
+class LibraryNotFound final: public std::runtime_error
 {
 public:
     explicit LibraryNotFound(const std::string& s):
@@ -53,7 +53,7 @@ public:
     }
 };
 
-class ModelNotFound: public std::runtime_error
+class ModelNotFound final: public std::runtime_error
 {
 public:
     explicit ModelNotFound(const std::string& s):

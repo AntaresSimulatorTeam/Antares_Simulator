@@ -38,7 +38,7 @@ class PartHydro;
 
 namespace Solver
 {
-class FinalLevelValidator
+class FinalLevelValidator final
 {
 public:
     FinalLevelValidator(const Antares::Data::PartHydro& hydro,

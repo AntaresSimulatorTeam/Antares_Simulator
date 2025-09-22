@@ -27,7 +27,7 @@
 #include "FlowDissociation.h"
 #include "ShortTermStorageLevel.h"
 
-class Group1: public ConstraintGroup
+class Group1 final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

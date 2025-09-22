@@ -25,7 +25,7 @@
 
 namespace Antares::IO::Inputs::YmlModel
 {
-class Parser
+class Parser final
 {
 public:
     Parser() = default;

@@ -5,7 +5,7 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class VarFillerContext: public LinearProblemFiller
+class VarFillerContext final: public LinearProblemFiller
 {
 public:
     explicit VarFillerContext() = default;

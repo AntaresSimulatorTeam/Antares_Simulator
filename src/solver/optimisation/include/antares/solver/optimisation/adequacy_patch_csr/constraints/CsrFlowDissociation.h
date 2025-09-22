@@ -35,7 +35,7 @@ struct CsrFlowDissociationData
     const int hour;
 };
 
-class CsrFlowDissociation: private ConstraintFactory
+class CsrFlowDissociation final: private ConstraintFactory
 {
 public:
     CsrFlowDissociation(ConstraintBuilder& builder, CsrFlowDissociationData& data):

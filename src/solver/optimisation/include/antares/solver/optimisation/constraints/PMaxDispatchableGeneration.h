@@ -25,7 +25,7 @@
 /*!
  * represent 'PMaxDispatchableGeneration' Constraint type
  */
-class PMaxDispatchableGeneration: private ConstraintFactory
+class PMaxDispatchableGeneration final: private ConstraintFactory
 {
 public:
     PMaxDispatchableGeneration(ConstraintBuilder& builder, StartUpCostsData& data):

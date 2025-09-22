@@ -5,7 +5,7 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class OneVarFiller: public LinearProblemFiller
+class OneVarFiller final: public LinearProblemFiller
 {
 public:
     explicit OneVarFiller() = default;

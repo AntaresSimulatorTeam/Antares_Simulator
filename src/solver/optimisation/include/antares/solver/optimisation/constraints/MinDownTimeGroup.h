@@ -29,7 +29,7 @@
  *
  */
 
-class MinDownTimeGroup: public AbstractStartUpCostsGroup
+class MinDownTimeGroup final: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;

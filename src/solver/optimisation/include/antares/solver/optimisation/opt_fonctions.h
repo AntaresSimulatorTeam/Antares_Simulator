@@ -36,11 +36,15 @@ using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
 class ISimulationTable;
 class OptimisationsSimulationTable;
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
-                                  PROBLEME_HEBDO* pProblemeHebdo,
-                                  Solver::IResultWriter& writer,
-                                  Solver::Simulation::ISimulationObserver& simulationObserver,
-                                  OptimisationsSimulationTable& simulationTables);
+void OPT_OptimisationHebdomadaireLineaire(
+  const OptimizationOptions& options,
+  PROBLEME_HEBDO* pProblemeHebdo,
+  Solver::IResultWriter& writer,
+  Solver::Simulation::ISimulationObserver& simulationObserver,
+  OptimisationsSimulationTable& simulationTables);
+void OPT_OptimisationHebdomadaireQuadratique(const OptimizationOptions& options,
+                                             PROBLEME_HEBDO* pProblemeHebdo);
+
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);

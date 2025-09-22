@@ -44,7 +44,7 @@ enum PathListOption
 /*!
 ** \brief Path list structure
 */
-class PathList
+class PathList final
 {
 public:
     struct FileInfo

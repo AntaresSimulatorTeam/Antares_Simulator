@@ -29,7 +29,7 @@
  *
  */
 
-class NbUnitsOutageLessThanNbUnitsStopGroup: public AbstractStartUpCostsGroup
+class NbUnitsOutageLessThanNbUnitsStopGroup final: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;

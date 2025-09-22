@@ -37,8 +37,7 @@ namespace Antares::Solver::Simulation
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
                                       const std::vector<AvgExchangeResults*>& balance,
-                                      int PasDeTempsDebut,
-                                      OptimisationsSimulationTable& simulationTables)
+                                      int PasDeTempsDebut)
 {
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
     {
@@ -93,14 +92,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
     try
     {
-        NullResultWriter resultWriter;
-        NullSimulationObserver simulationObserver;
-
-        OPT_OptimisationHebdomadaire(study.parameters.optOptions,
-                                     &problem,
-                                     resultWriter,
-                                     simulationObserver,
-                                     simulationTables);
+        OPT_OptimisationHebdomadaireQuadratique(study.parameters.optOptions, &problem);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -148,8 +140,7 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 void ComputeFlowQuad(Data::Study& study,
                      PROBLEME_HEBDO& problem,
                      const std::vector<AvgExchangeResults*>& balance,
-                     uint nbWeeks,
-                     OptimisationsSimulationTable& simulationTables)
+                     uint nbWeeks)
 {
     uint startTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
 
@@ -157,12 +148,11 @@ void ComputeFlowQuad(Data::Study& study,
     {
         logs.info() << "Post-processing... (quadratic optimisation)";
 
-        problem.TypeDOptimisation = OPTIMISATION_QUADRATIQUE;
         problem.LeProblemeADejaEteInstancie = false;
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);
-            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut, simulationTables);
+            RecalculDesEchangesMoyens(study, problem, balance, PasDeTempsDebut);
         }
     }
     else

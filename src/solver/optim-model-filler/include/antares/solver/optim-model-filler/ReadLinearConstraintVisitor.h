@@ -29,7 +29,7 @@
 namespace Antares::Optimisation
 {
 class OptimEntityContainer;
-} // 
+} //
 /**
  * Read Linear Constraint Visitor
  * Visits a Node and produces a Linear Constraint (defined by its Linear Expression and bounds).
@@ -52,7 +52,7 @@ struct LinearConstraint
     Eigen::VectorXd ub;
 };
 
-class ReadLinearConstraintVisitor: public Expressions::Visitors::NodeVisitor<LinearConstraint>
+class ReadLinearConstraintVisitor final: public Expressions::Visitors::NodeVisitor<LinearConstraint>
 {
 public:
     ReadLinearConstraintVisitor() = delete;

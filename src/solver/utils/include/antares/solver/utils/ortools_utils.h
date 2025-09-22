@@ -84,7 +84,7 @@ MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName);
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
 
-class OrtoolsUtils
+class OrtoolsUtils final
 {
 public:
     struct SolverNames

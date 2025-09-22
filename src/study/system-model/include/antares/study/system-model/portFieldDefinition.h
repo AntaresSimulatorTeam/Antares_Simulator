@@ -26,7 +26,7 @@
 namespace Antares::ModelerStudy::SystemModel
 {
 
-class PortFieldDefinition
+class PortFieldDefinition final
 {
 public:
     PortFieldDefinition(Port port, PortField field, Expression definition):

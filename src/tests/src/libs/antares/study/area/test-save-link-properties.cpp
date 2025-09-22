@@ -42,7 +42,7 @@ namespace fs = std::filesystem;
 const string generatedIniFileName = "properties.ini";
 const string referenceIniFileName = "properties-reference.ini";
 
-class referenceIniFile
+class referenceIniFile final
 {
 public:
     referenceIniFile();

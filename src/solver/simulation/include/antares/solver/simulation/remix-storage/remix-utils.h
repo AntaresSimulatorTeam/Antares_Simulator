@@ -82,7 +82,7 @@ inline double min_on_subrange(std::vector<double>&& v, unsigned h, unsigned H)
 }
 
 template<typename T>
-class CyclicIterator
+class CyclicIterator final
 {
 public:
     CyclicIterator(std::vector<T>& v);

@@ -25,7 +25,7 @@
 
 namespace Antares::Solver::LoadFiles
 {
-class FileLoader: public ILoader
+class FileLoader final: public ILoader
 {
 public:
     explicit FileLoader(std::filesystem::path studyPath);

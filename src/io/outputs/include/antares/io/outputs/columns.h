@@ -82,7 +82,7 @@ static std::string FormatValue(const U& v)
 }
 
 template<typename T>
-class TypedColumn: public IColumn
+class TypedColumn final: public IColumn
 {
 public:
     TypedColumn() = default;

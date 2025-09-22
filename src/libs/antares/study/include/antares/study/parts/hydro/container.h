@@ -82,7 +82,7 @@ struct AreaDependantHydroManagementData
 /*!
 ** \brief Hydro for a single area
 */
-class PartHydro
+class PartHydro final
 {
 public:
     enum

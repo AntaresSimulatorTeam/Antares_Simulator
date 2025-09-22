@@ -22,7 +22,7 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-class ShortTermStorageLevel: private ConstraintFactory
+class ShortTermStorageLevel final: private ConstraintFactory
 {
 public:
     ShortTermStorageLevel(ConstraintBuilder& builder, ShortTermStorageData& data):

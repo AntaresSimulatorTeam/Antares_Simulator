@@ -29,7 +29,7 @@
  * @brief Group of Pmin/PmaxDispatchableGenerationGroup constraints
  *
  */
-class PMinMaxDispatchableGenerationGroup: public AbstractStartUpCostsGroup
+class PMinMaxDispatchableGenerationGroup final: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;

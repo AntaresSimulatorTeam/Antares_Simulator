@@ -40,37 +40,32 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
 bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions&, PROBLEME_HEBDO*);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
-                                  PROBLEME_HEBDO* pProblemeHebdo,
-                                  Solver::IResultWriter& writer,
-                                  Solver::Simulation::ISimulationObserver& simulationObserver,
-                                  OptimisationsSimulationTable& simulationTables)
+void OPT_OptimisationHebdomadaireLineaire(
+  const OptimizationOptions& options,
+  PROBLEME_HEBDO* pProblemeHebdo,
+  Solver::IResultWriter& writer,
+  Solver::Simulation::ISimulationObserver& simulationObserver,
+  OptimisationsSimulationTable& simulationTables)
 {
-    if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
+    if (!OPT_PilotageOptimisationLineaire(options,
+                                          pProblemeHebdo,
+                                          writer,
+                                          simulationObserver,
+                                          simulationTables))
     {
-        if (!OPT_PilotageOptimisationLineaire(options,
-                                              pProblemeHebdo,
-                                              writer,
-                                              simulationObserver,
-                                              simulationTables))
-        {
-            logs.error() << "Linear optimization failed";
-            throw UnfeasibleProblemError("Linear optimization failed");
-        }
+        logs.error() << "Linear optimization failed";
+        throw UnfeasibleProblemError("Linear optimization failed");
     }
-    else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
+}
+
+void OPT_OptimisationHebdomadaireQuadratique(const OptimizationOptions& options,
+                                             PROBLEME_HEBDO* pProblemeHebdo)
+
+{
+    OPT_LiberationProblemesSimplexe(pProblemeHebdo);
+    if (!OPT_PilotageOptimisationQuadratique(options.quadraticOptimOptions, pProblemeHebdo))
     {
-        OPT_LiberationProblemesSimplexe(pProblemeHebdo);
-        if (!OPT_PilotageOptimisationQuadratique(options.quadraticOptimOptions, pProblemeHebdo))
-        {
-            logs.error() << "Quadratic optimization failed";
-            throw UnfeasibleProblemError("Quadratic optimization failed");
-        }
-    }
-    else
-    {
-        throw FatalError(
-          "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
-          "non initialise");
+        logs.error() << "Quadratic optimization failed";
+        throw UnfeasibleProblemError("Quadratic optimization failed");
     }
 }

@@ -747,7 +747,7 @@ BOOST_AUTO_TEST_CASE(offset_in_objective__throws_exception)
 }
 
 // Mock classes
-class MockMipVariable: public IMipVariable
+class MockMipVariable final: public IMipVariable
 {
 public:
     MockMipVariable(double lb, double ub, bool integer, const std::string& name):
@@ -811,7 +811,7 @@ private:
     std::string name_;
 };
 
-class MockLinearProblem: public ILinearProblem
+class MockLinearProblem final: public ILinearProblem
 {
 public:
     std::vector<std::unique_ptr<MockMipVariable>> variables_;

@@ -23,7 +23,7 @@
 #include "ConstraintGroup.h"
 #include "HydroPower.h"
 
-class HydroPowerGroup: public ConstraintGroup
+class HydroPowerGroup final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

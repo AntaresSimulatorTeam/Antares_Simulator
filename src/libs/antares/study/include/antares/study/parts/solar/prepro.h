@@ -28,7 +28,7 @@ namespace Antares::Data::Solar
 /*!
 ** \brief Prepro Solar
 */
-class Prepro
+class Prepro final
 {
 public:
     //! \name Constructor & Destructor

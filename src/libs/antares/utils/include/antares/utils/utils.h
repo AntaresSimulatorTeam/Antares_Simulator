@@ -67,7 +67,7 @@ std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::stri
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
 
-class TimeMeasurement
+class TimeMeasurement final
 {
     using clock = std::chrono::steady_clock;
 

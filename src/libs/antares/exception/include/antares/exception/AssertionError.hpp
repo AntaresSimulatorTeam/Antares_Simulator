@@ -25,7 +25,7 @@
 
 namespace Antares::Data
 {
-class AssertionError: public std::runtime_error
+class AssertionError final: public std::runtime_error
 {
 public:
     explicit AssertionError(const std::string& message);

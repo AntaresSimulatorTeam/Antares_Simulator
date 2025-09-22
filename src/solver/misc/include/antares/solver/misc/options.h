@@ -32,7 +32,7 @@
 /*!
 ** \brief Command line settings for launching the simulation
 */
-class Settings
+class Settings final
 {
 public:
     void reset();

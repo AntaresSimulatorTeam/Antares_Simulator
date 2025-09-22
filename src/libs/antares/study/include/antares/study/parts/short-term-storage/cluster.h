@@ -34,7 +34,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class STStorageCluster
+class STStorageCluster final
 {
 public:
     bool enabled() const;

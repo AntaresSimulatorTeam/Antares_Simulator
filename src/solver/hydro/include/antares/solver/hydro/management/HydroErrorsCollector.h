@@ -28,10 +28,10 @@
 namespace Antares
 {
 
-class HydroErrorsCollector
+class HydroErrorsCollector final
 {
 public:
-    class AreaReference
+    class AreaReference final
     {
     public:
         AreaReference(HydroErrorsCollector* collector, const std::string& name);

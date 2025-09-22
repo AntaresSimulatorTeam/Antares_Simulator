@@ -25,7 +25,7 @@
 /*!
  * represent 'Consistence Number Of Dispatchable Units Constraint' type
  */
-class ConsistenceNumberOfDispatchableUnits: private ConstraintFactory
+class ConsistenceNumberOfDispatchableUnits final: private ConstraintFactory
 {
 public:
     ConsistenceNumberOfDispatchableUnits(ConstraintBuilder& builder, StartUpCostsData& data):

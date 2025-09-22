@@ -32,7 +32,7 @@ class BasisStatus;
 
 namespace Antares::Optimization
 {
-class BasisStatusImpl
+class BasisStatusImpl final
 {
 private:
     friend class BasisStatus;

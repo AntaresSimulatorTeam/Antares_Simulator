@@ -24,7 +24,7 @@
 #include "MaxHydroPower.h"
 #include "MinHydroPower.h"
 
-class MinMaxHydroPowerGroup: public ConstraintGroup
+class MinMaxHydroPowerGroup final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

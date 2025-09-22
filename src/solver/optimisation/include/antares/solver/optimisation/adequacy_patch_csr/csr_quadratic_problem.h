@@ -27,7 +27,7 @@ class HourlyCSRProblem;
 namespace Antares::Solver::Optimization
 {
 
-class CsrQuadraticProblem
+class CsrQuadraticProblem final
 {
 public:
     CsrQuadraticProblem(PROBLEME_HEBDO* p,

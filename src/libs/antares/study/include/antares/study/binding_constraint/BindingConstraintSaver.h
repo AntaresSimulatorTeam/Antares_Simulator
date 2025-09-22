@@ -30,7 +30,7 @@
 
 namespace Antares::Data
 {
-class BindingConstraintSaver
+class BindingConstraintSaver final
 {
 public:
     class EnvForSaving final

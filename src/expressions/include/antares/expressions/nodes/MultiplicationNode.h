@@ -27,7 +27,7 @@ namespace Antares::Expressions::Nodes
 /**
  * @brief Represents a multiplication node in a syntax tree.
  */
-class MultiplicationNode: public BinaryNode
+class MultiplicationNode final: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;

@@ -64,7 +64,7 @@ struct Fixture
     Yuni::Clob path_to_generated_file;
 };
 
-class referenceIniFile
+class referenceIniFile final
 {
 public:
     referenceIniFile();

@@ -23,7 +23,7 @@
 #include "BindingConstraintDay.h"
 #include "ConstraintGroup.h"
 
-class BindingConstraintDayGroup: public ConstraintGroup
+class BindingConstraintDayGroup final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;
