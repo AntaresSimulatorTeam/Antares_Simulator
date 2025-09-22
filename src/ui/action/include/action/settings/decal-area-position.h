@@ -22,7 +22,7 @@
 #define __ANTARES_LIBS_STUDY_ACTION_SETTINGS_DECAL_AREA_POSITION_H__
 
 #include <yuni/yuni.h>
-#include "../action.h"
+#include "action/action.h"
 
 namespace Antares::Action::Settings
 {

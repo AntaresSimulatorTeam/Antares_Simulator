@@ -22,7 +22,7 @@
 #define __ANTARES_COMMON_COMPONENTS_PANEL_PANEL_H__
 
 #include <yuni/yuni.h>
-#include "../../wx-wrapper.h"
+#include "wx-wrapper.h"
 #include <wx/panel.h>
 
 namespace Antares::Component

@@ -20,7 +20,7 @@
  */
 
 #include "panel.h"
-#include "../../lock.h"
+#include "lock.h"
 #include <wx/sizer.h>
 
 using namespace Yuni;

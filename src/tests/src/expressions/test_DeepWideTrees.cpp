@@ -29,7 +29,7 @@
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
-#include "../modeler/mockModelerObjects.h"
+#include "mockModelerObjects.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;

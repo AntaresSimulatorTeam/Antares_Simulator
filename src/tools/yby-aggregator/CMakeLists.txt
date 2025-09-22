@@ -1,11 +1,11 @@
 project(AntaresStudyYearByYearAggregator)
 cmake_minimum_required(VERSION 2.8)
 
-include(../../cmake/messages.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/messages.cmake)
 OMESSAGE("antares-ybyaggregator")
 
 
-include(../../cmake/common-settings.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/common-settings.cmake)
 
 
 # Le main

@@ -23,7 +23,7 @@
 #include "registry.h"
 #include <vector>
 #include "frame.h"
-#include "../../dispatcher.h"
+#include "dispatcher.h"
 #include "local-frame.h"
 
 namespace Antares::Component::Frame::Registry

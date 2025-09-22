@@ -1,13 +1,13 @@
 project(AntaresBatchRun)
 cmake_minimum_required(VERSION 2.8)
 
-include(../../cmake/messages.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/messages.cmake)
 OMESSAGE("antares-batchrun")
 
 
 
 
-Include(../../cmake/common-settings.cmake)
+Include(${CMAKE_SOURCE_DIR}/cmake/common-settings.cmake)
 
 
 
