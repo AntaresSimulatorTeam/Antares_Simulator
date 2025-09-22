@@ -429,7 +429,23 @@ public:
 
     AllTimeExpr visit(const Nodes::PortFieldSumNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        auto& portId = node->getPortName();
+        auto& fieldId = node->getFieldName();
+
+        AllTimeExpr to_return(nbtimeSteps_);
+
+        for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
+        {
+            auto* component = connexion_end.component();
+            auto* port = connexion_end.port();
+
+            Visitor visitor(optimEntityContainer_, *component, fillContext_, nbtimeSteps_);
+
+            const Node* node = component->nodeAtPortField(port->Id(), fieldId);
+            to_return += visitor.dispatch(node);
+        }
+
+        return to_return;
     }
 
     AllTimeExpr visit(const Nodes::TimeShiftNode* node) override
