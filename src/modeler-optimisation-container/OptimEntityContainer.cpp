@@ -18,10 +18,25 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
+
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+
+#include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
 namespace Antares::Optimisation
 {
+
+  OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
+                                           const LinearProblemApi::ILinearProblemData& data,
+                                           const ScenarioGroupRepository& scenarioGroupRepository):
+    linearProblem_(linearProblem),
+    data_(data),
+    scenarioGroupRepository_(scenarioGroupRepository)
+{
+}
+
+
+
 void OptimEntityContainer::addFromSystemComponent(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
@@ -42,6 +57,10 @@ void OptimEntityContainer::addFromSystemComponent(
     }
     optimComponents_.push_back({.index = component.Index(),
                                 .modelVariablesGlobalIndices = modelVariablesGlobalIndices,
-                                .variableIndexMap = variableIndexMap});
+                                .variableIndexMap = variableIndexMap,
+       .evaluationContext = Optimisation::EvaluationContext(&component,
+                                                            &data_,
+                                                            &scenarioGroupRepository_.scenario(
+                                                              component.getScenarioGroupId() ) ) });
 }
 } // namespace Antares::Optimisation

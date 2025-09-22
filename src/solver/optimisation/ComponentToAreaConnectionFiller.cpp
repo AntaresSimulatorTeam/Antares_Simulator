@@ -27,7 +27,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
-#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Optimisation;
@@ -37,13 +36,12 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  const OptimEntityContainer& variableContainer,
+   OptimEntityContainer& optimEntityContainer,
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
-    optimEntityContainer_(variableContainer),
-    evaluationContextProvider_(linearProblemData, scenarioGroupRepository)
+    optimEntityContainer_(optimEntityContainer)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
@@ -52,8 +50,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&,
-                                                   ILinearProblemData&,
+void ComponentToAreaConnectionFiller::addVariables(
                                                    const FillContext&)
 {
     // nothing to do
@@ -72,7 +69,7 @@ static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Compone
     return field.value();
 }
 
-IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem& pb,
+IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                                                       const std::string& areaId,
                                                                       unsigned ts) const
 {
@@ -92,7 +89,7 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
 }
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
-  ILinearProblem& pb,
+  Optimisation::LinearProblemApi::ILinearProblem& pb,
   const LinearExpressionEigen& linearExpression,
   const FillContext& ctx,
   const std::string& areaId) const
@@ -136,14 +133,14 @@ public:
 };
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
-  ILinearProblem& pb,
+    ILinearProblem& pb,
   const FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
+    ReadLinearExpressionVisitor visitor(
                                         ctx,
                                         component,
                                         optimEntityContainer_);
@@ -151,21 +148,19 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }
 
-void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
-                                                     ILinearProblemData& data,
+void ComponentToAreaConnectionFiller::addConstraints(
                                                      const FillContext& ctx)
 {
     for (const auto& component: modelerSystem_->Components())
     {
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            addComponentPortContributionToArea(pb, ctx, component, portId, areaId);
+            addComponentPortContributionToArea(optimEntityContainer_.Problem(), ctx, component, portId, areaId);
         }
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&,
-                                                   ILinearProblemData&,
+void ComponentToAreaConnectionFiller::addObjective(
                                                    const FillContext&)
 {
     // nothing to do

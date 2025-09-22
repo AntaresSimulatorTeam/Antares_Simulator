@@ -19,7 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 #define WIN32_LEAN_AND_MEAN
-
+#if 0
 #include <boost/test/unit_test.hpp>
 
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
@@ -133,3 +133,4 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+#endif

@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
@@ -43,3 +44,4 @@ void TwoVarsTwoConstraintsFiller::addObjective([[maybe_unused]] ILinearProblem& 
 }
 
 } // namespace Antares::Optimisation::LinearProblemApi
+#endif

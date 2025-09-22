@@ -286,6 +286,7 @@ add_subdirectory(optimisation)  #optimisation APIs
 add_subdirectory(study)         #antares study model
 add_subdirectory(solver)     #antares solver and all associated libs
 add_subdirectory(modeler)       #antares modeler
+add_subdirectory(modeler-optimisation-container)       #antares modeler
 
 # Tools
 if (BUILD_TOOLS)

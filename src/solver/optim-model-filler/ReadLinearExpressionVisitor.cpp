@@ -23,11 +23,9 @@
 
 #include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
-#include "antares/expressions/RotateIndex.h"
 #include "antares/study/system-model/component.h"
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
@@ -37,17 +35,15 @@ namespace Antares::Optimization
 {
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
-  const Optimisation::EvaluationContextProvider& evalContextProvider,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const SystemModel::Component& component,
-  const Optimisation::OptimEntityContainer& variableContainer):
-    evalContextProvider_(evalContextProvider),
-    evalContext_(evalContextProvider_.provide(component)),
+  const Optimisation::OptimEntityContainer& optimEntityContainer):
+    evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
     fillContext_(fillContext),
     component_(component),
-    evalVisitor_(evalContext_, fillContext_),
-    nbModelVariables_(variableContainer.variablesSize()),
-    optimEntityContainer_(variableContainer)
+    evalVisitor_(optimEntityContainer, evalContext_, fillContext_),
+    nbModelVariables_(optimEntityContainer.variablesSize()),
+    optimEntityContainer_(optimEntityContainer)
 {
     nbtimeSteps_ = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep() + 1;
 }
@@ -118,7 +114,12 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     const auto globalIndex = optimComponent.variableIndexMap.at(
       node->value()); // the only time we search in a map
     const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
-    const auto variableStart = variableStartColumn.at(globalIndex);
+    // const auto variableStart = variableStartColumn.at(globalIndex);
+    // const auto globalIndex = optimComponent.variableIndexMap.at(
+    //   node->value()); // the only time we search in a map
+    // const auto variableStart = variableStartColumn[globalIndex];
+        const auto variableStart = optimEntityContainer_
+                                     .getVariableStartColumn(optimComponent.index, node->value());
     const auto variableEnd = variableStart == *variableStartColumn.rbegin()
                                ? nbModelVariables_
                                : variableStartColumn.at(globalIndex + 1);
@@ -126,7 +127,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     auto localFirstTimeStep = fillContext_.getLocalFirstTimeStep();
     auto localLastTimeStep = fillContext_.getLocalLastTimeStep();
 
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         for (auto localTimeStep = localFirstTimeStep; localTimeStep <= localLastTimeStep;
              ++localTimeStep)
@@ -136,8 +137,8 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
     }
     // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd -
     // variableStart+1
-    if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
-        || node->timeIndex() == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
+    if (node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
+        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not handled !*/
     {
         auto variableIndex = variableStart;
         for (auto localTimeStep = localFirstTimeStep; localTimeStep <= localLastTimeStep;
@@ -162,8 +163,8 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const VariableNode* nod
 LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != ParameterType::CONSTANT)
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        && systemParameter.type != Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         throw Error::InvalidArgumentError(
           "Parameter " + node->value()
@@ -173,7 +174,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const ParameterNode* no
     // TODO
 
     LinearExpressionEigen out(nbtimeSteps_, nbModelVariables_);
-    if (systemParameter.type == ParameterType::CONSTANT)
+    if (systemParameter.type == SystemModel::ParameterType::CONSTANT)
     {
         out.setOffset(
           Eigen::VectorXd::Constant(nbtimeSteps_,
@@ -218,7 +219,7 @@ LinearExpressionEigen ReadLinearExpressionVisitor::visit(const PortFieldSumNode*
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        ReadLinearExpressionVisitor visitor(evalContextProvider_,
+        ReadLinearExpressionVisitor visitor(
                                             fillContext_,
                                             *component,
                                             optimEntityContainer_);

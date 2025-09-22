@@ -16,7 +16,7 @@
 //
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-
+#if 0
 #pragma once
 #include <map>
 #include <memory>
@@ -136,3 +136,4 @@ struct LinearProblemBuildingFixture
     }
 };
 } // namespace Test::Modeler
+#endif

@@ -27,25 +27,30 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
-#include "antares/solver/optim-model-filler/Dimensions.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
 namespace Antares::Expressions::Visitors
 {
-EvalVisitor::EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext):
-    context_(std::move(context)),
-    fillContext_(std::move(fillContext))
+EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
+                         const Optimisation::EvaluationContext& context,
+                         const Optimisation::LinearProblemApi::FillContext& fillContext):
+    optimContainer_(optimContainer),
+    context_(context),
+    fillContext_(fillContext)
 {
 }
 
-EvalVisitor::EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext,
+
+EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
+                         const Optimisation::EvaluationContext& context,
+                         const Optimisation::LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component* component):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
-    context_(std::move(context)),
-    fillContext_(std::move(fillContext)),
+    optimContainer_(optimContainer),
+    context_(context),
+    fillContext_(fillContext),
     component_(component)
 {
 }
@@ -89,51 +94,52 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
-
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
     if (!component_)
     {
         throw Error::RuntimeError("Component null. Cannot evaluate VariableNode.");
     }
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->timeIndex() == TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    const auto& solverVariables = optimContainer_.getVariables();
+    const auto startColumn = optimContainer_.getVariableStartColumn(component_->Index(),
+                                                                    node->value());
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
         std::string varName = Optimization::buildVariableName(component_->Id(),
                                                               node->value(),
                                                               Optimization::MCYearAndTime::MCYear{
                                                                 fillContext_.getYear()},
                                                               std::nullopt);
-        return EvaluationResult(context_.getVariableValue(varName));
+
+        return EvaluationResult(solverVariables[startColumn]->solutionValue());
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
-    std::vector<double> varValues;
-    varValues.reserve(fillContext_.getLocalNumberOfTimeSteps());
-    for (auto timeStep = fillContext_.getLocalFirstTimeStep();
-         timeStep <= fillContext_.getLocalLastTimeStep();
-         ++timeStep)
-    {
-        std::string varName = Optimization::buildVariableName(component_->Id(),
-                                                              node->value(),
-                                                              Optimization::MCYearAndTime::MCYear{
-                                                                fillContext_.getYear()},
-                                                              timeStep);
-        varValues.emplace_back(context_.getVariableValue(varName));
-    }
+    unsigned nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
+                          + 1;
+    std::vector<double> varValues(nbTimeStep, 0.0);
+
+    
+        for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
+        {
+            varValues[varInd] = solverVariables[startColumn + varInd]->solutionValue();
+        }
+    
     return EvaluationResult{varValues};
 }
+
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = context_.getParameter(node->value());
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != ParameterType::CONSTANT)
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         std::string msg = "Parameter " + node->value() + " is declared constant in time and"
                           + " scenario in library but not in system";
         throw std::invalid_argument(msg);
     }
-    if (systemParameter.type == ParameterType::CONSTANT)
+    if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
     }

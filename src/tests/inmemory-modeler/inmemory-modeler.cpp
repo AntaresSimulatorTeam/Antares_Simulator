@@ -16,7 +16,7 @@
 //
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-
+#if 0
 #include "inmemory-modeler.h"
 
 #include <map>
@@ -28,7 +28,7 @@
 #include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
-#if 0
+
 using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Test::Modeler

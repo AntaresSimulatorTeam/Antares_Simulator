@@ -29,14 +29,12 @@
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
-#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
-#include "antares/solver/optim-model-filler/OptimEntityContainer.h"
 
 #include "../../modeler/FileWriter.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
-using TI = Antares::Expressions::Visitors::TimeIndex;
+using TI = Antares::Optimisation::TimeIndex;
 
 TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
@@ -198,8 +196,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           std::optional<unsigned> scenario,
-                          bool forceExportForScenarioIndex,
-                          const Antares::Optimisation::EvaluationContextProvider& contextProvider)
+                          bool forceExportForScenarioIndex)
 {
     const auto& cid = component.Id();
     const bool isLp = linearProblem.isLP();
@@ -263,24 +260,25 @@ void addObjectiveValue(ISimulationTable& simulation,
 void addPortEntries(ISimulationTable& simulationTable,
                     const FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
+                    const OptimEntityContainer& optimEntityContainer,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
-                    bool forceExportForScenarioIndex,
-                    const Antares::Optimisation::EvaluationContextProvider& contextProvider)
+                    bool forceExportForScenarioIndex)
 {
     const auto& cid = component.Id();
-    auto evalContext = contextProvider.provide(component);
+    const auto& evalContext =  optimEntityContainer.getOptimComponent(component.Index())
+                                .evaluationContext;
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
-        Antares::Expressions::Visitors::EvalVisitor evalVisitor(evalContext,
+        Antares::Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer, evalContext,
                                                                 fillContext,
                                                                 &component);
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
 
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(component, contextProvider)
+        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(optimEntityContainer, component)
                        .dispatch(portFieldDef.Definition().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
@@ -323,18 +321,11 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                          bool forceExportForScenarioIndex)
 {
     unsigned scenario = fillContext.getYear();
-    std::map<std::string, double> solutions;
-    for (int i = 0; i < linearProblem.variableCount(); ++i)
-    {
-        auto* var = linearProblem.getVariable(i);
-        solutions.try_emplace(var->getName(), var->solutionValue());
-    }
+   
     for (const auto& component: modelerData.system->Components())
     {
         EmptyScenario emptyScenario;
-        Antares::Optimisation::EvaluationContextProvider
-          contextProvider(*modelerData.dataSeries, modelerData.scenarioGroupRepository, solutions);
-
+       
         addVariableEntries(simulationTable,
                            linearProblem,
                            fillContext,
@@ -351,17 +342,16 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                              currentBlock,
                              timeConversionMode,
                              scenario,
-                             forceExportForScenarioIndex,
-                             contextProvider);
+                             forceExportForScenarioIndex);
 
         addPortEntries(simulationTable,
                        fillContext,
                        component,
+                       optimEntityContainer,
                        currentBlock,
                        timeConversionMode,
                        scenario,
-                       forceExportForScenarioIndex,
-                       contextProvider);
+                       forceExportForScenarioIndex);
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
 }

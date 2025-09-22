@@ -53,16 +53,23 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
 class SystemLinearProblemBuilder
 {
 public:
-    explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system):
-        system_(system)
+    
+    explicit SystemLinearProblemBuilder(
+      const ModelerStudy::SystemModel::System* system,
+      ILinearProblem& pb,
+      const LinearProblemApi::ILinearProblemData& dataSeries,
+      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
+        system_(system),
+        linearProblem_(pb),
+        dataSeries_(dataSeries),
+        scenarioGroupRepository_(scenarioGroupRepository),
+        optimEntityContainer_(pb, dataSeries, scenarioGroupRepository)
     {
     }
 
     ~SystemLinearProblemBuilder() = default;
 
-    void Provide(ILinearProblem& pb,
-                 ILinearProblemData* dataSeries,
-                 const Optimisation::ScenarioGroupRepository& scenario_group_repository,
+    void Provide(
                  const FillContext& timeScenarioCtx)
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
@@ -72,15 +79,15 @@ public:
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       optimEntityContainer_,
-                                                                      *dataSeries,
-                                                                      scenario_group_repository);
+                                                                       dataSeries_,
+                                                                    scenarioGroupRepository_);
             fillers.push_back(std::move(cf));
             optimEntityContainer_.addFromSystemComponent(component);
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);
 
-        linear_problem_builder.build(pb, *dataSeries, timeScenarioCtx);
+        linear_problem_builder.build(timeScenarioCtx);
     }
 
     [[nodiscard]] const Optimisation::OptimEntityContainer& getOptimEntityContainer() const
@@ -90,6 +97,9 @@ public:
 
 private:
     const ModelerStudy::SystemModel::System* system_;
+    ILinearProblem& linearProblem_;
+    const LinearProblemApi::ILinearProblemData& dataSeries_;
+    const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
     Optimisation::OptimEntityContainer optimEntityContainer_;
 };
 
@@ -104,7 +114,6 @@ void Modeler::solve() const
 
         Utils::TimeMeasurement measure;
 
-        SystemLinearProblemBuilder system_linear_problem(data.system.get());
 
         writer_.init(!parameters.noOutput, simulationTableSuffix);
 
@@ -129,10 +138,12 @@ void Modeler::solve() const
           parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
           parameters.lastTimeStep,  // global = local
           0};
-        system_linear_problem.Provide(ortools_linear_problem,
-                                      data.dataSeries.get(),
-                                      data.scenarioGroupRepository,
-                                      timeScenarioCtx);
+        SystemLinearProblemBuilder system_linear_problem(data.system.get(),
+                                                         ortools_linear_problem,
+                                                         *data.dataSeries,
+                                                         data.scenarioGroupRepository);
+
+        system_linear_problem.Provide(timeScenarioCtx);
 
         logs.info() << "Linear problem provided";
 

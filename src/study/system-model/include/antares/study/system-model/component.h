@@ -24,14 +24,26 @@
 #include <optional>
 
 #include <antares/expressions/nodes/PortFieldNode.h>
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include "antares/study/system-model/connection.h"
 
 #include "model.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
+enum class ParameterType : unsigned int
+{
+    CONSTANT = 0,
+    TIMESERIE = 1
+    // TODO: add varying_in_scenario_only, varying_in_time_and_scenario, and handle them in visitors
+};
 
+// this struct contains more or less the same infos as the one in system.h
+struct ParameterTypeAndValue
+{
+    std::string id;
+    ParameterType type;
+    std::string value;
+};
 /**
  * Defines the attributes of the Component class
  * Made into a struct to avoid duplication in ComponentBuilder
@@ -41,7 +53,7 @@ class ComponentData
 public:
     std::string id;
     const Model* model = nullptr;
-    std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values;
+    std::map<std::string, ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
     unsigned index = 0;
 
@@ -75,7 +87,7 @@ public:
         return data_.model;
     }
 
-    const std::map<std::string, Expressions::Visitors::ParameterTypeAndValue>& getParameterValues()
+    const std::map<std::string, ParameterTypeAndValue>& getParameterValues()
       const
     {
         return data_.parameter_values;
@@ -132,7 +144,7 @@ public:
     ComponentBuilder& withModel(const Model* model);
     ComponentBuilder& withIndex(unsigned int index);
     ComponentBuilder& withParameterValues(
-      std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values);
+      std::map<std::string, ParameterTypeAndValue> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);
     Component build();
 
