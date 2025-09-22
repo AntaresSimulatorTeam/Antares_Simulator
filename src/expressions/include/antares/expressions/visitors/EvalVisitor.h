@@ -73,6 +73,11 @@ public:
         return evaluateBinaryOperation(right, std::multiplies<>());
     }
 
+    EvaluationResult operator==(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::equal_to<>());
+    }
+
     struct SafeDivides
     {
         static constexpr double DEFAULT_THRESHOLD = 1e-16;

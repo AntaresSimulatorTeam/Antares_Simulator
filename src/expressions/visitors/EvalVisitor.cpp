@@ -73,7 +73,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::EqualNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    return dispatch(node->left()) == dispatch(node->right());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
