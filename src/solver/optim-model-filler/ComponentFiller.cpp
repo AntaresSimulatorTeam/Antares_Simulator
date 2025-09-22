@@ -295,7 +295,7 @@ public:
         nbtimeSteps_(nbtimeSteps),
         fillContext_(fillContext),
         evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
-        evalVisitor_(optimEntityContainer, evalContext_, fillContext_)
+        evalVisitor_(optimEntityContainer, fillContext, component)
     {
     }
 
@@ -317,7 +317,7 @@ public:
 
     AllTimeExpr visit(const Nodes::SubtractionNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::MultiplicationNode* node) override
@@ -329,27 +329,27 @@ public:
 
     AllTimeExpr visit(const Nodes::DivisionNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::EqualNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::LessThanOrEqualNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::GreaterThanOrEqualNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::NegationNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::VariableNode* node) override
@@ -391,7 +391,7 @@ public:
 
     AllTimeExpr visit(const Nodes::ParameterNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::LiteralNode* node) override
@@ -403,17 +403,17 @@ public:
 
     AllTimeExpr visit(const Nodes::PortFieldNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::PortFieldSumNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::TimeShiftNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::TimeIndexNode* node) override
@@ -431,7 +431,7 @@ public:
 
     AllTimeExpr visit(const Nodes::TimeSumNode* node) override
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     AllTimeExpr visit(const Nodes::AllTimeSumNode* node) override
