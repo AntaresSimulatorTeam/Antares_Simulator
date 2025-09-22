@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "thermalprepro.h"
 #include <yuni/core/math.h>
@@ -25,13 +25,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 /*!
 ** \brief Compute the MTBF for FO
@@ -47,7 +41,9 @@ static double MTBFForFO(Antares::Data::PreproAvailability* preproThermal, int y)
         double duration = data[Antares::Data::PreproAvailability::foDuration][y];
 
         if (Math::Zero(rate))
+        {
             return std::numeric_limits<double>::infinity();
+        }
 
         double mtbf = (duration / rate) - duration;
         return mtbf < 1. ? mtbf : Math::Round(mtbf, 2);
@@ -69,7 +65,9 @@ static double MTBFForPO(Antares::Data::PreproAvailability* preproThermal, int y)
         double duration = data[Antares::Data::PreproAvailability::poDuration][y];
 
         if (Math::Zero(rate))
+        {
             return std::numeric_limits<double>::infinity();
+        }
 
         double mtbf = (duration / rate) - duration;
         return mtbf < 1. ? mtbf : Math::Round(mtbf, 2);
@@ -78,12 +76,14 @@ static double MTBFForPO(Antares::Data::PreproAvailability* preproThermal, int y)
 }
 
 ThermalClusterPrepro::ThermalClusterPrepro(wxWindow* control,
-                                           Toolbox::InputSelector::ThermalCluster* notifier) :
- MatrixAncestorType(control)
+                                           Toolbox::InputSelector::ThermalCluster* notifier):
+    MatrixAncestorType(control)
 {
     if (notifier)
-        notifier->onThermalClusterChanged.connect(
-          this, &ThermalClusterPrepro::internalThermalClusterChanged);
+    {
+        notifier->onThermalClusterChanged
+          .connect(this, &ThermalClusterPrepro::internalThermalClusterChanged);
+    }
 }
 
 ThermalClusterPrepro::~ThermalClusterPrepro()
@@ -128,9 +128,13 @@ wxString ThermalClusterPrepro::cellValue(int x, int y) const
         {
             double rounded = Math::Round(d, 2);
             if (d < 1. and !(rounded < 1.)) // nearly 1.
+            {
                 return wxT("~ 1");
+            }
             if (Math::Zero(rounded) and not Math::Zero(d))
+            {
                 return wxT("~ 0");
+            }
             return DoubleToWxString(d);
         }
         return DoubleToWxString(d);
@@ -168,11 +172,17 @@ bool ThermalClusterPrepro::cellValue(int x, int y, const String& value)
     {
         double v;
         if (not value.to(v))
+        {
             return false;
+        }
         if (v < 1)
+        {
             return MatrixAncestorType::cellValue(x, y, "1");
+        }
         if (v > 365)
+        {
             return MatrixAncestorType::cellValue(x, y, "365");
+        }
 
         uint duration = (uint)Math::Round(v);
         return MatrixAncestorType::cellValue(x, y, CString<64, false>() << duration);
@@ -191,7 +201,9 @@ void ThermalClusterPrepro::internalThermalClusterChanged(Antares::Data::ThermalC
 wxString ThermalClusterPrepro::rowCaption(int row) const
 {
     if (!study or row >= study->calendar.maxDaysInYear)
+    {
         return wxEmptyString;
+    }
     return wxStringFromUTF8(study->calendar.text.daysYear[row]);
 }
 
@@ -204,49 +216,65 @@ IRenderer::CellStyle ThermalClusterPrepro::cellStyle(int col, int row) const
         {
             double mtbf = MTBFForFO(pPreproAvailability, row);
             if (Math::Zero(mtbf))
+            {
                 return IRenderer::cellStyleWarning;
+            }
         }
         // MTBF PO
         if (col == 7)
         {
             double mtbf = MTBFForPO(pPreproAvailability, row);
             if (Math::Zero(mtbf))
+            {
                 return IRenderer::cellStyleWarning;
+            }
         }
 
         return IRenderer::cellStyleDisabled;
     }
 
     if (col <= 1 and cellNumericValue(col, row) < 1.)
+    {
         return IRenderer::cellStyleError;
+    }
 
     if (col > 1 and col <= 3)
     {
         double d = cellNumericValue(col, row);
         if (d < 0. or d > 1)
+        {
             return IRenderer::cellStyleError;
+        }
     }
     if (col > 3 and col < 6)
     {
         double d = cellNumericValue(col, row);
         if (d < 0)
+        {
             return IRenderer::cellStyleError;
+        }
 
         if (pCluster)
         {
             if (col == 4)
             {
                 if (d > cellNumericValue(col + 1, row) or d > pCluster->unitCount)
+                {
                     return IRenderer::cellStyleError;
+                }
             }
             else
             {
                 if (col == 5)
                 {
                     if (d < cellNumericValue(col - 1, row))
+                    {
                         return IRenderer::cellStyleError;
+                    }
                     if (d > pCluster->unitCount)
+                    {
                         return IRenderer::cellStyleWarning;
+                    }
                 }
             }
         }
@@ -270,9 +298,13 @@ wxColour ThermalClusterPrepro::horizontalBorderColor(int x, int y) const
         auto& hourinfo = study->calendar.hours[y + 1];
 
         if (hourinfo.firstHourInMonth)
+        {
             return Default::BorderMonthSeparator();
+        }
         if (hourinfo.firstHourInDay)
+        {
             return Default::BorderDaySeparator();
+        }
     }
     return IRenderer::verticalBorderColor(x, y);
 }
@@ -283,7 +315,4 @@ void ThermalClusterPrepro::onStudyClosed()
     MatrixAncestorType::onStudyClosed();
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

@@ -211,7 +211,7 @@ void ComponentFiller::addVariables(
     }
 
 const auto& evaluationContext = optimEntityContainer_.getOptimComponent(component_.Index()).evaluationContext;
-    Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, evaluationContext, ctx);
+    Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())
@@ -272,9 +272,8 @@ const auto& evaluationContext = optimEntityContainer_.getOptimComponent(componen
 
 void ComponentFiller::addStaticConstraint(
                                           const Optimization::LinearConstraint& linear_constraint,
-                                          const std::string& constraint_id) 
+                                          const std::string& constraint_id)
 {
-    
     auto* ct = optimEntityContainer_.Problem().addConstraint(linear_constraint.lb(0),
                                 linear_constraint.ub(0),
                                 component_.Id() + "." + constraint_id);
@@ -294,7 +293,7 @@ void ComponentFiller::addStaticConstraint(
 void ComponentFiller::addTimeDependentConstraints(
   const Optimization::LinearConstraint& linear_constraints,
   const std::string& constraint_id,
-  const Optimisation::LinearProblemApi::FillContext& ctx) 
+  const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto& pb = optimEntityContainer_.Problem();
     const Optimization::Dimensions dim(
@@ -355,7 +354,6 @@ void ComponentFiller::addConstraints(
             {
                 addStaticConstraint(linear_constraints, constraint.Id());
             }
-        
     }
 }
 

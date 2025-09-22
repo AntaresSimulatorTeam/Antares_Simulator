@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <antares/logs/logs.h>
 #include "recentfiles.h"
@@ -27,9 +27,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace RecentFiles
+namespace Antares::RecentFiles
 {
 using WxConfigPtr = SmartPtr<wxConfig, Policy::Ownership::ReferenceCounted>;
 
@@ -80,7 +78,9 @@ ListPtr Get()
             // Getting the title from the real folder
             // The operation may fail so 'title' will remain untouched
             if (!TryToGetTheTitleFromStudyFolder(cstr, pathConvert, path, title))
+            {
                 continue;
+            }
 
             // Adding
             if (!path.IsEmpty() && wxT(".") != path && wxT("..") != path && wxDir::Exists(path))
@@ -90,12 +90,16 @@ ListPtr Get()
                     if (System::windows)
                     {
                         if (path[c] == wxT('/'))
+                        {
                             path[c] = wxT('\\');
+                        }
                     }
                     else
                     {
                         if (path[c] == wxT('\\'))
+                        {
                             path[c] = wxT('/');
+                        }
                     }
                 }
                 result->push_back(std::pair<wxString, wxString>(path, title));
@@ -111,7 +115,9 @@ ListPtr AddAndGet(wxString path, const wxString& title)
     ListPtr lst = Get();
 
     if (path.Last() == '/' || path.Last() == '\\')
+    {
         path.RemoveLast();
+    }
     if (!path.IsEmpty())
     {
         // Check if the path does not already exist
@@ -125,7 +131,9 @@ ListPtr AddAndGet(wxString path, const wxString& title)
         }
         // Check for limits
         if (lst->size() == Max)
+        {
             lst->pop_back();
+        }
 
         // Insert the item at the begining
         lst->push_front(std::pair<wxString, wxString>(path, title));
@@ -159,7 +167,9 @@ void Write(const ListPtr lst)
                 p << wxT("recents/") << indx << wxT("/");
                 config->Write(p + wxT("path"), i->first);
                 if (!i->second.IsEmpty())
+                {
                     config->Write(p + wxT("title"), i->second);
+                }
                 ++indx;
             }
         }
@@ -193,5 +203,4 @@ bool ShowPathInMenu()
     return true;
 }
 
-} // namespace RecentFiles
-} // namespace Antares
+} // namespace Antares::RecentFiles

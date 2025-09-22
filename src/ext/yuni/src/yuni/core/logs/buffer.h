@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,11 +13,7 @@
 #include "../../yuni.h"
 #include "../string.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace LogImpl
+namespace Yuni::Private::LogImpl
 {
 // Forward declaration
 template<class LogT, class V, int E = V::enabled>
@@ -44,12 +41,14 @@ public:
 public:
     //! \name Constructos & Destructor
     //@{
-    inline Buffer(const LoggerType& l) : pLogger(l)
+    inline Buffer(const LoggerType& l):
+        pLogger(l)
     {
     }
 
     template<typename U>
-    inline Buffer(const LoggerType& l, U u) : pLogger(l)
+    inline Buffer(const LoggerType& l, U u):
+        pLogger(l)
     {
         pBuffer.append(u);
     }
@@ -60,6 +59,7 @@ public:
         // For example, the buffer will be written to the output
         pLogger.template dispatchMessageToHandlers<V>(pBuffer);
     }
+
     //@}
 
     template<typename U>
@@ -138,6 +138,4 @@ public:
 
 }; // class Buffer
 
-} // namespace LogImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::LogImpl

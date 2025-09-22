@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,14 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <iostream>
+
 #include "../../yuni.h"
 #include "../string.h"
 #include "bit.h"
-#include <iostream>
 
-namespace Yuni
-{
-namespace Bit
+namespace Yuni::Bit
 {
 /*!
 ** \brief Array of bits
@@ -52,6 +52,7 @@ public:
     typedef uint Size;
     //! Buffer Type
     typedef CString<20, true> BufferType;
+
     enum
     {
         //! Invalide offset
@@ -240,7 +241,6 @@ private:
 
 }; // class Array
 
-} // namespace Bit
-} // namespace Yuni
+} // namespace Yuni::Bit
 
 #include "array.hxx"

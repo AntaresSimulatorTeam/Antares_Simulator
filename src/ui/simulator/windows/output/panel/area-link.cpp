@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "panel.h"
 #include <yuni/io/file.h>
@@ -42,11 +42,7 @@ using namespace Yuni;
 #define ANTARES_MATRIX_SNPRINTF snprintf
 #endif
 
-namespace Antares
-{
-namespace Private
-{
-namespace OutputViewerData
+namespace Antares::Private::OutputViewerData
 {
 namespace // anonymous
 {
@@ -70,7 +66,7 @@ static const char* const sfmt[] = {
   "%.16f",
 };
 
-class JobMatrix : public Yuni::Job::IJob, public Yuni::IEventObserver<JobMatrix>
+class JobMatrix: public Yuni::Job::IJob, public Yuni::IEventObserver<JobMatrix>
 {
 public:
     //! Smart pointer
@@ -79,7 +75,11 @@ public:
     using MatrixType = ::Antares::Private::OutputViewerData::Panel::MatrixType;
 
 public:
-    JobMatrix(Panel& panel) : Yuni::Job::IJob(), shouldAbort(0), pPanel(panel), pMatrix(nullptr)
+    JobMatrix(Panel& panel):
+        Yuni::Job::IJob(),
+        shouldAbort(0),
+        pPanel(panel),
+        pMatrix(nullptr)
     {
     }
 
@@ -106,7 +106,9 @@ protected:
     virtual void onExecute()
     {
         if (shouldAbort)
+        {
             return;
+        }
 
         logs.info() << "[output-viewer] loading " << filename;
         bool success = false;
@@ -123,13 +125,19 @@ protected:
             auto mutex = ProvideLockingForFileLocking(filename);
             std::lock_guard locker(*mutex);
             if (not shouldAbort)
+            {
                 success = pMatrix->loadFromCSVFile(filename, 1, 0, options);
+            }
         }
 #ifndef NDEBUG
         if (success)
+        {
             logs.debug() << "success " << filename;
+        }
         else
+        {
             logs.debug() << "failed " << filename;
+        }
 #endif
 
         if (not shouldAbort)
@@ -145,7 +153,9 @@ protected:
                 // dispatch matrix loading (for taking in the main thread)
                 callback.bind(&pPanel, &Panel::loadDataFromMatrix, pMatrix);
                 if (not shouldAbort)
+                {
                     Antares::Dispatcher::GUI::Post(callback, 50);
+                }
                 // avoid matrix being deleted
                 pMatrix = nullptr;
                 return;
@@ -155,7 +165,9 @@ protected:
             // The GUI will be updated with nullptr
             callback.bind(&pPanel, &Panel::loadDataFromMatrix, (MatrixType*)nullptr);
             if (not shouldAbort)
+            {
                 Antares::Dispatcher::GUI::Post(callback, 50);
+            }
         }
 
         // release
@@ -174,7 +186,7 @@ private:
 
 }; // class JobMatrix
 
-class JobAggregator : public Yuni::Job::IJob, public Yuni::IEventObserver<JobAggregator>
+class JobAggregator: public Yuni::Job::IJob, public Yuni::IEventObserver<JobAggregator>
 {
 public:
     //! Smart pointer
@@ -183,7 +195,11 @@ public:
     using MatrixType = Panel::MatrixType;
 
 public:
-    JobAggregator(Panel& panel) : Yuni::Job::IJob(), shouldAbort(0), pPanel(panel), result(nullptr)
+    JobAggregator(Panel& panel):
+        Yuni::Job::IJob(),
+        shouldAbort(0),
+        pPanel(panel),
+        result(nullptr)
     {
         // Getting the layer type
         ::Antares::Window::OutputViewer::Layer* layer = pPanel.layer();
@@ -215,6 +231,7 @@ protected:
         maxHeaderWidth = 10,
         maxHeaderHeight = 7,
     };
+
     enum
     {
         options = Matrix<>::optImmediate | Matrix<>::optNoWarnIfEmpty | Matrix<>::optQuiet
@@ -263,7 +280,9 @@ protected:
         for (uint i = 0; i != (uint)filenames.size(); ++i)
         {
             if (shouldAbort || IsGUIAboutToQuit())
+            {
                 return;
+            }
             auto& filename = filenames[i];
             logs.info() << "[output-viewer][virtual] loading " << filename;
 
@@ -277,14 +296,20 @@ protected:
                 auto mutex = ProvideLockingForFileLocking(filename);
                 std::lock_guard locker(*mutex);
                 if (shouldAbort)
+                {
                     return;
+                }
                 success = rawdata.loadFromCSVFile(filename, 1, 0, options);
             }
 
             if (not success || rawdata.empty())
+            {
                 continue;
+            }
             if (shouldAbort || IsGUIAboutToQuit())
+            {
                 return;
+            }
 
             ++count;
 
@@ -296,7 +321,9 @@ protected:
 
             // calculate the caption info with the first matrix
             if (!i)
+            {
                 retrieveColRowCaption(rawdata);
+            }
 
             double v;
             for (uint x = 0; x != mW; ++x)
@@ -309,37 +336,49 @@ protected:
                     // If the cell is already marked as "string", there is nothing
                     // at this point
                     if (cellStatus[x][y] == stString)
+                    {
                         continue;
+                    }
                     // If the cell is marked as "indeterminate" and the cell
                     // is empty, it will remain "indeterminate"
                     if (cellStatus[x][y] == stIndeterminate && rawcol[y].empty())
+                    {
                         continue;
+                    }
 
                     if (rawcol[y].empty() || y < maxHeaderHeight || not rawcol[y].to(v))
                     {
                         if (y < maxHeaderHeight)
                         {
                             if (!i) // first matrix
+                            {
                                 headerColumns[x][y] = rawcol[y];
+                            }
                             else
                             {
                                 if (not rawcol[y].empty())
                                 {
                                     if (not rawcol[y].equalsInsensitive(headerColumns[x][y]))
+                                    {
                                         headerColumns[x][y] = "??";
+                                    }
                                 }
                             }
                         }
                         else if (x < maxHeaderWidth)
                         {
                             if (!i)
+                            {
                                 headerRows[x][y] = rawcol[y];
+                            }
                             else
                             {
                                 if (not rawcol[y].empty())
                                 {
                                     if (!rawcol[y].equalsInsensitive(headerRows[x][y]))
+                                    {
                                         headerRows[x][y] = "??";
+                                    }
                                 }
                             }
                         }
@@ -351,7 +390,9 @@ protected:
                         cellStatus[x][y] = stDouble;
                         // if it is the first matrix and the element is a caption
                         if (!i || colRowCaption[x])
+                        {
                             opsColumn[y] = v;
+                        }
                         else
                         {
                             switch (pLayerType)
@@ -365,11 +406,15 @@ protected:
                                 break;
                             case ltMin:
                                 if (v < opsColumn[y])
+                                {
                                     opsColumn[y] = v;
+                                }
                                 break;
                             case ltMax:
                                 if (v > opsColumn[y])
+                                {
                                     opsColumn[y] = v;
+                                }
                                 break;
                             case ltOutput:
                                 assert(false);
@@ -383,7 +428,9 @@ protected:
                         {
                             uint p = rawcol[y].size() - offset - 1;
                             if (p > precision[x])
+                            {
                                 precision[x] = (p > 16) ? 16 : p;
+                            }
                         }
                     }
                 }
@@ -391,7 +438,9 @@ protected:
         } // all filenames
 
         if (shouldAbort || IsGUIAboutToQuit())
+        {
             return;
+        }
 
         if (count && (result = new MatrixType()))
         {
@@ -400,7 +449,9 @@ protected:
             for (uint x = 0; x != ops.width; ++x)
             {
                 if (!(x % 2) && (shouldAbort || IsGUIAboutToQuit()))
+                {
                     return;
+                }
                 assert(x < precision.size());
 
                 auto& opscol = ops[x];
@@ -411,28 +462,42 @@ protected:
                 for (uint y = 0; y != ops.height; ++y)
                 {
                     if (y < maxHeaderHeight)
+                    {
                         rescol[y] = headerColumns[x][y];
+                    }
                     else
                     {
                         if (invcol[y] != stDouble)
                         {
                             if (x < maxHeaderWidth)
+                            {
                                 rescol[y] = headerRows[x][y];
+                            }
                             else
+                            {
                                 continue;
+                            }
                         }
                         else
                         {
                             // Post-processing
                             if (pLayerType == ltAverage)
+                            {
                                 opscol[y] /= (double)count;
+                            }
 
-                            const int sizePrintf = ANTARES_MATRIX_SNPRINTF(
-                              conversionBuffer, sizeof(conversionBuffer), format, opscol[y]);
+                            const int sizePrintf = ANTARES_MATRIX_SNPRINTF(conversionBuffer,
+                                                                           sizeof(conversionBuffer),
+                                                                           format,
+                                                                           opscol[y]);
                             if (sizePrintf >= 0 && sizePrintf < (int)(sizeof(conversionBuffer)))
+                            {
                                 rescol[y].write((const char*)conversionBuffer, sizePrintf);
+                            }
                             else
+                            {
                                 rescol[y] = "ERR";
+                            }
                         }
                     }
                 }
@@ -444,7 +509,9 @@ protected:
         cellStatus.clear();
 
         if (shouldAbort || IsGUIAboutToQuit())
+        {
             return;
+        }
 
         // Early cleanup
         ops.clear();
@@ -457,7 +524,9 @@ protected:
         {
             callback.bind(&pPanel, &Panel::loadDataFromMatrix, result);
             if (shouldAbort || IsGUIAboutToQuit())
+            {
                 return;
+            }
             result = nullptr;
             Antares::Dispatcher::GUI::Post(callback, 50);
             return;
@@ -467,7 +536,9 @@ protected:
         // The GUI will be updated with nullptr
         callback.bind(&pPanel, &Panel::loadDataFromMatrix, (MatrixType*)nullptr);
         if (shouldAbort || IsGUIAboutToQuit()) // double-check
+        {
             return;
+        }
         Antares::Dispatcher::GUI::Post(callback, 50);
     }
 
@@ -489,13 +560,19 @@ protected:
             else
             {
                 if (mW > ops.width && mH > ops.height)
+                {
                     ops.resizeWithoutDataLost(mW, mH, 0.);
+                }
                 else
                 {
                     if (rawdata.width > ops.width)
+                    {
                         ops.resizeWithoutDataLost(mW, ops.height, 0.);
+                    }
                     else
+                    {
                         ops.resizeWithoutDataLost(ops.width, mH, 0.);
+                    }
                 }
                 cellStatus.resizeWithoutDataLost(ops.width, ops.height, stIndeterminate);
                 headerColumns.resizeWithoutDataLost(ops.width, maxHeaderHeight);
@@ -529,13 +606,19 @@ protected:
                 uint countNonEmpty = 0;
                 // 1srt line
                 if (not matrix[x][4].empty())
+                {
                     ++countNonEmpty;
+                }
                 // 2nd line
                 if (not matrix[x][5].empty())
+                {
                     ++countNonEmpty;
+                }
                 // 3nd line
                 if (not matrix[x][6].empty())
+                {
                     ++countNonEmpty;
+                }
 
                 // The check on "year" is required for the view variable-per-variable
                 colRowCaption[x] = (countNonEmpty <= 1);
@@ -567,7 +650,7 @@ private:
     std::vector<uint8_t> precision;
 }; // class JobAggregator
 
-class DataAreaOrLink : public Panel::IData
+class DataAreaOrLink: public Panel::IData
 {
 public:
     DataAreaOrLink()
@@ -591,7 +674,9 @@ void Panel::loadVirtualLayer()
     assert(this && "Invalid this");
 
     if (!pComponent || IsGUIAboutToQuit())
+    {
         return;
+    }
 
     // waiting for all other standard panels
     if (pPanelsInCallingLoadDataFromFile)
@@ -616,7 +701,9 @@ void Panel::loadVirtualLayer()
         assert(i < (uint)pComponent->pPanelAllOutputs.size());
         auto* panel = pComponent->pPanelAllOutputs[i];
         if (panel && not panel->filename().empty())
+        {
             job->filenames.push_back(panel->filename());
+        }
     }
     Antares::Dispatcher::Post((const Yuni::Job::IJob::Ptr&)job);
 }
@@ -634,7 +721,9 @@ void Panel::loadDataFromFile()
         return;
     }
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     delete pData;
     pData = nullptr;
@@ -645,11 +734,11 @@ void Panel::loadDataFromFile()
     auto& output = *(pLayer->selection);
 
     // Getting the current selection type
-    const SelectionType selectionType
-      = ((pLayer->detached) ? pLayer->customSelectionType : pComponent->pCurrentSelectionType);
+    const SelectionType selectionType = ((pLayer->detached) ? pLayer->customSelectionType
+                                                            : pComponent->pCurrentSelectionType);
     // The area / link name
-    const String& areaOrLinkName
-      = ((pLayer->detached) ? pLayer->customAreaOrLink : pComponent->pCurrentAreaOrLink);
+    const String& areaOrLinkName = ((pLayer->detached) ? pLayer->customAreaOrLink
+                                                       : pComponent->pCurrentAreaOrLink);
 
     auto* data = new DataAreaOrLink();
     auto* job = new JobMatrix(*this);
@@ -700,36 +789,60 @@ void Panel::loadDataFromFile()
     filename << SEP;
 
     if (selectionType == stArea)
+    {
         filename << "areas";
+    }
     else
+    {
         filename << "links";
+    }
 
     filename << SEP << areaOrLinkName << SEP;
 
     if (pComponent->pBtnValues->pushed())
+    {
         filename << "values";
+    }
     else if (pComponent->pBtnDetails->pushed())
+    {
         filename << "details";
+    }
     else if (pComponent->pBtnDetailsRes->pushed())
+    {
         filename << "details-res";
+    }
     else if (pComponent->pBtnID->pushed())
+    {
         filename << "id";
+    }
 
     filename << '-';
 
     if (pComponent->pBtnHourly->pushed())
+    {
         filename << "hourly";
+    }
     else if (pComponent->pBtnDaily->pushed())
+    {
         filename << "daily";
+    }
     else if (pComponent->pBtnWeekly->pushed())
+    {
         filename << "weekly";
+    }
     else if (pComponent->pBtnMonthly->pushed())
+    {
         filename << "monthly";
+    }
     else if (pComponent->pBtnAnnual->pushed())
+    {
         filename << "annual";
+    }
 
     if (pComponent->pCurrentLOD == lodDetailedResultsWithConcatenation)
+    {
         filename << '-' << pComponent->pCurrentVariableID;
+    }
 
     filename << ".txt";
 
@@ -746,7 +859,9 @@ void Panel::loadDataFromFile()
         newfilename.replace(torepl, replacement);
 
         if (IO::File::Exists(newfilename))
+        {
             filename = newfilename;
+        }
     }
 
     // The filename to open
@@ -779,7 +894,9 @@ void Panel::loadDataFromMatrix(MatrixType* matrix)
     assert(pLayer && "invalid layer");
 
     if (!pComponent)
+    {
         return;
+    }
 
     GUILocker locker;
     if (not matrix)
@@ -792,12 +909,18 @@ void Panel::loadDataFromMatrix(MatrixType* matrix)
             String filename = pFilename;
             filename << ".nodata";
             if (IO::File::Exists(filename))
+            {
                 noData();
+            }
             else
+            {
                 messageMergeYbY();
+            }
         }
         else
+        {
             noData();
+        }
     }
     else
     {
@@ -805,8 +928,13 @@ void Panel::loadDataFromMatrix(MatrixType* matrix)
         clearAllComponents();
 
         auto* renderer = new AreaLinkRenderer(pComponent, matrix);
-        DatagridType* grid
-          = new DatagridType(this, renderer, wxEmptyString, false, true, true, true);
+        DatagridType* grid = new DatagridType(this,
+                                              renderer,
+                                              wxEmptyString,
+                                              false,
+                                              true,
+                                              true,
+                                              true);
 
         renderer->grid(grid);
         pSizer->Add(grid, 1, wxALL | wxEXPAND);
@@ -820,7 +948,9 @@ void Panel::loadDataFromMatrix(MatrixType* matrix)
 
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Layout();
+    }
 }
 
 void Panel::noData()
@@ -828,9 +958,9 @@ void Panel::noData()
     message(wxT("no data available"), "images/64x64/file-not-found.png");
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Layout();
+    }
 }
 
-} // namespace OutputViewerData
-} // namespace Private
-} // namespace Antares
+} // namespace Antares::Private::OutputViewerData

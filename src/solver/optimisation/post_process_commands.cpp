@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -74,26 +74,19 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
 // -----------------------------
 RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                                    AreaList& areas,
-                                                   SheddingPolicy sheddingPolicy,
-                                                   SimplexOptimization simplexOptimization,
+                                                   const Data::Parameters& params,
                                                    unsigned int numSpace):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     numSpace_(numSpace),
-    shedding_policy_(sheddingPolicy),
-    splx_optimization_(simplexOptimization)
+    params_(params)
 {
 }
 
 void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
-    RemixHydroForAllAreas(area_list_,
-                          *problemeHebdo_,
-                          shedding_policy_,
-                          splx_optimization_,
-                          numSpace_,
-                          hourInYear);
+    RemixHydroForAllAreas(area_list_, *problemeHebdo_, params_, numSpace_, hourInYear);
 }
 
 // ----------------------------------

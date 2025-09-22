@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "playlist.h"
 #include <wx/sizer.h>
@@ -37,24 +37,20 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Options
+namespace Antares::Window::Options
 {
 BEGIN_EVENT_TABLE(MCPlaylist, wxDialog)
 EVT_MOTION(MCPlaylist::mouseMoved)
 EVT_CHECKBOX(mnIDEnabled, MCPlaylist::evtEnabled)
 END_EVENT_TABLE()
 
-MCPlaylist::MCPlaylist(wxFrame* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("MC Playlist"),
-          wxDefaultPosition,
-          wxSize(380, 410),
-          wxCLOSE_BOX | wxCAPTION | wxRESIZE_BORDER)
+MCPlaylist::MCPlaylist(wxFrame* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("MC Playlist"),
+             wxDefaultPosition,
+             wxSize(380, 410),
+             wxCLOSE_BOX | wxCAPTION | wxRESIZE_BORDER)
 {
     assert(parent);
 
@@ -68,11 +64,12 @@ MCPlaylist::MCPlaylist(wxFrame* parent) :
     auto* sizer = new wxBoxSizer(wxVERTICAL);
 
     // Header
-    sizer->Add(
-      Toolbox::Components::WizardHeader::Create(
-        this, wxT("Options"), "images/32x32/orderedlist.png", wxT("Configure MC playlist")),
-      0,
-      wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    sizer->Add(Toolbox::Components::WizardHeader::Create(this,
+                                                         wxT("Options"),
+                                                         "images/32x32/orderedlist.png",
+                                                         wxT("Configure MC playlist")),
+               0,
+               wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
     sizer->AddSpacer(20);
 
@@ -92,12 +89,18 @@ MCPlaylist::MCPlaylist(wxFrame* parent) :
         {
             uint y = study->parameters.nbYears;
             if (y < 2)
+            {
                 s << wxT("1 year)");
+            }
             else
+            {
                 s << y << wxT(" years)");
+            }
         }
         else
+        {
             s << wxT("no study)");
+        }
 
         pInfo = Component::CreateLabel(this, s, false, true);
         sizer->Add(pInfo, 1, wxLEFT | wxRIGHT | wxEXPAND | wxALIGN_TOP, 25);
@@ -127,16 +130,22 @@ MCPlaylist::MCPlaylist(wxFrame* parent) :
 
     // Reset weights
     rightSizer->AddSpacer(10);
-    btn = Component::CreateButton(
-      pPanel, wxT("Reset weights"), this, &MCPlaylist::onResetYearsWeight);
+    btn = Component::CreateButton(pPanel,
+                                  wxT("Reset weights"),
+                                  this,
+                                  &MCPlaylist::onResetYearsWeight);
     rightSizer->Add(btn, 0, wxEXPAND | wxLEFT | wxRIGHT);
 
     // Datagrid
     auto* renderer = new Component::Datagrid::Renderer::MCPlaylist();
     renderer->study = study;
     renderer->onTriggerUpdate.bind(this, &MCPlaylist::updateCaption);
-    auto* grid
-      = new Component::Datagrid::Component(pPanel, renderer, wxEmptyString, false, true, true);
+    auto* grid = new Component::Datagrid::Component(pPanel,
+                                                    renderer,
+                                                    wxEmptyString,
+                                                    false,
+                                                    true,
+                                                    true);
     grid->SetBackgroundColour(GetBackgroundColour());
     pGrid = grid;
     renderer->control(grid);
@@ -188,12 +197,16 @@ void MCPlaylist::onSelectAll(void*)
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     Freeze();
     for (uint i = 0; i != study.parameters.nbYears; ++i)
+    {
         study.parameters.yearsFilter[i] = true;
+    }
 
     onUpdateStatus();
 
@@ -208,12 +221,16 @@ void MCPlaylist::onUnselectAll(void*)
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     Freeze();
     for (uint i = 0; i != study.parameters.nbYears; ++i)
+    {
         study.parameters.yearsFilter[i] = false;
+    }
 
     onUpdateStatus();
 
@@ -228,7 +245,9 @@ void MCPlaylist::onToggle(void*)
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     Freeze();
@@ -250,7 +269,9 @@ void MCPlaylist::onResetYearsWeight(void*)
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     study.parameters.resetYearsWeigth();
@@ -267,7 +288,9 @@ void MCPlaylist::updateCaption()
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     auto& d = study.parameters;
@@ -308,14 +331,20 @@ void MCPlaylist::updateCaption()
         }
 
         if (y < 2)
+        {
             pStatus->SetLabel(wxString() << wxT(" Use a custom playlist with ") << y
                                          << wxT(" year  ") << yearWeightLabel);
+        }
         else
+        {
             pStatus->SetLabel(wxString() << wxT(" Use a custom playlist with ") << y
                                          << wxT(" years  ") << yearWeightLabel);
+        }
     }
     else
+    {
         pStatus->SetLabel(wxT(" Use a custom playlist  "));
+    }
 
     wxSizer& sizer = *GetSizer();
     sizer.Layout();
@@ -325,7 +354,9 @@ void MCPlaylist::onUpdateStatus()
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     Freeze();
@@ -362,7 +393,9 @@ void MCPlaylist::evtEnabled(wxCommandEvent& evt)
             message.showModal();
         }
         else
+        {
             d.userPlaylist = v;
+        }
     }
     onUpdateStatus();
     OnStudySimulationSettingsChanged();
@@ -372,6 +405,4 @@ void MCPlaylist::evtEnabled(wxCommandEvent& evt)
     OnStudyUpdatePlaylist();
 }
 
-} // namespace Options
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Options

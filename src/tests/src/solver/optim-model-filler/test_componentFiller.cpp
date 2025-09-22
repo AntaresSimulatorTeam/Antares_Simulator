@@ -105,18 +105,6 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised)
     BOOST_CHECK_THROW(buildLinearProblem(), out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
-{
-    createModel("my-model",
-                {},
-                {{"variable", ValueType::FLOAT, literal(10), variable("variable")}},
-                {});
-    createComponent("my-model", "my-component");
-    BOOST_CHECK_EXCEPTION(buildLinearProblem(),
-                          Antares::Error::RuntimeError,
-                          checkMessage("Component null. Cannot evaluate VariableNode."));
-}
-
 BOOST_AUTO_TEST_CASE(var_with_empty_lower_bound_default_to_minus_infinity)
 {
     createModel("my-model",

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -70,15 +70,12 @@ public:
     // gp : to the create(...) method, and to underlying calls to constructors.
     // gp : In case we need new data for a new post process, we would not have to change
     // gp : the constructors' signatures of the post process list classes.
-    static std::unique_ptr<interfacePostProcessList> create(
-      AdqPatchParams& adqPatchParams,
-      PROBLEME_HEBDO* problemeHebdo,
-      uint numSpace,
-      AreaList& areas,
-      SheddingPolicy sheddingPolicy,
-      SimplexOptimization splxOptimization,
-      Calendar& calendar,
-      const OptimizationOptions& solverOptions);
+    static std::unique_ptr<interfacePostProcessList> create(AdqPatchParams& adqPatchParams,
+                                                            PROBLEME_HEBDO* problemeHebdo,
+                                                            uint numSpace,
+                                                            AreaList& areas,
+                                                            const Data::Parameters& params,
+                                                            Calendar& calendar);
     void runAll(const optRuntimeData& opt_runtime_data);
 
 protected:

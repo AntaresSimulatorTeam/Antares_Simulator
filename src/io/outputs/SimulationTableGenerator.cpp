@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -22,6 +22,8 @@
 
 #include <optional>
 
+#include <boost/test/tools/assertion.hpp>
+
 #include <antares/solver/optim-model-filler/Dimensions.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
@@ -29,8 +31,7 @@
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
-
-#include "../../modeler/FileWriter.h"
+#include "antares/solver/modeler/data.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -61,11 +62,11 @@ TI updateTimeIndexIfShouldForceScenario(TI timeIndex, bool forceExportForScenari
     return forceExportForScenarioIndex ? timeIndex | TI::VARYING_IN_SCENARIO_ONLY : timeIndex;
 }
 
-std::string BuildModelerConstraintName(const std::string& cid,
+std::string BuildModelerConstraintName(const std::string& componentId,
                                        const std::string& cname,
                                        const std::optional<unsigned>& ts)
 {
-    std::string key = cid + "." + cname;
+    std::string key = componentId + "." + cname;
     if (ts)
     {
         key += "_" + std::to_string(*ts);
@@ -85,7 +86,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const TimeConversionMode& timeConversionMode,
                         std::optional<unsigned> scenario)
 {
-    const auto& cid = component.Id();
+    const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
 
     const auto& variableStart = optimEntityContainer.getVariableStartColumn();
@@ -116,7 +117,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
             auto* var = solverVariables.at(variableStart.at(varGlobalIndex) + timeStep.value_or(0));
             simulationTable.addEntry(
               {.block = tb.block,
-               .component = cid,
+               .component = componentId,
                .output = modelVar.Id(),
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
@@ -198,7 +199,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           std::optional<unsigned> scenario,
                           bool forceExportForScenarioIndex)
 {
-    const auto& cid = component.Id();
+    const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
     const auto& constraintStart = optimEntityContainer.getConstraintStartLine();
     const auto& solverConstraints = optimEntityContainer.getConstraints();
@@ -207,12 +208,12 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     unsigned constraintLocalIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
-        const auto& cname = modelConstr.Id();
-        
+        const auto& constraintId = modelConstr.Id();
+
         auto constraintGlobalIndex = modelConstraintsGlobalIndices.at(constraintLocalIndex);
         TI idxType = optimComponent.modelConstraintsTimeIndex[constraintLocalIndex];
         ++constraintLocalIndex;
-        
+
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
@@ -228,8 +229,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                                           .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry(
               {.block = tb.block,
-               .component = cid,
-               .output = cname,
+               .component = componentId,
+               .output = constraintId,
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
                .scenario_index = scenIdx,
@@ -257,6 +258,48 @@ void addObjectiveValue(ISimulationTable& simulation,
                          .status = MipBasisStatus::NOT_AVAILABLE});
 }
 
+void addEntriesForNode(ISimulationTable& simulationTable,
+                       const FillContext& fillContext,
+                       const Antares::ModelerStudy::SystemModel::Component& component,
+                       const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                       unsigned currentBlock,
+                       const TimeConversionMode& timeConversionMode,
+                       std::optional<unsigned> scenario,
+                       bool forceExportForScenarioIndex,
+                       const std::string& componentId,
+                       const std::string& outputName,
+                       const Antares::Expressions::Nodes::Node* rootNode)
+{
+    auto evalVisitor = Antares::Expressions::Visitors::EvalVisitor(optimEntityContainer,
+                                                                   fillContext,
+                                                                   component);
+    auto value = evalVisitor.dispatch(rootNode);
+
+    TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(optimEntityContainer, component)
+                   .dispatch(rootNode);
+    idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+
+    auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+    {
+        TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
+                                                                   timeConversionMode,
+                                                                   currentBlock)
+                          : TimeBlock{.block = currentBlock + 1,
+                                      .blockTimeIndex = std::nullopt,
+                                      .absoluteTimeIndex = std::nullopt};
+        auto val = ts ? value.getValueInVector(ts.value()) : value.valueAsDouble();
+        simulationTable.addEntry({.block = tb.block,
+                                  .component = componentId,
+                                  .output = outputName,
+                                  .absolute_time_index = tb.absoluteTimeIndex,
+                                  .block_time_index = tb.blockTimeIndex,
+                                  .scenario_index = scenIdx,
+                                  .value = val,
+                                  .status = MipBasisStatus::NOT_AVAILABLE});
+    };
+    handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+}
+
 void addPortEntries(ISimulationTable& simulationTable,
                     const FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
@@ -272,9 +315,9 @@ void addPortEntries(ISimulationTable& simulationTable,
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
-        Antares::Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer, evalContext,
+        Antares::Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
                                                                 fillContext,
-                                                                &component);
+                                                                component);
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
 
@@ -310,6 +353,34 @@ void addPortEntries(ISimulationTable& simulationTable,
     }
 }
 
+void addExtraOutputEntries(ISimulationTable& simulationTable,
+                           const FillContext& fillContext,
+                           const Antares::ModelerStudy::SystemModel::Component& component,
+                           const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                           unsigned currentBlock,
+                           const TimeConversionMode& timeConversionMode,
+                           std::optional<unsigned> scenario,
+                           bool forceExportForScenarioIndex)
+{
+    const auto& componentId = component.Id();
+    for (const auto& [extraOutputId, extraOutput]: component.getModel()->ExtraOutputs())
+    {
+        const auto* rootNode = extraOutput.expression().RootNode();
+        std::string outputName = extraOutputId;
+        addEntriesForNode(simulationTable,
+                          fillContext,
+                          component,
+                          optimEntityContainer,
+                          currentBlock,
+                          timeConversionMode,
+                          scenario,
+                          forceExportForScenarioIndex,
+                          componentId,
+                          outputName,
+                          rootNode);
+    }
+}
+
 void FillSimulationTable(ISimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
@@ -321,11 +392,11 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                          bool forceExportForScenarioIndex)
 {
     unsigned scenario = fillContext.getYear();
-   
+
     for (const auto& component: modelerData.system->Components())
     {
         EmptyScenario emptyScenario;
-       
+
         addVariableEntries(simulationTable,
                            linearProblem,
                            fillContext,
@@ -352,6 +423,15 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                        timeConversionMode,
                        scenario,
                        forceExportForScenarioIndex);
+
+        addExtraOutputEntries(simulationTable,
+                              fillContext,
+                              component,
+                              optimEntityContainer,
+                              currentBlock,
+                              timeConversionMode,
+                              scenario,
+                              forceExportForScenarioIndex);
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
 }

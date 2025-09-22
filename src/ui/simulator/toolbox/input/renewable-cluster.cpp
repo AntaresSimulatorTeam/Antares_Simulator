@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "../../application/study.h"
 #include "../../application/main.h"
@@ -36,14 +36,14 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Toolbox::InputSelector
 {
-namespace Toolbox
-{
-namespace InputSelector
-{
-RenewableCluster::RenewableCluster(wxWindow* parent, InputSelector::Area* area) :
- AInput(parent), pArea(nullptr), pTotalMW(nullptr), pImageList(16, 16), pAreaNotifier(area)
+RenewableCluster::RenewableCluster(wxWindow* parent, InputSelector::Area* area):
+    AInput(parent),
+    pArea(nullptr),
+    pTotalMW(nullptr),
+    pImageList(16, 16),
+    pAreaNotifier(area)
 {
     SetSize(300, 330);
 
@@ -67,13 +67,15 @@ RenewableCluster::RenewableCluster(wxWindow* parent, InputSelector::Area* area) 
     OnStudyEndUpdate.connect(this, &RenewableCluster::onStudyEndUpdate);
 
     if (area)
+    {
         area->onAreaChanged.connect(this, &RenewableCluster::areaHasChanged);
+    }
 
     OnStudyRenewableClusterRenamed.connect(this, &RenewableCluster::onStudyRenewableClusterRenamed);
-    OnStudyRenewableClusterGroupChanged.connect(
-      this, &RenewableCluster::onStudyRenewableClusterGroupChanged);
-    OnStudyRenewableClusterCommonSettingsChanged.connect(
-      this, &RenewableCluster::onStudyRenewableClusterCommonSettingsChanged);
+    OnStudyRenewableClusterGroupChanged
+      .connect(this, &RenewableCluster::onStudyRenewableClusterGroupChanged);
+    OnStudyRenewableClusterCommonSettingsChanged
+      .connect(this, &RenewableCluster::onStudyRenewableClusterCommonSettingsChanged);
 }
 
 RenewableCluster::~RenewableCluster()
@@ -114,8 +116,11 @@ void RenewableCluster::internalBuildSubControls()
     Antares::Component::AddVerticalSeparator(this, toolSZ);
 
     // Clone
-    btn = new Antares::Component::Button(
-      this, wxT("Clone"), "images/16x16/paste.png", this, &RenewableCluster::internalClonePlant);
+    btn = new Antares::Component::Button(this,
+                                         wxT("Clone"),
+                                         "images/16x16/paste.png",
+                                         this,
+                                         &RenewableCluster::internalClonePlant);
     toolSZ->Add(btn, 0, wxALIGN_CENTER_VERTICAL | wxALL);
 
     toolSZ->AddStretchSpacer();
@@ -163,7 +168,9 @@ void RenewableCluster::updateWhenGroupChanges()
     // Warn the selected data source (A-Z or Z-A sorting) that a cluster's group changed
     ClustersByOrder* dataSource = dynamic_cast<ClustersByOrder*>(pRnListbox->datasource());
     if (dataSource)
+    {
         dataSource->hasGroupChanged(true);
+    }
 
     pRnListbox->forceRedraw();
     onClusterChanged(nullptr);
@@ -173,7 +180,9 @@ void RenewableCluster::updateWhenGroupChanges()
 void RenewableCluster::updateInnerValues()
 {
     if (pRnListbox)
+    {
         pRnListbox->updateHtmlContent();
+    }
 
     if (pArea)
     {
@@ -185,7 +194,9 @@ void RenewableCluster::updateInnerValues()
         pTotalMW->SetLabel(wxString() << unitCount << wxT(" units, ") << total << wxT(" MW"));
     }
     else
+    {
         pTotalMW->SetLabel(wxEmptyString);
+    }
 
     // The layout must be updated since the label has been changed
     GetSizer()->Layout();
@@ -198,23 +209,31 @@ void RenewableCluster::areaHasChanged(Antares::Data::Area* area)
         pArea = area;
         pLastSelectedRenewableCluster = nullptr;
         if (pRnListbox)
+        {
             pRnListbox->forceUpdate();
+        }
         update();
         if (pRnListbox)
+        {
             pRnListbox->Refresh();
+        }
     }
 }
 
 void RenewableCluster::onStudyEndUpdate()
 {
     if (pRnListbox)
+    {
         pRnListbox->forceUpdate();
+    }
 }
 
 void RenewableCluster::onStudyRenewableClusterRenamed(Antares::Data::RenewableCluster* cluster)
 {
     if (cluster->parentArea == pArea)
+    {
         updateInnerValues();
+    }
 }
 
 void RenewableCluster::evtPopupDelete(wxCommandEvent&)
@@ -235,12 +254,16 @@ void RenewableCluster::internalDeletePlant(void*)
 {
     // Nothing is/was selected. Aborting.
     if (!pArea || !pLastSelectedRenewableCluster || not CurrentStudyIsValid())
+    {
         return;
+    }
 
     // The renewable cluster to delete
     auto* toDelete = pLastSelectedRenewableCluster->renewableAggregate();
     if (not toDelete)
+    {
         return;
+    }
 
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
@@ -288,7 +311,9 @@ void RenewableCluster::internalDeletePlant(void*)
             study->uiinfo->reload();
         }
         else
+        {
             logs.error() << "Impossible to delete the cluster '" << toDelete->name() << "'";
+        }
 
         // The components are now allow to refresh themselves
         OnStudyEndUpdate();
@@ -299,7 +324,9 @@ void RenewableCluster::internalDeleteAll(void*)
 {
     // Nothing is/was selected. Aborting.
     if (!pArea)
+    {
         return;
+    }
 
     if (pArea->renewable.list.empty())
     {
@@ -313,12 +340,12 @@ void RenewableCluster::internalDeleteAll(void*)
     auto study = GetCurrentStudy();
 
     // If the pointer has been, it is guaranteed to be valid
-    Window::Message message(
-      &mainFrm,
-      wxT("Renewable cluster"),
-      wxT("Delete all renewable clusters"),
-      wxString() << wxT("Do you really want to delete all renewable clusters from the area '")
-                 << wxStringFromUTF8(pArea->name) << wxT("' ?"));
+    Window::Message message(&mainFrm,
+                            wxT("Renewable cluster"),
+                            wxT("Delete all renewable clusters"),
+                            wxString() << wxT(
+                              "Do you really want to delete all renewable clusters from the area '")
+                                       << wxStringFromUTF8(pArea->name) << wxT("' ?"));
     message.add(Window::Message::btnYes);
     message.add(Window::Message::btnCancel, true);
     if (message.showModal() == Window::Message::btnYes)
@@ -399,7 +426,9 @@ void RenewableCluster::internalClonePlant(void*)
 {
     // Nothing is/was selected. Aborting.
     if (!pArea || !pLastSelectedRenewableCluster)
+    {
         return;
+    }
 
     if (!pArea->renewable.list.findInAll(pLastSelectedRenewableCluster->renewableAggregate()->id()))
     {
@@ -411,8 +440,8 @@ void RenewableCluster::internalClonePlant(void*)
     }
 
     WIP::Locker wip;
-    const Antares::Data::RenewableCluster& selectedPlant
-      = *pLastSelectedRenewableCluster->renewableAggregate();
+    const Antares::Data::RenewableCluster& selectedPlant = *pLastSelectedRenewableCluster
+                                                              ->renewableAggregate();
 
     auto study = GetCurrentStudy();
     if (!(!study) && pArea)
@@ -518,8 +547,10 @@ void RenewableCluster::onDeleteDropdown(Antares::Component::Button&, wxMenu& men
 {
     wxMenuItem* it;
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Delete the selected cluster"), "images/16x16/thermal_remove.png");
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Delete the selected cluster"),
+                          "images/16x16/thermal_remove.png");
 
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
@@ -551,6 +582,4 @@ void RenewableCluster::onStudyRenewableClusterCommonSettingsChanged()
     Refresh();
 }
 
-} // namespace InputSelector
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::InputSelector

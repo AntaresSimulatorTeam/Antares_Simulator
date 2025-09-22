@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "select-output.h"
 #include <wx/sizer.h>
@@ -37,24 +37,20 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Options
+namespace Antares::Window::Options
 {
 BEGIN_EVENT_TABLE(SelectOutput, wxDialog)
 EVT_MOTION(SelectOutput::mouseMoved)
 EVT_CHECKBOX(mnIDEnabled, SelectOutput::evtEnabled)
 END_EVENT_TABLE()
 
-SelectOutput::SelectOutput(wxFrame* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Output Selection"),
-          wxDefaultPosition,
-          wxSize(380, 410),
-          wxCLOSE_BOX | wxCAPTION | wxRESIZE_BORDER)
+SelectOutput::SelectOutput(wxFrame* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Output Selection"),
+             wxDefaultPosition,
+             wxSize(380, 410),
+             wxCLOSE_BOX | wxCAPTION | wxRESIZE_BORDER)
 {
     assert(parent);
 
@@ -68,11 +64,12 @@ SelectOutput::SelectOutput(wxFrame* parent) :
     auto* sizer = new wxBoxSizer(wxVERTICAL);
 
     // Header
-    sizer->Add(
-      Toolbox::Components::WizardHeader::Create(
-        this, wxT("Options"), "images/32x32/orderedlist.png", wxT("Configure output selection")),
-      0,
-      wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    sizer->Add(Toolbox::Components::WizardHeader::Create(this,
+                                                         wxT("Options"),
+                                                         "images/32x32/orderedlist.png",
+                                                         wxT("Configure output selection")),
+               0,
+               wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
     sizer->AddSpacer(20);
 
@@ -94,7 +91,9 @@ SelectOutput::SelectOutput(wxFrame* parent) :
             s << nvars << wxT(" variables)");
         }
         else
+        {
             s << wxT("no study)");
+        }
 
         pInfo = Component::CreateLabel(this, s, false, true);
         sizer->Add(pInfo, 1, wxLEFT | wxRIGHT | wxEXPAND | wxALIGN_TOP, 25);
@@ -126,8 +125,12 @@ SelectOutput::SelectOutput(wxFrame* parent) :
     auto* renderer = new Component::Datagrid::Renderer::SelectVariables();
     renderer->study = study;
     renderer->onTriggerUpdate.bind(this, &SelectOutput::updateCaption);
-    auto* grid
-      = new Component::Datagrid::Component(pPanel, renderer, wxEmptyString, false, true, true);
+    auto* grid = new Component::Datagrid::Component(pPanel,
+                                                    renderer,
+                                                    wxEmptyString,
+                                                    false,
+                                                    true,
+                                                    true);
     grid->SetBackgroundColour(GetBackgroundColour());
     pGrid = grid;
     renderer->control(grid);
@@ -179,7 +182,9 @@ void SelectOutput::onSelectAll(void*)
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     Freeze();
@@ -195,7 +200,9 @@ void SelectOutput::onUnselectAll(void*)
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     Freeze();
@@ -211,7 +218,9 @@ void SelectOutput::onToggle(void*)
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     Freeze();
@@ -233,7 +242,9 @@ void SelectOutput::updateCaption()
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     auto& d = study.parameters;
@@ -242,21 +253,29 @@ void SelectOutput::updateCaption()
     {
         uint nbPrintedVars = d.variablesPrintInfo.numberOfEnabledVariables();
         if (nbPrintedVars < 2)
-            pStatus->SetLabel(wxString()
-                              << wxT(" Ask for selecting ") << nbPrintedVars << wxT(" output variable  "));
+        {
+            pStatus->SetLabel(wxString() << wxT(" Ask for selecting ") << nbPrintedVars
+                                         << wxT(" output variable  "));
+        }
         else
-            pStatus->SetLabel(wxString()
-                              << wxT(" Ask for selecting ") << nbPrintedVars << wxT(" output variables  "));
+        {
+            pStatus->SetLabel(wxString() << wxT(" Ask for selecting ") << nbPrintedVars
+                                         << wxT(" output variables  "));
+        }
     }
     else
+    {
         pStatus->SetLabel(wxT(" Ask for selecting output variables "));
+    }
 }
 
 void SelectOutput::onUpdateStatus()
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     Freeze();
@@ -293,6 +312,4 @@ void SelectOutput::evtEnabled(wxCommandEvent& evt)
     OnStudyUpdatePlaylist();
 }
 
-} // namespace Options
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Options

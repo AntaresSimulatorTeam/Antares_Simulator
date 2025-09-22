@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "main.h"
 #include "antares/study/study.h"
@@ -36,20 +36,18 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Forms
+namespace Antares::Forms
 {
 namespace // anonymous
 {
-class JobBuildConstraints final : public Toolbox::Jobs::Job
+class JobBuildConstraints final: public Toolbox::Jobs::Job
 {
 public:
-    JobBuildConstraints(const String& filename, Data::Study::Ptr study) :
-     Toolbox::Jobs::Job(wxT("Constraints Builder"),
-                        wxT("Build the network constraints"),
-                        "images/32x32/run.png"),
-     study(study)
+    JobBuildConstraints(const String& filename, Data::Study::Ptr study):
+        Toolbox::Jobs::Job(wxT("Constraints Builder"),
+                           wxT("Build the network constraints"),
+                           "images/32x32/run.png"),
+        study(study)
     {
         // reset IO statistics
         Statistics::Reset();
@@ -141,7 +139,9 @@ void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
 
     const wxString wfilename = evt.GetString();
     if (wfilename.empty())
+    {
         return;
+    }
     String filename;
     wxStringToString(wfilename, filename);
 
@@ -196,7 +196,9 @@ void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
 
         // Reload runtime info about the study (Paranoid, should not be required)
         if (study->uiinfo)
+        {
             study->uiinfo->reloadAll();
+        }
 
         GUIFlagInvalidateAreas = true;
         OnStudyEndUpdate();
@@ -234,5 +236,4 @@ void ApplWnd::launchConstraintsBuilder(const String& filename)
     }
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms

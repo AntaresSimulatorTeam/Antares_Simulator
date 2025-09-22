@@ -227,9 +227,9 @@ struct ComponentToAreaConnectionFillerFixture
                                                modelerVariableDictionary,
                                                data,
                                                scenarioGroupRepository);
-        filler.addVariables(linearProblem, data, fillCtx);
-        filler.addConstraints(linearProblem, data, fillCtx);
-        filler.addObjective(linearProblem, data, fillCtx);
+        filler.addVariables(linearProblem, fillCtx);
+        filler.addConstraints(linearProblem, fillCtx);
+        filler.addObjective(linearProblem, fillCtx);
     }
 };
 

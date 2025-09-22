@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,11 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../yuni.h"
 #include "../core/smartptr.h"
+#include "../yuni.h"
 #include "pthread.h"
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 /*!
 ** \brief Mecanism for notifying a waiting thread of the occurrence of a particular event
@@ -107,7 +106,6 @@ private:
 
 }; // class Signal
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread
 
 #include "signal.hxx"

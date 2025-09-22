@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #pragma once
 
@@ -27,17 +27,11 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 using namespace Antares::Data;
 
-class Cell : public Yuni::IEventObserver<Cell>
+class Cell: public Yuni::IEventObserver<Cell>
 {
 public:
     Cell(TimeSeriesType ts);
@@ -56,7 +50,7 @@ protected:
     TimeSeriesType tsKind_;
 };
 
-class blankCell : public Cell
+class blankCell: public Cell
 {
 public:
     blankCell();
@@ -67,7 +61,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class inactiveCell : public Cell
+class inactiveCell: public Cell
 {
 public:
     inactiveCell(wxString toPrintInCell);
@@ -81,7 +75,7 @@ private:
     wxString toBePrintedInCell_;
 };
 
-class readyMadeTSstatus : public Cell
+class readyMadeTSstatus: public Cell
 {
 public:
     readyMadeTSstatus(TimeSeriesType ts);
@@ -92,7 +86,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class generatedTSstatus : public Cell
+class generatedTSstatus: public Cell
 {
 public:
     generatedTSstatus(TimeSeriesType ts);
@@ -103,7 +97,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class NumberTsCell : public Cell
+class NumberTsCell: public Cell
 {
 public:
     NumberTsCell(TimeSeriesType ts);
@@ -120,14 +114,14 @@ private:
     std::map<TimeSeriesType, uint*> tsToNumberTs_;
 };
 
-class NumberTsCellThermal : public NumberTsCell
+class NumberTsCellThermal: public NumberTsCell
 {
 public:
     NumberTsCellThermal();
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class RefreshTsCell : public Cell
+class RefreshTsCell: public Cell
 {
 public:
     RefreshTsCell(TimeSeriesType ts);
@@ -138,14 +132,14 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class RefreshTsCellThermal : public RefreshTsCell
+class RefreshTsCellThermal: public RefreshTsCell
 {
 public:
     RefreshTsCellThermal();
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class RefreshSpanCell : public Cell
+class RefreshSpanCell: public Cell
 {
 public:
     RefreshSpanCell(TimeSeriesType ts);
@@ -162,14 +156,14 @@ private:
     std::map<TimeSeriesType, uint*> tsToRefreshSpan_;
 };
 
-class RefreshSpanCellThermal : public RefreshSpanCell
+class RefreshSpanCellThermal: public RefreshSpanCell
 {
 public:
     RefreshSpanCellThermal();
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class SeasonalCorrelationCell : public Cell
+class SeasonalCorrelationCell: public Cell
 {
 public:
     SeasonalCorrelationCell(TimeSeriesType ts);
@@ -186,7 +180,7 @@ private:
     std::map<TimeSeriesType, Correlation*> tsToCorrelation_;
 };
 
-class SeasonalCorrelationCellThermal : public SeasonalCorrelationCell
+class SeasonalCorrelationCellThermal: public SeasonalCorrelationCell
 {
 public:
     SeasonalCorrelationCellThermal();
@@ -194,7 +188,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class storeToInputCell : public Cell
+class storeToInputCell: public Cell
 {
 public:
     storeToInputCell(TimeSeriesType ts);
@@ -205,7 +199,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class storeToOutputCell : public Cell
+class storeToOutputCell: public Cell
 {
 public:
     storeToOutputCell(TimeSeriesType ts);
@@ -216,7 +210,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class intraModalCell : public Cell
+class intraModalCell: public Cell
 {
 public:
     intraModalCell(TimeSeriesType ts);
@@ -227,7 +221,7 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-class interModalCell : public Cell
+class interModalCell: public Cell
 {
 public:
     interModalCell(TimeSeriesType ts);
@@ -238,7 +232,4 @@ public:
     IRenderer::CellStyle cellStyle() const override;
 };
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_CONNECTION_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_CONNECTION_H__
 
@@ -27,15 +27,9 @@
 #include "matrix.h"
 #include <yuni/core/event.h>
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-class Connection : public Renderer::Matrix<>
+class Connection: public Renderer::Matrix<>
 {
 public:
     Connection(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
@@ -45,6 +39,7 @@ public:
     {
         return Renderer::Matrix<>::width();
     }
+
     virtual int height() const
     {
         return Renderer::Matrix<>::height();
@@ -96,7 +91,7 @@ private:
 // ===========================
 // Parameters grid renderer
 // ===========================
-class connectionParameters final : public Connection
+class connectionParameters final: public Connection
 {
 public:
     connectionParameters(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
@@ -115,7 +110,7 @@ private:
 // ===========================
 // NTC grid renderer
 // ===========================
-class connectionNTC : public Connection
+class connectionNTC: public Connection
 {
 public:
     connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
@@ -131,7 +126,7 @@ protected:
 // ----------------
 // Direct
 // ----------------
-class connectionNTCdirect : public connectionNTC
+class connectionNTCdirect: public connectionNTC
 {
 public:
     connectionNTCdirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
@@ -145,7 +140,7 @@ private:
 // ----------------
 // Indirect
 // ----------------
-class connectionNTCindirect : public connectionNTC
+class connectionNTCindirect: public connectionNTC
 {
 public:
     connectionNTCindirect(wxWindow* parent, Toolbox::InputSelector::Connections* notifier);
@@ -156,9 +151,6 @@ private:
     void setMatrix(Data::AreaLink* link) override;
 };
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_CONNECTION_H__

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -87,7 +87,7 @@ private:
     bool yearByYear;
     Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
-    std::reference_wrapper<ISimulationObserver> simulationObserver_;
+    ISimulationObserver& simulationObserver_;
     HydroManagement hydroManagement;
     std::mutex& aggregationMutex;
 
@@ -174,8 +174,7 @@ public:
                                              scratchmap);
         auto& simTable = simulation_->getSimulationTable(numSpace);
 
-        auto buffers = simTable.buffers();
-        simTable.clear();
+        auto buffers = simTable.moveBuffers();
 
         simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
 

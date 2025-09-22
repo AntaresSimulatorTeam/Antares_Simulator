@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -135,11 +135,20 @@ public:
 
     [[nodiscard]] std::vector<double> valuesAsVector() const
     {
-        if (!std::holds_alternative<std::vector<double>>(value_))
+        if (const auto* v = std::get_if<std::vector<double>>(&value_))
         {
-            throw EvalResultTypeError("Expected a vector but found a double.");
+            return *v;
         }
-        return std::get<std::vector<double>>(value_);
+        throw EvalResultTypeError("Expected a vector but found a double.");
+    }
+
+    [[nodiscard]] double getValueInVector(unsigned index) const
+    {
+        if (const auto* v = std::get_if<std::vector<double>>(&value_))
+        {
+            return (*v)[index];
+        }
+        throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
     EvaluationResult operator[](int timeIndex) const;
@@ -268,20 +277,17 @@ public:
      * @param context The evaluation context.
      * @param fillContext
      */
-explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
-                         const Optimisation::EvaluationContext& context,
-                         const Optimisation::LinearProblemApi::FillContext& fillContext);
+
     explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
-                         const Optimisation::EvaluationContext& context,
                          const Optimisation::LinearProblemApi::FillContext& fillContext,
-                         const ModelerStudy::SystemModel::Component* component);
+                         const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
 private:
     const Optimisation::EvaluationContext& context_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
-    const ModelerStudy::SystemModel::Component* component_ = nullptr;
+    const ModelerStudy::SystemModel::Component& component_;
     const Optimisation::OptimEntityContainer& optimContainer_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;

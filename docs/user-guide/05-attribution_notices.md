@@ -2,7 +2,7 @@
 
 **Antares\_Simulator**
 
-**Copyright 2007-2024, RTE (https://www.rte-france.com) - Authors: The Antares\_Simulator Team**
+**Copyright 2007-2025, RTE (https://www.rte-france.com) - Authors: The Antares\_Simulator Team**
 
 This user guide is part of *Antares\_Simulator: Adequacy and Performance assessment for interconnected energy networks*.
 

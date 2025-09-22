@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "geographic-trimming.h"
 #include <wx/statline.h>
@@ -29,11 +29,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Options
+namespace Antares::Window::Options
 {
 BEGIN_EVENT_TABLE(geographicTrimming, wxDialog)
 EVT_MOTION(geographicTrimming::mouseMoved)
@@ -41,13 +37,13 @@ END_EVENT_TABLE()
 
 geographicTrimming::geographicTrimming(
   wxFrame* parent,
-  Component::Datagrid::Renderer::geographicTrimmingGrid* renderer) :
- wxDialog(parent,
-          wxID_ANY,
-          wxEmptyString,
-          wxDefaultPosition,
-          wxSize(1000, 400),
-          wxCLOSE_BOX | wxCAPTION)
+  Component::Datagrid::Renderer::geographicTrimmingGrid* renderer):
+    wxDialog(parent,
+             wxID_ANY,
+             wxEmptyString,
+             wxDefaultPosition,
+             wxSize(1000, 400),
+             wxCLOSE_BOX | wxCAPTION)
 {
     pRenderer = new Component::Datagrid::Renderer::areasTrimmingGrid();
 
@@ -63,11 +59,12 @@ geographicTrimming::geographicTrimming(
     auto* sizer = new wxBoxSizer(wxVERTICAL);
 
     // Header
-    sizer->Add(
-      Toolbox::Components::WizardHeader::Create(
-        this, wxT("Options"), "images/32x32/orderedlist.png", wxT("Configure geographic trimming")),
-      0,
-      wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    sizer->Add(Toolbox::Components::WizardHeader::Create(this,
+                                                         wxT("Options"),
+                                                         "images/32x32/orderedlist.png",
+                                                         wxT("Configure geographic trimming")),
+               0,
+               wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
     sizer->AddSpacer(20);
 
@@ -127,22 +124,20 @@ void geographicTrimming::mouseMoved(wxMouseEvent&)
     Antares::Component::Panel::OnMouseMoveFromExternalComponent();
 }
 
-areasTrimming::areasTrimming(wxFrame* parent) :
- geographicTrimming(parent, new Component::Datagrid::Renderer::areasTrimmingGrid())
+areasTrimming::areasTrimming(wxFrame* parent):
+    geographicTrimming(parent, new Component::Datagrid::Renderer::areasTrimmingGrid())
 {
     // Title of the Form
     SetLabel(wxT("Areas trimming"));
     SetTitle(GetLabel());
 }
 
-linksTrimming::linksTrimming(wxFrame* parent) :
- geographicTrimming(parent, new Component::Datagrid::Renderer::linksTrimmingGrid())
+linksTrimming::linksTrimming(wxFrame* parent):
+    geographicTrimming(parent, new Component::Datagrid::Renderer::linksTrimmingGrid())
 {
     // Title of the Form
     SetLabel(wxT("Links trimming"));
     SetTitle(GetLabel());
 }
 
-} // namespace Options
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Options

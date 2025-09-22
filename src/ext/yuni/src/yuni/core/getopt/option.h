@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,15 +10,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include <string>
-#include "../string.h"
 #include <cassert>
+#include <string>
 
-namespace Yuni
-{
-namespace Private
-{
-namespace GetOptImpl
+#include "../string.h"
+
+namespace Yuni::Private::GetOptImpl
 {
 // Forward declaration
 class Tokenizer;
@@ -51,9 +49,13 @@ public:
     static bool Add(std::basic_string<C>& out, const char* c_str, const String::size_type len)
     {
         if (len)
+        {
             out = c_str;
+        }
         else
+        {
             out.clear();
+        }
         return true;
     }
 };
@@ -65,9 +67,13 @@ public:
     static bool Add(L<T, Alloc>& out, const char* c_str, const String::size_type len)
     {
         if (len)
+        {
             out.push_back(String(c_str, len).to<T>());
+        }
         else
+        {
             out.push_back(T());
+        }
         return true;
     }
 };
@@ -94,9 +100,13 @@ public:
                     const String::size_type len)
     {
         if (len)
+        {
             out.push_back(std::string(c_str, len));
+        }
         else
+        {
             out.push_back(std::string());
+        }
         return true;
     }
 };
@@ -256,24 +266,33 @@ void DisplayTextParagraph(std::ostream& out, const String& text);
 class IOption
 {
 public:
-    IOption() : pShortName('\0')
-    {
-    }
-    IOption(const IOption& rhs) :
-     pShortName(rhs.pShortName), pLongName(rhs.pLongName), pDescription(rhs.pDescription)
+    IOption():
+        pShortName('\0')
     {
     }
 
-    explicit IOption(char s) : pShortName(s)
+    IOption(const IOption& rhs):
+        pShortName(rhs.pShortName),
+        pLongName(rhs.pLongName),
+        pDescription(rhs.pDescription)
     {
     }
 
-    IOption(char s, const AnyString& name) : pShortName(s), pLongName(name)
+    explicit IOption(char s):
+        pShortName(s)
     {
     }
 
-    IOption(char s, const AnyString& name, const AnyString& description) :
-     pShortName(s), pLongName(name), pDescription(description)
+    IOption(char s, const AnyString& name):
+        pShortName(s),
+        pLongName(name)
+    {
+    }
+
+    IOption(char s, const AnyString& name, const AnyString& description):
+        pShortName(s),
+        pLongName(name),
+        pDescription(description)
     {
     }
 
@@ -328,7 +347,7 @@ protected:
 ** \brief A single command line option
 */
 template<class T, bool Visible, bool AdditionalParam = true>
-class Option final : public IOption
+class Option final: public IOption
 {
 public:
     enum
@@ -340,24 +359,33 @@ public:
 public:
     //! \name Constructors & Destructor
     //@{
-    Option(const Option& rhs) : IOption(rhs), pVariable(rhs.pVariable)
+    Option(const Option& rhs):
+        IOption(rhs),
+        pVariable(rhs.pVariable)
     {
     }
 
-    Option(T& var, char c) : IOption(c), pVariable(var)
+    Option(T& var, char c):
+        IOption(c),
+        pVariable(var)
     {
     }
 
-    Option(T& var, const AnyString& name) : IOption('\0', name), pVariable(var)
+    Option(T& var, const AnyString& name):
+        IOption('\0', name),
+        pVariable(var)
     {
     }
 
-    Option(T& var, char c, const AnyString& name) : IOption(c, name), pVariable(var)
+    Option(T& var, char c, const AnyString& name):
+        IOption(c, name),
+        pVariable(var)
     {
     }
 
-    Option(T& var, char s, const AnyString& name, const AnyString& description) :
-     IOption(s, name, description), pVariable(var)
+    Option(T& var, char s, const AnyString& name, const AnyString& description):
+        IOption(s, name, description),
+        pVariable(var)
     {
     }
 
@@ -365,6 +393,7 @@ public:
     virtual ~Option()
     {
     }
+
     //@}
 
     /*!
@@ -387,7 +416,9 @@ public:
     virtual void helpUsage(std::ostream& out) const override
     {
         if (Visible)
+        {
             DisplayHelpForOption(out, pShortName, pLongName, pDescription, AdditionalParam);
+        }
     }
 
     virtual bool requireAdditionalParameter() const override
@@ -404,16 +435,18 @@ private:
 /*!
 ** \brief A text paragraph
 */
-class Paragraph final : public IOption
+class Paragraph final: public IOption
 {
 public:
     //! \name Constructors & Destructor
     //@{
-    Paragraph(const Paragraph& rhs) : IOption(rhs)
+    Paragraph(const Paragraph& rhs):
+        IOption(rhs)
     {
     }
 
-    explicit Paragraph(const AnyString& description) : IOption(' ', nullptr, description)
+    explicit Paragraph(const AnyString& description):
+        IOption(' ', nullptr, description)
     {
     }
 
@@ -421,6 +454,7 @@ public:
     virtual ~Paragraph()
     {
     }
+
     //@}
 
     /*!
@@ -458,6 +492,4 @@ public:
 // Forward declaration
 class Context;
 
-} // namespace GetOptImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::GetOptImpl

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -26,20 +27,16 @@
 #endif
 
 #ifdef YUNI_OS_MAC
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#include <unistd.h>
 #include <mach/mach.h>
+#include <sys/sysctl.h>
+#include <sys/types.h>
+#include <unistd.h>
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
 
-namespace Yuni
-{
-namespace System
-{
-namespace Memory
+namespace Yuni::System::Memory
 {
 //! Constants to use when information about the memory usage could not be retrieved
 enum
@@ -66,7 +63,8 @@ uint64_t Available()
     // see http://msdn.microsoft.com/en-us/library/aa366589(VS.85).aspx
     MEMORYSTATUSEX statex;
     statex.dwLength = (DWORD)sizeof(statex);
-    return (GlobalMemoryStatusEx(&statex)) ? (uint64_t)statex.ullAvailPhys : (uint64_t)defaultAvailable;
+    return (GlobalMemoryStatusEx(&statex)) ? (uint64_t)statex.ullAvailPhys
+                                           : (uint64_t)defaultAvailable;
 }
 
 bool Usage::update()
@@ -107,7 +105,9 @@ static inline int fgetline(FILE* fp, char* s, int maxlen)
             return i;
         }
         if (i >= maxlen)
+        {
             return i;
+        }
 
         *s++ = c;
         ++i;
@@ -152,12 +152,16 @@ static inline uint64_t readvalue(char* line)
 
     // Trimming the string from the begining
     while (*line == ' ' and *line != '\0')
+    {
         ++line;
+    }
     const char* first = line;
 
     // Looking for the end of the number
     while (*line != ' ' and *line != '\0')
+    {
         ++line;
+    }
     // Tagging the end of the number
     *line = '\0';
 
@@ -198,25 +202,33 @@ bool Usage::update()
             {
                 total = readvalue(line + 10);
                 if (!(remains >> 1))
+                {
                     break;
+                }
             }
             if (!strncmp("MemFree:", line, 8))
             {
                 available += readvalue(line + 9);
                 if (!(remains >> 1))
+                {
                     break;
+                }
             }
             if (!strncmp("Cached:", line, 7))
             {
                 available += readvalue(line + 8);
                 if (!(remains >> 1))
+                {
                     break;
+                }
             }
             if (!strncmp("Buffers:", line, 8))
             {
                 available += readvalue(line + 9);
                 if (!(remains >> 1))
+                {
                     break;
+                }
             }
         }
 
@@ -331,6 +343,4 @@ bool Usage::update()
 
 #endif // Fallback
 
-} // namespace Memory
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Memory

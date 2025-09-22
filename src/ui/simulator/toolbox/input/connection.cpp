@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
@@ -37,13 +37,9 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Toolbox::InputSelector
 {
-namespace Toolbox
-{
-namespace InputSelector
-{
-class TreeLeaf final : public wxTreeItemData
+class TreeLeaf final: public wxTreeItemData
 {
 public:
     //! \name Constructor & Destructor
@@ -51,13 +47,16 @@ public:
     /*!
     ** \brief Default constructor
     */
-    TreeLeaf(Data::AreaLink* lnk) : pLink(lnk)
+    TreeLeaf(Data::AreaLink* lnk):
+        pLink(lnk)
     {
     }
+
     //! Destructor
     virtual ~TreeLeaf()
     {
     }
+
     //@}
 
     //! Get the attached link
@@ -72,8 +71,11 @@ private:
 
 }; // class TreeLeaf
 
-Connections::Connections(wxWindow* parent) :
- AInput(parent), pLayerFilter(nullptr), pListbox(nullptr), pLastSelected(nullptr)
+Connections::Connections(wxWindow* parent):
+    AInput(parent),
+    pLayerFilter(nullptr),
+    pListbox(nullptr),
+    pLastSelected(nullptr)
 {
     // Default size
     SetSize(420, 300);
@@ -102,7 +104,9 @@ Connections::~Connections()
 {
     destroyBoundEvents();
     if (pListbox)
+    {
         pListbox->DeleteAllItems();
+    }
 }
 
 void Connections::internalBuildSubControls()
@@ -111,8 +115,14 @@ void Connections::internalBuildSubControls()
     SetSizer(sizer);
     sizer->AddSpacer(1);
     // Layer filter
-    pLayerFilter = new wxComboBox(
-      this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxCB_READONLY);
+    pLayerFilter = new wxComboBox(this,
+                                  wxID_ANY,
+                                  wxEmptyString,
+                                  wxDefaultPosition,
+                                  wxDefaultSize,
+                                  0,
+                                  nullptr,
+                                  wxCB_READONLY);
     pLayerFilter->SetFont(wxFont(wxFontInfo().Bold()));
     pLayerFilter->AppendString("All");
     pLayerFilter->SetValue("All");
@@ -125,13 +135,13 @@ void Connections::internalBuildSubControls()
     sizer->AddSpacer(2);
     sizer->Hide(pLayerFilter);
     // Listbox
-    pListbox
-      = new wxTreeCtrl(this,
-                       wxID_ANY,
-                       wxDefaultPosition,
-                       wxDefaultSize,
-                       wxTR_HIDE_ROOT | wxTR_FULL_ROW_HIGHLIGHT | wxTR_NO_LINES | wxTR_HAS_BUTTONS
-                         | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxBORDER_NONE);
+    pListbox = new wxTreeCtrl(this,
+                              wxID_ANY,
+                              wxDefaultPosition,
+                              wxDefaultSize,
+                              wxTR_HIDE_ROOT | wxTR_FULL_ROW_HIGHLIGHT | wxTR_NO_LINES
+                                | wxTR_HAS_BUTTONS | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE
+                                | wxBORDER_NONE);
 
     pListbox->Connect(pListbox->GetId(),
                       wxEVT_COMMAND_TREE_SEL_CHANGED,
@@ -175,34 +185,36 @@ static void addUpstreamDownstream(const wxTreeItemId& rootId,
     auto localRootId = listbox->AppendItem(rootId, wxString(wxT("Upstream / Downstream")), 2);
     listbox->SetItemBold(localRootId, true);
     {
-        for (const auto& [links, area] : areas)
+        for (const auto& [links, area]: areas)
         {
             if (area->isVisibleOnLayer(layerID))
             {
                 wxTreeItemId id;
                 // Foreach Interconnection for the area
-                for (const auto& [unused, lnk] : area->links)
+                for (const auto& [unused, lnk]: area->links)
                 {
                     if (lnk->isVisibleOnLayer(layerID))
                     {
                         if (!id)
                         {
                             // We have to create the item corresponding to the area
-                            id = listbox->AppendItem(
-                              localRootId,
-                              wxString() << wxT(' ') << wxStringFromUTF8(area->name) << wxT(' '),
-                              1,
-                              1);
+                            id = listbox->AppendItem(localRootId,
+                                                     wxString()
+                                                       << wxT(' ') << wxStringFromUTF8(area->name)
+                                                       << wxT(' '),
+                                                     1,
+                                                     1);
                             listbox->SetItemBold(id, true);
                         }
                         // Adding the item for the interconnection
-                        listbox->AppendItem(
-                          id, /*parent*/
-                          // caption
-                          wxString() << wxT(' ') << wxStringFromUTF8(lnk->with->name) << wxT(' '),
-                          0,
-                          0,
-                          new TreeLeaf(lnk));
+                        listbox->AppendItem(id, /*parent*/
+                                            // caption
+                                            wxString()
+                                              << wxT(' ') << wxStringFromUTF8(lnk->with->name)
+                                              << wxT(' '),
+                                            0,
+                                            0,
+                                            new TreeLeaf(lnk));
                     }
                 }
             }
@@ -226,11 +238,11 @@ static void addByArea(const wxTreeItemId& rootId,
     // 1. Build hierarchy
     std::map<Data::AreaName, ListOfLinks> areaToListOfLinks;
     // AreaName area1 -> {Link* lnk1, Link* lnk2, ...}
-    for (const auto& [unused1, area] : areas)
+    for (const auto& [unused1, area]: areas)
     {
         if (area->isVisibleOnLayer(layerID))
         {
-            for (const auto& [unused2, lnk] : area->links)
+            for (const auto& [unused2, lnk]: area->links)
             {
                 if (lnk->isVisibleOnLayer(layerID))
                 {
@@ -241,13 +253,13 @@ static void addByArea(const wxTreeItemId& rootId,
         }
     }
     // 2. Create nodes, etc.
-    for (const auto& [area, links] : areaToListOfLinks)
+    for (const auto& [area, links]: areaToListOfLinks)
     {
         // Reference to the area
         wxTreeItemId id;
         // Foreach Interconnection for the area
         auto count = links.size();
-        for (auto lnk : links)
+        for (auto lnk: links)
         {
             if (!id)
             {
@@ -262,15 +274,15 @@ static void addByArea(const wxTreeItemId& rootId,
 
             const bool isAreaOriginOfLink = (area == lnk->from->name);
             // Adding the item for the interconnection
-            listbox->AppendItem(
-              id, /*parent*/
-              // caption
-              wxString() << wxT(' ')
-                         << wxStringFromUTF8(isAreaOriginOfLink ? lnk->with->name : lnk->from->name)
-                         << wxT(' '),
-              0,
-              0,
-              new TreeLeaf(lnk));
+            listbox->AppendItem(id, /*parent*/
+                                // caption
+                                wxString() << wxT(' ')
+                                           << wxStringFromUTF8(isAreaOriginOfLink ? lnk->with->name
+                                                                                  : lnk->from->name)
+                                           << wxT(' '),
+                                0,
+                                0,
+                                new TreeLeaf(lnk));
         }
     }
 }
@@ -287,13 +299,17 @@ void Connections::update()
     }
 
     if (!pListbox)
+    {
         return;
+    }
 
     // Set all items at once
     pListbox->DeleteAllItems();
 
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     pListbox->Freeze();
@@ -301,7 +317,9 @@ void Connections::update()
     String layerName = "";
     size_t layerID = 0;
     if (pLayerFilter)
+    {
         layerName = std::string(pLayerFilter->GetValue().mb_str());
+    }
     auto layerListEnd = study.layers.end();
     for (auto layerIt = study.layers.begin(); layerIt != layerListEnd; layerIt++)
     {
@@ -344,7 +362,9 @@ void Connections::onStudyClosed()
     pLastSelected = nullptr;
     onConnectionChanged(nullptr);
     if (pListbox)
+    {
         pListbox->DeleteAllItems();
+    }
 }
 
 void Connections::onSelectionChanged(wxTreeEvent& evt)
@@ -393,7 +413,9 @@ void Connections::onMapLayerAdded(const wxString* text)
     {
         pLayerFilter->AppendString(*text);
         if (pLayerFilter->GetCount() > 1 && !GetSizer()->IsShown(pLayerFilter))
+        {
             GetSizer()->Show(pLayerFilter);
+        }
     }
     // wxStringToString(*text, pLastResearch);
     // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
@@ -412,7 +434,9 @@ void Connections::onMapLayerRemoved(const wxString* text)
             pLayerFilter->Select(0);
         }
         if (pLayerFilter->GetCount() == 1 && GetSizer()->IsShown(pLayerFilter))
+        {
             GetSizer()->Hide(pLayerFilter);
+        }
     }
     Dispatcher::GUI::Post(this, &Connections::update);
 }
@@ -422,7 +446,9 @@ void Connections::onMapLayerChanged(const wxString* text)
     // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
     // event
     if (pLayerFilter)
+    {
         pLayerFilter->SetValue(*text);
+    }
 
     // wxStringToString(*text, pLastResearch);
     Dispatcher::GUI::Post(this, &Connections::update);
@@ -433,7 +459,9 @@ void Connections::onMapLayerRenamed(const wxString* text)
     // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
     // event
     if (pLayerFilter)
+    {
         pLayerFilter->SetString(pLayerFilter->GetSelection(), *text);
+    }
 
     // wxStringToString(*text, pLastResearch);
     Dispatcher::GUI::Post(this, &Connections::update);
@@ -442,12 +470,12 @@ void Connections::onMapLayerRenamed(const wxString* text)
 void Connections::layerFilterChanged(wxCommandEvent& /* evt */)
 {
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
     wxString temp = pLayerFilter->GetValue();
     OnMapLayerChanged(&temp);
     Dispatcher::GUI::Post(this, &Connections::update);
 }
 
-} // namespace InputSelector
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::InputSelector

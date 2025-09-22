@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,13 +12,7 @@
 #pragma once
 #include "../../../core/string.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::Private::IO::Directory
 {
 //! Platform-dependant data implementation
 class IteratorData;
@@ -46,7 +41,4 @@ bool IteratorDataIsFolder(const IteratorData*);
 
 bool IteratorDataIsFile(const IteratorData*);
 
-} // namespace Directory
-} // namespace IO
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::IO::Directory

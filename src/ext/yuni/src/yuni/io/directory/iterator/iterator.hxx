@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,17 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "iterator.h"
+#include "../../../core/static/remove.h"
 #include "../../../core/traits/cstring.h"
 #include "../../../core/traits/length.h"
-#include "../../../core/static/remove.h"
 #include "../../io.h"
+#include "iterator.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 #ifndef YUNI_NO_THREAD_SAFE
 template<bool DetachedT>
@@ -37,8 +34,8 @@ inline IIterator<DetachedT>::DetachedThread::~DetachedThread()
 template<bool DetachedT>
 inline IIterator<DetachedT>::IIterator()
 #ifndef YUNI_NO_THREAD_SAFE
- :
- pThread(NULL)
+    :
+    pThread(NULL)
 #endif
 {
 }
@@ -46,8 +43,8 @@ inline IIterator<DetachedT>::IIterator()
 template<bool DetachedT>
 inline IIterator<DetachedT>::IIterator(const IIterator& rhs)
 #ifndef YUNI_NO_THREAD_SAFE
- :
- pThread(NULL)
+    :
+    pThread(NULL)
 #endif
 {
     typename ThreadingPolicy::MutexLocker locker(rhs);
@@ -104,7 +101,9 @@ bool IIterator<DetachedT>::start()
 
         // Early detection of an invalid root folder
         if (pRootFolder.empty())
+        {
             return false;
+        }
 
         if (nullptr == pThread)
         {
@@ -114,7 +113,9 @@ bool IIterator<DetachedT>::start()
         {
             // Do nothing if already started
             if (pThread->started())
+            {
                 return false;
+            }
         }
 
         // Providing a reference to ourselves for events
@@ -135,7 +136,9 @@ bool IIterator<DetachedT>::start()
             typename ThreadingPolicy::MutexLocker locker(*this);
             // Early detection of an invalid root folder
             if (pRootFolder.empty())
+            {
                 return false;
+            }
 
             opts.rootFolder = pRootFolder;
         }
@@ -197,7 +200,9 @@ inline void IIterator<DetachedT>::wait(uint timeout)
         // Lock
         typename ThreadingPolicy::MutexLocker locker(*this);
         if (pThread)
+        {
             pThread->wait(timeout);
+        }
     }
 #else
     (void)timeout;
@@ -253,6 +258,4 @@ inline bool IIterator<DetachedT>::onStart(const String&)
     return true;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

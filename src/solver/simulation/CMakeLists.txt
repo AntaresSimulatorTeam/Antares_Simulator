@@ -1,14 +1,5 @@
-# Remix hydro algorithm
-add_library(shave-peaks-by-remix-storage-gen)
 
-target_sources(shave-peaks-by-remix-storage-gen
-        PRIVATE
-		hydro-for-remix.cpp
-		shave-peaks-by-remix-storage-gen.cpp)
-
-target_include_directories(shave-peaks-by-remix-storage-gen
-        PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+add_subdirectory(remix-storage)
 
 #
 # Simulation

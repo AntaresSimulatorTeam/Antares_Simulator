@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -29,9 +29,12 @@
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
+#include "../modeler/mockModelerObjects.h"
+
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
+using namespace Antares::ModelerStudy::SystemModel;
 
 BOOST_AUTO_TEST_SUITE(_DeepTree_)
 
@@ -50,7 +53,9 @@ struct MyDummyFixture: Registry<Node>
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
-    EvalVisitor evalVisitor{evaluationContext, {0, 0, 0, 0, 0}};
+    MockEvaluationContextProvider contextProvider = MockEvaluationContextProvider(
+      evaluationContext);
+    EvalVisitor evalVisitor{contextProvider, {0, 0, 0, 0, 0}, createComponent()};
 };
 
 BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)

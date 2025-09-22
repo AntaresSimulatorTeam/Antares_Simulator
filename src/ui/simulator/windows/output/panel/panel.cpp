@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "panel.h"
 #include <wx/sizer.h>
@@ -37,11 +37,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Private
-{
-namespace OutputViewerData
+namespace Antares::Private::OutputViewerData
 {
 std::atomic<int> Panel::pPanelsInCallingLoadDataFromFile = 0;
 
@@ -75,17 +71,17 @@ static inline void CreateHorizontalSeparator(Panel* parent, wxBoxSizer* sizer)
 
 } // anonymous namespace
 
-Panel::Panel(OutputViewerComponent* component, wxWindow* parent) :
- Antares::Component::Panel(parent),
- pComponent(component),
- pLayer(nullptr),
- pIndex((uint)-1),
- pSizer(nullptr),
- pLabelMessage(nullptr),
- pIconMessage(nullptr),
- pButton(nullptr),
- pShouldRebuildMessage(true),
- pData(nullptr)
+Panel::Panel(OutputViewerComponent* component, wxWindow* parent):
+    Antares::Component::Panel(parent),
+    pComponent(component),
+    pLayer(nullptr),
+    pIndex((uint)-1),
+    pSizer(nullptr),
+    pLabelMessage(nullptr),
+    pIconMessage(nullptr),
+    pButton(nullptr),
+    pShouldRebuildMessage(true),
+    pData(nullptr)
 {
     assert(parent && "invalid parent");
 
@@ -130,7 +126,9 @@ Panel::~Panel()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void Panel::index(uint i)
@@ -141,7 +139,9 @@ void Panel::index(uint i)
 void Panel::layer(Layer* newLayer, bool forceUpdate)
 {
     if (!forceUpdate && pLayer == newLayer)
+    {
         return;
+    }
 
     pLayer = newLayer;
     forceRefresh();
@@ -154,7 +154,9 @@ void Panel::forceRefresh()
     assert(pSizer && "Invalid sizer");
 
     if (not pComponent)
+    {
         return;
+    }
 
     // Memory fence
     WIP::Locker wipLocker;
@@ -170,7 +172,9 @@ void Panel::forceRefresh()
         clearAllComponents();
         auto* sizer = GetSizer();
         if (sizer)
+        {
             sizer->Layout();
+        }
         return;
     }
     if (pLayer->isVirtual())
@@ -194,7 +198,9 @@ void Panel::forceRefresh()
         assert(!(!pLayer->selection));
         auto selectionType = pComponent->pCurrentSelectionType;
         if (pLayer->detached)
+        {
             selectionType = pLayer->customSelectionType;
+        }
 
         switch (selectionType)
         {
@@ -243,7 +249,9 @@ void Panel::forceRefresh()
 
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Layout();
+    }
 }
 
 void Panel::messageMergeYbY()
@@ -278,8 +286,10 @@ void Panel::messageMergeYbY()
         pSizer->AddSpacer(10);
     }
 
-    wxButton* button
-      = Antares::Component::CreateButton(this, wxT("Proceed"), this, &Panel::onProceed);
+    wxButton* button = Antares::Component::CreateButton(this,
+                                                        wxT("Proceed"),
+                                                        this,
+                                                        &Panel::onProceed);
     pSizer->Add(button, 0, wxALL | wxALIGN_CENTER_HORIZONTAL | wxRESERVE_SPACE_EVEN_IF_HIDDEN);
     pButton = button;
 
@@ -310,7 +320,9 @@ void Panel::message(const wxString& msg, const char* image)
             pSizer->AddSpacer(8);
         }
         if (lbl)
+        {
             pSizer->Add(lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL);
+        }
 
         pSizer->AddStretchSpacer();
         pLabelMessage = lbl;
@@ -329,7 +341,9 @@ void Panel::message(const wxString& msg, const char* image)
                 delete bmp;
             }
             else
+            {
                 pIconMessage->SetBitmap(wxBitmap());
+            }
         }
         pLabelMessage->SetLabel(msg);
     }
@@ -346,7 +360,9 @@ void Panel::clearAllComponents()
     pIconMessage = nullptr;
     pButton = nullptr;
     if (pSizer)
+    {
         pSizer->Clear(true);
+    }
     pShouldRebuildMessage = true;
 }
 
@@ -354,9 +370,13 @@ void Panel::onProceed(void*)
 {
     assert(this && "Invalid this");
     if (!pLabelMessage || !pButton)
+    {
         return;
+    }
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
 
     pButton->Enable(false);
     pButton->SetLabel(wxT("running"));
@@ -364,7 +384,9 @@ void Panel::onProceed(void*)
     pLabelMessage->Enable(false);
     pLabelMessage->SetLabel(wxT("The data are being prepared"));
     if (pSizer)
+    {
         pSizer->Layout();
+    }
     Refresh();
 
     Yuni::Bind<void()> callback;
@@ -391,7 +413,9 @@ void Panel::runMerge()
 void Panel::executeAggregator()
 {
     if (not pComponent || not CurrentStudyIsValid())
+    {
         return;
+    }
 
     // Where is our program ?
     String exeLocation;
@@ -409,11 +433,15 @@ void Panel::executeAggregator()
     // Area / Link
     auto selectionType = pComponent->pCurrentSelectionType;
     if (pLayer->detached)
+    {
         selectionType = pLayer->customSelectionType;
+    }
 
     String currentAreaOrLink = pComponent->pCurrentAreaOrLink;
     if (pLayer->detached)
+    {
         currentAreaOrLink = pLayer->customAreaOrLink;
+    }
 
     switch (selectionType)
     {
@@ -477,7 +505,9 @@ std::shared_ptr<std::mutex> ProvideLockingForFileLocking(const YString& filename
     std::lock_guard locker(mutexToAccessToLockFiles);
     auto& ptr = mutexForFiles[filename];
     if (!ptr)
+    {
         ptr = std::make_shared<std::mutex>();
+    }
     return ptr;
 }
 
@@ -487,6 +517,4 @@ void ClearAllMutexForFileLocking()
     mutexForFiles.clear();
 }
 
-} // namespace OutputViewerData
-} // namespace Private
-} // namespace Antares
+} // namespace Antares::Private::OutputViewerData

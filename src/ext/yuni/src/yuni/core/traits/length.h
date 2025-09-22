@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include "../../yuni.h"
 #include "../static/remove.h"
 
-namespace Yuni
-{
-namespace Extension
+namespace Yuni::Extension
 {
 /*!
 ** \brief Extension: Get the length of the inner buffer
@@ -24,6 +23,7 @@ class Length final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 0,
@@ -39,12 +39,9 @@ public:
     }
 };
 
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension
 
-namespace Yuni
-{
-namespace Traits
+namespace Yuni::Traits
 {
 /*!
 ** \brief Traits: Length (number of items) of an arbitrary container
@@ -64,6 +61,7 @@ public:
     typedef SizeT SizeType;
     //! Extension
     typedef Extension::Length<Type, SizeT> ExtensionType;
+
     enum
     {
         //! A non-zero value if the specialization is valid
@@ -93,7 +91,6 @@ public:
 
 }; // class Length<U>
 
-} // namespace Traits
-} // namespace Yuni
+} // namespace Yuni::Traits
 
 #include "extension/length.h"

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "component.h"
 #include <wx/sizer.h>
@@ -30,11 +30,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace HTMLListbox
+namespace Antares::Component::HTMLListbox
 {
 BEGIN_EVENT_TABLE(Component, Panel)
 EVT_PAINT(Component::onDraw)
@@ -43,7 +39,7 @@ END_EVENT_TABLE()
 /*!
 ** \brief Additional data for a single item in a listbox
 */
-class CustomClientData final : public wxClientData
+class CustomClientData final: public wxClientData
 {
 public:
     //! List
@@ -51,9 +47,11 @@ public:
     using Vector = std::vector<CustomClientData*>;
 
 public:
-    CustomClientData(const Item::IItem::Ptr& it) : item(it)
+    CustomClientData(const Item::IItem::Ptr& it):
+        item(it)
     {
     }
+
     virtual ~CustomClientData()
     {
     }
@@ -61,17 +59,22 @@ public:
     Item::IItem::Ptr item;
 };
 
-Component::Component(wxWindow* parent) :
- Panel(parent),
- pListbox(nullptr),
- pSizerForDatasources(nullptr),
- pSearchEdit(nullptr),
- pCurrentDatasource(nullptr),
- pInvalidated(true)
+Component::Component(wxWindow* parent):
+    Panel(parent),
+    pListbox(nullptr),
+    pSizerForDatasources(nullptr),
+    pSearchEdit(nullptr),
+    pCurrentDatasource(nullptr),
+    pInvalidated(true)
 {
     // The Listbox
-    pListbox = new wxSimpleHtmlListBox(
-      this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxBORDER_NONE);
+    pListbox = new wxSimpleHtmlListBox(this,
+                                       wxID_ANY,
+                                       wxDefaultPosition,
+                                       wxDefaultSize,
+                                       0,
+                                       nullptr,
+                                       wxBORDER_NONE);
     pListbox->SetAutoLayout(true);
     pListbox->Connect(pListbox->GetId(),
                       wxEVT_COMMAND_LISTBOX_SELECTED,
@@ -87,8 +90,9 @@ Component::Component(wxWindow* parent) :
     // Sizer
     pSizerForDatasources = new wxBoxSizer(wxHORIZONTAL);
     pSizerForDatasources->AddSpacer(15);
-    pSizerForDatasources->Add(
-      CreateLabel(this, wxT("sort"), false, true), 0, wxALIGN_CENTER_VERTICAL | wxALL);
+    pSizerForDatasources->Add(CreateLabel(this, wxT("sort"), false, true),
+                              0,
+                              wxALIGN_CENTER_VERTICAL | wxALL);
     pSizerForDatasources->AddSpacer(2);
 
     // Get the main sizer
@@ -126,12 +130,16 @@ Component::~Component()
     // Remove all datasources
     const auto end = pDatasources.end();
     for (auto i = pDatasources.begin(); i != end; ++i)
+    {
         delete i->second;
+    }
     pDatasources.clear();
 
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void Component::add(Item::IItem::Ptr it)
@@ -197,7 +205,9 @@ void Component::internalUpdateItems()
     internalClearTheListbox();
 
     if (not pListbox)
+    {
         return;
+    }
 
     if (pItems.empty())
     {
@@ -246,17 +256,23 @@ void Component::internalUpdateItems()
                         newSelection = *i;
                     }
                     else
+                    {
                         arr.Add(tmp);
+                    }
                 }
             }
         }
 
         assert((uint)arr.GetCount() == pts.size());
         if (pListbox)
+        {
             pListbox->Append(arr);
+        }
 
         for (uint i = 0; i != pts.size(); ++i)
+        {
             pListbox->SetClientObject(i, pts[i]);
+        }
 
         if (selection == -1)
         {
@@ -283,7 +299,9 @@ void Component::updateHtmlContent()
         {
             const auto* cd = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(i));
             if (cd)
+            {
                 pListbox->SetString(i, cd->item->htmlContent(wxEmptyString));
+            }
         }
     }
 }
@@ -293,8 +311,8 @@ void Component::onSelectionChanged(wxCommandEvent& evt)
     if (not GUIIsLock() && pListbox)
     {
         GUILocker locker;
-        const auto* c
-          = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        const auto* c = dynamic_cast<CustomClientData*>(
+          pListbox->GetClientObject(evt.GetSelection()));
         if (c)
         {
             pLastSelectedItem = c->item;
@@ -308,8 +326,8 @@ void Component::onSelectionDblClick(wxCommandEvent& evt)
     if (not GUIIsLock() && pListbox)
     {
         GUILocker locker;
-        const auto* c
-          = dynamic_cast<CustomClientData*>(pListbox->GetClientObject(evt.GetSelection()));
+        const auto* c = dynamic_cast<CustomClientData*>(
+          pListbox->GetClientObject(evt.GetSelection()));
         if (c)
         {
             pLastSelectedItem = c->item;
@@ -323,8 +341,11 @@ void Component::internalAddDatasource(Datasource::IDatasource* ds)
     if (ds)
     {
         using ButtonType = Antares::Component::Button;
-        auto* btn
-          = new ButtonType(this, wxEmptyString, ds->icon(), this, &Component::onDatasourceClicked);
+        auto* btn = new ButtonType(this,
+                                   wxEmptyString,
+                                   ds->icon(),
+                                   this,
+                                   &Component::onDatasourceClicked);
         pSizerForDatasources->Add(btn, 0, wxALL | wxEXPAND);
         btn->userdata(ds);
         // Keep a reference somewhere
@@ -333,7 +354,9 @@ void Component::internalAddDatasource(Datasource::IDatasource* ds)
 #ifdef WYUNI_OS_WINDOWS
         auto* sizer = GetSizer();
         if (sizer)
+        {
             sizer->Show(pSizerForDatasources, true, true);
+        }
 #endif
         pSizerForDatasources->Layout();
     }
@@ -358,7 +381,9 @@ void Component::onDraw(wxPaintEvent& evt)
         // The control is invalidated
         // It must be refresh from the datasource
         if (pCurrentDatasource)
+        {
             pCurrentDatasource->refresh();
+        }
         // Update the internal structure
         internalUpdateItems();
         pInvalidated = false;
@@ -370,7 +395,9 @@ void Component::onDraw(wxPaintEvent& evt)
 void Component::internalClearTheListbox()
 {
     if (pListbox && not pListbox->IsEmpty())
+    {
         pListbox->Clear();
+    }
 }
 
 void Component::onStudyClosed()
@@ -378,6 +405,4 @@ void Component::onStudyClosed()
     clear();
 }
 
-} // namespace HTMLListbox
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::HTMLListbox

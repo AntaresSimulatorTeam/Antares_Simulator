@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,19 +11,10 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Core
-{
-namespace EventLoop
+namespace Yuni::Private::Core::EventLoop
 {
 // Forward declaration of the external thread used in detached mode
 template<class EventLoopT>
 class Thread;
 
-} // namespace EventLoop
-} // namespace Core
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Core::EventLoop

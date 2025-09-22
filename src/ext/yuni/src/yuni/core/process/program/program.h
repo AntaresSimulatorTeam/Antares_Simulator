@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,15 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../yuni.h"
 #include "../../../core/string.h"
+#include "../../../yuni.h"
 #include "../../atomic/int.h"
 #include "../../bind.h"
 #include "stream.h"
 
-namespace Yuni
-{
-namespace Process
+namespace Yuni::Process
 {
 /*!
 ** \brief Execute a command and wait for it
@@ -267,5 +266,4 @@ private:
 
 }; // class Program
 
-} // namespace Process
-} // namespace Yuni
+} // namespace Yuni::Process
