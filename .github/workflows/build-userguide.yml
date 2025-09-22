@@ -12,6 +12,7 @@ on:
     - issue-*
     - doc/*
     - dependabot/**
+    - copilot/*
   workflow_call:
     inputs:
       run-tests:
