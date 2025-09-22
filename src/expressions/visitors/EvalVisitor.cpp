@@ -83,7 +83,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    return dispatch(node->left()) >= dispatch(node->right());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
