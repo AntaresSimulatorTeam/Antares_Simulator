@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_WINDOWS_XCAST_XCAST_HXX__
 #define __ANTARES_WINDOWS_XCAST_XCAST_HXX__
 
@@ -32,13 +32,13 @@
 #include "../../windows/inspector.h"
 #include <ui/common/component/panel.h>
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 template<enum Data::TimeSeriesType T>
-XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
- wxPanel(parent, wxID_ANY), pNotifier(notifier), pArea(nullptr)
+XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier):
+    wxPanel(parent, wxID_ANY),
+    pNotifier(notifier),
+    pArea(nullptr)
 {
     assert(pNotifier != NULL);
 
@@ -53,16 +53,19 @@ XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
     notebook->theme(Component::Notebook::themeLight);
 
     grid = new Component::Datagrid::Component(
-      notebook, new Component::Datagrid::Renderer::XCastCoefficients<T>(this, notifier));
+      notebook,
+      new Component::Datagrid::Renderer::XCastCoefficients<T>(this, notifier));
     pGridCoeffs = grid;
     pPageGeneral = notebook->add(grid, wxT("coeffs"), wxT("Coefficients"));
 
     grid = new Component::Datagrid::Component(
-      notebook, new Component::Datagrid::Renderer::XCastK<T>(this, notifier));
+      notebook,
+      new Component::Datagrid::Renderer::XCastK<T>(this, notifier));
     pPageDailyProfile = notebook->add(grid, wxT("Daily profile"));
 
     grid = new Component::Datagrid::Component(
-      notebook, new Component::Datagrid::Renderer::XCastTranslation<T>(this, notifier));
+      notebook,
+      new Component::Datagrid::Renderer::XCastTranslation<T>(this, notifier));
     pPageDailyProfile = notebook->add(grid, wxT("Translation"));
 
     wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -76,8 +79,12 @@ XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
 
         // Capacity
         {
-            t = new wxStaticText(
-              this, wxID_ANY, wxT("Capacity : "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
+            t = new wxStaticText(this,
+                                 wxID_ANY,
+                                 wxT("Capacity : "),
+                                 wxDefaultPosition,
+                                 wxDefaultSize,
+                                 wxALIGN_RIGHT);
             wxFont f = t->GetFont();
             f.SetWeight(wxFONTWEIGHT_BOLD);
             t->SetFont(f);
@@ -95,21 +102,31 @@ XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
         }
 
         // Probability distribution
-        t = new wxStaticText(
-          this, wxID_ANY, wxT("Distribution : "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
+        t = new wxStaticText(this,
+                             wxID_ANY,
+                             wxT("Distribution : "),
+                             wxDefaultPosition,
+                             wxDefaultSize,
+                             wxALIGN_RIGHT);
         pGridSizer->Add(t, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
         wxArrayString list;
         for (uint i = 1; i < Data::XCast::dtMax; ++i)
+        {
             list.Add(
               wxStringFromUTF8(Data::XCast::DistributionToCString(Data::XCast::Distribution(i))));
+        }
         wxChoice* ch = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 22), list);
         pDistribution = ch;
         pGridSizer->Add(ch, 1, wxALL | wxEXPAND, 1);
 
         // TS Translation
-        t = new wxStaticText(
-          this, wxID_ANY, wxT("Translation : "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
+        t = new wxStaticText(this,
+                             wxID_ANY,
+                             wxT("Translation : "),
+                             wxDefaultPosition,
+                             wxDefaultSize,
+                             wxALIGN_RIGHT);
         pGridSizer->Add(t, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
         // see XCast::CStringToTSTranslationUse if you modifiy this list
@@ -161,7 +178,8 @@ XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
         wxSizer* ss = new wxBoxSizer(wxVERTICAL);
 
         grid = new Component::Datagrid::Component(
-          panel, new Component::Datagrid::Renderer::XCastConversion<T>(this, notifier));
+          panel,
+          new Component::Datagrid::Renderer::XCastConversion<T>(this, notifier));
         ss->Add(grid, 0, wxALL | wxEXPAND);
         ss->SetItemMinSize(grid, 100, 150);
 
@@ -172,7 +190,9 @@ XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
     // Events
     OnStudyClosed.connect(this, &XCast<T>::onStudyClosed);
     if (notifier)
+    {
         notifier->onAreaChanged.connect(this, &XCast<T>::onAreaChanged);
+    }
     pInstalledCapacity->Connect(pInstalledCapacity->GetId(),
                                 wxEVT_COMMAND_TEXT_UPDATED,
                                 wxCommandEventHandler(XCast<T>::onInstalledCapacityChanged),
@@ -197,7 +217,9 @@ void XCast<T>::onUpdateDistribution(wxCommandEvent& evt)
     {
         Data::XCast* xcast = pArea->xcastData<T>();
         if (!xcast)
+        {
             return;
+        }
 
         YString s;
         wxStringToString(obj->GetStringSelection(), s);
@@ -209,7 +231,9 @@ void XCast<T>::onUpdateDistribution(wxCommandEvent& evt)
             Window::Inspector::Refresh();
             if (pGridCoeffs and pNotebook->selected()
                 and pNotebook->selected()->name() == wxT("coeffs"))
+            {
                 pGridCoeffs->Refresh();
+            }
         }
     }
 }
@@ -218,11 +242,15 @@ template<enum Data::TimeSeriesType T>
 void XCast<T>::onUpdateConversion(wxCommandEvent& evt)
 {
     if (!pArea)
+    {
         return;
+    }
 
     Data::XCast* xcast = pArea->xcastData<T>();
     if (!xcast)
+    {
         return;
+    }
 
     if (xcast->useConversion != evt.IsChecked())
     {
@@ -240,7 +268,9 @@ void XCast<T>::onUpdateTSTranslationUse(wxCommandEvent& evt)
     {
         Data::XCast* xcast = pArea->xcastData<T>();
         if (!xcast)
+        {
             return;
+        }
 
         YString s;
         wxStringToString(obj->GetStringSelection(), s);
@@ -258,7 +288,9 @@ template<enum Data::TimeSeriesType T>
 inline void XCast<T>::selectDefaultPage()
 {
     if (pPageGeneral)
+    {
         pPageGeneral->select();
+    }
 }
 
 template<enum Data::TimeSeriesType T>
@@ -287,7 +319,9 @@ void XCast<T>::onAreaChanged(Data::Area* area)
             // Distribution
             int indx = (int)xcast->distribution - 1;
             if (indx < 0 or indx > 5)
+            {
                 indx = 1;
+            }
             pDistribution->SetSelection(indx);
 
             // Transfert
@@ -306,11 +340,15 @@ template<enum Data::TimeSeriesType T>
 void XCast<T>::onInstalledCapacityChanged(wxCommandEvent& evt)
 {
     if (!pArea)
+    {
         return;
+    }
     double d;
     evt.GetString().ToDouble(&d);
     if (d < 0.)
+    {
         d = 0.;
+    }
 
     Data::XCast* xcastData = pArea->xcastData<T>();
     if (xcastData and not Yuni::Math::Equals(d, xcastData->capacity))
@@ -320,7 +358,6 @@ void XCast<T>::onInstalledCapacityChanged(wxCommandEvent& evt)
     }
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window
 
 #endif // __ANTARES_WINDOWS_XCAST_XCAST_HXX__

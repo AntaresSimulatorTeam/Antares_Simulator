@@ -247,7 +247,7 @@ def should_check(row, key):
 def run_simulation(context):
     command = build_antares_solver_command(context)
     print(f"Running command: {command}")
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     if out:
         context.logs_out = out.decode("utf-8")
@@ -367,7 +367,7 @@ def check_thermal_cluster_min_gen_for_hour(context, area, cluster_name, hour, ye
 
 @step('the message "{log}" is reported in the logs')
 def ckeck_log_exists(context, log):
-    for log_line in context.logs_out.splitlines():
+    for log_line in context.logs_err.splitlines():
         if log in log_line:
             return
     raise AssertionError(f"Log '{log}' is not reported in the logs")

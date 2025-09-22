@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/antares/antares.h"
 #include "outputs.h"
@@ -32,17 +32,11 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace OutputViewer
-{
-namespace Provider
+namespace Antares::Window::OutputViewer::Provider
 {
 namespace // anonymous
 {
-class OutputSpotlightItem : public Antares::Component::Spotlight::IItem
+class OutputSpotlightItem: public Antares::Component::Spotlight::IItem
 {
 public:
     //! Ptr
@@ -56,6 +50,7 @@ public:
     OutputSpotlightItem()
     {
     }
+
     virtual ~OutputSpotlightItem()
     {
     }
@@ -68,7 +63,9 @@ public:
 
 } // anonymous namespace
 
-Outputs::Outputs(Component& com, Layer* layer) : pComponent(com), pLayer(layer)
+Outputs::Outputs(Component& com, Layer* layer):
+    pComponent(com),
+    pLayer(layer)
 {
     assert(&pComponent);
     pBmpClose = Resources::BitmapLoadFromFile("images/16x16/close.png");
@@ -86,7 +83,9 @@ Outputs::Outputs(Component& com, Layer* layer) : pComponent(com), pLayer(layer)
 Outputs::~Outputs()
 {
     for (uint i = 0; i != 10; ++i)
+    {
         delete pBmpNumbers[i];
+    }
     delete pBmpMultiple;
     delete pBmpEmpty;
     delete pBmpClose;
@@ -114,18 +113,24 @@ void Outputs::search(Spotlight::IItem::Vector& out,
     {
         // OutputSpotlightItem
         if (pLayer && pComponent.pTabs.size() > 1)
+        {
             out.push_back(std::make_shared<Spotlight::Separator>());
+        }
 
         Data::Output::Ptr outputSelected;
         if (pLayer)
+        {
             outputSelected = pLayer->selection;
+        }
 
         Data::Output::MapByTimestampDesc map;
         foreach (Data::Output::Ptr output, pComponent.pOutputs)
         {
             assert(!(!output) && "invalid output");
             if (!(!output))
+            {
                 map[(output->timestamp)] = output;
+            }
         }
 
         auto end = map.end();
@@ -150,7 +155,9 @@ void Outputs::search(Spotlight::IItem::Vector& out,
                     }
                 }
                 if (not canContinue)
+                {
                     continue;
+                }
             }
 
             auto item = std::make_shared<OutputSpotlightItem>();
@@ -190,9 +197,13 @@ void Outputs::search(Spotlight::IItem::Vector& out,
                 break;
             default:
                 if (imgIndex < 9)
+                {
                     item->image(pBmpNumbers[imgIndex + 1]);
+                }
                 else
+                {
                     item->image(pBmpEmpty);
+                }
             }
             out.push_back(item);
         }
@@ -203,17 +214,20 @@ bool Outputs::onSelect(Spotlight::IItem::Ptr& item)
 {
     auto withlayer = std::dynamic_pointer_cast<OutputSpotlightItem>(item);
     if (!item)
+    {
         return true;
+    }
 
     if (not withlayer->output)
+    {
         pComponent.removeOutput(withlayer->layer);
+    }
     else
+    {
         pComponent.selectAnotherOutput(withlayer->output);
+    }
 
     return true;
 }
 
-} // namespace Provider
-} // namespace OutputViewer
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::OutputViewer::Provider

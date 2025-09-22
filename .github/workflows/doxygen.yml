@@ -3,8 +3,8 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - develop  # Set a branch name to trigger deployment
-      - dependabot/*
+    - develop  # Set a branch name to trigger deployment
+    - dependabot/**
 
 jobs:
   deploy:
@@ -14,35 +14,35 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-      - name: theme
-        run: |
-          git clone https://github.com/jothepro/doxygen-awesome-css.git
-          cd doxygen-awesome-css
-          git checkout v2.2.1
-          git apply ../docs/antares-simulator-doxygen.patch
+    - name: theme
+      run: |
+        git clone https://github.com/jothepro/doxygen-awesome-css.git
+        cd doxygen-awesome-css
+        git checkout v2.2.1
+        git apply ../docs/antares-simulator-doxygen.patch
 
-      - name: Install and Run Doxygen
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y doxygen
-          doxygen docs/Doxyfile
+    - name: Install and Run Doxygen
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen
+        doxygen docs/Doxyfile
 
-      - name: Deploy to GitHub Pages
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git fetch origin gh-pages || git checkout --orphan gh-pages
-          git checkout gh-pages
-          rm -rf doxygen
-          mkdir -p doxygen
-          cp -r ./html/* doxygen/
-          git add doxygen
-          git commit -m "Deploy updated Doxygen documentation"
-          git push origin gh-pages
+    - name: Deploy to GitHub Pages
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        git fetch origin gh-pages || git checkout --orphan gh-pages
+        git checkout gh-pages
+        rm -rf doxygen
+        mkdir -p doxygen
+        cp -r ./html/* doxygen/
+        git add doxygen
+        git commit -m "Deploy updated Doxygen documentation"
+        git push origin gh-pages
           
         

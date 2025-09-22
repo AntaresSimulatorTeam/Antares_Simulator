@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,16 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../job.h"
-#include "../../core/slist/slist.h"
-#include "../../core/atomic/bool.h"
 #include <deque>
 
-namespace Yuni
-{
-namespace Private
-{
-namespace QueueService
+#include "../../core/atomic/bool.h"
+#include "../../core/slist/slist.h"
+#include "../job.h"
+
+namespace Yuni::Private::QueueService
 {
 /*!
 ** \brief Container for all jobs waiting to be executed
@@ -101,8 +99,6 @@ private:
 
 }; // class WaitingRoom
 
-} // namespace QueueService
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::QueueService
 
 #include "waitingroom.hxx"

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "editor-calendar.h"
 #include "frame.h"
@@ -29,11 +29,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Inspector
+namespace Antares::Window::Inspector
 {
 StudyCalendarBtnEditor::StudyCalendarBtnEditor()
 {
@@ -53,8 +49,10 @@ wxPGWindowList StudyCalendarBtnEditor::CreateControls(wxPropertyGrid* grid,
     // Add two regular buttons
     buttons->Add(wxT(".."));
     // Create the 'primary' editor control (textctrl in this case)
-    wxPGWindowList wndList
-      = wxPGTextCtrlEditor::CreateControls(grid, property, pos, buttons->GetPrimarySize());
+    wxPGWindowList wndList = wxPGTextCtrlEditor::CreateControls(grid,
+                                                                property,
+                                                                pos,
+                                                                buttons->GetPrimarySize());
     buttons->Finalize(grid, pos);
     wndList.SetSecondary(buttons);
     return wndList;
@@ -69,7 +67,9 @@ bool StudyCalendarBtnEditor::OnEvent(wxPropertyGrid* grid,
     {
         auto study = GetCurrentStudy();
         if (!study)
+        {
             return false;
+        }
 
         auto* buttons = (wxPGMultiButton*)grid->GetEditorControlSecondary();
 
@@ -113,6 +113,4 @@ bool StudyCalendarBtnEditor::OnEvent(wxPropertyGrid* grid,
     return wxPGTextCtrlEditor::OnEvent(grid, property, ctrl, event);
 }
 
-} // namespace Inspector
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Inspector

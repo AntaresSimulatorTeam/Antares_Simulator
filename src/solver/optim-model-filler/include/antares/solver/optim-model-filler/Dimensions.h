@@ -41,7 +41,7 @@ struct IntegerInterval
     unsigned int initialTime = 0;
     unsigned int finalTime = 0;
 
-    class Iterator
+    class Iterator final
     {
     public:
         explicit Iterator(unsigned int current);
@@ -69,7 +69,7 @@ struct IntegerInterval
     }
 };
 
-class Dimensions
+class Dimensions final
 {
 public:
     Dimensions() = default;

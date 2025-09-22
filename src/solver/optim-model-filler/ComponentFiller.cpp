@@ -620,7 +620,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 
     const auto& evaluationContext = optimEntityContainer_.getOptimComponent(component_.Index())
                                       .evaluationContext;
-    Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, evaluationContext, ctx);
+    Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())

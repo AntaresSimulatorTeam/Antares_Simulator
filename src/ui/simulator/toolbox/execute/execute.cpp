@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/core/system/suspend.h>
 #include "execute.h"
@@ -32,11 +32,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Toolbox
-{
-namespace Process
+namespace Antares::Toolbox::Process
 {
 // Forward declaration
 class JobProcess;
@@ -44,7 +40,7 @@ class JobProcess;
 /*!
 ** \brief Dedicated class to customize the job
 */
-class JobExecute : public Jobs::Job
+class JobExecute: public Jobs::Job
 {
     friend class JobProcess;
 
@@ -85,12 +81,15 @@ private:
 /*!
  * \brief Dedicated class to handle the executed process
  */
-class JobProcess : public wxProcess
+class JobProcess: public wxProcess
 {
 public:
-    JobProcess(JobExecute& j) : wxProcess(&j), pJob(j)
+    JobProcess(JobExecute& j):
+        wxProcess(&j),
+        pJob(j)
     {
     }
+
     virtual ~JobProcess()
     {
     }
@@ -134,7 +133,9 @@ bool JobProcess::HasInput()
             wxTextInputStream tis(*stream);
             const wxString& msg = tis.ReadLine();
             if (not msg.empty())
+            {
                 pJob.updateTheMessage(msg);
+            }
             hasInput = true;
         }
     }
@@ -146,7 +147,9 @@ bool JobProcess::HasInput()
             wxTextInputStream tis(*stream);
             const wxString& msg = tis.ReadLine();
             if (not msg.empty())
+            {
                 pJob.updateTheMessage(msg);
+            }
             return true;
         }
     }
@@ -157,12 +160,12 @@ JobExecute::JobExecute(const wxString& command,
                        const wxString& workingdirectory,
                        const wxString& title,
                        const wxString& subTitle,
-                       const char* icon) :
- Jobs::Job(title, subTitle, icon),
- pCommand(command),
- pWDirectory(workingdirectory),
- pRunning(0),
- pProcess(nullptr)
+                       const char* icon):
+    Jobs::Job(title, subTitle, icon),
+    pCommand(command),
+    pWDirectory(workingdirectory),
+    pRunning(0),
+    pProcess(nullptr)
 {
     pPreviousDirectory = wxGetCwd();
 }
@@ -177,7 +180,9 @@ JobExecute::~JobExecute()
 void JobExecute::evtOnIdle(wxIdleEvent& evt)
 {
     if (pRunning && pProcess && pProcess->HasInput())
+    {
         evt.RequestMore();
+    }
 }
 
 bool JobExecute::onRunQuery()
@@ -207,7 +212,9 @@ void JobExecute::onBeforeRunning()
 
     // Setting the new working directory, if any
     if (not pWDirectory.IsEmpty())
+    {
         ::wxSetWorkingDirectory(pWDirectory);
+    }
 
     // Create the process handler
     auto* redirect = new JobProcess(*this);
@@ -243,12 +250,12 @@ void JobExecute::disable()
     disableAllComponents();
 }
 
-Execute::Execute() :
- pTitle(wxT("Execute")),
- pSubTitle(),
- pCommand(),
- pDisplayProgressBar(true),
- pIcon("images/32x32/converter.png")
+Execute::Execute():
+    pTitle(wxT("Execute")),
+    pSubTitle(),
+    pCommand(),
+    pDisplayProgressBar(true),
+    pIcon("images/32x32/converter.png")
 {
 }
 
@@ -269,6 +276,4 @@ bool Execute::run()
     return ret;
 }
 
-} // namespace Process
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Process

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "studylogs.h"
 #include <yuni/io/file.h>
@@ -48,9 +48,7 @@ using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 bool CompareDesc::operator()(const wxString& s1, const wxString& s2) const
 {
@@ -63,7 +61,7 @@ END_EVENT_TABLE()
 
 namespace // anonymous
 {
-class LogFile final : public Antares::Component::Spotlight::IItem
+class LogFile final: public Antares::Component::Spotlight::IItem
 {
 public:
     //! Ptr
@@ -82,10 +80,12 @@ public:
     LogFile()
     {
     }
+
     //! Destructor
     virtual ~LogFile()
     {
     }
+
     //@}
 
 public:
@@ -138,8 +138,10 @@ inline void FindAllLogFiles(MapFileList& filelist, wxRegEx& regex, const AnyStri
 }
 } // anonymous namespace
 
-FileListProvider::FileListProvider(StudyLogs& frame) :
- pFrame(frame), pAutoTriggerSelection(true), pShowAll(false)
+FileListProvider::FileListProvider(StudyLogs& frame):
+    pFrame(frame),
+    pAutoTriggerSelection(true),
+    pShowAll(false)
 {
     pBmpFile = std::shared_ptr<wxBitmap>(Resources::BitmapLoadFromFile("images/16x16/logs.png"));
 }
@@ -202,7 +204,9 @@ void FileListProvider::search(Spotlight::IItem::Vector& out,
                     }
 
                     if (not gotcha)
+                    {
                         continue;
+                    }
 
                     hasAtLeastOneStudyLogEntry = true;
                     auto item = std::make_shared<LogFile>();
@@ -218,7 +222,9 @@ void FileListProvider::search(Spotlight::IItem::Vector& out,
     if (pShowAll)
     {
         if (hasAtLeastOneStudyLogEntry)
+        {
             out.push_back(std::make_shared<Spotlight::Text>());
+        }
         out.push_back(std::make_shared<Spotlight::Text>(" UI logs"));
         out.push_back(std::make_shared<Spotlight::Separator>());
         {
@@ -260,7 +266,9 @@ void FileListProvider::search(Spotlight::IItem::Vector& out,
                             }
                         }
                         if (not gotcha)
+                        {
                             continue;
+                        }
 
                         ++count;
                         auto item = std::make_shared<LogFile>();
@@ -271,7 +279,9 @@ void FileListProvider::search(Spotlight::IItem::Vector& out,
                     }
 
                     if (0 == count)
+                    {
                         out.push_back(std::make_shared<Spotlight::Text>("  (no result found)"));
+                    }
                 }
             }
         }
@@ -282,7 +292,9 @@ bool FileListProvider::onSelect(Spotlight::IItem::Ptr& item)
 {
     auto logfile = std::dynamic_pointer_cast<LogFile>(item);
     if (!logfile)
+    {
         return false;
+    }
     pFrame.loadFromFile(logfile->filename);
     return true;
 }
@@ -319,14 +331,15 @@ void FileListProvider::refreshFileList(bool showAll)
     redoResearch();
 }
 
-class JobGUIUpdate final : public Yuni::Job::IJob
+class JobGUIUpdate final: public Yuni::Job::IJob
 {
 public:
     using LogEntry = Component::Datagrid::Renderer::LogEntry;
     using LogEntryContainer = Component::Datagrid::Renderer::LogEntryContainer;
 
 public:
-    explicit JobGUIUpdate(StudyLogs* window) : pWindow(window)
+    explicit JobGUIUpdate(StudyLogs* window):
+        pWindow(window)
     {
     }
 
@@ -349,7 +362,7 @@ private:
     StudyLogs* pWindow;
 };
 
-class JobLoadLogFile final : public Yuni::Job::IJob
+class JobLoadLogFile final: public Yuni::Job::IJob
 {
 public:
     using LogEntry = Component::Datagrid::Renderer::LogEntry;
@@ -358,8 +371,10 @@ public:
     using LineType = Clob;
 
 public:
-    explicit JobLoadLogFile(StudyLogs* window, const String& filename) :
-     pStudyLogs(window), pEntries(nullptr), pEntriesErrors(nullptr)
+    explicit JobLoadLogFile(StudyLogs* window, const String& filename):
+        pStudyLogs(window),
+        pEntries(nullptr),
+        pEntriesErrors(nullptr)
     {
         IO::Normalize(pFilename, filename);
     }
@@ -395,7 +410,9 @@ protected:
         // Read the file
         IO::File::Stream file(pFilename);
         if (not file.opened())
+        {
             logs.error() << "Impossible to open " << pFilename;
+        }
         else
         {
             // Read content from the file
@@ -457,7 +474,9 @@ protected:
                     // We only have a part of the line. We have to fetch the
                     // next piece of file for pursuing
                     if (offset < pBuffer.size())
+                    {
                         line.append(pBuffer, pBuffer.size() - offset, offset);
+                    }
                     break;
                 }
 
@@ -471,18 +490,26 @@ protected:
                     {
                         adapter.adapt(pBuffer.c_str() + offset, p - offset);
                         if (!readLogLine(adapter))
+                        {
                             addEmptyLine();
+                        }
                     }
                     else
+                    {
                         addEmptyLine();
+                    }
                 }
                 else
                 {
                     if (offset < p)
+                    {
                         line.append(pBuffer, p - offset, offset);
+                    }
 
                     if (!readLogLine(line))
+                    {
                         addEmptyLine();
+                    }
                     // reset
                     line.clear();
                 }
@@ -496,7 +523,9 @@ protected:
         if (not line.empty())
         {
             if (!readLogLine(line))
+            {
                 addEmptyLine();
+            }
         }
     }
 
@@ -511,43 +540,63 @@ protected:
         // [Mon Apr  4 11:26:33 2011][solver][infos] My message here
         //
         if (line.size() < 38 /*arbitrary*/ or line.at(0) != '[')
+        {
             return false;
+        }
         if (line.at(20) != ']' or line.at(21) != '[')
+        {
             return false;
+        }
 
         const BufferType::Size applR = line.find(']', 22);
         if (BufferType::npos == applR)
+        {
             return false;
+        }
         const BufferType::Size verbosityR = line.find(']', applR + 1);
         if (BufferType::npos == verbosityR or applR >= verbosityR)
+        {
             return false;
+        }
 
         // alias to the raw data
         const char* const bcstr = line.c_str();
 
         verbosity.adapt(bcstr + applR + 2, verbosityR - applR - 2);
         if (verbosity == "progress") // should not create empty lines
+        {
             return true;
+        }
         if (verbosity == "progress" or line.size() <= verbosityR + 1)
+        {
             return false;
+        }
 
         // The message itself
         if (verbosityR - 2 >= line.size())
+        {
             return false;
+        }
 
         AnyString message;
         message.adapt(bcstr + verbosityR + 2, line.size() - verbosityR - 2);
 
         if (message.empty() or message.startsWith(LOG_UI))
+        {
             return false;
+        }
 
         date.adapt(bcstr + 1, 19);
 
         // Application
         if (applR > 27)
+        {
             application.adapt(bcstr + 22, applR - 22);
+        }
         else
+        {
             application.clear();
+        }
 
         LogEntry* entry = new LogEntry();
         pLastLineWasEmpty = false;
@@ -588,7 +637,9 @@ protected:
             {
                 if (message.startsWith("Years from") or message.startsWith("Year ")
                     or message.startsWith("Summary"))
+                {
                     entry->highlight = true;
+                }
             }
         }
 
@@ -651,16 +702,16 @@ private:
 
 }; // class JobLoadLogFile
 
-StudyLogs::StudyLogs(wxFrame* parent) :
- Component::Frame::WxLocalFrame(
-   parent,
-   wxID_ANY,
-   wxT("Logs"),
-   wxDefaultPosition,
-   wxSize(1000, 600),
-   wxCAPTION | wxMAXIMIZE_BOX | wxCLOSE_BOX | wxSYSTEM_MENU | wxRESIZE_BORDER | wxCLIP_CHILDREN),
- pCanCloseTheWindow(true),
- pShowAllLogsFiles(false)
+StudyLogs::StudyLogs(wxFrame* parent):
+    Component::Frame::WxLocalFrame(parent,
+                                   wxID_ANY,
+                                   wxT("Logs"),
+                                   wxDefaultPosition,
+                                   wxSize(1000, 600),
+                                   wxCAPTION | wxMAXIMIZE_BOX | wxCLOSE_BOX | wxSYSTEM_MENU
+                                     | wxRESIZE_BORDER | wxCLIP_CHILDREN),
+    pCanCloseTheWindow(true),
+    pShowAllLogsFiles(false)
 {
     pLastLogFile.reserve(FILENAME_MAX);
 
@@ -671,8 +722,11 @@ StudyLogs::StudyLogs(wxFrame* parent) :
     auto* sizer = new wxBoxSizer(wxVERTICAL);
 
     {
-        pSplitter
-          = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
+        pSplitter = new wxSplitterWindow(this,
+                                         wxID_ANY,
+                                         wxDefaultPosition,
+                                         wxDefaultSize,
+                                         wxSP_NOBORDER);
         auto* panelAllFiles = new Component::Panel(pSplitter);
         wxSizer* sizerAllFiles = new wxBoxSizer(wxVERTICAL);
         panelAllFiles->SetSizer(sizerAllFiles);
@@ -681,12 +735,12 @@ StudyLogs::StudyLogs(wxFrame* parent) :
         {
             wxSizer* hzAllFiles = new wxBoxSizer(wxHORIZONTAL);
             hzAllFiles->AddSpacer(8);
-            Component::Button* btnRefresh
-              = new Component::Button(panelAllFiles,
-                                      wxT("Refresh the file list"),
-                                      "images/16x16/refresh.png",
-                                      this,
-                                      &StudyLogs::onButtonRefreshFileList);
+            Component::Button* btnRefresh = new Component::Button(
+              panelAllFiles,
+              wxT("Refresh the file list"),
+              "images/16x16/refresh.png",
+              this,
+              &StudyLogs::onButtonRefreshFileList);
             hzAllFiles->Add(btnRefresh, 0, wxALL | wxEXPAND);
             sizerAllFiles->AddSpacer(5);
             sizerAllFiles->Add(hzAllFiles, 0, wxALL | wxEXPAND, 2);
@@ -766,9 +820,13 @@ StudyLogs::StudyLogs(wxFrame* parent) :
 
         // Split the view
         if (System::windows)
+        {
             pSplitter->SetMinimumPaneSize(250);
+        }
         else
+        {
             pSplitter->SetMinimumPaneSize(300);
+        }
 
         pSplitter->SplitVertically(panelAllFiles, logfilepanel);
         // pSplitter->SetSashGravity(0.3);
@@ -778,8 +836,13 @@ StudyLogs::StudyLogs(wxFrame* parent) :
 
         // Grids
         pRendererEntries = new Component::Datagrid::Renderer::LogFile();
-        pLogDisplay = new Component::Datagrid::Component(
-          notebook, pRendererEntries, wxEmptyString, false, true, true, true);
+        pLogDisplay = new Component::Datagrid::Component(notebook,
+                                                         pRendererEntries,
+                                                         wxEmptyString,
+                                                         false,
+                                                         true,
+                                                         true,
+                                                         true);
         pRendererEntries->control(pLogDisplay);
         Component::Notebook::Page* page;
 
@@ -787,8 +850,13 @@ StudyLogs::StudyLogs(wxFrame* parent) :
         page->visible(false);
 
         pRendererEntriesErrors = new Component::Datagrid::Renderer::LogFile();
-        pLogDisplayErrors = new Component::Datagrid::Component(
-          notebook, pRendererEntriesErrors, wxEmptyString, false, true, true, true);
+        pLogDisplayErrors = new Component::Datagrid::Component(notebook,
+                                                               pRendererEntriesErrors,
+                                                               wxEmptyString,
+                                                               false,
+                                                               true,
+                                                               true,
+                                                               true);
         pRendererEntriesErrors->control(pLogDisplayErrors);
         page = notebook->add(pLogDisplayErrors, wxT("errors"), wxT("Warnings & Errors"));
         page->visible(false);
@@ -807,7 +875,9 @@ StudyLogs::~StudyLogs()
 {
     auto* wnd = Forms::ApplWnd::Instance();
     if (wnd)
+    {
         wnd->pWndLogs = nullptr;
+    }
 
     pLoadingMutex.lock();
     pLogFilenameInfo.clear();
@@ -831,7 +901,9 @@ void StudyLogs::loadFromFile(const Yuni::String& filename)
     Dispatcher::Post((const Yuni::Job::IJob::Ptr&)job);
     // Avoid undefined behavior
     if (&filename != &pLastLogFile)
+    {
         pLastLogFile = filename;
+    }
 }
 
 void StudyLogs::onClose(wxCloseEvent& evt)
@@ -861,7 +933,9 @@ void StudyLogs::enterLoadingMode(const String& filename)
     pNotebook->caption(wxEmptyString);
     auto* page = pNotebook->find(wxT("errors"));
     if (page)
+    {
         page->caption(wxString(wxT("Warnings & Errors")));
+    }
 
     // Window title
     SetTitle(wxString(wxT("Logs:  Loading  ")) << wxStringFromUTF8(name));
@@ -936,7 +1010,9 @@ void StudyLogs::reloadFromData(LogEntryContainer::Ptr entries, LogEntryContainer
 void StudyLogs::onReloadLogFile(void*)
 {
     if (not pLastLogFile.empty() and pCanCloseTheWindow)
+    {
         loadFromFile(pLastLogFile);
+    }
 }
 
 void StudyLogs::onChangeShowAllAdvanced(wxCommandEvent& evt)
@@ -945,5 +1021,4 @@ void StudyLogs::onChangeShowAllAdvanced(wxCommandEvent& evt)
     refreshListOfAllAvailableLogs();
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

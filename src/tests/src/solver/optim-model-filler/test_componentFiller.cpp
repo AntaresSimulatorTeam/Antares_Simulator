@@ -105,18 +105,6 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised)
     BOOST_CHECK_THROW(buildLinearProblem(), out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
-{
-    createModel("my-model",
-                {},
-                {{"variable", ValueType::FLOAT, literal(10), variable("variable")}},
-                {});
-    createComponent("my-model", "my-component");
-    BOOST_CHECK_EXCEPTION(buildLinearProblem(),
-                          Antares::Error::RuntimeError,
-                          checkMessage("Component null. Cannot evaluate VariableNode."));
-}
-
 BOOST_AUTO_TEST_CASE(var_with_empty_lower_bound_default_to_minus_infinity)
 {
     createModel("my-model",
@@ -759,7 +747,7 @@ BOOST_AUTO_TEST_CASE(offset_in_objective__throws_exception)
 }
 
 // Mock classes
-class MockMipVariable: public IMipVariable
+class MockMipVariable final: public IMipVariable
 {
 public:
     MockMipVariable(double lb, double ub, bool integer, const std::string& name):
@@ -823,7 +811,7 @@ private:
     std::string name_;
 };
 
-class MockLinearProblem: public ILinearProblem
+class MockLinearProblem final: public ILinearProblem
 {
 public:
     std::vector<std::unique_ptr<MockMipVariable>> variables_;

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/antares/antares.h"
 #include "output.h"
@@ -50,11 +50,7 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Window
-{
-namespace OutputViewer
+namespace Antares::Window::OutputViewer
 {
 static const char* const imageNumber[10] = {
   "images/16x16/0.png",
@@ -83,50 +79,52 @@ enum CallbackType
 
 using PairLayerWindow = std::pair<Layer*, wxWindow*>;
 
-Component::Component(wxWindow* parent, bool parentIsStandaloneWindow) :
- Antares::Component::Panel(parent),
- pCurrentSelectionType(stNone),
- pCurrentLOD(lodAllMCYears),
- pCurrentYear(1),
- pHasYearByYear(false),
- pHasConcatenedDataset(false),
- pCurrentVariable(defaultVariable),
- pCurrentVariableID(defaultVariableID),
- pCurrentClusters(nullptr),
- pSizerForBtnOutputs(nullptr),
- pWindowForBtnOutputs(nullptr),
- pSizerForPanelOutputs(nullptr),
- pWindowForPanelOutputs(nullptr),
- pCurrentLayerForMenu(nullptr),
- pLblAreaOrLinkName(nullptr),
- pSpotlight(nullptr),
- pControlsAlreadyCreated(false),
- pSplitter(nullptr),
- pSplitterWindow1(nullptr),
- pSplitterWindow2(nullptr),
- pSidebarCollapsed(false),
- pOldSidebarWidth(200),
- pParentWindow(nullptr),
- pLabelItemName(nullptr),
- pBtnValues(nullptr),
- pBtnDetails(nullptr),
- pBtnDetailsRes(nullptr),
- pBtnID(nullptr),
- pBtnHourly(nullptr),
- pBtnDaily(nullptr),
- pBtnWeekly(nullptr),
- pBtnMonthly(nullptr),
- pBtnAnnual(nullptr),
- pBtnCurrentYearNumber(nullptr),
- pBtnVariables(nullptr),
- pJobsRemaining(0),
- pOpenedInANewWindow(parentIsStandaloneWindow),
- pASelectionHasAlreadyBeenMade(false)
+Component::Component(wxWindow* parent, bool parentIsStandaloneWindow):
+    Antares::Component::Panel(parent),
+    pCurrentSelectionType(stNone),
+    pCurrentLOD(lodAllMCYears),
+    pCurrentYear(1),
+    pHasYearByYear(false),
+    pHasConcatenedDataset(false),
+    pCurrentVariable(defaultVariable),
+    pCurrentVariableID(defaultVariableID),
+    pCurrentClusters(nullptr),
+    pSizerForBtnOutputs(nullptr),
+    pWindowForBtnOutputs(nullptr),
+    pSizerForPanelOutputs(nullptr),
+    pWindowForPanelOutputs(nullptr),
+    pCurrentLayerForMenu(nullptr),
+    pLblAreaOrLinkName(nullptr),
+    pSpotlight(nullptr),
+    pControlsAlreadyCreated(false),
+    pSplitter(nullptr),
+    pSplitterWindow1(nullptr),
+    pSplitterWindow2(nullptr),
+    pSidebarCollapsed(false),
+    pOldSidebarWidth(200),
+    pParentWindow(nullptr),
+    pLabelItemName(nullptr),
+    pBtnValues(nullptr),
+    pBtnDetails(nullptr),
+    pBtnDetailsRes(nullptr),
+    pBtnID(nullptr),
+    pBtnHourly(nullptr),
+    pBtnDaily(nullptr),
+    pBtnWeekly(nullptr),
+    pBtnMonthly(nullptr),
+    pBtnAnnual(nullptr),
+    pBtnCurrentYearNumber(nullptr),
+    pBtnVariables(nullptr),
+    pJobsRemaining(0),
+    pOpenedInANewWindow(parentIsStandaloneWindow),
+    pASelectionHasAlreadyBeenMade(false)
 {
     pYearsLimits[0] = 0;
     pYearsLimits[1] = 0;
     if (parentIsStandaloneWindow)
+    {
         pParentWindow = parent;
+    }
 
     // The output has been updated
     OnStudyUpdateOutputInfo.connect(this, &Component::updateFromExternalEvent);
@@ -155,7 +153,9 @@ Component::~Component()
     // we should destroy all children as soon as possible.
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void Component::displayMiniFrame(wxWindow* parent,
@@ -168,9 +168,13 @@ void Component::displayMiniFrame(wxWindow* parent,
 
     uint flags = 0;
     if (!searchInput)
+    {
         flags |= Antares::Component::Spotlight::optNoSearchInput;
+    }
     if (groups)
+    {
         flags |= Antares::Component::Spotlight::optGroups;
+    }
 
     Antares::Component::Spotlight::FrameShow(parent, provider, flags, (int)width);
 }
@@ -180,7 +184,9 @@ void Component::emptyCache()
     pMutex.lock();
     auto end = pAlreadyPreparedContents.cend();
     for (auto i = pAlreadyPreparedContents.cbegin(); i != end; ++i)
+    {
         delete i->second;
+    }
 
     pAlreadyPreparedContents.clear();
     pMutex.unlock();
@@ -195,7 +201,9 @@ void Component::updateFromExternalEvent(const Data::Output::List& list,
 void Component::createAllControlsIfNeeded()
 {
     if (pControlsAlreadyCreated)
+    {
         return;
+    }
 
     auto* vz = new wxBoxSizer(wxVERTICAL);
     SetSizer(vz);
@@ -204,8 +212,11 @@ void Component::createAllControlsIfNeeded()
     vz->AddSpacer(2);
 
     {
-        pSplitter
-          = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
+        pSplitter = new wxSplitterWindow(this,
+                                         wxID_ANY,
+                                         wxDefaultPosition,
+                                         wxDefaultSize,
+                                         wxSP_NOBORDER);
 
         auto* content = new Component::Panel(pSplitter);
         {
@@ -241,8 +252,9 @@ void Component::createAllControlsIfNeeded()
 
                 // Plus - Add a new output
                 {
-                    btn = new Button(
-                      grp->subpanel, wxT("New tab"), nullptr); //"images/16x16/plus.png");
+                    btn = new Button(grp->subpanel,
+                                     wxT("New tab"),
+                                     nullptr); //"images/16x16/plus.png");
                     btn->onPopupMenu(this, &Component::onDropDownOutputs);
                     btn->menu(true);
                     btn->pushedColor(grp);
@@ -266,8 +278,9 @@ void Component::createAllControlsIfNeeded()
                 auto* grp = new Antares::Component::PanelGroup(content);
                 hzori->Add(grp, 0, wxALL | wxEXPAND);
                 hz = grp->subpanel->GetSizer();
-                sbmp = Resources::StaticBitmapLoadFromFile(
-                  grp, wxID_ANY, "images/16x16/calendar_current.png");
+                sbmp = Resources::StaticBitmapLoadFromFile(grp,
+                                                           wxID_ANY,
+                                                           "images/16x16/calendar_current.png");
                 grp->leftSizer->Add(sbmp, 0, wxALIGN_CENTER);
 
                 btn = new Button(grp->subpanel, wxT("MC Synthesis"), nullptr);
@@ -298,8 +311,11 @@ void Component::createAllControlsIfNeeded()
                 btn->SetToolTip(wxT("Next individual year"));
                 ybySizer->Add(btn, 0, wxALL | wxEXPAND);
 
-                btn = new Button(
-                  grp->subpanel, wxT("1 / 10"), nullptr, this, &Component::goToASpecificYear);
+                btn = new Button(grp->subpanel,
+                                 wxT("1 / 10"),
+                                 nullptr,
+                                 this,
+                                 &Component::goToASpecificYear);
                 btn->pushedColor(grp);
                 // btn->menu(true);
                 pBtnCurrentYearNumber = btn;
@@ -334,13 +350,18 @@ void Component::createAllControlsIfNeeded()
                 auto* grp = new Antares::Component::PanelGroup(content);
                 hzori->Add(grp, 0, wxALL | wxEXPAND);
                 hz = grp->subpanel->GetSizer();
-                sbmp
-                  = Resources::StaticBitmapLoadFromFile(grp, wxID_ANY, "images/16x16/default.png");
+                sbmp = Resources::StaticBitmapLoadFromFile(grp,
+                                                           wxID_ANY,
+                                                           "images/16x16/default.png");
                 grp->leftSizer->Add(sbmp, 0, wxALIGN_CENTER);
 
-                auto addButton = [&](const wxString& caption) -> Button* {
-                    btn = new Button(
-                      grp->subpanel, caption, nullptr, this, &Component::onSelectDataLevel);
+                auto addButton = [&](const wxString& caption) -> Button*
+                {
+                    btn = new Button(grp->subpanel,
+                                     caption,
+                                     nullptr,
+                                     this,
+                                     &Component::onSelectDataLevel);
                     btn->pushedColor(grp);
                     btn->userdata(btn);
                     hz->Add(btn, 0, wxALL | wxEXPAND);
@@ -365,33 +386,48 @@ void Component::createAllControlsIfNeeded()
                 grp->leftSizer->Add(sbmp, 0, wxALIGN_CENTER);
                 hz = grp->subpanel->GetSizer();
 
-                btn = new Button(
-                  grp->subpanel, wxT("Hourly"), nullptr, this, &Component::onSelectTimeLevel);
+                btn = new Button(grp->subpanel,
+                                 wxT("Hourly"),
+                                 nullptr,
+                                 this,
+                                 &Component::onSelectTimeLevel);
                 btn->pushed(true);
                 btn->pushedColor(grp);
                 btn->userdata(btn);
                 pBtnHourly = btn;
                 hz->Add(btn, 0, wxALL | wxEXPAND);
-                btn = new Button(
-                  grp->subpanel, wxT("Daily"), nullptr, this, &Component::onSelectTimeLevel);
+                btn = new Button(grp->subpanel,
+                                 wxT("Daily"),
+                                 nullptr,
+                                 this,
+                                 &Component::onSelectTimeLevel);
                 btn->pushedColor(grp);
                 btn->userdata(btn);
                 hz->Add(btn, 0, wxALL | wxEXPAND);
                 pBtnDaily = btn;
-                btn = new Button(
-                  grp->subpanel, wxT("Weekly"), nullptr, this, &Component::onSelectTimeLevel);
+                btn = new Button(grp->subpanel,
+                                 wxT("Weekly"),
+                                 nullptr,
+                                 this,
+                                 &Component::onSelectTimeLevel);
                 btn->pushedColor(grp);
                 btn->userdata(btn);
                 hz->Add(btn, 0, wxALL | wxEXPAND);
                 pBtnWeekly = btn;
-                btn = new Button(
-                  grp->subpanel, wxT("Monthly"), nullptr, this, &Component::onSelectTimeLevel);
+                btn = new Button(grp->subpanel,
+                                 wxT("Monthly"),
+                                 nullptr,
+                                 this,
+                                 &Component::onSelectTimeLevel);
                 btn->pushedColor(grp);
                 btn->userdata(btn);
                 pBtnMonthly = btn;
                 hz->Add(btn, 0, wxALL | wxEXPAND);
-                btn = new Button(
-                  grp->subpanel, wxT("Annual"), nullptr, this, &Component::onSelectTimeLevel);
+                btn = new Button(grp->subpanel,
+                                 wxT("Annual"),
+                                 nullptr,
+                                 this,
+                                 &Component::onSelectTimeLevel);
                 btn->pushedColor(grp);
                 btn->userdata(btn);
                 pBtnAnnual = btn;
@@ -467,6 +503,7 @@ void Component::createAllControlsIfNeeded()
         {
             flags = Antares::Component::Spotlight::optGroups
         };
+
         pSpotlight = new Antares::Component::Spotlight(listboxPanel, flags);
         OnMapLayerChanged.connect(pSpotlight, &Antares::Component::Spotlight::onMapLayerChanged);
         OnMapLayerAdded.connect(pSpotlight, &Antares::Component::Spotlight::onMapLayerAdded);
@@ -515,13 +552,17 @@ void Component::updateLayerList()
     layer++; // we skip the layer "All" as iti is always present
     auto layerEnd = study->layers.end();
     for (; layer != layerEnd; layer++)
+    {
         pSpotlight->onMapLayerAdded(new wxString(layer->second));
+    }
 }
 
 void Component::backToInputData(void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
 
@@ -531,7 +572,9 @@ void Component::backToInputData(void*)
 
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
+    {
         mainFrm->backToInputData();
+    }
 }
 
 void Component::onStudyClosed()
@@ -572,7 +615,9 @@ void Component::clear()
     for (uint i = 0; i != (uint)pPanelAllOutputs.size(); ++i)
     {
         if (pPanelAllOutputs[i])
+        {
             pPanelAllOutputs[i]->Destroy();
+        }
     }
 
     pPanelAllOutputs.clear();
@@ -592,7 +637,9 @@ void Component::clear()
     // Removing all components
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
     pControlsAlreadyCreated = false;
 
     delete pCurrentClusters;
@@ -655,11 +702,15 @@ void Component::update(const Data::Output::List& list, const Data::Output::Ptr& 
     // The copy operation is useless and dangerous if the two variables are actually
     // the same.
     if (&pOutputs != &list)
+    {
         pOutputs = list;
+    }
     outputSelectionsAdd(selection);
 
     if (!pControlsAlreadyCreated)
+    {
         createAllControlsIfNeeded();
+    }
 
     // Refresh all tabs
     refreshAllTabs();
@@ -668,7 +719,9 @@ void Component::update(const Data::Output::List& list, const Data::Output::Ptr& 
 void Component::onDropDownComparison(Button&, wxMenu&, void* userdata)
 {
     if (GUIIsLock() || !userdata)
+    {
         return;
+    }
     Button* btn = (Button*)userdata;
     displayMiniFrame(btn, std::make_shared<Provider::Comparison>(*this), 120, false, false);
 }
@@ -676,7 +729,9 @@ void Component::onDropDownComparison(Button&, wxMenu&, void* userdata)
 void Component::onDropDownOutputs(Button& button, wxMenu&, void* userdata)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     // The current UI output info
     Layer* uiinfo = nullptr;
@@ -690,23 +745,35 @@ void Component::onDropDownOutputs(Button& button, wxMenu&, void* userdata)
         pCurrentLayerForMenu = uiinfo;
     }
     else
+    {
         pCurrentLayerForMenu = nullptr;
+    }
 
     if (uiinfo && uiinfo->isVirtual())
     {
         // In this case, there will be only one item "close the tab"
-        displayMiniFrame(
-          &button, std::make_shared<Provider::Outputs>(*this, uiinfo), 150, false, false);
+        displayMiniFrame(&button,
+                         std::make_shared<Provider::Outputs>(*this, uiinfo),
+                         150,
+                         false,
+                         false);
     }
     else
-        displayMiniFrame(
-          &button, std::make_shared<Provider::Outputs>(*this, uiinfo), 380, true, false);
+    {
+        displayMiniFrame(&button,
+                         std::make_shared<Provider::Outputs>(*this, uiinfo),
+                         380,
+                         true,
+                         false);
+    }
 }
 
 void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     closeSubFrames();
 
@@ -720,10 +787,14 @@ void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
         pCurrentLayerForMenu = uiinfo;
     }
     else
+    {
         pCurrentLayerForMenu = nullptr;
+    }
 
     if (!uiinfo || uiinfo->isVirtual() || !pCurrentLayerForMenu)
+    {
         return;
+    }
 
     // wxWindow* form = (pParentWindow) ? pParentWindow : Forms::ApplWnd::Instance();
     auto* form = this;
@@ -743,8 +814,11 @@ void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
         default:
             return; // Uh ?
         }
-        auto* it
-          = Menu::CreateItem(&menu, wxID_ANY, caption, "images/16x16/pin.png", wxEmptyString);
+        auto* it = Menu::CreateItem(&menu,
+                                    wxID_ANY,
+                                    caption,
+                                    "images/16x16/pin.png",
+                                    wxEmptyString);
         form->Connect(it->GetId(),
                       wxEVT_COMMAND_MENU_SELECTED,
                       wxCommandEventHandler(Component::onDetachCurrentLayer),
@@ -760,23 +834,31 @@ void Component::onDropDownDetachMenu(Button&, wxMenu& menu, void* userdata)
         assert(!(!tab));
 
         if (tab->btnItem)
+        {
             displayMiniFrame(tab->btnItem, std::make_shared<SpotlightProvider>(this, layer));
+        }
     }
 }
 
 void Component::onDetachCurrentLayer(wxCommandEvent&)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     // Close any sub frames, just to be sure
     closeSubFrames();
 
     if (!pCurrentLayerForMenu)
+    {
         return;
+    }
     Layer& layer = *pCurrentLayerForMenu;
     if (layer.detached)
+    {
         return;
+    }
 
     // Copying the global selection
     layer.customSelectionType = pCurrentSelectionType;
@@ -789,7 +871,9 @@ void Component::onDetachCurrentLayer(wxCommandEvent&)
 void Component::createNewVirtualLayer(LayerType type)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     Layer* layer = new Layer(type);
@@ -803,7 +887,9 @@ void Component::createNewVirtualLayer(LayerType type)
 void Component::selectAnotherOutput(const Data::Output::Ptr& selectedOutput)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     // Close any sub frames, just to be sure
@@ -833,7 +919,9 @@ void Component::selectAnotherOutput(const Data::Output::Ptr& selectedOutput)
                 rebuildIndexes();
             }
             else
+            {
                 outputSelectionsAdd(output);
+            }
 
             // reset
             pCurrentLayerForMenu = nullptr;
@@ -861,13 +949,17 @@ void Component::internalUpdate()
     closeSubFrames();
 
     if (!pControlsAlreadyCreated || !pSizerForBtnOutputs)
+    {
         return;
+    }
 
     // reset the pointer
     pCurrentLayerForMenu = nullptr;
 
     if (IsGUIAboutToQuit())
+    {
         return;
+    }
 
     if (pSelections.empty())
     {
@@ -876,7 +968,9 @@ void Component::internalUpdate()
             for (uint i = 0; i != pBtnPanelAllOutputs.size(); ++i)
             {
                 if (pBtnPanelAllOutputs[i])
+                {
                     pBtnPanelAllOutputs[i]->Destroy();
+                }
             }
             pBtnPanelAllOutputs.clear();
         }
@@ -886,7 +980,9 @@ void Component::internalUpdate()
             for (uint i = 0; i != pPanelAllOutputs.size(); ++i)
             {
                 if (pPanelAllOutputs[i])
+                {
                     pPanelAllOutputs[i]->Destroy();
+                }
             }
             pPanelAllOutputs.clear();
         }
@@ -905,7 +1001,9 @@ void Component::internalUpdate()
         for (uint i = start; i < end; ++i)
         {
             if (pBtnPanelAllOutputs[i])
+            {
                 pBtnPanelAllOutputs[i]->Destroy();
+            }
         }
         pTabs.resize(pSelections.size());
         pBtnPanelAllOutputs.resize(pSelections.size());
@@ -917,7 +1015,9 @@ void Component::internalUpdate()
         for (uint i = start; i < end; ++i)
         {
             if (pPanelAllOutputs[i])
+            {
                 pPanelAllOutputs[i]->Destroy();
+            }
         }
         pPanelAllOutputs.resize(pSelections.size());
     }
@@ -1040,12 +1140,18 @@ void Component::internalUpdate()
             btn->userdata(&uiinfo);
 
             if (tab->btnCustomSelection)
+            {
                 tab->btnCustomSelection->userdata(&uiinfo);
+            }
 
             if (!(!outputInfo))
+            {
                 btn->caption(wxStringFromUTF8(outputInfo->title));
+            }
             else
+            {
                 btn->caption(uiinfo.alternativeCaption());
+            }
         }
         else
         {
@@ -1122,7 +1228,9 @@ void Component::treeDataUpdate()
         const auto* layer = pSelections[i];
         // We may not have a study output info for virtual layers
         if (!layer || !layer->selection)
+        {
             continue;
+        }
 
         // We will use the first available as reference
         const String& path = (layer->selection)->path;
@@ -1138,7 +1246,9 @@ void Component::treeDataUpdate()
             {
                 // We only want a non-empty content
                 if (content->empty())
+                {
                     continue;
+                }
                 foundAnOutput = true;
                 treeDataUpdateWL(*content);
             }
@@ -1150,7 +1260,9 @@ void Component::treeDataUpdate()
     pMutex.unlock();
 
     if (!foundAnOutput)
+    {
         noSimulationData();
+    }
 }
 
 void Component::treeDataUpdateWL(const Content& content)
@@ -1203,7 +1315,9 @@ void Component::treeDataUpdateWL(const Content& content)
             if (areaIt->first() == '@')
             {
                 if (!checkAreaIsCommonToAllOutputs(*areaIt))
+                {
                     uncommonAreas.insert(*areaIt);
+                }
                 else
                 {
                     hasFoundSomething = true;
@@ -1216,7 +1330,9 @@ void Component::treeDataUpdateWL(const Content& content)
             if (areaIt->first() != '@')
             {
                 if (!checkAreaIsCommonToAllOutputs(*areaIt))
+                {
                     uncommonAreas.insert(*areaIt);
+                }
                 else
                 {
                     hasFoundSomething = true;
@@ -1233,7 +1349,9 @@ void Component::treeDataUpdateWL(const Content& content)
         for (auto linkIt = links->begin(); linkIt != linkEnd; ++linkIt)
         {
             if (!checkLinkIsCommonToAllOutputs(*linkIt))
+            {
                 uncommonLinks.insert(*linkIt);
+            }
             else
             {
                 hasFoundSomething = true;
@@ -1252,14 +1370,18 @@ void Component::treeDataUpdateWL(const Content& content)
             auto end = areaI->second.end();
             auto i = areaI->second.begin();
             for (; i != end; ++i)
+            {
                 (*pCurrentClusters)[areaname].insert(*i);
+            }
         }
     }
 
     // If nothing, adding a label for notifying the user that there is no problem
     // but no data
     if (!hasFoundSomething)
+    {
         provider->addNoCommonItem();
+    }
 
     // Adding (at the end), all areas / links that are not available
     // in all outputs
@@ -1269,14 +1391,18 @@ void Component::treeDataUpdateWL(const Content& content)
         {
             auto areaEnd = uncommonAreas.end();
             for (auto areaIt = uncommonAreas.begin(); areaIt != areaEnd; ++areaIt)
+            {
                 provider->addUncommonAreaName(*areaIt);
+            }
         }
 
         if (!uncommonLinks.empty())
         {
             auto linkEnd = uncommonLinks.end();
             for (auto linkIt = uncommonLinks.begin(); linkIt != linkEnd; ++linkIt)
+            {
                 provider->addUncommonLinkName(*linkIt);
+            }
         }
     }
 
@@ -1310,7 +1436,9 @@ void Component::treeDataWaiting()
 void Component::copyFrom(const Component& source)
 {
     if (&source == this)
+    {
         return;
+    }
 
     GUILocker locker;
 
@@ -1319,7 +1447,9 @@ void Component::copyFrom(const Component& source)
     if (!pSelections.empty())
     {
         for (uint i = 0; i != (uint)pSelections.size(); ++i)
+        {
             delete pSelections[i];
+        }
         pSelections.clear();
     }
 
@@ -1330,7 +1460,9 @@ void Component::copyFrom(const Component& source)
     }
 
     if (!pControlsAlreadyCreated)
+    {
         createAllControlsIfNeeded();
+    }
 
     // Retrieving filter values
     // Data level
@@ -1372,7 +1504,9 @@ void Component::copyFrom(const Component& source)
 void Component::openNewWindow(void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
@@ -1386,7 +1520,9 @@ void Component::openNewWindow(void*)
         // The layout must be updated (especially on Windows)
         auto* sizer = window->GetSizer();
         if (sizer)
+        {
             sizer->Layout();
+        }
     }
 }
 
@@ -1401,7 +1537,9 @@ void Component::outputSelectionsClear()
         {
             assert(pPanelAllOutputs[i] && "invalid panel output");
             if (pPanelAllOutputs[i])
+            {
                 pPanelAllOutputs[i]->layer(nullptr);
+            }
         }
     }
     if (!pTabs.empty())
@@ -1415,9 +1553,13 @@ void Component::outputSelectionsClear()
             {
                 auto& tab = *(pTabs[i]);
                 if (tab.btnOutput)
+                {
                     tab.btnOutput->userdata(nullptr);
+                }
                 if (tab.btnCustomSelection)
+                {
                     tab.btnCustomSelection->userdata(nullptr);
+                }
             }
         }
     }
@@ -1426,7 +1568,9 @@ void Component::outputSelectionsClear()
     if (!pSelections.empty())
     {
         for (uint i = 0; i != pSelections.size(); ++i)
+        {
             delete pSelections[i];
+        }
         pSelections.clear();
     }
 }
@@ -1456,7 +1600,9 @@ uint Component::outputSelectionsAdd(Data::Output::Ptr output)
 const char* Component::imageForLayerPlaceOrder(const Layer* so) const
 {
     if (!so || pSelections.empty())
+    {
         return "images/16x16/empty.png";
+    }
 
     uint count = 0;
     const char* image = "images/16x16/empty.png";
@@ -1469,10 +1615,14 @@ const char* Component::imageForLayerPlaceOrder(const Layer* so) const
             if (count > 1)
             {
                 if (count == 2)
+                {
                     image = "images/16x16/000.png";
+                }
             }
             else
+            {
                 image = imageNumber[i + 1];
+            }
         }
     }
     return image;
@@ -1481,7 +1631,9 @@ const char* Component::imageForLayerPlaceOrder(const Layer* so) const
 const char* Component::imageForLayerPlaceOrder(const Data::Output::Ptr& so) const
 {
     if (!so || pSelections.empty())
+    {
         return "images/16x16/empty.png";
+    }
 
     uint count = 0;
     const char* image = "images/16x16/empty.png";
@@ -1494,10 +1646,14 @@ const char* Component::imageForLayerPlaceOrder(const Data::Output::Ptr& so) cons
             if (count > 1)
             {
                 if (count == 2)
+                {
                     image = "images/16x16/000.png";
+                }
             }
             else
+            {
                 image = imageNumber[i + 1];
+            }
         }
     }
     return image;
@@ -1506,7 +1662,9 @@ const char* Component::imageForLayerPlaceOrder(const Data::Output::Ptr& so) cons
 int Component::imageIndexForOutput(const Data::Output::Ptr& so) const
 {
     if (!so || pSelections.empty())
+    {
         return -2;
+    }
 
     uint count = 0;
     int index = -2;
@@ -1519,10 +1677,14 @@ int Component::imageIndexForOutput(const Data::Output::Ptr& so) const
             if (count > 1)
             {
                 if (count == 2)
+                {
                     return -1;
+                }
             }
             else
+            {
                 index = i;
+            }
         }
     }
     return index;
@@ -1537,14 +1699,18 @@ void Component::rebuildIndexes()
     {
         assert(pSelections[i]);
         if (pSelections[i])
+        {
             pSelections[i]->index = i;
+        }
     }
 }
 
 void Component::removeOutput(Layer* layer)
 {
     if (!layer || GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     // Close any sub-frames
@@ -1563,7 +1729,9 @@ void Component::removeOutput(Layer* layer)
             {
                 assert(pPanelAllOutputs[x]);
                 if (pPanelAllOutputs[x])
+                {
                     pPanelAllOutputs[x]->layer(nullptr);
+                }
             }
 
             stopMerging();
@@ -1583,7 +1751,9 @@ void Component::onSelectDataLevel(void* userdata)
     assert(userdata && "Some user data are expected");
 
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     // Close any sub frames, just to be sure
@@ -1603,7 +1773,9 @@ void Component::onSelectTimeLevel(void* userdata)
     assert(userdata && "Some user data are expected");
 
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     // Close any sub frames, just to be sure
@@ -1649,13 +1821,17 @@ void Component::mergeOutputs()
     {
         // We may not have a study output info for virtual layers
         if (!layer || !layer->selection)
+        {
             continue;
+        }
         // The path of the output
         const String& path = (layer->selection)->path;
 
         // We must analyze it if not already in cache
         if (pAlreadyPreparedContents.find(path) == pAlreadyPreparedContents.end())
+        {
             scandirs.insert(path);
+        }
     }
     pJobsRemaining = (uint)scandirs.size();
     pMutex.unlock();
@@ -1702,7 +1878,9 @@ void Component::stopMerging()
         {
             auto& job = pJobs[i];
             if (!(!job))
+            {
                 job->cancel();
+            }
         }
         pJobs.clear();
 
@@ -1726,8 +1904,10 @@ void Component::createSubMenuForSwitchingOrders(wxMenu* menu, const Layer* curre
     if (pSelections.size() > 1)
     {
         wxMenuItem* it;
-        it = Menu::CreateItemWithSubMenu(
-          menu, wxID_ANY, wxT("Change order with"), "images/16x16/switch.png");
+        it = Menu::CreateItemWithSubMenu(menu,
+                                         wxID_ANY,
+                                         wxT("Change order with"),
+                                         "images/16x16/switch.png");
         wxMenu* newMenu = it->GetSubMenu();
 
         foreach (auto* layer, pSelections)
@@ -1746,7 +1926,9 @@ void Component::createSubMenuForSwitchingOrders(wxMenu* menu, const Layer* curre
                 it = Menu::CreateItem(newMenu, wxID_ANY, title, image, wxEmptyString);
             }
             if (layer == currentLayer)
+            {
                 it->Enable(false);
+            }
         }
     }
 }
@@ -1758,7 +1940,9 @@ bool Component::checkAreaIsCommonToAllOutputs(const Data::AreaName& name)
         auto* layer = pSelections[i];
         // We may not have a study output info for virtual layers
         if (!layer || !layer->selection)
+        {
             continue;
+        }
 
         // We will use the first available as reference
         const String& path = (layer->selection)->path;
@@ -1767,15 +1951,21 @@ bool Component::checkAreaIsCommonToAllOutputs(const Data::AreaName& name)
 
         auto ci = pAlreadyPreparedContents.find(path);
         if (ci == pAlreadyPreparedContents.end())
+        {
             return false;
+        }
 
         const Content* content = ci->second;
         assert(content && "Invalid output view content");
         if (!content)
+        {
             continue;
+        }
 
         if (!content->economy.areas.count(name) && !content->adequacy.areas.count(name))
+        {
             return false;
+        }
     }
     return true;
 }
@@ -1792,7 +1982,9 @@ void Component::checkYearByYearMode()
     {
         // We may not have a study output info for virtual layers
         if (!layer || !layer->selection)
+        {
             continue;
+        }
 
         // We will use the first available as reference
         const String& path = (layer->selection)->path;
@@ -1801,12 +1993,16 @@ void Component::checkYearByYearMode()
 
         auto ci = pAlreadyPreparedContents.find(path);
         if (ci == pAlreadyPreparedContents.end())
+        {
             continue;
+        }
 
         const Content* content = ci->second;
         assert(content && "Invalid output view content");
         if (!content)
+        {
             continue;
+        }
 
         if (content->hasYearByYear)
         {
@@ -1816,14 +2012,20 @@ void Component::checkYearByYearMode()
             pHasYearByYear = true;
             pHasConcatenedDataset = true;
             if (content->ybyInterval[0] < pYearsLimits[0])
+            {
                 pYearsLimits[0] = content->ybyInterval[0];
+            }
             if (content->ybyInterval[1] > pYearsLimits[1])
+            {
                 pYearsLimits[1] = content->ybyInterval[1];
+            }
         }
         else
         {
             if (content->hasConcatenedYbY)
+            {
                 pHasConcatenedDataset = true;
+            }
         }
     }
 }
@@ -1835,7 +2037,9 @@ bool Component::checkLinkIsCommonToAllOutputs(const Data::AreaLinkName& name)
         Layer* layer = pSelections[i];
         // We may not have a study output info for virtual layers
         if (!layer || !layer->selection)
+        {
             continue;
+        }
 
         // We will use the first available as reference
         const String& path = (layer->selection)->path;
@@ -1845,15 +2049,21 @@ bool Component::checkLinkIsCommonToAllOutputs(const Data::AreaLinkName& name)
 
         ContentMap::const_iterator ci = pAlreadyPreparedContents.find(path);
         if (ci == pAlreadyPreparedContents.end())
+        {
             return false;
+        }
 
         const Content* content = ci->second;
         assert(content && "Invalid output view content");
         if (!content)
+        {
             continue;
+        }
 
         if (!content->economy.links.count(name) && !content->adequacy.links.count(name))
+        {
             return false;
+        }
     }
     return true;
 }
@@ -1867,14 +2077,18 @@ void Component::bugFixResetSashPosition()
 void Component::updateAreaOrLinkName()
 {
     if (pTabs.empty())
+    {
         return;
+    }
 
     GUILocker locker;
     assert(pTabs.size() == pSelections.size());
     for (uint i = 0; i != pTabs.size(); ++i)
     {
         if (!pTabs[i])
+        {
             continue;
+        }
         Tab& tab = *(pTabs[i]);
         Layer* layer = pSelections[i];
         if (layer && layer->detached)
@@ -1884,7 +2098,9 @@ void Component::updateAreaOrLinkName()
             tab.updateAreaOrLinkName(layer->customSelectionType, s);
         }
         else
+        {
             tab.updateAreaOrLinkName(pCurrentSelectionType, pCurrentAreaOrLink);
+        }
     }
 
     // Rebuild the layout
@@ -1951,7 +2167,9 @@ void Component::updateGlobalSelection()
         {
             auto* area = study->areas.find(pCurrentAreaOrLink);
             if (area)
+            {
                 Antares::Window::Inspector::SelectArea(area);
+            }
         }
         break;
     }
@@ -1985,7 +2203,9 @@ void Component::refreshPanel(uint index)
 
             auto* sizer = panel->GetSizer();
             if (sizer)
+            {
                 sizer->Layout();
+            }
         }
     }
 }
@@ -2015,7 +2235,9 @@ void Component::refreshAllPanels()
 
             auto* sizer = panel->GetSizer();
             if (sizer)
+            {
                 sizer->Layout();
+            }
         }
     }
 
@@ -2034,7 +2256,9 @@ void Component::refreshAllPanels()
 
                     auto* sizer = panel->GetSizer();
                     if (sizer)
+                    {
                         sizer->Layout();
+                    }
                 }
             }
         }
@@ -2056,7 +2280,9 @@ void Component::refreshAllPanelsWithVirtualLayer()
 
                 auto* sizer = panel->GetSizer();
                 if (sizer)
+                {
                     sizer->Layout();
+                }
             }
         }
     }
@@ -2083,7 +2309,9 @@ void Component::refreshAllTabs()
 void Component::onToggleSidebar(void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     if (pSidebarCollapsed)
@@ -2106,31 +2334,44 @@ void Component::onToggleSidebar(void*)
 void Component::allYearsOrYearByYearSelector(Button&, wxMenu&, void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     closeSubFrames();
-    displayMiniFrame(
-      pBtnAllYears, std::make_shared<SpotlightProviderMCAll>(this), 220, false, false);
+    displayMiniFrame(pBtnAllYears,
+                     std::make_shared<SpotlightProviderMCAll>(this),
+                     220,
+                     false,
+                     false);
 }
 
 void Component::incrementYearByYear(void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     // The upper bound
     const uint bound = pYearsLimits[1];
 
     if (pCurrentYear < bound)
+    {
         ++pCurrentYear;
+    }
     else
     {
         if (pCurrentYear > bound)
+        {
             pCurrentYear = bound;
+        }
         else
+        {
             return;
+        }
     }
 
     // Update
@@ -2141,7 +2382,9 @@ void Component::incrementYearByYear(void*)
 void Component::goToASpecificYear(void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     wxString out;
     out << pCurrentYear; // Default value
@@ -2153,7 +2396,9 @@ void Component::goToASpecificYear(void*)
     if (Antares::Window::AskForInput(out, wxT("Individual year"), caption))
     {
         if (out.empty())
+        {
             return;
+        }
 
         // Lock the GUI
         {
@@ -2179,8 +2424,10 @@ void Component::goToASpecificYear(void*)
             }
         }
 
-        Antares::Window::Message message(
-          this, wxT("Output viewer"), wxT("Individual year"), wxT("The value is invalid"));
+        Antares::Window::Message message(this,
+                                         wxT("Output viewer"),
+                                         wxT("Individual year"),
+                                         wxT("The value is invalid"));
         message.add(Antares::Window::Message::btnContinue, true);
         message.showModal();
     }
@@ -2189,20 +2436,28 @@ void Component::goToASpecificYear(void*)
 void Component::decrementYearByYear(void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     // The lower bound
     uint bound = pYearsLimits[0];
 
     if (pCurrentYear > bound)
+    {
         --pCurrentYear;
+    }
     else
     {
         if (pCurrentYear > bound)
+        {
             pCurrentYear = bound;
+        }
         else
+        {
             return;
+        }
     }
 
     Dispatcher::GUI::Post(this, &Component::refreshAllTabs);
@@ -2212,7 +2467,9 @@ void Component::decrementYearByYear(void*)
 void Component::dropDownAllVariables(Button& button, wxMenu&, void*)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     GUILocker locker;
     closeSubFrames();
@@ -2258,6 +2515,4 @@ void Component::selectCellAllPanels(uint x, uint y)
     pOnSelectCellAllPanels(x, y);
 }
 
-} // namespace OutputViewer
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::OutputViewer

@@ -7,7 +7,7 @@
 
 namespace Antares::Optimization
 {
-class LegacyFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
+class LegacyFiller final: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
     explicit LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,

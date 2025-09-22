@@ -8,7 +8,7 @@
 
 namespace Antares::Optimisation
 {
-class ScenarioGroupRepository
+class ScenarioGroupRepository final
 {
 public:
     void addScenario(const std::string& groupId,
@@ -20,13 +20,13 @@ private:
     std::map<std::string, std::unique_ptr<LinearProblemApi::IScenario>> scenarioGroups_;
 
 public:
-    class AlreadyExists: public std::invalid_argument
+    class AlreadyExists final: public std::invalid_argument
     {
     public:
         explicit AlreadyExists(const std::string& groupId);
     };
 
-    class DoesNotExist: public std::invalid_argument
+    class DoesNotExist final: public std::invalid_argument
     {
     public:
         explicit DoesNotExist(const std::string& groupId);

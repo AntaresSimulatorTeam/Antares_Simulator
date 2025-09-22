@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "grid.h"
 #include <ui/common/lock.h>
@@ -45,11 +45,7 @@ using namespace Yuni;
 
 #include "accumulator.hxx"
 
-namespace Antares
-{
-namespace Window
-{
-namespace Inspector
+namespace Antares::Window::Inspector
 {
 bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
                                          const PropertyNameType& name,
@@ -57,7 +53,9 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
 {
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
+    {
         return false;
+    }
 
     // aliases
     auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
@@ -95,7 +93,9 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
     {
         double d = Math::Round(value.GetDouble(), 3);
         for (; i != end; ++i)
+        {
             (*i)->thermal.unsuppliedEnergyCost = d;
+        }
         OnStudyNodalOptimizationChanged();
         return true;
     }
@@ -103,7 +103,9 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
     {
         const double d = Math::Round(value.GetDouble(), 3);
         for (; i != end; ++i)
+        {
             (*i)->thermal.spilledEnergyCost = d;
+        }
         OnStudyNodalOptimizationChanged();
         return true;
     }
@@ -127,12 +129,16 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
         if (value.GetBool())
         {
             for (; i != end; ++i)
+            {
                 (*i)->nodalOptimization |= Data::anoNonDispatchPower;
+            }
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->nodalOptimization &= ~Data::anoNonDispatchPower;
+            }
         }
         OnStudyNodalOptimizationChanged();
         return true;
@@ -142,12 +148,16 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
         if (value.GetBool())
         {
             for (; i != end; ++i)
+            {
                 (*i)->nodalOptimization |= Data::anoDispatchHydroPower;
+            }
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->nodalOptimization &= ~Data::anoDispatchHydroPower;
+            }
         }
         OnStudyNodalOptimizationChanged();
         return true;
@@ -157,12 +167,16 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
         if (value.GetBool())
         {
             for (; i != end; ++i)
+            {
                 (*i)->nodalOptimization |= Data::anoOtherDispatchPower;
+            }
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->nodalOptimization &= ~Data::anoOtherDispatchPower;
+            }
         }
         OnStudyNodalOptimizationChanged();
         return true;
@@ -189,25 +203,35 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
         return true;
     }
     if (name == "area.links_count")
+    {
         return false;
+    }
     if (name == "area.cluster_count")
+    {
         return false;
+    }
     if (name.startsWith("area.filtering-synthesis."))
     {
         AnyString precision(name, 25);
         uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
+        {
             return false;
+        }
 
         if (value.GetBool())
         {
             for (; i != end; ++i)
+            {
                 (*i)->filterSynthesis |= flag;
+            }
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->filterSynthesis &= ~flag;
+            }
         }
         return true;
     }
@@ -216,17 +240,23 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
         AnyString precision(name, 28);
         uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
+        {
             return false;
+        }
 
         if (value.GetBool())
         {
             for (; i != end; ++i)
+            {
                 (*i)->filterYearByYear |= flag;
+            }
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->filterYearByYear &= ~flag;
+            }
         }
         return true;
     }
@@ -270,7 +300,9 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
 {
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
+    {
         return false;
+    }
 
     auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
     auto end = data->links.end();
@@ -355,13 +387,21 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
 
         Data::LocalTransmissionCapacities tc;
         if (s == "enabled")
+        {
             tc = Data::LocalTransmissionCapacities::enabled;
+        }
         else if (s == "set to null")
+        {
             tc = Data::LocalTransmissionCapacities::null;
+        }
         else if (s == "set to infinite")
+        {
             tc = Data::LocalTransmissionCapacities::infinite;
+        }
         else
+        {
             tc = Data::LocalTransmissionCapacities::null;
+        }
 
         for (; i != end; ++i)
         {
@@ -379,17 +419,29 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
 
         Data::AssetType at;
         if (s == "ac")
+        {
             at = Data::atAC;
+        }
         else if (s == "dc")
+        {
             at = Data::atDC;
+        }
         else if (s == "gaz")
+        {
             at = Data::atGas;
+        }
         else if (s == "virt")
+        {
             at = Data::atVirt;
+        }
         else if (s == "other")
+        {
             at = Data::atOther;
+        }
         else
+        {
             at = Data::atOther;
+        }
 
         for (; i != end; ++i)
         {
@@ -452,7 +504,9 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
         AnyString precision(name, 25);
         uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
+        {
             return false;
+        }
 
         if (value.GetBool())
         {
@@ -477,7 +531,9 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
         AnyString precision(name, 28);
         uint flag = Data::stringIntoDatePrecision(precision);
         if (!flag)
+        {
             return false;
+        }
 
         if (value.GetBool())
         {
@@ -507,7 +563,9 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
 {
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
+    {
         return false;
+    }
     Data::BindingConstraint::Set::iterator end = data->constraints.end();
     Data::BindingConstraint::Set::iterator i = data->constraints.begin();
 
@@ -520,12 +578,16 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
         if (value.GetBool())
         {
             for (; i != end; ++i)
+            {
                 (*i)->enabled(true);
+            }
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->enabled(false);
+            }
         }
         return true;
     }
@@ -535,12 +597,16 @@ bool InspectorGrid::onPropertyChanging_Constraint(wxPGProperty*,
         wxStringToString(value.GetString(), s);
         s.trim(" \t\n\r");
         for (; i != end; ++i)
+        {
             (*i)->comments(s);
+        }
         return true;
     }
 
     if (name == "constraint.type")
+    {
         return false;
+    }
 
     return false;
 }
@@ -551,7 +617,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 {
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
+    {
         return false;
+    }
 
     ClusterUpdaterThermal updater(data, pFrame);
 
@@ -578,9 +646,11 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         // apply check and colour
         // specific to thermal
         AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(
-          pFrame.pPGThClusterMinStablePower, data->ThClusters);
+          pFrame.pPGThClusterMinStablePower,
+          data->ThClusters);
         AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(
-          pFrame.pPGThClusterNominalCapacity, data->ThClusters);
+          pFrame.pPGThClusterNominalCapacity,
+          data->ThClusters);
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pFrame.pPGThClusterSpinning,
                                                                 data->ThClusters);
         // Notify
@@ -603,7 +673,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     {
         bool v = value.GetBool();
         for (; i != end; ++i)
+        {
             (*i)->mustrun = v;
+        }
         return true;
     }
 
@@ -613,19 +685,25 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
+            {
                 (*i)->minStablePower = 0.;
+            }
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->minStablePower = d;
+            }
         }
 
         // pFrame.delayApply();
         AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(
-          pFrame.pPGThClusterMinStablePower, data->ThClusters);
+          pFrame.pPGThClusterMinStablePower,
+          data->ThClusters);
         AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(
-          pFrame.pPGThClusterNominalCapacity, data->ThClusters);
+          pFrame.pPGThClusterNominalCapacity,
+          data->ThClusters);
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pFrame.pPGThClusterSpinning,
                                                                 data->ThClusters);
         // Notify
@@ -654,22 +732,32 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         {
             index -= 3;
             if (index < 1)
+            {
                 d = 1;
+            }
             else
             {
                 if (index > 168)
+                {
                     d = 168;
+                }
                 else
+                {
                     d = static_cast<uint>(index);
+                }
             }
         }
         }
         for (; i != end; ++i)
         {
             if (name == "cluster.minuptime")
+            {
                 (*i)->minUpTime = d;
+            }
             else if (name == "cluster.mindowntime")
+            {
                 (*i)->minDownTime = d;
+            }
         }
         return true;
     }
@@ -679,22 +767,28 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
+            {
                 (*i)->spinning = 0.;
+            }
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->spinning = d;
+            }
         }
 
         // pFrame.delayApply();
 
         // apply check and colour
         AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(
-          pFrame.pPGThClusterMinStablePower, data->ThClusters);
+          pFrame.pPGThClusterMinStablePower,
+          data->ThClusters);
         AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(
-          pFrame.pPGThClusterNominalCapacity, data->ThClusters);
+          pFrame.pPGThClusterNominalCapacity,
+          data->ThClusters);
         AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pFrame.pPGThClusterSpinning,
                                                                 data->ThClusters);
         // Notify
@@ -707,13 +801,17 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
+            {
                 (*i)->emissions.factors[Antares::Data::Pollutant::CO2] = 0.;
+            }
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->emissions.factors[Antares::Data::Pollutant::CO2] = d;
+            }
         }
         return true;
     }
@@ -723,7 +821,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0. || d > 100.)
         {
             for (; i != end; ++i)
+            {
                 (*i)->fuelEfficiency = 100.0;
+            }
             pFrame.delayApply();
         }
         else
@@ -784,17 +884,25 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
         // New scheme
         if (Math::Abs(d) < 5.e-3)
+        {
             d = 0.;
+        }
         else
         {
             if (d > 5.e4)
+            {
                 d = 5.e4;
+            }
             else
             {
                 if (d < -5.e4)
+                {
                     d = -5.e4;
+                }
                 else
+                {
                     d = Math::Round(value.GetDouble(), 3);
+                }
             }
         }
 
@@ -815,22 +923,32 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
         // New scheme
         if (Math::Abs(d) < 5.e-3)
+        {
             d = 0.;
+        }
         else
         {
             if (d > 5.e4)
+            {
                 d = 5.e4;
+            }
             else
             {
                 if (d < -5.e4)
+                {
                     d = -5.e4;
+                }
                 else
+                {
                     d = Math::Round(value.GetDouble(), 3);
+                }
             }
         }
 
         for (; i != end; ++i)
+        {
             (*i)->fixedCost = d;
+        }
         pFrame.delayApply();
         return true;
     }
@@ -841,22 +959,32 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         // New scheme
         // v5.0 format startup cost in [-5000000;5000000]
         if (Math::Abs(d) < 5.e-3)
+        {
             d = 0.;
+        }
         else
         {
             if (d > 5.e6)
+            {
                 d = 5.e6;
+            }
             else
             {
                 if (d < -5.e6)
+                {
                     d = -5.e6;
+                }
                 else
+                {
                     d = Math::Round(value.GetDouble(), 3);
+                }
             }
         }
 
         for (; i != end; ++i)
+        {
             (*i)->startupCost = d;
+        }
         pFrame.delayApply();
         return true;
     }
@@ -866,17 +994,25 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
 
         // New scheme
         if (Math::Abs(d) < 5.e-3)
+        {
             d = 0.;
+        }
         else
         {
             if (d > 5.e4)
+            {
                 d = 5.e4;
+            }
             else
             {
                 if (d < -5.e4)
+                {
                     d = -5.e4;
+                }
                 else
+                {
                     d = Math::Round(value.GetDouble(), 3);
+                }
             }
         }
 
@@ -897,16 +1033,22 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 5.e-3)
         {
             for (; i != end; ++i)
+            {
                 (*i)->spreadCost = 0.;
+            }
             pFrame.delayApply();
         }
         else
         {
             if (d > 5.e4)
+            {
                 d = 5.e4;
+            }
 
             for (; i != end; ++i)
+            {
                 (*i)->spreadCost = d;
+            }
             pFrame.delayApply();
         }
         return true;
@@ -917,7 +1059,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
+            {
                 (*i)->variableomcost = 0.;
+            }
             pFrame.delayApply();
         }
         else
@@ -938,18 +1082,26 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0. || d > 1.)
         {
             if (d < 0.)
+            {
                 d = 0.;
+            }
             else if (d > 1.)
+            {
                 d = 1.;
+            }
 
             for (; i != end; ++i)
+            {
                 (*i)->forcedVolatility = d;
+            }
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->forcedVolatility = d;
+            }
         }
         return true;
     }
@@ -960,18 +1112,26 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0. || d > 1.)
         {
             if (d < 0.)
+            {
                 d = 0.;
+            }
             else if (d > 1.)
+            {
                 d = 1.;
+            }
 
             for (; i != end; ++i)
+            {
                 (*i)->plannedVolatility = d;
+            }
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->plannedVolatility = d;
+            }
         }
         return true;
     }
@@ -993,7 +1153,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             return false;
         }
         for (; i != end; ++i)
+        {
             (*i)->forcedLaw = law;
+        }
         return true;
     }
 
@@ -1014,7 +1176,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             return false;
         }
         for (; i != end; ++i)
+        {
             (*i)->plannedLaw = law;
+        }
         return true;
     }
 
@@ -1040,7 +1204,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
 
         for (; i != end; ++i)
+        {
             (*i)->tsGenBehavior = behavior;
+        }
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();
         pFrame.Refresh();
@@ -1056,7 +1222,9 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
     using namespace Data;
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
+    {
         return false;
+    }
 
     ClusterUpdaterRenewable updater(data, pFrame);
 
@@ -1106,7 +1274,9 @@ bool InspectorGrid::onPropertyChanging_RenewableClusters(const PropertyNameType&
             return false;
         }
         for (; i != end; ++i)
+        {
             (*i)->tsMode = tsMode;
+        }
 
         OnStudyRenewableClusterCommonSettingsChanged();
         return true;
@@ -1120,7 +1290,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
 {
     const InspectorData::Ptr& data = pCurrentSelection;
     if (!data)
+    {
         return false;
+    }
 
     Data::Study::Set::iterator end = data->studies.end();
     Data::Study::Set::iterator i = data->studies.begin();
@@ -1142,7 +1314,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
                 (*i)->parameters.resetPlaylist(1);
             }
             else
+            {
                 (*i)->parameters.resetPlaylist(years);
+            }
         }
         if (error)
         {
@@ -1152,7 +1326,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         else
         {
             if (years != value.GetLong())
+            {
                 pFrame.delayApply();
+            }
         }
 
         OnStudySimulationSettingsChanged();
@@ -1162,17 +1338,23 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
     {
         bool v = value.GetBool();
         for (; i != end; ++i)
+        {
             (*i)->parameters.yearByYear = v;
+        }
         OnStudySimulationSettingsChanged();
         if (v)
+        {
             pFrame.delayApply();
+        }
         return true;
     }
     if (name == "study.simsynthesis")
     {
         bool v = value.GetBool();
         for (; i != end; ++i)
+        {
             (*i)->parameters.synthesis = v;
+        }
         OnStudySimulationSettingsChanged();
         return true;
     }
@@ -1184,11 +1366,17 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
 
         Data::SimulationMode mode = Data::SimulationMode::Unknown;
         if (s == "economy" || s == "0")
+        {
             mode = Data::SimulationMode::Economy;
+        }
         else if (s == "adequacy" || s == "1")
+        {
             mode = Data::SimulationMode::Adequacy;
+        }
         else
+        {
             mode = Data::SimulationMode::Economy;
+        }
 
         for (; i != end; ++i)
         {
@@ -1203,7 +1391,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         String s;
         wxStringToString(value.GetString(), s);
         for (; i != end; ++i)
+        {
             (*i)->parameters.horizon = s;
+        }
         OnStudySimulationSettingsChanged();
         return true;
     }
@@ -1212,10 +1402,14 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         uint s = static_cast<uint>(value.GetLong());
         uint d = s;
         if (d > 0)
+        {
             --d;
+        }
         uint v = Math::MinMax(d, 0u, 364u);
         for (; i != end; ++i)
+        {
             (*i)->parameters.simulationDays.first = v;
+        }
         // Accumulator<PStudyCalBegin> :: Apply(pFrame.pPGStudyCalendarBegin, data->studies);
         OnStudySimulationSettingsChanged();
         return true;
@@ -1225,7 +1419,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         uint d = static_cast<uint>(value.GetLong());
         uint v = Math::MinMax(d, 1u, 365u);
         for (; i != end; ++i)
+        {
             (*i)->parameters.simulationDays.end = v;
+        }
         // Accumulator<PStudyCalEnd> :: Apply(pFrame.pPGStudyCalendarEnd, data->studies);
         OnStudySimulationSettingsChanged();
         return true;
@@ -1238,7 +1434,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         case 0: // automatic
         {
             for (; i != end; ++i)
+            {
                 (*i)->parameters.userPlaylist = false;
+            }
             return true;
         }
         case 1: // manual
@@ -1247,17 +1445,21 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
             for (; i != end; ++i)
             {
                 if ((*i)->parameters.nbYears < 2)
+                {
                     error = true;
+                }
                 else
+                {
                     (*i)->parameters.userPlaylist = true;
+                }
             }
             if (error)
             {
-                Window::Message message(
-                  this,
-                  wxT("Selection Mode"),
-                  wxT("MC Playlist"),
-                  wxT("Impossible to enable the MC playlist with only 1 year"));
+                Window::Message message(this,
+                                        wxT("Selection Mode"),
+                                        wxT("MC Playlist"),
+                                        wxT(
+                                          "Impossible to enable the MC playlist with only 1 year"));
                 message.add(Window::Message::btnContinue, true);
                 message.showModal();
                 return false;
@@ -1273,8 +1475,8 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         // Gets menu Configure's scenario builder item
         auto& mainFrm = *Antares::Forms::ApplWnd::Instance();
         auto* menu = mainFrm.GetMenuBar();
-        auto* sc_builder_menu_item
-          = menu->FindItem(Antares::Forms::mnIDOptionConfigureMCScenarioBuilder);
+        auto* sc_builder_menu_item = menu->FindItem(
+          Antares::Forms::mnIDOptionConfigureMCScenarioBuilder);
 
         uint d = value.GetLong();
         switch (d)
@@ -1288,7 +1490,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
             }
 
             if (sc_builder_menu_item)
+            {
                 sc_builder_menu_item->Enable(false);
+            }
 
             return true;
         }
@@ -1301,7 +1505,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
             }
 
             if (sc_builder_menu_item)
+            {
                 sc_builder_menu_item->Enable(true);
+            }
 
             return true;
         }
@@ -1338,13 +1544,19 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
             }
 
             if (sc_builder_menu_item)
+            {
                 sc_builder_menu_item->Enable(false);
+            }
 
             // Updating the number of years
             if (shouldReloadNbYears)
+            {
                 Accumulator<PStudyYears>::Apply(pFrame.pPGStudyYears, data->studies);
+            }
             if (shouldReloadPlaylist)
+            {
                 Accumulator<PStudyPlaylist>::Apply(pFrame.pPGStudyPlaylist, data->studies);
+            }
             return true;
         }
         }
@@ -1354,7 +1566,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
     {
         uint d = Math::MinMax<uint>(value.GetLong(), 0, 6);
         for (; i != end; ++i)
+        {
             (*i)->parameters.dayOfThe1stJanuary = (Antares::DayOfTheWeek)d;
+        }
         StudyRefreshCalendar();
         OnStudySimulationSettingsChanged();
         return true;
@@ -1363,7 +1577,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
     {
         bool v = value.GetBool();
         for (; i != end; ++i)
+        {
             (*i)->parameters.leapYear = v;
+        }
         StudyRefreshCalendar();
         OnStudySimulationSettingsChanged();
         return true;
@@ -1372,7 +1588,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
     {
         uint d = Math::MinMax<uint>(value.GetLong(), 0, 6);
         for (; i != end; ++i)
+        {
             (*i)->parameters.firstWeekday = (Antares::DayOfTheWeek)d;
+        }
         StudyRefreshCalendar();
         OnStudySimulationSettingsChanged();
         return true;
@@ -1381,7 +1599,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
     {
         uint d = Math::MinMax<uint>(value.GetLong(), 0, 11);
         for (; i != end; ++i)
+        {
             (*i)->parameters.firstMonthInYear = (Antares::MonthName)d;
+        }
         StudyRefreshCalendar();
         OnStudySimulationSettingsChanged();
         return true;
@@ -1392,7 +1612,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         if (!v)
         {
             for (; i != end; ++i)
+            {
                 (*i)->parameters.timeSeriesToArchive = 0;
+            }
             OnStudySimulationSettingsChanged();
             return true;
         }
@@ -1402,7 +1624,9 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
     {
         const bool v = value.GetBool();
         for (; i != end; ++i)
+        {
             (*i)->parameters.storeTimeseriesNumbers = v;
+        }
         OnStudySimulationSettingsChanged();
         return true;
     }
@@ -1414,14 +1638,18 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         case 0: // none
         {
             for (; i != end; ++i)
+            {
                 (*i)->parameters.geographicTrimming = false;
+            }
             OnStudySimulationSettingsChanged();
             return true;
         }
         case 1: // custom
         {
             for (; i != end; ++i)
+            {
                 (*i)->parameters.geographicTrimming = true;
+            }
             OnStudySimulationSettingsChanged();
             return true;
         }
@@ -1436,14 +1664,18 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         case 0: // none
         {
             for (; i != end; ++i)
+            {
                 (*i)->parameters.thematicTrimming = false;
+            }
             OnStudySimulationSettingsChanged();
             return true;
         }
         case 1: // custom
         {
             for (; i != end; ++i)
+            {
                 (*i)->parameters.thematicTrimming = true;
+            }
             OnStudySimulationSettingsChanged();
             return true;
         }
@@ -1457,17 +1689,23 @@ void InspectorGrid::OnPropertyChanging(wxPropertyGridEvent& event)
 {
     wxPGProperty* property = event.GetProperty();
     if (!property)
+    {
         return;
+    }
     wxVariant value = event.GetValue();
     // Make sure value is not unspecified
     if (value.IsNull())
+    {
         return;
+    }
 
     // PropertyNameType propName;
     PropertyNameType propName;
     wxStringToString(property->GetName(), propName);
     if (propName.size() < 2)
+    {
         return;
+    }
 
     GUILocker guilocker;
     propName.toLower();
@@ -1529,6 +1767,4 @@ void InspectorGrid::OnPropertyChanging(wxPropertyGridEvent& event)
     }
 }
 
-} // namespace Inspector
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Inspector

@@ -1,33 +1,32 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "bindingconstraint.h"
 #include "../component.h"
 #include "../../../../application/study.h"
 
-namespace Antares
+namespace Antares::Map
 {
-namespace Map
-{
-BindingConstraint::BindingConstraint(Manager& manager) : Item(manager, 100000)
+BindingConstraint::BindingConstraint(Manager& manager):
+    Item(manager, 100000)
 {
 }
 
@@ -85,7 +84,9 @@ void BindingConstraint::drawExternalDrawer(DrawingContext& dc)
     {
         i->refreshCache(device);
         if (pCachedSize.y < i->size.GetHeight())
+        {
             pCachedSize.y = i->size.GetHeight();
+        }
         pCachedSize.x += i->size.GetWidth() + 2;
     }
 
@@ -98,8 +99,10 @@ void BindingConstraint::drawExternalDrawer(DrawingContext& dc)
 
     pCachedPosition.x += dc.clientSize().x / 2 - pCachedSize.x / 2;
 
-    wxRect pCachedBB(
-      pCachedPosition.x, pCachedPosition.y - pCachedSize.y / 2, pCachedSize.x, pCachedSize.y);
+    wxRect pCachedBB(pCachedPosition.x,
+                     pCachedPosition.y - pCachedSize.y / 2,
+                     pCachedSize.x,
+                     pCachedSize.y);
 
     // Color
     device.SetPen(wxPen(wxColour(0, 0, 0)));
@@ -162,7 +165,9 @@ void BindingConstraint::selected(bool v)
             // Remove itself from the list of selected items
             Manager::NodeMap::iterator i = pManager.pSelectedItems.find(this);
             if (i != pManager.pSelectedItems.end())
+            {
                 pManager.pSelectedItems.erase(i);
+            }
         }
         pSelected = v;
         forceReload();
@@ -178,7 +183,9 @@ void BindingConstraint::add(Item* item)
         {
             pConnections.insert(std::pair<Connection*, Infos>(c, Infos()));
             if (item->pLinks)
+            {
                 (*(item->pLinks))[this] = false;
+            }
             MarkTheStudyAsModified();
             GUIFlagInvalidateAreas = true;
         }
@@ -197,7 +204,9 @@ bool BindingConstraint::remove(Item* item)
             {
                 Links::iterator i = item->pLinks->find(this);
                 if (i != item->pLinks->end())
+                {
                     item->pLinks->erase(i);
+                }
             }
             pConnections.erase(i);
             MarkTheStudyAsModified();
@@ -219,7 +228,9 @@ void BindingConstraint::clear()
             {
                 Links::iterator j = ((i->first)->pLinks)->find(this);
                 if (j != (i->first)->pLinks->end())
+                {
                     (i->first)->pLinks->erase(j);
+                }
             }
         }
         pConnections.clear();
@@ -227,5 +238,4 @@ void BindingConstraint::clear()
     }
 }
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map

@@ -1,37 +1,32 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "position.h"
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Action::AntaresStudy::Area
 {
-namespace Action
-{
-namespace AntaresStudy
-{
-namespace Area
-{
-Position::Position(const AnyString& areaname) : pOriginalAreaName(areaname)
+Position::Position(const AnyString& areaname):
+    pOriginalAreaName(areaname)
 {
     pInfos.caption << "Position";
 }
@@ -51,10 +46,14 @@ bool Position::prepareWL(Context& ctx)
         const String& decalX = ctx.property["area.coordinate.x.offset"];
         const String& decalY = ctx.property["area.coordinate.y.offset"];
         if (!decalX && !decalY)
+        {
             pInfos.message << "The coordinates will be copied";
+        }
         else
+        {
             pInfos.message << "The coordinates will be copied (x:+" << decalX << ", y:+" << decalY
                            << ')';
+        }
         break;
     }
     default:
@@ -79,19 +78,23 @@ bool Position::performWL(Context& ctx)
             if (not decalX.empty())
             {
                 if (!decalX.to(dX))
+                {
                     dX = 0;
+                }
             }
             if (not decalY.empty())
             {
                 if (!decalY.to(dY))
+                {
                     dY = 0;
+                }
             }
 
             ctx.area->ui->x = source->ui->x + dX;
             ctx.area->ui->y = source->ui->y + dY;
 
-            Data::Area* nearest
-              = ctx.extStudy->areas.findFromPosition(ctx.area->ui->x, ctx.area->ui->y);
+            Data::Area* nearest = ctx.extStudy->areas.findFromPosition(ctx.area->ui->x,
+                                                                       ctx.area->ui->y);
             while (nearest && nearest != ctx.area)
             {
                 ctx.area->ui->x += 25;
@@ -101,7 +104,9 @@ bool Position::performWL(Context& ctx)
             }
 
             if (ctx.layerID != 0)
+            {
                 ctx.area->ui->mapLayersVisibilityList.push_back(ctx.layerID);
+            }
 
             return true;
         }
@@ -109,7 +114,4 @@ bool Position::performWL(Context& ctx)
     return false;
 }
 
-} // namespace Area
-} // namespace AntaresStudy
-} // namespace Action
-} // namespace Antares
+} // namespace Antares::Action::AntaresStudy::Area

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -15,11 +16,7 @@
 #include "../../string.h"
 #include "../validator.h"
 
-namespace Yuni
-{
-namespace Validator
-{
-namespace Text
+namespace Yuni::Validator::Text
 {
 template<class D>
 class IValidatorTmpl
@@ -48,9 +45,7 @@ public:
 
 }; // class IValidatorTmpl
 
-} // namespace Text
-} // namespace Validator
-} // namespace Yuni
+} // namespace Yuni::Validator::Text
 
 #include "default.h"
 

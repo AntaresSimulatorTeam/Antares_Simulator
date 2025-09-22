@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -20,16 +20,17 @@
 */
 #pragma once
 #include <string>
-#include <unordered_map>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/component.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
-#include "antares/solver/modeler/data.h"
-#include "antares/solver/optim-model-filler/Dimensions.h"
-
 #include "ISimulationTable.h"
+
+namespace Antares::Modeler
+{
+struct Data;
+}
 
 namespace Antares::Optimisation
 {
@@ -75,7 +76,7 @@ Antares::Optimisation::TimeIndex updateTimeIndexIfShouldForceScenario(
   Antares::Optimisation::TimeIndex timeIndex,
   bool forceExportForScenarioIndex);
 
-std::string BuildModelerConstraintName(const std::string& cid,
+std::string BuildModelerConstraintName(const std::string& componentId,
                                        const std::string& cname,
                                        const std::optional<unsigned>& ts);
 
@@ -109,6 +110,26 @@ void addPortEntries(ISimulationTable& simulationTable,
                     std::optional<unsigned> scenario,
                     bool forceExportForScenarioIndex);
 
+void addExtraOutputEntries(ISimulationTable& simulationTable,
+                           const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                           const Antares::ModelerStudy::SystemModel::Component& component,
+                           const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                           unsigned currentBlock,
+                           const TimeConversionMode& timeConversionMode,
+                           std::optional<unsigned> scenario,
+                           bool forceExportForScenarioIndex);
+
+void addEntriesForNode(ISimulationTable& simulationTable,
+                       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                       const Antares::ModelerStudy::SystemModel::Component& component,
+                       const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                       unsigned currentBlock,
+                       const TimeConversionMode& timeConversionMode,
+                       std::optional<unsigned> scenario,
+                       bool forceExportForScenarioIndex,
+                       const std::string& componentId,
+                       const std::string& outputName,
+                       const Antares::Expressions::Nodes::Node* rootNode);
 /**
  * Fill modeler outputs in the simulation table
  * @param simulationTable the simulation table to fill

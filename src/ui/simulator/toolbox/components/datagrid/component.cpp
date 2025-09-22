@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <antares/array/matrix.h>
 #include <yuni/io/file.h>
@@ -66,20 +66,18 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
+namespace Antares::Component::Datagrid
 {
 namespace // anonymous
 {
-class PopupMenuModifierSet final : public wxObject
+class PopupMenuModifierSet final: public wxObject
 {
 public:
-    PopupMenuModifierSet(ModifierSet set) : modifierSet(set)
+    PopupMenuModifierSet(ModifierSet set):
+        modifierSet(set)
     {
     }
+
     virtual ~PopupMenuModifierSet()
     {
     }
@@ -87,12 +85,14 @@ public:
     ModifierSet modifierSet;
 };
 
-class PopupMenuModifierOperator final : public wxObject
+class PopupMenuModifierOperator final: public wxObject
 {
 public:
-    PopupMenuModifierOperator(uint op) : modifierOperator(op)
+    PopupMenuModifierOperator(uint op):
+        modifierOperator(op)
     {
     }
+
     virtual ~PopupMenuModifierOperator()
     {
     }
@@ -112,7 +112,7 @@ public:
 
 } // anonymous namespace
 
-class InternalState final : public Yuni::IEventObserver<InternalState>
+class InternalState final: public Yuni::IEventObserver<InternalState>
 {
 public:
     //! Default constructor
@@ -208,6 +208,7 @@ public:
     {
         // Current selected set of actions
         ModifierSet selectedSet;
+
         //! Specific Action from the current selected modifier set of actions
         /*enum*/ uint selectedAction;
         struct
@@ -229,6 +230,7 @@ public:
         } ui;
 
     } modifier;
+
     //@}
 
     //! The real datagrid component
@@ -264,7 +266,9 @@ InternalState::~InternalState()
     destroyBoundEvents();
 
     if (grid)
+    {
         grid->DisableCellEditControl();
+    }
 
     // Cleaning the filter
     if (filter.component)
@@ -276,7 +280,9 @@ InternalState::~InternalState()
     if (gridHelper)
     {
         if (grid)
+        {
             grid->SetTable(nullptr, false);
+        }
         delete gridHelper;
         gridHelper = nullptr;
     }
@@ -306,7 +312,9 @@ void InternalState::forceRefresh()
         if (filter.component)
         {
             if (filter.component->precision() != renderer->precision())
+            {
                 recreateFilter();
+            }
             filter.component->gridHelper(nullptr);
         }
 
@@ -330,7 +338,9 @@ void InternalState::forceRefresh()
 
         // Updating the filer
         if (filter.component)
+        {
             filter.component->updateSearchResults();
+        }
 
         // applyLayerFiltering();
 
@@ -383,7 +393,9 @@ void InternalState::applyLayerFiltering()
 void InternalState::recreateFilter()
 {
     if (!filter.component) // no filter !
+    {
         return;
+    }
 
     if (filter.sizer)
     {
@@ -391,7 +403,9 @@ void InternalState::recreateFilter()
 
         filter.sizer->Detach(filter.component);
         if (filter.component)
+        {
             filter.component->Destroy();
+        }
         filter.component = new Toolbox::Filter::Component(component, precision);
         filter.component->onUpdateSearchResults.connect(this, &InternalState::applyLayerFiltering);
         filter.component->precision(precision);
@@ -413,10 +427,10 @@ void InternalState::updaterModifiersControls()
 {
     auto* name = ModifierOperators::Name(modifier.selectedSet);
     auto* apply = ModifierOperators::ApplyName(modifier.selectedSet, modifier.selectedAction);
-    auto* opname
-      = ModifierOperators::OperatorToCString(modifier.selectedSet, modifier.selectedAction);
-    auto input
-      = ModifierOperators::OperatorInputType(modifier.selectedSet, modifier.selectedAction);
+    auto* opname = ModifierOperators::OperatorToCString(modifier.selectedSet,
+                                                        modifier.selectedAction);
+    auto input = ModifierOperators::OperatorInputType(modifier.selectedSet,
+                                                      modifier.selectedAction);
 
     // captions
     modifier.ui.btnSetSelector->caption(name);
@@ -460,7 +474,9 @@ void InternalState::rendererGridUpdate()
 {
     wxSizer* sizer = component->GetSizer();
     if (!sizer)
+    {
         return;
+    }
 
     // Resize the matrix
     if (renderer and renderer->valid() and !updateCount)
@@ -500,10 +516,14 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
 
     // Adding the caption, if any
     if (not caption.empty())
+    {
         sizer->Add(new CaptionPanel(component, caption), 0, wxALL | wxEXPAND);
+    }
 
     if (renderer)
+    {
         precision = renderer->precision();
+    }
 
     // Panel
     component->createModifyPanel(sizer, flags.copypasteOnly, flags.readonly);
@@ -530,8 +550,9 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
 
         auto* ssz = new wxBoxSizer(wxHORIZONTAL);
         ssz->AddSpacer(15);
-        ssz->Add(
-          CreateLabel(component, wxT("Layer"), false, true), 0, wxALIGN_CENTER_VERTICAL | wxALL);
+        ssz->Add(CreateLabel(component, wxT("Layer"), false, true),
+                 0,
+                 wxALIGN_CENTER_VERTICAL | wxALL);
         ssz->Add(3, 3);
         ssz->AddSpacer(26);
         ssz->Add(pLayerFilter, 0, wxALL | wxEXPAND);
@@ -544,8 +565,9 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
     {
         auto* ssz = new wxBoxSizer(wxHORIZONTAL);
         ssz->AddSpacer(15);
-        ssz->Add(
-          CreateLabel(component, wxT("Filter"), false, true), 0, wxALIGN_CENTER_VERTICAL | wxALL);
+        ssz->Add(CreateLabel(component, wxT("Filter"), false, true),
+                 0,
+                 wxALIGN_CENTER_VERTICAL | wxALL);
         ssz->Add(3, 3);
         filter.component = new Toolbox::Filter::Component(component, precision);
         filter.component->onUpdateSearchResults.connect(this, &InternalState::applyLayerFiltering);
@@ -562,7 +584,9 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
     // Grid
     grid = new DBGrid(component);
     if (not flags.colorMappingRowLabels)
+    {
         grid->disableColorMappingForRowLabels();
+    }
 
     cellRenderer = new AntaresWxGridRenderer();
     cellRenderer->renderer = renderer;
@@ -581,10 +605,14 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
 
     // Attaching the grid to the filter
     if (flags.hasFilter)
+    {
         filter.component->grid(grid);
+    }
 
     if (renderer)
+    {
         renderer->onRefresh.connect(component, &Component::forceRefresh);
+    }
 
     // Rebuild the virtual table
     component->internalShowDatagrid(false);
@@ -594,7 +622,9 @@ void InternalState::onPickDate(Button&, wxMenu&, void*)
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return;
+    }
 
     auto* frame = wxFindFrameParent(component);
     Window::CalendarSelect calendarWindow(frame);
@@ -660,7 +690,9 @@ void InternalState::onMapLayerChanged(const wxString* text)
     // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
     // event
     if (pLayerFilter)
+    {
         pLayerFilter->SetValue(*text);
+    }
 }
 
 void InternalState::onMapLayerRenamed(const wxString* text)
@@ -668,7 +700,9 @@ void InternalState::onMapLayerRenamed(const wxString* text)
     // Note: the method ChangeValue does not generate a wexEXT_COMMAND_TEXT_UPDATED
     // event
     if (pLayerFilter)
+    {
         pLayerFilter->SetString(pLayerFilter->GetSelection(), *text);
+    }
 }
 
 Component::Component(wxWindow* parent,
@@ -678,8 +712,9 @@ Component::Component(wxWindow* parent,
                      bool colorMappingRowLabels,
                      bool copypasteOnly,
                      bool readonly,
-                     bool hasLayerFilter) :
- Panel(parent), ComponentRefresh(pInternal)
+                     bool hasLayerFilter):
+    Panel(parent),
+    ComponentRefresh(pInternal)
 {
     pInternal = new InternalState();
     auto& internal = *pInternal;
@@ -719,7 +754,9 @@ Component::~Component()
     // we should destroy all children as soon as possible.
     auto* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void Component::internalShowDatagrid(bool v)
@@ -746,7 +783,9 @@ void Component::onBeginUpdate()
     }
     ++internal.updateCount;
     if (internal.grid)
+    {
         internal.grid->enableRefresh(false);
+    }
 }
 
 void Component::onEndUpdate()
@@ -763,11 +802,17 @@ void Component::onEndUpdate()
         assert(internal.nodata.textLabel);
         internal.nodata.textLabel->SetLabel(wxT("No data available"));
         if (internal.gridHelper)
+        {
             internal.gridHelper->valid = false;
+        }
         if (internal.renderer)
+        {
             internal.renderer->invalidate = true;
+        }
         if (internal.grid)
+        {
             internal.grid->enableRefresh(true);
+        }
         forceRefreshDelayed();
     }
 }
@@ -810,8 +855,11 @@ void Component::createModifyPanel(wxSizer* sizer, bool /*copypasteOnly*/, bool r
         Antares::Component::AddVerticalSeparator(grp->subpanel, hz, 2);
 
         // COPY / PASTE
-        btn = new Antares::Component::Button(
-          grp->subpanel, wxT("Copy"), "images/16x16/copy.png", this, &Component::onCopyValues);
+        btn = new Antares::Component::Button(grp->subpanel,
+                                             wxT("Copy"),
+                                             "images/16x16/copy.png",
+                                             this,
+                                             &Component::onCopyValues);
         btn->dropDown(true);
         btn->onPopupMenu(this, &Component::createPopupCopy);
         hz->Add(btn, 0, wxALIGN_CENTER_VERTICAL | wxALL);
@@ -862,13 +910,15 @@ void Component::createModifyPanelValues(wxSizer* sizer, bool copypasteOnly)
         ssz->Add(grp, 0, wxALL | wxEXPAND);
         internal.modifier.ui.sizer = ssz;
 
-        auto* sbmp
-          = Resources::StaticBitmapLoadFromFile(grp, wxID_ANY, "images/16x16/update_values.png");
+        auto* sbmp = Resources::StaticBitmapLoadFromFile(grp,
+                                                         wxID_ANY,
+                                                         "images/16x16/update_values.png");
         grp->leftSizer->Add(sbmp, 0, wxALL | wxALIGN_CENTRE_VERTICAL);
 
         auto* hz = grp->subpanel->GetSizer();
-        auto* operatorGroup
-          = new Antares::Component::Button(grp->subpanel, wxT("Change values"), nullptr);
+        auto* operatorGroup = new Antares::Component::Button(grp->subpanel,
+                                                             wxT("Change values"),
+                                                             nullptr);
         operatorGroup->bold(true);
         operatorGroup->menu(true);
         operatorGroup->onPopupMenu(this, &Component::onPopupMenuModifierSet);
@@ -896,16 +946,19 @@ void Component::createModifyPanelValues(wxSizer* sizer, bool copypasteOnly)
         hz->Add(textValue, 0, wxALL | wxALIGN_CENTER_VERTICAL);
         internal.modifier.ui.textValue = textValue;
 
-        auto* btnSelectCalendar
-          = new Antares::Component::Button(grp->subpanel, wxT("(date not set)"));
+        auto* btnSelectCalendar = new Antares::Component::Button(grp->subpanel,
+                                                                 wxT("(date not set)"));
         btnSelectCalendar->menu(true);
         hz->Add(btnSelectCalendar, 0, wxALL | wxALIGN_CENTER_VERTICAL);
         btnSelectCalendar->onPopupMenu(pInternal, &InternalState::onPickDate);
         internal.modifier.ui.btnSelectCalendar = btnSelectCalendar;
 
         Antares::Component::AddVerticalSeparator(grp->subpanel, hz, 2);
-        auto* apply = new Antares::Component::Button(
-          grp->subpanel, wxT("Apply"), nullptr, this, &Component::onModifyAll);
+        auto* apply = new Antares::Component::Button(grp->subpanel,
+                                                     wxT("Apply"),
+                                                     nullptr,
+                                                     this,
+                                                     &Component::onModifyAll);
         internal.modifier.ui.btnApply = apply;
         hz->Add(apply, 0, wxALL | wxEXPAND);
 
@@ -931,13 +984,17 @@ void Component::createModifyPanelValues(wxSizer* sizer, bool copypasteOnly)
 void ComponentRefresh::forceRefreshDelayed()
 {
     if (pInternal)
+    {
         Dispatcher::GUI::Post(pInternal, &InternalState::forceRefresh);
+    }
 }
 
 void ComponentRefresh::forceRefresh()
 {
     if (pInternal)
+    {
         pInternal->forceRefresh();
+    }
 }
 
 void Component::precision(const Date::Precision p)
@@ -951,7 +1008,9 @@ void Component::precision(const Date::Precision p)
             internal.recreateFilter();
         }
         if (internal.gridHelper)
+        {
             internal.gridHelper->precision(p);
+        }
     }
 }
 
@@ -959,7 +1018,9 @@ void Component::onLoadMatrix(void*)
 {
     auto& internal = *pInternal;
     if (!internal.gridHelper or !internal.grid)
+    {
         return;
+    }
 
     GUILocker locker;
     // avoid useless memory flush
@@ -974,12 +1035,12 @@ void Component::onLoadMatrix(void*)
 #endif
     }
 
-    auto* dialog
-      = new wxFileDialog(this,
-                         wxString(wxT("Load")),
-                         wxStringFromUTF8(LastPathForOpeningAFile),
-                         wxT("matrix.txt"),
-                         wxT("Text files (*.txt)|*.txt|CSV files (*.csv)|*.csv|All files|*.*"));
+    auto* dialog = new wxFileDialog(
+      this,
+      wxString(wxT("Load")),
+      wxStringFromUTF8(LastPathForOpeningAFile),
+      wxT("matrix.txt"),
+      wxT("Text files (*.txt)|*.txt|CSV files (*.csv)|*.csv|All files|*.*"));
     dialog->SetFilterIndex(0);
     dialog->CentreOnParent();
 
@@ -992,8 +1053,10 @@ void Component::onLoadMatrix(void*)
         // Update the grid
         {
             Matrix<> m;
-            if (m.loadFromCSVFile(
-                  stdFilename, 1, internal.gridHelper->GetNumberRows(), Matrix<>::optImmediate))
+            if (m.loadFromCSVFile(stdFilename,
+                                  1,
+                                  internal.gridHelper->GetNumberRows(),
+                                  Matrix<>::optImmediate))
             {
                 wxString value;
                 for (uint x = 0; x != m.width; ++x)
@@ -1014,17 +1077,23 @@ void Component::onLoadMatrix(void*)
         IO::parent_path(LastPathForOpeningAFile, stdFilename);
 
         if (pInternal->shouldMarkStudyModifiedWhenModifyingCell)
+        {
             MarkTheStudyAsModified();
+        }
     }
     else
+    {
         dialog->Destroy();
+    }
 }
 
 void Component::onSaveMatrix(void*)
 {
     auto& internal = *pInternal;
     if (!internal.gridHelper or !internal.grid)
+    {
         return;
+    }
 
     GUILocker locker;
     // avoid useless memory flush
@@ -1061,7 +1130,9 @@ void Component::onSaveMatrix(void*)
         for (int x = 0; x < internal.gridHelper->GetNumberCols(); ++x)
         {
             for (int y = 0; y < internal.gridHelper->GetNumberRows(); ++y)
+            {
                 m[x][y] = internal.gridHelper->GetNumericValue(y, x);
+            }
         }
 
         // Exporting the matrix
@@ -1070,13 +1141,19 @@ void Component::onSaveMatrix(void*)
         IO::parent_path(LastPathForOpeningAFile, stdFilename);
     }
     else
+    {
         dialog->Destroy();
+    }
 }
 
 class SelectionRect
 {
 public:
-    SelectionRect() : x((uint)-1), y((uint)-1), x2(), y2()
+    SelectionRect():
+        x((uint)-1),
+        y((uint)-1),
+        x2(),
+        y2()
     {
     }
 
@@ -1088,13 +1165,21 @@ public:
     void analyze(uint a, uint b)
     {
         if (x > a)
+        {
             x = a;
+        }
         if (x2 < a)
+        {
             x2 = a;
+        }
         if (y > b)
+        {
             y = b;
+        }
         if (y2 < b)
+        {
             y2 = b;
+        }
     }
 
     bool valid() const
@@ -1159,7 +1244,9 @@ static void ForAllSelectedCells(wxGrid& grid, SelectionRect& rect)
             for (int row = tl.GetRow(); row <= br.GetRow(); ++row)
             {
                 for (int col = tl.GetCol(); col <= br.GetCol(); ++col)
+                {
                     rect.analyze(col, row);
+                }
             }
         }
     }
@@ -1200,15 +1287,22 @@ void Component::copyToClipboard()
     {
         auto* clipboard = new Toolbox::Clipboard();
         if (!clipboard)
+        {
             return;
+        }
         SelectionRect rect;
         ForAllSelectedCells(*internal.grid, rect);
         if (rect.valid())
         {
             if (rect.x <= rect.x2 and rect.y <= rect.y2)
             {
-                clipboard->add(
-                  internal.gridHelper, rect.x, rect.y, rect.x2 + 1, rect.y2 + 1, false, false);
+                clipboard->add(internal.gridHelper,
+                               rect.x,
+                               rect.y,
+                               rect.x2 + 1,
+                               rect.y2 + 1,
+                               false,
+                               false);
             }
         }
         else
@@ -1250,15 +1344,21 @@ static void PasteFromClipboard(DBGrid& grid, VGridHelper& gridHelper)
         String s;
         Toolbox::Clipboard::GetFromClipboard(s);
         if (s.empty())
+        {
             return;
+        }
 
         // Construction of the matrix
         s.trim("\r\n");
         if (!s)
+        {
             return;
+        }
         s.split(rows, "\n", true, true);
         if (rows.empty())
+        {
             return;
+        }
     }
 
     // Getting the first position
@@ -1305,7 +1405,9 @@ static void PasteFromClipboard(DBGrid& grid, VGridHelper& gridHelper)
             {
                 rect.x2 = (uint)cols.size();
                 if (!rect.x2)
+                {
                     return;
+                }
                 if (rect.x + rect.x2 > (uint)gridHelper.GetNumberCols()
                     || rect.y + rect.y2 > (uint)gridHelper.GetNumberRows())
                 {
@@ -1337,7 +1439,9 @@ static void PasteFromClipboard(DBGrid& grid, VGridHelper& gridHelper)
 
     grid.ForceRefresh();
     if (gridHelper.markTheStudyAsModified())
+    {
         MarkTheStudyAsModified();
+    }
 }
 
 void Component::pasteFromClipboard()
@@ -1359,7 +1463,9 @@ void Component::onStudyClosed()
         auto& internal = *pInternal;
         forceRefresh();
         if (internal.grid)
+        {
             internal.grid->SetTable(nullptr, false);
+        }
         delete internal.gridHelper;
         internal.gridHelper = nullptr;
     }
@@ -1370,15 +1476,19 @@ void ComponentRefresh::enableRefresh(bool enabled)
     assert(pInternal);
     auto& internal = *pInternal;
     if (internal.grid)
+    {
         internal.grid->enableRefresh(enabled);
+    }
 }
 
 void Component::createPopupCopy(Button&, wxMenu& menu, void*)
 {
     wxMenuItem* it;
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Copy the selection to the clipboard\tCtrl+C"), "images/16x16/copy.png");
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Copy the selection to the clipboard\tCtrl+C"),
+                          "images/16x16/copy.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Component::onCopyValuesFromMenu),
@@ -1396,14 +1506,20 @@ void Component::createPopupCopy(Button&, wxMenu& menu, void*)
 void Component::scroll(wxScrolledWindow* component)
 {
     if (!component)
+    {
         return;
+    }
     assert(pInternal);
     auto& internal = *pInternal;
     if (!internal.grid)
+    {
         return;
+    }
 
     if (dynamic_cast<wxScrolledWindow*>(internal.grid) == component)
+    {
         return;
+    }
 
     int x, y;
     component->GetViewStart(&x, &y);
@@ -1433,7 +1549,9 @@ bool Component::markTheStudyAsModified() const
 void Component::markTheStudyAsModified(bool flag)
 {
     if (pInternal)
+    {
         pInternal->shouldMarkStudyModifiedWhenModifyingCell = flag;
+    }
 }
 
 void Component::runSelectedAction(uint selectedSet,
@@ -1442,8 +1560,11 @@ void Component::runSelectedAction(uint selectedSet,
                                   VGridHelper* gridHelper)
 {
     onBeginUpdate();
-    ModifierOperators::ApplyChanges(
-      (ModifierSet)selectedSet, selectedAction, value, pInternal->renderer, gridHelper);
+    ModifierOperators::ApplyChanges((ModifierSet)selectedSet,
+                                    selectedAction,
+                                    value,
+                                    pInternal->renderer,
+                                    gridHelper);
     pInternal->renderer->onRefresh();
     onEndUpdate();
 }
@@ -1453,7 +1574,9 @@ void Component::onModifyAll(void*)
     assert(pInternal);
     auto& internal = *pInternal;
     if (not internal.gridHelper or not internal.modifier.ui.textValue or not internal.renderer)
+    {
         return;
+    }
 
     // Retrieving the edit value as double
     String value;
@@ -1477,7 +1600,9 @@ void Component::onComboUpdated(wxCommandEvent& /* evt */)
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return;
+    }
 
     // OnMapLayerChanged(&(pInternal->pLayerFilter->GetValue()));
 
@@ -1494,8 +1619,11 @@ void Component::onPopupMenuModifierSet(Button&, wxMenu& menu, void*)
         auto* caption = ModifierOperators::Name(set);
         auto* userdata = new PopupMenuModifierSet(set);
 
-        auto* it
-          = Menu::CreateItem(&menu, wxID_ANY, caption, "images/16x16/empty.png", wxEmptyString);
+        auto* it = Menu::CreateItem(&menu,
+                                    wxID_ANY,
+                                    caption,
+                                    "images/16x16/empty.png",
+                                    wxEmptyString);
         Connect(it->GetId(),
                 wxEVT_COMMAND_MENU_SELECTED,
                 wxCommandEventHandler(Component::onChangeModifierSet),
@@ -1515,8 +1643,11 @@ void Component::onPopupMenuModifierOperators(Button&, wxMenu& menu, void*)
         auto* caption = ModifierOperators::OperatorToCString(set, i);
         auto* userdata = new PopupMenuModifierOperator(i);
 
-        auto* it
-          = Menu::CreateItem(&menu, wxID_ANY, caption, "images/16x16/empty.png", wxEmptyString);
+        auto* it = Menu::CreateItem(&menu,
+                                    wxID_ANY,
+                                    caption,
+                                    "images/16x16/empty.png",
+                                    wxEmptyString);
         Connect(it->GetId(),
                 wxEVT_COMMAND_MENU_SELECTED,
                 wxCommandEventHandler(Component::onChangeModifierOperator),
@@ -1537,7 +1668,9 @@ void Component::onChangeModifierSet(wxCommandEvent& event)
         internal.modifier.selectedAction = 0;
         internal.updaterModifiersControls();
         if (internal.modifier.ui.textValue)
+        {
             internal.modifier.ui.textValue->SetFocus();
+        }
     }
 }
 
@@ -1552,7 +1685,9 @@ void Component::onChangeModifierOperator(wxCommandEvent& event)
         internal.modifier.selectedAction = userdata->modifierOperator;
         internal.updaterModifiersControls();
         if (internal.modifier.ui.textValue)
+        {
             internal.modifier.ui.textValue->SetFocus();
+        }
     }
 }
 
@@ -1567,7 +1702,9 @@ void Component::renderer(Renderer::IRenderer* newrenderer)
     assert(pInternal);
     auto& internal = *pInternal;
     if (!internal.grid) // no grid ? Strange but nothing to do here
+    {
         return;
+    }
 
     // If an existing renderer is already attached to this component,
     // we have to destroy it
@@ -1589,7 +1726,9 @@ void Component::renderer(Renderer::IRenderer* newrenderer)
         internal.renderer->dataGridPrecision = internal.precision;
     }
     else
+    {
         internal.precision = Date::stepNone; // default
+    }
 
     // recreate all filters accordingly
     internal.recreateFilter();
@@ -1614,6 +1753,4 @@ Date::Precision Component::precision() const
     return pInternal->precision;
 }
 
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid

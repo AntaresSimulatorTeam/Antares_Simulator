@@ -26,7 +26,7 @@
 
 namespace Antares::Solver::Simulation
 {
-class NumSpaceManager
+class NumSpaceManager final
 {
 public:
     explicit NumSpaceManager(unsigned N);

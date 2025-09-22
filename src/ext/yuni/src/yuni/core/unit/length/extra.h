@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,15 +12,11 @@
 #ifndef __YUNI_CORE_UNIT_LENGTH_EXTRA_H__
 #define __YUNI_CORE_UNIT_LENGTH_EXTRA_H__
 
-#include "length.h"
-#include "../unit.h"
 #include "../define.h"
+#include "../unit.h"
+#include "length.h"
 
-namespace Yuni
-{
-namespace Unit
-{
-namespace Length
+namespace Yuni::Unit::Length
 {
 //! \brief Astronomical unit (Distance from Earth to Sun)
 //! \ingroup UnitLength
@@ -158,9 +155,7 @@ YUNI_UNIT_IMPL(NauticalMileAdmiralty, "nautical mile (admiralty)", "nmii(Adm)", 
 //! astronomical unit) \ingroup UnitLength
 YUNI_UNIT_IMPL(Parsec, "parsec", "pc", int64_t, 3.08568025e16);
 
-} // namespace Length
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit::Length
 
 #include "../undef.h"
 

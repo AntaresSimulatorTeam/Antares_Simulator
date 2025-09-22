@@ -1,39 +1,34 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "create.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Action::AntaresStudy::ThermalCluster
 {
-namespace Action
-{
-namespace AntaresStudy
-{
-namespace ThermalCluster
-{
-Create::Create(const AnyString& areaname, const AnyString& clustername) :
- pOriginalAreaName(areaname), pOriginalPlantName(clustername)
+Create::Create(const AnyString& areaname, const AnyString& clustername):
+    pOriginalAreaName(areaname),
+    pOriginalPlantName(clustername)
 {
     pInfos.behavior = bhOverwrite;
 }
@@ -50,7 +45,9 @@ bool Create::prepareWL(Context& ctx)
     // The variable pTargetPlantName may be slighty different from the original
     // name (changed from the interface for example)
     if (pTargetPlantName.empty())
+    {
         pTargetPlantName = pOriginalPlantName;
+    }
     pFuturPlantName = pTargetPlantName;
 
     // The name can not be empty
@@ -159,11 +156,15 @@ bool Create::performWL(Context& ctx)
         // source cluster
         Data::Area* source = ctx.extStudy->areas.findFromName(pOriginalAreaName);
         if (!source)
+        {
             return false;
+        }
         TransformNameIntoID(pOriginalPlantName, id);
         ctx.originalPlant = source->thermal.list.findInAll(id);
         if (!ctx.originalPlant)
+        {
             return false;
+        }
 
         // new cluster
         id.clear();
@@ -175,19 +176,19 @@ bool Create::performWL(Context& ctx)
             ctx.cluster = new Data::ThermalCluster(ctx.area);
             ctx.cluster->setName(pFuturPlantName);
             ctx.cluster->reset();
-            (ctx.area)->thermal.list.addToCompleteList(std::shared_ptr<Data::ThermalCluster>(ctx.cluster));
+            (ctx.area)->thermal.list.addToCompleteList(
+              std::shared_ptr<Data::ThermalCluster>(ctx.cluster));
         }
         else
         {
             if (pInfos.behavior == bhOverwrite)
+            {
                 (ctx.cluster)->reset();
+            }
         }
         return (ctx.area != nullptr);
     }
     return true;
 }
 
-} // namespace ThermalCluster
-} // namespace AntaresStudy
-} // namespace Action
-} // namespace Antares
+} // namespace Antares::Action::AntaresStudy::ThermalCluster

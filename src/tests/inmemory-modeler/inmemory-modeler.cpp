@@ -70,7 +70,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
       "sirius");
     Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
 
-    linear_problem_builder.build(*pb, dummy_data, time_scenario_ctx);
+    linear_problem_builder.build(*pb, time_scenario_ctx);
 }
 
 void LinearProblemBuildingFixture::buildLinearProblem(

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_ACTION_H__
 #define __ANTARES_LIBS_STUDY_ACTION_ACTION_H__
 
@@ -28,13 +28,11 @@
 #include <antares/study/study.h>
 #include <vector>
 
-namespace Antares
-{
-namespace Action
+namespace Antares::Action
 {
 class Context;
 
-class IAction : public Yuni::Core::TreeN<IAction>
+class IAction: public Yuni::Core::TreeN<IAction>
 {
 public:
     //! The ancestor
@@ -150,16 +148,20 @@ public:
 protected:
     //! Prepare the execution
     virtual bool prepareWL(Context& ctx) = 0;
+
     //! Prepare the execution (when the behavior says that the action should be skipped)
     virtual void prepareSkipWL(Context&)
     {
     }
+
     //! Perform the action
     virtual bool performWL(Context& ctx) = 0;
+
     //! Register all views
     virtual void registerViewsWL(Context&)
     {
     }
+
     //! Create post actions (if any)
     virtual void createPostActionsWL(const IAction::Ptr& node);
 
@@ -172,10 +174,9 @@ private:
 
 }; // class IAction
 
-} // namespace Action
-} // namespace Antares
+} // namespace Antares::Action
 
-#include "context.h"
 #include "action.hxx"
+#include "context.h"
 
 #endif // __ANTARES_LIBS_STUDY_ACTION_ACTION_H__

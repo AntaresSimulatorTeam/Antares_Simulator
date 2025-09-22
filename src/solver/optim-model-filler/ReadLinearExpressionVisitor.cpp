@@ -41,7 +41,7 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
     fillContext_(fillContext),
     component_(component),
-    evalVisitor_(optimEntityContainer, evalContext_, fillContext_),
+    evalVisitor_(optimEntityContainer, fillContext_, component),
     nbModelVariables_(optimEntityContainer.variablesSize()),
     optimEntityContainer_(optimEntityContainer)
 {

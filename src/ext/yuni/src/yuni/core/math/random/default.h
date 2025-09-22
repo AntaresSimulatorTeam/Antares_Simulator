@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,20 +12,17 @@
 #pragma once
 #include <stdlib.h>
 #include <time.h>
+
 #include "distribution.h"
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Random
+namespace Yuni::Math::Random
 {
 /*!
 ** \brief Default Pseudo random number generator
 **
 ** This random number generator is the one provided by your Operating System.
 */
-class YUNI_DECL Default /*final*/ : public ADistribution<int, Default>
+class YUNI_DECL Default /*final*/: public ADistribution<int, Default>
 {
 public:
     // Name of the distribution
@@ -40,6 +38,7 @@ public:
     Default()
     {
     }
+
     ~Default()
     {
     }
@@ -56,8 +55,6 @@ public:
     Default& operator>>(U& u);
 };
 
-} // namespace Random
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math::Random
 
 #include "default.hxx"

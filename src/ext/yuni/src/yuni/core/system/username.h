@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "../../yuni.h"
 
-namespace Yuni
-{
-namespace System
+namespace Yuni::System
 {
 /*!
 ** \brief Retrieves the calling user's name
@@ -33,7 +32,6 @@ namespace System
 template<class StringT>
 YUNI_DECL bool Username(StringT& out, bool emptyBefore = true);
 
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System
 
 #include "username.hxx"

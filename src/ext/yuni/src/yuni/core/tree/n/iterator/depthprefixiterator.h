@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,13 +12,7 @@
 #ifndef __YUNI_CORE_TREE_N_DEPTH_PREFIX_ITERATOR_H__
 #define __YUNI_CORE_TREE_N_DEPTH_PREFIX_ITERATOR_H__
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Core
-{
-namespace Tree
+namespace Yuni::Private::Core::Tree
 {
 template<class NodeT>
 class DepthPrefixIterator
@@ -98,10 +93,7 @@ private:
     NodePtr pNode;
 };
 
-} // namespace Tree
-} // namespace Core
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Core::Tree
 
 #include "depthprefixiterator.hxx"
 

@@ -1,36 +1,34 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <ui/common/component/panel.h>
 #include <wx/dcbuffer.h>
 #include <yuni/core/math/math.h>
 #include <yuni/core/bind.h>
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 class CalendarSelect;
 
-class CalendarViewStandard : public Component::Panel
+class CalendarViewStandard: public Component::Panel
 {
 public:
     enum
@@ -43,13 +41,14 @@ public:
         weekNumbersWidth = dayWidth * 2,
         recommendedWindowWidth = nbMonthPerRow * (dayWidth * 7 + spaceBetweenMonth) + decalX * 2
                                  + weekNumbersWidth * nbMonthPerRow /* week number*/,
-        recommendedWindowHeight
-        = (12 / nbMonthPerRow) * (dayWidth * 8 + spaceBetweenMonth) + decalY * 2 + 4 + dayWidth * 2,
+        recommendedWindowHeight = (12 / nbMonthPerRow) * (dayWidth * 8 + spaceBetweenMonth)
+                                  + decalY * 2 + 4 + dayWidth * 2,
         borderWidth = 4
     };
 
 public:
     CalendarViewStandard(wxWindow* parent, CalendarSelect& dialog);
+
     virtual ~CalendarViewStandard()
     {
     }
@@ -59,10 +58,12 @@ public:
 
     //! Event: draw the panel
     void onDraw(wxPaintEvent&);
+
     //! UI: Erase background, empty to avoid flickering
     void onEraseBackground(wxEraseEvent&)
     {
     }
+
     //! wxEvent : onMouseMove
     virtual void onMouseMoved(int x, int y);
 
@@ -156,12 +157,15 @@ enum
 
     textDrawOffsetY = Yuni::System::windows ? -1 : 0,
 };
+
 static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 static const wxFont fontBold(
   wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).Bold().FaceName("Tahoma"));
 
-CalendarViewStandard::CalendarViewStandard(wxWindow* parent, CalendarSelect& dialog) :
- Panel(parent), calendar(GetCurrentStudy()->calendar), pDialog(dialog)
+CalendarViewStandard::CalendarViewStandard(wxWindow* parent, CalendarSelect& dialog):
+    Panel(parent),
+    calendar(GetCurrentStudy()->calendar),
+    pDialog(dialog)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
     SetSize(recommendedWindowWidth, recommendedWindowHeight);
@@ -228,14 +232,18 @@ void CalendarViewStandard::updateGridCells(int x, int y)
         {
             // Do never take into consideration the last day in leap year
             if (d < 365)
+            {
                 pCurrentDayYearHover = d;
+            }
             break;
         }
     }
     updateSelectionDayRange();
 
     for (uint w = 0; w != calendar.maxWeeksInYear; ++w)
+    {
         pCacheWeek[pCacheWeekObjectID[w]].type = dtWeekNormal;
+    }
 
     // updating all cells
     for (uint d = 0; d != calendar.maxDaysInYear; ++d)
@@ -247,11 +255,11 @@ void CalendarViewStandard::updateGridCells(int x, int y)
         {
             for (uint i = d + 1; i < calendar.maxDaysInYear; ++i)
             {
-                pCacheDay[i].type
-                  = (pDialog.selectionDayRange[1] != (uint)-1 && i < pDialog.selectionDayRange[1]
-                     && i >= pDialog.selectionDayRange[0])
-                      ? dtSelection
-                      : dtNormal;
+                pCacheDay[i].type = (pDialog.selectionDayRange[1] != (uint)-1
+                                     && i < pDialog.selectionDayRange[1]
+                                     && i >= pDialog.selectionDayRange[0])
+                                      ? dtSelection
+                                      : dtNormal;
             }
 
             // highlighting the week
@@ -261,12 +269,16 @@ void CalendarViewStandard::updateGridCells(int x, int y)
             if (d < pDayYearRangeStart)
             {
                 for (uint wd = range.first; wd < range.end; ++wd)
+                {
                     pCacheDay[wd].type = dtWeek;
+                }
             }
             else
             {
                 for (uint wd = d + 1; wd < range.end; ++wd)
+                {
                     pCacheDay[wd].type = dtWeek;
+                }
             }
 
             // hightlighting the day where the mouse is hover
@@ -274,11 +286,11 @@ void CalendarViewStandard::updateGridCells(int x, int y)
             break;
         }
 
-        day.type
-          = (d >= pDayYearRangeStart)
-              ? ((d == pDayYearRangeStart) ? dtHighlight : dtHighlightRange)
-              : (d >= pDialog.selectionDayRange[0] && d < pDialog.selectionDayRange[1] ? dtSelection
-                                                                                       : dtNormal);
+        day.type = (d >= pDayYearRangeStart)
+                     ? ((d == pDayYearRangeStart) ? dtHighlight : dtHighlightRange)
+                     : (d >= pDialog.selectionDayRange[0] && d < pDialog.selectionDayRange[1]
+                          ? dtSelection
+                          : dtNormal);
     }
 
     if (pDayYearRangeStart == (uint)-1)
@@ -290,7 +302,9 @@ void CalendarViewStandard::updateGridCells(int x, int y)
             if (count < 7)
             {
                 for (uint i = pDialog.selectionDayRange[0]; i < pDialog.selectionDayRange[1]; ++i)
+                {
                     pCacheDay[i].type = dtHighlightRangeSimulationOut;
+                }
             }
             else
             {
@@ -298,7 +312,9 @@ void CalendarViewStandard::updateGridCells(int x, int y)
                 for (uint i = pDialog.selectionDayRange[1] - partial;
                      i < pDialog.selectionDayRange[1];
                      ++i)
+                {
                     pCacheDay[i].type = dtHighlightRangeSimulationOut;
+                }
             }
         }
     }
@@ -311,7 +327,9 @@ void CalendarViewStandard::updateGridCells(int x, int y)
             if (count < 7)
             {
                 for (uint i = pCurrentSelectionDayRange[0]; i <= pCurrentSelectionDayRange[1]; ++i)
+                {
                     pCacheDay[i].type = dtHighlightRangeSimulationOut;
+                }
             }
             else
             {
@@ -319,7 +337,9 @@ void CalendarViewStandard::updateGridCells(int x, int y)
                 for (uint i = pCurrentSelectionDayRange[1] - partial + 1;
                      i <= pCurrentSelectionDayRange[1];
                      ++i)
+                {
                     pCacheDay[i].type = dtHighlightRangeSimulationOut;
+                }
             }
         }
     }
@@ -330,7 +350,9 @@ void CalendarViewStandard::updateGridCells(int x, int y)
         uint week = calendar.days[pDayYearRangeStart].week;
         auto& range = calendar.weeks[week].daysYear;
         for (uint wd = range.first; wd < pDayYearRangeStart; ++wd)
+        {
             pCacheDay[wd].type = dtWeek;
+        }
     }
 }
 
@@ -342,12 +364,16 @@ void CalendarViewStandard::onMouseMoved(int x, int y)
     pMousePosition.x = x;
     pMousePosition.y = y;
     if (pDayYearRangeStart == (uint)-1)
+    {
         pCurrentDayYearHover = (uint)-1;
+    }
 
     updateGridCells(x, y);
 
     if (pDayYearRangeStart != (uint)-1)
+    {
         updateSelectionText();
+    }
     // refresh the component itself
     Refresh();
 }
@@ -355,7 +381,9 @@ void CalendarViewStandard::onMouseMoved(int x, int y)
 void CalendarViewStandard::onMouseDown(wxMouseEvent& evt)
 {
     if (pDialog.allowRangeSelection)
+    {
         pDayYearRangeStart = pCurrentDayYearHover;
+    }
 
     pCurrentDayYearHover = (uint)-1;
     const auto& position = evt.GetPosition();
@@ -469,7 +497,9 @@ void CalendarViewStandard::onDraw(wxPaintEvent&)
     {
         auto& cache = pCacheWeek[week];
         if (cache.type == dtInvalid)
+        {
             break;
+        }
         auto& colors = colorSet[cache.type];
 
         dc.SetBrush(wxBrush(colors.background, wxBRUSHSTYLE_SOLID));
@@ -540,7 +570,9 @@ void CalendarViewStandard::prepareGrid(wxDC& dc, const Date::Calendar& calendar)
                 maxY = 0;
             }
             else
+            {
                 monthRect.x += weekNumbersWidth + monthRect.width + spaceBetweenMonth;
+            }
         }
 
         uint wx = 0;
@@ -551,6 +583,7 @@ void CalendarViewStandard::prepareGrid(wxDC& dc, const Date::Calendar& calendar)
         {
             uint x = decalX + monthRect.x + wx;
             uint y = decalY + monthRect.y + wy;
+
             enum
             {
                 w = dayWidth * 7,
@@ -563,8 +596,9 @@ void CalendarViewStandard::prepareGrid(wxDC& dc, const Date::Calendar& calendar)
             text = wxStringFromUTF8(calendar.text.months[month].name);
             auto extend = dc.GetTextExtent(text);
             dc.SetTextForeground(monthTextColor);
-            dc.DrawText(
-              text, x + w / 2 - extend.GetWidth() / 2, y + dayWidth / 2 - extend.GetHeight() / 2);
+            dc.DrawText(text,
+                        x + w / 2 - extend.GetWidth() / 2,
+                        y + dayWidth / 2 - extend.GetHeight() / 2);
         }
         wy += dayWidth;
 
@@ -645,7 +679,9 @@ void CalendarViewStandard::prepareGrid(wxDC& dc, const Date::Calendar& calendar)
             cacheday.textY = y + dayWidth / 2 - extend.GetHeight() / 2 + textDrawOffsetY;
 
             if (y > maxY)
+            {
                 maxY = y;
+            }
             if (++graphicalWeekday >= 7)
             {
                 graphicalWeekday = 0;
@@ -654,7 +690,9 @@ void CalendarViewStandard::prepareGrid(wxDC& dc, const Date::Calendar& calendar)
                 weekNumbersY += dayWidth;
             }
             else
+            {
                 wx += dayWidth;
+            }
         }
         ++weekIndex;
     }
@@ -664,13 +702,17 @@ void CalendarViewStandard::prepareGrid(wxDC& dc, const Date::Calendar& calendar)
 
     // initializing textextend for all weeks
     for (uint week = 0; week != calendar.maxWeeksInYear; ++week)
+    {
         pCacheWeekObjectID[week] = calendar.maxWeeksInYear * 2 - 1; // invalid and never seen
+    }
 
     for (uint pseudoweek = 0; pseudoweek != calendar.maxWeeksInYear * 2; ++pseudoweek)
     {
         auto& cache = pCacheWeek[pseudoweek];
         if (cache.type == dtInvalid)
+        {
             break;
+        }
 
         cache.text.clear();
         if (cache.textX < calendar.maxDaysInYear)
@@ -694,7 +736,9 @@ void CalendarViewStandard::updateSelectionText(YString& text, uint from, uint to
 
     text << ' ';
     if (to != (uint)-1)
+    {
         text << "From  ";
+    }
 
     auto realmonth = calendar.months[start.month].realmonth;
     text << Date::WeekdayToString((int)start.weekday);
@@ -719,12 +763,18 @@ void CalendarViewStandard::updateSelectionText(YString& text, uint from, uint to
                 text << " days, ";
                 uint nbweeks = nbdays / 7;
                 if (nbweeks == 1)
+                {
                     text << "1 week)";
+                }
                 else
+                {
                     text << nbweeks << " weeks)";
+                }
             }
             else
+            {
                 text << "days)";
+            }
         }
     }
 }
@@ -739,7 +789,9 @@ void CalendarViewStandard::updateSelectionText()
         uint from = pCurrentSelectionDayRange[0];
         uint to = pCurrentSelectionDayRange[1];
         if (to == from)
+        {
             to = (uint)-1;
+        }
         updateSelectionText(text, from, to);
     }
     else
@@ -750,15 +802,18 @@ void CalendarViewStandard::updateSelectionText()
         if (from != (uint)-1)
         {
             if (to == from)
+            {
                 to = (uint)-1;
+            }
             updateSelectionText(text, from, to);
         }
     }
 
     if (text.empty())
+    {
         text = "(no selection)";
+    }
     onUpdateSelectionText(text);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

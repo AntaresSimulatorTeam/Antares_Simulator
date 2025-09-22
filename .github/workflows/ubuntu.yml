@@ -10,7 +10,7 @@ on:
     - issue-*
     - release/*
     - doc/*
-    - dependabot/*
+    - dependabot/**
     - tests/*
   schedule:
   - cron: '21 2 * * *'
@@ -103,7 +103,7 @@ jobs:
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
 

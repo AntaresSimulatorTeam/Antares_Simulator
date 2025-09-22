@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Result
+namespace Yuni::Result
 {
 template<typename T>
 struct Sum final
@@ -27,15 +26,19 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    Sum() : pValue()
+    Sum():
+        pValue()
     {
     }
+
     /*!
     ** \brief Copy constructor
     */
-    Sum(const Sum& rhs) : pValue(rhs.pValue)
+    Sum(const Sum& rhs):
+        pValue(rhs.pValue)
     {
     }
+
     //@}
 
     //! Take into account a new value
@@ -66,5 +69,4 @@ private:
 
 }; // class Sum
 
-} // namespace Result
-} // namespace Yuni
+} // namespace Yuni::Result

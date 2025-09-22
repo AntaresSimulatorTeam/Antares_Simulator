@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <mutex>
 #include <yuni/yuni.h>
@@ -32,9 +32,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Dispatcher
+namespace Antares::Dispatcher
 {
 namespace // anonymous
 {
@@ -47,12 +45,15 @@ static DispatcherServiceType gDispatcher;
 static LinkedList<Yuni::Job::IJob::Ptr> gGUIDispatcherList;
 static std::mutex gGUIMutex;
 
-class JobDelay final : public Yuni::Job::IJob
+class JobDelay final: public Yuni::Job::IJob
 {
 public:
-    JobDelay(const Job::IJob::Ptr& job, uint delay) : pJob(job), pDelay(delay)
+    JobDelay(const Job::IJob::Ptr& job, uint delay):
+        pJob(job),
+        pDelay(delay)
     {
     }
+
     virtual ~JobDelay()
     {
     }
@@ -61,7 +62,9 @@ protected:
     virtual void onExecute() override
     {
         if (not suspend(pDelay))
+        {
             ::Antares::Dispatcher::GUI::Post(pJob);
+        }
     }
 
 private:
@@ -113,11 +116,17 @@ bool Start()
     {
         uint cpus = System::CPU::Count();
         if (cpus > 1)
+        {
             --cpus;
+        }
         if (cpus < 3)
+        {
             cpus = 3; // a minimum is required for concurrent and blocking jobs
+        }
         if (cpus > 5)
+        {
             cpus = 5; // will be good enough
+        }
         gDispatcher.maximumThreadCount(cpus);
     }
 
@@ -143,14 +152,9 @@ bool Empty()
     return Antares::Dispatcher::gGUIDispatcherList.empty();
 }
 
-} // namespace Dispatcher
-} // namespace Antares
+} // namespace Antares::Dispatcher
 
-namespace Antares
-{
-namespace Dispatcher
-{
-namespace Internal
+namespace Antares::Dispatcher::Internal
 {
 void ExecuteQueueDispatcher()
 {
@@ -165,9 +169,9 @@ void ExecuteQueueDispatcher()
 
     // Execute the event
     if (!(!job))
+    {
         job->execute(nullptr);
+    }
 }
 
-} // namespace Internal
-} // namespace Dispatcher
-} // namespace Antares
+} // namespace Antares::Dispatcher::Internal

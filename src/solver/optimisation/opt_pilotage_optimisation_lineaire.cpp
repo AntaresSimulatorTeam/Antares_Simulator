@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -35,26 +35,23 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
-        if (problemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
+        problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
+                                             / problemeHebdo->NombreDePasDeTempsDUneJournee);
+
+        if (!problemeHebdo->OptimisationAuPasHebdomadaire)
         {
-            problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
-                                                 / problemeHebdo->NombreDePasDeTempsDUneJournee);
-
-            if (!problemeHebdo->OptimisationAuPasHebdomadaire)
-            {
-                problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-                  = problemeHebdo->NombreDePasDeTempsDUneJournee;
-            }
-            else
-            {
-                problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
-                                                                         ->NombreDePasDeTemps;
-            }
-
-            OPT_AllocDuProblemeAOptimiser(problemeHebdo);
-
-            OPT_ChainagesDesIntercoPartantDUnNoeud(problemeHebdo);
+            problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsDUneJournee;
         }
+        else
+        {
+            problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                                     ->NombreDePasDeTemps;
+        }
+
+        OPT_AllocDuProblemeAOptimiser(problemeHebdo);
+
+        OPT_ChainagesDesIntercoPartantDUnNoeud(problemeHebdo);
 
         problemeHebdo->LeProblemeADejaEteInstancie = true;
     }

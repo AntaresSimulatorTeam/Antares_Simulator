@@ -31,7 +31,7 @@ namespace Antares::Optimisation::LinearProblemApi
 /** \brief Context for filling linear problem data.
  * Contains temporal information
  */
-class FillContext
+class FillContext final
 {
 public:
     FillContext(unsigned localFirstTimeStep,

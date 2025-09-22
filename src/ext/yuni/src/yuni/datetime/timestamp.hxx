@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,24 +11,17 @@
 */
 #pragma once
 #include <cstdlib>
+
 #include "timestamp.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace DateTime
+namespace Yuni::Private::DateTime
 {
 // forward declaration
 char* FormatTimestampToString(const AnyString& format, int64_t timestamp);
 
-} // namespace DateTime
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::DateTime
 
-namespace Yuni
-{
-namespace DateTime
+namespace Yuni::DateTime
 {
 template<class StringT>
 inline bool TimestampToString(StringT& out,
@@ -36,9 +30,13 @@ inline bool TimestampToString(StringT& out,
                               bool emptyBefore)
 {
     if (emptyBefore)
+    {
         out.clear();
+    }
     if (format.empty())
+    {
         return true;
+    }
 
     char* buffer = Yuni::Private::DateTime::FormatTimestampToString(format, timestamp);
     if (buffer)
@@ -50,5 +48,4 @@ inline bool TimestampToString(StringT& out,
     return false;
 }
 
-} // namespace DateTime
-} // namespace Yuni
+} // namespace Yuni::DateTime

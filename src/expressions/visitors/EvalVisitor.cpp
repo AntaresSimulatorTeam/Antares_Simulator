@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -31,25 +31,15 @@
 
 namespace Antares::Expressions::Visitors
 {
-EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
-                         const Optimisation::EvaluationContext& context,
-                         const Optimisation::LinearProblemApi::FillContext& fillContext):
-    optimContainer_(optimContainer),
-    context_(context),
-    fillContext_(fillContext)
-{
-}
-
 
 EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
-                         const Optimisation::EvaluationContext& context,
                          const Optimisation::LinearProblemApi::FillContext& fillContext,
-                         const ModelerStudy::SystemModel::Component* component):
+                         const ModelerStudy::SystemModel::Component& component):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
     optimContainer_(optimContainer),
-    context_(context),
+    context_(optimContainer.getOptimComponent(component.Index()).evaluationContext),
     fillContext_(fillContext),
     component_(component)
 {
@@ -96,17 +86,13 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 }
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (!component_)
-    {
-        throw Error::RuntimeError("Component null. Cannot evaluate VariableNode.");
-    }
     const auto& solverVariables = optimContainer_.getVariables();
-    const auto startColumn = optimContainer_.getVariableStartColumn(component_->Index(),
+    const auto startColumn = optimContainer_.getVariableStartColumn(component_.Index(),
                                                                     node->value());
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
-        std::string varName = Optimization::buildVariableName(component_->Id(),
+        std::string varName = Optimization::buildVariableName(component_.Id(),
                                                               node->value(),
                                                               Optimization::MCYearAndTime::MCYear{
                                                                 fillContext_.getYear()},
@@ -119,12 +105,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
                           + 1;
     std::vector<double> varValues(nbTimeStep, 0.0);
 
-    
-        for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
-        {
-            varValues[varInd] = solverVariables[startColumn + varInd]->solutionValue();
-        }
-    
+    for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
+    {
+        varValues[varInd] = solverVariables[startColumn + varInd]->solutionValue();
+    }
+
     return EvaluationResult{varValues};
 }
 
@@ -172,7 +157,20 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
+    EvaluationResult result(0.);
+    for (const auto connectionEnd: component_.componentConnectionsViaPort(portId))
+    {
+        auto* component = connectionEnd.component();
+        auto* port = connectionEnd.port();
+        EvalVisitor visitor(optimContainer_, fillContext_, *component);
+        const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
+        auto dispatchResult = visitor.dispatch(nodeToVisit);
+        result += dispatchResult;
+    }
+    return result;
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)

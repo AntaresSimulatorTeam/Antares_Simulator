@@ -25,7 +25,7 @@ namespace Antares::Solver
 class ILoader;
 class IWriter;
 
-class Modeler
+class Modeler final
 {
 public:
     Modeler(ILoader& loader, IWriter& writer);

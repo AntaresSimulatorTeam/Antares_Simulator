@@ -5,8 +5,8 @@ set(SRC_optim_model_filler
         ComponentFiller.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
-        VariableDictionary.cpp
         LinearExpressionEigen.cpp
+        Dimensions.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,20 +10,16 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../thread/thread.h"
 #include "../../../job/queue/service.h"
 #include "../../../thread/signal.h"
+#include "../../../thread/thread.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace QueueService
+namespace Yuni::Private::QueueService
 {
 /*!
 ** \brief A single thread for a queue service
 */
-class YUNI_DECL QueueThread final : public Yuni::Thread::IThread
+class YUNI_DECL QueueThread final: public Yuni::Thread::IThread
 {
 public:
     //! The most suitable smart pointer for the class
@@ -66,8 +63,6 @@ private:
 
 }; // class QueueThread
 
-} // namespace QueueService
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::QueueService
 
 #include "thread.hxx"

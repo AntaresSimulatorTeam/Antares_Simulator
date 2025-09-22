@@ -1,0 +1,74 @@
+#include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
+
+namespace Antares::Solver::Simulation
+{
+
+std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generation,
+                                                    std::vector<double>& unsupE,
+                                                    std::vector<double>& levels,
+                                                    const std::vector<double>& Pmax,
+                                                    const std::vector<double>& Pmin,
+                                                    const std::vector<double>& inflows,
+                                                    const std::vector<double>& overflow,
+                                                    const std::vector<double>& pump,
+                                                    const double initLevel,
+                                                    const double reservoirCapacity,
+                                                    const double pumpEfficiency,
+                                                    bool reservoirManagement)
+{
+    if (!reservoirManagement)
+    {
+        return std::make_shared<StorageForRemixNoLevels>(generation, unsupE, Pmax, Pmin);
+    }
+
+    size_t size = generation.size();
+    const std::vector<double> lowRuleCurve(size, 0.);
+    const std::vector<double> upRuleCurve(size, reservoirCapacity);
+    const double withdrawalEff = 1.;
+    return std::make_shared<StorageForRemixWithLevels>(generation,
+                                                       unsupE,
+                                                       levels,
+                                                       Pmax,
+                                                       Pmin,
+                                                       inflows,
+                                                       overflow,
+                                                       pump,
+                                                       lowRuleCurve,
+                                                       upRuleCurve,
+                                                       initLevel,
+                                                       withdrawalEff);
+}
+
+std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawal,
+                                                  std::vector<double>& unsupE,
+                                                  std::vector<double>& levels,
+                                                  const std::vector<double>& pmax,
+                                                  const std::vector<double>& inflows,
+                                                  const std::vector<double>& injection,
+                                                  const std::vector<double>& lowRuleCurve,
+                                                  const std::vector<double>& upRuleCurve,
+                                                  const double initLevel,
+                                                  const double withdrawalEff,
+                                                  const double injectionEff)
+{
+    size_t size = withdrawal.size();
+
+    std::vector<double> overflows(size, 0.);
+    std::vector<double> pmin(size, 0.);
+
+    return std::make_shared<StorageForRemixWithLevels>(withdrawal,
+                                                       unsupE,
+                                                       levels,
+                                                       pmax,
+                                                       pmin,
+                                                       inflows,
+                                                       overflows,
+                                                       injection,
+                                                       lowRuleCurve,
+                                                       upRuleCurve,
+                                                       initLevel,
+                                                       withdrawalEff,
+                                                       injectionEff);
+}
+
+} // namespace Antares::Solver::Simulation

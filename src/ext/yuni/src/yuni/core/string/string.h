@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,12 +11,12 @@
 */
 #pragma once
 #include "../../yuni.h"
-#include "../static/remove.h"
+#include "../smartptr.h"
 #include "../static/assert.h"
+#include "../static/remove.h"
 #include "../static/typedef.h"
 #include "../traits/cstring.h"
 #include "../traits/length.h"
-#include "../smartptr.h"
 
 #ifdef YUNI_OS_MSVC
 #pragma warning(push)
@@ -28,27 +29,27 @@
 #include <stdarg.h>
 #endif
 
-#include <string>
 #include <functional> // std::hash
+#include <string>
 
 #ifdef YUNI_HAS_VECTOR
 #include <vector>
 #endif
-#include <list>
 #include <iosfwd>
+#include <list>
 
 #ifdef YUNI_OS_MSVC
 #pragma warning(pop)
 #endif
 
-#include "utf8char.h"
 #include "../iterator.h"
-#include "traits/traits.h"
 #include "traits/append.h"
 #include "traits/assign.h"
 #include "traits/fill.h"
-#include "traits/vnsprintf.h"
 #include "traits/into.h"
+#include "traits/traits.h"
+#include "traits/vnsprintf.h"
+#include "utf8char.h"
 
 #ifdef YUNI_HAS_CPP_MOVE
 #include <utility>
@@ -117,7 +118,7 @@ namespace Yuni
 **   string with a fixed-length capacity (equals to ChunkSizeT)
 */
 template<uint ChunkSizeT, bool ExpandableT>
-class YUNI_DECL CString final : protected Private::CStringImpl::Data<ChunkSizeT, ExpandableT>
+class YUNI_DECL CString final: protected Private::CStringImpl::Data<ChunkSizeT, ExpandableT>
 {
 public:
     //! POD type
@@ -172,6 +173,7 @@ public:
         //! True if the string is a string adapter (only read-only operations are allowed)
         adapter = (0 == chunkSize and expandable),
     };
+
     //! char Case
     enum charCase
     {
@@ -385,6 +387,7 @@ public:
     ~CString()
     {
     }
+
     //@}
 
     //! \name Iterators
@@ -2129,13 +2132,10 @@ extern const String emptyString;
 
 } // namespace Yuni
 
-namespace Yuni
+namespace Yuni::Traits
 {
-namespace Traits
-{
-} // namespace Traits
-} // namespace Yuni
+}
 
 #include "iterator.hxx"
-#include "string.hxx"
 #include "operators.hxx"
+#include "string.hxx"

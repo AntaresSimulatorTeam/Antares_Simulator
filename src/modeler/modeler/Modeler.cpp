@@ -50,10 +50,9 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
 {
 }
 
-class SystemLinearProblemBuilder
+class SystemLinearProblemBuilder final
 {
 public:
-    
     explicit SystemLinearProblemBuilder(
       const ModelerStudy::SystemModel::System* system,
       ILinearProblem& pb,
@@ -157,18 +156,26 @@ void Modeler::solve() const
         writer_.writeProblem(ortools_linear_problem);
 
         logs.info() << "Launching resolution...";
-        auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
+        Utils::TimeMeasurement solveMeasure;
 
+        auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
+        solveMeasure.tick();
+        logs.info() << "Solved in " << solveMeasure.toStringInSeconds();
         switch (solution->getStatus())
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
+        {
+            Utils::TimeMeasurement simulationTableMeasure;
             writer_.writeSimulationTable(ortools_linear_problem,
                                          *solution,
                                          data,
                                          system_linear_problem.getOptimEntityContainer(),
                                          timeScenarioCtx);
-            break;
+            simulationTableMeasure.tick();
+            logs.info() << "Simulation Table is generated in " << simulationTableMeasure.toString();
+        }
+        break;
         default:
             logs.error() << "Problem during linear optimization";
         }

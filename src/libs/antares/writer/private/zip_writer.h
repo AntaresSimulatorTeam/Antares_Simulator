@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -45,7 +45,7 @@ class ZipWriter;
  * May be used as a function object.
  */
 template<class ContentT>
-class ZipWriteJob
+class ZipWriteJob final
 {
 public:
     ZipWriteJob(ZipWriter& writer,
@@ -74,7 +74,7 @@ private:
     Benchmarking::DurationCollector& pDurationCollector;
 };
 
-class ZipWriter: public IResultWriter
+class ZipWriter final: public IResultWriter
 {
 public:
     ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
