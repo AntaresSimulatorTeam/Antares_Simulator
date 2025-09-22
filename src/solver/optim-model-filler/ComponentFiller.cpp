@@ -288,10 +288,14 @@ public:
      */
     explicit Visitor(const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                      const Antares::ModelerStudy::SystemModel::Component& component,
+                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                      int nbtimeSteps):
         optimEntityContainer_(optimEntityContainer),
         component_(component),
-        nbtimeSteps_(nbtimeSteps)
+        nbtimeSteps_(nbtimeSteps),
+        fillContext_(fillContext),
+        evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
+        evalVisitor_(optimEntityContainer, evalContext_, fillContext_)
     {
     }
 
@@ -414,7 +418,15 @@ public:
 
     AllTimeExpr visit(const Nodes::TimeIndexNode* node) override
     {
-        throw "Not implemented";
+        auto expression = dispatch(node->left());
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+        if (expression.size() == 1)
+        {
+            return expression;
+        }
+        const auto timeIndex = static_cast<int>(
+          evalVisitor_.dispatch(node->right()).valueAsDouble());
+        return AllTimeExpr(std::move(*(expression.begin() + timeIndex)));
     }
 
     AllTimeExpr visit(const Nodes::TimeSumNode* node) override
@@ -436,6 +448,9 @@ public:
 private:
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Antares::ModelerStudy::SystemModel::Component& component_;
+    const Antares::Optimisation::EvaluationContext& evalContext_;
+    const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
+    Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
     int nbtimeSteps_;
 };
 
@@ -755,7 +770,7 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
     }
 
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    V::Visitor visitor(optimEntityContainer_, component_, 168); // TODO TimeSteps
+    V::Visitor visitor(optimEntityContainer_, component_, ctx, 168); // TODO TimeSteps
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
 
