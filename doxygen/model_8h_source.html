@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('model_8h_source.html',''); initResizab
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html">PortFieldKey</a>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKeyHash.html">   45</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKeyHash.html">PortFieldKeyHash</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKeyHash.html">   45</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKeyHash.html">PortFieldKeyHash</a> final</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    std::size_t operator()(<span class="keyword">const</span> <a class="code" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html">PortFieldKey</a>&amp; input) <span class="keyword">const</span>;</div>
@@ -180,7 +180,7 @@ $(document).ready(function(){initNavTree('model_8h_source.html',''); initResizab
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">using</span> PortFieldMap = std::unordered_map&lt;PortFieldKey, PortFieldDefinition, PortFieldKeyHash&gt;;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// TODO: add unit tests for this class</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">   58</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Model</a></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">   58</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Model</a> final</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Model</a>() = <span class="keywordflow">default</span>;</div>
@@ -247,7 +247,7 @@ $(document).ready(function(){initNavTree('model_8h_source.html',''); initResizab
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;};</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">// List of IDs used internally to check for uniqueness of IDs at component level</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1UniqueIDChecker.html">  125</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1UniqueIDChecker.html">UniqueIDChecker</a></div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1UniqueIDChecker.html">  125</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1UniqueIDChecker.html">UniqueIDChecker</a> final</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;{</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">void</span> add(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>);</div>
@@ -258,7 +258,7 @@ $(document).ready(function(){initNavTree('model_8h_source.html',''); initResizab
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    std::unordered_map&lt;std::string, int&gt; attribute_ids_;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;};</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html">  136</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html">ModelBuilder</a></div>
+<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html">  136</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html">ModelBuilder</a> final</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;{</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html">ModelBuilder</a>&amp; <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html#a7020792ae271097f4977c8afe1bd6f91">withId</a>(std::string_view <span class="keywordtype">id</span>);</div>

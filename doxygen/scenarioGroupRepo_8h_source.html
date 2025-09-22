@@ -137,7 +137,7 @@ $(document).ready(function(){initNavTree('scenarioGroupRepo_8h_source.html','');
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>Antares::Optimisation</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a> final</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> addScenario(<span class="keyword">const</span> std::string&amp; groupId,</div>
@@ -149,13 +149,13 @@ $(document).ready(function(){initNavTree('scenarioGroupRepo_8h_source.html','');
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::map&lt;std::string, std::unique_ptr&lt;LinearProblemApi::IScenario&gt;&gt; scenarioGroups_;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">   23</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">AlreadyExists</a>: <span class="keyword">public</span> std::invalid_argument</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">   23</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">AlreadyExists</a> final: <span class="keyword">public</span> std::invalid_argument</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    {</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html">AlreadyExists</a>(<span class="keyword">const</span> std::string&amp; groupId);</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    };</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">   29</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">DoesNotExist</a>: <span class="keyword">public</span> std::invalid_argument</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">   29</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">DoesNotExist</a> final: <span class="keyword">public</span> std::invalid_argument</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    {</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html">DoesNotExist</a>(<span class="keyword">const</span> std::string&amp; groupId);</div>
