@@ -45,6 +45,18 @@ std::optional<T> buildOptional(bool condition, T value)
         return {};
     }
 }
+
+template<class T>
+void rotate(T& v, int shift)
+{
+    if (!v.empty())
+    {
+        return;
+    }
+    const int n = static_cast<int>(v.size());
+    const int k = ((shift % n) + n) % n;
+    std::rotate(v.begin(), v.begin() + k, v.end());
+}
 } // namespace
 
 namespace V
@@ -271,6 +283,16 @@ public:
         return result;
     }
 
+    SingleTimeExpr* asSingle()
+    {
+        return std::get_if<SingleTimeExpr>(&v_);
+    }
+
+    std::vector<SingleTimeExpr>* asMultiple()
+    {
+        return std::get_if<std::vector<SingleTimeExpr>>(&v_);
+    }
+
 private:
     std::variant<SingleTimeExpr, std::vector<SingleTimeExpr>> v_;
 };
@@ -412,17 +434,27 @@ public:
 
     AllTimeExpr visit(const Nodes::TimeShiftNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        auto expression = dispatch(node->left());
+        if (expression.size() == 1)
+        {
+            return expression;
+        }
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
+        const auto timeIndex = static_cast<int>(
+          evalVisitor_.dispatch(node->right()).valueAsDouble());
+        rotate(*expression.asMultiple(), timeIndex);
+        return expression;
     }
 
     AllTimeExpr visit(const Nodes::TimeIndexNode* node) override
     {
         auto expression = dispatch(node->left());
-        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+
         if (expression.size() == 1)
         {
             return expression;
         }
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
         const auto timeIndex = static_cast<int>(
           evalVisitor_.dispatch(node->right()).valueAsDouble());
         return AllTimeExpr(std::move(*(expression.begin() + timeIndex)));
