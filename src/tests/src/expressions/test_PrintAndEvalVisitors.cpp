@@ -592,6 +592,22 @@ BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(equalLiteralParam).valueAsDouble(), 1.0);
 }
 
+BOOST_FIXTURE_TEST_CASE(comparisonLessThanOrEqualNode, MyDummyFixture)
+{
+    const double num1 = 1428;
+    const double num2 = 8241;
+
+    Node* nodeLessTrue = create<LessThanOrEqualNode>(create<LiteralNode>(num1),
+                                                     create<LiteralNode>(num2));
+    Node* nodeLessFalse = create<LessThanOrEqualNode>(create<LiteralNode>(num2),
+                                                      create<LiteralNode>(num1));
+    Node* nodeEqualTrue = create<LessThanOrEqualNode>(create<LiteralNode>(num1),
+                                                      create<LiteralNode>(num1));
+
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessTrue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessFalse).valueAsDouble(), 0.0);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeEqualTrue).valueAsDouble(), 1.0);
+}
 
 BOOST_FIXTURE_TEST_CASE(print_port_field_node, MyDummyFixture)
 {
@@ -1083,8 +1099,7 @@ BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, MyDummyFixture)
     LiteralNode literalNode(23.);
     std::string component_id("id");
     std::string name("name");
-    std::vector<Node*> nodes = {create<LessThanOrEqualNode>(&literalNode, &literalNode),
-                                create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
+    std::vector<Node*> nodes = {create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
                                 create<PortFieldNode>(name, name)};
     for (auto* node: nodes)
     {
