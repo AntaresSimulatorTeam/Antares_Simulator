@@ -43,6 +43,14 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
     }
     tsSet_.push_back(std::move(ts));
 }
+void TimeSeriesSet::add(std::vector<double>&& ts)
+{
+    if (ts.size() != height_)
+    {
+        throw AddTSofWrongSize(name(), ts.size(), height_);
+    }
+    tsSet_.push_back(std::move(ts));
+}
 
 double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNumber,
                               unsigned hour) const
