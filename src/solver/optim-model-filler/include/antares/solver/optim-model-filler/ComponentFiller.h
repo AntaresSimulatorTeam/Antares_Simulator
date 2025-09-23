@@ -69,10 +69,10 @@ public:
     void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    void addStaticConstraint(const Optimization::LinearConstraint& linear_constraint,
+    void addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
                              const std::string& constraint_id);
 
-    void addTimeDependentConstraints(const Optimization::LinearConstraint& linear_constraints,
+    void addTimeDependentConstraints(const Optimisation::LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
                                      const Optimisation::LinearProblemApi::FillContext& ctx);
 
@@ -96,28 +96,28 @@ public:
                      double lb,
                      double ub,
                      bool integer,
-                     const Optimization::Dimensions& dim) const;
+                     const Optimisation::Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      const std::vector<double>& lb,
                      double ub,
                      bool integer,
-                     const Optimization::Dimensions& dim) const;
+                     const Optimisation::Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      double lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimization::Dimensions& dim) const;
+                     const Optimisation::Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      const std::vector<double>& lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimization::Dimensions& dim) const;
+                     const Optimisation::Dimensions& dim) const;
 
     class BoundsSizeMismatch: public std::invalid_argument
     {

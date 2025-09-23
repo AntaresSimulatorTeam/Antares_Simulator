@@ -23,7 +23,8 @@
 
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/solver/optim-model-filler/LinearExpressionEigen.h>
+#include <antares/solver/optim-model-filler/LinearExpression.h>
+#include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
@@ -34,45 +35,267 @@
  * coefficients of variables)
  * Comparison Nodes are not allowed
  */
-namespace Antares::Optimization
+using namespace Antares::Expressions;
+
+template<class T>
+void rotate(T& v, int shift)
+{
+    if (!v.empty())
+    {
+        return;
+    }
+    const int n = static_cast<int>(v.size());
+    const int k = ((shift % n) + n) % n;
+    std::rotate(v.begin(), v.begin() + k, v.end());
+}
+
+namespace Antares::Optimisation
 {
 
-class ReadLinearExpressionVisitor final
-    : public Expressions::Visitors::NodeVisitor<LinearExpressionEigen>
+class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<
+                                     Antares::Optimization::TimeDependentLinearExpression>
 {
 public:
-    ReadLinearExpressionVisitor() = delete;
-    ReadLinearExpressionVisitor(const Optimisation::LinearProblemApi::FillContext& fillContext,
-                                const ModelerStudy::SystemModel::Component& component,
-                                const Optimisation::OptimEntityContainer& variableContainer);
-    std::string name() const override;
+    /**
+     * @brief Constructs a clone visitor with the specified registry for creating new nodes.
+     *
+     * @param registry The registry used for creating new nodes.
+     */
+    explicit ReadLinearExpressionVisitor(
+      const OptimEntityContainer& optimEntityContainer,
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext):
+        optimEntityContainer_(optimEntityContainer),
+        component_(component),
+        nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps()),
+        fillContext_(fillContext),
+        evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
+        evalVisitor_(optimEntityContainer, fillContext, component)
+    {
+    }
+
+    std::string name() const override
+    {
+        return "V::Visitor";
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(const Nodes::SumNode* node) override
+    {
+        const auto& operands = node->getOperands();
+        Antares::Optimization::TimeDependentLinearExpression ret(nbtimeSteps_);
+        for (auto* operand: operands)
+        {
+            ret += dispatch(operand);
+        }
+        return ret;
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::SubtractionNode* node) override
+    {
+        throw std::runtime_error("Not implemented");
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::MultiplicationNode* node) override
+    {
+        auto ret = dispatch(node->left());
+        ret *= dispatch(node->right());
+        return ret;
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::DivisionNode* node) override
+    {
+        throw std::runtime_error("Not implemented");
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::EqualNode* node) override
+    {
+        throw std::runtime_error("Not implemented");
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::LessThanOrEqualNode* node) override
+    {
+        throw std::runtime_error("Not implemented");
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::GreaterThanOrEqualNode* node) override
+    {
+        throw std::runtime_error("Not implemented");
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::NegationNode* node) override
+    {
+        throw std::runtime_error("Not implemented");
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::VariableNode* node) override
+    {
+        const auto& optimComponent = optimEntityContainer_.getOptimComponent(component_.Index());
+        const auto globalIndex = optimComponent.variableIndexMap.at(
+          node->value()); // the only time we search in a map
+        const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
+        const auto variableStart = variableStartColumn.at(globalIndex);
+        const auto variableEnd = variableStart == *variableStartColumn.rbegin()
+                                   ? optimEntityContainer_.variablesSize()
+                                   : variableStartColumn.at(globalIndex + 1);
+
+        if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+        {
+            Antares::Optimization::LinearExpression out;
+            out.coefs.emplace_back(variableStart, 1);
+            return Antares::Optimization::TimeDependentLinearExpression(std::move(out));
+        }
+        // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd
+        // - variableStart+1
+        if (node->timeIndex() == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
+            || node->timeIndex()
+                 == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not
+                                                                                  handled !*/
+        {
+            Antares::Optimization::TimeDependentLinearExpression out(nbtimeSteps_);
+
+            auto variableIndex = variableStart;
+            for (int ts = 0; ts < nbtimeSteps_; ts++)
+            {
+                out[ts].coefs.emplace_back(variableIndex, 1);
+                ++variableIndex;
+            }
+            return out;
+        }
+        throw "the support of scenario dependent variables is not available for now";
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::ParameterNode* node) override
+    {
+        const auto systemParameter = evalContext_.getParameter(node->value());
+        if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+            && systemParameter.type != Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
+        {
+            throw std::runtime_error(
+              "Parameter " + node->value()
+              + " is declared constant in time and scenario in library but not in system");
+        }
+
+        if (systemParameter.type == Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
+        {
+            double value = evalContext_.getSystemParameterValueAsDouble(node->value());
+            return Antares::Optimization::TimeDependentLinearExpression(
+              Antares::Optimization::LinearExpression({}, value));
+        }
+        // only dependent
+
+        // assume global nb timeStep == nbtimeSteps
+        const auto& parameters = evalContext_.getParameterValue(
+          node->value(),
+          fillContext_.getYear(),
+          fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
+          fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
+        Antares::Optimization::TimeDependentLinearExpression out(nbtimeSteps_);
+        for (int idx = 0; idx < nbtimeSteps_; idx++)
+        {
+            out[idx].constant = parameters[idx];
+        }
+        return out;
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::LiteralNode* node) override
+    {
+        Antares::Optimization::LinearExpression ret({}, node->value()); // Constant expr
+        return Antares::Optimization::TimeDependentLinearExpression(std::move(ret));
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::PortFieldNode* node) override
+    {
+        throw std::runtime_error("Not implemented");
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::PortFieldSumNode* node) override
+    {
+        auto& portId = node->getPortName();
+        auto& fieldId = node->getFieldName();
+
+        Antares::Optimization::TimeDependentLinearExpression to_return(nbtimeSteps_);
+
+        for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
+        {
+            auto* component = connexion_end.component();
+            auto* port = connexion_end.port();
+
+            ReadLinearExpressionVisitor visitor(optimEntityContainer_, *component, fillContext_);
+
+            const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+            to_return += visitor.dispatch(node);
+        }
+
+        return to_return;
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::TimeShiftNode* node) override
+    {
+        auto expression = dispatch(node->left());
+        if (expression.size() == 1)
+        {
+            return expression;
+        }
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
+        const auto timeIndex = static_cast<int>(
+          evalVisitor_.dispatch(node->right()).valueAsDouble());
+        rotate(*expression.asMultiple(), timeIndex);
+        return expression;
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::TimeIndexNode* node) override
+    {
+        auto expression = dispatch(node->left());
+
+        if (expression.size() == 1)
+        {
+            return expression;
+        }
+        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
+        const auto timeIndex = static_cast<int>(
+          evalVisitor_.dispatch(node->right()).valueAsDouble());
+        return Antares::Optimization::TimeDependentLinearExpression(
+          std::move(expression[timeIndex]));
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::TimeSumNode* node) override
+    {
+        throw std::runtime_error("Not implemented");
+    }
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::AllTimeSumNode* node) override
+    {
+        Antares::Optimization::LinearExpression ret; // Constant expr
+        auto expr = dispatch(node->child());
+        for (auto& s: expr)
+        {
+            ret += s;
+        }
+        return Antares::Optimization::TimeDependentLinearExpression(std::move(ret));
+    }
 
 private:
-    LinearExpressionEigen visit(const Expressions::Nodes::SumNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::SubtractionNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::MultiplicationNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::DivisionNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::EqualNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::LessThanOrEqualNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::NegationNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::VariableNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::ParameterNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::LiteralNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::PortFieldNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::TimeShiftNode* node) override;
-    LinearExpressionEigen TimeIndex(const LinearExpressionEigen& expression, int timeIndex) const;
-    LinearExpressionEigen visit(const Expressions::Nodes::TimeIndexNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::TimeSumNode* node) override;
-    LinearExpressionEigen visit(const Expressions::Nodes::AllTimeSumNode* node) override;
-
-    const Optimisation::EvaluationContext& evalContext_;
-    const Optimisation::LinearProblemApi::FillContext& fillContext_;
-    const ModelerStudy::SystemModel::Component& component_;
-    Expressions::Visitors::EvalVisitor evalVisitor_;
-    unsigned int nbModelVariables_;
-    unsigned int nbtimeSteps_;
-    const Optimisation::OptimEntityContainer& optimEntityContainer_;
+    const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
+    const Antares::ModelerStudy::SystemModel::Component& component_;
+    const Antares::Optimisation::EvaluationContext& evalContext_;
+    const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
+    Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
+    int nbtimeSteps_;
 };
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

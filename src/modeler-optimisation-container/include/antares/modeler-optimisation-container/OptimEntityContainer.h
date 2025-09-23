@@ -25,7 +25,6 @@
 #include <antares/optimisation/linear-problem-api/mipConstraint.h>
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
 #include <antares/study/system-model/component.h>
-
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 
 #include "EvaluationContext.h"
@@ -56,7 +55,7 @@ public:
         return variableStartColumn_;
     }
 
-      [[nodiscard]] unsigned int getVariableStartColumn(size_t compoIndex,
+    [[nodiscard]] unsigned int getVariableStartColumn(size_t compoIndex,
                                                       const std::string& varName) const
     {
         const auto& optimComponent = optimComponents_[compoIndex];
@@ -98,7 +97,7 @@ public:
         return variables_.size();
     }
 
-  [[nodiscard]] size_t constraintsSize() const
+    [[nodiscard]] size_t constraintsSize() const
     {
         return constraints_.size();
     }
@@ -108,7 +107,7 @@ public:
         variables_.push_back(variable);
     }
 
-      void registerConstraint(LinearProblemApi::IMipConstraint* constraint)
+    void registerConstraint(LinearProblemApi::IMipConstraint* constraint)
     {
         constraints_.push_back(constraint);
     }
@@ -117,7 +116,8 @@ public:
     {
         return optimComponents_.at(index);
     }
-    [[nodiscard]]  OptimComponent& getOptimComponent(size_t index) 
+
+    [[nodiscard]] OptimComponent& getOptimComponent(size_t index)
     {
         return optimComponents_.at(index);
     }
@@ -129,7 +129,6 @@ public:
 
     void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
 
-    
     // unsigned int VariableGLobalIndex() const
     // {
     //     return variableGlobalIndex_;

@@ -22,7 +22,7 @@
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
-#include "antares/solver/optim-model-filler/LinearExpressionEigen.h"
+#include "antares/solver/optim-model-filler/LinearExpression.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
 
@@ -70,10 +70,11 @@ private:
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const std::string& areaId,
       unsigned ts) const;
-    void addExpressionToConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                   const LinearExpressionEigen& linearExpression,
-                                   const Optimisation::LinearProblemApi::FillContext& ctx,
-                                   const std::string& areaId) const;
+    void addExpressionToConstraint(
+      Optimisation::LinearProblemApi::ILinearProblem& pb,
+      const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
+      const Optimisation::LinearProblemApi::FillContext& ctx,
+      const std::string& areaId) const;
     void addComponentPortContributionToArea(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                             const Optimisation::LinearProblemApi::FillContext& ctx,
                                             const ModelerStudy::SystemModel::Component& component,

@@ -32,7 +32,7 @@ namespace Antares::Optimisation::LinearProblemApi
 class IMipVariable;
 }
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 
 struct IntegerInterval
@@ -91,4 +91,4 @@ std::string buildVariableName(const std::string& compoId,
                               std::optional<Optimization::MCYearAndTime::MCYear> mcyear,
                               std::optional<unsigned int> timestep);
 
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

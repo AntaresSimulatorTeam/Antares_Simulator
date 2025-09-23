@@ -45,490 +45,10 @@ std::optional<T> buildOptional(bool condition, T value)
         return {};
     }
 }
-
-template<class T>
-void rotate(T& v, int shift)
-{
-    if (!v.empty())
-    {
-        return;
-    }
-    const int n = static_cast<int>(v.size());
-    const int k = ((shift % n) + n) % n;
-    std::rotate(v.begin(), v.begin() + k, v.end());
-}
 } // namespace
-
-namespace V
-{
-struct SingleTimeExpr final
-{
-    std::vector<std::pair<int, double>> coefs;
-    double constant = 0.;
-
-    SingleTimeExpr() = default;
-
-    SingleTimeExpr(const std::vector<std::pair<int, double>>& coefs, double constant):
-        coefs(coefs),
-        constant(constant)
-    {
-    }
-
-    SingleTimeExpr& operator+=(const SingleTimeExpr& other)
-    {
-        coefs.insert(coefs.end(), other.coefs.begin(), other.coefs.end());
-        constant += other.constant;
-        return *this;
-    }
-
-    SingleTimeExpr& operator*=(const SingleTimeExpr& other)
-    {
-        if (hasCoefs() && other.hasCoefs())
-        {
-            // Multiplying two symbolic expressions would give quadratic terms,
-            // which this representation cannot hold.
-            throw std::runtime_error("Quadratic term detected");
-        }
-        else if (!hasCoefs() && !other.hasCoefs())
-        {
-            // constant * constant
-            constant *= other.constant;
-        }
-        else if (hasCoefs() && !other.hasCoefs())
-        {
-            // linear * constant
-            for (auto& [idx, coef]: coefs)
-            {
-                coef *= other.constant;
-            }
-            constant *= other.constant;
-        }
-        else // (!hasCoefs() && other.hasCoefs())
-        {
-            // constant * linear
-            coefs = other.coefs;
-            for (auto& [idx, coef]: coefs)
-            {
-                coef *= constant; // use this->constant as multiplier
-            }
-            constant *= other.constant;
-        }
-        return *this;
-    }
-
-    bool hasCoefs() const
-    {
-        return !coefs.empty();
-    }
-};
-
-class AllTimeExpr final
-{
-public:
-    AllTimeExpr(std::size_t nbTimesteps)
-    {
-        if (nbTimesteps == 1)
-        {
-            v_.emplace<0>();
-        }
-        else
-        {
-            v_.emplace<1>(nbTimesteps);
-        }
-    }
-
-    AllTimeExpr(SingleTimeExpr&& expr):
-        v_(std::move(expr))
-    {
-    }
-
-    void expandTo(std::size_t nbTimesteps)
-    {
-        if (auto* expr = std::get_if<SingleTimeExpr>(&v_))
-        {
-            v_.emplace<1>(nbTimesteps, *expr);
-        }
-    }
-
-    SingleTimeExpr* begin()
-    {
-        if (auto* expr = std::get_if<SingleTimeExpr>(&v_))
-        {
-            return expr;
-        }
-        if (auto* expr = std::get_if<std::vector<SingleTimeExpr>>(&v_))
-        {
-            return expr->data();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
-
-    const SingleTimeExpr* begin() const
-    {
-        if (const auto* expr = std::get_if<SingleTimeExpr>(&v_))
-        {
-            return expr;
-        }
-        if (const auto* expr = std::get_if<std::vector<SingleTimeExpr>>(&v_))
-        {
-            return expr->data();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
-
-    SingleTimeExpr* end()
-    {
-        if (auto* expr = std::get_if<SingleTimeExpr>(&v_))
-        {
-            return expr + 1;
-        }
-        if (auto* expr = std::get_if<std::vector<SingleTimeExpr>>(&v_))
-        {
-            return expr->data() + expr->size();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
-
-    const SingleTimeExpr* end() const
-    {
-        if (const auto* expr = std::get_if<SingleTimeExpr>(&v_))
-        {
-            return expr + 1;
-        }
-        if (const auto* expr = std::get_if<std::vector<SingleTimeExpr>>(&v_))
-        {
-            return expr->data() + expr->size();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
-
-    SingleTimeExpr& operator[](std::size_t idx)
-    {
-        if (auto* expr = std::get_if<SingleTimeExpr>(&v_))
-        {
-            return *expr;
-        }
-        if (auto* expr = std::get_if<std::vector<SingleTimeExpr>>(&v_))
-        {
-            return expr->operator[](idx);
-        }
-        throw std::runtime_error("Invalid variant");
-    }
-
-    const SingleTimeExpr& operator[](std::size_t idx) const
-    {
-        if (const auto* expr = std::get_if<SingleTimeExpr>(&v_))
-        {
-            return *expr;
-        }
-        if (const auto* expr = std::get_if<std::vector<SingleTimeExpr>>(&v_))
-        {
-            return expr->operator[](idx);
-        }
-        throw std::runtime_error("Invalid variant");
-    }
-
-    std::size_t size() const
-    {
-        if (const auto* expr = std::get_if<SingleTimeExpr>(&v_))
-        {
-            return 1;
-        }
-        if (const auto* expr = std::get_if<std::vector<SingleTimeExpr>>(&v_))
-        {
-            return expr->size();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
-
-    AllTimeExpr& operator+=(const AllTimeExpr& other)
-    {
-        if (other.size() > size())
-        {
-            expandTo(other.size());
-        }
-        for (std::size_t t = 0; t < size(); ++t)
-        {
-            this->operator[](t) += other[t];
-        }
-        return *this;
-    }
-
-    AllTimeExpr& operator*=(const AllTimeExpr& other)
-    {
-        if (other.size() > size())
-        {
-            expandTo(other.size());
-        }
-        int t = 0;
-        for (auto& expr: *this)
-        {
-            expr *= other[t];
-            t++;
-        }
-        return *this;
-    }
-
-    AllTimeExpr operator-() const
-    {
-        AllTimeExpr result = *this;
-        for (auto& expr: result)
-        {
-            for (auto& [idx, coef]: expr.coefs)
-            {
-                coef = -coef;
-            }
-            expr.constant = -expr.constant;
-        }
-        return result;
-    }
-
-    SingleTimeExpr* asSingle()
-    {
-        return std::get_if<SingleTimeExpr>(&v_);
-    }
-
-    std::vector<SingleTimeExpr>* asMultiple()
-    {
-        return std::get_if<std::vector<SingleTimeExpr>>(&v_);
-    }
-
-private:
-    std::variant<SingleTimeExpr, std::vector<SingleTimeExpr>> v_;
-};
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
-
-class Visitor: public Visitors::NodeVisitor<AllTimeExpr>
-{
-public:
-    /**
-     * @brief Constructs a clone visitor with the specified registry for creating new nodes.
-     *
-     * @param registry The registry used for creating new nodes.
-     */
-    explicit Visitor(const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
-                     const Antares::ModelerStudy::SystemModel::Component& component,
-                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
-                     int nbtimeSteps):
-        optimEntityContainer_(optimEntityContainer),
-        component_(component),
-        nbtimeSteps_(nbtimeSteps),
-        fillContext_(fillContext),
-        evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
-        evalVisitor_(optimEntityContainer, fillContext, component)
-    {
-    }
-
-    std::string name() const override
-    {
-        return "V::Visitor";
-    }
-
-    AllTimeExpr visit(const Nodes::SumNode* node) override
-    {
-        const auto& operands = node->getOperands();
-        AllTimeExpr ret(nbtimeSteps_);
-        for (auto* operand: operands)
-        {
-            ret += dispatch(operand);
-        }
-        return ret;
-    }
-
-    AllTimeExpr visit(const Nodes::SubtractionNode* node) override
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    AllTimeExpr visit(const Nodes::MultiplicationNode* node) override
-    {
-        auto ret = dispatch(node->left());
-        ret *= dispatch(node->right());
-        return ret;
-    }
-
-    AllTimeExpr visit(const Nodes::DivisionNode* node) override
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    AllTimeExpr visit(const Nodes::EqualNode* node) override
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    AllTimeExpr visit(const Nodes::LessThanOrEqualNode* node) override
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    AllTimeExpr visit(const Nodes::GreaterThanOrEqualNode* node) override
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    AllTimeExpr visit(const Nodes::NegationNode* node) override
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    AllTimeExpr visit(const Nodes::VariableNode* node) override
-    {
-        const auto& optimComponent = optimEntityContainer_.getOptimComponent(component_.Index());
-        const auto globalIndex = optimComponent.variableIndexMap.at(
-          node->value()); // the only time we search in a map
-        const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
-        const auto variableStart = variableStartColumn.at(globalIndex);
-        const auto variableEnd = variableStart == *variableStartColumn.rbegin()
-                                   ? optimEntityContainer_.variablesSize()
-                                   : variableStartColumn.at(globalIndex + 1);
-
-        if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
-        {
-            SingleTimeExpr out;
-            out.coefs.emplace_back(variableStart, 1);
-            return AllTimeExpr(std::move(out));
-        }
-        // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd
-        // - variableStart+1
-        if (node->timeIndex() == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
-            || node->timeIndex()
-                 == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not
-                                                                                  handled !*/
-        {
-            AllTimeExpr out(nbtimeSteps_);
-
-            auto variableIndex = variableStart;
-            for (int ts = 0; ts < nbtimeSteps_; ts++)
-            {
-                out[ts].coefs.emplace_back(variableIndex, 1);
-                ++variableIndex;
-            }
-            return out;
-        }
-        throw "the support of scenario dependent variables is not available for now";
-    }
-
-    AllTimeExpr visit(const Nodes::ParameterNode* node) override
-    {
-        const auto systemParameter = evalContext_.getParameter(node->value());
-        if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-            && systemParameter.type != Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
-        {
-            throw std::runtime_error(
-              "Parameter " + node->value()
-              + " is declared constant in time and scenario in library but not in system");
-        }
-
-        if (systemParameter.type == Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
-        {
-            double value = evalContext_.getSystemParameterValueAsDouble(node->value());
-            return AllTimeExpr(SingleTimeExpr({}, value));
-        }
-        // only dependent
-
-        // assume global nb timeStep == nbtimeSteps
-        const auto& parameters = evalContext_.getParameterValue(
-          node->value(),
-          fillContext_.getYear(),
-          fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
-          fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
-        AllTimeExpr out(nbtimeSteps_);
-        for (int idx = 0; idx < nbtimeSteps_; idx++)
-        {
-            out[idx].constant = parameters[idx];
-        }
-        return out;
-    }
-
-    AllTimeExpr visit(const Nodes::LiteralNode* node) override
-    {
-        SingleTimeExpr ret({}, node->value()); // Constant expr
-        return AllTimeExpr(std::move(ret));
-    }
-
-    AllTimeExpr visit(const Nodes::PortFieldNode* node) override
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    AllTimeExpr visit(const Nodes::PortFieldSumNode* node) override
-    {
-        auto& portId = node->getPortName();
-        auto& fieldId = node->getFieldName();
-
-        AllTimeExpr to_return(nbtimeSteps_);
-
-        for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
-        {
-            auto* component = connexion_end.component();
-            auto* port = connexion_end.port();
-
-            Visitor visitor(optimEntityContainer_, *component, fillContext_, nbtimeSteps_);
-
-            const Node* node = component->nodeAtPortField(port->Id(), fieldId);
-            to_return += visitor.dispatch(node);
-        }
-
-        return to_return;
-    }
-
-    AllTimeExpr visit(const Nodes::TimeShiftNode* node) override
-    {
-        auto expression = dispatch(node->left());
-        if (expression.size() == 1)
-        {
-            return expression;
-        }
-        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
-        const auto timeIndex = static_cast<int>(
-          evalVisitor_.dispatch(node->right()).valueAsDouble());
-        rotate(*expression.asMultiple(), timeIndex);
-        return expression;
-    }
-
-    AllTimeExpr visit(const Nodes::TimeIndexNode* node) override
-    {
-        auto expression = dispatch(node->left());
-
-        if (expression.size() == 1)
-        {
-            return expression;
-        }
-        // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
-        const auto timeIndex = static_cast<int>(
-          evalVisitor_.dispatch(node->right()).valueAsDouble());
-        return AllTimeExpr(std::move(expression[timeIndex]));
-    }
-
-    AllTimeExpr visit(const Nodes::TimeSumNode* node) override
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    AllTimeExpr visit(const Nodes::AllTimeSumNode* node) override
-    {
-        SingleTimeExpr ret; // Constant expr
-        auto expr = dispatch(node->child());
-        for (auto& s: expr)
-        {
-            ret += s;
-        }
-        return AllTimeExpr(std::move(ret));
-    }
-
-private:
-    const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
-    const Antares::ModelerStudy::SystemModel::Component& component_;
-    const Antares::Optimisation::EvaluationContext& evalContext_;
-    const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
-    Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
-    int nbtimeSteps_;
-};
-
-} // namespace V
 
 namespace Antares::Optimisation
 {
@@ -545,7 +65,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         double lb,
                                         double ub,
                                         bool integer,
-                                        const Optimization::Dimensions& dim) const
+                                        const Optimisation::Dimensions& dim) const
 {
     optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
@@ -570,7 +90,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::vector<double>& lb,
                                         double ub,
                                         bool integer,
-                                        const Optimization::Dimensions& dim) const
+                                        const Optimisation::Dimensions& dim) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != count)
@@ -605,7 +125,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         double lb,
                                         const std::vector<double>& ub,
                                         bool integer,
-                                        const Optimization::Dimensions& dim) const
+                                        const Optimisation::Dimensions& dim) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (ub.size() != count)
@@ -639,7 +159,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::vector<double>& lb,
                                         const std::vector<double>& ub,
                                         bool integer,
-                                        const Optimization::Dimensions& dim) const
+                                        const Optimisation::Dimensions& dim) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != ub.size() || lb.size() != count)
@@ -716,10 +236,10 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                                         variable.Type() == SM::ValueType::BOOL ? 1 : pb.infinity());
         if (variable.isTimeDependent())
         {
-            const Optimization::Dimensions dim(
-              Optimization::IntegerInterval{ctx.getYear(),
+            const Optimisation::Dimensions dim(
+              Optimisation::IntegerInterval{ctx.getYear(),
                                             ctx.getYear()}, /*TODO Handle range of year ? */
-              Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
+              Optimisation::IntegerInterval(ctx.getLocalFirstTimeStep(),
                                             ctx.getLocalLastTimeStep()));
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
@@ -731,7 +251,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                                  variable.Id(),
                                  lb_,
                                  ub_,
-                                 variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
+                                 variable.Type() != SM::ValueType::FLOAT,
                                  dim);
               },
               lb.value(),
@@ -740,73 +260,73 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         else
         {
             // No time component
-            const Optimization::Dimensions dim({}, {});
+            const Optimisation::Dimensions dim({}, {});
 
             VariablesBulkAddition(pb, optimEntityContainer_)
               .addVariable(component_.Id(),
                            variable.Id(),
                            lb.valueAsDouble(),
                            ub.valueAsDouble(),
-                           variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
+                           variable.Type() != SM::ValueType::FLOAT,
                            dim);
         }
     }
 }
 
-void ComponentFiller::addStaticConstraint(const Optimization::LinearConstraint& linear_constraint,
+void ComponentFiller::addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
                                           const std::string& constraint_id)
 {
-    auto* ct = optimEntityContainer_.Problem().addConstraint(linear_constraint.lb(0),
-                                                             linear_constraint.ub(0),
+    auto* ct = optimEntityContainer_.Problem().addConstraint(linear_constraint.lb[0],
+                                                             linear_constraint.ub[0],
                                                              component_.Id() + "." + constraint_id);
 
     optimEntityContainer_.registerConstraint(ct);
     const auto& solverVariables = optimEntityContainer_.getVariables();
 
-    for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
-           it(linear_constraint.coef_per_var, 0);
-         it;
-         ++it)
-    {
-        ct->setCoefficient(solverVariables[it.col()], it.value());
-    }
+    // for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
+    //        it(linear_constraint.coef_per_var, 0);
+    //      it;
+    //      ++it)
+    // {
+    //     ct->setCoefficient(solverVariables[it.col()], it.value());
+    // }
 }
 
 void ComponentFiller::addTimeDependentConstraints(
-  const Optimization::LinearConstraint& linear_constraints,
+  const Optimisation::LinearConstraint& linear_constraints,
   const std::string& constraint_id,
   const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto& pb = optimEntityContainer_.Problem();
-    const Optimization::Dimensions dim(
-      Optimization::IntegerInterval{ctx.getYear(), ctx.getYear()}, /*TODO Handle range of year ? */
-      Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
+    const Optimisation::Dimensions dim(
+      Optimisation::IntegerInterval{ctx.getYear(), ctx.getYear()}, /*TODO Handle range of year ? */
+      Optimisation::IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
 
     const auto& solverVariables = optimEntityContainer_.getVariables();
     for (const auto s: dim.getScenarioIndices()) // TODO
     {
         for (const auto t: dim.getTimesteps())
         {
-            auto* ct = pb.addConstraint(linear_constraints.lb(t),
-                                        linear_constraints.ub(t),
+            auto* ct = pb.addConstraint(linear_constraints.lb[t],
+                                        linear_constraints.ub[t],
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(t));
             optimEntityContainer_.registerConstraint(ct);
 
-            for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
-                   it(linear_constraints.coef_per_var, t);
-                 it;
-                 ++it)
-            {
-                ct->setCoefficient(solverVariables[it.col()], it.value());
-            }
+            // for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
+            //        it(linear_constraints.coef_per_var, t);
+            //      it;
+            //      ++it)
+            // {
+            //     ct->setCoefficient(solverVariables[it.col()], it.value());
+            // }
         }
     }
 }
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
-    Optimization::ReadLinearConstraintVisitor visitor(ctx, component_, optimEntityContainer_);
+    Optimisation::ReadLinearConstraintVisitor visitor(ctx, component_, optimEntityContainer_);
 
     const auto& modelConstraints = component_.getModel()->Constraints();
     for (auto constraintLocalIndex = 0; constraintLocalIndex < modelConstraints.size();
@@ -844,7 +364,7 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
     }
 
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    V::Visitor visitor(optimEntityContainer_, component_, ctx, 168); // TODO TimeSteps
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_, component_, ctx);
 
     const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
 

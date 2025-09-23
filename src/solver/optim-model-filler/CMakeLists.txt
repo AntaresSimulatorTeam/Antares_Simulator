@@ -1,18 +1,17 @@
 set(PROJ optim-model-filler)
-find_package(Eigen3 CONFIG REQUIRED)
 
 set(SRC_optim_model_filler
         ComponentFiller.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
-        LinearExpressionEigen.cpp
+        LinearExpression.cpp
         Dimensions.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
         include/antares/solver/optim-model-filler/MCYearAndTime.h
         include/antares/solver/optim-model-filler/Dimensions.h
-        include/antares/solver/optim-model-filler/LinearExpressionEigen.h
+        include/antares/solver/optim-model-filler/LinearExpression.h
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})
@@ -28,7 +27,6 @@ target_link_libraries(${PROJ}
         Antares::antares-study-system-model
         Antares::linear-problem-api
         fmt::fmt
-        Eigen3::Eigen
 )
 
 target_include_directories(${PROJ}

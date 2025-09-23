@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -18,15 +18,4 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
-#include <numeric>
-
-#include <antares/exception/InvalidArgumentError.hpp>
-#include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/NodeVisitor.h>
-#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
-#include "antares/study/system-model/component.h"
-using namespace Antares::Expressions::Nodes;
-using namespace Antares::Expressions::Visitors;
-using namespace Antares::ModelerStudy;
+// TODO place function defs here

@@ -90,7 +90,7 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   Optimisation::LinearProblemApi::ILinearProblem& pb,
-  const LinearExpressionEigen& linearExpression,
+  const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
   const std::string& areaId) const
 {
@@ -100,21 +100,21 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     std::string lowerAreaId = areaId;
     boost::algorithm::to_lower(lowerAreaId);
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    const auto& coeffPerVar = linearExpression.coefPerVar();
+    // const auto& coeffPerVar = linearExpression.coefPerVar();
 
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
         IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localIndex);
 
-        for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coeffPerVar,
-                                                                            localIndex);
-             it;
-             ++it)
+        for (const auto& expr: linearExpression)
         {
-            areaBalanceConstraint->setCoefficient(solverVariables.at(it.col()), -it.value());
+            for (const auto& [index, coef]: expr.coefs)
+            {
+                areaBalanceConstraint->setCoefficient(solverVariables.at(index), -coef);
+            }
         }
-        double offset = linearExpression.offset()(localIndex);
+        double offset = linearExpression[localIndex].constant;
         areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + offset,
                                          areaBalanceConstraint->getUb() + offset);
     }
@@ -140,7 +140,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    ReadLinearExpressionVisitor visitor(ctx, component, optimEntityContainer_);
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_, component, ctx);
     auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }

@@ -23,7 +23,7 @@
 
 #include <antares/solver/optim-model-filler/Dimensions.h>
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 
 IntegerInterval::Iterator::Iterator(unsigned int current):
@@ -96,4 +96,4 @@ std::string buildVariableName(const std::string& compoId,
     }
     return ret;
 }
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

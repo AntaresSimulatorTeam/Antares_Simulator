@@ -93,11 +93,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
-        std::string varName = Optimization::buildVariableName(component_.Id(),
-                                                              node->value(),
-                                                              Optimization::MCYearAndTime::MCYear{
-                                                                fillContext_.getYear()},
-                                                              std::nullopt);
+        std::string varName = Antares::Optimisation::buildVariableName(
+          component_.Id(),
+          node->value(),
+          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
+          std::nullopt);
 
         return EvaluationResult(solverVariables[startColumn]->solutionValue());
     }
