@@ -27,7 +27,7 @@ namespace Antares::Data::Solar
 {
 class Prepro;
 
-class Container
+class Container final
 {
 public:
     //! \name Constructor & Destructor

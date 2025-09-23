@@ -104,7 +104,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
 }
 
 // TODO remove and use proper scenario
-class DefaultScenario: public IScenario
+class DefaultScenario final: public IScenario
 {
 public:
     using IScenario::IScenario;

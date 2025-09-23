@@ -51,7 +51,7 @@ struct LinearConstraint
     unsigned int timeStep = 0;
 };
 
-class ReadLinearConstraintVisitor
+class ReadLinearConstraintVisitor final
     : public Expressions::Visitors::NodeVisitor<std::vector<LinearConstraint>>
 {
 public:

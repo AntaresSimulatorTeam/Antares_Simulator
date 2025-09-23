@@ -41,7 +41,7 @@ const string referenceScBuilderFileName = "scenariobuilder-reference.dat";
 // ===========================================
 // Reference scenario builder file handler
 // ===========================================
-class referenceScBuilderFile
+class referenceScBuilderFile final
 {
 public:
     referenceScBuilderFile() = default;

@@ -26,7 +26,7 @@
  * represent 'Hydraulic Power Smoothing Using Variation Max Down' constraint type
  */
 
-class HydroPowerSmoothingUsingVariationMaxDown: private ConstraintFactory
+class HydroPowerSmoothingUsingVariationMaxDown final: private ConstraintFactory
 {
 public:
     using ConstraintFactory::ConstraintFactory;

@@ -25,7 +25,7 @@
 namespace Antares::Expressions::Nodes
 {
 
-class SumNode: public ParentNode
+class SumNode final: public ParentNode
 {
 public:
     using ParentNode::ParentNode;

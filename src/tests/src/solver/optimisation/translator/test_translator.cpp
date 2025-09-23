@@ -31,7 +31,7 @@
 
 using namespace Antares::Solver;
 
-class StubOptPeriodStringGenerator: public OptPeriodStringGenerator
+class StubOptPeriodStringGenerator final: public OptPeriodStringGenerator
 {
 public:
     std::string to_string() const override

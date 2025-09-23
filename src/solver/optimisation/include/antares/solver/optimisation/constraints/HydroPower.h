@@ -33,7 +33,7 @@ struct HydroPowerData
  * represent 'Hydraulic Power' constraint type
  */
 
-class HydroPower: private ConstraintFactory
+class HydroPower final: private ConstraintFactory
 {
 public:
     HydroPower(ConstraintBuilder& builder, HydroPowerData& data):

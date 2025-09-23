@@ -25,7 +25,7 @@
 
 namespace Antares::Optimization
 {
-class PartialKey
+class PartialKey final
 {
 public:
     PartialKey(const std::string& component_id, const std::string& variable_id);
@@ -41,7 +41,7 @@ private:
     std::string variable_id;
 };
 
-class PartialKeyHash
+class PartialKeyHash final
 {
 public:
     std::size_t operator()(const PartialKey& p) const;

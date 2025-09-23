@@ -32,7 +32,7 @@ struct FinalStockExpressionData
 /*!
  * represent 'Final Stock Expression' constraint type
  */
-class FinalStockExpression: private ConstraintFactory
+class FinalStockExpression final: private ConstraintFactory
 {
 public:
     FinalStockExpression(ConstraintBuilder& builder, FinalStockExpressionData& data):

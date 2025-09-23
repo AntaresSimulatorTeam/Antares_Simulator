@@ -52,7 +52,7 @@ private:
     double value_{0.};
 };
 
-class EmptyDataSeries: public ConstantDataSeries
+class EmptyDataSeries final: public ConstantDataSeries
 {
 public:
     EmptyDataSeries():
@@ -74,7 +74,7 @@ Antares::ModelerStudy::SystemModel::Component copyComponent(
       .build();
 }
 
-class DefaultScenario: public Antares::Optimisation::LinearProblemApi::IScenario
+class DefaultScenario final: public Antares::Optimisation::LinearProblemApi::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -88,7 +88,7 @@ public:
 using Models = std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model>;
 
 template<class Fixture>
-class InMemoryLoader: public Antares::Solver::ILoader
+class InMemoryLoader final: public Antares::Solver::ILoader
 {
 public:
     Antares::Solver::ModelerParameters loadParameters() override
@@ -197,7 +197,7 @@ struct Solution
     double objectiveValue{0.0};
 };
 
-class InMemoryWriter: public Antares::Solver::IWriter
+class InMemoryWriter final: public Antares::Solver::IWriter
 {
 public:
     mutable Solution solution_{};

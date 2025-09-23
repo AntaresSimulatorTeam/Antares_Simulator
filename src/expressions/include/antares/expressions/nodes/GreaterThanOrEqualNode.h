@@ -27,7 +27,7 @@ namespace Antares::Expressions::Nodes
 /**
  * @brief Represents a greater than or equal comparison node in a syntax tree.
  */
-class GreaterThanOrEqualNode: public ComparisonNode
+class GreaterThanOrEqualNode final: public ComparisonNode
 {
 public:
     using ComparisonNode::ComparisonNode;

@@ -5,7 +5,7 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class TwoVarsTwoConstraintsFiller: public LinearProblemFiller
+class TwoVarsTwoConstraintsFiller final: public LinearProblemFiller
 {
 public:
     explicit TwoVarsTwoConstraintsFiller() = default;

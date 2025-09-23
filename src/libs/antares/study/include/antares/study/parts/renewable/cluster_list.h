@@ -34,7 +34,7 @@ namespace Antares::Data
 ** \brief List of renewable clusters
 ** \ingroup renewableclusters
 */
-class RenewableClusterList: public ClusterList<RenewableCluster>
+class RenewableClusterList final: public ClusterList<RenewableCluster>
 {
 public:
     std::string typeID() const override;

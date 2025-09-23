@@ -24,7 +24,7 @@
 
 #include "SimulationTableCsv.h"
 
-class SimulationTableCsvFile: public SimulationTableCsv
+class SimulationTableCsvFile final: public SimulationTableCsv
 {
 public:
     SimulationTableCsvFile(const std::filesystem::path& outputFolder,

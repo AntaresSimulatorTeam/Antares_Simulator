@@ -37,7 +37,7 @@ namespace Antares::Data
 
 class BindingConstraint;
 
-class BindingConstraintLoader
+class BindingConstraintLoader final
 {
 public:
     std::vector<std::shared_ptr<BindingConstraint>> load(EnvForLoading env);

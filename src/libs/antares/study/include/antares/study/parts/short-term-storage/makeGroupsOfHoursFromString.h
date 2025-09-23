@@ -38,7 +38,7 @@ struct ShortTermStorageAdditionalConstraintsError final: std::invalid_argument
     using std::invalid_argument::invalid_argument;
 };
 
-class CustomErrorListener: public antlr4::BaseErrorListener
+class CustomErrorListener final: public antlr4::BaseErrorListener
 {
 public:
     void syntaxError(antlr4::Recognizer* recognizer,

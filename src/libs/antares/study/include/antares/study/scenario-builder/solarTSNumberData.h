@@ -29,7 +29,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class solarTSNumberData: public TSNumberData
+class solarTSNumberData final: public TSNumberData
 {
 public:
     bool apply(Study& study) override;

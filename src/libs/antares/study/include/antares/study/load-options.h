@@ -30,7 +30,7 @@
 
 namespace Antares::Data
 {
-class StudyLoadOptions
+class StudyLoadOptions final
 {
 public:
     //! \name Constructor

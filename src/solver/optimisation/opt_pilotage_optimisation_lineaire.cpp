@@ -35,26 +35,23 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
-        if (problemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
+        problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
+                                             / problemeHebdo->NombreDePasDeTempsDUneJournee);
+
+        if (!problemeHebdo->OptimisationAuPasHebdomadaire)
         {
-            problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
-                                                 / problemeHebdo->NombreDePasDeTempsDUneJournee);
-
-            if (!problemeHebdo->OptimisationAuPasHebdomadaire)
-            {
-                problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-                  = problemeHebdo->NombreDePasDeTempsDUneJournee;
-            }
-            else
-            {
-                problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
-                                                                         ->NombreDePasDeTemps;
-            }
-
-            OPT_AllocDuProblemeAOptimiser(problemeHebdo);
-
-            OPT_ChainagesDesIntercoPartantDUnNoeud(problemeHebdo);
+            problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+              = problemeHebdo->NombreDePasDeTempsDUneJournee;
         }
+        else
+        {
+            problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                                     ->NombreDePasDeTemps;
+        }
+
+        OPT_AllocDuProblemeAOptimiser(problemeHebdo);
+
+        OPT_ChainagesDesIntercoPartantDUnNoeud(problemeHebdo);
 
         problemeHebdo->LeProblemeADejaEteInstancie = true;
     }

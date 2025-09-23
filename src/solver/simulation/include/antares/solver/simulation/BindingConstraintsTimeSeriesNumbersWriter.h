@@ -28,7 +28,7 @@
 
 namespace Antares::Solver::Simulation
 {
-class BindingConstraintsTimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter
+class BindingConstraintsTimeSeriesNumbersWriter final: public ITimeSeriesNumbersWriter
 {
 public:
     explicit BindingConstraintsTimeSeriesNumbersWriter(IResultWriter& resultWriter);

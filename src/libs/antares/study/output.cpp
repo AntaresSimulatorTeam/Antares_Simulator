@@ -37,7 +37,7 @@ namespace // anonymous
 {
 
 // TODO VP: remove with GUI
-class OutputFolderIterator: public IO::Directory::IIterator<true>
+class OutputFolderIterator final: public IO::Directory::IIterator<true>
 {
 public:
     using IteratorType = IO::Directory::IIterator<true>;

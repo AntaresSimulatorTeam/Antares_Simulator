@@ -31,7 +31,7 @@ struct NbDispUnitsMinBoundSinceMinUpTimeData
 /*!
  * represent 'Number of Dispatchable Units Min Bound Since Min Up Time' type
  */
-class NbDispUnitsMinBoundSinceMinUpTime: private ConstraintFactory
+class NbDispUnitsMinBoundSinceMinUpTime final: private ConstraintFactory
 {
 public:
     NbDispUnitsMinBoundSinceMinUpTime(ConstraintBuilder& builder,

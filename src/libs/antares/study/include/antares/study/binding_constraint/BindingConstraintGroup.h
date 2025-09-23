@@ -32,7 +32,7 @@
 namespace Antares::Data
 {
 
-class BindingConstraintGroup
+class BindingConstraintGroup final
 {
 public:
     explicit BindingConstraintGroup(std::string name);

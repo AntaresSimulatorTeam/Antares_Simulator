@@ -40,7 +40,7 @@
 namespace Antares::Optimization
 {
 
-class ReadLinearExpressionVisitor
+class ReadLinearExpressionVisitor final
     : public Expressions::Visitors::NodeVisitor<TimeDependentLinearExpression>
 {
 public:

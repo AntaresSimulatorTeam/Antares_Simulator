@@ -33,7 +33,7 @@ namespace
 /*!
  * Just wraps an arbitrary task as a yuni job, and allows to retrieve the corresponding future.
  */
-class PackagedJob: public Yuni::Job::IJob
+class PackagedJob final: public Yuni::Job::IJob
 {
 public:
     PackagedJob(const Task& task):

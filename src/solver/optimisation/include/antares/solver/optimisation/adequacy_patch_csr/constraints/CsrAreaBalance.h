@@ -39,7 +39,7 @@ struct CsrAreaBalanceData
     const uint32_t NombreDePays;
 };
 
-class CsrAreaBalance: private ConstraintFactory
+class CsrAreaBalance final: private ConstraintFactory
 {
 public:
     CsrAreaBalance(ConstraintBuilder& builder, CsrAreaBalanceData& data):

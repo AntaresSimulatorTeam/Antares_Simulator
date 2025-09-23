@@ -34,7 +34,7 @@ struct FlowDissociationData
  * represent 'Flow Dissociation' constraint type
  */
 
-class FlowDissociation: private ConstraintFactory
+class FlowDissociation final: private ConstraintFactory
 {
 public:
     FlowDissociation(ConstraintBuilder& builder, FlowDissociationData& data):

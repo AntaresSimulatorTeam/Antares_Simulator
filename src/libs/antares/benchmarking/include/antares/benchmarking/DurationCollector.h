@@ -32,7 +32,7 @@
 namespace Benchmarking
 {
 
-class DurationCollector
+class DurationCollector final
 {
 public:
     void toFileContent(FileContent& file_content);

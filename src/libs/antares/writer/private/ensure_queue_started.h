@@ -25,7 +25,7 @@
 
 namespace Antares::Solver
 {
-class EnsureQueueStartedIfNeeded
+class EnsureQueueStartedIfNeeded final
 {
 public:
     explicit EnsureQueueStartedIfNeeded(IResultWriter* writer,

@@ -24,7 +24,7 @@
 
 namespace Antares::Expressions::Nodes
 {
-class TimeIndexNode: public BinaryNode
+class TimeIndexNode final: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;

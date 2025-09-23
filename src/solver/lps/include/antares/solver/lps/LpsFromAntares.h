@@ -112,7 +112,7 @@ using WeeklyDataByYearWeek = std::map<WeeklyProblemId, WeeklyDataFromAntares>;
  * @brief The LpsFromAntares class is used to manage the constant and weekly data for Antares
  * problems.
  */
-class LpsFromAntares
+class LpsFromAntares final
 {
 public:
     /*

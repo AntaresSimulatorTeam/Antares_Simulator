@@ -28,7 +28,7 @@ namespace Antares
 /*!
 ** \brief A generic exception for errors that should end the program.
 */
-class FatalError: public std::runtime_error
+class FatalError final: public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;

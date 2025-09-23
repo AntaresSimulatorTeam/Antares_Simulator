@@ -40,11 +40,11 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
 
 void WeeklyOptimization::solve()
 {
-    OPT_OptimisationHebdomadaire(options_,
-                                 problemeHebdo_,
-                                 writer_,
-                                 simulationObserver_.get(),
-                                 simulationTables_);
+    OPT_OptimisationHebdomadaireLineaire(options_,
+                                         problemeHebdo_,
+                                         writer_,
+                                         simulationObserver_.get(),
+                                         simulationTables_);
 }
 
 } // namespace Antares::Solver::Optimization

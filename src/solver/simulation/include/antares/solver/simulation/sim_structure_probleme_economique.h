@@ -454,8 +454,6 @@ struct PROBLEME_HEBDO
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
 
-    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or
-                                                    // OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
     uint32_t NombreDeContraintesCouplantes = 0;

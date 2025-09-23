@@ -38,7 +38,7 @@ namespace Antares::Data
  */
 class TimeSeries;
 
-class TimeSeriesNumbers
+class TimeSeriesNumbers final
 {
 public:
     void registerSeries(const TimeSeries* s, std::string label);
@@ -61,7 +61,7 @@ private:
     std::map<std::string, const TimeSeries*> series;
 };
 
-class TimeSeries
+class TimeSeries final
 {
 public:
     using TS = Matrix<double>;

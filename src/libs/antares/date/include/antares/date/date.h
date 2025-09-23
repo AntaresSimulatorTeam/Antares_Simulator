@@ -176,7 +176,7 @@ struct DayInterval
     }
 }; // class DayInterval
 
-class Calendar
+class Calendar final
 {
 public:
     //! Short string representation with maximum 42 characters

@@ -25,7 +25,7 @@
 /*!
  * represent 'PMinDispatchableGeneration' Constraint type
  */
-class PMinDispatchableGeneration: private ConstraintFactory
+class PMinDispatchableGeneration final: private ConstraintFactory
 {
 public:
     PMinDispatchableGeneration(ConstraintBuilder& builder, StartUpCostsData& data):

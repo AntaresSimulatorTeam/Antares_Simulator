@@ -27,7 +27,7 @@ using namespace Yuni;
 
 namespace FSWalker
 {
-class FileJob: public IJob
+class FileJob final: public IJob
 {
 public:
     FileJob(EventsRegistry& events):

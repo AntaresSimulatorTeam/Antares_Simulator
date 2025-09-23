@@ -22,7 +22,7 @@
 #pragma once
 #include "ConstraintGroup.h"
 
-class HydraulicSmoothingGroup: public ConstraintGroup
+class HydraulicSmoothingGroup final: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

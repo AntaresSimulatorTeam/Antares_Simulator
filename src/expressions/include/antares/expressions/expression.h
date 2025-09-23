@@ -33,7 +33,7 @@ namespace Antares::ModelerStudy::SystemModel
 {
 
 // TODO: add unit tests for this class
-class Expression
+class Expression final
 {
 public:
     Expression() = default;

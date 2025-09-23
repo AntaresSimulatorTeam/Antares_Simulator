@@ -29,7 +29,7 @@
 
 namespace Antares::Solver
 {
-class ImmediateFileResultWriter: public IResultWriter
+class ImmediateFileResultWriter final: public IResultWriter
 {
 public:
     ImmediateFileResultWriter(const std::filesystem::path& folderOutput);

@@ -37,7 +37,7 @@ public:
 
 class ThermalCluster;
 
-class ConstantCostProvider: public CostProvider
+class ConstantCostProvider final: public CostProvider
 {
 public:
     explicit ConstantCostProvider(const ThermalCluster& cluster);
@@ -50,7 +50,7 @@ private:
     const ThermalCluster& cluster;
 };
 
-class ScenarizedCostProvider: public CostProvider
+class ScenarizedCostProvider final: public CostProvider
 {
 public:
     explicit ScenarizedCostProvider(const ThermalCluster& cluster);

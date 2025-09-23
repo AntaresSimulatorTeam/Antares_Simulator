@@ -34,7 +34,7 @@ namespace Antares::Data
 {
 // Represents an output variable (wears the same name) and mainly answers the question :
 // Is the real variable printed in all output reports ? Or is it not printed in any report ?
-class VariablePrintInfo
+class VariablePrintInfo final
 {
 public:
     VariablePrintInfo(uint dataLvl, uint fileLvl);
@@ -78,7 +78,7 @@ private:
 
 class AllVariablesPrintInfo;
 
-class variablePrintInfoCollector
+class variablePrintInfoCollector final
 {
 public:
     variablePrintInfoCollector(AllVariablesPrintInfo* allvarsprintinfo);
@@ -91,7 +91,7 @@ private:
 // Variables print info collection. Mainly a vector of pointers to print info.
 // This collection is filled with as many print info as we can find output variables in the output
 // variables Antares's static list.
-class AllVariablesPrintInfo
+class AllVariablesPrintInfo final
 {
 public:
     // Public methods

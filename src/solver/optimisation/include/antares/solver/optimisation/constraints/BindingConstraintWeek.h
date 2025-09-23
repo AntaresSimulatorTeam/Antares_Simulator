@@ -33,7 +33,7 @@ struct BindingConstraintWeekData
  * represent 'Hourly Binding Constraint' type
  */
 
-class BindingConstraintWeek: private ConstraintFactory
+class BindingConstraintWeek final: private ConstraintFactory
 {
 public:
     BindingConstraintWeek(ConstraintBuilder& builder, BindingConstraintWeekData& data):

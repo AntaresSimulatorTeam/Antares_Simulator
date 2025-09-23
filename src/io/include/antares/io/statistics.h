@@ -95,7 +95,7 @@ void Reset();
 */
 void DumpToLogs();
 
-class Updater
+class Updater final
 {
 public:
     Updater()
@@ -109,7 +109,7 @@ public:
     }
 };
 
-class LogsDumper
+class LogsDumper final
 {
 public:
     LogsDumper()

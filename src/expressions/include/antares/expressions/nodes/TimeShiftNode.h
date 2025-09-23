@@ -25,7 +25,7 @@
 namespace Antares::Expressions::Nodes
 {
 
-class TimeShiftNode: public BinaryNode
+class TimeShiftNode final: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;

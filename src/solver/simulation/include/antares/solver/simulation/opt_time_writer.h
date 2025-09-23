@@ -26,7 +26,7 @@
 
 #include "simulation.h"
 
-class OptimizationStatisticsWriter
+class OptimizationStatisticsWriter final
 {
 public:
     void addTime(uint week, const TIME_MEASURES& timeMeasure);

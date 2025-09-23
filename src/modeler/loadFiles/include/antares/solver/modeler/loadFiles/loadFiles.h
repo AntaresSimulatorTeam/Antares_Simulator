@@ -55,7 +55,7 @@ Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
 void handleYamlError(const YAML::Exception& e, const std::string& context);
 
 /// Generic error class for all loading errors to catch in the main
-class ErrorLoadingYaml: public std::runtime_error
+class ErrorLoadingYaml final: public std::runtime_error
 {
 public:
     explicit ErrorLoadingYaml(const std::string& s):

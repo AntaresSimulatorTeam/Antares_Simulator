@@ -28,7 +28,7 @@
 
 namespace Antares::Optimisation
 {
-class EvaluationContextProvider: public Expressions::IEvaluationContextProvider
+class EvaluationContextProvider final: public Expressions::IEvaluationContextProvider
 {
 public:
     explicit EvaluationContextProvider(const LinearProblemApi::ILinearProblemData& data,

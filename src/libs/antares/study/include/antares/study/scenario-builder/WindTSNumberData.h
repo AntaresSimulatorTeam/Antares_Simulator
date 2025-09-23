@@ -25,7 +25,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class windTSNumberData: public TSNumberData
+class windTSNumberData final: public TSNumberData
 {
 public:
     bool apply(Study& study) override;

@@ -31,7 +31,7 @@ namespace Antares::Optimization
 using LinearExpressionMap = std::map<unsigned int, LinearExpression>;
 
 // time dependent parameter
-class TimeDependentLinearExpression
+class TimeDependentLinearExpression final
 {
 public:
     explicit TimeDependentLinearExpression(

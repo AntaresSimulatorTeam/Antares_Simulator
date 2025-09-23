@@ -25,7 +25,7 @@
 
 namespace Benchmarking
 {
-class Timer
+class Timer final
 {
 public:
     Timer();

@@ -24,7 +24,7 @@
 
 namespace Antares::IO::Inputs::YmlSystem
 {
-class Parser
+class Parser final
 {
 public:
     System parse(const std::string& content);

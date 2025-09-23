@@ -36,7 +36,7 @@ namespace Antares::ModelerStudy::SystemModel
  * Defines the attributes of the Component class
  * Made into a struct to avoid duplication in ComponentBuilder
  */
-class ComponentData
+class ComponentData final
 {
 public:
     std::string id;
@@ -56,7 +56,7 @@ public:
 /**
  * Defines an actual component of the simulated system.
  */
-class Component
+class Component final
 {
 public:
     // Only allowing one private constructor (see below) to forbid empty Components
@@ -116,7 +116,7 @@ protected:
     ComponentData data_;
 };
 
-class ComponentBuilder
+class ComponentBuilder final
 {
 public:
     ComponentBuilder& withId(std::string_view id);
