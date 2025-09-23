@@ -282,14 +282,12 @@ void ComponentFiller::addStaticConstraint(const Optimisation::LinearConstraint& 
 
     optimEntityContainer_.registerConstraint(ct);
     const auto& solverVariables = optimEntityContainer_.getVariables();
+    const auto& coefsPerVar = linear_constraint.coef_per_var[0];
 
-    // for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
-    //        it(linear_constraint.coef_per_var, 0);
-    //      it;
-    //      ++it)
-    // {
-    //     ct->setCoefficient(solverVariables[it.col()], it.value());
-    // }
+    for (const auto& [index, value]: coefsPerVar.coefs)
+    {
+        ct->setCoefficient(solverVariables[index], value);
+    }
 }
 
 void ComponentFiller::addTimeDependentConstraints(
@@ -313,13 +311,11 @@ void ComponentFiller::addTimeDependentConstraints(
                                           + std::to_string(t));
             optimEntityContainer_.registerConstraint(ct);
 
-            // for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator
-            //        it(linear_constraints.coef_per_var, t);
-            //      it;
-            //      ++it)
-            // {
-            //     ct->setCoefficient(solverVariables[it.col()], it.value());
-            // }
+            const auto& coefsPerVar = linear_constraints.coef_per_var[t];
+            for (const auto& [index, value]: coefsPerVar.coefs)
+            {
+                ct->setCoefficient(solverVariables[index], value);
+            }
         }
     }
 }
