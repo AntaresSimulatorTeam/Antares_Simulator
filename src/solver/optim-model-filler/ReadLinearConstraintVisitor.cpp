@@ -50,31 +50,40 @@ std::string ReadLinearConstraintVisitor::name() const
 LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
-    // left -= linear_expression_visitor_.dispatch(node->right()); // TODO
-    // const auto boundary = -left.offset();
-    //    return {.coef_per_var = left.coefPerVar(), .lb = boundary, .ub = boundary};
+    left -= linear_expression_visitor_.dispatch(node->right());
+    const std::vector<double> offset = left.constant();
+    return {.coef_per_var = left, .lb = offset, .ub = offset};
+}
+
+std::vector<double> operator-(const std::vector<double>& in)
+{
+    std::vector<double> ret(in);
+    for (double& x: ret)
+    {
+        x = -x;
+    }
+    return ret;
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
-    // left -= linear_expression_visitor_.dispatch(node->right()); // TODO
+    left -= linear_expression_visitor_.dispatch(node->right()); // TODO
+    const std::vector<double> offset = left.constant();
 
-    // return {.coef_per_var = left.coefPerVar(),
-    //         .lb = std::vector<double>(left.offset().rows(),
-    //                                   -std::numeric_limits<double>::infinity()),
-    //         .ub = -left.offset()};
+    return {.coef_per_var = left,
+            .lb = std::vector<double>(left.size(), -std::numeric_limits<double>::infinity()),
+            .ub = -left.constant()};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
 
-    // left -= linear_expression_visitor_.dispatch(node->right()); // TODO
-    // return {.coef_per_var = left.coefPerVar(),
-    //         .lb = -left.offset(),
-    //         .ub = Eigen::VectorXd::Constant(left.offset().rows(),
-    //                                         std::numeric_limits<double>::infinity())};
+    left -= linear_expression_visitor_.dispatch(node->right());
+    return {.coef_per_var = left,
+            .lb = -left.constant(),
+            .ub = std::vector<double>(left.size(), std::numeric_limits<double>::infinity())};
 }
 
 static Error::InvalidArgumentError IllegalNodeException()

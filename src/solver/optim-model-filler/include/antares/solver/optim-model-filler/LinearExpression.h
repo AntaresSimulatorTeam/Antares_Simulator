@@ -50,7 +50,7 @@ struct LinearExpression final
     LinearExpression& operator-=(const LinearExpression& other)
     {
         coefs.reserve(coefs.size() + other.coefs.size());
-        for (const auto [index, coef]: other.coefs)
+        for (const auto& [index, coef]: other.coefs)
         {
             coefs.emplace_back(index, -coef);
         }
@@ -137,6 +137,25 @@ public:
         {
             v_.emplace<1>(nbTimesteps, *expr);
         }
+    }
+
+    std::vector<double> constant() const
+    {
+        if (auto* expr = std::get_if<LinearExpression>(&v_))
+        {
+            return {expr->constant};
+        }
+        if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
+        {
+            std::vector<double> ret;
+            ret.reserve(expr->size());
+            for (const auto& x: *expr)
+            {
+                ret.push_back(x.constant);
+            }
+            return ret;
+        }
+        throw std::runtime_error("Invalid variant");
     }
 
     LinearExpression* begin()

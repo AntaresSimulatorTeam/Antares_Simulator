@@ -64,7 +64,7 @@ public:
 
     std::string name() const override
     {
-        return "V::Visitor";
+        return "ReadLinearExpressionVisitor";
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(const Nodes::SumNode* node) override
@@ -81,7 +81,9 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::SubtractionNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        auto ret = dispatch(node->left());
+        ret -= dispatch(node->right());
+        return ret;
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
@@ -119,7 +121,8 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::NegationNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        auto ret = dispatch(node->child());
+        return -ret;
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
@@ -263,7 +266,16 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::TimeSumNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        auto expression = dispatch(node->expression());
+        const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
+        const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
+        Antares::Optimization::LinearExpression ret; // Constant expr
+        for (int t = from; t <= to; ++t)
+        {
+            ret += expression[t];
+        }
+
+        return Antares::Optimization::TimeDependentLinearExpression(std::move(ret));
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
