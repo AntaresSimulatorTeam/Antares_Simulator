@@ -24,6 +24,30 @@
 #include <variant>
 #include <vector>
 
+inline void removeDuplicates(std::vector<std::pair<int, double>>& v)
+{
+    // Step 1: sort by .first
+    std::sort(v.begin(), v.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
+
+    // Step 2: merge duplicates
+    auto it = v.begin();
+    for (auto next = it; next != v.end(); ++next)
+    {
+        if (next->first == it->first)
+        {
+            it->second += next->second; // accumulate
+        }
+        else
+        {
+            ++it;
+            *it = *next; // move the unique pair forward
+        }
+    }
+
+    // Step 3: shrink vector
+    v.erase(++it, v.end());
+}
+
 namespace Antares::Optimization
 {
 struct LinearExpression final
@@ -37,6 +61,11 @@ struct LinearExpression final
         coefs(coefs),
         constant(constant)
     {
+    }
+
+    void removeDuplicates()
+    {
+        ::removeDuplicates(coefs);
     }
 
     LinearExpression& operator+=(const LinearExpression& other)
@@ -156,6 +185,14 @@ public:
             return ret;
         }
         throw std::runtime_error("Invalid variant");
+    }
+
+    void removeDuplicates()
+    {
+        for (auto& expr: *this)
+        {
+            expr.removeDuplicates();
+        }
     }
 
     LinearExpression* begin()

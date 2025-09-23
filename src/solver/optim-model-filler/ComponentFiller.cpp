@@ -362,7 +362,7 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, component_, ctx);
 
-    const auto linearExpression = visitor.dispatch(model->Objective().RootNode());
+    const auto linearExpression = visitor.visitRemoveDuplicates(model->Objective().RootNode());
 
     auto& pb = optimEntityContainer_.Problem();
     for (const auto& expr: linearExpression)

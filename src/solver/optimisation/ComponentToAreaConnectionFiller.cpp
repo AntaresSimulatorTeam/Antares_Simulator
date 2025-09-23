@@ -140,7 +140,8 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, component, ctx);
-    auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
+    auto linearExpression = visitor.visitRemoveDuplicates(
+      component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }
 

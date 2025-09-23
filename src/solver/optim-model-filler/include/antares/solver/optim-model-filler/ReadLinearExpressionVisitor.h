@@ -62,6 +62,14 @@ public:
     {
     }
 
+    Antares::Optimization::TimeDependentLinearExpression visitRemoveDuplicates(
+      const Nodes::Node* node)
+    {
+        auto expr = dispatch(node);
+        expr.removeDuplicates();
+        return expr;
+    }
+
     std::string name() const override
     {
         return "ReadLinearExpressionVisitor";
