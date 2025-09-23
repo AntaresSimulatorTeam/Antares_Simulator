@@ -62,7 +62,7 @@ public:
         linearProblem_(pb),
         dataSeries_(dataSeries),
         scenarioGroupRepository_(scenarioGroupRepository),
-        optimEntityContainer_(pb, dataSeries, scenarioGroupRepository)
+        optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository)
     {
     }
 
@@ -156,24 +156,21 @@ void Modeler::solve() const
         writer_.writeProblem(ortools_linear_problem);
 
         logs.info() << "Launching resolution...";
-        Utils::TimeMeasurement solveMeasure;
-
+        measure.reset();
         auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
-        solveMeasure.tick();
-        logs.info() << "Solved in " << solveMeasure.toStringInSeconds();
+        measure.tick();
+        logs.info() << "Solved in " << measure.toStringInSeconds();
+
         switch (solution->getStatus())
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
         {
-            Utils::TimeMeasurement simulationTableMeasure;
             writer_.writeSimulationTable(ortools_linear_problem,
                                          *solution,
                                          data,
                                          system_linear_problem.getOptimEntityContainer(),
                                          timeScenarioCtx);
-            simulationTableMeasure.tick();
-            logs.info() << "Simulation Table is generated in " << simulationTableMeasure.toString();
         }
         break;
         default:

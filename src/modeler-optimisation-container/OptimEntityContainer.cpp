@@ -27,8 +27,8 @@ namespace Antares::Optimisation
 {
 
   OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
-                                           const LinearProblemApi::ILinearProblemData& data,
-                                           const ScenarioGroupRepository& scenarioGroupRepository):
+                                           const LinearProblemApi::ILinearProblemData* data,
+                                           const ScenarioGroupRepository* scenarioGroupRepository):
     linearProblem_(linearProblem),
     data_(data),
     scenarioGroupRepository_(scenarioGroupRepository)
@@ -59,8 +59,8 @@ void OptimEntityContainer::addFromSystemComponent(
                                 .modelVariablesGlobalIndices = modelVariablesGlobalIndices,
                                 .variableIndexMap = variableIndexMap,
        .evaluationContext = Optimisation::EvaluationContext(&component,
-                                                            &data_,
-                                                            &scenarioGroupRepository_.scenario(
+                                                            data_,
+                                                            &scenarioGroupRepository_->scenario(
                                                               component.getScenarioGroupId() ) ) });
 }
 } // namespace Antares::Optimisation

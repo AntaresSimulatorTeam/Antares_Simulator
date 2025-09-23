@@ -54,6 +54,7 @@ using namespace std;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::IO;
 
 auto count_lines = [](std::string_view s)
 {
