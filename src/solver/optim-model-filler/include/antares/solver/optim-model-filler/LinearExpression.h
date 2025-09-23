@@ -256,6 +256,16 @@ public:
         return *this;
     }
 
+    void rotate(int shift)
+    {
+        if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_); expr && !expr->empty())
+        {
+            const int n = static_cast<int>(expr->size());
+            const int k = ((shift % n) + n) % n;
+            std::rotate(expr->begin(), expr->begin() + k, expr->end());
+        }
+    }
+
     TimeDependentLinearExpression& operator*=(const TimeDependentLinearExpression& other)
     {
         if (other.size() > size())
@@ -279,16 +289,6 @@ public:
             expr = -expr;
         }
         return result;
-    }
-
-    LinearExpression* asSingle()
-    {
-        return std::get_if<LinearExpression>(&v_);
-    }
-
-    std::vector<LinearExpression>* asMultiple()
-    {
-        return std::get_if<std::vector<LinearExpression>>(&v_);
     }
 
 private:
