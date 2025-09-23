@@ -284,6 +284,6 @@ private:
     const Antares::Optimisation::EvaluationContext& evalContext_;
     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
     Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
-    int nbtimeSteps_;
+    const int nbtimeSteps_;
 };
 } // namespace Antares::Optimisation
