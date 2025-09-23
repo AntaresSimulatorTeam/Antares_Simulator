@@ -41,9 +41,33 @@ struct LinearExpression final
 
     LinearExpression& operator+=(const LinearExpression& other)
     {
+        coefs.reserve(coefs.size() + other.coefs.size());
         coefs.insert(coefs.end(), other.coefs.begin(), other.coefs.end());
         constant += other.constant;
         return *this;
+    }
+
+    LinearExpression& operator-=(const LinearExpression& other)
+    {
+        coefs.reserve(coefs.size() + other.coefs.size());
+        for (const auto [index, coef]: other.coefs)
+        {
+            coefs.emplace_back(index, -coef);
+        }
+        constant -= other.constant;
+        return *this;
+    }
+
+    LinearExpression operator-() const
+    {
+        LinearExpression ret;
+        ret.coefs.reserve(coefs.size());
+        for (const auto& [index, coef]: coefs)
+        {
+            ret.coefs.emplace_back(index, -coef);
+        }
+        ret.constant = -constant;
+        return ret;
     }
 
     LinearExpression& operator*=(const LinearExpression& other)
@@ -219,6 +243,19 @@ public:
         return *this;
     }
 
+    TimeDependentLinearExpression& operator-=(const TimeDependentLinearExpression& other)
+    {
+        if (other.size() > size())
+        {
+            expandTo(other.size());
+        }
+        for (std::size_t t = 0; t < size(); ++t)
+        {
+            this->operator[](t) -= other[t];
+        }
+        return *this;
+    }
+
     TimeDependentLinearExpression& operator*=(const TimeDependentLinearExpression& other)
     {
         if (other.size() > size())
@@ -239,11 +276,7 @@ public:
         TimeDependentLinearExpression result = *this;
         for (auto& expr: result)
         {
-            for (auto& [idx, coef]: expr.coefs)
-            {
-                coef = -coef;
-            }
-            expr.constant = -expr.constant;
+            expr = -expr;
         }
         return result;
     }

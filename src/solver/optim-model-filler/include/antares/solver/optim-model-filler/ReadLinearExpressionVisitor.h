@@ -252,7 +252,8 @@ public:
         // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
         const auto timeIndex = static_cast<int>(
           evalVisitor_.dispatch(node->right()).valueAsDouble());
-        rotate(*expression.asMultiple(), timeIndex);
+        rotate(*expression.asMultiple(),
+               timeIndex); // TODO move `rotate` into TimeDependentLinearExpression class
         return expression;
     }
 
