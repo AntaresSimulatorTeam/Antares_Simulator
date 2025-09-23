@@ -26,26 +26,31 @@
 
 inline void removeDuplicates(std::vector<std::pair<int, double>>& v)
 {
-    // Step 1: sort by .first
+    if (v.empty())
+    {
+        return;
+    }
+
+    // Step 1: sort by first
     std::sort(v.begin(), v.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
 
     // Step 2: merge duplicates
-    auto it = v.begin();
-    for (auto next = it; next != v.end(); ++next)
+    size_t write = 0;
+    for (size_t read = 1; read < v.size(); ++read)
     {
-        if (next->first == it->first)
+        if (v[read].first == v[write].first)
         {
-            it->second += next->second; // accumulate
+            v[write].second += v[read].second; // accumulate
         }
         else
         {
-            ++it;
-            *it = *next; // move the unique pair forward
+            ++write;
+            v[write] = v[read]; // move next unique element forward
         }
     }
 
-    // Step 3: shrink vector
-    v.erase(++it, v.end());
+    // Step 3: erase leftover duplicates
+    v.erase(v.begin() + write + 1, v.end());
 }
 
 namespace Antares::Optimization

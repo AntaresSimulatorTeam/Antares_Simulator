@@ -47,15 +47,6 @@ std::string ReadLinearConstraintVisitor::name() const
     return "ReadLinearConstraintVisitor";
 }
 
-LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
-{
-    auto left = linear_expression_visitor_.dispatch(node->left());
-    left -= linear_expression_visitor_.dispatch(node->right());
-    left.removeDuplicates();
-    const std::vector<double> offset = left.constant();
-    return {.coef_per_var = left, .lb = offset, .ub = offset};
-}
-
 std::vector<double> operator-(const std::vector<double>& in)
 {
     std::vector<double> ret(in);
@@ -64,6 +55,15 @@ std::vector<double> operator-(const std::vector<double>& in)
         x = -x;
     }
     return ret;
+}
+
+LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
+{
+    auto left = linear_expression_visitor_.dispatch(node->left());
+    left -= linear_expression_visitor_.dispatch(node->right());
+    left.removeDuplicates();
+    const std::vector<double> offset = -left.constant();
+    return {.coef_per_var = left, .lb = offset, .ub = offset};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
