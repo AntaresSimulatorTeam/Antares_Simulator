@@ -48,6 +48,4 @@ library:
           expression: gen1_p + gen2_p - load = 0
         - id: fuel availability gen1
           expression: sum(gen1_p) <= fuel_max
-      objective:
-        - id: objective
-          expression: sum(gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)
+      objective: sum(gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)
