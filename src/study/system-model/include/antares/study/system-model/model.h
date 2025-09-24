@@ -71,10 +71,9 @@ public:
         return id_;
     }
 
-    const Expression& Objectives() const
+    const std::map<std::string, Objective>& Objectives() const
     {
-        // TODO: return the map
-        return objectives_.begin()->second.expression();
+        return objectives_;
     }
 
     const std::map<std::string, Constraint>& Constraints() const

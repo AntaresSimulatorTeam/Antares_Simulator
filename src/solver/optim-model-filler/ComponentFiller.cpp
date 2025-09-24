@@ -278,30 +278,37 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
 }
 
 void ComponentFiller::addObjectives(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                   const Optimisation::LinearProblemApi::FillContext& ctx)
+                                    const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto model = component_.getModel();
-    if (model->Objectives().Empty())
+    if (model->Objectives().empty())
     {
         return;
     }
-    Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_, ctx, component_);
 
-    const auto timeDependentLinearExpression = visitor.dispatch(model->Objectives().RootNode());
-    const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
-
-    if (std::abs(linear_expressions.at(ctx.getLocalFirstTimeStep()).offset()) > 1e-10)
+    for (const auto& [id, objective]: model->Objectives())
     {
-        throw std::invalid_argument("Antares does not support objective offsets (found in model '"
-                                    + model->Id() + "' of component '" + component_.Id() + "').");
-    }
+        Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
+                                                          ctx,
+                                                          component_);
 
-    for (const auto& linear_expression: linear_expressions | std::views::values)
-    {
-        for (const auto& [variableFullKey, coefficient]: linear_expression.coefPerVar())
+        const auto timeDependentLinearExpression = visitor.dispatch(objective.expression().RootNode());
+        const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
+
+        if (std::abs(linear_expressions.at(ctx.getLocalFirstTimeStep()).offset()) > 1e-10)
         {
-            auto* variable = variableDictionary_(variableFullKey);
-            pb.setObjectiveCoefficient(variable, coefficient);
+            throw std::invalid_argument(
+              "Antares does not support objective offsets (found in model '" + model->Id()
+              + "' of component '" + component_.Id() + "').");
+        }
+
+        for (const auto& linear_expression: linear_expressions | std::views::values)
+        {
+            for (const auto& [variableFullKey, coefficient]: linear_expression.coefPerVar())
+            {
+                auto* variable = variableDictionary_(variableFullKey);
+                pb.setObjectiveCoefficient(variable, coefficient);
+            }
         }
     }
 }
