@@ -298,9 +298,9 @@ void ComponentFiller::addObjectives(Optimisation::LinearProblemApi::ILinearProbl
 
         if (std::abs(linear_expressions.at(ctx.getLocalFirstTimeStep()).offset()) > 1e-10)
         {
-            throw std::invalid_argument(
-              "Antares does not support objective offsets (found in model '" + model->Id()
-              + "' of component '" + component_.Id() + "').");
+            throw std::invalid_argument("Antares does not support objective offsets (objective '"
+                                        + id + "' found in model '" + model->Id()
+                                        + "' of component '" + component_.Id() + "').");
         }
 
         for (const auto& linear_expression: linear_expressions | std::views::values)
