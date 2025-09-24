@@ -288,8 +288,11 @@ public:
         Antares::Optimization::TimeDependentLinearExpression ret(nbtimeSteps_);
         for (int t = from; t <= to; ++t)
         {
-            expression.rotate(1);
             ret += expression;
+            if (t < to)
+            {
+                expression.rotate(1);
+            }
         }
         return ret;
     }
