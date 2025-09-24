@@ -229,7 +229,7 @@ struct ComponentToAreaConnectionFillerFixture
                                                scenarioGroupRepository);
         filler.addVariables(linearProblem, fillCtx);
         filler.addConstraints(linearProblem, fillCtx);
-        filler.addObjective(linearProblem, fillCtx);
+        filler.addObjectives(linearProblem, fillCtx);
     }
 };
 

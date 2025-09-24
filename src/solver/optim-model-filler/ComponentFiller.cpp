@@ -277,7 +277,7 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
     }
 }
 
-void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
+void ComponentFiller::addObjectives(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                    const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto model = component_.getModel();

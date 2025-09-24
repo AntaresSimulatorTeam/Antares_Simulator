@@ -359,8 +359,7 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
         std::vector<ModelerStudy::SystemModel::Constraint> constraints = convertConstraints(model);
         std::vector<ModelerStudy::SystemModel::ExtraOutput> extraOutputs = convertExtraOutputs(
           model);
-        std::vector<ModelerStudy::SystemModel::Objective> objectives = convertObjectives(
-          model);
+        std::vector<ModelerStudy::SystemModel::Objective> objectives = convertObjectives(model);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjectives(std::move(objectives))

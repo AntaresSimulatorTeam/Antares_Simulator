@@ -11,7 +11,7 @@ public:
     explicit OneVarFiller() = default;
     void addVariables(ILinearProblem& pb, const FillContext& ctx) override;
     void addConstraints(ILinearProblem& pb, const FillContext& ctx) override;
-    void addObjective(ILinearProblem& pb, const FillContext& ctx) override;
+    void addObjectives(ILinearProblem& pb, const FillContext& ctx) override;
 
 private:
     std::string added_var_name_ = "var-by-OneVarFiller";
@@ -27,7 +27,7 @@ void OneVarFiller::addConstraints([[maybe_unused]] ILinearProblem& pb,
 {
 }
 
-void OneVarFiller::addObjective(ILinearProblem& pb, [[maybe_unused]] const FillContext& ctx)
+void OneVarFiller::addObjectives(ILinearProblem& pb, [[maybe_unused]] const FillContext& ctx)
 {
     auto* var = pb.lookupVariable(added_var_name_);
     pb.setObjectiveCoefficient(var, 1);
