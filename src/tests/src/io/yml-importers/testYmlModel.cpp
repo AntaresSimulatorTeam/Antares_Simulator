@@ -138,7 +138,9 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
+                      - id: "objective2"
+                        expression: "objective2"
 
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
@@ -153,6 +155,8 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
     BOOST_CHECK(model.constraints.empty());
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "objective");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression, "objective");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].id, "objective2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].expression, "objective2");
 }
 
 // Test library with multiple models
@@ -174,7 +178,7 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
                   constraints: []
                   objectives:
                       - id: "objective1"
-                      - expression: "objective1"
+                        expression: "objective1"
                 - id: "model_id2"
                   description: "model_description2"
                   parameters: []
@@ -183,8 +187,8 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
                   port-field-definitions: []
                   constraints: []
                   objectives:
-                      - id: "objective1"
-                      - expression: "objective2"
+                      - id: "objective2"
+                        expression: "objective2"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 2);
@@ -220,7 +224,7 @@ BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -255,7 +259,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -288,7 +292,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters_default_values)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.models.size() == 1);
@@ -320,7 +324,7 @@ BOOST_AUTO_TEST_CASE(variables_properly_parsed)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -355,7 +359,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -390,7 +394,7 @@ BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
@@ -432,7 +436,7 @@ BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     auto& model = libraryObj.models[0];
@@ -467,7 +471,7 @@ BOOST_AUTO_TEST_CASE(ports_are_properly_parsed)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -499,7 +503,7 @@ BOOST_AUTO_TEST_CASE(model_can_conatin_multiple_ports)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -532,7 +536,7 @@ BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -567,7 +571,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
                   constraints: []
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -601,7 +605,7 @@ BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
                         expression: "expression"
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -633,7 +637,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
                         expression: "expression2"
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
@@ -678,7 +682,7 @@ BOOST_AUTO_TEST_CASE(model_attributes_can_be_ommited)
     BOOST_CHECK(libraryObj.models[0].ports.empty());
     BOOST_CHECK(libraryObj.models[0].port_field_definitions.empty());
     BOOST_CHECK(libraryObj.models[0].constraints.empty());
-    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "");
+    BOOST_CHECK(libraryObj.models[0].objectives.empty());
 }
 
 BOOST_AUTO_TEST_CASE(test_variable_to_string)
@@ -715,7 +719,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
                         expression: "expression2"
                   objectives:
                       - id: "objective"
-                      - expression: "objective"
+                        expression: "objective"
         )"s;
     Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);

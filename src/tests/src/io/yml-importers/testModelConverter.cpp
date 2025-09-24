@@ -123,14 +123,14 @@ BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
                            .port_field_definitions = {},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objectives = {{"param1", "parameter 1"}},
+                           .objectives = {{"objective", "param1"}},
                            .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 1);
     BOOST_CHECK_EQUAL(lib.Models().at("model1").Id(), "model1");
-    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objectives().at("param1").expression().Value(),
-                      "parameter 1");
+    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objectives().at("objective").expression().Value(),
+                      "param1");
 }
 
 // Test library with models and parameters
@@ -173,7 +173,7 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objectives = {{"var1", ""}},
+      .objectives = {{"objective", "var1"}},
       .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
