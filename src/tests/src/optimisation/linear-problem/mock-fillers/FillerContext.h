@@ -38,7 +38,7 @@ void VarFillerContext::addConstraints([[maybe_unused]] ILinearProblem& pb,
 }
 
 void VarFillerContext::addObjectives([[maybe_unused]] ILinearProblem& pb,
-                                    [[maybe_unused]] const FillContext& ctx)
+                                     [[maybe_unused]] const FillContext& ctx)
 {
 }
 

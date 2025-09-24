@@ -26,7 +26,7 @@ void OneConstraintFiller::addConstraints(ILinearProblem& pb,
 }
 
 void OneConstraintFiller::addObjectives([[maybe_unused]] ILinearProblem& pb,
-                                       [[maybe_unused]] const FillContext& ctx)
+                                        [[maybe_unused]] const FillContext& ctx)
 {
 }
 

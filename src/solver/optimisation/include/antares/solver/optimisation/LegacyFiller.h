@@ -16,7 +16,7 @@ public:
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
                         const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
+                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre_;

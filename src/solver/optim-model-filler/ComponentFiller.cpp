@@ -292,7 +292,8 @@ void ComponentFiller::addObjectives(Optimisation::LinearProblemApi::ILinearProbl
                                                           ctx,
                                                           component_);
 
-        const auto timeDependentLinearExpression = visitor.dispatch(objective.expression().RootNode());
+        const auto timeDependentLinearExpression = visitor.dispatch(
+          objective.expression().RootNode());
         const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
 
         if (std::abs(linear_expressions.at(ctx.getLocalFirstTimeStep()).offset()) > 1e-10)

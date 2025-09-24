@@ -29,7 +29,7 @@ void TwoVarsTwoConstraintsFiller::addConstraints(ILinearProblem& pb,
 }
 
 void TwoVarsTwoConstraintsFiller::addObjectives([[maybe_unused]] ILinearProblem& pb,
-                                               [[maybe_unused]] const FillContext& ctx)
+                                                [[maybe_unused]] const FillContext& ctx)
 {
 }
 
