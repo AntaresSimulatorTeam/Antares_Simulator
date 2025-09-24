@@ -21,13 +21,13 @@
 #pragma once
 
 #include <map>
-#include <unordered_set>
 #include <vector>
 
 #include <antares/expressions/expression.h>
 
 #include "constraint.h"
 #include "extraOutput.h"
+#include "objective.h"
 #include "parameter.h"
 #include "port.h"
 #include "portFieldDefinition.h"
@@ -71,9 +71,10 @@ public:
         return id_;
     }
 
-    const Expression& Objective() const
+    const Expression& Objectives() const
     {
-        return objective_;
+        // TODO: return the map
+        return objectives_.begin()->second.expression();
     }
 
     const std::map<std::string, Constraint>& Constraints() const
@@ -110,12 +111,12 @@ public:
 private:
     friend class ModelBuilder;
     std::string id_;
-    Expression objective_;
 
     std::map<std::string, Parameter> parameters_;
     std::map<std::string, Variable> variables_;
     std::map<std::string, Constraint> constraints_;
     std::map<std::string, Port> ports_;
+    std::map<std::string, Objective> objectives_;
     std::map<std::string, ExtraOutput> extraOutputs_;
 
     PortFieldMap portFieldDefinitions_;
@@ -137,7 +138,7 @@ class ModelBuilder final
 {
 public:
     ModelBuilder& withId(std::string_view id);
-    ModelBuilder& withObjective(Expression&& objective);
+    ModelBuilder& withObjectives(std::vector<Objective>&& objectives);
     ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
     ModelBuilder& withVariables(std::vector<Variable>&& variables);
     ModelBuilder& withPorts(std::vector<Port>&& ports);

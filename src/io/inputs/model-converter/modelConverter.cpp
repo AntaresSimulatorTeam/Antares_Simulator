@@ -27,7 +27,6 @@
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
-#include "antares/study/system-model/model.h"
 #include "antares/study/system-model/parameter.h"
 #include "antares/study/system-model/port.h"
 #include "antares/study/system-model/portType.h"
@@ -322,10 +321,10 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
  * \param model The YmlModel::Model object containing objectives.
  * \return A vector of SystemModel::Expression objects.
  */
-std::vector<ModelerStudy::SystemModel::Expression> convertObjectives(
+std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
   const IO::Inputs::YmlModel::Model& model)
 {
-    std::vector<ModelerStudy::SystemModel::Expression> objectives;
+    std::vector<ModelerStudy::SystemModel::Objective> objectives;
     objectives.reserve(model.objectives.size());
     for (const auto& objective: model.objectives)
     {
@@ -360,13 +359,11 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
         std::vector<ModelerStudy::SystemModel::Constraint> constraints = convertConstraints(model);
         std::vector<ModelerStudy::SystemModel::ExtraOutput> extraOutputs = convertExtraOutputs(
           model);
-
-        auto nodeObjective = convertExpressionToNode(model.objective, model);
+        std::vector<ModelerStudy::SystemModel::Objective> objectives = convertObjectives(
+          model);
 
         auto modelObj = modelBuilder.withId(model.id)
-                          .withObjective(
-                            ModelerStudy::SystemModel::Expression{model.objective,
-                                                                  std::move(nodeObjective)})
+                          .withObjectives(std::move(objectives))
                           .withParameters(std::move(parameters))
                           .withVariables(std::move(variables))
                           .withPorts(std::move(ports))

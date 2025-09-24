@@ -126,14 +126,14 @@ ModelBuilder& ModelBuilder::withId(std::string_view id)
 }
 
 /**
- * \brief Sets the objective of the model.
+ * \brief Sets the objectives of the model.
  *
- * \param objective The Expression object representing the objective.
+ * \param parameters A vector of Objective objects to set.
  * \return Reference to the ModelBuilder object.
  */
-ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
+ModelBuilder& ModelBuilder::withObjectives(std::vector<Objective>&& objectives)
 {
-    model_.objective_ = std::move(objective);
+    fillMapFrom(model_.objectives_, objectives, uniqueIdChecker_);
     return *this;
 }
 

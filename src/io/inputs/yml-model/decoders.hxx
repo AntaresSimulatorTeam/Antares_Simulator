@@ -213,8 +213,8 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
           std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(node["constraints"]);
         rhs.binding_constraints = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(node["binding-constraints"]);
-        rhs.objectives = as_fallback_default<
-          std::vector<Antares::IO::Inputs::YmlModel::Objective>>(node["objectives"]);
+        rhs.objectives = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Objective>>(
+          node["objectives"]);
         rhs.extra_outputs = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlModel::ExtraOutput>>(node["extra-outputs"]);
         return true;

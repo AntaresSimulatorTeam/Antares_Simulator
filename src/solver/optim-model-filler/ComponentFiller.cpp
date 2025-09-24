@@ -281,13 +281,13 @@ void ComponentFiller::addObjective(Optimisation::LinearProblemApi::ILinearProble
                                    const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto model = component_.getModel();
-    if (model->Objective().Empty())
+    if (model->Objectives().Empty())
     {
         return;
     }
     Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_, ctx, component_);
 
-    const auto timeDependentLinearExpression = visitor.dispatch(model->Objective().RootNode());
+    const auto timeDependentLinearExpression = visitor.dispatch(model->Objectives().RootNode());
     const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();
 
     if (std::abs(linear_expressions.at(ctx.getLocalFirstTimeStep()).offset()) > 1e-10)
