@@ -317,6 +317,27 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
 }
 
 /**
+ * \brief Converts objectives from YmlModel::Model to SystemModel::Expression.
+ *
+ * \param model The YmlModel::Model object containing objectives.
+ * \return A vector of SystemModel::Expression objects.
+ */
+std::vector<ModelerStudy::SystemModel::Expression> convertObjectives(
+  const IO::Inputs::YmlModel::Model& model)
+{
+    std::vector<ModelerStudy::SystemModel::Expression> objectives;
+    objectives.reserve(model.objectives.size());
+    for (const auto& objective: model.objectives)
+    {
+        auto nodeRegistry = convertExpressionToNode(objective.expression, model);
+        objectives.emplace_back(objective.id,
+                                ModelerStudy::SystemModel::Expression{objective.expression,
+                                                                      std::move(nodeRegistry)});
+    }
+    return objectives;
+}
+
+/**
  * \brief Converts models from YmlModel::Library to SystemModel::Model.
  *
  * \param library The YmlModel::Library object containing models.
