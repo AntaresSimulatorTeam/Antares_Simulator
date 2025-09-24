@@ -275,15 +275,23 @@ public:
       const Nodes::TimeSumNode* node) override
     {
         auto expression = dispatch(node->expression());
+
         const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
         const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
-        Antares::Optimization::LinearExpression ret; // Constant expr
-        for (int t = from; t <= to; ++t)
+
+        if (expression.size() == 1)
         {
-            ret += expression[t];
+            expression *= static_cast<double>(to - from);
+            return expression;
         }
 
-        return Antares::Optimization::TimeDependentLinearExpression(std::move(ret));
+        Antares::Optimization::TimeDependentLinearExpression ret(nbtimeSteps_);
+        for (int t = from; t <= to; ++t)
+        {
+            expression.rotate(1);
+            ret += expression;
+        }
+        return ret;
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(

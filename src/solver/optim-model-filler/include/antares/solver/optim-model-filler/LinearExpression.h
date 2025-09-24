@@ -73,6 +73,17 @@ struct LinearExpression final
         ::removeDuplicates(coefs);
     }
 
+    LinearExpression& operator*=(double factor)
+    {
+        for (auto& [index, coef]: coefs)
+        {
+            coef *= factor;
+        }
+        constant *= factor;
+
+        return *this;
+    }
+
     LinearExpression& operator+=(const LinearExpression& other)
     {
         coefs.reserve(coefs.size() + other.coefs.size());
@@ -325,6 +336,15 @@ public:
             const int k = ((shift % n) + n) % n;
             std::rotate(expr->begin(), expr->begin() + k, expr->end());
         }
+    }
+
+    TimeDependentLinearExpression& operator*=(double factor)
+    {
+        for (auto& expr: *this)
+        {
+            expr *= factor;
+        }
+        return *this;
     }
 
     TimeDependentLinearExpression& operator*=(const TimeDependentLinearExpression& other)
