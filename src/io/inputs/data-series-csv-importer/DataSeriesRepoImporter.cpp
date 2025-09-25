@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <algorithm>
+#include <charconv>
 #include <fstream>
-#include <iostream>
 #include <ranges>
 #include <vector>
 
@@ -29,11 +29,22 @@
 
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
+
 namespace fs = std::filesystem;
 
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
 using namespace Optimisation::LinearProblemDataImpl;
+
+inline const char* parseOneDouble(const char* ptr, const char* end, double& value)
+{
+    auto [p, ec] = std::from_chars(ptr, end, value);
+    if (ec == std::errc::invalid_argument)
+    {
+        return ptr + 1; // skip bad char
+    }
+    return p;
+}
 
 std::vector<double> parseNumbersFast(const char* first,
                                      const char* last,
@@ -47,26 +58,25 @@ std::vector<double> parseNumbersFast(const char* first,
     }
 
     const char* ptr = first;
-    const char* line_end = last;
-    char* end;
 
-    while (ptr < line_end)
+    while (ptr < last)
     {
         // Skip leading whitespace and separators
-        while (ptr < line_end && (*ptr == sep || *ptr == ' ' || *ptr == '\t'))
+        while (ptr < last && (*ptr == sep || *ptr == ' ' || *ptr == '\t'))
         {
             ++ptr;
         }
 
         // If we've reached the end, break
-        if (ptr >= line_end)
+        if (ptr >= last)
         {
             break;
         }
-        double val = std::strtod(ptr, &end);
 
+        double val = 0.;
+        const char* next = parseOneDouble(ptr, last, val);
         // Check if we parsed anything
-        if (end == ptr)
+        if (next == ptr)
         {
             // Skip invalid characters and try again
             ++ptr;
@@ -74,8 +84,7 @@ std::vector<double> parseNumbersFast(const char* first,
         }
 
         row.push_back(val);
-        ptr = end;
-
+        ptr = next;
     }
 
     return row;
@@ -99,7 +108,6 @@ std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, 
     }
 
     std::vector<std::vector<double>> columns;
-
     const char* start = file.data();
     const char* end = file.data() + file.size();
 
