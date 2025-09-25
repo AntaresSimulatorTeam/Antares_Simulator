@@ -63,8 +63,8 @@ BOOST_AUTO_TEST_CASE(WithObjectives)
     BOOST_CHECK_EQUAL(config.modelDecomposition.objectives[0].id, "obj1");
     BOOST_CHECK(config.modelDecomposition.objectives[0].location == Location::MASTER);
     BOOST_CHECK_EQUAL(config.modelDecomposition.objectives[1].id, "obj2");
-    BOOST_CHECK(config.modelDecomposition.objectives[1].location ==
-                      Location::MASTER_AND_SUBPROBLEMS);
+    BOOST_CHECK(config.modelDecomposition.objectives[1].location
+                == Location::MASTER_AND_SUBPROBLEMS);
 }
 
 BOOST_AUTO_TEST_CASE(Build)
