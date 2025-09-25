@@ -31,62 +31,97 @@ namespace fs = std::filesystem;
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
 using namespace Optimisation::LinearProblemDataImpl;
-std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, char sep)
+std::vector<double> parseNumbersFast(const std::string& line, char sep = ' ', size_t capacity = 0)
 {
-    std::ifstream file(filename, std::ios::binary);
-    if (!file.is_open())
+    std::vector<double> row;
+    if (capacity > 0)
     {
-        throw std::runtime_error("Could not open file " + filename.string());
+        row.reserve(capacity);
     }
 
-    std::vector<std::vector<double>> columns;
-    std::string line;
+    const char* ptr = line.data();
+    const char* line_end = line.data() + line.size();
+    char* end;
 
-    while (std::getline(file, line))
+    while (ptr < line_end && *ptr != '\0')
     {
-        if (line.empty())
+        double val = std::strtod(ptr, &end);
+
+        // Check if we parsed anything
+        if (end == ptr)
         {
+            // Skip invalid characters and try again
+            ++ptr;
             continue;
         }
 
-        std::vector<double> row;
-        const char* ptr = line.c_str();
-        char* end;
+        row.push_back(val);
+        ptr = end;
 
-        while (*ptr)
+        // Skip separators and whitespace
+        while (ptr < line_end && (*ptr == sep || *ptr == ' ' || *ptr == '\t'))
         {
-            double val = std::strtod(ptr, &end);
-
-            row.push_back(val);
-            ptr = end;
-
-            // skip separator and whitespace
-            while (*ptr == sep || *ptr == ' ' || *ptr == '\t')
-            {
-                ++ptr;
-            }
-            if (*(ptr + 1) == '\0')
-            {
-                break;
-            }
-        }
-
-        // initialize columns on first row
-        if (columns.empty())
-        {
-            columns.resize(row.size());
-        }
-
-        if (row.size() != columns.size())
-        {
-            throw std::runtime_error("Inconsistent number of columns in CSV");
-        }
-
-        for (size_t i = 0; i < row.size(); ++i)
-        {
-            columns[i].push_back(row[i]);
+            ++ptr;
         }
     }
+
+    return row;
+}
+
+std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, char sep)
+{
+    const auto fileName = filename.string();
+    MappedFile file(fileName.c_str());
+    std::vector<std::vector<double>> columns;
+
+    file.for_each_line(
+      [&columns, &sep](const std::string& line)
+      {
+          if (line.empty())
+          {
+              return;
+          }
+
+          // std::vector<double> row;
+          // const char* ptr = line.c_str();
+          // char* end;
+          auto row = parseNumbersFast(line, sep, columns.size());
+
+          // while (*ptr)
+          // {
+          //     double val = std::strtod(ptr, &end);
+          //
+          //     row.push_back(val);
+          //     ptr = end;
+          //
+          //     // skip separator and whitespace
+          //     while (*ptr == sep || *ptr == ' ' || *ptr == '\t')
+          //     {
+          //         ++ptr;
+          //     }
+          //     if (*(ptr + 1) == '\0')
+          //     {
+          //         break;
+          //     }
+          // }
+
+          // initialize columns on first row
+          if (columns.empty())
+          {
+              columns.resize(row.size());
+          }
+
+          if (row.size() != columns.size())
+          {
+              throw std::runtime_error("Inconsistent number of columns in CSV");
+          }
+
+          for (size_t i = 0; i < row.size(); ++i)
+          {
+              columns[i].push_back(row[i]);
+          }
+      });
+
     return columns;
 }
 
