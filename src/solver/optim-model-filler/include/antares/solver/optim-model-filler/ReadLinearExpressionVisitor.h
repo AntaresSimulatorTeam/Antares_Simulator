@@ -281,11 +281,13 @@ public:
 
         if (expression.size() == 1)
         {
-            expression *= static_cast<double>(to - from);
+            // example from=0, to=2 => length({0, 1, 2}) = 3
+            expression *= static_cast<double>(to - from + 1);
             return expression;
         }
 
         Antares::Optimization::TimeDependentLinearExpression ret(nbtimeSteps_);
+        expression.rotate(from);
         for (int t = from; t <= to; ++t)
         {
             ret += expression;

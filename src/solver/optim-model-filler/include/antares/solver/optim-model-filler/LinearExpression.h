@@ -330,6 +330,11 @@ public:
 
     void rotate(int shift)
     {
+        if (shift == 0)
+        {
+            // Nothing to do
+            return;
+        }
         if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_); expr && !expr->empty())
         {
             const int n = static_cast<int>(expr->size());
