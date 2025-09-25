@@ -56,7 +56,7 @@ static double convertToDouble(const std::string& key, const std::string& value)
 
 double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key) const
 {
-    const auto& parameters_types_and_values= component_->getParameterValues();
+    const auto& parameters_types_and_values = component_->getParameterValues();
     const auto it = parameters_types_and_values.find(key);
     if (it == parameters_types_and_values.end())
     {
@@ -68,7 +68,7 @@ double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key
 
 std::string EvaluationContext::getSystemParameterValue(const std::string& key) const
 {
-    const auto& parameters_types_and_values= component_->getParameterValues();
+    const auto& parameters_types_and_values = component_->getParameterValues();
     return parameters_types_and_values.at(key).value;
 }
 
@@ -77,7 +77,7 @@ double EvaluationContext::getParameterValue(const std::string& key,
                                             unsigned int hour) const
 {
     IScenario::TimeSeriesNumber time_series_number = scenario_->getData(year);
-    const auto& parameters_types_and_values= component_->getParameterValues();
+    const auto& parameters_types_and_values = component_->getParameterValues();
     return data_->getData(parameters_types_and_values.at(key).value, time_series_number, hour);
 }
 
@@ -87,7 +87,7 @@ std::span<const double> EvaluationContext::getParameterValue(const std::string& 
                                                              unsigned int lastHour) const
 {
     IScenario::TimeSeriesNumber time_series_number = scenario_->getData(year);
-    const auto& parameters_types_and_values= component_->getParameterValues();
+    const auto& parameters_types_and_values = component_->getParameterValues();
     return data_->getData(parameters_types_and_values.at(key).value,
                           time_series_number,
                           firstHour,
@@ -97,14 +97,14 @@ std::span<const double> EvaluationContext::getParameterValue(const std::string& 
 ModelerStudy::SystemModel::ParameterType EvaluationContext::getParameterType(
   const std::string& key) const
 {
-    const auto& parameters_types_and_values= component_->getParameterValues();
+    const auto& parameters_types_and_values = component_->getParameterValues();
     return parameters_types_and_values.at(key).type;
 }
 
 ModelerStudy::SystemModel::ParameterTypeAndValue EvaluationContext::getParameter(
   const std::string& key) const
 {
-    const auto& parameters_types_and_values= component_->getParameterValues();
+    const auto& parameters_types_and_values = component_->getParameterValues();
     return parameters_types_and_values.at(key);
 }
 
