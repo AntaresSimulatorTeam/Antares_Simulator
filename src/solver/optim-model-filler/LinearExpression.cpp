@@ -181,11 +181,11 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(std::size_t nbTimes
 {
     if (nbTimesteps == 1)
     {
-        v_.emplace<0>();
+        v_.emplace<LinearExpression>();
     }
     else
     {
-        v_.emplace<1>(nbTimesteps);
+        v_.emplace<std::vector<LinearExpression>>(nbTimesteps);
     }
 }
 
@@ -193,11 +193,11 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(const std::span<con
 {
     if (values.size() == 1)
     {
-        v_.emplace<0>(values[0]);
+        v_.emplace<LinearExpression>(values[0]);
     }
     else
     {
-        auto& out = v_.emplace<1>();
+        auto& out = v_.emplace<std::vector<LinearExpression>>();
         out.reserve(values.size());
         for (const double& v: values)
         {
@@ -215,7 +215,7 @@ void TimeDependentLinearExpression::expandTo(std::size_t nbTimesteps)
 {
     if (auto* expr = std::get_if<LinearExpression>(&v_))
     {
-        v_.emplace<1>(nbTimesteps, *expr);
+        v_.emplace<std::vector<LinearExpression>>(nbTimesteps, *expr);
     }
 }
 
