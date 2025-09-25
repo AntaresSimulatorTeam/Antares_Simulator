@@ -161,7 +161,6 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
-
     for (const auto& variable: variables)
     {
         uniqueIdChecker_.add(variable.Id());

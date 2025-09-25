@@ -24,7 +24,6 @@
 #include <sstream>
 #include <variant>
 
-
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/modeler-optimisation-container/EvaluationContext.h"

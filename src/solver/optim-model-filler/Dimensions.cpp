@@ -23,9 +23,8 @@
 
 #include <antares/solver/optim-model-filler/Dimensions.h>
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
-
 
 IntegerInterval::Iterator::Iterator(unsigned int current):
     current_(current)
@@ -80,6 +79,7 @@ unsigned int Dimensions::getNumberOfTimesteps() const
 {
     return timeInterval ? timeInterval->finalTime - timeInterval->initialTime + 1 : 1;
 }
+
 std::string buildVariableName(const std::string& compoId,
                               const std::string& variableId,
                               std::optional<Optimization::MCYearAndTime::MCYear> mcyear,
@@ -96,4 +96,4 @@ std::string buildVariableName(const std::string& compoId,
     }
     return ret;
 }
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

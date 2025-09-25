@@ -29,16 +29,16 @@
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-    
+
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const Component& component,
 
-  const Optimisation::OptimEntityContainer& variableContainer):
-    linear_expression_visitor_( fillContext, component, variableContainer)
+  const Optimisation::OptimEntityContainer& optimEntityContainer):
+    linear_expression_visitor_(optimEntityContainer, component, fillContext)
 {
 }
 
@@ -47,33 +47,46 @@ std::string ReadLinearConstraintVisitor::name() const
     return "ReadLinearConstraintVisitor";
 }
 
+std::vector<double> operator-(const std::vector<double>& in)
+{
+    std::vector<double> ret(in);
+    for (double& x: ret)
+    {
+        x = -x;
+    }
+    return ret;
+}
+
 LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right());
-    const auto boundary = -left.offset();
-    return {.coef_per_var = left.coefPerVar(), .lb = boundary, .ub = boundary};
+    left.removeDuplicates();
+    const std::vector<double> offset = -left.constant();
+    return {.coef_per_var = left, .lb = offset, .ub = offset};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
-    left -= linear_expression_visitor_.dispatch(node->right());
+    left -= linear_expression_visitor_.dispatch(node->right()); // TODO
+    left.removeDuplicates();
+    const std::vector<double> offset = left.constant();
 
-    return {.coef_per_var = left.coefPerVar(),
-            .lb = Eigen::VectorXd::Constant(left.offset().rows(),
-                                            -std::numeric_limits<double>::infinity()),
-            .ub = -left.offset()};
+    return {.coef_per_var = left,
+            .lb = std::vector<double>(left.size(), -std::numeric_limits<double>::infinity()),
+            .ub = -left.constant()};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
+
     left -= linear_expression_visitor_.dispatch(node->right());
-    return {.coef_per_var = left.coefPerVar(),
-            .lb = -left.offset(),
-            .ub = Eigen::VectorXd::Constant(left.offset().rows(),
-                                            std::numeric_limits<double>::infinity())};
+    left.removeDuplicates();
+    return {.coef_per_var = left,
+            .lb = -left.constant(),
+            .ub = std::vector<double>(left.size(), std::numeric_limits<double>::infinity())};
 }
 
 static Error::InvalidArgumentError IllegalNodeException()
@@ -150,4 +163,4 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
 {
     throw IllegalNodeException();
 }
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

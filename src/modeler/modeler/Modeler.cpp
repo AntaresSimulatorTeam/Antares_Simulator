@@ -68,8 +68,7 @@ public:
 
     ~SystemLinearProblemBuilder() = default;
 
-    void Provide(
-                 const FillContext& timeScenarioCtx)
+    void Provide(const FillContext& timeScenarioCtx)
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         // All LP variables coordinates (component id, variable id, scenario, time step)
@@ -78,8 +77,8 @@ public:
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       optimEntityContainer_,
-                                                                       dataSeries_,
-                                                                    scenarioGroupRepository_);
+                                                                      dataSeries_,
+                                                                      scenarioGroupRepository_);
             fillers.push_back(std::move(cf));
             optimEntityContainer_.addFromSystemComponent(component);
         }
@@ -112,7 +111,6 @@ void Modeler::solve() const
         const auto data = loader_.loadAll();
 
         Utils::TimeMeasurement measure;
-
 
         writer_.init(!parameters.noOutput, simulationTableSuffix);
 

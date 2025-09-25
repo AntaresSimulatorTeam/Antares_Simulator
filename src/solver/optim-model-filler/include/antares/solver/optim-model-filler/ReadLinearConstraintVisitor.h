@@ -25,17 +25,20 @@
 
 #include <antares/expressions/visitors/NodeVisitor.h>
 
+#include "LinearExpression.h"
 #include "ReadLinearExpressionVisitor.h"
+
 namespace Antares::Optimisation
 {
 class OptimEntityContainer;
-} //
+} // namespace Antares::Optimisation
+
 /**
  * Read Linear Constraint Visitor
  * Visits a Node and produces a Linear Constraint (defined by its Linear Expression and bounds).
  * The root node is expected to be a comparison node.
  */
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 
 /**
@@ -47,9 +50,9 @@ namespace Antares::Optimization
  */
 struct LinearConstraint
 {
-    Eigen::SparseMatrix<double, Eigen::RowMajor> coef_per_var;
-    Eigen::VectorXd lb;
-    Eigen::VectorXd ub;
+    Antares::Optimization::TimeDependentLinearExpression coef_per_var;
+    std::vector<double> lb;
+    std::vector<double> ub;
 };
 
 class ReadLinearConstraintVisitor final: public Expressions::Visitors::NodeVisitor<LinearConstraint>
@@ -84,4 +87,4 @@ private:
 
     ReadLinearExpressionVisitor linear_expression_visitor_;
 };
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

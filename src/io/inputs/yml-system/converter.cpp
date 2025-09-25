@@ -109,12 +109,11 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     for (const auto& [id, time_dependent, scenario_dependent, value]: c.parameters)
     {
         parameters.try_emplace(id,
-                               ParameterTypeAndValue{
-                                 .id = id,
-                                 .type = time_dependent
-                                           ? ParameterType::TIMESERIE
-                                           : ParameterType::CONSTANT,
-                                 .value = value});
+                               ParameterTypeAndValue{.id = id,
+                                                     .type = time_dependent
+                                                               ? ParameterType::TIMESERIE
+                                                               : ParameterType::CONSTANT,
+                                                     .value = value});
     }
 
     auto component = component_builder.withId(c.id)

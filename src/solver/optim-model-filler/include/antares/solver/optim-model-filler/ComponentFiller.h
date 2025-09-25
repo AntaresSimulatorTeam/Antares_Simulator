@@ -23,10 +23,10 @@
 
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "ReadLinearConstraintVisitor.h"
-#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -61,29 +61,23 @@ public:
                              const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
-    void addVariables(
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    void addConstraints(
-                        const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     const std::vector<unsigned int>& getVariableStartColumn() const;
 
-    void addObjective(
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    void addStaticConstraint(
-                             const Optimization::LinearConstraint& linear_constraint,
-                             const std::string& constraint_id) ;
+    void addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
+                             const std::string& constraint_id);
 
-    void addTimeDependentConstraints(
-                                     const Optimization::LinearConstraint& linear_constraints,
+    void addTimeDependentConstraints(const Optimisation::LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
-                                     const Optimisation::LinearProblemApi::FillContext& ctx) ;
+                                     const Optimisation::LinearProblemApi::FillContext& ctx);
 
-      TimeIndex getConstraintTimeIndex(
-      const Expressions::Nodes::Node* node,
-      const ModelerStudy::SystemModel::Component& component) const;
+    TimeIndex getConstraintTimeIndex(const Expressions::Nodes::Node* node,
+                                     const ModelerStudy::SystemModel::Component& component) const;
 
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
@@ -102,28 +96,28 @@ public:
                      double lb,
                      double ub,
                      bool integer,
-                     const Optimization::Dimensions& dim) const;
+                     const Optimisation::Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      const std::vector<double>& lb,
                      double ub,
                      bool integer,
-                     const Optimization::Dimensions& dim) const;
+                     const Optimisation::Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      double lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimization::Dimensions& dim) const;
+                     const Optimisation::Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      const std::vector<double>& lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimization::Dimensions& dim) const;
+                     const Optimisation::Dimensions& dim) const;
 
     class BoundsSizeMismatch: public std::invalid_argument
     {

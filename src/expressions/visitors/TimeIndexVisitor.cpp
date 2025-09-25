@@ -111,7 +111,7 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* n
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        TimeIndexVisitor visitor(optimEntityContainer_,*component);
+        TimeIndexVisitor visitor(optimEntityContainer_, *component);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
@@ -123,7 +123,8 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* time
     return dispatch(timeShiftNode->left());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
+Optimisation::TimeIndex TimeIndexVisitor::visit(
+  [[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
 {
     return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
@@ -134,7 +135,8 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSu
     return dispatch(timeSumNode->expression());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
+Optimisation::TimeIndex TimeIndexVisitor::visit(
+  [[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
     return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }

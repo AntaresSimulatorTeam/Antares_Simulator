@@ -54,7 +54,6 @@ static void checkComponentDataValidity(const ComponentData& data)
                                         + "\" has no value for parameter '" + param + "'");
         }
     }
-
 }
 
 Component::Component(const ComponentData& component_data)

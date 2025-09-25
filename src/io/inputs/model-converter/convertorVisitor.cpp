@@ -132,10 +132,10 @@ static constexpr unsigned int convertBool(bool in)
 }
 
 static constexpr Optimisation::TimeIndex convertToTimeIndex(bool timedependent,
-                                                                     bool scenariodependent)
+                                                            bool scenariodependent)
 {
     return static_cast<Optimisation::TimeIndex>((convertBool(scenariodependent) << 1)
-                                                         | convertBool(timedependent));
+                                                | convertBool(timedependent));
 }
 
 Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const

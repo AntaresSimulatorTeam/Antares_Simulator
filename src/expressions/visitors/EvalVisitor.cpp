@@ -84,6 +84,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());
 }
+
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
     const auto& solverVariables = optimContainer_.getVariables();
@@ -92,11 +93,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
-        std::string varName = Optimization::buildVariableName(component_.Id(),
-                                                              node->value(),
-                                                              Optimization::MCYearAndTime::MCYear{
-                                                                fillContext_.getYear()},
-                                                              std::nullopt);
+        std::string varName = Antares::Optimisation::buildVariableName(
+          component_.Id(),
+          node->value(),
+          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
+          std::nullopt);
 
         return EvaluationResult(solverVariables[startColumn]->solutionValue());
     }
@@ -112,7 +113,6 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 
     return EvaluationResult{varValues};
 }
-
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {

@@ -36,7 +36,7 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-   OptimEntityContainer& optimEntityContainer,
+  OptimEntityContainer& optimEntityContainer,
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
@@ -50,8 +50,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addVariables(const FillContext&)
 {
     // nothing to do
 }
@@ -69,9 +68,10 @@ static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Compone
     return field.value();
 }
 
-IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                                                      const std::string& areaId,
-                                                                      unsigned ts) const
+IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
+  Optimisation::LinearProblemApi::ILinearProblem& pb,
+  const std::string& areaId,
+  unsigned ts) const
 {
     auto pdt = ts % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
     if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end())
@@ -90,7 +90,7 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(Optimisati
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   Optimisation::LinearProblemApi::ILinearProblem& pb,
-  const LinearExpressionEigen& linearExpression,
+  const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
   const std::string& areaId) const
 {
@@ -100,21 +100,18 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     std::string lowerAreaId = areaId;
     boost::algorithm::to_lower(lowerAreaId);
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    const auto& coeffPerVar = linearExpression.coefPerVar();
 
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
         IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localIndex);
 
-        for (Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(coeffPerVar,
-                                                                            localIndex);
-             it;
-             ++it)
+        for (const auto& [index, coef]: linearExpression[localIndex])
         {
-            areaBalanceConstraint->setCoefficient(solverVariables.at(it.col()), -it.value());
+            areaBalanceConstraint->setCoefficient(solverVariables.at(index), -coef);
         }
-        double offset = linearExpression.offset()(localIndex);
+
+        double offset = linearExpression[localIndex].constant();
         areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + offset,
                                          areaBalanceConstraint->getUb() + offset);
     }
@@ -133,35 +130,35 @@ public:
 };
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
-    ILinearProblem& pb,
+  ILinearProblem& pb,
   const FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
   const std::string& areaId)
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
-    ReadLinearExpressionVisitor visitor(
-                                        ctx,
-                                        component,
-                                        optimEntityContainer_);
-    auto linearExpression = visitor.dispatch(component.nodeAtPortField(portId, injectionFieldId));
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_, component, ctx);
+    auto linearExpression = visitor.visitRemoveDuplicates(
+      component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }
 
-void ComponentToAreaConnectionFiller::addConstraints(
-                                                     const FillContext& ctx)
+void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
 {
     for (const auto& component: modelerSystem_->Components())
     {
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            addComponentPortContributionToArea(optimEntityContainer_.Problem(), ctx, component, portId, areaId);
+            addComponentPortContributionToArea(optimEntityContainer_.Problem(),
+                                               ctx,
+                                               component,
+                                               portId,
+                                               areaId);
         }
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addObjective(const FillContext&)
 {
     // nothing to do
 }
