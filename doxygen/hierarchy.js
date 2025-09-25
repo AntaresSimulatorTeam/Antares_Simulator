@@ -1807,6 +1807,7 @@ var hierarchy =
     [ "StructureIndex< thermalTSNumberData, const ThermalCluster * >", "classStructureIndex.html", [
       [ "Fixture::Thermal", "structFixture_1_1Thermal.html", null ]
     ] ],
+    [ "STS_holder< nb_hours >", "structSTS__holder.html", null ],
     [ "Antares::Data::ShortTermStorage::STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", null ],
     [ "Antares::Data::ShortTermStorage::STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", null ],
     [ "study_input_handler.study_input_handler", "classstudy__input__handler_1_1study__input__handler.html", null ],

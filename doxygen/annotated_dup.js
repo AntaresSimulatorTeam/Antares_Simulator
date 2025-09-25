@@ -1714,6 +1714,7 @@ var annotated_dup =
     [ "StorageMock", "classStorageMock.html", "classStorageMock" ],
     [ "StringIsNotWellFormated", "classStringIsNotWellFormated.html", "classStringIsNotWellFormated" ],
     [ "StructureIndex", "classStructureIndex.html", "classStructureIndex" ],
+    [ "STS_holder", "structSTS__holder.html", "structSTS__holder" ],
     [ "StubOptPeriodStringGenerator", "classStubOptPeriodStringGenerator.html", "classStubOptPeriodStringGenerator" ],
     [ "StudyBuilder", "structStudyBuilder.html", "structStudyBuilder" ],
     [ "StudyData", "classStudyData.html", "classStudyData" ],
