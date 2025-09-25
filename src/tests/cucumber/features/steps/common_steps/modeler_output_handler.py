@@ -12,7 +12,9 @@ class modeler_output_handler:
     def __read_simulation_table(absolute_path) -> pd.DataFrame:
         df = pd.read_csv(absolute_path, header=0, sep=",", low_memory=False)
         # We need an int or a range for scenario the modeler step 
+        df['scenario_index'] = df['scenario_index'].replace("None", 0)
         df['scenario_index'] = df['scenario_index'].replace(np.nan, 0)
+        df.replace("None", np.nan, inplace=True)
         cols = ["block", "absolute_time_index", "block_time_index", "scenario_index", "value"]
         for col in cols:
             df[col] = df[col].astype(float)
