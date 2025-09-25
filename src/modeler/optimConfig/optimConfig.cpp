@@ -19,60 +19,34 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <string>
-#include <vector>
+#include "antares/solver/modeler/optimConfig/optimConfig.h"
+
+#include <utility>
 
 namespace Antares::Modeler::Config
 {
 
-enum class Location
+OptimConfigBuilder& OptimConfigBuilder::withId(const std::string& id)
 {
-    MASTER,
-    MASTER_AND_SUBPROBLEMS,
-    SUBPROBLEMS
-};
+    config_.id = id;
+    return *this;
+}
 
-class Variable
+OptimConfigBuilder& OptimConfigBuilder::withVariables(std::vector<Variable>&& variables)
 {
-public:
-    std::string id;
-    Location location;
-};
+    config_.modelDecomposition.variables = std::move(variables);
+    return *this;
+}
 
-class Objective
+OptimConfigBuilder& OptimConfigBuilder::withObjectives(std::vector<Objective>&& objectives)
 {
-public:
-    std::string id;
-    Location location;
-};
+    config_.modelDecomposition.objectives = std::move(objectives);
+    return *this;
+}
 
-class ModelDecomposition
+OptimConfig OptimConfigBuilder::build()
 {
-public:
-    std::vector<Variable> variables;
-    std::vector<Objective> objectives;
-};
-
-class OptimConfig
-{
-public:
-    std::string id;
-    ModelDecomposition modelDecomposition;
-
-    // Friend declaration
-    friend class OptimConfigBuilder;
-};
-
-class OptimConfigBuilder
-{
-public:
-    OptimConfigBuilder& withId(const std::string& id);
-    OptimConfigBuilder& withVariables(std::vector<Variable>&& variables);
-    OptimConfigBuilder& withObjectives(std::vector<Objective>&& objectives);
-    OptimConfig build();
-
-private:
-    OptimConfig config_;
-};
+    return config_;
+}
 
 } // namespace Antares::Modeler::Config
