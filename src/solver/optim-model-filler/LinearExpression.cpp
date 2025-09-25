@@ -24,12 +24,21 @@
 namespace
 {
 void removeDuplicates(std::vector<std::pair<int, double>>& v)
-{
-    if (v.empty())
-    {
-        return;
-    }
 
+{
+    // Most constraints have 1 or 2 terms, so we handle them here without sort & loops
+    switch (v.size())
+    {
+    case 0:
+    case 1:
+        return;
+    case 2:
+        if (v[0].first != v[1].first)
+        {
+            return;
+        }
+        break;
+    }
     // Step 1: sort by first
     std::sort(v.begin(), v.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
 
