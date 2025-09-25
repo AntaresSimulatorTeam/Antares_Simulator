@@ -55,7 +55,8 @@ namespace Antares::ModelerStudy::SystemModel
 {
 class Component;
 }
-
+namespace Antares::IO
+{
 struct TimeBlock
 {
     unsigned int block;
@@ -156,3 +157,4 @@ void FillSimulationTable(
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   bool forceExportForScenarioIndex = false);
+} // namespace Antares::IO

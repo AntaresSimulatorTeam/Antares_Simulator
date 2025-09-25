@@ -47,8 +47,8 @@ class OptimEntityContainer
 {
 public:
     OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
-                         const LinearProblemApi::ILinearProblemData& data,
-                         const ScenarioGroupRepository& scenarioGroupRepository);
+                         const LinearProblemApi::ILinearProblemData* data,
+                         const ScenarioGroupRepository* scenarioGroupRepository);
 
     [[nodiscard]] const std::vector<unsigned int>& getVariableStartColumn() const
     {
@@ -159,7 +159,7 @@ private:
     std::vector<unsigned int> constraintStartLine_;
     unsigned int constraintGlobalIndex_ = 0;
     LinearProblemApi::ILinearProblem& linearProblem_;
-    const LinearProblemApi::ILinearProblemData& data_;
-    const ScenarioGroupRepository& scenarioGroupRepository_;
+    const LinearProblemApi::ILinearProblemData* data_;
+    const ScenarioGroupRepository* scenarioGroupRepository_;
 };
 } // namespace Antares::Optimisation

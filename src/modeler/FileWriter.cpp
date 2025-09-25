@@ -61,14 +61,14 @@ void FileWriter::writeSimulationTable(
     if (output)
     {
         SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
-        FillSimulationTable(simulationTable,
-                            linearProblem,
-                            solution.getObjectiveValue(),
-                            modelerData,
-                            variableContainer,
-                            fillContext,
-                            0,
-                            TimeConversionMode::SingleBlock);
+        IO::FillSimulationTable(simulationTable,
+                                linearProblem,
+                                solution.getObjectiveValue(),
+                                modelerData,
+                                variableContainer,
+                                fillContext,
+                                0,
+                                IO::TimeConversionMode::SingleBlock);
         simulationTable.writeHeader();
         simulationTable.write();
     }

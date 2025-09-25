@@ -106,12 +106,12 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     {
         IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localIndex);
 
-        for (const auto& [index, coef]: linearExpression[localIndex].coefs)
+        for (const auto& [index, coef]: linearExpression[localIndex])
         {
             areaBalanceConstraint->setCoefficient(solverVariables.at(index), -coef);
         }
 
-        double offset = linearExpression[localIndex].constant;
+        double offset = linearExpression[localIndex].constant();
         areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + offset,
                                          areaBalanceConstraint->getUb() + offset);
     }

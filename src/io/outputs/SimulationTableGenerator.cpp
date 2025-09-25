@@ -32,11 +32,14 @@
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/modeler/data.h"
+#include "antares/utils/utils.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 using TI = Antares::Optimisation::TimeIndex;
 
+namespace Antares::IO
+{
 TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  const unsigned currentBlock)
@@ -326,7 +329,8 @@ void addPortEntries(ISimulationTable& simulationTable,
                        .dispatch(portFieldDef.Definition().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
-        // is time and/or scenario dependent. It may be more efficient to enrich EvaluationResult
+        // is time and/or scenario dependent. It may be more efficient to enrich
+        // EvaluationResult
         // by adding a TimeIndex to it? It would require some careful work inside EvalVisitor
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
@@ -392,6 +396,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                          const TimeConversionMode& timeConversionMode,
                          bool forceExportForScenarioIndex)
 {
+    Utils::TimeMeasurement measure;
     unsigned scenario = fillContext.getYear();
 
     for (const auto& component: modelerData.system->Components())
@@ -436,4 +441,8 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                               forceExportForScenarioIndex);
     }
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
+
+    measure.tick();
+    Antares::logs.info() << "Simulation Table is generated in " << measure.toString();
 }
+} // namespace Antares::IO

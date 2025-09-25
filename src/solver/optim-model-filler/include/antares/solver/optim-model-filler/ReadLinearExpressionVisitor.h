@@ -148,7 +148,7 @@ public:
         if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
         {
             Antares::Optimization::LinearExpression out;
-            out.coefs.emplace_back(variableStart, 1);
+            out.addVariable(variableStart, 1);
             return Antares::Optimization::TimeDependentLinearExpression(std::move(out));
         }
         // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd
@@ -163,7 +163,7 @@ public:
             auto variableIndex = variableStart;
             for (int ts = 0; ts < nbtimeSteps_; ts++)
             {
-                out[ts].coefs.emplace_back(variableIndex, 1);
+                out[ts].addVariable(variableIndex, 1);
                 ++variableIndex;
             }
             return out;
@@ -197,12 +197,8 @@ public:
           fillContext_.getYear(),
           fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
           fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
-        Antares::Optimization::TimeDependentLinearExpression out(nbtimeSteps_);
-        for (int idx = 0; idx < nbtimeSteps_; idx++)
-        {
-            out[idx].constant = parameters[idx];
-        }
-        return out;
+
+        return Antares::Optimization::TimeDependentLinearExpression(parameters);
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(

@@ -284,7 +284,7 @@ void ComponentFiller::addStaticConstraint(const Optimisation::LinearConstraint& 
     const auto& solverVariables = optimEntityContainer_.getVariables();
     const auto& coefsPerVar = linear_constraint.coef_per_var[0];
 
-    for (const auto& [index, value]: coefsPerVar.coefs)
+    for (const auto& [index, value]: coefsPerVar)
     {
         ct->setCoefficient(solverVariables[index], value);
     }
@@ -312,7 +312,7 @@ void ComponentFiller::addTimeDependentConstraints(
             optimEntityContainer_.registerConstraint(ct);
 
             const auto& coefsPerVar = linear_constraints.coef_per_var[t];
-            for (const auto& [index, value]: coefsPerVar.coefs)
+            for (const auto& [index, value]: coefsPerVar)
             {
                 ct->setCoefficient(solverVariables[index], value);
             }
@@ -367,7 +367,7 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
     auto& pb = optimEntityContainer_.Problem();
     for (const auto& expr: linearExpression)
     {
-        for (const auto& [index, value]: expr.coefs)
+        for (const auto& [index, value]: expr)
         {
             pb.setObjectiveCoefficient(solverVariables[index], value);
         }

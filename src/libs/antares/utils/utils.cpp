@@ -223,8 +223,7 @@ bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>
 
 TimeMeasurement::TimeMeasurement()
 {
-    start_ = clock::now();
-    end_ = start_;
+    reset();
 }
 
 void TimeMeasurement::tick()
@@ -248,6 +247,12 @@ std::string TimeMeasurement::toStringInSeconds() const
     oss.precision(3);
     oss << std::fixed << (duration_ms() / 1000.0) << " s";
     return oss.str();
+}
+
+void TimeMeasurement::reset()
+{
+    start_ = clock::now();
+    end_ = start_;
 }
 
 } // namespace Utils

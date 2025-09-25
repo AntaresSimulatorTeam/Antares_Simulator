@@ -19,363 +19,78 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 #pragma once
+#include <span>
 #include <stdexcept>
 #include <utility>
 #include <variant>
 #include <vector>
 
-inline void removeDuplicates(std::vector<std::pair<int, double>>& v)
-{
-    if (v.empty())
-    {
-        return;
-    }
-
-    // Step 1: sort by first
-    std::sort(v.begin(), v.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
-
-    // Step 2: merge duplicates
-    size_t write = 0;
-    for (size_t read = 1; read < v.size(); ++read)
-    {
-        if (v[read].first == v[write].first)
-        {
-            v[write].second += v[read].second; // accumulate
-        }
-        else
-        {
-            ++write;
-            v[write] = v[read]; // move next unique element forward
-        }
-    }
-
-    // Step 3: erase leftover duplicates
-    v.erase(v.begin() + write + 1, v.end());
-}
-
 namespace Antares::Optimization
 {
-struct LinearExpression final
+class LinearExpression final
 {
-    std::vector<std::pair<int, double>> coefs;
-    double constant = 0.;
+public:
+    LinearExpression();
+    LinearExpression(double constant);
+    LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant);
 
-    LinearExpression() = default;
+    void removeDuplicates();
 
-    LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant):
-        coefs(coefs),
-        constant(constant)
-    {
-    }
+    LinearExpression& operator*=(double factor);
+    LinearExpression& operator+=(const LinearExpression& other);
+    LinearExpression& operator-=(const LinearExpression& other);
+    LinearExpression operator-() const;
+    LinearExpression& operator*=(const LinearExpression& other);
+    void addVariable(int index, double value);
+    double constant() const;
 
-    void removeDuplicates()
-    {
-        ::removeDuplicates(coefs);
-    }
+    using const_iterator = std::vector<std::pair<int, double>>::const_iterator;
+    const_iterator begin() const;
+    const_iterator end() const;
 
-    LinearExpression& operator*=(double factor)
-    {
-        for (auto& [index, coef]: coefs)
-        {
-            coef *= factor;
-        }
-        constant *= factor;
-
-        return *this;
-    }
-
-    LinearExpression& operator+=(const LinearExpression& other)
-    {
-        coefs.reserve(coefs.size() + other.coefs.size());
-        coefs.insert(coefs.end(), other.coefs.begin(), other.coefs.end());
-        constant += other.constant;
-        return *this;
-    }
-
-    LinearExpression& operator-=(const LinearExpression& other)
-    {
-        coefs.reserve(coefs.size() + other.coefs.size());
-        for (const auto& [index, coef]: other.coefs)
-        {
-            coefs.emplace_back(index, -coef);
-        }
-        constant -= other.constant;
-        return *this;
-    }
-
-    LinearExpression operator-() const
-    {
-        LinearExpression ret;
-        ret.coefs.reserve(coefs.size());
-        for (const auto& [index, coef]: coefs)
-        {
-            ret.coefs.emplace_back(index, -coef);
-        }
-        ret.constant = -constant;
-        return ret;
-    }
-
-    LinearExpression& operator*=(const LinearExpression& other)
-    {
-        if (hasCoefs() && other.hasCoefs())
-        {
-            // Multiplying two symbolic expressions would give quadratic terms,
-            // which this representation cannot hold.
-            throw std::runtime_error("Quadratic term detected");
-        }
-        else if (!hasCoefs() && !other.hasCoefs())
-        {
-            // constant * constant
-            constant *= other.constant;
-        }
-        else if (hasCoefs() && !other.hasCoefs())
-        {
-            // linear * constant
-            for (auto& [idx, coef]: coefs)
-            {
-                coef *= other.constant;
-            }
-            constant *= other.constant;
-        }
-        else // (!hasCoefs() && other.hasCoefs())
-        {
-            // constant * linear
-            coefs = other.coefs;
-            for (auto& [idx, coef]: coefs)
-            {
-                coef *= constant; // use this->constant as multiplier
-            }
-            constant *= other.constant;
-        }
-        return *this;
-    }
-
-    bool hasCoefs() const
-    {
-        return !coefs.empty();
-    }
+private:
+    bool hasCoefs() const;
+    std::vector<std::pair<int, double>> coefs_;
+    double constant_ = 0.;
 };
 
 class TimeDependentLinearExpression final
 {
 public:
-    TimeDependentLinearExpression(std::size_t nbTimesteps)
-    {
-        if (nbTimesteps == 1)
-        {
-            v_.emplace<0>();
-        }
-        else
-        {
-            v_.emplace<1>(nbTimesteps);
-        }
-    }
+    explicit TimeDependentLinearExpression(std::size_t nbTimesteps);
 
-    TimeDependentLinearExpression(LinearExpression&& expr):
-        v_(std::move(expr))
-    {
-    }
+    explicit TimeDependentLinearExpression(const std::span<const double>& values);
 
-    void expandTo(std::size_t nbTimesteps)
-    {
-        if (auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            v_.emplace<1>(nbTimesteps, *expr);
-        }
-    }
+    explicit TimeDependentLinearExpression(LinearExpression&& expr);
+    void expandTo(std::size_t nbTimesteps);
 
-    std::vector<double> constant() const
-    {
-        if (auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            return {expr->constant};
-        }
-        if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-        {
-            std::vector<double> ret;
-            ret.reserve(expr->size());
-            for (const auto& x: *expr)
-            {
-                ret.push_back(x.constant);
-            }
-            return ret;
-        }
-        throw std::runtime_error("Invalid variant");
-    }
+    std::vector<double> constant() const;
 
-    void removeDuplicates()
-    {
-        for (auto& expr: *this)
-        {
-            expr.removeDuplicates();
-        }
-    }
+    void removeDuplicates();
 
-    LinearExpression* begin()
-    {
-        if (auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            return expr;
-        }
-        if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-        {
-            return expr->data();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
+    std::size_t size() const;
 
-    const LinearExpression* begin() const
-    {
-        if (const auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            return expr;
-        }
-        if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-        {
-            return expr->data();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
+    LinearExpression* begin();
+    LinearExpression* end();
 
-    LinearExpression* end()
-    {
-        if (auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            return expr + 1;
-        }
-        if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-        {
-            return expr->data() + expr->size();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
+    const LinearExpression* begin() const;
+    const LinearExpression* end() const;
 
-    const LinearExpression* end() const
-    {
-        if (const auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            return expr + 1;
-        }
-        if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-        {
-            return expr->data() + expr->size();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
+    LinearExpression& operator[](std::size_t idx);
 
-    LinearExpression& operator[](std::size_t idx)
-    {
-        if (auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            return *expr;
-        }
-        if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-        {
-            return expr->operator[](idx);
-        }
-        throw std::runtime_error("Invalid variant");
-    }
+    const LinearExpression& operator[](std::size_t idx) const;
 
-    const LinearExpression& operator[](std::size_t idx) const
-    {
-        if (const auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            return *expr;
-        }
-        if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-        {
-            return expr->operator[](idx);
-        }
-        throw std::runtime_error("Invalid variant");
-    }
+    TimeDependentLinearExpression& operator+=(const TimeDependentLinearExpression& other);
 
-    std::size_t size() const
-    {
-        if (const auto* expr = std::get_if<LinearExpression>(&v_))
-        {
-            return 1;
-        }
-        if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-        {
-            return expr->size();
-        }
-        throw std::runtime_error("Invalid variant");
-    }
+    TimeDependentLinearExpression& operator-=(const TimeDependentLinearExpression& other);
 
-    TimeDependentLinearExpression& operator+=(const TimeDependentLinearExpression& other)
-    {
-        if (other.size() > size())
-        {
-            expandTo(other.size());
-        }
-        for (std::size_t t = 0; t < size(); ++t)
-        {
-            this->operator[](t) += other[t];
-        }
-        return *this;
-    }
+    void rotate(int shift);
 
-    TimeDependentLinearExpression& operator-=(const TimeDependentLinearExpression& other)
-    {
-        if (other.size() > size())
-        {
-            expandTo(other.size());
-        }
-        for (std::size_t t = 0; t < size(); ++t)
-        {
-            this->operator[](t) -= other[t];
-        }
-        return *this;
-    }
+    TimeDependentLinearExpression& operator*=(double factor);
 
-    void rotate(int shift)
-    {
-        if (shift == 0)
-        {
-            // Nothing to do
-            return;
-        }
-        if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_); expr && !expr->empty())
-        {
-            const int n = static_cast<int>(expr->size());
-            const int k = ((shift % n) + n) % n;
-            std::rotate(expr->begin(), expr->begin() + k, expr->end());
-        }
-    }
+    TimeDependentLinearExpression& operator*=(const TimeDependentLinearExpression& other);
 
-    TimeDependentLinearExpression& operator*=(double factor)
-    {
-        for (auto& expr: *this)
-        {
-            expr *= factor;
-        }
-        return *this;
-    }
-
-    TimeDependentLinearExpression& operator*=(const TimeDependentLinearExpression& other)
-    {
-        if (other.size() > size())
-        {
-            expandTo(other.size());
-        }
-        int t = 0;
-        for (auto& expr: *this)
-        {
-            expr *= other[t];
-            t++;
-        }
-        return *this;
-    }
-
-    TimeDependentLinearExpression operator-() const
-    {
-        TimeDependentLinearExpression result = *this;
-        for (auto& expr: result)
-        {
-            expr = -expr;
-        }
-        return result;
-    }
+    TimeDependentLinearExpression operator-() const;
 
 private:
     std::variant<LinearExpression, std::vector<LinearExpression>> v_;
