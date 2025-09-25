@@ -20,12 +20,7 @@
 */
 #pragma once
 
-#include <cstddef>
-#include <cstring>
 #include <filesystem>
-#include <stdexcept>
-#include <string>
-#include <string_view>
 
 #include <antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h>
 

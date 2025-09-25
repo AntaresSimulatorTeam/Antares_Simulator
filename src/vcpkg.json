@@ -19,6 +19,10 @@
       "version>=": "1.86.0"
     },
     {
+      "name": "boost-iostreams",
+      "version>=": "1.86.0"
+    },
+    {
       "name": "minizip-ng",
       "default-features": false,
       "version>=": "4.0.0",
