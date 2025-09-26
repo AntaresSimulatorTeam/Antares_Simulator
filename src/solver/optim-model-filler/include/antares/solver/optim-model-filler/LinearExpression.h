@@ -20,7 +20,6 @@
  */
 #pragma once
 #include <span>
-#include <stdexcept>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -34,7 +33,7 @@ public:
     LinearExpression(double constant);
     LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant);
 
-    void removeDuplicates();
+    void removeDuplicateCoefficients();
 
     LinearExpression& operator*=(double factor);
     LinearExpression& operator+=(const LinearExpression& other);
@@ -66,7 +65,7 @@ public:
 
     std::vector<double> constant() const;
 
-    void removeDuplicates();
+    void removeDuplicateCoefficients();
 
     std::size_t size() const;
 

@@ -66,7 +66,7 @@ public:
       const Nodes::Node* node)
     {
         auto expr = dispatch(node);
-        expr.removeDuplicates();
+        expr.removeDuplicateCoefficients();
         return expr;
     }
 

@@ -21,10 +21,12 @@
 
 #include "antares/solver/optim-model-filler/LinearExpression.h"
 
+#include <algorithm>
+#include <stdexcept>
+
 namespace
 {
 void removeDuplicates(std::vector<std::pair<int, double>>& v)
-
 {
     // Most constraints have 1 or 2 terms, so we handle them here without sort & loops
     switch (v.size())
@@ -63,7 +65,6 @@ void removeDuplicates(std::vector<std::pair<int, double>>& v)
 } // namespace
 
 namespace Antares::Optimization
-
 {
 LinearExpression::LinearExpression() = default;
 
@@ -79,9 +80,9 @@ LinearExpression::LinearExpression(const std::vector<std::pair<int, double>>& co
 {
 }
 
-void LinearExpression::removeDuplicates()
+void LinearExpression::removeDuplicateCoefficients()
 {
-    ::removeDuplicates(coefs_);
+    removeDuplicates(coefs_);
 }
 
 LinearExpression& LinearExpression::operator*=(double factor)
@@ -247,11 +248,11 @@ std::vector<double> TimeDependentLinearExpression::constant() const
     throw std::runtime_error("Invalid variant");
 }
 
-void TimeDependentLinearExpression::removeDuplicates()
+void TimeDependentLinearExpression::removeDuplicateCoefficients()
 {
     for (auto& expr: *this)
     {
-        expr.removeDuplicates();
+        expr.removeDuplicateCoefficients();
     }
 }
 
