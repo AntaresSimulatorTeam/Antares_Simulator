@@ -443,7 +443,7 @@ private:
                 // This means that, here :
                 // - for OverallCost, we sum the hourly values of var OverallCost for each
                 //   district's areas.
-                // - for LOLD, we sum the hourly values of var LOLD for each district's areas.
+                // - for LOLD, we sum the hourly values of var UNSP. ENRG for each district's areas
                 allVars.template computeSpatialAggregateWith<
                   typename VCardType::VCardForSpatialAggregate>(pValuesForTheCurrentYear[numSpace],
                                                                 *i /* the current area */,
