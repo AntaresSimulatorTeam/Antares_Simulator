@@ -35,8 +35,11 @@ enum class Location
 class Variable
 {
 public:
-    Variable(std::string id, Location location)
-        : id(std::move(id)), location(location) {}
+    Variable(std::string id, Location location):
+        id(std::move(id)),
+        location(location)
+    {
+    }
 
 private:
     std::string id;
@@ -46,8 +49,11 @@ private:
 class Objective
 {
 public:
-    Objective(std::string id, Location location)
-        : id(std::move(id)), location(location) {}
+    Objective(std::string id, Location location):
+        id(std::move(id)),
+        location(location)
+    {
+    }
 
 private:
     std::string id;
@@ -57,8 +63,11 @@ private:
 class ModelDecomposition
 {
 public:
-    ModelDecomposition(std::vector<Variable> variables, std::vector<Objective> objectives)
-        : variables(std::move(variables)), objectives(std::move(objectives)) {}
+    ModelDecomposition(std::vector<Variable> variables, std::vector<Objective> objectives):
+        variables(std::move(variables)),
+        objectives(std::move(objectives))
+    {
+    }
 
 private:
     std::vector<Variable> variables;
@@ -68,8 +77,11 @@ private:
 class Model
 {
 public:
-    Model(std::string id, ModelDecomposition modelDecomposition)
-        : id(std::move(id)), modelDecomposition(std::move(modelDecomposition)) {}
+    Model(std::string id, ModelDecomposition modelDecomposition):
+        id(std::move(id)),
+        modelDecomposition(std::move(modelDecomposition))
+    {
+    }
 
 private:
     std::string id;
