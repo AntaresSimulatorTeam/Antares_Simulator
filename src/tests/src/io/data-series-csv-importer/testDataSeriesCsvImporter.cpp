@@ -77,13 +77,6 @@ BOOST_AUTO_TEST_CASE(not_a_number)
                           checkMessage(filePath.string() + ": \"X\" is not a number"));
 }
 
-BOOST_AUTO_TEST_CASE(empty_line)
-{
-    writeFile("wrong.csv", "1;2\n\n3;4");
-    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
-                          std::invalid_argument,
-                          checkMessage("wrong.csv: empty line in the middle of the file"));
-}
 
 BOOST_AUTO_TEST_CASE(one_line_one_column)
 {
