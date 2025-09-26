@@ -36,12 +36,15 @@ namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
 using namespace Optimisation::LinearProblemDataImpl;
 
-inline const char* parseOneDouble(const char* ptr, const char* end, double& value)
+inline const char* parseOneDouble(const char* ptr,
+                                  const char* end,
+                                  double& value,
+                                  const std::string& errorMessagePrefix = "")
 {
     auto [p, ec] = std::from_chars(ptr, end, value);
     if (ec == std::errc::invalid_argument)
     {
-        return ptr + 1; // skip bad char
+        throw std::invalid_argument(errorMessagePrefix + ": \"" + *p + "\" is not a number");
     }
     return p;
 }
@@ -49,7 +52,8 @@ inline const char* parseOneDouble(const char* ptr, const char* end, double& valu
 std::vector<double> parseNumbersFast(const char* first,
                                      const char* last,
                                      char sep = ' ',
-                                     size_t capacity = 0)
+                                     size_t capacity = 0,
+                                     const std::string& errorMessagePrefix = "")
 {
     std::vector<double> row;
     if (capacity > 0)
@@ -100,11 +104,12 @@ std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, 
     {
         return {}; // empty or inaccessible
     }
-    boost::iostreams::mapped_file_source file(filename.string());
+    const auto& fileName = filename.string();
+    boost::iostreams::mapped_file_source file(fileName);
 
     if (!file.is_open())
     {
-        throw std::runtime_error("Failed to open file: " + filename.string());
+        throw std::runtime_error("Failed to open file: " + fileName);
     }
 
     std::vector<std::vector<double>> columns;
@@ -125,7 +130,7 @@ std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, 
             line_len--;
         }
 
-        auto row = parseNumbersFast(start, start + line_len, sep, columns.size());
+        auto row = parseNumbersFast(start, start + line_len, sep, columns.size(), fileName);
 
         // initialize columns on first row
         if (columns.empty())
@@ -134,7 +139,7 @@ std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, 
         }
         if (row.size() != columns.size())
         {
-            throw std::runtime_error("Inconsistent number of columns in CSV");
+            throw std::runtime_error(fileName + ": rows have inconsistent number of columns");
         }
 
         for (size_t i = 0; i < row.size(); ++i)
@@ -145,18 +150,6 @@ std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, 
     }
 
     return columns;
-}
-
-static TimeSeriesSet importFromFile(const std::filesystem::path& path, char csvSeparator)
-{
-    auto cols = readCSV(path, csvSeparator);
-    int nTimesteps = cols.empty() ? 0 : cols[0].size();
-    TimeSeriesSet timeSeriesSet(path.stem().string(), nTimesteps);
-    for (auto&& col: cols)
-    {
-        timeSeriesSet.add(col);
-    }
-    return timeSeriesSet;
 }
 
 bool hasRightExtension(const std::filesystem::directory_entry& e)
@@ -183,7 +176,8 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
         {
             continue;
         }
-        auto timeSeriesSet = std::make_unique<TimeSeriesSet>(importFromFile(entry, csvSeparator));
+        auto timeSeriesSet = std::make_unique<TimeSeriesSet>(entry.path().stem().string(),
+                                                             readCSV(entry, csvSeparator));
         repo.addDataSeries(std::move(timeSeriesSet));
     }
     return repo;

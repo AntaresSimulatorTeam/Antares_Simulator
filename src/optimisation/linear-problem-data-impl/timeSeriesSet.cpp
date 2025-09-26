@@ -21,6 +21,7 @@
 
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
+#include <absl/strings/internal/str_format/extension.h>
 #include <stdexcept>
 #include <string>
 
@@ -33,6 +34,16 @@ TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
     IDataSeries::IDataSeries(name),
     height_(height)
 {
+}
+
+TimeSeriesSet::TimeSeriesSet(std::string name, std::vector<std::vector<double>>&& tsSet):
+    IDataSeries::IDataSeries(name),
+    tsSet_(std::move(tsSet))
+{
+    if (!tsSet_.empty())
+    {
+        height_ = tsSet_[0].size();
+    }
 }
 
 void TimeSeriesSet::add(const std::vector<double>& ts)

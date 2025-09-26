@@ -31,6 +31,7 @@ class TimeSeriesSet: public IDataSeries
 {
 public:
     explicit TimeSeriesSet(std::string name, unsigned height);
+    explicit TimeSeriesSet(std::string name, std::vector<std::vector<double>>&& tsSet);
     void add(const std::vector<double>& ts);
     void add(std::vector<double>&& ts);
     double getData(unsigned tsNumber, unsigned hour) const override;

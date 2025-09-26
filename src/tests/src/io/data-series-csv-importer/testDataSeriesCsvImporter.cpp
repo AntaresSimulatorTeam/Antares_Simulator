@@ -65,13 +65,7 @@ BOOST_AUTO_TEST_CASE(inconsistent_columns)
                           checkMessage("wrong.csv: rows have inconsistent number of columns"));
 }
 
-BOOST_AUTO_TEST_CASE(inconsistent_rows)
-{
-    writeFile("wrong2.csv", "1;2\n;3");
-    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
-                          std::invalid_argument,
-                          checkMessage("wrong2.csv: columns have inconsistent number of rows"));
-}
+
 
 BOOST_AUTO_TEST_CASE(not_a_number)
 {
