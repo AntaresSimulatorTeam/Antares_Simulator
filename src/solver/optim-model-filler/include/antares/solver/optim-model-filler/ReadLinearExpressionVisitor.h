@@ -57,7 +57,7 @@ public:
         component_(component),
         nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps()),
         fillContext_(fillContext),
-        evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
+        evalContext_(optimEntityContainer.getEvaluationContext(component)),
         evalVisitor_(optimEntityContainer, fillContext, component)
     {
     }
@@ -136,23 +136,14 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::VariableNode* node) override
     {
-        const auto& optimComponent = optimEntityContainer_.getOptimComponent(component_.Index());
-        const auto globalIndex = optimComponent.variableIndexMap.at(
-          node->value()); // the only time we search in a map
-        const auto& variableStartColumn = optimEntityContainer_.getVariableStartColumn();
-        const auto variableStart = variableStartColumn.at(globalIndex);
-        const auto variableEnd = variableStart == *variableStartColumn.rbegin()
-                                   ? optimEntityContainer_.variablesSize()
-                                   : variableStartColumn.at(globalIndex + 1);
-
+        const auto variableStart = optimEntityContainer_.getVariableStartColumn(component_,
+                                                                                node->value());
         if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
         {
             Antares::Optimization::LinearExpression out;
             out.addVariable(variableStart, 1);
             return Antares::Optimization::TimeDependentLinearExpression(std::move(out));
         }
-        // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd
-        // - variableStart+1
         if (node->timeIndex() == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
             || node->timeIndex()
                  == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not

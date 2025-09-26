@@ -313,8 +313,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     bool forceExportForScenarioIndex)
 {
     const auto& cid = component.Id();
-    const auto& evalContext = optimEntityContainer.getOptimComponent(component.Index())
-                                .evaluationContext;
+    const auto& evalContext = optimEntityContainer.getEvaluationContext(component);
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {

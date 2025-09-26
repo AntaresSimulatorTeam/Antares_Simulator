@@ -50,16 +50,25 @@ public:
                          const LinearProblemApi::ILinearProblemData* data,
                          const ScenarioGroupRepository* scenarioGroupRepository);
 
+    // TODO REMOVE
     [[nodiscard]] const std::vector<unsigned int>& getVariableStartColumn() const
     {
         return variableStartColumn_;
     }
 
-    [[nodiscard]] unsigned int getVariableStartColumn(size_t compoIndex,
-                                                      const std::string& varName) const
+    [[nodiscard]] unsigned int getVariableStartColumn(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      const std::string& varName) const
     {
-        const auto& optimComponent = optimComponents_[compoIndex];
-        return variableStartColumn_[optimComponent.variableIndexMap.at(varName)];
+        const auto& optimComponent = optimComponents_.at(component.Index());
+        return variableStartColumn_.at(optimComponent.variableIndexMap.at(varName));
+    }
+
+    [[nodiscard]] const EvaluationContext& getEvaluationContext(
+      const Antares::ModelerStudy::SystemModel::Component& component) const
+    {
+        const auto& optimComponent = optimComponents_.at(component.Index());
+        return optimComponent.evaluationContext;
     }
 
     [[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
@@ -129,20 +138,10 @@ public:
 
     void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
 
-    // unsigned int VariableGLobalIndex() const
-    // {
-    //     return variableGlobalIndex_;
-    // }
-
     unsigned int ConstraintGLobalIndex() const
     {
         return constraintGlobalIndex_;
     }
-
-    // void IncrementVariableGLobalIndex()
-    // {
-    //     ++variableGlobalIndex_;
-    // }
 
     void IncrementConstraintGLobalIndex()
     {

@@ -145,7 +145,7 @@ TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& opt
                                    const ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
-    context_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext)
+    context_(optimEntityContainer.getEvaluationContext(component))
 {
 }
 

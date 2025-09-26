@@ -39,7 +39,7 @@ EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContaine
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
     optimContainer_(optimContainer),
-    context_(optimContainer.getOptimComponent(component.Index()).evaluationContext),
+    context_(optimContainer.getEvaluationContext(component)),
     fillContext_(fillContext),
     component_(component)
 {
@@ -88,8 +88,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
     const auto& solverVariables = optimContainer_.getVariables();
-    const auto startColumn = optimContainer_.getVariableStartColumn(component_.Index(),
-                                                                    node->value());
+    const auto startColumn = optimContainer_.getVariableStartColumn(component_, node->value());
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
