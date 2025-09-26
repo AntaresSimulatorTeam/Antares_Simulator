@@ -88,8 +88,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
     const auto& solverVariables = optimContainer_.getVariables();
-    const auto startColumn = optimContainer_.getVariableStartColumn(component_.Index(),
-                                                                    node->value());
+    const auto startColumn = optimContainer_.getVariableStartColumn(component_, node->value());
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
