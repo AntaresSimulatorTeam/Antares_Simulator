@@ -78,7 +78,7 @@ std::vector<double> parseNumbersFast(const char* first,
         }
 
         double val = 0.;
-        const char* next = parseOneDouble(ptr, last, val);
+        const char* next = parseOneDouble(ptr, last, val, errorMessagePrefix);
         // Check if we parsed anything
         if (next == ptr)
         {
@@ -132,6 +132,11 @@ std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, 
 
         auto row = parseNumbersFast(start, start + line_len, sep, columns.size(), fileName);
 
+        // skip empty line
+        if (row.empty())
+        {
+            continue;
+        }
         // initialize columns on first row
         if (columns.empty())
         {
@@ -139,7 +144,7 @@ std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, 
         }
         if (row.size() != columns.size())
         {
-            throw std::runtime_error(fileName + ": rows have inconsistent number of columns");
+            throw std::invalid_argument(fileName + ": rows have inconsistent number of columns");
         }
 
         for (size_t i = 0; i < row.size(); ++i)

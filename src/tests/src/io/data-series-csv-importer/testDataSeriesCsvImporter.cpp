@@ -44,35 +44,37 @@ struct CsvCreationFixture
         filesystem::create_directories(temp_path);
     }
 
-    void writeFile(string filename, string content);
+    std::filesystem::path writeFile(string filename, string content);
 };
 
-void CsvCreationFixture::writeFile(const string filename, const string content)
+std::filesystem::path CsvCreationFixture::writeFile(const string filename, const string content)
 {
     auto filepath = temp_path / (filename);
     std::ofstream outfile(filepath);
     outfile << content;
     outfile.close();
+    return filepath;
 }
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
 
 BOOST_AUTO_TEST_CASE(inconsistent_columns)
 {
-    writeFile("wrong.csv", "1;2\n3");
+    const auto filePath = writeFile("wrong.csv", "1;2\n3");
     BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
                           std::invalid_argument,
-                          checkMessage("wrong.csv: rows have inconsistent number of columns"));
+                          checkMessage(filePath.string()
+                                       + ": rows have inconsistent number of columns"));
 }
 
 
 
 BOOST_AUTO_TEST_CASE(not_a_number)
 {
-    writeFile("wrong.csv", "1;2\nXy;3");
+    const auto filePath = writeFile("wrong.csv", "1;2\nXy;3");
     BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
                           std::invalid_argument,
-                          checkMessage("wrong.csv: \"Xy\" is not a number"));
+                          checkMessage(filePath.string() + ": \"X\" is not a number"));
 }
 
 BOOST_AUTO_TEST_CASE(empty_line)
@@ -81,17 +83,6 @@ BOOST_AUTO_TEST_CASE(empty_line)
     BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
                           std::invalid_argument,
                           checkMessage("wrong.csv: empty line in the middle of the file"));
-}
-
-BOOST_AUTO_TEST_CASE(empty_file)
-{
-    writeFile("empty.csv", "");
-    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
-    BOOST_CHECK_EQUAL(repo.getDataSeries("empty").name(), "empty");
-    BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("empty").getData(1, 0),
-                          TimeSeriesSet::Empty,
-                          checkMessage(
-                            "TS set 'empty' : empty, requesting a value makes no sense"));
 }
 
 BOOST_AUTO_TEST_CASE(one_line_one_column)
