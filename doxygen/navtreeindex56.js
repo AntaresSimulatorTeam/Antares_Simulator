@@ -1,5 +1,8 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a3cded9a6d6411a0f7f3dca37e172ed7b":[8,0,0,18,4,4,43,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#ab99e83542726369da03946e9f25cf63d":[8,0,0,18,4,4,43,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html":[8,0,0,18,4,4,45],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a2fc2250a111a738459770f829ed95638":[8,0,0,18,4,4,45,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a380cd53234ca0d9402cace16893dc683":[8,0,0,18,4,4,45,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a91c021d0e49cd8e6795287c04dcb741b":[8,0,0,18,4,4,45,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a5fbe715de4f738c8b1f0a3dbd8187a26":[8,0,0,18,4,4,117,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a6516c5c9c8168e3c39b645ed6db3fd5c":[8,0,0,18,4,4,117,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a74b32a23eb3007da28cc803e81989ff5":[8,0,0,18,4,4,117,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#af114b90f03d17e6ceff20d112a9ea9c1":[8,0,0,18,4,4,117,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html":[8,0,0,18,4,4,119],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a12df50cd2c1e1c78a98db21c94511389":[8,0,0,18,4,4,119,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a3960816873b685677a7ac5457492b770":[8,0,0,18,4,4,119,3]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#af114b90f03d17e6ceff20d112a9ea9c1":[8,0,0,18,4,4,117,3]
 };

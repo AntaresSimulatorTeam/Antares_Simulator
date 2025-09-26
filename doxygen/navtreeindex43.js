@@ -1,5 +1,8 @@
 var NAVTREEINDEX43 =
 {
+"classPublicStudy.html":[8,0,249],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,249,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,249,1],
 "classQuadraticProblemMatrix.html":[8,0,251],
 "classQuadraticProblemMatrix.html#a125f854b3137ecb3e79b501a8530ced2":[8,0,251,1],
 "classQuadraticProblemMatrix.html#a7722642ba2cc688ff94a834baa6c1ffc":[8,0,251,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX43 =
 "classTestExceptionN.html":[8,0,309],
 "classTest_1_1BasisStatus.html":[8,0,29,1],
 "classTest_1_1BasisStatus.html#a8382a4e76a85a661bf5ae5c4aa99c13d":[8,0,29,1,2],
-"classTest_1_1BasisStatus.html#a8d75303fca619598612fef414fcdf89b":[8,0,29,1,0],
-"classTest_1_1BasisStatus.html#aae1a39ea0b8595db664e44fa8343f853":[8,0,29,1,3],
-"classTest_1_1BasisStatus.html#ab5eb23c83289e3bba6a2e82c22c3be41":[8,0,29,1,1],
-"classTestingSimulationObserver.html":[8,0,310]
+"classTest_1_1BasisStatus.html#a8d75303fca619598612fef414fcdf89b":[8,0,29,1,0]
 };

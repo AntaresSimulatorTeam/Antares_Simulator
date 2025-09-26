@@ -1,5 +1,8 @@
 var NAVTREEINDEX22 =
 {
+"classAntares_1_1MemoryFlushLocker.html#a605737ededafe42eb081ac0753e9becf":[8,0,0,59,1],
+"classAntares_1_1MemoryFlushLocker.html#a8f70c9a227b5c2f80f9553f9a3488d1c":[8,0,0,59,0],
+"classAntares_1_1Menu.html":[8,0,0,57],
 "classAntares_1_1MersenneTwister.html":[8,0,0,39],
 "classAntares_1_1MersenneTwister.html#a27a18621de8e65018a35d2e40454230b":[8,0,0,39,0],
 "classAntares_1_1MersenneTwister.html#a365a5a4e67b967d6ff7d24980df2b08f":[8,0,0,39,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX22 =
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller.html#a71b44497ce881eb3721f8996cab1f62c":[8,0,0,15,0,14,0],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller.html#a8581312b24d64b8ae0cc526c35fbf4b7":[8,0,0,15,0,14,2],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller.html#abbc7151e73b4e2af5dc337c8c055c5e6":[8,0,0,15,0,14,1],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller.html#af1add9ad15b3beefc6a06591511c75b9":[8,0,0,15,0,14,3],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneVarFiller.html":[8,0,0,15,0,15],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneVarFiller.html#a624a60a42d7dd47fbb784dfa2e100697":[8,0,0,15,0,15,1],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneVarFiller.html#a72598b086bc3be5ba6aa4038f4687eb8":[8,0,0,15,0,15,0]
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller.html#af1add9ad15b3beefc6a06591511c75b9":[8,0,0,15,0,14,3]
 };

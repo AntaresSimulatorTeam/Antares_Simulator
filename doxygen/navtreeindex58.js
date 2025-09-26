@@ -1,5 +1,8 @@
 var NAVTREEINDEX58 =
 {
+"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html#a55a54c2b31e74a84c56a8d7ca3109af7":[8,0,0,24,1,35,0],
+"structAntares_1_1Window_1_1Inspector_1_1PAreaUnsuppliedEnergyCost.html":[8,0,0,24,1,30],
+"structAntares_1_1Window_1_1Inspector_1_1PAreaUnsuppliedEnergyCost.html#a124479e3d7fcaab8c00384933338e212":[8,0,0,24,1,30,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html":[8,0,0,24,1,41],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterArea.html#aa9d1d3d590f7157110db954f98accfd7":[8,0,0,24,1,41,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterCO2.html":[8,0,0,24,1,44],
@@ -246,8 +249,5 @@ var NAVTREEINDEX58 =
 "structCONTRAINTES__COUPLANTES.html#a9f0f1895312920d202aa791e3d50759a":[8,0,82,11],
 "structCONTRAINTES__COUPLANTES.html#ab2d866f8352737c662fb89d25f521b06":[8,0,82,4],
 "structCONTRAINTES__COUPLANTES.html#acfd6a3517f39292e7c28da340baeb21f":[8,0,82,13],
-"structCONTRAINTES__COUPLANTES.html#ad0942d962d3627d52d73ebcc0dc2d24c":[8,0,82,1],
-"structCONTRAINTES__COUPLANTES.html#ae8fde973632be6ad541158c900e0f94f":[8,0,82,2],
-"structCONTRAINTES__COUPLANTES.html#aed73dc2ec4e2c868aaddf727f113ec20":[8,0,82,5],
-"structCONTRAINTES__COUPLANTES.html#af320d888b35f21d867a95160512ea7c6":[8,0,82,9]
+"structCONTRAINTES__COUPLANTES.html#ad0942d962d3627d52d73ebcc0dc2d24c":[8,0,82,1]
 };

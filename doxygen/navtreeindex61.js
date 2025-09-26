@@ -1,5 +1,8 @@
 var NAVTREEINDEX61 =
 {
+"structMyDummyFixture.html#a91f17e9c252614496d41220189d4ec62":[8,0,208,10],
+"structMyDummyFixture.html#a9b9af2fff9b34a2338a67be43abc64da":[8,0,208,7],
+"structMyDummyFixture.html#af0b0ef4b6275aded6e578ac51af5ff2b":[8,0,208,11],
 "structMyDummyFixture.html#afbff0d1e4d83f86fa00606ffd3f8e058":[8,0,208,14],
 "structMyDummyFixture.html#aff338a606b9c977a778dfdc9417d5452":[8,0,208,15],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html":[8,0,212],
@@ -246,8 +249,5 @@ var NAVTREEINDEX61 =
 "structSavingToStreamFixture.html#aca73c0b9bd5fc49144ae1fdd5d9dbeeb":[8,0,260,2],
 "structSavingToStreamFixture.html#ae9a1f52a2aa02ed4029ff2ba1637a8e3":[8,0,260,4],
 "structScenarioBuilderFixture.html":[8,0,262],
-"structScenarioBuilderFixture.html#a9b18ebfbf02d296d6e5911e3682ff24c":[8,0,262,1],
-"structScenarioBuilderFixture.html#abebd5db9126ba81270a30cfc8c6081ba":[8,0,262,0],
-"structShortTermStorageCumulativeConstraintData.html":[8,0,278],
-"structShortTermStorageCumulativeConstraintData.html#a865fca8cd5bc823a72e30e4048955dd0":[8,0,278,0]
+"structScenarioBuilderFixture.html#a9b18ebfbf02d296d6e5911e3682ff24c":[8,0,262,1]
 };

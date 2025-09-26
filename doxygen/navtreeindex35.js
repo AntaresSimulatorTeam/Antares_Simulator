@@ -1,5 +1,8 @@
 var NAVTREEINDEX35 =
 {
+"classAntares_1_1Toolbox_1_1Jobs_1_1ReadWriteStatsFlusherTimer.html#aec555535d59f0b4978f5d335c97ad86f":[8,0,0,20,3,6,0],
+"classAntares_1_1Toolbox_1_1Jobs_1_1TimerElapsedTime.html":[8,0,0,20,3,3],
+"classAntares_1_1Toolbox_1_1Jobs_1_1TimerElapsedTime.html#a05a1f8f8a6665ab06b1413e87cb3b56f":[8,0,0,20,3,3,3],
 "classAntares_1_1Toolbox_1_1Jobs_1_1TimerElapsedTime.html#a1fa74e19eee317f9e3210eab11aade56":[8,0,0,20,3,3,0],
 "classAntares_1_1Toolbox_1_1Jobs_1_1TimerElapsedTime.html#a9f6f18e49a2f0ed309d8c8e7dbc2c2f7":[8,0,0,20,3,3,1],
 "classAntares_1_1Toolbox_1_1Jobs_1_1TimerElapsedTime.html#aa31553e9ee43892d05f27aedd4823a0a":[8,0,0,20,3,3,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX35 =
 "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#ae7cf6606286b94f325dce01dc0edf989":[8,0,0,24,1,74,6],
 "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#aea0845a846155f460271a2124d938442":[8,0,0,24,1,74,11],
 "classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#aedfc77831ada123e94d05c80b5a9d422":[8,0,0,24,1,74,3],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#af53a2343e5fac74a0947d6f50295ba70":[8,0,0,24,1,74,10],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterRenewable.html":[8,0,0,24,1,76],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterRenewable.html#a859e409f12848deeab1e26e2c38dc149":[8,0,0,24,1,76,0],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterThermal.html":[8,0,0,24,1,75]
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html#af53a2343e5fac74a0947d6f50295ba70":[8,0,0,24,1,74,10]
 };
