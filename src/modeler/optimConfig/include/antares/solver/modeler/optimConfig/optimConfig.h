@@ -36,77 +36,123 @@ class Variable
 {
 public:
     Variable(std::string id, Location location):
-        id(std::move(id)),
-        location(location)
+        id_(std::move(id)),
+        location_(location)
     {
     }
 
+    const std::string& id() const
+    {
+        return id_;
+    }
+
+    Location location() const
+    {
+        return location_;
+    }
+
 private:
-    std::string id;
-    Location location;
+    std::string id_;
+    Location location_;
 };
 
 class Objective
 {
 public:
     Objective(std::string id, Location location):
-        id(std::move(id)),
-        location(location)
+        id_(std::move(id)),
+        location_(location)
     {
     }
 
+    const std::string& id() const
+    {
+        return id_;
+    }
+
+    Location location() const
+    {
+        return location_;
+    }
+
 private:
-    std::string id;
-    Location location;
+    std::string id_;
+    Location location_;
 };
 
 class ModelDecomposition
 {
 public:
     ModelDecomposition(std::vector<Variable> variables, std::vector<Objective> objectives):
-        variables(std::move(variables)),
-        objectives(std::move(objectives))
+        variables_(std::move(variables)),
+        objectives_(std::move(objectives))
     {
     }
 
+    const std::vector<Variable>& variables() const
+    {
+        return variables_;
+    }
+
+    const std::vector<Objective>& objectives() const
+    {
+        return objectives_;
+    }
+
 private:
-    std::vector<Variable> variables;
-    std::vector<Objective> objectives;
+    std::vector<Variable> variables_;
+    std::vector<Objective> objectives_;
 };
 
 class Model
 {
 public:
     Model(std::string id, ModelDecomposition modelDecomposition):
-        id(std::move(id)),
-        modelDecomposition(std::move(modelDecomposition))
+        id_(std::move(id)),
+        modelDecomposition_(std::move(modelDecomposition))
     {
     }
 
+    const std::string& id() const
+    {
+        return id_;
+    }
+
+    const ModelDecomposition& modelDecomposition() const
+    {
+        return modelDecomposition_;
+    }
+
 private:
-    std::string id;
-    ModelDecomposition modelDecomposition;
+    std::string id_;
+    ModelDecomposition modelDecomposition_;
 };
 
 class OptimConfig
 {
-private:
-    std::vector<std::string> modelLibraries;
-    std::vector<Model> models;
-
-    friend class OptimConfigBuilder;
-};
-
-class OptimConfigBuilder
-{
 public:
-    OptimConfigBuilder& withId(const std::string& id);
-    OptimConfigBuilder& withVariables(std::vector<Variable>&& variables);
-    OptimConfigBuilder& withObjectives(std::vector<Objective>&& objectives);
-    OptimConfig build();
+    OptimConfig(std::vector<std::string> modelLibraries, std::vector<Model> models):
+        modelLibraries_(std::move(modelLibraries)),
+        models_(std::move(models))
+    {
+        checkDuplicateModelIds();
+    }
+
+    void checkDuplicateModelIds() const;
+
+    const std::vector<std::string>& modelLibraries() const
+    {
+        return modelLibraries_;
+    }
+
+    const std::vector<Model>& models() const
+    {
+        return models_;
+    }
 
 private:
-    OptimConfig config_;
+    std::vector<std::string> modelLibraries_;
+    std::vector<Model> models_;
 };
 
 } // namespace Antares::Modeler::Config

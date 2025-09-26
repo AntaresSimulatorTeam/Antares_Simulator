@@ -21,32 +21,28 @@
 
 #include "antares/solver/modeler/optimConfig/optimConfig.h"
 
-#include <utility>
+#include <stdexcept>
+#include <unordered_map>
 
 namespace Antares::Modeler::Config
 {
 
-OptimConfigBuilder& OptimConfigBuilder::withId(const std::string& id)
+void OptimConfig::checkDuplicateModelIds() const
 {
-    config_.id = id;
-    return *this;
-}
+    std::unordered_map<std::string, int> modelIds;
+    for (const auto& model: models_)
+    {
+        modelIds[model.id()]++;
+    }
 
-OptimConfigBuilder& OptimConfigBuilder::withVariables(std::vector<Variable>&& variables)
-{
-    config_.modelDecomposition.variables = std::move(variables);
-    return *this;
-}
-
-OptimConfigBuilder& OptimConfigBuilder::withObjectives(std::vector<Objective>&& objectives)
-{
-    config_.modelDecomposition.objectives = std::move(objectives);
-    return *this;
-}
-
-OptimConfig OptimConfigBuilder::build()
-{
-    return config_;
+    for (const auto& [id, count]: modelIds)
+    {
+        if (count > 1)
+        {
+            throw std::runtime_error("OptimConfig contains multiple models with ID \"" + id
+                                     + "\".");
+        }
+    }
 }
 
 } // namespace Antares::Modeler::Config
