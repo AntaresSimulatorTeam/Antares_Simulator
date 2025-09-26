@@ -39,7 +39,7 @@ EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContaine
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
     optimContainer_(optimContainer),
-    context_(optimContainer.getOptimComponent(component.Index()).evaluationContext),
+    context_(optimContainer.getEvaluationContext(component)),
     fillContext_(fillContext),
     component_(component)
 {

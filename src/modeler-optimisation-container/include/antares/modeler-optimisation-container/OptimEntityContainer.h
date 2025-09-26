@@ -64,6 +64,13 @@ public:
         return variableStartColumn_.at(optimComponent.variableIndexMap.at(varName));
     }
 
+    [[nodiscard]] const EvaluationContext& getEvaluationContext(
+      const Antares::ModelerStudy::SystemModel::Component& component) const
+    {
+        const auto& optimComponent = optimComponents_.at(component.Index());
+        return optimComponent.evaluationContext;
+    }
+
     [[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
     {
         return constraintStartLine_;
