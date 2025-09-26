@@ -35,6 +35,10 @@ enum class Location
 class Variable
 {
 public:
+    Variable(std::string id, Location location)
+        : id(std::move(id)), location(location) {}
+
+private:
     std::string id;
     Location location;
 };
@@ -42,6 +46,10 @@ public:
 class Objective
 {
 public:
+    Objective(std::string id, Location location)
+        : id(std::move(id)), location(location) {}
+
+private:
     std::string id;
     Location location;
 };
@@ -49,17 +57,31 @@ public:
 class ModelDecomposition
 {
 public:
+    ModelDecomposition(std::vector<Variable> variables, std::vector<Objective> objectives)
+        : variables(std::move(variables)), objectives(std::move(objectives)) {}
+
+private:
     std::vector<Variable> variables;
     std::vector<Objective> objectives;
 };
 
-class OptimConfig
+class Model
 {
 public:
+    Model(std::string id, ModelDecomposition modelDecomposition)
+        : id(std::move(id)), modelDecomposition(std::move(modelDecomposition)) {}
+
+private:
     std::string id;
     ModelDecomposition modelDecomposition;
+};
 
-    // Friend declaration
+class OptimConfig
+{
+private:
+    std::vector<std::string> modelLibraries;
+    std::vector<Model> models;
+
     friend class OptimConfigBuilder;
 };
 
