@@ -54,6 +54,7 @@ void TimeSeriesSet::add(const std::vector<double>& ts)
     }
     tsSet_.push_back(std::move(ts));
 }
+
 void TimeSeriesSet::add(std::vector<double>&& ts)
 {
     if (ts.size() != height_)

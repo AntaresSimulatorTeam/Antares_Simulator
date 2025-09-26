@@ -67,8 +67,6 @@ BOOST_AUTO_TEST_CASE(inconsistent_columns)
                                        + ": rows have inconsistent number of columns"));
 }
 
-
-
 BOOST_AUTO_TEST_CASE(not_a_number)
 {
     const auto filePath = writeFile("wrong.csv", "1;2\nXy;3");
@@ -76,7 +74,6 @@ BOOST_AUTO_TEST_CASE(not_a_number)
                           std::invalid_argument,
                           checkMessage(filePath.string() + ": \"X\" is not a number"));
 }
-
 
 BOOST_AUTO_TEST_CASE(one_line_one_column)
 {
