@@ -31,55 +31,64 @@ BOOST_AUTO_TEST_SUITE(test_optim_config_builder)
 
 using namespace Antares::Modeler::Config;
 
-BOOST_AUTO_TEST_CASE(WithId)
+BOOST_AUTO_TEST_CASE(TestVariable)
 {
-    OptimConfigBuilder builder;
-    builder.withId("test_id");
-    OptimConfig config = builder.build();
-    BOOST_CHECK_EQUAL(config.id, "test_id");
+    Variable var("var1", Location::MASTER);
+    BOOST_CHECK(var.id() == "var1");
+    BOOST_CHECK(var.location() == Location::MASTER);
 }
 
-BOOST_AUTO_TEST_CASE(WithVariables)
+BOOST_AUTO_TEST_CASE(TestObjective)
 {
-    OptimConfigBuilder builder;
-    std::vector<Variable> variables = {{"var1", Location::MASTER}, {"var2", Location::SUBPROBLEMS}};
-    builder.withVariables(std::move(variables));
-    OptimConfig config = builder.build();
-    BOOST_CHECK_EQUAL(config.modelDecomposition.variables.size(), 2);
-    BOOST_CHECK_EQUAL(config.modelDecomposition.variables[0].id, "var1");
-    BOOST_CHECK(config.modelDecomposition.variables[0].location == Location::MASTER);
-    BOOST_CHECK_EQUAL(config.modelDecomposition.variables[1].id, "var2");
-    BOOST_CHECK(config.modelDecomposition.variables[1].location == Location::SUBPROBLEMS);
+    Objective obj("obj1", Location::SUBPROBLEMS);
+    BOOST_CHECK(obj.id() == "obj1");
+    BOOST_CHECK(obj.location() == Location::SUBPROBLEMS);
 }
 
-BOOST_AUTO_TEST_CASE(WithObjectives)
+BOOST_AUTO_TEST_CASE(TestModelDecomposition)
 {
-    OptimConfigBuilder builder;
-    std::vector<Objective> objectives = {{"obj1", Location::MASTER},
-                                         {"obj2", Location::MASTER_AND_SUBPROBLEMS}};
-    builder.withObjectives(std::move(objectives));
-    OptimConfig config = builder.build();
-    BOOST_CHECK_EQUAL(config.modelDecomposition.objectives.size(), 2);
-    BOOST_CHECK_EQUAL(config.modelDecomposition.objectives[0].id, "obj1");
-    BOOST_CHECK(config.modelDecomposition.objectives[0].location == Location::MASTER);
-    BOOST_CHECK_EQUAL(config.modelDecomposition.objectives[1].id, "obj2");
-    BOOST_CHECK(config.modelDecomposition.objectives[1].location
-                == Location::MASTER_AND_SUBPROBLEMS);
+    std::vector<Variable> variables = {Variable("var1", Location::MASTER)};
+    std::vector<Objective> objectives = {Objective("obj1", Location::SUBPROBLEMS)};
+    ModelDecomposition md(variables, objectives);
+
+    BOOST_CHECK(md.variables().size() == 1);
+    BOOST_CHECK(md.objectives().size() == 1);
+    BOOST_CHECK(md.variables()[0].id() == "var1");
+    BOOST_CHECK(md.objectives()[0].id() == "obj1");
 }
 
-BOOST_AUTO_TEST_CASE(Build)
+BOOST_AUTO_TEST_CASE(TestModel)
 {
-    OptimConfigBuilder builder;
-    builder.withId("test_id");
-    std::vector<Variable> variables = {{"var1", Location::MASTER}, {"var2", Location::SUBPROBLEMS}};
-    builder.withVariables(std::move(variables));
-    std::vector<Objective> objectives = {{"obj1", Location::MASTER},
-                                         {"obj2", Location::MASTER_AND_SUBPROBLEMS}};
-    builder.withObjectives(std::move(objectives));
-    OptimConfig config = builder.build();
-    BOOST_CHECK_EQUAL(config.id, "test_id");
-    BOOST_CHECK_EQUAL(config.modelDecomposition.variables.size(), 2);
-    BOOST_CHECK_EQUAL(config.modelDecomposition.objectives.size(), 2);
+    std::vector<Variable> variables = {Variable("var1", Location::MASTER)};
+    std::vector<Objective> objectives = {Objective("obj1", Location::SUBPROBLEMS)};
+    ModelDecomposition md(variables, objectives);
+    Model model("model1", md);
+
+    BOOST_CHECK(model.id() == "model1");
+    BOOST_CHECK(model.modelDecomposition().variables().size() == 1);
+    BOOST_CHECK(model.modelDecomposition().objectives().size() == 1);
 }
 
+BOOST_AUTO_TEST_CASE(TestOptimConfigUniqueIDs)
+{
+    std::vector<Model> models;
+    models.push_back(Model("model1", ModelDecomposition({}, {})));
+    models.push_back(Model("model2", ModelDecomposition({}, {})));
+
+    std::vector<std::string> libraries = {"lib1", "lib2"};
+    OptimConfig config(libraries, models);
+
+    BOOST_CHECK(config.modelLibraries().size() == 2);
+    BOOST_CHECK(config.models().size() == 2);
+}
+
+BOOST_AUTO_TEST_CASE(TestOptimConfigDuplicateIDs)
+{
+    std::vector<Model> models;
+    models.push_back(Model("model1", ModelDecomposition({}, {})));
+    models.push_back(Model("model1", ModelDecomposition({}, {}))); // Duplicate ID
+
+    std::vector<std::string> libraries = {"lib1", "lib2"};
+    BOOST_CHECK_THROW(OptimConfig config(libraries, models), std::runtime_error);
+}
 } // namespace Antares::Modeler::Config
