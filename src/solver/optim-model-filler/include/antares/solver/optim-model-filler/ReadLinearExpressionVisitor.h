@@ -145,7 +145,8 @@ public:
                                    ? optimEntityContainer_.variablesSize()
                                    : variableStartColumn.at(globalIndex + 1);
 
-        if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+        if (node->timeIndex()
+            == Antares::Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
         {
             Antares::Optimization::LinearExpression out;
             out.addVariable(variableStart, 1);
@@ -153,10 +154,10 @@ public:
         }
         // else time-dep only hanled    //  check if var is time-dep then nbTimeStep == variableEnd
         // - variableStart+1
-        if (node->timeIndex() == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
+        if (node->timeIndex() == Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
             || node->timeIndex()
-                 == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not
-                                                                                  handled !*/
+                 == Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario
+                                                                                  not handled !*/
         {
             Antares::Optimization::TimeDependentLinearExpression out(nbtimeSteps_);
 
@@ -175,7 +176,8 @@ public:
       const Nodes::ParameterNode* node) override
     {
         const auto systemParameter = evalContext_.getParameter(node->value());
-        if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        if (node->timeIndex()
+              == Antares::Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
             && systemParameter.type != Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
         {
             throw std::runtime_error(

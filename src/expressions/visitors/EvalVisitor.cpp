@@ -90,8 +90,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     const auto& solverVariables = optimContainer_.getVariables();
     const auto startColumn = optimContainer_.getVariableStartColumn(component_.Index(),
                                                                     node->value());
-    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->timeIndex() == TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
         std::string varName = Antares::Optimisation::buildVariableName(
           component_.Id(),
@@ -117,7 +117,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = context_.getParameter(node->value());
-    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         std::string msg = "Parameter " + node->value() + " is declared constant in time and"

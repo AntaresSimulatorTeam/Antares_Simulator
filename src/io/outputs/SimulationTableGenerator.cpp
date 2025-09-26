@@ -36,7 +36,7 @@
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
-using TI = Antares::Optimisation::TimeIndex;
+using TI = Antares::Expressions::Visitors::TimeIndex;
 
 namespace Antares::IO
 {

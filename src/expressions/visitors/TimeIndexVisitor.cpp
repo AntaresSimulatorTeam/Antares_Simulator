@@ -29,83 +29,83 @@ using namespace Antares::ModelerStudy::SystemModel;
 namespace Antares::Expressions::Visitors
 {
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
 {
     const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
-                           [this](Optimisation::TimeIndex sum, Nodes::Node* operand)
+                           TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                           [this](TimeIndex sum, Nodes::Node* operand)
                            { return sum | dispatch(operand); });
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
+TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
 {
     return dispatch(sub->left()) | dispatch(sub->right());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::MultiplicationNode* mult)
+TimeIndex TimeIndexVisitor::visit(const Nodes::MultiplicationNode* mult)
 {
     return dispatch(mult->left()) | dispatch(mult->right());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::DivisionNode* div)
+TimeIndex TimeIndexVisitor::visit(const Nodes::DivisionNode* div)
 {
     return dispatch(div->left()) | dispatch(div->right());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::EqualNode* equ)
+TimeIndex TimeIndexVisitor::visit(const Nodes::EqualNode* equ)
 {
     return dispatch(equ->left()) | dispatch(equ->right());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode* lt)
+TimeIndex TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode* lt)
 {
     return dispatch(lt->left()) | dispatch(lt->right());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
+TimeIndex TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
 {
     return dispatch(gt->left()) | dispatch(gt->right());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::VariableNode* var)
+TimeIndex TimeIndexVisitor::visit(const Nodes::VariableNode* var)
 {
     return var->timeIndex();
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
+TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
 {
     const auto systemParameter = context_.getParameter(param->value());
     if (systemParameter.type == ParameterType::CONSTANT)
     {
-        return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+        return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
         // TODO: handle more cases, but ParameterType must be exhaustive first
     }
     return param->timeIndex();
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)
+TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)
 {
-    return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
+TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
 {
     return dispatch(neg->child());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode*)
+TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode*)
 {
     throw std::invalid_argument("PortFieldNode not handled by visitor TimeIndexVisitor");
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
 
-    auto to_return = Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    auto to_return = TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
         auto* component = connexion_end.component();
@@ -118,27 +118,25 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* n
     return to_return;
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
+TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
     return dispatch(timeShiftNode->left());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(
-  [[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
+TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
 {
-    return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
+TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
 {
     // TODO  case from = to
     return dispatch(timeSumNode->expression());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(
-  [[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
+TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
-    return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
 TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
