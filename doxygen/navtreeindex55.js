@@ -1,5 +1,6 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html":[8,0,0,11,0,4,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html#ab844fe4e993d24219d19a94a0f302845":[8,0,0,11,0,4,3,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html#afb6da5bff6d06a6bb7590ebe7fad3dab":[8,0,0,11,0,4,3,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html":[8,0,0,11,0,4,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html#aae81673728f2211748e192c815b12e77":[8,0,0,18,4,4,41,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html#ab104766e003e9658b8dd9a368dab3c09":[8,0,0,18,4,4,41,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html#ab1ae6de95f8ac5895b968012331f8fcf":[8,0,0,18,4,4,41,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html":[8,0,0,18,4,4,43],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a19131fca284bf51dc32ffe2373f0892e":[8,0,0,18,4,4,43,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html":[8,0,0,18,4,4,43]
 };

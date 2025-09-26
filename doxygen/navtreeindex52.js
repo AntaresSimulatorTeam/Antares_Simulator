@@ -1,5 +1,6 @@
 var NAVTREEINDEX52 =
 {
+"modifiers_8hxx_source.html":[9,0,0,11,2,1,1,1,7],
 "modules.html":[6],
 "modulo_8h_source.html":[9,0,0,11,2,1,1,1,0,1,6],
 "month_8h_source.html":[9,0,0,11,2,1,1,1,0,0,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX52 =
 "run-study-tests_2conftest_8py.html#a75aa74dbf5a8cc876d721a29b81cf470":[7,0,11,0],
 "run-study-tests_2conftest_8py.html#a9740f129861e2a7c9214e69368a0a87f":[7,0,11,3],
 "run-study-tests_2conftest_8py.html#ab14b209de745d00c3dea31b7fc8b55be":[7,0,11,1],
-"run-study-tests_2conftest_8py.html#abb137afc7ad9747df934f556298017a7":[7,0,11,5],
-"run-study-tests_2utils_2assertions_8py.html#a12484173019ff38ad11b727adc616565":[7,0,1,1]
+"run-study-tests_2conftest_8py.html#abb137afc7ad9747df934f556298017a7":[7,0,11,5]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX60 =
 {
+"structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a5b53546fc164ef89003a09bc48d27f20":[8,0,12,2,3],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a72996c82231344e5a44e57d427f4b1f7":[8,0,12,2,4],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a977e825fb2fd56401e24a80b33a0b450":[8,0,12,2,0],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a9c5088a95e21109a9b25e62472a2eba2":[8,0,12,2,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX60 =
 "structMyDummyFixture.html#a4d1f8675b8f7193f6272e4d38c9347b0":[8,0,208,6],
 "structMyDummyFixture.html#a5a3da5c5ca5468c3eb002e3964766d42":[8,0,208,9],
 "structMyDummyFixture.html#a68cb5dd51e0ca2b207e7f98d45ebbfed":[8,0,208,8],
-"structMyDummyFixture.html#a690ff238cccc2ce727c96799194d7376":[8,0,208,2],
-"structMyDummyFixture.html#a860aa368505fa917a761931b15eea4dd":[8,0,208,3]
+"structMyDummyFixture.html#a690ff238cccc2ce727c96799194d7376":[8,0,208,2]
 };

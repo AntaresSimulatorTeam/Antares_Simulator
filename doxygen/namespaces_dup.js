@@ -1155,7 +1155,8 @@ var namespaces_dup =
             [ "convertPorts", "modelConverter_8cpp.html#a7599275f007d83a35dfcd5f949f6c346", null ],
             [ "convertType", "modelConverter_8cpp.html#a0f47ce41f17f6160bf36c67d08e545c9", null ],
             [ "convertTypes", "modelConverter_8cpp.html#a1088a8c1790ed3bb470dff1151b76cbe", null ],
-            [ "convertVariables", "modelConverter_8cpp.html#a54ffbf422f4e51558629fbc0c06be0a3", null ]
+            [ "convertVariables", "modelConverter_8cpp.html#a54ffbf422f4e51558629fbc0c06be0a3", null ],
+            [ "extractSumOperands", "convertorVisitor_8cpp.html#afa5c8a0bd8efdf755de9122b85b0d7b9", null ]
           ] ],
           [ "SystemConverter", null, [
             [ "ErrorWhileSplittingLibraryAndModel", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel" ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#af114b90f03d17e6ceff20d112a9ea9c1":[8,0,0,18,4,4,117,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html":[8,0,0,18,4,4,119],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a12df50cd2c1e1c78a98db21c94511389":[8,0,0,18,4,4,119,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a3960816873b685677a7ac5457492b770":[8,0,0,18,4,4,119,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[8,0,0,24,1,33],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html#a04d30f507a8f029fe58f9efe89a1f69c":[8,0,0,24,1,33,0],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html":[8,0,0,24,1,32],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html#a2da01e316548fbfe3e00bfcd7651b86d":[8,0,0,24,1,32,0],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaSpilledEnergyCost.html":[8,0,0,24,1,35]
+"structAntares_1_1Window_1_1Inspector_1_1PAreaResortStatus.html#a2da01e316548fbfe3e00bfcd7651b86d":[8,0,0,24,1,32,0]
 };

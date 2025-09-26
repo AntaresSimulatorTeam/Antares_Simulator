@@ -1,5 +1,6 @@
 var NAVTREEINDEX61 =
 {
+"structMyDummyFixture.html#a860aa368505fa917a761931b15eea4dd":[8,0,208,3],
 "structMyDummyFixture.html#a91f17e9c252614496d41220189d4ec62":[8,0,208,10],
 "structMyDummyFixture.html#a9b9af2fff9b34a2338a67be43abc64da":[8,0,208,7],
 "structMyDummyFixture.html#af0b0ef4b6275aded6e578ac51af5ff2b":[8,0,208,11],
@@ -248,6 +249,5 @@ var NAVTREEINDEX61 =
 "structSavingToStreamFixture.html#aac2a1c317545e49285112a2c89b854a9":[8,0,260,0],
 "structSavingToStreamFixture.html#aca73c0b9bd5fc49144ae1fdd5d9dbeeb":[8,0,260,2],
 "structSavingToStreamFixture.html#ae9a1f52a2aa02ed4029ff2ba1637a8e3":[8,0,260,4],
-"structScenarioBuilderFixture.html":[8,0,262],
-"structScenarioBuilderFixture.html#a9b18ebfbf02d296d6e5911e3682ff24c":[8,0,262,1]
+"structScenarioBuilderFixture.html":[8,0,262]
 };

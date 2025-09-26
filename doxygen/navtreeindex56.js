@@ -1,5 +1,6 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a19131fca284bf51dc32ffe2373f0892e":[8,0,0,18,4,4,43,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a3cded9a6d6411a0f7f3dca37e172ed7b":[8,0,0,18,4,4,43,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#ab99e83542726369da03946e9f25cf63d":[8,0,0,18,4,4,43,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html":[8,0,0,18,4,4,45],
@@ -248,6 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a3b83549a6de741ea97f53569778c3dd4":[8,0,0,18,4,4,117,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a5fbe715de4f738c8b1f0a3dbd8187a26":[8,0,0,18,4,4,117,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a6516c5c9c8168e3c39b645ed6db3fd5c":[8,0,0,18,4,4,117,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a74b32a23eb3007da28cc803e81989ff5":[8,0,0,18,4,4,117,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#af114b90f03d17e6ceff20d112a9ea9c1":[8,0,0,18,4,4,117,3]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a74b32a23eb3007da28cc803e81989ff5":[8,0,0,18,4,4,117,1]
 };
