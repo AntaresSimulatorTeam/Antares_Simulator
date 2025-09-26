@@ -181,7 +181,7 @@ InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
 {
 }
 
-CommandLineArguments::CommandLineArguments(uint errors):
+CommandLineArguments::CommandLineArguments(unsigned errors):
     LoadingError("Invalid command-line arguments provided : " + std::to_string(errors)
                  + " error(s) found")
 {

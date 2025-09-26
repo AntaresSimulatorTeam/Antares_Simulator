@@ -177,7 +177,7 @@ private:
 class CommandLineArguments final: public LoadingError
 {
 public:
-    explicit CommandLineArguments(uint errors);
+    explicit CommandLineArguments(unsigned errors);
 };
 
 class IncompatibleSimulationModeForAdqPatch final: public LoadingError
