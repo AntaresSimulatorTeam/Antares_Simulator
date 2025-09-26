@@ -25,10 +25,10 @@
 #include <antares/optimisation/linear-problem-api/mipConstraint.h>
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
 #include <antares/study/system-model/component.h>
-#include "antares/expressions/visitors/TimeIndex.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 
 #include "EvaluationContext.h"
+#include "TimeIndex.h"
 #include "scenarioGroupRepo.h"
 
 namespace Antares::Optimisation
@@ -39,7 +39,7 @@ struct OptimComponent
     std::vector<unsigned int> modelVariablesGlobalIndices = {};
     std::unordered_map<std::string, unsigned int> variableIndexMap;
     std::vector<unsigned int> modelConstraintsGlobalIndices = {};
-    std::vector<Antares::Expressions::Visitors::TimeIndex> modelConstraintsTimeIndex = {};
+    std::vector<TimeIndex> modelConstraintsTimeIndex = {};
     EvaluationContext evaluationContext;
 };
 

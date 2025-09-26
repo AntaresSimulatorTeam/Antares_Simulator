@@ -339,8 +339,8 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 
         optimEntityContainer_.IncrementConstraintGLobalIndex();
         optimEntityContainer_.addStartLine();
-        if (timeIndex == Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
-            || timeIndex == Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+        if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
+            || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
         {
             addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx);
         }
@@ -374,7 +374,7 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
     }
 }
 
-Antares::Expressions::Visitors::TimeIndex ComponentFiller::getConstraintTimeIndex(
+TimeIndex ComponentFiller::getConstraintTimeIndex(
   const Expressions::Nodes::Node* node,
   const ModelerStudy::SystemModel::Component& component) const
 {

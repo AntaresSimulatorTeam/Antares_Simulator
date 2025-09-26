@@ -75,8 +75,8 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  unsigned currentBlock);
 
-Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
-  Antares::Expressions::Visitors::TimeIndex timeIndex,
+Antares::Optimisation::TimeIndex updateTimeIndexIfShouldForceScenario(
+  Antares::Optimisation::TimeIndex timeIndex,
   bool forceExportForScenarioIndex);
 
 std::string BuildModelerConstraintName(const std::string& componentId,

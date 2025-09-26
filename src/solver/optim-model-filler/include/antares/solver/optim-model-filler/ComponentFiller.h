@@ -76,9 +76,8 @@ private:
                                      const std::string& constraint_id,
                                      const Optimisation::LinearProblemApi::FillContext& ctx);
 
-    Antares::Expressions::Visitors::TimeIndex getConstraintTimeIndex(
-      const Expressions::Nodes::Node* node,
-      const ModelerStudy::SystemModel::Component& component) const;
+    TimeIndex getConstraintTimeIndex(const Expressions::Nodes::Node* node,
+                                     const ModelerStudy::SystemModel::Component& component) const;
 
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
