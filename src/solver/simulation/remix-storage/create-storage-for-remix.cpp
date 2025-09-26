@@ -24,7 +24,7 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
     size_t size = generation.size();
     const std::vector<double> lowRuleCurve(size, 0.);
     const std::vector<double> upRuleCurve(size, reservoirCapacity);
-    const double withdrawalEff = 1.;
+    const double generationEff = 1.;
     return std::make_shared<StorageForRemixWithLevels>(generation,
                                                        unsupE,
                                                        levels,
@@ -36,7 +36,8 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                        lowRuleCurve,
                                                        upRuleCurve,
                                                        initLevel,
-                                                       withdrawalEff);
+                                                       generationEff,
+                                                       pumpEfficiency);
 }
 
 std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawal,

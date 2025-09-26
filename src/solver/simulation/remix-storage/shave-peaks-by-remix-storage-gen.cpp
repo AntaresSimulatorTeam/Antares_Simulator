@@ -18,14 +18,13 @@ void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,
                 const std::vector<double>& Spillage,
                 const std::vector<double>& DTG_MRG,
-                const std::vector<double>& storageGen)
+                const ListStorageForRemix& storagesForRemix)
 {
     // Arrays sizes must be identical
-    std::vector<size_t> sizes = {Load.size(),
-                                 UnsupE.size(),
-                                 Spillage.size(),
-                                 DTG_MRG.size(),
-                                 storageGen.size()};
+    std::vector<size_t> sizes = {Load.size(), UnsupE.size(), Spillage.size(), DTG_MRG.size()};
+    std::ranges::transform(storagesForRemix,
+                           std::back_inserter(sizes),
+                           [&](auto& s) { return s->initWithdrawal().size(); });
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
