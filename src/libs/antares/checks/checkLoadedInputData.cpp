@@ -84,7 +84,7 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
 }
 
 bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames)
+                                                std::map<int, std::string>& areaClusterNames)
 {
     YString areaname = "";
     bool resultat = true;
@@ -114,7 +114,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 {
     if (tsGenThermal)
     {
-        std::map<int, YString> areaClusterNames;
+        std::map<int, std::string> areaClusterNames;
         if (!(areasThermalClustersMinStablePowerValidity(areas, areaClusterNames)))
         {
             throw Error::InvalidParametersForThermalClusters(areaClusterNames);

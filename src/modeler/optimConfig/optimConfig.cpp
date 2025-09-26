@@ -21,8 +21,9 @@
 
 #include "antares/solver/modeler/optimConfig/optimConfig.h"
 
-#include <stdexcept>
 #include <unordered_map>
+
+#include <antares/exception/RuntimeError.hpp>
 
 namespace Antares::Modeler::Config
 {
@@ -39,7 +40,7 @@ void OptimConfig::checkDuplicateModelIds() const
     {
         if (count > 1)
         {
-            throw std::runtime_error("OptimConfig contains multiple models with ID \"" + id
+            throw Error::RuntimeError("OptimConfig contains multiple models with ID \"" + id
                                      + "\".");
         }
     }

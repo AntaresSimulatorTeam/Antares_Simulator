@@ -150,8 +150,7 @@ IncompatibleOptRangeUCMode::IncompatibleOptRangeUCMode():
 {
 }
 
-IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
-  const Antares::Data::AreaName& name):
+IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(const std::string& name):
     LoadingError(
       std::string("Area ") + name.c_str()
       + " : simplex daily optimization and use heuristic target == no are not compatible")
@@ -159,7 +158,7 @@ IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
 }
 
 std::string InvalidParametersForThermalClusters::buildMessage(
-  const std::map<int, Yuni::String>& clusterNames) const
+  const std::map<int, std::string>& clusterNames) const
 {
     const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
                                    "modulation for the following clusters : ");
@@ -177,7 +176,7 @@ std::string InvalidParametersForThermalClusters::buildMessage(
 }
 
 InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
-  const std::map<int, Yuni::String>& clusterNames):
+  const std::map<int, std::string>& clusterNames):
     LoadingError(buildMessage(clusterNames))
 {
 }
