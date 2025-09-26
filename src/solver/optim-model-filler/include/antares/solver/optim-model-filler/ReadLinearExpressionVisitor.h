@@ -57,7 +57,7 @@ public:
         component_(component),
         nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps()),
         fillContext_(fillContext),
-        evalContext_(optimEntityContainer.getOptimComponent(component.Index()).evaluationContext),
+        evalContext_(optimEntityContainer.getEvaluationContext(component)),
         evalVisitor_(optimEntityContainer, fillContext, component)
     {
     }
