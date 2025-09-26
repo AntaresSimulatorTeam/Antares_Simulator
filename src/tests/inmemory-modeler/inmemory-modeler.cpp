@@ -16,16 +16,16 @@
 //
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-#if 0
+
 #include "inmemory-modeler.h"
 
 #include <map>
 #include <memory>
 
 #include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
-#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
 
@@ -33,10 +33,10 @@ using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Test::Modeler
 {
-std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
+std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,
                              const std::string& value,
-                             const Antares::Expressions::Visitors::ParameterType& type)
+                             const Antares::ModelerStudy::SystemModel::ParameterType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
@@ -49,14 +49,20 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::LinearProblemFiller>>
       fillers;
     // All LP variables coordinates (component id, variable id, scenario, time step)
-    Antares::Optimization::VariableDictionary optimEntityContainer;
+
     Antares::Optimisation::ScenarioGroupRepository scenario_group_repository;
     for (auto& scenario: scenarios)
     {
         auto name = scenario->group();
         scenario_group_repository.addScenario(name, std::move(scenario));
     }
-    for (auto& component: components | std::views::values)
+    pb = std::make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(
+      false,
+      "sirius");
+    Antares::Optimisation::OptimEntityContainer optimEntityContainer(*pb,
+                                                                     &dummy_data,
+                                                                     &scenario_group_repository);
+    for (auto& component: components)
     {
         auto cf = std::make_unique<Antares::Optimisation::ComponentFiller>(
           component,
@@ -65,12 +71,9 @@ void LinearProblemBuildingFixture::buildLinearProblem(
           scenario_group_repository);
         fillers.push_back(std::move(cf));
     }
-    pb = std::make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(
-      false,
-      "sirius");
     Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
 
-    linear_problem_builder.build(*pb, time_scenario_ctx);
+    linear_problem_builder.build(time_scenario_ctx);
 }
 
 void LinearProblemBuildingFixture::buildLinearProblem(
@@ -89,7 +92,7 @@ void LinearProblemBuildingFixture::buildLinearProblem()
 void LinearProblemBuildingFixture::createComponent(
   const std::string& modelId,
   const std::string& componentId,
-  std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues,
+  std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> parameterValues,
   std::string scenarioGroupId)
 {
     ComponentBuilder component_builder;
@@ -98,7 +101,7 @@ void LinearProblemBuildingFixture::createComponent(
                        .withScenarioGroupId(scenarioGroupId)
                        .withParameterValues(std::move(parameterValues))
                        .build();
-    components.emplace(component.Id(), std::move(component));
+    components.emplace_back(component);
 }
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::literal(double value)
@@ -108,14 +111,14 @@ Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::literal(double 
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::parameter(
   const std::string& paramId,
-  const Antares::Expressions::Visitors::TimeIndex& timeIndex)
+  const Antares::Optimisation::TimeIndex& timeIndex)
 {
     return nodes.create<Antares::Expressions::Nodes::ParameterNode>(paramId, timeIndex);
 }
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::variable(
   const std::string& varId,
-  const Antares::Expressions::Visitors::TimeIndex& timeIndex)
+  const Antares::Optimisation::TimeIndex& timeIndex)
 {
     return nodes.create<Antares::Expressions::Nodes::VariableNode>(varId, timeIndex);
 }
@@ -211,4 +214,3 @@ void LinearProblemBuildingFixture::createModelWithOneFloatVar(
                 objective);
 }
 } // namespace Test::Modeler
-#endif

@@ -16,15 +16,15 @@
 //
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-#if 0
+
 #pragma once
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "antares/expressions/visitors/EvaluationContext.h"
-#include "antares/expressions/visitors/TimeIndex.h"
+#include "antares/modeler-optimisation-container/EvaluationContext.h"
+#include "antares/modeler-optimisation-container/TimeIndex.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/data.h"
@@ -32,16 +32,14 @@
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 
-#include "inmemory-modeler.h"
-
 namespace Test::Modeler
 {
 auto build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const Antares::Expressions::Visitors::ParameterType& type = Antares::Expressions::Visitors::
-    ParameterType::CONSTANT)
-  -> std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>;
+  const Antares::ModelerStudy::SystemModel::ParameterType& type = Antares::ModelerStudy::
+    SystemModel::ParameterType::CONSTANT)
+  -> std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>;
 
 struct VariableData
 {
@@ -93,7 +91,8 @@ struct LinearProblemBuildingFixture
     void createComponent(
       const std::string& modelId,
       const std::string& componentId,
-      std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues
+      std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
+        parameterValues
       = {},
       std::string scenarioGroupId = "");
 
@@ -101,13 +100,13 @@ struct LinearProblemBuildingFixture
 
     Antares::Expressions::Nodes::Node* parameter(
       const std::string& paramId,
-      const Antares::Expressions::Visitors::TimeIndex& timeIndex = Antares::Expressions::Visitors::
-        TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
+        CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* variable(
       const std::string& varId,
-      const Antares::Expressions::Visitors::TimeIndex& timeIndex = Antares::Expressions::Visitors::
-        TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
+        CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
                                                 Antares::Expressions::Nodes::Node* node2);
@@ -136,4 +135,3 @@ struct LinearProblemBuildingFixture
     }
 };
 } // namespace Test::Modeler
-#endif
