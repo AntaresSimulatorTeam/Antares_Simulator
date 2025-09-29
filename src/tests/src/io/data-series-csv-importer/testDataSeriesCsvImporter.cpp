@@ -45,6 +45,14 @@ struct CsvCreationFixture
     }
 
     std::filesystem::path writeFile(string filename, string content);
+
+    ~CsvCreationFixture()
+    {
+        if (filesystem::exists(temp_path))
+        {
+            filesystem::remove_all(temp_path);
+        }
+    }
 };
 
 std::filesystem::path CsvCreationFixture::writeFile(const string filename, const string content)
