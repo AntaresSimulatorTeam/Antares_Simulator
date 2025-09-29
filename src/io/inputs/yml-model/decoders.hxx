@@ -194,7 +194,7 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
         {
             auto& variable = rhs.variables[index];
             variable = as_fallback_default<Antares::IO::Inputs::YmlModel::Variable>(
-              nodeVariables[i]);
+              nodeVariables[index]);
             variable.index = index;
         }
         rhs.ports = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Port>>(
