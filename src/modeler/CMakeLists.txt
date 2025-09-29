@@ -2,6 +2,7 @@ add_subdirectory(loadFiles)
 add_subdirectory(modeler)
 add_subdirectory(parameters)
 add_subdirectory(optimConfig)
+add_subdirectory(investment)
 
 OMESSAGE("  :: modeler")
 
