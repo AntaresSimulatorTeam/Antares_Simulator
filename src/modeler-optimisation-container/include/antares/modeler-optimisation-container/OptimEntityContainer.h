@@ -98,10 +98,10 @@ public:
 
     [[nodiscard]] std::span<LinearProblemApi::IMipVariable* const> getComponentVariable(
       const Antares::ModelerStudy::SystemModel::Component& component,
-      const std::string& varName,
+      unsigned int index,
       std::size_t nbTimeSteps) const
     {
-        unsigned int startColumn = getVariableStartColumn(component, varName);
+        unsigned int startColumn = getVariableStartColumn(component, index);
         return {variables_.begin() + startColumn, nbTimeSteps};
     }
 
