@@ -192,12 +192,6 @@ public:
     IncompatibleSimulationModeForAdqPatch();
 };
 
-class NoAreaInsideAdqPatchMode final: public LoadingError
-{
-public:
-    NoAreaInsideAdqPatchMode();
-};
-
 class IncompatibleHurdleCostCSR final: public LoadingError
 {
 public:

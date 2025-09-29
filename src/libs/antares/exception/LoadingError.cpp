@@ -193,11 +193,6 @@ IncompatibleSimulationModeForAdqPatch::IncompatibleSimulationModeForAdqPatch():
 {
 }
 
-NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode():
-    LoadingError("Minimum one area must be inside adequacy patch mode when using adequacy patch")
-{
-}
-
 IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR():
     LoadingError("Incompatible options include.hurdleCost and curtailmentSharing.includeHurdleCost")
 {
