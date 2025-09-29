@@ -24,7 +24,8 @@ public:
       Optimisation::TimeIndex time_index = Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
       unsigned int index = 0):
         Leaf<std::string>(value),
-        time_index_(time_index)
+        time_index_(time_index),
+        index_(index)
     {
     }
 

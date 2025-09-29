@@ -92,7 +92,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
-          node->value(),
+          node->Index(),
           1 /* single timestep*/);
         return EvaluationResult(componentVariables[0]->solutionValue());
     }
