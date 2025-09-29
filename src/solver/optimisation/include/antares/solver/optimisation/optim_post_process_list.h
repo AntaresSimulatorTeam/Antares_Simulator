@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -25,14 +25,13 @@
 
 namespace Antares::Solver::Simulation
 {
-class OptPostProcessList: public interfacePostProcessList
+class OptPostProcessList final: public interfacePostProcessList
 {
 public:
     OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                        uint numSpace,
                        AreaList& areas,
-                       SheddingPolicy sheddingPolicy,
-                       SimplexOptimization splxOptimization,
+                       const Data::Parameters& params,
                        Calendar& calendar);
 
     virtual ~OptPostProcessList() = default;

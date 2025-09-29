@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -33,7 +33,7 @@ namespace
 /*!
  * Just wraps an arbitrary task as a yuni job, and allows to retrieve the corresponding future.
  */
-class PackagedJob: public Yuni::Job::IJob
+class PackagedJob final: public Yuni::Job::IJob
 {
 public:
     PackagedJob(const Task& task):

@@ -50,9 +50,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&,
-                                                   ILinearProblemData&,
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addVariables(ILinearProblem&, const FillContext&)
 {
     // nothing to do
 }
@@ -106,7 +104,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
 }
 
 // TODO remove and use proper scenario
-class DefaultScenario: public IScenario
+class DefaultScenario final: public IScenario
 {
 public:
     using IScenario::IScenario;
@@ -137,9 +135,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     }
 }
 
-void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
-                                                     ILinearProblemData& data,
-                                                     const FillContext& ctx)
+void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb, const FillContext& ctx)
 {
     for (const auto& component: modelerSystem_->Components() | std::ranges::views::values)
     {
@@ -150,9 +146,7 @@ void ComponentToAreaConnectionFiller::addConstraints(ILinearProblem& pb,
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&,
-                                                   ILinearProblemData&,
-                                                   const FillContext&)
+void ComponentToAreaConnectionFiller::addObjective(ILinearProblem&, const FillContext&)
 {
     // nothing to do
 }

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -461,9 +462,7 @@
 
 #ifdef __cplusplus /* Only with a C++ Compiler */
 
-namespace Yuni
-{
-namespace System
+namespace Yuni::System
 {
 /* Operating systems */
 enum
@@ -478,8 +477,7 @@ enum
     macos = YUNI_OS_FLAG_MACOS,
 };
 
-} /* namespace System */
-} /* namespace Yuni */
+} // namespace Yuni::System
 
 namespace Yuni
 {
@@ -502,12 +500,12 @@ enum
 
 } /* namespace Yuni */
 
-//# ifndef YUNI_HAS_CONSTEXPR
-// There are some issues with Visual Studio 11
-// The feature is disabled, waiting for a valid fix
-//#	ifndef constexpr
-//#		define constexpr  /* does nothing, but compiles */
-//#	endif
-//# endif
+// # ifndef YUNI_HAS_CONSTEXPR
+//  There are some issues with Visual Studio 11
+//  The feature is disabled, waiting for a valid fix
+// #	ifndef constexpr
+// #		define constexpr  /* does nothing, but compiles */
+// #	endif
+// # endif
 
 #endif /* __cplusplus */

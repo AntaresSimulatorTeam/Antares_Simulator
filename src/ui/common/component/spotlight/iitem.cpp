@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "spotlight.h"
 #include <wx/dcbuffer.h>
@@ -29,9 +29,7 @@ using namespace Yuni;
 #define NODE_DRAW_COLOR_VARIATION_LIGHT 30
 #define NODE_DRAW_COLOR_VARIATION_DARK 15
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 //! Convenient using char = for unsigned
 using uchar = unsigned char;
@@ -66,8 +64,11 @@ static void DrawTextWithSelection(const AnyString& text,
     {
         decalTextY = System::windows ? 1 : 0
     };
+
     if (!text)
+    {
         return;
+    }
 
     if (BoldT)
     {
@@ -120,11 +121,15 @@ static void DrawTextWithSelection(const AnyString& text,
                     if (offset < text.size())
                     {
                         for (uint j = offset; j < token.text.size() + offset; ++j)
+                        {
                             regions[j] = true;
+                        }
                         ++offset;
                     }
                     else
+                    {
                         break;
+                    }
                 } while (true);
             }
         }
@@ -138,7 +143,9 @@ static void DrawTextWithSelection(const AnyString& text,
         for (uint i = 1; i != text.size() + 1; ++i)
         {
             if (regions[i] == flag)
+            {
                 continue;
+            }
 
             const wxString t = wxStringFromUTF8(text.c_str() + offset, i - offset);
             const wxSize sizet = dc.GetTextExtent(t);
@@ -159,16 +166,18 @@ static void DrawTextWithSelection(const AnyString& text,
                 if (!ReverseColorT)
                 {
                     dc.SetTextForeground(white);
-                    dc.DrawText(
-                      t, 1 + x, 1 + y + itemHeight / 2 - size.GetHeight() / 2 - decalTextY);
+                    dc.DrawText(t,
+                                1 + x,
+                                1 + y + itemHeight / 2 - size.GetHeight() / 2 - decalTextY);
                     dc.SetTextForeground(black);
                     dc.DrawText(t, x, y + itemHeight / 2 - size.GetHeight() / 2 - 1);
                 }
                 else
                 {
                     dc.SetTextForeground(gray);
-                    dc.DrawText(
-                      t, 1 + x, 1 + y + itemHeight / 2 - size.GetHeight() / 2 - decalTextY);
+                    dc.DrawText(t,
+                                1 + x,
+                                1 + y + itemHeight / 2 - size.GetHeight() / 2 - decalTextY);
                     dc.SetTextForeground(white);
                     dc.DrawText(t, x, y + itemHeight / 2 - size.GetHeight() / 2 - decalTextY);
                 }
@@ -200,17 +209,23 @@ static void DrawTag(wxDC& dc, const Spotlight::IItem::Tag& tag, wxRect& bounds, 
 
     wxSize size = dc.GetTextExtent(tag.text);
     if (!LeftToRightT)
+    {
         bounds.x -= size.GetWidth() + 2 + spaceX * 2 + 4;
+    }
 
     float y = tag.color.red * 0.299f + tag.color.green * 0.587f + tag.color.blue * 0.114f;
     float u = (tag.color.blue - y) * 0.565f;
     float v = (tag.color.red - y) * 0.713f;
     if (y < 50.f)
+    {
         y = 50.f;
+    }
     else
     {
         if (y > 225.f)
+        {
             y = 225.f;
+        }
     }
 
     const int r = Math::MinMax<int>((int)(y + 1.403f * v), 0, 255);
@@ -254,12 +269,13 @@ static void DrawTag(wxDC& dc, const Spotlight::IItem::Tag& tag, wxRect& bounds, 
     dc.SetPen(wxPen(border, 1, wxPENSTYLE_SOLID));
     dc.DrawRectangle(bounds.x, bounds.y + 2, size.GetWidth() + 2 + spaceX * 2, itemHeight - 4);
     // Gradient inside
-    dc.GradientFillLinear(
-      wxRect(
-        bounds.x + 1, 1 + bounds.y + 2, size.GetWidth() + spaceX * 2, (itemHeight - 4 - 2) / 2),
-      pCachedColorGradientStart,
-      pCachedColorGradientEnd,
-      wxSOUTH);
+    dc.GradientFillLinear(wxRect(bounds.x + 1,
+                                 1 + bounds.y + 2,
+                                 size.GetWidth() + spaceX * 2,
+                                 (itemHeight - 4 - 2) / 2),
+                          pCachedColorGradientStart,
+                          pCachedColorGradientEnd,
+                          wxSOUTH);
     dc.GradientFillLinear(wxRect(bounds.x + 1,
                                  bounds.y + itemHeight / 2,
                                  size.GetWidth() + spaceX * 2,
@@ -269,16 +285,21 @@ static void DrawTag(wxDC& dc, const Spotlight::IItem::Tag& tag, wxRect& bounds, 
                           wxSOUTH);
 
     dc.SetTextForeground(pCachedColorText);
+
     enum
     {
         // Y offset on Windows for the beauty of alignment
         decalY = System::windows ? 1 : 0,
     };
-    dc.DrawText(
-      tag.text, bounds.x + spaceX + 1, bounds.y + itemHeight / 2 - size.GetHeight() / 2 - decalY);
+
+    dc.DrawText(tag.text,
+                bounds.x + spaceX + 1,
+                bounds.y + itemHeight / 2 - size.GetHeight() / 2 - decalY);
 
     if (LeftToRightT)
+    {
         bounds.x += size.GetWidth() + 2 + spaceX * 2 + 4;
+    }
 }
 
 static uint Brightness(const wxColour& c)
@@ -287,14 +308,21 @@ static uint Brightness(const wxColour& c)
                                   + c.Blue() * c.Blue() * 0.068);
 }
 
-Spotlight::IItem::IItem() : tag(0), pSelected(false), pCountedAsResult(true)
+Spotlight::IItem::IItem():
+    tag(0),
+    pSelected(false),
+    pCountedAsResult(true)
 {
     // Global variable initialization
     {
         if (not gColorHighlight.IsOk())
+        {
             gColorHighlight = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT);
+        }
         if (not gColorBackgroundDefault.IsOk())
+        {
             gColorBackgroundDefault = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+        }
     }
 }
 
@@ -349,7 +377,9 @@ void Spotlight::IItem::draw(wxDC& dc,
         }
 
         if (Brightness(a) <= 180)
+        {
             reverseTextColor = true;
+        }
 
         dc.SetPen(wxPen(border, 1, wxPENSTYLE_SOLID));
         dc.SetBrush(wxBrush(a, wxBRUSHSTYLE_SOLID));
@@ -359,22 +389,32 @@ void Spotlight::IItem::draw(wxDC& dc,
     // Bitmap drawing
     if (pBitmap.IsOk())
     {
-        dc.DrawBitmap(
-          pBitmap, bounds.x + 2, bounds.y + itemHeight / 2 - pBitmap.GetHeight() / 2, true);
+        dc.DrawBitmap(pBitmap,
+                      bounds.x + 2,
+                      bounds.y + itemHeight / 2 - pBitmap.GetHeight() / 2,
+                      true);
         if (pBitmap.GetWidth() > 20)
+        {
             bounds.x += pBitmap.GetWidth() + 5 + 3;
+        }
         else
+        {
             bounds.x += 25;
+        }
     }
     else
+    {
         bounds.x += 5;
+    }
 
     // All tags
     if (not pLeftTags.empty())
     {
         auto end = pLeftTags.end();
         for (auto i = pLeftTags.begin(); i != end; ++i)
+        {
             DrawTag<true>(dc, *(*i), bounds, itemHeight);
+        }
 
         // For beauty (space before caption)
         bounds.x += 3;
@@ -390,8 +430,14 @@ void Spotlight::IItem::draw(wxDC& dc,
         // display the sub label, with shadow
         if (!reverseTextColor)
         {
-            DrawTextWithSelection<true, false>(
-              pCaption, pCacheCaption, dc, tokens, tagHeight, bounds.x, bounds.y, mayHasSelection);
+            DrawTextWithSelection<true, false>(pCaption,
+                                               pCacheCaption,
+                                               dc,
+                                               tokens,
+                                               tagHeight,
+                                               bounds.x,
+                                               bounds.y,
+                                               mayHasSelection);
             if (pSubCaption.length() * 5 < bounds_width - bounds.x - 1)
             {
                 dc.SetTextForeground(wxColour(255, 255, 255));
@@ -400,13 +446,22 @@ void Spotlight::IItem::draw(wxDC& dc,
                 dc.DrawText(subCaption, bounds.x, bounds.y + 16);
             }
             else
-                dc.DrawText(
-                  subCaption(0, subCaption.Find(')') + 1) + " ...", bounds.x, bounds.y + 16);
+            {
+                dc.DrawText(subCaption(0, subCaption.Find(')') + 1) + " ...",
+                            bounds.x,
+                            bounds.y + 16);
+            }
         }
         else
         {
-            DrawTextWithSelection<true, true>(
-              pCaption, pCacheCaption, dc, tokens, tagHeight, bounds.x, bounds.y, mayHasSelection);
+            DrawTextWithSelection<true, true>(pCaption,
+                                              pCacheCaption,
+                                              dc,
+                                              tokens,
+                                              tagHeight,
+                                              bounds.x,
+                                              bounds.y,
+                                              mayHasSelection);
             if (pSubCaption.length() * 5 < bounds_width - bounds.x - 1)
             {
                 dc.SetTextForeground(wxColour(70, 70, 90));
@@ -415,8 +470,11 @@ void Spotlight::IItem::draw(wxDC& dc,
                 dc.DrawText(subCaption, bounds.x, bounds.y + 16);
             }
             else
-                dc.DrawText(
-                  subCaption(0, subCaption.Find(')') + 1) + " ...", bounds.x, bounds.y + 16);
+            {
+                dc.DrawText(subCaption(0, subCaption.Find(')') + 1) + " ...",
+                            bounds.x,
+                            bounds.y + 16);
+            }
         }
     }
     else
@@ -424,13 +482,25 @@ void Spotlight::IItem::draw(wxDC& dc,
         // display main label
         if (!reverseTextColor)
         {
-            DrawTextWithSelection<false, false>(
-              pCaption, pCacheCaption, dc, tokens, tagHeight, bounds.x, bounds.y, mayHasSelection);
+            DrawTextWithSelection<false, false>(pCaption,
+                                                pCacheCaption,
+                                                dc,
+                                                tokens,
+                                                tagHeight,
+                                                bounds.x,
+                                                bounds.y,
+                                                mayHasSelection);
         }
         else
         {
-            DrawTextWithSelection<false, true>(
-              pCaption, pCacheCaption, dc, tokens, tagHeight, bounds.x, bounds.y, mayHasSelection);
+            DrawTextWithSelection<false, true>(pCaption,
+                                               pCacheCaption,
+                                               dc,
+                                               tokens,
+                                               tagHeight,
+                                               bounds.x,
+                                               bounds.y,
+                                               mayHasSelection);
         }
     }
 
@@ -440,12 +510,13 @@ void Spotlight::IItem::draw(wxDC& dc,
         bounds.x = bounds.width;
         Tag::Vector::const_iterator end = pRightTags.end();
         for (Tag::Vector::const_iterator i = pRightTags.begin(); i != end; ++i)
+        {
             DrawTag<false>(dc, *(*i), bounds, itemHeight);
+        }
     }
 
     // increasing the Y offset
     bounds.y += itemHeight;
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component

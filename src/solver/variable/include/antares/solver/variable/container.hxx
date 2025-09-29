@@ -25,13 +25,7 @@
 
 #include "antares/solver/variable/surveyresults/reportbuilder.hxx"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Container
+namespace Antares::Solver::Variable::Container
 {
 template<class NextT>
 inline void List<NextT>::initializeFromStudy(Data::Study& study)
@@ -295,9 +289,6 @@ void List<NextT>::exportSurveyResults(bool global,
     }
 }
 
-} // namespace Container
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Container
 
 #endif // __SOLVER_CONTAINER_CONTAINER_H__

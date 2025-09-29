@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "node.h"
 #include "../manager.h"
@@ -32,19 +32,19 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 enum // constants
 {
     nodeDrawBorderspaceX = 8,
     nodeDrawBorderspaceY = 1,
 };
+
 enum
 {
     fontSize = 8
 };
+
 static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
 template<typename T>
@@ -53,12 +53,17 @@ static inline bool IsInRange(const T value, const T min, const T max)
     return (value >= min) && (value <= max);
 }
 
-Node::Node(Manager& manager) : Item(manager, 100), pId(), pAttachedArea(nullptr)
+Node::Node(Manager& manager):
+    Item(manager, 100),
+    pId(),
+    pAttachedArea(nullptr)
 {
 }
 
-Node::Node(Manager& manager, const wxString& id) :
- Item(manager, 100), pId(id), pAttachedArea(nullptr)
+Node::Node(Manager& manager, const wxString& id):
+    Item(manager, 100),
+    pId(id),
+    pAttachedArea(nullptr)
 {
 }
 
@@ -106,9 +111,12 @@ Node::~Node()
 bool Node::isVisibleOnLayer(const size_t& layerID) const
 {
     if (pAttachedArea == nullptr)
+    {
         return false;
+    }
     return pAttachedArea->isVisibleOnLayer(layerID);
 }
+
 //@}
 
 void Node::refreshCache(wxDC& dc)
@@ -167,11 +175,15 @@ void Node::refreshCache(wxDC& dc)
     double u = (pColor.Blue() - y) * 0.565;
     double v = (pColor.Red() - y) * 0.713;
     if (y < 50.)
+    {
         y = 50.;
+    }
     else
     {
         if (y > 225.)
+        {
             y = 225.;
+        }
     }
 
     const int r = Math::MinMax<int>((int)(y + 1.403 * v), 0, 255);
@@ -197,10 +209,11 @@ void Node::refreshCache(wxDC& dc)
 
     double yy;
     yy = (y <= 147.) ? 255. : 60.;
-    pCachedColorText.Set(
-      (unsigned char)Math::MinMax<int>((int)(yy + 1.403 * v), 0, 255),
-      (unsigned char)Math::MinMax<int>((int)(yy - 0.344 * u - 0.714 * v), 0, 255),
-      (unsigned char)Math::MinMax<int>((int)(yy + 1.770 * u), 0, 255));
+    pCachedColorText.Set((unsigned char)Math::MinMax<int>((int)(yy + 1.403 * v), 0, 255),
+                         (unsigned char)Math::MinMax<int>((int)(yy - 0.344 * u - 0.714 * v),
+                                                          0,
+                                                          255),
+                         (unsigned char)Math::MinMax<int>((int)(yy + 1.770 * u), 0, 255));
 
     // Border color
     wxColour border;
@@ -211,9 +224,13 @@ void Node::refreshCache(wxDC& dc)
     pBorderPen.SetColour(border); // pColor);
     // Shadow pen
     if (pSelected)
+    {
         pShadowPen.SetColour(Settings::selectionNodeBorder);
+    }
     else
+    {
         pShadowPen.SetColour(Settings::defaultNodeShadow);
+    }
 
     pInvalidated = false;
 }
@@ -234,12 +251,14 @@ bool Node::isContained(const int x1, const int y1, const int x2, const int y2) c
 bool Node::contains(const int x, const int y, double& distance)
 {
     if (!pInvalidated)
+    {
         if (x >= pCachedPosition.x && x <= pCachedPosition.x + pCachedSize.x
             && y >= pCachedPosition.y && y <= pCachedPosition.y + pCachedSize.y)
         {
             distance = 0;
             return true;
         }
+    }
     return false;
 }
 
@@ -265,7 +284,9 @@ void Node::move(const int x, const int y)
 void Node::draw(DrawingContext& dc)
 {
     if (!isVisibleOnLayer(dc.getLayerId()))
+    {
         return;
+    }
 
     // The device context
     wxDC& device = dc.device();
@@ -284,20 +305,31 @@ void Node::draw(DrawingContext& dc)
     // Do not draw nodes outside the current view port
     if (rTopLeft.x < dc.scroll().x - pCachedSize.x
         || rTopLeft.x > dc.bottomRight().x + pCachedSize.x)
+    {
         return;
+    }
     if (rTopLeft.y < dc.scroll().y - pCachedSize.y
         || rTopLeft.y > dc.bottomRight().y + pCachedSize.y)
+    {
         return;
+    }
 
     // Background
     // Shadow
     device.SetPen(pShadowPen);
     device.SetBrush(wxBrush(Settings::selectionNodeBackground));
     if (pSelected)
-        device.DrawRoundedRectangle(
-          rTopLeft.x - 3, rTopLeft.y - 3, pCachedSize.x + 6, pCachedSize.y + 6, 2);
+    {
+        device.DrawRoundedRectangle(rTopLeft.x - 3,
+                                    rTopLeft.y - 3,
+                                    pCachedSize.x + 6,
+                                    pCachedSize.y + 6,
+                                    2);
+    }
     else
+    {
         device.DrawRectangle(rTopLeft.x, rTopLeft.y, pCachedSize.x + 2, pCachedSize.y + 2);
+    }
 
     // Border
     device.SetPen(pBorderPen);
@@ -331,15 +363,23 @@ void Node::extendBoundingBox(wxPoint& topLeft, wxPoint& bottomRight)
 {
     const wxPoint p(pCachedPosition.x, pCachedPosition.y + pCachedSize.y);
     if (topLeft.x > p.x)
+    {
         topLeft.x = p.x;
+    }
     if (topLeft.y < p.y)
+    {
         topLeft.y = p.y;
+    }
     const int px = pCachedSize.x + p.x;
     const int py = -pCachedSize.y + p.y;
     if (bottomRight.x < px)
+    {
         bottomRight.x = px;
+    }
     if (bottomRight.y > py)
+    {
         bottomRight.y = py;
+    }
 }
 
 void Node::addLayerVisibility(size_t id)
@@ -347,7 +387,9 @@ void Node::addLayerVisibility(size_t id)
     std::vector<size_t>& layerList = pAttachedArea->ui->mapLayersVisibilityList;
     std::vector<size_t>::iterator layerPosition = std::find(layerList.begin(), layerList.end(), id);
     if (layerPosition == layerList.end())
+    {
         layerList.push_back(id);
+    }
     pAttachedArea->ui->markAsModified();
 }
 
@@ -357,7 +399,9 @@ void Node::removeLayerVisibility(size_t id)
     std::vector<size_t>& layerList = pAttachedArea->ui->mapLayersVisibilityList;
     std::vector<size_t>::iterator layerPosition = std::find(layerList.begin(), layerList.end(), id);
     if (layerPosition != layerList.end())
+    {
         layerList.erase(layerPosition);
+    }
     pAttachedArea->ui->markAsModified();
 }
 
@@ -377,7 +421,9 @@ void Node::captionHasChanged()
     else
     {
         if (!pAttachedArea)
+        {
             createANewAreaIfNotAlreadyAttached();
+        }
     }
 }
 
@@ -419,5 +465,4 @@ void Node::colorHasChanged()
     }
 }
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map

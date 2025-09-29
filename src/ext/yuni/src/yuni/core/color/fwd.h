@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,13 +11,11 @@
 */
 #pragma once
 #include "../math.h"
-#include "../string.h"
 #include "../static/if.h"
 #include "../static/types.h"
+#include "../string.h"
 
-namespace Yuni
-{
-namespace Color
+namespace Yuni::Color
 {
 // forward declarations
 template<class T>
@@ -24,14 +23,9 @@ class RGB;
 template<class T>
 class RGBA;
 
-} // namespace Color
-} // namespace Yuni
+} // namespace Yuni::Color
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Color
+namespace Yuni::Private::Color
 {
 /*!
 ** \brief A default transparency upperBound, according to a given type
@@ -55,6 +49,7 @@ struct DefaultValues<float>
         upperBound = 1
     };
 };
+
 template<>
 struct DefaultValues<double>
 {
@@ -84,11 +79,13 @@ struct Print
 {
     typedef T Type;
 };
+
 template<>
 struct Print<char>
 {
     typedef int Type;
 };
+
 template<>
 struct Print<unsigned char>
 {
@@ -106,6 +103,7 @@ struct SignedType<float>
 {
     typedef float Type;
 };
+
 template<>
 struct SignedType<double>
 {
@@ -139,6 +137,4 @@ struct Calculation
 
 }; // struct Calculation
 
-} // namespace Color
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Color

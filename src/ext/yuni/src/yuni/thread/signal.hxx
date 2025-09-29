@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "signal.h"
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 inline bool Signal::valid() const
 {
@@ -38,5 +37,4 @@ inline Signal& Signal::operator=(const Signal&)
     return *this;
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

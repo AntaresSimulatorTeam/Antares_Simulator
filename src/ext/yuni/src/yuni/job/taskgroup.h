@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,16 +10,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../yuni.h"
-#include "../core/string.h"
 #include "../core/event/event.h"
 #include "../core/noncopyable.h"
 #include "../core/smartptr/intrusive.h"
+#include "../core/string.h"
 #include "../thread/signal.h"
+#include "../yuni.h"
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 //! Forward declaration
 class IJob;
@@ -49,8 +48,8 @@ class QueueService;
 ** \endcode
 ** \internal This class must keep the fewer dependencies as possible
 */
-class YUNI_DECL Taskgroup final : public IIntrusiveSmartPtr<Taskgroup, false>,
-                                  public NonCopyable<Taskgroup>
+class YUNI_DECL Taskgroup final: public IIntrusiveSmartPtr<Taskgroup, false>,
+                                 public NonCopyable<Taskgroup>
 {
 public:
     //! Ancestor
@@ -228,7 +227,6 @@ private:
 
 }; // class Taskgroup
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job
 
 #include "taskgroup.hxx"

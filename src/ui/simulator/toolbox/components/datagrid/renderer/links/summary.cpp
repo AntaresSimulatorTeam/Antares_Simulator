@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "summary.h"
 #include <yuni/core/math.h>
@@ -26,17 +26,10 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer::Links
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-namespace Links
-{
-Summary::Summary(wxWindow* control) : pControl(control)
+Summary::Summary(wxWindow* control):
+    pControl(control)
 {
 }
 
@@ -67,13 +60,17 @@ double Summary::cellNumericValue(int x, int y) const
 {
     auto study = GetCurrentStudy();
     if (!study)
+    {
         return 0;
+    }
 
     assert(study->uiinfo);
     auto& uiinfo = *(study->uiinfo);
     Data::AreaLink* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (!link)
+    {
         return 0.;
+    }
     switch (x)
     {
     case 0:
@@ -88,12 +85,16 @@ double Summary::cellNumericValue(int x, int y) const
 wxString Summary::cellValue(int x, int y) const
 {
     if (not CurrentStudyIsValid())
+    {
         return wxEmptyString;
+    }
     assert(GetCurrentStudy()->uiinfo);
     auto& uiinfo = *(GetCurrentStudy()->uiinfo);
     auto* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (not link)
+    {
         return wxEmptyString;
+    }
     switch (x)
     {
     case 0:
@@ -132,12 +133,16 @@ IRenderer::CellStyle Summary::cellStyle(int x, int y) const
 {
     using namespace Data;
     if (!CurrentStudyIsValid())
+    {
         return IRenderer::cellStyleDefault;
+    }
     assert(GetCurrentStudy()->uiinfo);
     auto& uiinfo = *(GetCurrentStudy()->uiinfo);
     Data::AreaLink* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (!link)
+    {
         return IRenderer::cellStyleDefault;
+    }
 
     switch (x)
     {
@@ -156,12 +161,16 @@ bool Summary::cellValue(int x, int y, const String& value)
 {
     using namespace Data;
     if (!CurrentStudyIsValid())
+    {
         return false;
+    }
     assert(GetCurrentStudy()->uiinfo);
     auto& uiinfo = *(GetCurrentStudy()->uiinfo);
     auto* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (not link)
+    {
         return false;
+    }
 
     CString<10, false> pTmp = value;
     pTmp.trim();
@@ -177,12 +186,18 @@ bool Summary::cellValue(int x, int y, const String& value)
         return true;
     case 1:
         if (pTmp == "enabled" || pTmp == "e")
+        {
             link->transmissionCapacities = LocalTransmissionCapacities::enabled;
+        }
         else if (pTmp == "infinite" || pTmp == "set to infinite" || pTmp == "inf" || pTmp == "i")
+        {
             link->transmissionCapacities = LocalTransmissionCapacities::infinite;
+        }
         else if (pTmp == "0" || pTmp == "zero" || pTmp == "null" || pTmp == "set to null"
                  || pTmp == "n")
+        {
             link->transmissionCapacities = LocalTransmissionCapacities::null;
+        }
 
         OnInspectorRefresh(nullptr);
         MarkTheStudyAsModified();
@@ -197,8 +212,4 @@ int Summary::height() const
     return !study ? 0 : study->uiinfo->linkCount();
 }
 
-} // namespace Links
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer::Links

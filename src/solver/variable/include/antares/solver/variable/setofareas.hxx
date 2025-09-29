@@ -21,11 +21,7 @@
 #ifndef __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 #define __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 template<class NextT>
 void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
@@ -336,8 +332,6 @@ inline void SetsOfAreas<NextT>::RetrieveVariableList(PredicateT& /*predicate*/)
 {
 }
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #endif // __SOLVER_VARIABLE_SET_OF_AREAS_HXX__

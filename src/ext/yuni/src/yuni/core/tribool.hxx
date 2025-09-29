@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -142,13 +143,10 @@ inline std::ostream& operator<<(std::ostream& out, const Yuni::Tribool& rhs)
     rhs.print(out);
     return out;
 }
+
 //@}
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT>
 class Append<CStringT, Yuni::Tribool>
@@ -234,6 +232,4 @@ public:
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString

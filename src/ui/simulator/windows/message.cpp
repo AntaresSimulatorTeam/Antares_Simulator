@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include <yuni/core/system/memory.h>
@@ -37,13 +37,11 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 namespace // anonymous
 {
-class MessageProvider final : public Component::Spotlight::IProvider
+class MessageProvider final: public Component::Spotlight::IProvider
 {
 public:
     //! Component
@@ -55,13 +53,16 @@ public:
     /*!
     ** \brief Default constructor
     */
-    explicit MessageProvider(Message::ItemList& items) : pItems(items)
+    explicit MessageProvider(Message::ItemList& items):
+        pItems(items)
     {
     }
+
     //! Destructor
     virtual ~MessageProvider()
     {
     }
+
     //@}
 
     virtual void search(Spotlight::IItem::Vector& out,
@@ -70,7 +71,9 @@ public:
     {
         uint count = (uint)pItems.size();
         for (uint i = 0; i != count; ++i)
+        {
             out.push_back(pItems[i]);
+        }
     }
 
 private:
@@ -85,11 +88,11 @@ Message::Message(wxWindow* parent,
                  const wxString& title,
                  const wxString& subtitle,
                  const wxString& msg,
-                 const char* icon) :
- wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
- pSpotlight(nullptr),
- pReturnStatus(btnStartID),
- pRecommendedWidth(0)
+                 const char* icon):
+    wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize),
+    pSpotlight(nullptr),
+    pReturnStatus(btnStartID),
+    pRecommendedWidth(0)
 {
     // Informations about the study
     wxColour defaultBgColor = GetBackgroundColour();
@@ -100,8 +103,9 @@ Message::Message(wxWindow* parent,
 
     auto* textSizer = new wxBoxSizer(wxHORIZONTAL);
     textSizer->AddSpacer(20);
-    textSizer->Add(
-      Resources::StaticBitmapLoadFromFile(this, wxID_ANY, icon), 0, wxALL | wxALIGN_TOP);
+    textSizer->Add(Resources::StaticBitmapLoadFromFile(this, wxID_ANY, icon),
+                   0,
+                   wxALL | wxALIGN_TOP);
     textSizer->AddSpacer(15);
 
     auto* v = new wxBoxSizer(wxVERTICAL);
@@ -118,9 +122,13 @@ Message::Message(wxWindow* parent,
     v->Add(lbl, 0, wxLEFT);
 
     if (not subtitle.empty())
+    {
         textSizer->Add(v, 0, wxALL | wxLEFT | wxTOP);
+    }
     else
+    {
         textSizer->Add(v, 0, wxALL | wxEXPAND);
+    }
 
     textSizer->SetItemMinSize(v, 50, 50);
     textSizer->AddSpacer(4);
@@ -132,6 +140,7 @@ Message::Message(wxWindow* parent,
         {
             flags = Component::Spotlight::optNoSearchInput | Component::Spotlight::optBkgWhite,
         };
+
         auto* sizerList = new wxBoxSizer(wxVERTICAL);
         pSpotlight = new Component::Spotlight(this, flags);
         pSpotlight->SetBackgroundColour(GetBackgroundColour());
@@ -182,7 +191,9 @@ Message::~Message()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void Message::add(const wxString& caption, DefaultButtonType value, bool defaultButton, int space)
@@ -226,7 +237,9 @@ void Message::prepareShowModal()
     else
     {
         if (pSpotlight)
+        {
             pSpotlight->provider(std::make_shared<MessageProvider>(pItemList));
+        }
         sizer->Show(pListSizer, true);
         pSpace->Show(false);
     }
@@ -239,11 +252,15 @@ void Message::prepareShowModal()
     {
         p.SetWidth(p.GetWidth() + 20);
         if (p.GetWidth() < 400)
+        {
             p.SetWidth(400);
+        }
         else
         {
             if (p.GetWidth() > 700)
+            {
                 p.SetWidth(700);
+            }
         }
     }
     else
@@ -251,17 +268,25 @@ void Message::prepareShowModal()
         if (pRecommendedWidth && pRecommendedWidth > (uint)p.GetWidth())
         {
             if (pRecommendedWidth < 400)
+            {
                 p.SetWidth(400);
+            }
             else
+            {
                 p.SetWidth(pRecommendedWidth);
+            }
         }
         else
+        {
             p.SetWidth(p.GetWidth());
+        }
     }
 
     p.SetHeight(p.GetHeight() + (int)pItemList.size() * 18);
     if (p.GetHeight() > 600)
+    {
         p.SetHeight(600);
+    }
 
     SetSize(p);
     Centre(wxBOTH);
@@ -292,5 +317,4 @@ void Message::appendWarning(const AnyString& text)
     pItemList.push_back(item);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

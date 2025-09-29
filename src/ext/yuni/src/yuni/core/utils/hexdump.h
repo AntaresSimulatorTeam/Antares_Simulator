@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,11 +13,7 @@
 #include "../../yuni.h"
 #include "../string.h"
 
-namespace Yuni
-{
-namespace Core
-{
-namespace Utils
+namespace Yuni::Core::Utils
 {
 /*!
 ** \brief A simple hexadecimal buffer dumper.
@@ -120,15 +117,13 @@ private:
 
 private:
     //! Pointer to the current buffer (not owned by Hexdump)
-    char const* pBuffer;
+    const char* pBuffer;
     //! The current dump size.
     uint pSize;
 
 }; // class HexDump
 
-} // namespace Utils
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::Utils
 
 //! Operator overloads for printing
 //@{

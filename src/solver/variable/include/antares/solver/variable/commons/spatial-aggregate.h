@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
 #define __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
 
@@ -25,13 +25,7 @@
 
 // #include <antares/logs/logs.h>	// In case it is needed
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Common
+namespace Antares::Solver::Variable::Common
 {
 template<int ColumnCountT, class VCardT>
 struct MultipleCaptionProxy
@@ -430,12 +424,30 @@ private:
         // Make the spatial cluster
         if (!set.empty())
         {
+            // We compute the district's (or set) hourly values by looping over district's areas
+            // and calling computeSpatialAggregateWith on each area.
+            // The aggregated results is stored in pValuesForTheCurrentYear[numSpace].
             auto end = set.end();
             for (auto i = set.begin(); i != end; ++i)
             {
+                // computeSpatialAggregateWith is called with VCardType::VCardForSpatialAggregate
+                // as a template parameter.
+                // Note that VCardType represents the vcard of the current spatial aggregate's
+                // variable (template parameter VarT).
+                // For most variables VCardType::VCardOrigin and
+                // VCardType::VCardForSpatialAggregate are identical vcard types.
+                // For example : for var OverallCost, VCardOverallCost::VCardForSpatialAggregate
+                // is simply VCardOverallCost itself.
+                // But var LOLD is different : VCardLOLD::VCardForSpatialAggregate is actually
+                // VCardUnsupliedEnergy.
+                // This means that, here :
+                // - for OverallCost, we sum the hourly values of var OverallCost for each
+                //   district's areas.
+                // - for LOLD, we sum the hourly values of var UNSP. ENRG for each district's areas
                 allVars.template computeSpatialAggregateWith<
-                  typename VCardType::VCardForSpatialAggregate> //<typename VCardType::VCardOrigin>
-                  (pValuesForTheCurrentYear[numSpace], *i /* the current area */, numSpace);
+                  typename VCardType::VCardForSpatialAggregate>(pValuesForTheCurrentYear[numSpace],
+                                                                *i /* the current area */,
+                                                                numSpace);
             }
 
             // The spatial cluster may be an average
@@ -448,6 +460,8 @@ private:
             if (VCardType::VCardOrigin::spatialAggregate
                 & Category::spatialAggregateSumThen1IfPositive)
             {
+                // This case applies (for instance) if VarT is LOLD : if any area in the district
+                // has any unsupplied E (even tiny), LOLD of district is 1.
                 VariableAccessorType::SetTo1IfPositive(pValuesForTheCurrentYear[numSpace]);
             }
             if (VCardType::VCardOrigin::spatialAggregate & Category::spatialAggregateOr)
@@ -481,9 +495,6 @@ private:
 
 }; // class SpatialAggregate
 
-} // namespace Common
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Common
 
 #endif // __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__

@@ -32,13 +32,7 @@
 // To remove warnings (unused variable) at compile time on linux
 #define UNUSED_VARIABLE(x) (void)(x)
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Container
+namespace Antares::Solver::Variable::Container
 {
 class EndOfList
 {
@@ -289,9 +283,6 @@ public:
 
 }; // class EndOfList
 
-} // namespace Container
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Container
 
 #endif // __SOLVER_END_OF_LIST_END_OF_LIST_H__

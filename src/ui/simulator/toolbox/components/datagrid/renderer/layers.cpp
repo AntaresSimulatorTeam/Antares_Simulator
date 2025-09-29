@@ -1,36 +1,32 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include "layers.h"
 #include "../../../../windows/inspector.h"
 #include "../component.h"
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-LayersUI::LayersUI(Toolbox::InputSelector::Area* notifier) : pControl(nullptr), pArea(nullptr)
+LayersUI::LayersUI(Toolbox::InputSelector::Area* notifier):
+    pControl(nullptr),
+    pArea(nullptr)
 {
     if (notifier)
     {
@@ -70,7 +66,9 @@ void LayersUI::onAreaChanged(Data::Area* area)
         pArea = area;
         onRefresh();
         if (pControl)
+        {
             pControl->Refresh();
+        }
     }
 }
 
@@ -107,9 +105,13 @@ wxString LayersUI::rowCaption(int rowIndx) const
 bool LayersUI::cellValue(int x, int y, const Yuni::String& value)
 {
     if (!study || (uint)x >= study->layers.size())
+    {
         return false;
+    }
     if (x == 0 && y == 0)
+    {
         return true;
+    }
 
     auto layerIterator = study->layers.begin();
     std::advance(layerIterator, x);
@@ -124,7 +126,9 @@ bool LayersUI::cellValue(int x, int y, const Yuni::String& value)
         if (b)
         {
             if (layerPosition == layerList.end())
+            {
                 layerList.push_back(layerIterator->first);
+            }
             pArea->ui->layerX[layerIterator->first] = pArea->ui->layerX[0];
             pArea->ui->layerY[layerIterator->first] = pArea->ui->layerY[0];
             pControl->Refresh();
@@ -132,7 +136,9 @@ bool LayersUI::cellValue(int x, int y, const Yuni::String& value)
         else
         {
             if (layerPosition != layerList.end())
+            {
                 layerList.erase(layerPosition);
+            }
         }
         Window::Inspector::Refresh();
         OnInspectorRefresh(nullptr);
@@ -143,7 +149,9 @@ bool LayersUI::cellValue(int x, int y, const Yuni::String& value)
     {
         int intValue;
         if (!value.to(intValue))
+        {
             intValue = 0;
+        }
 
         if (layerPosition != layerList.end())
         {
@@ -159,7 +167,9 @@ bool LayersUI::cellValue(int x, int y, const Yuni::String& value)
     {
         int intValue;
         if (!value.to(intValue))
+        {
             intValue = 0;
+        }
 
         if (layerPosition != layerList.end())
         {
@@ -236,7 +246,9 @@ wxString LayersUI::cellValue(int x, int y) const
 IRenderer::CellStyle LayersUI::cellStyle(int x, int y) const
 {
     if (x == 0 && y == 0)
+    {
         return cellStyleLayerDisabled;
+    }
     return cellStyleDefaultCenter;
 }
 
@@ -247,7 +259,8 @@ void LayersUI::onStudyClosed()
 }
 
 /*layers visibility grid renderer*/
-LayersVisibility::LayersVisibility() : pControl(nullptr)
+LayersVisibility::LayersVisibility():
+    pControl(nullptr)
 {
 }
 
@@ -307,9 +320,13 @@ wxString LayersVisibility::rowCaption(int rowIndx) const
 bool LayersVisibility::cellValue(int x, int y, const Yuni::String& value)
 {
     if (!study || (uint)x >= study->layers.size() || (uint)y >= study->areas.size())
+    {
         return false;
+    }
     if (x == 0)
+    {
         return true;
+    }
 
     auto layerIterator = study->layers.begin();
     std::advance(layerIterator, x);
@@ -323,14 +340,18 @@ bool LayersVisibility::cellValue(int x, int y, const Yuni::String& value)
     if (b)
     {
         if (layerPosition == layerList.end())
+        {
             layerList.push_back(layerIterator->first);
+        }
         pArea->ui->layerX[layerIterator->first] = pArea->ui->layerX[0];
         pArea->ui->layerY[layerIterator->first] = pArea->ui->layerY[0];
     }
     else
     {
         if (layerPosition != layerList.end())
+        {
             layerList.erase(layerPosition);
+        }
     }
     Window::Inspector::Refresh();
     OnInspectorRefresh(nullptr);
@@ -374,7 +395,9 @@ wxString LayersVisibility::cellValue(int x, int y) const
 IRenderer::CellStyle LayersVisibility::cellStyle(int x, int /* y */) const
 {
     if (x == 0)
+    {
         return cellStyleLayerDisabled;
+    }
     return cellStyleDefaultCenter;
 }
 
@@ -383,7 +406,4 @@ void LayersVisibility::onStudyClosed()
     IRenderer::onStudyClosed();
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

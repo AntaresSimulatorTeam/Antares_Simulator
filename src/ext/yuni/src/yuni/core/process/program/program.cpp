@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "program.h"
+
 #include "../../../thread/thread.h"
 #ifndef YUNI_OS_MSVC
-#include <unistd.h>
-#include <stdio.h>
-#include <signal.h>
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
 #ifndef YUNI_OS_WINDOWS
 #include <sys/wait.h>
 #else
@@ -23,16 +25,15 @@
 #endif
 #else
 #endif
+#include <iostream>
+
 #include "../../../datetime/timestamp.h"
 #include "../../../io/directory.h"
 #include "process-info.h"
-#include <iostream>
 
-namespace Yuni
+namespace Yuni::Process
 {
-namespace Process
-{
-class Program::ThreadMonitor final : public Yuni::Thread::IThread
+class Program::ThreadMonitor final: public Yuni::Thread::IThread
 {
 public:
     //! \name Constructor & Destructor
@@ -106,16 +107,16 @@ private:
 
 }; // class ThreadMonitor
 
-inline Program::ThreadMonitor::ThreadMonitor(Yuni::Process::Program& process) :
- procinfoRef(process.pEnv),
- procinfo(*(process.pEnv)),
- stream(process.pStream),
- pRedirectToConsole(procinfo.redirectToConsole),
- pExitStatus(-1),
- pKilled(false),
- pStartTime(-1),
- pEndTime(0),
- pDurationPrecision(process.pEnv->durationPrecision)
+inline Program::ThreadMonitor::ThreadMonitor(Yuni::Process::Program& process):
+    procinfoRef(process.pEnv),
+    procinfo(*(process.pEnv)),
+    stream(process.pStream),
+    pRedirectToConsole(procinfo.redirectToConsole),
+    pExitStatus(-1),
+    pKilled(false),
+    pStartTime(-1),
+    pEndTime(0),
+    pDurationPrecision(process.pEnv->durationPrecision)
 {
     // to avoid compiler warning
     (void)procinfoRef;
@@ -182,7 +183,9 @@ void Program::ThreadMonitor::theProcessHasStopped(bool killed, int exitstatus)
     {
         MutexLocker locker(procinfo.mutex);
         if (YUNI_UNLIKELY(not procinfo.running)) // already stopped - should never happen
+        {
             return;
+        }
 
         procinfo.running = false;
         procinfo.processInput = -1;
@@ -198,22 +201,21 @@ void Program::ThreadMonitor::theProcessHasStopped(bool killed, int exitstatus)
     }
 }
 
-} // namespace Process
-} // namespace Yuni
+} // namespace Yuni::Process
 
 #include "unix.inc.hpp"
 #include "windows.inc.hpp"
 
-namespace Yuni
-{
-namespace Process
+namespace Yuni::Process
 {
 Program::Program()
 {
     // keep the symbol local
 }
 
-Program::Program(const Program& rhs) : pEnv(rhs.pEnv), pStream(rhs.pStream)
+Program::Program(const Program& rhs):
+    pEnv(rhs.pEnv),
+    pStream(rhs.pStream)
 {
     // keep the symbol local
 }
@@ -235,7 +237,9 @@ void Program::signal(int sig)
 #ifndef YUNI_OS_MSVC
     ProcessSharedInfo::Ptr envptr = pEnv;
     if (!(!envptr))
+    {
         envptr->sendSignal<true>(sig);
+    }
 #else
     // Signals are not supported on Windows. Silently ignoring it.
     (void)sig;
@@ -270,7 +274,9 @@ bool Program::execute(uint timeout)
     MutexLocker locker(env.mutex);
 
     if (env.running)
+    {
         return false;
+    }
 
     // notifying that the process is running
     env.running = true;
@@ -304,7 +310,9 @@ bool Program::execute(uint timeout)
 
     // start a sub thread to monitor the underlying process
     if (processReady)
+    {
         newthread->start();
+    }
     return processReady;
 }
 
@@ -314,7 +322,9 @@ int Program::wait(int64_t* duration)
     if (YUNI_UNLIKELY(!envptr))
     {
         if (duration)
+        {
             *duration = 0;
+        }
         return 0;
     }
     ProcessSharedInfo& env = *envptr;
@@ -326,7 +336,9 @@ int Program::wait(int64_t* duration)
         if (not env.running or not env.thread)
         {
             if (duration)
+            {
                 *duration = env.duration;
+            }
             return env.exitstatus;
         }
         // capture the thread
@@ -342,7 +354,9 @@ int Program::wait(int64_t* duration)
     // results
     MutexLocker locker(env.mutex);
     if (duration)
+    {
         *duration = env.duration;
+    }
     return env.exitstatus;
 }
 
@@ -355,8 +369,9 @@ public:
     typedef SmartPtr<ExecutionHelper> Ptr;
 
 public:
-    ExecutionHelper(Process::Program& process, Thread::Signal& signal) :
-     signal(signal), process(process)
+    ExecutionHelper(Process::Program& process, Thread::Signal& signal):
+        signal(signal),
+        process(process)
     {
 #ifndef NDEBUG
         pAlreadyLaunched = false;
@@ -465,7 +480,9 @@ String Program::workingDirectory() const
 {
     ProcessSharedInfo::Ptr envptr = pEnv; // keeping a reference to the current env
     if (!envptr)
+    {
         return nullptr;
+    }
     ProcessSharedInfo& env = *envptr;
     MutexLocker locker(env.mutex);
     return env.workingDirectory;
@@ -475,7 +492,9 @@ bool Program::redirectToConsole() const
 {
     ProcessSharedInfo::Ptr envptr = pEnv; // keeping a reference to the current env
     if (!envptr)
+    {
         return true;
+    }
     ProcessSharedInfo& env = *envptr;
     MutexLocker locker(env.mutex);
     return env.redirectToConsole;
@@ -487,7 +506,9 @@ void Program::redirectToConsole(bool flag)
     if (!envptr)
     {
         if (flag)
+        {
             return; // default is true, useless to instanciate something
+        }
 
         envptr = new ProcessSharedInfo();
         pEnv = envptr;
@@ -502,7 +523,9 @@ String Program::program() const
 {
     ProcessSharedInfo::Ptr envptr = pEnv; // keeping a reference to the current env
     if (!envptr)
+    {
         return nullptr;
+    }
     ProcessSharedInfo& env = *envptr;
     MutexLocker locker(env.mutex);
     return env.executable;
@@ -521,19 +544,25 @@ void Program::program(const AnyString& prgm)
     assert((not env.running)
            and "the process name can not be updated while the process is running");
     if (not env.running)
+    {
         env.executable = prgm;
+    }
 }
 
 void Program::argumentClear()
 {
     ProcessSharedInfo::Ptr envptr = pEnv; // keeping a reference to the current env
     if (!envptr)
+    {
         return;
+    }
     ProcessSharedInfo& env = *envptr;
     MutexLocker locker(env.mutex);
     assert((not env.running) and "the arguments can not be updated while the process is running");
     if (not env.running)
+    {
         env.arguments.clear();
+    }
 }
 
 void Program::argumentAdd(const AnyString& arg)
@@ -548,7 +577,9 @@ void Program::argumentAdd(const AnyString& arg)
     MutexLocker locker(env.mutex);
     assert((not env.running) and "the arguments can not be updated while the process is running");
     if (not env.running)
+    {
         env.arguments.push_back(arg);
+    }
 }
 
 Program::DurationPrecision Program::durationPrecision() const
@@ -576,7 +607,9 @@ void Program::durationPrecision(Program::DurationPrecision precision)
     MutexLocker locker(env.mutex);
     assert((not env.running) and "a precision can not be updated while the process is running");
     if (not env.running)
+    {
         env.durationPrecision = precision;
+    }
 }
 
 bool Execute(const AnyString& commandLine, uint timeout)
@@ -586,5 +619,4 @@ bool Execute(const AnyString& commandLine, uint timeout)
     return (program.execute(timeout)) ? (0 == program.wait()) : false;
 }
 
-} // namespace Process
-} // namespace Yuni
+} // namespace Yuni::Process

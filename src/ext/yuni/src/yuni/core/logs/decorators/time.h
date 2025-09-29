@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,25 +12,17 @@
 #pragma once
 #include "../null.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace LogsDecorator
+namespace Yuni::Private::LogsDecorator
 {
 // Forward declarations
 YUNI_DECL void WriteCurrentTimestampToBuffer(char buffer[32]);
 
-} // namespace LogsDecorator
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::LogsDecorator
 
-namespace Yuni
-{
-namespace Logs
+namespace Yuni::Logs
 {
 template<class LeftType = NullDecorator>
-class YUNI_DECL Time : public LeftType
+class YUNI_DECL Time: public LeftType
 {
 public:
     template<class Handler, class VerbosityType, class O>
@@ -49,5 +42,4 @@ public:
 
 }; // class Time
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs

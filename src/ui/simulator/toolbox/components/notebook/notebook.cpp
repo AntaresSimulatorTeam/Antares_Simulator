@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/antares/antares.h"
 #include "notebook.h"
@@ -36,27 +36,25 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 BEGIN_EVENT_TABLE(Notebook::Tabs, Panel)
 EVT_PAINT(Notebook::Tabs::onDraw)
 END_EVENT_TABLE()
 
-Notebook::Notebook(wxWindow* parent, Notebook::Orientation orientation) :
- Panel(parent),
- pOrientation(orientation),
- pTabs(nullptr),
- pTabsVisible(true),
- pAlwaysDisplayTab(false),
- pDisplayTitle(true),
- pSizerForPages(nullptr),
- pTopSizer(nullptr),
- pLeftSizer(nullptr),
- pLastSelected(nullptr),
- pTheme(themeDefault),
- pAlignment(alignRight)
+Notebook::Notebook(wxWindow* parent, Notebook::Orientation orientation):
+    Panel(parent),
+    pOrientation(orientation),
+    pTabs(nullptr),
+    pTabsVisible(true),
+    pAlwaysDisplayTab(false),
+    pDisplayTitle(true),
+    pSizerForPages(nullptr),
+    pTopSizer(nullptr),
+    pLeftSizer(nullptr),
+    pLastSelected(nullptr),
+    pTheme(themeDefault),
+    pAlignment(alignRight)
 {
     pOriginalColor = GetBackgroundColour();
     pOriginalColorDark.Set((unsigned char)Math::MinMax<int>(pOriginalColor.Red() - 70, 0, 255),
@@ -102,11 +100,16 @@ Notebook::~Notebook()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
-Notebook::Tabs::Tabs(wxWindow* parent, Notebook& notebook) :
- Panel(parent), pNotebook(notebook), pCachedSize(0, 0), pMaxFound(0)
+Notebook::Tabs::Tabs(wxWindow* parent, Notebook& notebook):
+    Panel(parent),
+    pNotebook(notebook),
+    pCachedSize(0, 0),
+    pMaxFound(0)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Needed by Windows
     pCachedSize.x = 150;
@@ -126,6 +129,7 @@ void Notebook::Tabs::onDraw(wxPaintEvent&)
     {
         fontSize = 8,
     };
+
     static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
     // The DC
@@ -191,8 +195,10 @@ void Notebook::Tabs::drawOrientationLeft(wxDC& dc)
         dc.SetPen(wxPen(wxColour(40, 40, 40), 1, wxPENSTYLE_SOLID));
         dc.DrawLine(0, 0, pRect.width, 0);
 
-        dc.GradientFillLinear(
-          wxRect(pRect.x + pRect.width - 6, 0, 6, pRect.height), bg, bgDark, wxEAST);
+        dc.GradientFillLinear(wxRect(pRect.x + pRect.width - 6, 0, 6, pRect.height),
+                              bg,
+                              bgDark,
+                              wxEAST);
 
         dc.SetPen(wxPen(pNotebook.pOriginalColorDark, 1, wxPENSTYLE_SOLID));
         dc.DrawLine(pRect.width - 1, 0, pRect.width - 1, pRect.GetHeight());
@@ -209,7 +215,9 @@ void Notebook::Tabs::drawOrientationLeft(wxDC& dc)
     {
         const Pages::const_iterator end = pNotebook.pPages.end();
         for (Pages::const_iterator i = pNotebook.pPages.begin(); i != end; ++i)
+        {
             drawItem(dc, *i, pos);
+        }
     }
 
     if (pMaxFound != pCachedSize.x)
@@ -278,11 +286,15 @@ void Notebook::Tabs::drawOrientationTop(wxDC& dc)
     double u = (ori.Blue() - y) * 0.565;
     double v = (ori.Red() - y) * 0.713;
     if (y < 50.)
+    {
         y = 50.;
+    }
     else
     {
         if (y > 225.)
+        {
             y = 225.;
+        }
     }
 
     const int r = Math::MinMax<int>((int)(y + 1.403 * v), 0, 255);
@@ -305,7 +317,10 @@ void Notebook::Tabs::drawOrientationTop(wxDC& dc)
     // Gradient inside
     dc.GradientFillLinear(wxRect(pRect.x, pRect.y, pRect.width, pRect.height / 2), a1, b1, wxSOUTH);
     dc.GradientFillLinear(
-      wxRect(pRect.x, pRect.y + pRect.height / 2, pRect.width, pRect.height / 2), a2, b2, wxSOUTH);
+      wxRect(pRect.x, pRect.y + pRect.height / 2, pRect.width, pRect.height / 2),
+      a2,
+      b2,
+      wxSOUTH);
     dc.SetPen(wxPen(a2, 1, wxPENSTYLE_SOLID));
     dc.DrawLine(0, pRect.height - 1, pRect.width, pRect.height - 1);
 
@@ -322,11 +337,13 @@ void Notebook::Tabs::drawOrientationTop(wxDC& dc)
                 {
                     const wxSize size = dc.GetTextExtent(pNotebook.pCaption);
                     dc.SetTextForeground(wxColour(50, 50, 50));
-                    dc.DrawText(
-                      pNotebook.pCaption, 31, 1 + (pRect.height >> 1) - (size.GetHeight() >> 1));
+                    dc.DrawText(pNotebook.pCaption,
+                                31,
+                                1 + (pRect.height >> 1) - (size.GetHeight() >> 1));
                     dc.SetTextForeground(wxColour(255, 166, 25));
-                    dc.DrawText(
-                      pNotebook.pCaption, 30, (pRect.height >> 1) - (size.GetHeight() >> 1));
+                    dc.DrawText(pNotebook.pCaption,
+                                30,
+                                (pRect.height >> 1) - (size.GetHeight() >> 1));
                     pos = 30 + size.GetWidth() + 10;
                 }
 
@@ -349,11 +366,13 @@ void Notebook::Tabs::drawOrientationTop(wxDC& dc)
                 {
                     const wxSize size = dc.GetTextExtent(pNotebook.pCacheTitle);
                     dc.SetTextForeground(wxColour(50, 50, 50));
-                    dc.DrawText(
-                      pNotebook.pCacheTitle, 31, 1 + (pRect.height >> 1) - (size.GetHeight() >> 1));
+                    dc.DrawText(pNotebook.pCacheTitle,
+                                31,
+                                1 + (pRect.height >> 1) - (size.GetHeight() >> 1));
                     dc.SetTextForeground(wxColour(255, 166, 25));
-                    dc.DrawText(
-                      pNotebook.pCacheTitle, 30, (pRect.height >> 1) - (size.GetHeight() >> 1));
+                    dc.DrawText(pNotebook.pCacheTitle,
+                                30,
+                                (pRect.height >> 1) - (size.GetHeight() >> 1));
                 }
                 break;
             }
@@ -371,7 +390,9 @@ void Notebook::Tabs::drawOrientationTop(wxDC& dc)
                 int pos = 15;
                 const Pages::const_iterator end = pNotebook.pPages.end();
                 for (Pages::const_iterator i = pNotebook.pPages.begin(); i != end; ++i)
+                {
                     drawItemTop(dc, *i, pos, alignLeft);
+                }
                 break;
             }
             case alignRight:
@@ -379,7 +400,9 @@ void Notebook::Tabs::drawOrientationTop(wxDC& dc)
                 int pos = pRect.GetWidth() - 15;
                 const Pages::const_reverse_iterator end = pNotebook.pPages.rend();
                 for (Pages::const_reverse_iterator i = pNotebook.pPages.rbegin(); i != end; ++i)
+                {
                     drawItemTop(dc, *i, pos, alignRight);
+                }
                 break;
             }
             }
@@ -425,8 +448,9 @@ void Notebook::Tabs::drawItemTop(wxDC& dc, Page* page, int& pos, Notebook::Align
                         rect.x + 8,
                         pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2 + 1);
             dc.SetTextForeground(wxColour(230, 230, 230));
-            dc.DrawText(
-              page->caption(), rect.x + 7, pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2);
+            dc.DrawText(page->caption(),
+                        rect.x + 7,
+                        pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2);
         }
         else
         {
@@ -453,8 +477,9 @@ void Notebook::Tabs::drawItemTop(wxDC& dc, Page* page, int& pos, Notebook::Align
             dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height);
 
             dc.SetTextForeground(colBlack);
-            dc.DrawText(
-              page->caption(), rect.x + 8, pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2);
+            dc.DrawText(page->caption(),
+                        rect.x + 8,
+                        pRect.y + pRect.height / 2 - textExtent.GetHeight() / 2);
         }
 
         switch (align)
@@ -519,11 +544,15 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
                               (unsigned char)Math::MinMax<int>(pColor.Green() - 50, 0, 255),
                               (unsigned char)Math::MinMax<int>(pColor.Blue() - 50, 0, 255));
 
-        dc.GradientFillLinear(
-          wxRect(11, pos + 1, pRect.width - 11, 4), wxColor(145, 145, 145), gColor, wxSOUTH);
+        dc.GradientFillLinear(wxRect(11, pos + 1, pRect.width - 11, 4),
+                              wxColor(145, 145, 145),
+                              gColor,
+                              wxSOUTH);
 
-        dc.GradientFillLinear(
-          wxRect(11, pos + 5, pRect.width - 11, h - 5), gColor, Map::Settings::background, wxSOUTH);
+        dc.GradientFillLinear(wxRect(11, pos + 5, pRect.width - 11, h - 5),
+                              gColor,
+                              Map::Settings::background,
+                              wxSOUTH);
 
         dc.SetTextForeground(wxColour(0, 0, 0));
 
@@ -544,8 +573,9 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
         }
         else
         {
-            dc.DrawText(
-              page->caption(), 15, pos + (subTabSize >> 1) - (textExtent.GetHeight() >> 1));
+            dc.DrawText(page->caption(),
+                        15,
+                        pos + (subTabSize >> 1) - (textExtent.GetHeight() >> 1));
             for (size_t i = 0; i < size; i++)
             {
                 wxSize subpageTextExtent = dc.GetTextExtent(page->subPages[i]->caption());
@@ -568,8 +598,8 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
                 if (page->subPages[i]->selected())
                 {
                     pPts[0].x = pRect.width - 6;
-                    pPts[0].y
-                      = pos + subTabSize * (i + 1) + (subpageTextExtent.GetHeight() >> 1) + 1;
+                    pPts[0].y = pos + subTabSize * (i + 1) + (subpageTextExtent.GetHeight() >> 1)
+                                + 1;
                     pPts[1].x = pPts[0].x - 3;
                     pPts[1].y = pPts[0].y - 3;
                     pPts[2].x = pPts[0].x - 3;
@@ -608,8 +638,10 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
         dc.SetPen(wxPen(pNotebook.pOriginalColorDark, 1, wxPENSTYLE_SOLID));
         dc.DrawRectangle(15, pos, pRect.width - 15, h);
 
-        dc.GradientFillLinear(
-          wxRect(20, pos, pRect.width - 5, 1), pNotebook.pOriginalColorDark, bgDark2, wxEAST);
+        dc.GradientFillLinear(wxRect(20, pos, pRect.width - 5, 1),
+                              pNotebook.pOriginalColorDark,
+                              bgDark2,
+                              wxEAST);
         dc.GradientFillLinear(wxRect(20, pos + h - 1, pRect.width - 5, 1),
                               pNotebook.pOriginalColorDark,
                               bgDark2,
@@ -639,19 +671,27 @@ void Notebook::Tabs::drawItem(wxDC& dc, Page* page, int& pos)
     {
         const wxSize textExtent = dc.GetTextExtent(page->caption());
         if (!page->selected())
+        {
             drawItemOnCanvasNotSelected(page, dc, pos, h, textExtent);
+        }
         else
         {
             if (page->subPages.size())
+            {
                 for (size_t i = 0; i < page->subPages.size(); i++)
+                {
                     h += h >> 1;
+                }
+            }
 
             drawItemOnCanvasSelected(page, dc, pos, h, textExtent);
         }
 
         const int dreamSize = textExtent.GetWidth() + 45;
         if (pMaxFound < dreamSize)
+        {
             pMaxFound = dreamSize;
+        }
         page->pBoundingBox.x = 0;
         page->pBoundingBox.y = pos;
         page->pBoundingBox.width = pRect.width;
@@ -659,7 +699,9 @@ void Notebook::Tabs::drawItem(wxDC& dc, Page* page, int& pos)
         pos += h;
     }
     else
+    {
         pos += h - 5;
+    }
 }
 
 void Notebook::clear()
@@ -672,7 +714,9 @@ void Notebook::clear()
             pPages.clear();
             const Pages::iterator end = copy.end();
             for (Pages::iterator i = copy.begin(); i != end; ++i)
+            {
                 delete *i;
+            }
         }
     }
 }
@@ -688,7 +732,9 @@ void Notebook::addCommonControl(wxWindow* ctrnl, const int border, const wxPoint
     {
         pLeftSizer->Prepend(ctrnl, 0, wxALL | wxEXPAND, border);
         if (recommendedSize.x && recommendedSize.y)
+        {
             pLeftSizer->SetItemMinSize(ctrnl, recommendedSize.x, recommendedSize.y);
+        }
         pExtraControls.push_back(ctrnl);
     }
 }
@@ -710,23 +756,23 @@ void Notebook::addCommonControlTop(wxWindow* ctrnl,
     }
 }
 
-Notebook::Page::Page(Notebook& notebook) :
- pNotebook(notebook),
- pControl(nullptr),
- pSelected(false),
- pVisible(true),
- pDisplayExtraControls(true)
+Notebook::Page::Page(Notebook& notebook):
+    pNotebook(notebook),
+    pControl(nullptr),
+    pSelected(false),
+    pVisible(true),
+    pDisplayExtraControls(true)
 {
     pNotebook.pPages.push_back(this);
 }
 
-Notebook::Page::Page(Notebook& notebook, wxWindow* ctnrl, const wxString& caption) :
- pNotebook(notebook),
- pControl(ctnrl),
- pCaption(caption),
- pSelected(false),
- pVisible(true),
- pDisplayExtraControls(true)
+Notebook::Page::Page(Notebook& notebook, wxWindow* ctnrl, const wxString& caption):
+    pNotebook(notebook),
+    pControl(ctnrl),
+    pCaption(caption),
+    pSelected(false),
+    pVisible(true),
+    pDisplayExtraControls(true)
 {
     pNotebook.pPages.push_back(this);
     if (pControl)
@@ -740,14 +786,14 @@ Notebook::Page::Page(Notebook& notebook, wxWindow* ctnrl, const wxString& captio
 Notebook::Page::Page(Notebook& notebook,
                      wxWindow* ctnrl,
                      const wxString& name,
-                     const wxString& caption) :
- pNotebook(notebook),
- pControl(ctnrl),
- pName(name),
- pCaption(caption),
- pSelected(false),
- pVisible(true),
- pDisplayExtraControls(true)
+                     const wxString& caption):
+    pNotebook(notebook),
+    pControl(ctnrl),
+    pName(name),
+    pCaption(caption),
+    pSelected(false),
+    pVisible(true),
+    pDisplayExtraControls(true)
 {
     pNotebook.pPages.push_back(this);
 
@@ -764,7 +810,9 @@ Notebook::Page::Page(Notebook& notebook,
 Notebook::Page::~Page()
 {
     if (pNotebook.pLastSelected == this)
+    {
         pNotebook.pLastSelected = nullptr;
+    }
 
     // Remove the page from the parent
     auto end = pNotebook.pPages.end();
@@ -783,7 +831,9 @@ Notebook::Page::~Page()
         pNotebook.pSizerForPages->Detach(pControl);
         auto* sizer = pNotebook.GetSizer();
         if (sizer)
+        {
             sizer->Detach(pControl);
+        }
         pControl->Destroy();
     }
 
@@ -806,17 +856,21 @@ Notebook::Page* Notebook::Page::addSubPage(Page* p)
 void Notebook::Page::removeSubPage(Page* p)
 {
     for (size_t i = 0, size = subPages.size(); i < size; i++)
+    {
         if (subPages[i]->name() == p->name())
         {
             subPages.erase(subPages.begin() + i);
             break;
         }
+    }
 }
 
 Notebook::Page* Notebook::Page::select(bool force)
 {
     if (pSelected && !force) // already selected
+    {
         return this;
+    }
     Dispatcher::GUI::Post(this, &Notebook::Page::onSelectPage);
     return this;
 }
@@ -830,7 +884,9 @@ void Notebook::Page::selectSubPage(Notebook::Page* subPage)
 
     pNotebook.pCacheTitle.clear();
     if (!pNotebook.pCaption.empty())
+    {
         pNotebook.pCacheTitle << pNotebook.pCaption << wxT(" :: ");
+    }
     pNotebook.pCacheTitle << caption();
     pNotebook.pCacheTitle << subPage->caption();
 
@@ -838,7 +894,9 @@ void Notebook::Page::selectSubPage(Notebook::Page* subPage)
     if (!pNotebook.pExtraControls.empty())
     {
         for (uint i = 0; i != pNotebook.pExtraControls.size(); ++i)
+        {
             pNotebook.pExtraControls[i]->Show(pDisplayExtraControls);
+        }
     }
 
     foreach (auto* page, pNotebook.pPages)
@@ -846,12 +904,16 @@ void Notebook::Page::selectSubPage(Notebook::Page* subPage)
         if (page->pControl)
         {
             if ((page->pSelected = (page == subPage)))
+            {
                 pNotebook.pLastSelected = page;
+            }
             EnableRefreshForAllDatagrid(page->pControl, page->pSelected);
             pNotebook.pSizerForPages->Show(page->pControl, (page->pSelected), false);
         }
         else
+        {
             page->pSelected = false;
+        }
     }
     this->pSelected = true;
 
@@ -872,14 +934,18 @@ void Notebook::Page::onSelectPage()
 
     pNotebook.pCacheTitle.clear();
     if (!pNotebook.pCaption.empty())
+    {
         pNotebook.pCacheTitle << pNotebook.pCaption << wxT(" :: ");
+    }
     pNotebook.pCacheTitle << caption();
 
     // Show / Hide extra controls
     if (!pNotebook.pExtraControls.empty())
     {
         for (uint i = 0; i != pNotebook.pExtraControls.size(); ++i)
+        {
             pNotebook.pExtraControls[i]->Show(pDisplayExtraControls);
+        }
     }
 
     pNotebook.pLastSelected = nullptr;
@@ -889,12 +955,16 @@ void Notebook::Page::onSelectPage()
         if (page->pControl)
         {
             if ((page->pSelected = (page == this)))
+            {
                 pNotebook.pLastSelected = page;
+            }
             EnableRefreshForAllDatagrid(page->pControl, page->pSelected);
             pNotebook.pSizerForPages->Show(page->pControl, (page->pSelected), false);
         }
         else
+        {
             page->pSelected = false;
+        }
     }
 
     pNotebook.forceRefresh();
@@ -903,7 +973,9 @@ void Notebook::Page::onSelectPage()
 void Notebook::enableRefreshForAllDatagrid(bool enabled)
 {
     foreach (auto* page, pPages)
+    {
         EnableRefreshForAllDatagrid(page->pControl, enabled && page->selected());
+    }
 }
 
 void Notebook::Tabs::onMouseUp(wxMouseEvent& evt)
@@ -981,10 +1053,14 @@ bool Notebook::select(const wxString& name, bool triggerEvents)
                         onPageChanged(page);
                     }
                     else
+                    {
                         return false;
+                    }
                 }
                 else
+                {
                     page.select();
+                }
             }
             return true;
         }
@@ -1002,7 +1078,9 @@ Notebook::Page* Notebook::find(const wxString& name)
     foreach (auto* page, pPages)
     {
         if (page->name() == name)
+        {
             return page;
+        }
     }
     return nullptr;
 }
@@ -1011,7 +1089,9 @@ void Notebook::set_page_visibility(const wxString& name, bool visibility)
 {
     Page* page = find(name);
     if (page == nullptr)
+    {
         return;
+    }
     page->visible(visibility);
 }
 
@@ -1027,9 +1107,13 @@ void Notebook::caption(const wxString& s)
 
     pCacheTitle.clear();
     if (!pCaption.empty())
+    {
         pCacheTitle << pCaption << wxT(" :: ");
+    }
     if (pLastSelected)
+    {
         pCacheTitle << pLastSelected->caption();
+    }
 
     Refresh();
 }
@@ -1046,5 +1130,4 @@ void Notebook::Page::caption(const wxString& s)
     pNotebook.Refresh();
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,13 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Core
-{
-namespace Tree
+namespace Yuni::Private::Core::Tree
 {
 template<class NodeT>
 class DepthInfixIterator
@@ -97,9 +92,6 @@ private:
     NodePtr pNode;
 }; // class DepthInfixIterator
 
-} // namespace Tree
-} // namespace Core
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Core::Tree
 
 #include "depthinfixiterator.hxx"

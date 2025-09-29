@@ -1,34 +1,30 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_MAP_TOOLS_TOOL_H__
 #define __ANTARES_TOOLBOX_MAP_TOOLS_TOOL_H__
 
 #include <vector>
 #include "../drawingcontext.h"
 
-namespace Antares
-{
-namespace Map
-{
-namespace Tool
+namespace Antares::Map::Tool
 {
 /*!
 ** \brief Life span for a tool
@@ -62,6 +58,7 @@ public:
     Tool(Manager& manager, const char* icon);
     //! Destructor
     virtual ~Tool();
+
     //@}
 
     //! \name Manager
@@ -70,10 +67,12 @@ public:
     {
         return pManager;
     }
+
     const Manager& manager() const
     {
         return pManager;
     }
+
     //@}
 
     //! \name X-Coordinate
@@ -83,11 +82,13 @@ public:
     {
         return pX;
     }
+
     //! Set the X-Coordinate of the tool
     void x(const int v)
     {
         pX = v;
     }
+
     //@}
     //! \name Y-Coordinate
     //@{
@@ -96,11 +97,13 @@ public:
     {
         return pY;
     }
+
     //! Set the Y-Coordinate of the tool
     void y(const int v)
     {
         pY = v;
     }
+
     //@}
 
     //! \name Sizes
@@ -110,11 +113,13 @@ public:
     {
         return pWidth;
     }
+
     //! Get the height of the tool
     uint height() const
     {
         return pHeight;
     }
+
     //@}
 
     //! \name Icon
@@ -124,6 +129,7 @@ public:
     {
         return pIcon;
     }
+
     /*!
     ** \brief Set the icon representing the tool
     **
@@ -132,6 +138,7 @@ public:
     ** \param filename A relative filename
     */
     void icon(const char* filename);
+
     //}
 
     //! \name Life span
@@ -141,6 +148,7 @@ public:
     {
         return lifeSpanMouseSelection;
     }
+
     //@}
 
     //! \name Drawing
@@ -213,8 +221,6 @@ protected:
 //! List of tools
 using List = std::vector<Tool*>;
 
-} // namespace Tool
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map::Tool
 
 #endif // __ANTARES_TOOLBOX_MAP_TOOLS_TOOL_H__

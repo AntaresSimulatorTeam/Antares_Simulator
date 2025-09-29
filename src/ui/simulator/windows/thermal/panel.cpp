@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "panel.h"
 #include "../../windows/inspector.h"
@@ -33,23 +33,19 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Window::Thermal
 {
-namespace Window
-{
-namespace Thermal
-{
-Panel::Panel(Component::Notebook* parent) :
- Component::Panel(parent),
- pageThermalTimeSeries(nullptr),
- pageThermalTimeSeriesFuelCost(nullptr),
- pageThermalTimeSeriesCO2Cost(nullptr),
- pageThermalPrepro(nullptr),
- pageThermalCommon(nullptr),
- pNotebookThermalCluster(nullptr),
- pAreaForThermalCommonData(nullptr),
- pAreaSelector(nullptr),
- pStudyRevisionIncrement((uint64_t)-1)
+Panel::Panel(Component::Notebook* parent):
+    Component::Panel(parent),
+    pageThermalTimeSeries(nullptr),
+    pageThermalTimeSeriesFuelCost(nullptr),
+    pageThermalTimeSeriesCO2Cost(nullptr),
+    pageThermalPrepro(nullptr),
+    pageThermalCommon(nullptr),
+    pNotebookThermalCluster(nullptr),
+    pAreaForThermalCommonData(nullptr),
+    pAreaSelector(nullptr),
+    pStudyRevisionIncrement((uint64_t)-1)
 {
     // A sizer for our panel
     wxSizer* mainsizer = new wxBoxSizer(wxVERTICAL);
@@ -86,46 +82,54 @@ Panel::Panel(Component::Notebook* parent) :
     // Thermal cluster list
     {
         // The window splitter
-        pSplitter = new wxSplitterWindow(
-          page.first, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
+        pSplitter = new wxSplitterWindow(page.first,
+                                         wxID_ANY,
+                                         wxDefaultPosition,
+                                         wxDefaultSize,
+                                         wxSP_NOBORDER);
         pageThermalClusterList = page.first->add(pSplitter, wxT("Thermal cluster list"));
         pSplitter->SetSashGravity(0.5);
 
         // Input selector for thermal clusters
-        Toolbox::InputSelector::ThermalCluster* tag
-          = new Toolbox::InputSelector::ThermalCluster(pSplitter, page.second);
+        Toolbox::InputSelector::ThermalCluster* tag = new Toolbox::InputSelector::ThermalCluster(
+          pSplitter,
+          page.second);
 
         // Informations about the current thermal cluster
-        Component::Notebook* subbook
-          = new Component::Notebook(pSplitter, Component::Notebook::orTop);
+        Component::Notebook* subbook = new Component::Notebook(pSplitter,
+                                                               Component::Notebook::orTop);
         pNotebookThermalCluster = subbook;
         subbook->caption(wxT("Thermal cluster"));
         subbook->theme(Component::Notebook::themeLight);
 
         // Common properties of the current thermal cluster
-        pageThermalCommon
-          = subbook->add(new Window::Thermal::CommonProperties(subbook, tag), wxT("Common"));
+        pageThermalCommon = subbook->add(new Window::Thermal::CommonProperties(subbook, tag),
+                                         wxT("Common"));
 
         // TS-Generator
         pageThermalPrepro = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::ThermalClusterPrepro(subbook, tag)),
+            subbook,
+            new Component::Datagrid::Renderer::ThermalClusterPrepro(subbook, tag)),
           wxT("TS generator"));
 
         pageThermalTimeSeriesFuelCost = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost(subbook, tag)),
+            subbook,
+            new Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost(subbook, tag)),
           wxT("Fuel Cost [\u20AC/GJ]"));
 
         pageThermalTimeSeriesCO2Cost = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost(subbook, tag)),
+            subbook,
+            new Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost(subbook, tag)),
           wxT("CO2 Cost [\u20AC/ton]"));
 
         // Availability (ex Time Series)
         pageThermalTimeSeries = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
+            subbook,
+            new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
           wxT("Availability [MW]"));
 
         // Split the view
@@ -182,7 +186,9 @@ void Panel::onThermalClusterChanged(Data::ThermalCluster* cluster)
 void Panel::onAreaChangedForThermalData(Data::Area* area)
 {
     if (area != pAreaForThermalCommonData)
+    {
         pAreaForThermalCommonData = area;
+    }
 }
 
 void Panel::internalOnStudyLoaded()
@@ -207,6 +213,4 @@ void Panel::onStudyLoaded()
     Dispatcher::GUI::Post(callback, 50 /*ms*/);
 }
 
-} // namespace Thermal
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Thermal

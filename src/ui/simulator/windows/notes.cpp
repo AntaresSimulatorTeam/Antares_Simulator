@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "notes.h"
 #include <yuni/io/file.h>
@@ -40,9 +40,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 Yuni::Event<void(Notes*)> Notes::OnChanged;
 
@@ -57,12 +55,12 @@ EVT_RICHTEXT_CONTENT_DELETED(wxID_ANY, Notes::onUserNotesStyleChanged)
 EVT_RICHTEXT_BUFFER_RESET(wxID_ANY, Notes::onUserNotesStyleChanged)
 END_EVENT_TABLE()
 
-Notes::Notes(wxWindow* parent, uint margin) :
- Antares::Component::Panel(parent),
- pRichEdit(nullptr),
- pStyleSheet(nullptr),
- pLocalRevision(0),
- pUpdatesToSkip(0)
+Notes::Notes(wxWindow* parent, uint margin):
+    Antares::Component::Panel(parent),
+    pRichEdit(nullptr),
+    pStyleSheet(nullptr),
+    pLocalRevision(0),
+    pUpdatesToSkip(0)
 {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -73,32 +71,53 @@ Notes::Notes(wxWindow* parent, uint margin) :
 
     btn = new Component::Button(this, wxEmptyString, "images/16x16/bold.png", this, &Notes::onBold);
     ssz->Add(btn);
-    btn = new Component::Button(
-      this, wxEmptyString, "images/16x16/italic.png", this, &Notes::onItalic);
+    btn = new Component::Button(this,
+                                wxEmptyString,
+                                "images/16x16/italic.png",
+                                this,
+                                &Notes::onItalic);
     ssz->Add(btn);
-    btn = new Component::Button(
-      this, wxEmptyString, "images/16x16/underline.png", this, &Notes::onUnderline);
-    ssz->Add(btn);
-
-    Antares::Component::AddVerticalSeparator(this, ssz);
-
-    btn = new Component::Button(
-      this, wxEmptyString, "images/16x16/alignleft.png", this, &Notes::onAlignLeft);
-    ssz->Add(btn);
-    btn = new Component::Button(
-      this, wxEmptyString, "images/16x16/aligncentre.png", this, &Notes::onAlignCenter);
-    ssz->Add(btn);
-    btn = new Component::Button(
-      this, wxEmptyString, "images/16x16/alignright.png", this, &Notes::onAlignRight);
+    btn = new Component::Button(this,
+                                wxEmptyString,
+                                "images/16x16/underline.png",
+                                this,
+                                &Notes::onUnderline);
     ssz->Add(btn);
 
     Antares::Component::AddVerticalSeparator(this, ssz);
 
-    btn = new Component::Button(
-      this, wxEmptyString, "images/16x16/list_bullet.png", this, &Notes::onListBullet);
+    btn = new Component::Button(this,
+                                wxEmptyString,
+                                "images/16x16/alignleft.png",
+                                this,
+                                &Notes::onAlignLeft);
     ssz->Add(btn);
-    btn = new Component::Button(
-      this, wxEmptyString, "images/16x16/list_numbered.png", this, &Notes::onListNumbered);
+    btn = new Component::Button(this,
+                                wxEmptyString,
+                                "images/16x16/aligncentre.png",
+                                this,
+                                &Notes::onAlignCenter);
+    ssz->Add(btn);
+    btn = new Component::Button(this,
+                                wxEmptyString,
+                                "images/16x16/alignright.png",
+                                this,
+                                &Notes::onAlignRight);
+    ssz->Add(btn);
+
+    Antares::Component::AddVerticalSeparator(this, ssz);
+
+    btn = new Component::Button(this,
+                                wxEmptyString,
+                                "images/16x16/list_bullet.png",
+                                this,
+                                &Notes::onListBullet);
+    ssz->Add(btn);
+    btn = new Component::Button(this,
+                                wxEmptyString,
+                                "images/16x16/list_numbered.png",
+                                this,
+                                &Notes::onListNumbered);
     ssz->Add(btn);
 
     Antares::Component::AddVerticalSeparator(this, ssz);
@@ -148,7 +167,9 @@ Notes::~Notes()
     if (not pTempFile.empty() and not IO::File::Delete(pTempFile))
     {
         if (IO::File::Exists(pTempFile))
+        {
             logs.warning() << "I/O error: impossible to delete " << pTempFile;
+        }
         pTempFile.clear();
     }
 
@@ -193,7 +214,9 @@ void Notes::onNotesModified(Notes* sender)
         if (pUpdatesToSkip)
         {
             if (0 != (--pUpdatesToSkip))
+            {
                 return;
+            }
         }
         // Reloading the user notes
         loadFromStudy();
@@ -212,18 +235,31 @@ void Notes::appendStyles()
     {
         bulletText.Clear();
         if (i == 0)
+        {
             bulletText = wxT("standard/circle");
+        }
         else if (i == 1)
+        {
             bulletText = wxT("standard/square");
+        }
         else if (i == 2)
+        {
             bulletText = wxT("standard/circle");
+        }
         else if (i == 3)
+        {
             bulletText = wxT("standard/square");
+        }
         else
+        {
             bulletText = wxT("standard/circle");
+        }
 
-        bulletList->SetAttributes(
-          i, (i + 1) * 60, 60, wxTEXT_ATTR_BULLET_STYLE_STANDARD, bulletText);
+        bulletList->SetAttributes(i,
+                                  (i + 1) * 60,
+                                  60,
+                                  wxTEXT_ATTR_BULLET_STYLE_STANDARD,
+                                  bulletText);
     }
     pStyleSheet->AddListStyle(bulletList);
 
@@ -232,18 +268,28 @@ void Notes::appendStyles()
     {
         long numberStyle;
         if (i == 0)
+        {
             numberStyle = wxTEXT_ATTR_BULLET_STYLE_ARABIC | wxTEXT_ATTR_BULLET_STYLE_PERIOD;
+        }
         else if (i == 1)
-            numberStyle
-              = wxTEXT_ATTR_BULLET_STYLE_LETTERS_LOWER | wxTEXT_ATTR_BULLET_STYLE_PARENTHESES;
+        {
+            numberStyle = wxTEXT_ATTR_BULLET_STYLE_LETTERS_LOWER
+                          | wxTEXT_ATTR_BULLET_STYLE_PARENTHESES;
+        }
         else if (i == 2)
-            numberStyle
-              = wxTEXT_ATTR_BULLET_STYLE_ROMAN_LOWER | wxTEXT_ATTR_BULLET_STYLE_PARENTHESES;
+        {
+            numberStyle = wxTEXT_ATTR_BULLET_STYLE_ROMAN_LOWER
+                          | wxTEXT_ATTR_BULLET_STYLE_PARENTHESES;
+        }
         else if (i == 3)
-            numberStyle
-              = wxTEXT_ATTR_BULLET_STYLE_ROMAN_UPPER | wxTEXT_ATTR_BULLET_STYLE_PARENTHESES;
+        {
+            numberStyle = wxTEXT_ATTR_BULLET_STYLE_ROMAN_UPPER
+                          | wxTEXT_ATTR_BULLET_STYLE_PARENTHESES;
+        }
         else
+        {
             numberStyle = wxTEXT_ATTR_BULLET_STYLE_ARABIC | wxTEXT_ATTR_BULLET_STYLE_PERIOD;
+        }
 
         numberStyle |= wxTEXT_ATTR_BULLET_STYLE_ALIGN_RIGHT;
         numberedList->SetAttributes(i, (i + 1) * 60, 60, numberStyle);
@@ -296,8 +342,9 @@ void Notes::onListBullet(void*)
     if (pRichEdit->HasSelection())
     {
         wxRichTextRange range = pRichEdit->GetSelectionRange();
-        pRichEdit->SetListStyle(
-          range, wxT("Bullet List"), wxRICHTEXT_SETSTYLE_WITH_UNDO | wxRICHTEXT_SETSTYLE_RENUMBER);
+        pRichEdit->SetListStyle(range,
+                                wxT("Bullet List"),
+                                wxRICHTEXT_SETSTYLE_WITH_UNDO | wxRICHTEXT_SETSTYLE_RENUMBER);
     }
 }
 
@@ -324,7 +371,9 @@ void Notes::onIndentIncrease(void*)
     {
         wxRichTextRange range(pRichEdit->GetInsertionPoint(), pRichEdit->GetInsertionPoint());
         if (pRichEdit->HasSelection())
+        {
             range = pRichEdit->GetSelectionRange();
+        }
 
         attr.SetLeftIndent(attr.GetLeftIndent() + 100);
 
@@ -344,7 +393,9 @@ void Notes::onIndentDecrease(void*)
     {
         wxRichTextRange range(pRichEdit->GetInsertionPoint(), pRichEdit->GetInsertionPoint());
         if (pRichEdit->HasSelection())
+        {
             range = pRichEdit->GetSelectionRange();
+        }
 
         if (attr.GetLeftIndent() > 0)
         {
@@ -358,7 +409,9 @@ void Notes::saveToStudy()
 {
     auto study = GetCurrentStudy();
     if (!pRichEdit || !study)
+    {
         return;
+    }
 
     if (!pTempFile)
     {
@@ -391,10 +444,14 @@ void Notes::disconnectFromNotification()
 void Notes::loadFromStudy()
 {
     if (!pRichEdit)
+    {
         return;
+    }
 
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (not pTempFile)
@@ -428,13 +485,17 @@ void Notes::loadFromStudy()
                 if (IO::File::SetContent(pTempFile, study.simulationComments.comments))
                 {
                     if (!pRichEdit->LoadFile(wxStringFromUTF8(pTempFile), wxRICHTEXT_TYPE_XML))
+                    {
                         logs.error() << "Impossible to load the comments file";
+                    }
 
                     // cleanup
                     IO::File::Delete(pTempFile);
                 }
                 else
+                {
                     logs.error() << "Impossible to write '" << pTempFile << "'";
+                }
             }
             else
             {
@@ -462,5 +523,4 @@ bool Notes::initializeTemporaryFile()
     return true;
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

@@ -1,29 +1,23 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-**
-** SPDX-License-Identifier: MPL-2.0
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #pragma once
 
@@ -36,9 +30,7 @@
 
 #include "antares/study/fwd.h"
 
-namespace Antares
-{
-namespace Error
+namespace Antares::Error
 {
 class LoadingError: public std::runtime_error
 {
@@ -46,140 +38,140 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-class StudyFolderDoesNotExist: public LoadingError
+class StudyFolderDoesNotExist final: public LoadingError
 {
 public:
     explicit StudyFolderDoesNotExist(const std::string& folder);
 };
 
-class StudyFolderContainsNonASCIIchars: public LoadingError
+class StudyFolderContainsNonASCIIchars final: public LoadingError
 {
 public:
     explicit StudyFolderContainsNonASCIIchars(const std::string& folder);
 };
 
-class ReadingStudy: public LoadingError
+class ReadingStudy final: public LoadingError
 {
 public:
     ReadingStudy();
 };
 
-class NoAreas: public LoadingError
+class NoAreas final: public LoadingError
 {
 public:
     NoAreas();
 };
 
-class Duplicates: public LoadingError
+class Duplicates final: public LoadingError
 {
 public:
     Duplicates();
 };
 
-class InvalidFileName: public LoadingError
+class InvalidFileName final: public LoadingError
 {
 public:
     InvalidFileName();
 };
 
-class RuntimeInfoInitialization: public LoadingError
+class RuntimeInfoInitialization final: public LoadingError
 {
 public:
     RuntimeInfoInitialization();
 };
 
-class WritingPID: public LoadingError
+class WritingPID final: public LoadingError
 {
 public:
     explicit WritingPID(const std::string& filePath);
 };
 
-class IncompatibleParallelOptions: public LoadingError
+class IncompatibleParallelOptions final: public LoadingError
 {
 public:
     IncompatibleParallelOptions();
 };
 
-class IncompatibleMILPOrtoolsSolver: public LoadingError
+class IncompatibleMILPOrtoolsSolver final: public LoadingError
 {
 public:
     IncompatibleMILPOrtoolsSolver();
 };
 
-class UseMILPsolverWithWrongOptions: public LoadingError
+class UseMILPsolverWithWrongOptions final: public LoadingError
 {
 public:
     UseMILPsolverWithWrongOptions();
 };
 
-class IncompatibleOptRangeHydroPricing: public LoadingError
+class IncompatibleOptRangeHydroPricing final: public LoadingError
 {
 public:
     IncompatibleOptRangeHydroPricing();
 };
 
-class IncompatibleOptRangeUCMode: public LoadingError
+class IncompatibleOptRangeUCMode final: public LoadingError
 {
 public:
     IncompatibleOptRangeUCMode();
 };
 
-class InvalidOptimizationRange: public LoadingError
+class InvalidOptimizationRange final: public LoadingError
 {
 public:
     InvalidOptimizationRange();
 };
 
-class InvalidSimulationMode: public LoadingError
+class InvalidSimulationMode final: public LoadingError
 {
 public:
     InvalidSimulationMode();
 };
 
-class InvalidSolver: public LoadingError
+class InvalidSolver final: public LoadingError
 {
 public:
     explicit InvalidSolver(const std::string& solver, const std::string& availableSolverList);
 };
 
-class InvalidSolverSpecificParameters: public LoadingError
+class InvalidSolverSpecificParameters final: public LoadingError
 {
 public:
     explicit InvalidSolverSpecificParameters(const std::string& solver,
                                              const std::string& specificParameters);
 };
 
-class IncompatibleLinearSolverParameters: public LoadingError
+class IncompatibleLinearSolverParameters final: public LoadingError
 {
 public:
     IncompatibleLinearSolverParameters();
 };
 
-class InvalidStudy: public LoadingError
+class InvalidStudy final: public LoadingError
 {
 public:
     explicit InvalidStudy(const std::string& study);
 };
 
-class NoStudyProvided: public LoadingError
+class NoStudyProvided final: public LoadingError
 {
 public:
     NoStudyProvided();
 };
 
-class InvalidVersion: public LoadingError
+class InvalidVersion final: public LoadingError
 {
 public:
     InvalidVersion(const std::string& version, const std::string& latest);
 };
 
-class IncompatibleDailyOptHeuristicForArea: public LoadingError
+class IncompatibleDailyOptHeuristicForArea final: public LoadingError
 {
 public:
     explicit IncompatibleDailyOptHeuristicForArea(const Antares::Data::AreaName& name);
 };
 
-class InvalidParametersForThermalClusters: public LoadingError
+class InvalidParametersForThermalClusters final: public LoadingError
 {
 public:
     explicit InvalidParametersForThermalClusters(const std::map<int, Yuni::String>& clusterNames);
@@ -188,47 +180,46 @@ private:
     std::string buildMessage(const std::map<int, Yuni::String>& clusterNames) const;
 };
 
-class CommandLineArguments: public LoadingError
+class CommandLineArguments final: public LoadingError
 {
 public:
     explicit CommandLineArguments(uint errors);
 };
 
-class IncompatibleSimulationModeForAdqPatch: public LoadingError
+class IncompatibleSimulationModeForAdqPatch final: public LoadingError
 {
 public:
     IncompatibleSimulationModeForAdqPatch();
 };
 
-class NoAreaInsideAdqPatchMode: public LoadingError
+class NoAreaInsideAdqPatchMode final: public LoadingError
 {
 public:
     NoAreaInsideAdqPatchMode();
 };
 
-class IncompatibleHurdleCostCSR: public LoadingError
+class IncompatibleHurdleCostCSR final: public LoadingError
 {
 public:
     IncompatibleHurdleCostCSR();
 };
 
-class IncompatibleOutputOptions: public LoadingError
+class IncompatibleOutputOptions final: public LoadingError
 {
 public:
     explicit IncompatibleOutputOptions(const std::string& text);
 };
 
-class IncompatibleCO2CostColumns: public LoadingError
+class IncompatibleCO2CostColumns final: public LoadingError
 {
 public:
     IncompatibleCO2CostColumns();
 };
 
-class IncompatibleFuelCostColumns: public LoadingError
+class IncompatibleFuelCostColumns final: public LoadingError
 {
 public:
     IncompatibleFuelCostColumns();
 };
 
-} // namespace Error
-} // namespace Antares
+} // namespace Antares::Error

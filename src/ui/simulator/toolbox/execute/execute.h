@@ -1,33 +1,29 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_E_EXECUTE_H__
 #define __ANTARES_TOOLBOX_E_EXECUTE_H__
 
 #include <wx/wx.h>
 
-namespace Antares
-{
-namespace Toolbox
-{
-namespace Process
+namespace Antares::Toolbox::Process
 {
 class Execute
 {
@@ -41,6 +37,7 @@ public:
     ** \brief Destructor
     */
     ~Execute();
+
     //@}
 
     //! \name Command to execute
@@ -50,11 +47,13 @@ public:
     {
         return pCommand;
     }
+
     //! Set the command to execute
     void command(const wxString& v)
     {
         pCommand = v;
     }
+
     //@}
 
     //! \name Working directory
@@ -64,11 +63,13 @@ public:
     {
         return pWDirectory;
     }
+
     //! Set the working directory
     void workingDirectory(const wxString& v)
     {
         pWDirectory = v;
     }
+
     //@}
 
     //! \name Title
@@ -78,11 +79,13 @@ public:
     {
         return pTitle;
     }
+
     //! Set the title
     void title(const wxString& v)
     {
         pTitle = v;
     }
+
     //@}
 
     //! \name Title
@@ -92,11 +95,13 @@ public:
     {
         return pSubTitle;
     }
+
     //! Set the sub-title
     void subTitle(const wxString& v)
     {
         pSubTitle = v;
     }
+
     //@}
 
     //! \name The progress bar
@@ -106,11 +111,13 @@ public:
     {
         return pDisplayProgressBar;
     }
+
     //! Set if the progress bar can be displayed
     void displayProgressBar(const bool v)
     {
         pDisplayProgressBar = v;
     }
+
     //@}
 
     //! \name Icon
@@ -120,11 +127,13 @@ public:
     {
         return pIcon;
     }
+
     //! Set the relative address to the icon in the resources folder
     void icon(const char* v)
     {
         pIcon = v;
     }
+
     //@}
 
     //! \name Execution workflow
@@ -151,8 +160,6 @@ private:
 
 }; // class Execute
 
-} // namespace Process
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Process
 
 #endif // __ANTARES_TOOLBOX_E_EXECUTE_H__

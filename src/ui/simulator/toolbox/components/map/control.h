@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_MAP_CONTROL_H__
 #define __ANTARES_TOOLBOX_MAP_CONTROL_H__
 
@@ -31,9 +31,7 @@
 #define DEFAULT_MAP_WIDTH 1680
 #define DEFAULT_MAP_HEIGHT 1050
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 // Forward declaration
 class Component;
@@ -41,7 +39,7 @@ class Component;
 /*!
 ** \brief Sub-Component for drawing the map and handle user-events
 */
-class Control final : public wxScrolledWindow
+class Control final: public wxScrolledWindow
 {
     friend class Component;
 
@@ -75,6 +73,7 @@ public:
 
     //! Destructor
     virtual ~Control();
+
     //@}
 
     /*!
@@ -91,17 +90,21 @@ public:
     {
         return pZoom;
     }
+
     void zoom(const double v);
+
     //@}
 
     void forceReload()
     {
         pInvalidated = true;
     }
+
     const wxColour& getBackgroundColor()
     {
         return pBackgroundColor;
     }
+
     void setBackgroundColor(const wxColour& newColor)
     {
         pBackgroundColor = newColor;
@@ -169,6 +172,7 @@ public:
     {
         pInfosAreaCount = infosAreaCount;
     }
+
     wxStaticText* getpInfosAreaCount()
     {
         return pInfosAreaCount;
@@ -178,10 +182,12 @@ public:
     ** \brief Get how many connections we have
     */
     uint connectionsCount() const;
+
     void setpInfosConnxCount(wxStaticText* infosConnxCount)
     {
         pInfosConnxCount = infosConnxCount;
     }
+
     wxStaticText* getpInfosConnxCount()
     {
         return pInfosConnxCount;
@@ -191,14 +197,17 @@ public:
     {
         pointX = textCtrl;
     }
+
     wxTextCtrl* getPointX()
     {
         return pointX;
     }
+
     void setPointY(wxTextCtrl* textCtrl)
     {
         pointY = textCtrl;
     }
+
     wxTextCtrl* getPointY()
     {
         return pointY;
@@ -343,7 +352,6 @@ private:
 
 }; // class Control
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map
 
 #endif // __ANTARES_TOOLBOX_MAP_CONTROL_H__

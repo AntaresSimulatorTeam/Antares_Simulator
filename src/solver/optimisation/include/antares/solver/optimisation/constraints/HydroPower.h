@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -33,7 +33,7 @@ struct HydroPowerData
  * represent 'Hydraulic Power' constraint type
  */
 
-class HydroPower: private ConstraintFactory
+class HydroPower final: private ConstraintFactory
 {
 public:
     HydroPower(ConstraintBuilder& builder, HydroPowerData& data):

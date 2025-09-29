@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -39,9 +39,7 @@ struct TSNumbersPredicate
 
 } // anonymous namespace
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 using namespace Yuni;
 
@@ -628,5 +626,4 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const fs::path& folder)
                                });
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

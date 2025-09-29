@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "spotlight.h"
 #include "listbox-panel.h"
@@ -26,15 +26,14 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 enum
 {
     fontSize = 8,
     horizontalSpaceBetweenGroupsAndItems = 6,
 };
+
 static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
 // Speeds up the scrolling in list box
@@ -49,8 +48,11 @@ EVT_LEFT_UP(ListboxPanel::onMouseLeftUp)
 EVT_LEFT_DCLICK(ListboxPanel::onMouseDblClick)
 END_EVENT_TABLE()
 
-ListboxPanel::ListboxPanel(Spotlight* parent, uint flags) :
- wxScrolledWindow(parent), pParent(parent), pRecomputeLonguestGroupNameSize(true), pFlags(flags)
+ListboxPanel::ListboxPanel(Spotlight* parent, uint flags):
+    wxScrolledWindow(parent),
+    pParent(parent),
+    pRecomputeLonguestGroupNameSize(true),
+    pFlags(flags)
 {
     assert(parent);
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
@@ -60,7 +62,9 @@ ListboxPanel::ListboxPanel(Spotlight* parent, uint flags) :
     SetScrollRate(16, pParent->itemHeight());
 
     if (0 != (flags & Spotlight::optBkgWhite))
+    {
         SetBackgroundColour(wxColour(255, 255, 255));
+    }
 
     const wxColour& bkgcol = GetBackgroundColour();
     pDisabledColor.Set(bkgcol.Red() - 35, bkgcol.Green() - 35, bkgcol.Blue() - 15);
@@ -82,7 +86,9 @@ void ListboxPanel::recomputeBoundsForLonguestGroupName(wxDC& dc)
 void ListboxPanel::onMouseMotion(wxMouseEvent& evt)
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     long y = evt.GetY();
     int vy;
@@ -140,7 +146,9 @@ void ListboxPanel::onDraw(wxPaintEvent&)
     Spotlight::IItem::VectorPtr itemsptr = pItems;
     Spotlight::SearchToken::VectorPtr tokensptr = pTokens;
     if (!pItems)
+    {
         return;
+    }
     // pProvider->redoResearch();
     // all items
     auto& items = *itemsptr;
@@ -167,7 +175,9 @@ void ListboxPanel::onDraw(wxPaintEvent&)
 
     // Bounds of the longuest group name
     if (pRecomputeLonguestGroupNameSize)
+    {
         recomputeBoundsForLonguestGroupName(dc);
+    }
 
     dc.SetPen(wxPen(GetBackgroundColour(), 1, wxPENSTYLE_SOLID));
     dc.SetBrush(wxBrush(GetBackgroundColour(), wxBRUSHSTYLE_SOLID));
@@ -177,9 +187,13 @@ void ListboxPanel::onDraw(wxPaintEvent&)
     bounds.y = 0;
     int newHeight = (int)pItems->size() * (int)itemHeight;
     if (!(pFlags & Spotlight::optNoSearchInput))
+    {
         newHeight += searchResultTextHeight;
+    }
     if (newHeight > bounds.height)
+    {
         bounds.height = newHeight;
+    }
     // The scrollbars have height + 2 pixels
     bounds.height += 2;
 
@@ -202,7 +216,9 @@ void ListboxPanel::onDraw(wxPaintEvent&)
         bounds.y += searchResultTextHeight;
     }
     else
+    {
         bounds.y += 2; // for beauty
+    }
 
     uint count = (uint)pItems->size();
 
@@ -218,7 +234,9 @@ void ListboxPanel::onDraw(wxPaintEvent&)
                 auto& group = item.group();
 
                 if (!(!group) && YString(group) != pLastGroupName)
+                {
                     pLastGroupName = group;
+                }
             }
             continue;
         }
@@ -245,20 +263,26 @@ void ListboxPanel::onDraw(wxPaintEvent&)
                         - horizontalSpaceBetweenGroupsAndItems - groupBounds.GetWidth();
                 int y = bounds.y + 9 - groupBounds.GetHeight() / 2 - 1;
                 if (System::unix)
+                {
                     ++y; // on unix, the name is not centered
+                }
 
                 dc.DrawText(wxgroup, x, y);
             }
             bounds.x = pLonguestGroupNameSize.GetWidth();
         }
         else
+        {
             bounds.x = 3;
+        }
 
         item.draw(dc, itemHeight, bounds, (pMouseOverItem == i), tokensptr);
 
         // It is useless to draw outside the region and it slows down the program
         if (bounds.y > maxHeight)
+        {
             break;
+        }
     }
 }
 
@@ -277,7 +301,9 @@ void ListboxPanel::updateItems(const Spotlight::IItem::VectorPtr& vptr,
         auto& group = item.group();
 
         if (item.countedAsResult())
+        {
             ++resultCount;
+        }
         if (group.size() > maxSize)
         {
             maxSize = group.size();
@@ -286,9 +312,13 @@ void ListboxPanel::updateItems(const Spotlight::IItem::VectorPtr& vptr,
     }
 
     if (itemIndex < count)
+    {
         pLonguestGroupName = wxStringFromUTF8((items[itemIndex]->group()));
+    }
     else
+    {
         pLonguestGroupName.clear();
+    }
 
     // Resetting the scrollbars
     int NbVerticalScrollUnitsInWindow = 0;
@@ -300,8 +330,8 @@ void ListboxPanel::updateItems(const Spotlight::IItem::VectorPtr& vptr,
     }
     else
     {
-        NbVerticalScrollUnitsInWindow
-          = (count * pParent->itemHeight() + 2) / NbPixelsPerVerticalScrollUnit;
+        NbVerticalScrollUnitsInWindow = (count * pParent->itemHeight() + 2)
+                                        / NbPixelsPerVerticalScrollUnit;
         SetScrollbars(1, NbPixelsPerVerticalScrollUnit, 1, NbVerticalScrollUnitsInWindow);
     }
 
@@ -329,21 +359,27 @@ void ListboxPanel::updateItems(const Spotlight::IItem::VectorPtr& vptr,
 void ListboxPanel::onMouseLeftUp(wxMouseEvent& evt)
 {
     if (not GUIIsLock())
+    {
         Dispatcher::GUI::Post(this, &ListboxPanel::doSelectItemFromMouseLeftUp);
+    }
     evt.Skip();
 }
 
 void ListboxPanel::onMouseDblClick(wxMouseEvent& evt)
 {
     if (not GUIIsLock())
+    {
         Dispatcher::GUI::Post(this, &ListboxPanel::doSelectItemFromMouseDblClick);
+    }
     evt.Skip();
 }
 
 void ListboxPanel::doSelectItemFromMouseDblClick()
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     Spotlight::IItem::VectorPtr itemsptr = pItems;
     Spotlight::IItem::Vector& items = *itemsptr;
@@ -371,7 +407,9 @@ void ListboxPanel::doSelectItemFromMouseDblClick()
                     for (uint i = 0; i != (uint)items.size(); ++i)
                     {
                         if (!(!items[i]))
+                        {
                             items[i]->unselect();
+                        }
                     }
                     itemptr->select();
                 }
@@ -384,7 +422,9 @@ void ListboxPanel::doSelectItemFromMouseDblClick()
 void ListboxPanel::doSelectItemFromMouseLeftUp()
 {
     if (GUIIsLock())
+    {
         return;
+    }
 
     Spotlight::IItem::VectorPtr itemsptr = pItems;
     Spotlight::IItem::Vector& items = *itemsptr;
@@ -412,7 +452,9 @@ void ListboxPanel::doSelectItemFromMouseLeftUp()
                     for (uint i = 0; i != (uint)items.size(); ++i)
                     {
                         if (!(!items[i]))
+                        {
                             items[i]->unselect();
+                        }
                     }
                     itemptr->select();
                 }
@@ -422,5 +464,4 @@ void ListboxPanel::doSelectItemFromMouseLeftUp()
     }
 }
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component

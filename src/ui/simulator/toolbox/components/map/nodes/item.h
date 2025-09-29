@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_MAP_ITEM_H__
 #define __ANTARES_TOOLBOX_MAP_ITEM_H__
 
@@ -28,9 +28,7 @@
 #include <wx/colour.h>
 #include <wx/dc.h>
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 class DrawingContext;
 class Manager;
@@ -73,6 +71,7 @@ public:
     ** \brief Destructor
     */
     virtual ~Item();
+
     //@}
 
     /*!
@@ -91,11 +90,13 @@ public:
     Manager& manager()
     {
         return pManager;
-    };
+    }
+
     const Manager& manager() const
     {
         return pManager;
-    };
+    }
+
     //@}
 
     //! \name layerVisibility
@@ -107,6 +108,7 @@ public:
     {
         return false;
     }
+
     //@}
 
     //! \name Caption
@@ -115,12 +117,14 @@ public:
     {
         return pCaption;
     }
+
     void caption(const wxString& v)
     {
         pCaption = v;
         forceReload();
         captionHasChanged();
     }
+
     //@}
 
     //! \name X-Coordinate
@@ -129,12 +133,14 @@ public:
     {
         return pX;
     }
+
     void x(const int v)
     {
         pX = v;
         forceReload();
         positionHasChanged();
     }
+
     //@}
 
     //! \name Y-Coordinate
@@ -143,12 +149,14 @@ public:
     {
         return pY;
     }
+
     void y(const int v)
     {
         pY = v;
         forceReload();
         positionHasChanged();
     }
+
     //@}
 
     virtual wxPoint absolutePosition(DrawingContext& dc) const;
@@ -159,10 +167,12 @@ public:
     {
         return pColor;
     }
+
     void color(const wxColour& c);
     void color(const wxString& s);
     void color(const int r, const int g, const int b);
     void color(const int r, const int g, const int b, const int alpha);
+
     //@}
 
     //! \name Selection
@@ -171,7 +181,9 @@ public:
     {
         return pSelected;
     }
+
     virtual void selected(bool v);
+
     //@}
 
     //! \name Z-Position
@@ -180,6 +192,7 @@ public:
     {
         return pZPosition;
     }
+
     //@}
 
     //! \name Cache
@@ -201,6 +214,7 @@ public:
     {
         return pInvalidated;
     }
+
     //@}
 
     //! \name Misc
@@ -227,6 +241,7 @@ public:
     virtual void drawExternalDrawer(DrawingContext&)
     {
     }
+
     //@}
 
     virtual void move(const int x, const int y);
@@ -244,6 +259,7 @@ public:
     virtual void mouseDblClick()
     {
     }
+
     //@}
 
 protected:
@@ -252,9 +268,11 @@ protected:
     virtual void captionHasChanged()
     {
     }
+
     virtual void positionHasChanged()
     {
     }
+
     virtual void colorHasChanged()
     {
     }
@@ -286,8 +304,7 @@ protected:
     friend class ::Antares::Map::BindingConstraint;
 }; // class Item
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map
 
 #include "../drawingcontext.h"
 #include "../manager.h"

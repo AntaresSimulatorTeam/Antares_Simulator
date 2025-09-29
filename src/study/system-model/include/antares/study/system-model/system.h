@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -29,7 +29,7 @@ namespace Antares::ModelerStudy::SystemModel
 /**
  * Defines the simulated system.
  */
-class System
+class System final
 {
 public:
     // Only allowing one private constructor (see below) to forbid empty Systems
@@ -55,7 +55,7 @@ private:
     std::unordered_map<std::string, Component> components_;
 };
 
-class SystemBuilder
+class SystemBuilder final
 {
 public:
     SystemBuilder& withId(std::string_view id);

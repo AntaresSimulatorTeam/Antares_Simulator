@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "../../traits/length.h"
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT, class StringT>
 class Fill final
@@ -25,14 +22,18 @@ public:
     {
         const uint patternSize = Traits::Length<StringT, uint>::Value(pattern);
         if (0 == patternSize)
+        {
             return;
+        }
 
         const char* const cstr = Traits::CString<StringT>::Perform(pattern);
         // If equals to 1, it is merely a single char
         if (1 == patternSize)
         {
             for (typename CStringT::Size i = 0; i < size; ++i)
+            {
                 data[i] = *cstr;
+            }
             return;
         }
         // We have to copy N times the pattern
@@ -43,7 +44,9 @@ public:
             p += patternSize;
         }
         for (; p < size; ++p)
+        {
             data[p] = ' ';
+        }
     }
 };
 
@@ -54,10 +57,10 @@ public:
     static void Perform(char* data, typename CStringT::Size size, const char rhs)
     {
         for (typename CStringT::Size i = 0; i != size; ++i)
+        {
             data[i] = rhs;
+        }
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString

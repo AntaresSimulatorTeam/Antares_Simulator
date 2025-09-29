@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,17 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../math.h"
 #include "../../../thread/policy.h"
+#include "../../atomic/int.h"
 #include "../../static/assert.h"
 #include "../../static/if.h"
-#include "../../atomic/int.h"
+#include "../math.h"
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Random
+namespace Yuni::Math::Random
 {
 /*!
 ** \brief Pre-Cached table of random numbers
@@ -69,7 +66,7 @@ template<class D,                // The distribution
          bool Cyclic = true,     // Cycle through the list or regenerate a new set ?
          template<class> class TP = Policy::SingleThreaded // The Threading policy
          >
-class YUNI_DECL Table : public TP<Table<D, TableSize, Cyclic, TP>>, public D
+class YUNI_DECL Table: public TP<Table<D, TableSize, Cyclic, TP>>, public D
 {
 public:
     //! Type for a single random number
@@ -79,6 +76,7 @@ public:
 
     // Assert about the table size
     YUNI_STATIC_ASSERT((TableSize > 10), MathRandomTable_InvalidTableSize);
+
     enum
     {
         //! The table size
@@ -145,8 +143,6 @@ private:
 
 }; // class Table
 
-} // namespace Random
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math::Random
 
 #include "table.hxx"

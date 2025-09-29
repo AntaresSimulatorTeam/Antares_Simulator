@@ -39,11 +39,7 @@
 #include "storage/results.h"
 #include "surveyresults.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 /*!
 ** \brief Interface for any variable
@@ -352,9 +348,7 @@ protected:
 
 }; // class Variable
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #include "variable.hxx"
 

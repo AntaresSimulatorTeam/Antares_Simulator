@@ -133,7 +133,7 @@ using RawTerm = std::pair<FullKey, double>;
  * - the non-zero coefficients of the variables
  * - a scalar offset
  */
-class LinearExpression
+class LinearExpression final
 {
 public:
     /// Build a linear expression with zero offset and zero coefficients

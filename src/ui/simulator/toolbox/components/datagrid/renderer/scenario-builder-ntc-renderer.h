@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -23,15 +23,9 @@
 #include "scenario-builder-renderer-base.h"
 #include "../../../input/connection.h"
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-class ntcScBuilderRenderer : public ScBuilderRendererBase
+class ntcScBuilderRenderer: public ScBuilderRendererBase
 {
 public:
     ntcScBuilderRenderer();
@@ -51,7 +45,4 @@ private:
     Data::AreaLink::Vector* pListOfLinks = nullptr;
 }; // class ntcScBuilderRenderer
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

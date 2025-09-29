@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -28,8 +28,7 @@ namespace Antares::Solver::Simulation
 OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                                        uint numSpace,
                                        AreaList& areas,
-                                       SheddingPolicy sheddingPolicy,
-                                       SimplexOptimization splxOptimization,
+                                       const Data::Parameters& params,
                                        Calendar& calendar)
 
     :
@@ -37,11 +36,8 @@ OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
 {
     post_process_list.push_back(
       std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, numSpace_, areas));
-    post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
-                                                                           areas,
-                                                                           sheddingPolicy,
-                                                                           splxOptimization,
-                                                                           numSpace));
+    post_process_list.push_back(
+      std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_, areas, params, numSpace));
     post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));
     post_process_list.push_back(

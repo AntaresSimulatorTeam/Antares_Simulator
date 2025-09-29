@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Event
+namespace Yuni::Event
 {
 /*!
 ** \brief Observer (Interface)
@@ -190,7 +189,7 @@ protected:
 ** \tparam TP The threading policy
 */
 template<class D, template<class> class TP = Policy::ObjectLevelLockable>
-class YUNI_DECL Observer : public TP<D>, public IObserver
+class YUNI_DECL Observer: public TP<D>, public IObserver
 {
     YUNI_EVENT_ALLFRIEND_DECL_E;
 
@@ -248,7 +247,6 @@ private:
 
 }; // class Observer
 
-} // namespace Event
-} // namespace Yuni
+} // namespace Yuni::Event
 
 #include "observer.hxx"

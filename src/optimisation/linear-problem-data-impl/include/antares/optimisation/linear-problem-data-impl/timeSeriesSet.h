@@ -39,7 +39,7 @@ private:
     std::vector<std::vector<double>> tsSet_;
 
 public:
-    class AddTSofWrongSize: public std::invalid_argument
+    class AddTSofWrongSize final: public std::invalid_argument
     {
     public:
         explicit AddTSofWrongSize(const std::string& name,
@@ -47,19 +47,19 @@ public:
                                   const unsigned& height);
     };
 
-    class Empty: public std::invalid_argument
+    class Empty final: public std::invalid_argument
     {
     public:
         explicit Empty(const std::string& name);
     };
 
-    class RankTooBig: public std::invalid_argument
+    class RankTooBig final: public std::invalid_argument
     {
     public:
         explicit RankTooBig(const std::string& name, unsigned rank, unsigned tsSetSize);
     };
 
-    class HourTooBig: public std::invalid_argument
+    class HourTooBig final: public std::invalid_argument
     {
     public:
         explicit HourTooBig(const std::string& name, unsigned hour);

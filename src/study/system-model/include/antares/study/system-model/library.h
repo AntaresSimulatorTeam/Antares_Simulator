@@ -30,7 +30,7 @@ namespace Antares::ModelerStudy::SystemModel
 {
 
 /// A library is a collection of models
-class Library
+class Library final
 {
 public:
     Library() = default;
@@ -72,7 +72,7 @@ private:
  * Follow builder pattern:
  * builder.Library().withId("id").withDescription("description").withPortTypes(portList).withModels(modelList).build();
  */
-class LibraryBuilder
+class LibraryBuilder final
 {
 public:
     LibraryBuilder& withId(const std::string& id);

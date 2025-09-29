@@ -10,7 +10,7 @@ on:
     - issue-*
     - release/*
     - doc/*
-    - dependabot/*
+    - dependabot/**
     - tests/*
   schedule:
   - cron: '21 2 * * *'
@@ -87,7 +87,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-        sudo apt-get install g++-10 gcc-10
         sudo apt-get install xsltproc
 
     - name: Config OR-Tools URL
@@ -103,7 +102,7 @@ jobs:
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
 
@@ -116,9 +115,7 @@ jobs:
       run: |
         cmake -B _build -S src \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCMAKE_BUILD_TYPE=Release \
@@ -162,9 +159,7 @@ jobs:
         cd src/api_client_example
          cmake -B _build -S . \
          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-         -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-         -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
          -DCMAKE_BUILD_TYPE=Release \
          -DBUILD_TESTING=ON \
          -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \

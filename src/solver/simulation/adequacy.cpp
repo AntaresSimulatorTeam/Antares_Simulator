@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -91,11 +91,6 @@ bool Adequacy::simulationBegin()
                                             nbHoursInAWeek,
                                             numSpace);
         }
-    }
-
-    for (auto& pb: pProblemesHebdo)
-    {
-        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -220,17 +215,16 @@ bool Adequacy::year(Progression::Task& progression,
             try
             {
                 auto& currentSimTable = simulationTables_[numSpace];
-                OPT_OptimisationHebdomadaire(study.parameters.optOptions,
-                                             &currentProblem,
-                                             resultWriter,
-                                             simulationObserver_.get(),
-                                             currentSimTable);
+                OPT_OptimisationHebdomadaireLineaire(study.parameters.optOptions,
+                                                     &currentProblem,
+                                                     resultWriter,
+                                                     simulationObserver_.get(),
+                                                     currentSimTable);
                 currentSimTable.write();
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
-                                      study.parameters.shedding.policy,
-                                      study.parameters.simplexOptimizationRange,
+                                      study.parameters,
                                       numSpace,
                                       hourInTheYear);
             }
@@ -402,11 +396,7 @@ void Adequacy::simulationEnd()
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study,
-                        pProblemesHebdo[0],
-                        balance,
-                        pNbWeeks,
-                        simulationTables_[0] /*TODO*/);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
 

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "math.h"
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 /*!
 ** \brief Compute the distance between two points (2D)
@@ -27,7 +26,6 @@ inline T Distance2D(T x1, T y1, T x2, T y2);
 template<typename T>
 inline T Distance3D(T x1, T y1, T z1, T x2, T y2, T z2);
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math
 
 #include "distance.hxx"

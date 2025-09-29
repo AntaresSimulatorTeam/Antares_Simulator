@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -55,7 +55,7 @@ Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
 void handleYamlError(const YAML::Exception& e, const std::string& context);
 
 /// Generic error class for all loading errors to catch in the main
-class ErrorLoadingYaml: public std::runtime_error
+class ErrorLoadingYaml final: public std::runtime_error
 {
 public:
     explicit ErrorLoadingYaml(const std::string& s):

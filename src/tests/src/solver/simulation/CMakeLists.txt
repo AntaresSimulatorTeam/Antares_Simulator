@@ -1,5 +1,7 @@
 include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
+add_subdirectory(remix-storage)
+
 # Useful variables definitions
 set(src_solver_simulation "${CMAKE_SOURCE_DIR}/solver/simulation")
 set(src_solver_hydro "${CMAKE_SOURCE_DIR}/solver/hydro")
@@ -53,16 +55,6 @@ add_boost_test(test-hydro_final
         LIBS
         test_utils_unit
         solver-lib)
-
-# ===================================
-# Tests on hydro remix algorithm
-# ===================================
-add_boost_test(tests-on-hydro-remix
-        SRC
-        test-hydro-remix.cpp
-        LIBS
-        shave-peaks-by-remix-storage-gen
-        test_utils_unit)
 
 # ===================================
 # Tests on numspace manager

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "optimization.h"
 #include <wx/sizer.h>
@@ -33,11 +33,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Options
+namespace Antares::Window::Options
 {
 static void ResetButton(Component::Button* button, bool value)
 {
@@ -77,6 +73,7 @@ const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status)
         return "images/16x16/light_orange.png";
     }
 }
+
 const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity)
 {
     using GTransmission = Data::GlobalTransmissionCapacities;
@@ -92,14 +89,14 @@ const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity
     }
 }
 
-Optimization::Optimization(wxWindow* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Optimization preferences"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
- pTargetRef(nullptr)
+Optimization::Optimization(wxWindow* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Optimization preferences"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
+    pTargetRef(nullptr)
 {
     assert(parent);
 
@@ -208,10 +205,10 @@ Optimization::Optimization(wxWindow* parent) :
         button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);
-        onPopup.bind(
-          this,
-          &Optimization::onPopupMenu,
-          PopupInfo(study.parameters.include.reserve.dayAhead, wxT("day ahead reserve")));
+        onPopup.bind(this,
+                     &Optimization::onPopupMenu,
+                     PopupInfo(study.parameters.include.reserve.dayAhead,
+                               wxT("day ahead reserve")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -238,10 +235,10 @@ Optimization::Optimization(wxWindow* parent) :
         button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);
-        onPopup.bind(
-          this,
-          &Optimization::onPopupMenu,
-          PopupInfo(study.parameters.include.reserve.strategic, wxT("strategic reserve")));
+        onPopup.bind(this,
+                     &Optimization::onPopupMenu,
+                     PopupInfo(study.parameters.include.reserve.strategic,
+                               wxT("strategic reserve")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -266,8 +263,9 @@ Optimization::Optimization(wxWindow* parent) :
         label = Component::CreateLabel(this, wxT("Export mps"));
 
         const Data::mpsExportStatus& defaultValue = Data::mpsExportStatus::NO_EXPORT;
-        button = new Component::Button(
-          this, mpsExportStatusToString(defaultValue), mpsExportIcon(defaultValue));
+        button = new Component::Button(this,
+                                       mpsExportStatusToString(defaultValue),
+                                       mpsExportIcon(defaultValue));
 
         button->SetBackgroundColour(bgColor);
         button->menu(true);
@@ -281,10 +279,11 @@ Optimization::Optimization(wxWindow* parent) :
     {
         label = Component::CreateLabel(this, wxT("Unfeasible problem behavior"));
 
-        const Data::UnfeasibleProblemBehavior& defaultValue
-          = Data::UnfeasibleProblemBehavior::ERROR_DRY;
-        button = new Component::Button(
-          this, Data::getDisplayName(defaultValue), Data::getIcon(defaultValue));
+        const Data::UnfeasibleProblemBehavior& defaultValue = Data::UnfeasibleProblemBehavior::
+          ERROR_DRY;
+        button = new Component::Button(this,
+                                       Data::getDisplayName(defaultValue),
+                                       Data::getIcon(defaultValue));
         button->SetBackgroundColour(bgColor);
         button->menu(true);
         onPopup.bind(this, &Optimization::onPopupMenuUnfeasibleBehavior);
@@ -308,8 +307,11 @@ Optimization::Optimization(wxWindow* parent) :
     }
     if (0)
     {
-        label = Component::CreateLabel(
-          this, wxT("Weekly binding constraints will be ignored"), false, false, -1);
+        label = Component::CreateLabel(this,
+                                       wxT("Weekly binding constraints will be ignored"),
+                                       false,
+                                       false,
+                                       -1);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->AddSpacer(2);
     }
@@ -339,8 +341,10 @@ Optimization::Optimization(wxWindow* parent) :
     pnlSizerBtns->Add(button, 0, wxALL | wxEXPAND);
 
     pnlSizerBtns->AddStretchSpacer();
-    wxButton* pBtnCancel
-      = Antares::Component::CreateButton(panel, wxT("  Close  "), this, &Optimization::onClose);
+    wxButton* pBtnCancel = Antares::Component::CreateButton(panel,
+                                                            wxT("  Close  "),
+                                                            this,
+                                                            &Optimization::onClose);
     pBtnCancel->SetDefault();
     pnlSizerBtns->Add(pBtnCancel, 0, wxALL | wxEXPAND);
     pnlSizerBtns->Add(25, 5);
@@ -349,7 +353,11 @@ Optimization::Optimization(wxWindow* parent) :
     sizer->Add(panel, 0, wxALL | wxEXPAND);
 
     // refresh
-    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Optimization::onInternalMotion), nullptr, this);
+    Connect(GetId(),
+            wxEVT_MOTION,
+            wxMouseEventHandler(Optimization::onInternalMotion),
+            nullptr,
+            this);
 
     refresh();
     SetSizer(sizer);
@@ -386,8 +394,8 @@ void Optimization::onResetToDefault(void*)
             auto& study = *studyptr;
             study.parameters.include.constraints = true;
             study.parameters.include.hurdleCosts = true;
-            study.parameters.transmissionCapacities
-              = Data::GlobalTransmissionCapacities::localValuesForAllLinks;
+            study.parameters.transmissionCapacities = Data::GlobalTransmissionCapacities::
+              localValuesForAllLinks;
             study.parameters.include.thermal.minStablePower = true;
             study.parameters.include.thermal.minUPTime = true;
             study.parameters.include.reserve.dayAhead = true;
@@ -396,8 +404,8 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.spinning = true;
             study.parameters.include.exportMPS = Data::mpsExportStatus::NO_EXPORT;
             study.parameters.simplexOptimizationRange = Data::sorWeek;
-            study.parameters.include.unfeasibleProblemBehavior
-              = Data::UnfeasibleProblemBehavior::ERROR_MPS;
+            study.parameters.include.unfeasibleProblemBehavior = Data::UnfeasibleProblemBehavior::
+              ERROR_MPS;
 
             refresh();
             MarkTheStudyAsModified();
@@ -415,7 +423,9 @@ void Optimization::refresh()
 {
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     // The current study
     auto& study = *studyptr;
 
@@ -475,8 +485,11 @@ void Optimization::onPopupMenu(Component::Button&, wxMenu& menu, void*, const Po
                  wxCommandEventHandler(Optimization::onSelectModeInclude),
                  nullptr,
                  this);
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("ignore"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("ignore"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Optimization::onSelectModeIgnore),
@@ -492,15 +505,21 @@ void Optimization::onPopupMenuSpecify(Component::Button&,
     pTargetRef = &info.rval;
     wxMenuItem* it;
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxString() << info.text, "images/16x16/light_green.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxString() << info.text,
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Optimization::onSelectModeInclude),
                  nullptr,
                  this);
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("false"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("false"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Optimization::onSelectModeIgnore),
@@ -511,15 +530,21 @@ void Optimization::onPopupMenuSpecify(Component::Button&,
 void Optimization::onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*)
 {
     wxMenuItem* it;
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Day"), "images/16x16/calendar_day.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Day"),
+                          "images/16x16/calendar_day.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Optimization::onSelectSimplexDay),
                  nullptr,
                  this);
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Week"), "images/16x16/calendar_week.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Week"),
+                          "images/16x16/calendar_week.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Optimization::onSelectSimplexWeek),
@@ -551,8 +576,11 @@ void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& men
     // Warning dry
     {
         const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::WARNING_DRY;
-        wxMenuItem* it = Menu::CreateItem(
-          &menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
+        wxMenuItem* it = Menu::CreateItem(&menu,
+                                          wxID_ANY,
+                                          Data::getDisplayName(value),
+                                          Data::getIcon(value),
+                                          wxEmptyString);
         menu.Connect(it->GetId(),
                      wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorWarningDry),
@@ -563,8 +591,11 @@ void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& men
     // Warning mps
     {
         const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::WARNING_MPS;
-        wxMenuItem* it = Menu::CreateItem(
-          &menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
+        wxMenuItem* it = Menu::CreateItem(&menu,
+                                          wxID_ANY,
+                                          Data::getDisplayName(value),
+                                          Data::getIcon(value),
+                                          wxEmptyString);
         menu.Connect(it->GetId(),
                      wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorWarningMps),
@@ -574,8 +605,11 @@ void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& men
     // Error dry
     {
         const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::ERROR_DRY;
-        wxMenuItem* it = Menu::CreateItem(
-          &menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
+        wxMenuItem* it = Menu::CreateItem(&menu,
+                                          wxID_ANY,
+                                          Data::getDisplayName(value),
+                                          Data::getIcon(value),
+                                          wxEmptyString);
         menu.Connect(it->GetId(),
                      wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorErrorDry),
@@ -586,8 +620,11 @@ void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& men
     // Error mps
     {
         const Data::UnfeasibleProblemBehavior& value = Data::UnfeasibleProblemBehavior::ERROR_MPS;
-        wxMenuItem* it = Menu::CreateItem(
-          &menu, wxID_ANY, Data::getDisplayName(value), Data::getIcon(value), wxEmptyString);
+        wxMenuItem* it = Menu::CreateItem(&menu,
+                                          wxID_ANY,
+                                          Data::getDisplayName(value),
+                                          Data::getIcon(value),
+                                          wxEmptyString);
         menu.Connect(it->GetId(),
                      wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(Optimization::onSelectUnfeasibleBehaviorErrorMps),
@@ -718,6 +755,4 @@ void Optimization::onSelectUnfeasibleBehaviorErrorMps(wxCommandEvent&)
     onSelectUnfeasibleBehavior(Data::UnfeasibleProblemBehavior::ERROR_MPS);
 }
 
-} // namespace Options
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Options

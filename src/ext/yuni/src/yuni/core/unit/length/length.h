@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,12 +12,10 @@
 #ifndef __YUNI_CORE_UNIT_LENGTH_LENGTH_H__
 #define __YUNI_CORE_UNIT_LENGTH_LENGTH_H__
 
-#include "../unit.h"
 #include "../define.h"
+#include "../unit.h"
 
-namespace Yuni
-{
-namespace Unit
+namespace Yuni::Unit
 {
 /*!
 ** \defgroup UnitLength  Length
@@ -37,8 +36,7 @@ struct Quantity;
 YUNI_UNIT_IMPL(SIBaseUnit, "metre", "m", int, 1);
 
 } // namespace Length
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit
 
 #include "../undef.h"
 

@@ -1,33 +1,31 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__
 #define __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__
 
 #include "item.h"
 
-namespace Antares
+namespace Antares::Map
 {
-namespace Map
-{
-class BindingConstraint final : public Item
+class BindingConstraint final: public Item
 {
 public:
     //! \name Constructor & Destructor
@@ -40,6 +38,7 @@ public:
     ** \brief Destructor
     */
     virtual ~BindingConstraint();
+
     //@}
 
     /*!
@@ -56,6 +55,7 @@ public:
     {
         return pSelected;
     }
+
     virtual void selected(bool v);
     //@}
 
@@ -65,6 +65,7 @@ public:
     ** \brief Refresh the cache (even if not invalidated)
     */
     virtual void refreshCache(wxDC& dc);
+
     //@}
 
     //! \name Misc
@@ -92,6 +93,7 @@ public:
     */
     virtual void draw(DrawingContext& dc);
     virtual void drawExternalDrawer(DrawingContext& dc);
+
     //@}
 
     /*!
@@ -107,6 +109,7 @@ public:
     {
         return pConnections.empty();
     }
+
     uint count() const
     {
         return (uint)pConnections.size();
@@ -120,12 +123,18 @@ private:
     struct Infos
     {
     public:
-        Infos() : weight(1.), selected(false)
+        Infos():
+            weight(1.),
+            selected(false)
         {
         }
-        Infos(const Infos& c) : weight(c.weight), selected(false)
+
+        Infos(const Infos& c):
+            weight(c.weight),
+            selected(false)
         {
         }
+
         double weight;
         bool selected;
     };
@@ -135,12 +144,19 @@ private:
 
     struct TextPart
     {
-        TextPart() : text(), color(0, 0, 0), size(0, 0)
+        TextPart():
+            text(),
+            color(0, 0, 0),
+            size(0, 0)
         {
         }
-        TextPart(const wxString& s, const int r, const int g, const int b) : text(s), color(r, g, b)
+
+        TextPart(const wxString& s, const int r, const int g, const int b):
+            text(s),
+            color(r, g, b)
         {
         }
+
         wxString text;
         wxColour color;
         wxSize size;
@@ -152,7 +168,6 @@ private:
 
 }; // class BindingConstraint
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map
 
 #endif // __ANTARES_TOOLBOX_MAP_BINDING_CONSTRAINT_H__

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -27,9 +27,7 @@
 
 #include <vector>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 struct BindingConstraintStructures
@@ -43,5 +41,4 @@ struct BindingConstraintStructures
     mutable std::vector<long> clustersAreaIndex;
 };
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

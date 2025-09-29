@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -31,7 +31,7 @@
 #include "../variables/VariableManagement.h"
 
 // TODO God struct should be decomposed
-class ConstraintBuilderData
+class ConstraintBuilderData final
 {
 public:
     std::vector<double>& Pi;
@@ -66,7 +66,7 @@ ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constr
 finally the build() method gather all variables and put them into the matrix
 \endverbatim
 */
-class ConstraintBuilder
+class ConstraintBuilder final
 {
 public:
     ConstraintBuilder() = delete;
@@ -164,7 +164,7 @@ public:
 
     //@}
 
-    class ConstraintBuilderInvalidOperator: public std::runtime_error
+    class ConstraintBuilderInvalidOperator final: public std::runtime_error
     {
     public:
         using std::runtime_error::runtime_error;
@@ -280,7 +280,7 @@ inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
     }
 }
 
-class BindingConstraintData
+class BindingConstraintData final
 {
 public:
     const char& TypeDeContrainteCouplante;
