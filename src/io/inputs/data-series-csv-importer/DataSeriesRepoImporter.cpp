@@ -49,11 +49,11 @@ inline const char* parseOneDouble(const char* ptr,
     return p;
 }
 
-std::vector<double> parseNumbersFast(const char* first,
-                                     const char* last,
-                                     char sep = ' ',
-                                     size_t capacity = 0,
-                                     const std::string& errorMessagePrefix = "")
+static std::vector<double> parseNumbersFast(const char* first,
+                                            const char* last,
+                                            char sep = ' ',
+                                            size_t capacity = 0,
+                                            const std::string& errorMessagePrefix = "")
 {
     std::vector<double> row;
     if (capacity > 0)
@@ -94,7 +94,7 @@ std::vector<double> parseNumbersFast(const char* first,
     return row;
 }
 
-std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, char sep)
+static std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, char sep)
 {
     // MappedFile file(fileName.c_str());
     // Check file size first

@@ -139,27 +139,6 @@ BOOST_AUTO_TEST_CASE(two_lines_two_columns)
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'two_by_two' : hour 2 exceeds TS set's height"));
 }
-//
-// BOOST_AUTO_TEST_CASE(two_lines_three_columns_three_separators)
-// {
-//     writeFile("2x3.csv", "1\t2;3\n4,5\t6");
-//     auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, "\t,;");
-//     BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").name(), "2x3");
-//     BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(1, 0), 1);
-//     BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(1, 1), 4);
-//     BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(2, 0), 2);
-//     BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(2, 1), 5);
-//     BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(3, 0), 3);
-//     BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(3, 1), 6);
-//     BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("2x3").getData(4, 1),
-//                           TimeSeriesSet::RankTooBig,
-//                           checkMessage(
-//                             "TS set '2x3' : TS number 4 exceeds TS set's number of columns
-//                             (3)"));
-//     BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("2x3").getData(3, 2),
-//                           TimeSeriesSet::HourTooBig,
-//                           checkMessage("TS set '2x3' : hour 2 exceeds TS set's height"));
-// }
 
 BOOST_AUTO_TEST_SUITE_END()
 
