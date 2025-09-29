@@ -235,7 +235,7 @@ BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem___check_any_var_is_zero, Fixtur
 
     auto* var = pb->lookupVariable("var");
     BOOST_CHECK(var); // searched variable is known by problem
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(var), 0);
+    BOOST_CHECK_EQUAL(var->solutionValue(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_status_is_optimal, FixtureFeasibleProblem)
@@ -256,14 +256,7 @@ BOOST_FIXTURE_TEST_CASE(solve_problem_then_add_new_var___new_var_optimal_value_i
 {
     auto* solution = pb->solve(false);
     auto* newVar = pb->addNumVariable(0, 1, "new var");
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(newVar), 0);
-}
-
-BOOST_FIXTURE_TEST_CASE(solve_problem___check_optimal_value_of_null_var_is_zero,
-                        FixtureFeasibleProblem)
-{
-    auto* solution = pb->solve(false);
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(nullptr), 0);
+    BOOST_CHECK_EQUAL(newVar->solutionValue(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
