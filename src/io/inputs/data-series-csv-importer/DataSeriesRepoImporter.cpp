@@ -134,6 +134,11 @@ static void ParseRow(const char* first,
                                         + ": rows have inconsistent number of columns");
         }
     }
+    if (colIndex != columns.size())
+    {
+        throw std::invalid_argument(errorMessagePrefix
+                                    + ": rows have inconsistent number of columns");
+    }
 }
 
 static std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, char sep)
