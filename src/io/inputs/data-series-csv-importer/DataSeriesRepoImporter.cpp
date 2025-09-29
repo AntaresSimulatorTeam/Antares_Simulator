@@ -114,7 +114,9 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
 
     std::vector<std::vector<double>> columns;
     const char* start = file.data();
-    const char* end = file.data() + file.size();
+    const char* end = start + file.size();
+    unsigned lineCount = std::count(start, end, '\n') + 1;
+    unsigned lineNumber = 0;
 
     while (start < end)
     {
@@ -141,6 +143,10 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
         if (columns.empty())
         {
             columns.resize(row.size());
+            for (auto& col: columns)
+            {
+                col.resize(lineCount);
+            }
         }
         if (row.size() != columns.size())
         {
@@ -149,9 +155,10 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
 
         for (size_t i = 0; i < row.size(); ++i)
         {
-            columns[i].push_back(row[i]);
+            columns[i][lineNumber] = row[i];
         }
         start = endLine + 1;
+        ++lineNumber;
     }
 
     return columns;
