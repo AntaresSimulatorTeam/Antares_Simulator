@@ -131,8 +131,7 @@ private:
 class OptimConfig
 {
 public:
-    OptimConfig(std::vector<std::string> modelLibraries, std::vector<Model> models):
-        modelLibraries_(std::move(modelLibraries)),
+    OptimConfig(std::vector<Model> models):
         models_(std::move(models))
     {
         checkDuplicateModelIds();
@@ -140,18 +139,12 @@ public:
 
     void checkDuplicateModelIds() const;
 
-    const std::vector<std::string>& modelLibraries() const
-    {
-        return modelLibraries_;
-    }
-
     const std::vector<Model>& models() const
     {
         return models_;
     }
 
 private:
-    std::vector<std::string> modelLibraries_;
     std::vector<Model> models_;
 };
 

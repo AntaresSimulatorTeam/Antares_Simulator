@@ -75,10 +75,8 @@ BOOST_AUTO_TEST_CASE(TestOptimConfigUniqueIDs)
     models.push_back(Model("model1", ModelDecomposition({}, {})));
     models.push_back(Model("model2", ModelDecomposition({}, {})));
 
-    std::vector<std::string> libraries = {"lib1", "lib2"};
-    OptimConfig config(libraries, models);
+    OptimConfig config(models);
 
-    BOOST_CHECK(config.modelLibraries().size() == 2);
     BOOST_CHECK(config.models().size() == 2);
 }
 
@@ -89,6 +87,6 @@ BOOST_AUTO_TEST_CASE(TestOptimConfigDuplicateIDs)
     models.push_back(Model("model1", ModelDecomposition({}, {}))); // Duplicate ID
 
     std::vector<std::string> libraries = {"lib1", "lib2"};
-    BOOST_CHECK_THROW(OptimConfig config(libraries, models), std::runtime_error);
+    BOOST_CHECK_THROW(OptimConfig config(models), std::runtime_error);
 }
 } // namespace Antares::Modeler::Config
