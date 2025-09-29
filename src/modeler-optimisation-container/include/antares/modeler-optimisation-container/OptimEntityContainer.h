@@ -110,16 +110,6 @@ public:
         return constraints_;
     }
 
-    [[nodiscard]] size_t variablesSize() const
-    {
-        return variables_.size();
-    }
-
-    [[nodiscard]] size_t constraintsSize() const
-    {
-        return constraints_.size();
-    }
-
     void registerVariable(LinearProblemApi::IMipVariable* variable)
     {
         variables_.push_back(variable);
