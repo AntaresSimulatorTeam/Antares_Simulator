@@ -79,6 +79,7 @@ public:
     void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                         const Matrix<double>::ColumnType& DailyMaxPumpPower);
 
+    // used when compatibility hydro-pmax = daily
     Matrix<> getDailyMaxGenPowerFromHourlyTS();
     Matrix<> getDailyMaxPumpPowerFromHourlyTS();
 
