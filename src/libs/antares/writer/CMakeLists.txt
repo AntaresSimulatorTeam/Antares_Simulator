@@ -35,11 +35,14 @@ add_library(result_writer
 add_library(Antares::result_writer ALIAS result_writer)
 
 target_include_directories(result_writer
-    PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    PRIVATE
+        PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
+
+find_package(Parquet REQUIRED)
+find_package(Arrow REQUIRED)
 
 target_link_libraries(result_writer
         PUBLIC
@@ -51,6 +54,8 @@ target_link_libraries(result_writer
         inifile
         io
         Antares::concurrency
+        Arrow::arrow_static
+        Parquet::parquet_static
 )
 
 install(DIRECTORY include/antares
