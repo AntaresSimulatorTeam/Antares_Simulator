@@ -130,6 +130,13 @@ jobs:
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
+    - name: Upload build in case of failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: build
+        path: ${{ github.workspace }}/_build
+
     - name: Install Build Wrapper
       uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v6.0.0
 
