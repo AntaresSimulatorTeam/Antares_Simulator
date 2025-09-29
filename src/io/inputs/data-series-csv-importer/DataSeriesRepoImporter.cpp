@@ -49,11 +49,11 @@ inline const char* parseOneDouble(const char* ptr,
     return p;
 }
 
-static std::vector<double> parseNumbersFast(const char* first,
-                                            const char* last,
-                                            char sep = ' ',
-                                            size_t capacity = 0,
-                                            const std::string& errorMessagePrefix = "")
+static std::vector<double> parseRow(const char* first,
+                                    const char* last,
+                                    char sep = ' ',
+                                    size_t capacity = 0,
+                                    const std::string& errorMessagePrefix = "")
 {
     std::vector<double> row;
     if (capacity > 0)
@@ -118,19 +118,19 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
 
     while (start < end)
     {
-        const char* newline = static_cast<const char*>(memchr(start, '\n', end - start));
-        if (!newline)
+        const char* endLine = static_cast<const char*>(memchr(start, '\n', end - start));
+        if (!endLine)
         {
-            newline = end;
+            endLine = end;
         }
         // Handle Windows line endings
-        size_t line_len = newline - start;
-        if (line_len > 0 && start[line_len - 1] == '\r')
+        size_t lineLen = endLine - start;
+        if (lineLen > 0 && start[lineLen - 1] == '\r')
         {
-            line_len--;
+            lineLen--;
         }
 
-        auto row = parseNumbersFast(start, start + line_len, sep, columns.size(), fileName);
+        auto row = parseRow(start, start + lineLen, sep, columns.size(), fileName);
 
         // skip empty line
         if (row.empty())
@@ -151,7 +151,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
         {
             columns[i].push_back(row[i]);
         }
-        start = newline + 1;
+        start = endLine + 1;
     }
 
     return columns;
