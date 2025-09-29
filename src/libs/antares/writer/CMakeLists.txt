@@ -9,6 +9,16 @@ add_library(result_writer
         include/antares/writer/writer_factory.h
         writer_factory.cpp
 
+        # Table writers (public API + implementations)
+        include/antares/writer/table_format.h
+        include/antares/writer/i_table_writer.h
+        include/antares/writer/table_writer_factory.h
+        table_writer_factory.cpp
+        csv_table_writer.h
+        csv_table_writer.cpp
+        parquet_table_writer.h
+        parquet_table_writer.cpp
+
         # Immediate file writer (private)
         private/immediate_file_writer.h
         immediate_file_writer.cpp
