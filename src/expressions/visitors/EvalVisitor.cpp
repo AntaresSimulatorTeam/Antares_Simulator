@@ -96,18 +96,20 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
           Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
           std::nullopt);
 
-        return EvaluationResult(
-          optimContainer_.getVariable(component_, node->value(), 0)->solutionValue());
+        std::span variables = optimContainer_.getComponentVariable(component_, node->value(), 1);
+        return EvaluationResult(variables[0]->solutionValue());
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
     unsigned nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
                           + 1;
     std::vector<double> varValues(nbTimeStep, 0.0);
 
+    std::span variables = optimContainer_.getComponentVariable(component_,
+                                                               node->value(),
+                                                               nbTimeStep);
     for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
     {
-        auto* variable = optimContainer_.getVariable(component_, node->value(), varInd);
-        varValues[varInd] = variable->solutionValue();
+        varValues[varInd] = variables[varInd]->solutionValue();
     }
 
     return EvaluationResult{varValues};

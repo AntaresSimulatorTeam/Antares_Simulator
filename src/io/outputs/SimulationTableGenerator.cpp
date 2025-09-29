@@ -91,17 +91,16 @@ void addVariableEntries(ISimulationTable& simulationTable,
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
-
-    const auto& variableStart = optimEntityContainer.getVariableStartColumn();
-    const auto& solverVariables = optimEntityContainer.getVariables();
     const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
-    unsigned variableLocalIndex = 0;
     for (const auto& modelVar: component.getModel()->Variables())
     {
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
+        const std::span componentVariables = optimEntityContainer.getComponentVariable(
+          component,
+          modelVar.Id(),
+          fillContext.getLocalNumberOfTimeSteps());
 
-        ++variableLocalIndex;
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
             TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(
@@ -111,9 +110,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
                                     : TimeBlock{.block = currentBlock + 1,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
-            auto* var = optimEntityContainer.getVariable(component,
-                                                         modelVar.Id(),
-                                                         timeStep.value_or(0));
+            auto* var = componentVariables[timeStep.value_or(0)];
             simulationTable.addEntry(
               {.block = tb.block,
                .component = componentId,

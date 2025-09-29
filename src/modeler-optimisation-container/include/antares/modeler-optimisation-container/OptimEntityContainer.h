@@ -20,6 +20,7 @@
  */
 
 #pragma once
+#include <span>
 #include <vector>
 
 #include <antares/optimisation/linear-problem-api/mipConstraint.h>
@@ -95,13 +96,13 @@ public:
         return variables_;
     }
 
-    [[nodiscard]] LinearProblemApi::IMipVariable* getVariable(
+    [[nodiscard]] std::span<LinearProblemApi::IMipVariable* const> getComponentVariable(
       const Antares::ModelerStudy::SystemModel::Component& component,
       const std::string& varName,
-      int localTimeStep) const
+      std::size_t nbTimeSteps) const
     {
         unsigned int startColumn = getVariableStartColumn(component, varName);
-        return variables_[startColumn + localTimeStep];
+        return {variables_.begin() + startColumn, nbTimeSteps};
     }
 
     [[nodiscard]] const std::vector<LinearProblemApi::IMipConstraint*>& getConstraints() const
