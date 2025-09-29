@@ -107,7 +107,7 @@ private:
 class Model
 {
 public:
-    Model(std::string id, ModelDecomposition modelDecomposition):
+    explicit Model(std::string id, ModelDecomposition modelDecomposition):
         id_(std::move(id)),
         modelDecomposition_(std::move(modelDecomposition))
     {
