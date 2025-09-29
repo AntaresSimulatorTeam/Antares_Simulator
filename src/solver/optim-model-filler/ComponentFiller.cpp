@@ -337,7 +337,6 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
         const auto timeIndex = getConstraintTimeIndex(root_node, component_);
         optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);
 
-        optimEntityContainer_.IncrementConstraintGLobalIndex();
         optimEntityContainer_.addStartLine();
         if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
             || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)

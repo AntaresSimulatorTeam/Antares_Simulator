@@ -140,12 +140,7 @@ public:
 
     unsigned int ConstraintGLobalIndex() const
     {
-        return constraintGlobalIndex_;
-    }
-
-    void IncrementConstraintGLobalIndex()
-    {
-        ++constraintGlobalIndex_;
+        return static_cast<unsigned int>(constraintStartLine_.size());
     }
 
 private:
@@ -156,7 +151,6 @@ private:
     //---
     std::vector<LinearProblemApi::IMipConstraint*> constraints_;
     std::vector<unsigned int> constraintStartLine_;
-    unsigned int constraintGlobalIndex_ = 0;
     LinearProblemApi::ILinearProblem& linearProblem_;
     const LinearProblemApi::ILinearProblemData* data_;
     const ScenarioGroupRepository* scenarioGroupRepository_;
