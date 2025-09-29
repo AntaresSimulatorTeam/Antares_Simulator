@@ -79,6 +79,9 @@ public:
     void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                         const Matrix<double>::ColumnType& DailyMaxPumpPower);
 
+    Matrix<> getDailyMaxGenPowerFromHourlyTS();
+    Matrix<> getDailyMaxPumpPowerFromHourlyTS();
+
     /*!
     ** \brief Save data series for hydro into a folder (`input/hydro/series`)
     **

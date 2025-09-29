@@ -28,7 +28,6 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
-#include "antares/study/study.h"
 
 using namespace Yuni;
 
@@ -63,6 +62,24 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
             hourlyColumn[hour] = dailyColumn[day];
             ++hour;
         }
+        ++day;
+    }
+}
+
+static void ConvertHourlyTSintoDailyTS(const Matrix<double>::ColumnType& hourlyColumn,
+                                       Matrix<double>::ColumnType& dailyColumn)
+{
+    unsigned hour = 0;
+    unsigned day = 0;
+    while (day < DAYS_PER_YEAR && hour < HOURS_PER_YEAR)
+    {
+        double sum = 0.0;
+        for (uint i = 0; i < HOURS_PER_DAY; ++i)
+        {
+            sum += hourlyColumn[hour + i];
+        }
+        dailyColumn[day] = sum / HOURS_PER_DAY;
+        hour += HOURS_PER_DAY;
         ++day;
     }
 }
@@ -180,6 +197,20 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
 
     ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower.timeSeries[0]);
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
+}
+
+Matrix<> DataSeriesHydro::getDailyMaxGenPowerFromHourlyTS()
+{
+    Matrix<> dailyTs(1, DAYS_PER_YEAR);
+    ConvertHourlyTSintoDailyTS(maxHourlyGenPower.timeSeries[0], dailyTs[0]);
+    return dailyTs;
+}
+
+Matrix<> DataSeriesHydro::getDailyMaxPumpPowerFromHourlyTS()
+{
+    Matrix<> dailyTs(1, DAYS_PER_YEAR);
+    ConvertHourlyTSintoDailyTS(maxHourlyPumpPower.timeSeries[0], dailyTs[0]);
+    return dailyTs;
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
