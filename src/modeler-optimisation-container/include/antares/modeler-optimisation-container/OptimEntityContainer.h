@@ -36,7 +36,6 @@ namespace Antares::Optimisation
 struct OptimComponent
 {
     unsigned int index = 0;
-    std::vector<unsigned int> modelVariablesGlobalIndices = {};
     std::unordered_map<std::string, unsigned int> variableIndexMap;
     std::vector<unsigned int> modelConstraintsGlobalIndices = {};
     std::vector<TimeIndex> modelConstraintsTimeIndex = {};
@@ -94,6 +93,15 @@ public:
     [[nodiscard]] const std::vector<LinearProblemApi::IMipVariable*>& getVariables() const
     {
         return variables_;
+    }
+
+    [[nodiscard]] LinearProblemApi::IMipVariable* getVariable(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      const std::string& varName,
+      int localTimeStep) const
+    {
+        unsigned int startColumn = getVariableStartColumn(component, varName);
+        return variables_[startColumn + localTimeStep];
     }
 
     [[nodiscard]] const std::vector<LinearProblemApi::IMipConstraint*>& getConstraints() const

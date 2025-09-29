@@ -95,18 +95,12 @@ void addVariableEntries(ISimulationTable& simulationTable,
     const auto& variableStart = optimEntityContainer.getVariableStartColumn();
     const auto& solverVariables = optimEntityContainer.getVariables();
     const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
-    const auto& modelVariablesGlobalIndices = optimComponent.modelVariablesGlobalIndices;
     unsigned variableLocalIndex = 0;
     for (const auto& modelVar: component.getModel()->Variables())
     {
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
-        // this is the global Index
-        // auto varGlobalIndex = component.getVariableGlobalIndex(modelVar.Id());
-        // but since model::Variables is a vector, the order never changes, in consequence
-        // component.getVariableGlobalIndex(modelVar.Id()) ==
-        // modelVariablesGlobalIndices.at(variableLocalIndex)
-        auto varGlobalIndex = modelVariablesGlobalIndices.at(variableLocalIndex);
+
         ++variableLocalIndex;
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
@@ -117,7 +111,9 @@ void addVariableEntries(ISimulationTable& simulationTable,
                                     : TimeBlock{.block = currentBlock + 1,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
-            auto* var = solverVariables.at(variableStart.at(varGlobalIndex) + timeStep.value_or(0));
+            auto* var = optimEntityContainer.getVariable(component,
+                                                         modelVar.Id(),
+                                                         timeStep.value_or(0));
             simulationTable.addEntry(
               {.block = tb.block,
                .component = componentId,

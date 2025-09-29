@@ -26,7 +26,7 @@
 namespace Antares::Optimisation
 {
 
-  OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
+OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
                                            const LinearProblemApi::ILinearProblemData* data,
                                            const ScenarioGroupRepository* scenarioGroupRepository):
     linearProblem_(linearProblem),
@@ -35,32 +35,28 @@ namespace Antares::Optimisation
 {
 }
 
-
-
 void OptimEntityContainer::addFromSystemComponent(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
     const auto* model = component.getModel();
     const auto& variables = model->Variables();
-    std::vector<unsigned int> modelVariablesGlobalIndices(variables.size(), 0);
     std::unordered_map<std::string, unsigned int> variableIndexMap;
     variableIndexMap.reserve(variables.size());
 
     unsigned int variableLocalIndex = 0;
     for (const auto& variable: variables)
     {
-        modelVariablesGlobalIndices[variableLocalIndex] = variableGlobalIndex_;
         variableIndexMap[variable.Id()] = variableGlobalIndex_; // used in
         // ReadlinearExpressionVisitor
         ++variableGlobalIndex_;
         ++variableLocalIndex;
     }
-    optimComponents_.push_back({.index = component.Index(),
-                                .modelVariablesGlobalIndices = modelVariablesGlobalIndices,
-                                .variableIndexMap = variableIndexMap,
+    optimComponents_.push_back(
+      {.index = component.Index(),
+       .variableIndexMap = variableIndexMap,
        .evaluationContext = Optimisation::EvaluationContext(&component,
                                                             data_,
                                                             &scenarioGroupRepository_->scenario(
-                                                              component.getScenarioGroupId() ) ) });
+                                                              component.getScenarioGroupId()))});
 }
 } // namespace Antares::Optimisation

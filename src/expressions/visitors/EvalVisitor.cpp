@@ -87,8 +87,6 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    const auto& solverVariables = optimContainer_.getVariables();
-    const auto startColumn = optimContainer_.getVariableStartColumn(component_, node->value());
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
@@ -98,7 +96,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
           Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
           std::nullopt);
 
-        return EvaluationResult(solverVariables[startColumn]->solutionValue());
+        return EvaluationResult(
+          optimContainer_.getVariable(component_, node->value(), 0)->solutionValue());
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
     unsigned nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
@@ -107,7 +106,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 
     for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
     {
-        varValues[varInd] = solverVariables[startColumn + varInd]->solutionValue();
+        auto* variable = optimContainer_.getVariable(component_, node->value(), varInd);
+        varValues[varInd] = variable->solutionValue();
     }
 
     return EvaluationResult{varValues};
