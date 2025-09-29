@@ -153,6 +153,7 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
     BOOST_CHECK(model.ports.empty());
     BOOST_CHECK(model.port_field_definitions.empty());
     BOOST_CHECK(model.constraints.empty());
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "objective");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression, "objective");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].id, "objective2");
@@ -194,10 +195,12 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].id, "model_id1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].description, "model_description1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "objective1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression, "objective1");
     BOOST_CHECK_EQUAL(libraryObj.models[1].id, "model_id2");
     BOOST_CHECK_EQUAL(libraryObj.models[1].description, "model_description2");
+    BOOST_CHECK_EQUAL(libraryObj.models[1].objectives.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[1].objectives[0].id, "objective2");
     BOOST_CHECK_EQUAL(libraryObj.models[1].objectives[0].expression, "objective2");
 }
