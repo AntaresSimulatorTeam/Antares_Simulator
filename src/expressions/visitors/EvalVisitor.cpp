@@ -90,12 +90,6 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
-        std::string varName = Antares::Optimisation::buildVariableName(
-          component_.Id(),
-          node->value(),
-          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
-          std::nullopt);
-
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
           node->value(),
@@ -103,8 +97,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
         return EvaluationResult(componentVariables[0]->solutionValue());
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
-    unsigned nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
-                          + 1;
+    const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> varValues(nbTimeStep, 0.0);
     const std::span componentVariables = optimContainer_.getComponentVariable(component_,
                                                                               node->value(),
