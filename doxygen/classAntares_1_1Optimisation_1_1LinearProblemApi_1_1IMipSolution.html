@@ -151,15 +151,6 @@ virtual MipStatus&#160;</td><td class="memItemRight" valign="bottom"><b>getStatu
 <tr class="memitem:a3a2d38054129f18a72bba59bc5da0663"><td class="memItemLeft" align="right" valign="top"><a id="a3a2d38054129f18a72bba59bc5da0663"></a>
 virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectiveValue</b> () const =0</td></tr>
 <tr class="separator:a3a2d38054129f18a72bba59bc5da0663"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ebe06b5a64c11205bd048da2b8d5696"><td class="memItemLeft" align="right" valign="top"><a id="a4ebe06b5a64c11205bd048da2b8d5696"></a>
-virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getOptimalValue</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *var) const =0</td></tr>
-<tr class="separator:a4ebe06b5a64c11205bd048da2b8d5696"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d758a961d17fa3c41cb1d72ceb53bb1"><td class="memItemLeft" align="right" valign="top"><a id="a8d758a961d17fa3c41cb1d72ceb53bb1"></a>
-virtual std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getOptimalValues</b> (const std::vector&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> * &gt; &amp;vars) const =0</td></tr>
-<tr class="separator:a8d758a961d17fa3c41cb1d72ceb53bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a963d82f93996e5c62b7dc9fb76d03d5f"><td class="memItemLeft" align="right" valign="top"><a id="a963d82f93996e5c62b7dc9fb76d03d5f"></a>
-virtual const std::map&lt; std::string, double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getOptimalValues</b> () const =0</td></tr>
-<tr class="separator:a963d82f93996e5c62b7dc9fb76d03d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>MipSolution Used to get the return status of the solve Contains the problem's optimal values for each variable </p>
