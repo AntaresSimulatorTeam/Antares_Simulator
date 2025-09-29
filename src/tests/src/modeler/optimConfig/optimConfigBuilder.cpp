@@ -25,7 +25,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/modeler/optimConfig/optimConfig.h"
+#include "antares/modeler/optimConfig/optimConfig.h"
 
 BOOST_AUTO_TEST_SUITE(test_optim_config_builder)
 
