@@ -69,19 +69,14 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
 static void ConvertHourlyTSintoDailyTS(const Matrix<double>::ColumnType& hourlyColumn,
                                        Matrix<double>::ColumnType& dailyColumn)
 {
-    unsigned hour = 0;
-    unsigned day = 0;
-    while (day < DAYS_PER_YEAR && hour < HOURS_PER_YEAR)
-    {
-        double sum = 0.0;
-        for (uint i = 0; i < HOURS_PER_DAY; ++i)
-        {
-            sum += hourlyColumn[hour + i];
-        }
-        dailyColumn[day] = sum / HOURS_PER_DAY;
-        hour += HOURS_PER_DAY;
-        ++day;
-    }
+for (unsigned hour = 0; hour < HOURS_PER_YEAR; ++hour)
+{
+    unsigned day = hour / HOURS_PER_DAY;
+    if (hour % HOURS_PER_DAY == 0)
+        dailyColumn[day] = 0.0;  // start a new day sum
+
+    dailyColumn[day] += hourlyColumn[hour] / HOURS_PER_DAY;
+}
 }
 
 DataSeriesHydro::DataSeriesHydro():
