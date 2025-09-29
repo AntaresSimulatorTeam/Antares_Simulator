@@ -187,8 +187,14 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
         rhs.description = node["description"].as<std::string>("");
         rhs.parameters = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Parameter>>(
           node["parameters"]);
-        rhs.variables = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Variable>>(
-          node["variables"]);
+        const auto& nodeVariables = node["variables"];
+        size_t numberOfVariables = nodeVariables.size();
+        rhs.variables.resize(numberOfVariables);
+        for (auto i = 0; i < numberOfVariables; ++i)
+        {
+            rhs.variables[i] = as_fallback_default<Antares::IO::Inputs::YmlModel::Variable>(
+              nodeVariables[i]);
+        }
         rhs.ports = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Port>>(
           node["ports"]);
         rhs.port_field_definitions = as_fallback_default<

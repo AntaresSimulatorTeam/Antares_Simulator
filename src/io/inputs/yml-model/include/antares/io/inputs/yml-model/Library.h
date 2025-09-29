@@ -61,6 +61,7 @@ inline std::string toString(const ValueType& value_type)
 struct Variable
 {
     std::string id;
+    unsigned int index;
     std::string lower_bound;
     std::string upper_bound;
     ValueType variable_type;

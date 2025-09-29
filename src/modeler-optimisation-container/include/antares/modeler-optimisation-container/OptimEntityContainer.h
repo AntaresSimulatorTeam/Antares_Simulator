@@ -37,7 +37,7 @@ namespace Antares::Optimisation
 struct OptimComponent
 {
     unsigned int index = 0;
-    std::unordered_map<std::string, unsigned int> variableIndexMap;
+    std::vector<unsigned int> modelVariableGlobalIndices;
     std::vector<unsigned int> modelConstraintsGlobalIndices = {};
     std::vector<TimeIndex> modelConstraintsTimeIndex = {};
     EvaluationContext evaluationContext;
@@ -58,10 +58,10 @@ public:
 
     [[nodiscard]] unsigned int getVariableStartColumn(
       const Antares::ModelerStudy::SystemModel::Component& component,
-      const std::string& varName) const
+      unsigned int index) const
     {
         const auto& optimComponent = optimComponents_.at(component.Index());
-        return variableStartColumn_.at(optimComponent.variableIndexMap.at(varName));
+        return variableStartColumn_.at(optimComponent.modelVariableGlobalIndices.at(index));
     }
 
     [[nodiscard]] const EvaluationContext& getEvaluationContext(

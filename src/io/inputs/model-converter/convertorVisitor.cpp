@@ -158,7 +158,8 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
             return static_cast<Node*>(
               registry_.create<VariableNode>(var.id,
                                              convertToTimeIndex(var.time_dependent,
-                                                                var.scenario_dependent)));
+                                                                var.scenario_dependent),
+                                             var.index));
         }
     }
     throw NoParameterOrVariableWithThisName(identifier);
