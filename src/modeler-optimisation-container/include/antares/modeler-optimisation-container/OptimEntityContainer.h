@@ -36,10 +36,10 @@ namespace Antares::Optimisation
 struct OptimComponent
 {
     unsigned int index = 0;
-    std::vector<unsigned int> modelVariablesGlobalIndices = {};
+    std::vector<unsigned int> modelVariablesGlobalIndices;
     std::unordered_map<std::string, unsigned int> variableIndexMap;
-    std::vector<unsigned int> modelConstraintsGlobalIndices = {};
-    std::vector<TimeIndex> modelConstraintsTimeIndex = {};
+    std::vector<unsigned int> modelConstraintsGlobalIndices;
+    std::vector<TimeIndex> modelConstraintsTimeIndex;
     EvaluationContext evaluationContext;
 };
 
@@ -129,11 +129,6 @@ public:
     [[nodiscard]] OptimComponent& getOptimComponent(size_t index)
     {
         return optimComponents_.at(index);
-    }
-
-    [[nodiscard]] const std::vector<OptimComponent>& getOptimComponents() const
-    {
-        return optimComponents_;
     }
 
     void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
