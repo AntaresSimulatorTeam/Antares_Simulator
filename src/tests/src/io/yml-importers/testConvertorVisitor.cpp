@@ -283,7 +283,7 @@ ExpressionToNodeConvertorEmptyModel createMediumExpression()
 std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& registry)
 {
     auto* param = registry.create<Nodes::ParameterNode>("param1");
-    auto* var = registry.create<Nodes::VariableNode>("varP");
+    auto* var = registry.create<Nodes::VariableNode>("varP", 89);
     auto* l3 = registry.create<Nodes::LiteralNode>(3);
     auto* l42 = registry.create<Nodes::LiteralNode>(42);
     auto* l1 = registry.create<Nodes::LiteralNode>(1);

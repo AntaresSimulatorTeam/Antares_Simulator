@@ -64,8 +64,6 @@ public:
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    const std::vector<unsigned int>& getVariableStartColumn() const;
-
     void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:

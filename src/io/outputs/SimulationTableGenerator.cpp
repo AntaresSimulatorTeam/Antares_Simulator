@@ -91,23 +91,18 @@ void addVariableEntries(ISimulationTable& simulationTable,
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
-
-    const auto& variableStart = optimEntityContainer.getVariableStartColumn();
-    const auto& solverVariables = optimEntityContainer.getVariables();
     const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
-    const auto& modelVariablesGlobalIndices = optimComponent.modelVariablesGlobalIndices;
-    unsigned variableLocalIndex = 0;
-    for (const auto& modelVar: component.getModel()->Variables())
+    const auto& variables = component.getModel()->Variables();
+    for (auto varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
+        const auto& modelVar = variables[varIndex];
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
-        // this is the global Index
-        // auto varGlobalIndex = component.getVariableGlobalIndex(modelVar.Id());
-        // but since model::Variables is a vector, the order never changes, in consequence
-        // component.getVariableGlobalIndex(modelVar.Id()) ==
-        // modelVariablesGlobalIndices.at(variableLocalIndex)
-        auto varGlobalIndex = modelVariablesGlobalIndices.at(variableLocalIndex);
-        ++variableLocalIndex;
+        const std::span componentVariables = optimEntityContainer.getComponentVariable(
+          component,
+          varIndex,
+          fillContext.getLocalNumberOfTimeSteps());
+
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
             TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(
@@ -117,7 +112,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
                                     : TimeBlock{.block = currentBlock + 1,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
-            auto* var = solverVariables.at(variableStart.at(varGlobalIndex) + timeStep.value_or(0));
+            auto* var = componentVariables[timeStep.value_or(0)];
             simulationTable.addEntry(
               {.block = tb.block,
                .component = componentId,
