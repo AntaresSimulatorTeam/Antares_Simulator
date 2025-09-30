@@ -36,6 +36,12 @@ class NoAreaInsideAdqPatchMode final: public LoadingError
 public:
     NoAreaInsideAdqPatchMode();
 };
+
+class IncompatibleHurdleCostCSR final: public LoadingError
+{
+public:
+    IncompatibleHurdleCostCSR();
+};
 } // namespace Antares::Error
 
 namespace Antares::Data::AdequacyPatch

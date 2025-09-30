@@ -192,12 +192,6 @@ public:
     IncompatibleSimulationModeForAdqPatch();
 };
 
-class IncompatibleHurdleCostCSR final: public LoadingError
-{
-public:
-    IncompatibleHurdleCostCSR();
-};
-
 class IncompatibleOutputOptions final: public LoadingError
 {
 public:
