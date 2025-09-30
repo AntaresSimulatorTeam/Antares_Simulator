@@ -563,6 +563,69 @@ BOOST_FIXTURE_TEST_CASE(Negative_of_SumNode, MyDummyFixture)
     BOOST_CHECK_EQUAL(eval, -(num1 + num2));
 }
 
+BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_basic, MyDummyFixture)
+{
+    const double num1 = 1428;
+    const double num2 = 8241;
+
+    Node* equalSameValue = create<EqualNode>(create<LiteralNode>(num1), create<LiteralNode>(num1));
+    Node* equalDifferentValue = create<EqualNode>(create<LiteralNode>(num1),
+                                                  create<LiteralNode>(num2));
+
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(equalSameValue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(equalDifferentValue).valueAsDouble(), 0.0);
+}
+
+BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
+{
+    ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    const std::string value = "221.3";
+    auto param = build_context_parameter_with("my-param", value);
+    EvaluationContext context({param}, {}, data, emptyScenario);
+
+    MockEvaluationContextProvider evalContextProvider{context};
+    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
+
+    const double num = 221.3;
+    Node* equalLiteralParam = create<EqualNode>(create<LiteralNode>(num), &root);
+
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(equalLiteralParam).valueAsDouble(), 1.0);
+}
+
+BOOST_FIXTURE_TEST_CASE(comparisonLessThanOrEqualNode, MyDummyFixture)
+{
+    const double num1 = 1428;
+    const double num2 = 8241;
+
+    Node* nodeLessTrue = create<LessThanOrEqualNode>(create<LiteralNode>(num1),
+                                                     create<LiteralNode>(num2));
+    Node* nodeLessFalse = create<LessThanOrEqualNode>(create<LiteralNode>(num2),
+                                                      create<LiteralNode>(num1));
+    Node* nodeEqualTrue = create<LessThanOrEqualNode>(create<LiteralNode>(num1),
+                                                      create<LiteralNode>(num1));
+
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessTrue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessFalse).valueAsDouble(), 0.0);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeEqualTrue).valueAsDouble(), 1.0);
+}
+
+BOOST_FIXTURE_TEST_CASE(comparisonGraterThanOrEqualNode, MyDummyFixture)
+{
+    const double num1 = 8241;
+    const double num2 = 1428;
+
+    Node* nodeLessTrue = create<GreaterThanOrEqualNode>(create<LiteralNode>(num1),
+                                                        create<LiteralNode>(num2));
+    Node* nodeLessFalse = create<GreaterThanOrEqualNode>(create<LiteralNode>(num2),
+                                                         create<LiteralNode>(num1));
+    Node* nodeEqualTrue = create<GreaterThanOrEqualNode>(create<LiteralNode>(num1),
+                                                         create<LiteralNode>(num1));
+
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessTrue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessFalse).valueAsDouble(), 0.0);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeEqualTrue).valueAsDouble(), 1.0);
+}
+
 BOOST_FIXTURE_TEST_CASE(print_port_field_node, MyDummyFixture)
 {
     PortFieldNode pt_fd("august", "2024");
@@ -1053,10 +1116,7 @@ BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, MyDummyFixture)
     LiteralNode literalNode(23.);
     std::string component_id("id");
     std::string name("name");
-    std::vector<Node*> nodes = {create<EqualNode>(&literalNode, &literalNode),
-                                create<LessThanOrEqualNode>(&literalNode, &literalNode),
-                                create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
-                                create<PortFieldNode>(name, name)};
+    std::vector<Node*> nodes = {create<PortFieldNode>(name, name)};
     for (auto* node: nodes)
     {
         BOOST_CHECK_THROW(evalVisitor.dispatch(node).valueAsDouble(), EvalVisitorNotImplemented);

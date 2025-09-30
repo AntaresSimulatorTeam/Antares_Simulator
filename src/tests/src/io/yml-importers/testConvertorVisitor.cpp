@@ -30,7 +30,6 @@
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
-namespace utf = boost::unit_test;
 
 class ExpressionToNodeConvertorEmptyModel
 {
@@ -140,15 +139,13 @@ BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertorEmptyModel)
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
 }
 
-/*
-  /!\ This test is disabled.
-  Current behavior
-  "1+2+3" -> SumNode(SumNode(1,2), 3)
-  Desired behavior
-  "1+2+3" -> SumNode(1,2,3)
-*/
-BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel, *utf::disabled())
+BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel)
 {
+    /*
+      Desired behavior
+      "1+2+3" -> SumNode(1,2,3)
+    */
+
     const std::string expression = "1 + 2 + 3";
     auto expr = run(expression);
 
@@ -295,9 +292,8 @@ std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& 
     auto* sub = registry.create<Nodes::SubtractionNode>(l4, l1);
     auto* mult = registry.create<Nodes::MultiplicationNode>(l12, sub);
     auto* sum1 = registry.create<Nodes::SumNode>(mult, param);
-    auto* sum2 = registry.create<Nodes::SumNode>(l42, l3);
-    auto* sum3 = registry.create<Nodes::SumNode>(sum2, var);
-    auto* neg = registry.create<Nodes::NegationNode>(sum3);
+    auto* sum2 = registry.create<Nodes::SumNode>(l42, l3, var);
+    auto* neg = registry.create<Nodes::NegationNode>(sum2);
     auto* div = registry.create<Nodes::DivisionNode>(sum1, neg);
     return {"(12 * (4 - 1) + param1) / -(42 + 3 + varP)", div};
 }

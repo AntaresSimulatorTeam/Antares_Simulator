@@ -215,14 +215,36 @@ std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* contex
     }
 }
 
+void extractSumOperands(Node* node, std::vector<Node*>& operands)
+{
+    if (auto* sumNode = dynamic_cast<SumNode*>(node))
+    {
+        for (auto* operand: sumNode->getOperands())
+        {
+            extractSumOperands(operand, operands);
+        }
+    }
+    else
+    {
+        operands.emplace_back(node);
+    }
+}
+
 std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
 {
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
 
     std::string op = context->op->getText();
-    return (op == "+") ? static_cast<Node*>(registry_.create<SumNode>(left, right))
-                       : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
+    if (op == "-")
+    {
+        return static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
+    }
+    // Sum node, flatten all operands in one vector if possible
+    std::vector<Node*> operands;
+    extractSumOperands(left, operands);
+    extractSumOperands(right, operands);
+    return static_cast<Node*>(registry_.create<SumNode>(operands));
 }
 
 class NotImplemented final: public std::runtime_error
