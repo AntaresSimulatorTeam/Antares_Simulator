@@ -46,7 +46,9 @@ public:
     }
 
 private:
-    Optimisation::TimeIndex time_index_;
-    unsigned int index_ = 0;
+    // Is the variable time-dependent / scenario-dependent ?
+    const Optimisation::TimeIndex time_index_;
+    // Local index within the component, starting from 0
+    const unsigned int index_ = 0;
 };
 } // namespace Antares::Expressions::Nodes

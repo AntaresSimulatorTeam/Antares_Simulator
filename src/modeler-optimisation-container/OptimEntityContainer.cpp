@@ -48,7 +48,6 @@ void OptimEntityContainer::addFromSystemComponent(
         modelVariableGlobalIndices[variableLocalIndex] = variableGlobalIndex_; // used in
         // ReadlinearExpressionVisitor
         ++variableGlobalIndex_;
-        ++variableLocalIndex;
     }
     optimComponents_.push_back(
       {.index = component.Index(),
