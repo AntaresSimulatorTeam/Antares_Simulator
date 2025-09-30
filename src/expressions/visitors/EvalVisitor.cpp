@@ -87,27 +87,24 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    const auto& solverVariables = optimContainer_.getVariables();
-    const auto startColumn = optimContainer_.getVariableStartColumn(component_, node->value());
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
-        std::string varName = Antares::Optimisation::buildVariableName(
-          component_.Id(),
-          node->value(),
-          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
-          std::nullopt);
-
-        return EvaluationResult(solverVariables[startColumn]->solutionValue());
+        const std::span componentVariables = optimContainer_.getComponentVariable(
+          component_,
+          node->Index(),
+          1 /* single timestep*/);
+        return EvaluationResult(componentVariables[0]->solutionValue());
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
-    unsigned nbTimeStep = fillContext_.getLocalLastTimeStep() - fillContext_.getLocalFirstTimeStep()
-                          + 1;
+    const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> varValues(nbTimeStep, 0.0);
-
+    const std::span componentVariables = optimContainer_.getComponentVariable(component_,
+                                                                              node->Index(),
+                                                                              nbTimeStep);
     for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
     {
-        varValues[varInd] = solverVariables[startColumn + varInd]->solutionValue();
+        varValues[varInd] = componentVariables[varInd]->solutionValue();
     }
 
     return EvaluationResult{varValues};

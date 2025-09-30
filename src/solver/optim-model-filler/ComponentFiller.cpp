@@ -72,9 +72,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
     {
         for (const auto t: dim.getTimesteps())
         {
-            auto year = buildOptional<Optimization::MCYearAndTime::MCYear>(
-              dim.isScenarioDependent(),
-              static_cast<Optimization::MCYearAndTime::MCYear>(s));
+            auto year = buildOptional(dim.isScenarioDependent(),
+                                      static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             optimEntityContainer_.registerVariable(
               linear_problem_.addVariable(lb,
@@ -337,7 +336,6 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
         const auto timeIndex = getConstraintTimeIndex(root_node, component_);
         optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);
 
-        optimEntityContainer_.IncrementConstraintGLobalIndex();
         optimEntityContainer_.addStartLine();
         if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
             || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)

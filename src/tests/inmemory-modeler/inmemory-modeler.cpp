@@ -118,9 +118,10 @@ Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::parameter(
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::variable(
   const std::string& varId,
+  unsigned index,
   const Antares::Optimisation::TimeIndex& timeIndex)
 {
-    return nodes.create<Antares::Expressions::Nodes::VariableNode>(varId, timeIndex);
+    return nodes.create<Antares::Expressions::Nodes::VariableNode>(varId, index, timeIndex);
 }
 
 Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::multiply(
