@@ -66,13 +66,22 @@ std::filesystem::path CsvCreationFixture::writeFile(const string filename, const
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
 
-BOOST_AUTO_TEST_CASE(inconsistent_columns)
+BOOST_AUTO_TEST_CASE(row_two_has_less_columns)
 {
     const auto filePath = writeFile("wrong.csv", "1;2\n3");
     BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
                           std::invalid_argument,
                           checkMessage(filePath.string()
-                                       + ": rows have inconsistent number of columns"));
+                                       + ": row (1) has less columns (1) than the expected (2)."));
+}
+
+BOOST_AUTO_TEST_CASE(row_two_has_more_columns)
+{
+    const auto filePath = writeFile("wrong.csv", "1;2\n3;4;5");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
+                          std::invalid_argument,
+                          checkMessage(filePath.string()
+                                       + ": row (1) has more columns (3) than the expected (2)."));
 }
 
 BOOST_AUTO_TEST_CASE(not_a_number)

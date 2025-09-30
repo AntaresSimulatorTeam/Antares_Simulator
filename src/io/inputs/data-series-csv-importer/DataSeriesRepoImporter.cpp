@@ -20,7 +20,6 @@
 */
 #include <algorithm>
 #include <charconv>
-#include <fstream>
 #include <ranges>
 #include <vector>
 
@@ -106,26 +105,34 @@ static bool ParseRow(const char* first,
             }
             else
             {
-                throw std::invalid_argument(errorMessagePrefix
-                                            + ": rows have inconsistent number of columns");
+                std::ostringstream oss;
+                oss << errorMessagePrefix << ": row (" << rowIndex << ") has more columns ("
+                    << colIndex + 1 << ") than the expected (" << columns.front().size() << ").";
+                throw std::invalid_argument(oss.str());
             }
         }
     }
     if (rowIndex != 0 && colIndex != columns.size())
     {
-        throw std::invalid_argument(errorMessagePrefix
-                                    + ": rows have inconsistent number of columns");
+        std::ostringstream oss;
+        oss << errorMessagePrefix << ": row (" << rowIndex << ") has less columns (" << colIndex
+            << ") than the expected (" << columns.front().size() << ").";
+        throw std::invalid_argument(oss.str());
     }
     return colIndex != 0;
 }
 
 static std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, char sep)
 {
-    // MappedFile file(fileName.c_str());
     // Check file size first
     std::error_code ec;
     auto sz = std::filesystem::file_size(filename, ec);
-    if (ec || sz == 0)
+    if (ec)
+    {
+        throw std::invalid_argument("Error reading CSV file( " + filename.string()
+                                    + "):" + ec.message());
+    }
+    if (sz == 0)
     {
         return {}; // empty or inaccessible
     }

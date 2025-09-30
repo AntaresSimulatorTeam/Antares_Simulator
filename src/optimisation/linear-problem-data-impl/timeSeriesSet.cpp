@@ -21,7 +21,6 @@
 
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
-#include <absl/strings/internal/str_format/extension.h>
 #include <stdexcept>
 #include <string>
 
