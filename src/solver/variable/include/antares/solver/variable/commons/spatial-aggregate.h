@@ -424,12 +424,30 @@ private:
         // Make the spatial cluster
         if (!set.empty())
         {
+            // We compute the district's (or set) hourly values by looping over district's areas
+            // and calling computeSpatialAggregateWith on each area.
+            // The aggregated results is stored in pValuesForTheCurrentYear[numSpace].
             auto end = set.end();
             for (auto i = set.begin(); i != end; ++i)
             {
+                // computeSpatialAggregateWith is called with VCardType::VCardForSpatialAggregate
+                // as a template parameter.
+                // Note that VCardType represents the vcard of the current spatial aggregate's
+                // variable (template parameter VarT).
+                // For most variables VCardType::VCardOrigin and
+                // VCardType::VCardForSpatialAggregate are identical vcard types.
+                // For example : for var OverallCost, VCardOverallCost::VCardForSpatialAggregate
+                // is simply VCardOverallCost itself.
+                // But var LOLD is different : VCardLOLD::VCardForSpatialAggregate is actually
+                // VCardUnsupliedEnergy.
+                // This means that, here :
+                // - for OverallCost, we sum the hourly values of var OverallCost for each
+                //   district's areas.
+                // - for LOLD, we sum the hourly values of var UNSP. ENRG for each district's areas
                 allVars.template computeSpatialAggregateWith<
-                  typename VCardType::VCardForSpatialAggregate> //<typename VCardType::VCardOrigin>
-                  (pValuesForTheCurrentYear[numSpace], *i /* the current area */, numSpace);
+                  typename VCardType::VCardForSpatialAggregate>(pValuesForTheCurrentYear[numSpace],
+                                                                *i /* the current area */,
+                                                                numSpace);
             }
 
             // The spatial cluster may be an average
@@ -442,6 +460,8 @@ private:
             if (VCardType::VCardOrigin::spatialAggregate
                 & Category::spatialAggregateSumThen1IfPositive)
             {
+                // This case applies (for instance) if VarT is LOLD : if any area in the district
+                // has any unsupplied E (even tiny), LOLD of district is 1.
                 VariableAccessorType::SetTo1IfPositive(pValuesForTheCurrentYear[numSpace]);
             }
             if (VCardType::VCardOrigin::spatialAggregate & Category::spatialAggregateOr)

@@ -71,6 +71,7 @@ struct InputFixture
         storagesForRemix.clear();
         storagesForRemix.push_back(sts_1.createSTS(UnsupE));
         storagesForRemix.push_back(sts_2.createSTS(UnsupE));
+
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
     }
 
@@ -98,7 +99,7 @@ BOOST_AUTO_TEST_CASE(creating_an_STS_with_unsup_having_a_wrong_size_leads_to_exc
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(creating_2_STS_of_different_sizes___checking_input_of_algo_leads_to_exception)
+BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_algo_raises_exception)
 {
     std::vector<double> Load(5);
     std::vector<double> TotaGenWithoutStorage(5);
@@ -110,7 +111,7 @@ BOOST_AUTO_TEST_CASE(creating_2_STS_of_different_sizes___checking_input_of_algo_
     STS_holder<5> sts_holder_1;
     auto sts_1 = sts_holder_1.createSTS(unsupE_1);
 
-    // Creating sts_1 for 3 hours
+    // Creating sts_2 for 3 hours
     std::vector<double> unsupE_2(3, 0.);
     STS_holder<3> sts_holder_2;
     auto sts_2 = sts_holder_2.createSTS(unsupE_2);
