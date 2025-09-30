@@ -28,12 +28,22 @@
 #include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
+#include <antares/exception/LoadingError.hpp>
 #include <antares/series/series.h>
 #include <antares/solver/ts-generator/prepro.h>
 #include <antares/study/version.h>
 #include <antares/writer/i_writer.h>
 
 #include "../fwd.h"
+
+namespace Antares::Error
+{
+class ReadingStudy final: public LoadingError
+{
+public:
+    ReadingStudy();
+};
+} // namespace Antares::Error
 
 namespace Antares::Data
 {

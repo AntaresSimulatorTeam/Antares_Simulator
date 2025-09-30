@@ -41,10 +41,6 @@ public:
 
     [[nodiscard]] LinearProblemApi::MipStatus getStatus() const override;
     [[nodiscard]] double getObjectiveValue() const override;
-    [[nodiscard]] double getOptimalValue(const LinearProblemApi::IMipVariable* var) const override;
-    [[nodiscard]] std::vector<double> getOptimalValues(
-      const std::vector<LinearProblemApi::IMipVariable*>& vars) const override;
-    [[nodiscard]] const std::map<std::string, double>& getOptimalValues() const override;
 
 private:
     operations_research::MPSolver::ResultStatus status_;

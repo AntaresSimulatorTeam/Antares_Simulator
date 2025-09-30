@@ -738,22 +738,6 @@ struct MockMipSolution: IMipSolution
     {
         return 11.18;
     }
-
-    [[nodiscard]] double getOptimalValue(const IMipVariable* var) const override
-    {
-        return 11.18;
-    }
-
-    [[nodiscard]] std::vector<double> getOptimalValues(
-      const std::vector<IMipVariable*>& vars) const override
-    {
-        return std::vector(vars.size(), 11.18);
-    }
-
-    [[nodiscard]] const std::map<std::string, double>& getOptimalValues() const override
-    {
-        return {};
-    }
 };
 
 struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture

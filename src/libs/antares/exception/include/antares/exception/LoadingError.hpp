@@ -50,12 +50,6 @@ public:
     explicit StudyFolderContainsNonASCIIchars(const std::string& folder);
 };
 
-class ReadingStudy final: public LoadingError
-{
-public:
-    ReadingStudy();
-};
-
 class NoAreas final: public LoadingError
 {
 public:
@@ -184,24 +178,6 @@ class CommandLineArguments final: public LoadingError
 {
 public:
     explicit CommandLineArguments(uint errors);
-};
-
-class IncompatibleSimulationModeForAdqPatch final: public LoadingError
-{
-public:
-    IncompatibleSimulationModeForAdqPatch();
-};
-
-class NoAreaInsideAdqPatchMode final: public LoadingError
-{
-public:
-    NoAreaInsideAdqPatchMode();
-};
-
-class IncompatibleHurdleCostCSR final: public LoadingError
-{
-public:
-    IncompatibleHurdleCostCSR();
 };
 
 class IncompatibleOutputOptions final: public LoadingError
