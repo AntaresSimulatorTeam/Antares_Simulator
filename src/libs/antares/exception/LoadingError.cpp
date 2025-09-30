@@ -34,11 +34,6 @@ StudyFolderContainsNonASCIIchars::StudyFolderContainsNonASCIIchars(const std::st
 {
 }
 
-ReadingStudy::ReadingStudy():
-    LoadingError("Got a fatal error reading the study.")
-{
-}
-
 NoAreas::NoAreas():
     LoadingError("No area found. A valid study contains contains at least one.")
 {

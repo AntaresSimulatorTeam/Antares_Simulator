@@ -38,6 +38,14 @@ namespace fs = std::filesystem;
 
 #define SEP (IO::Separator)
 
+namespace Antares::Error
+{
+ReadingStudy::ReadingStudy():
+    LoadingError("Got a fatal error reading the study.")
+{
+}
+} // namespace Antares::Error
+
 namespace Antares::Data
 {
 AreaLink::AreaLink():

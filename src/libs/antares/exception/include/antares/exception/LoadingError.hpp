@@ -50,12 +50,6 @@ public:
     explicit StudyFolderContainsNonASCIIchars(const std::string& folder);
 };
 
-class ReadingStudy final: public LoadingError
-{
-public:
-    ReadingStudy();
-};
-
 class NoAreas final: public LoadingError
 {
 public:
