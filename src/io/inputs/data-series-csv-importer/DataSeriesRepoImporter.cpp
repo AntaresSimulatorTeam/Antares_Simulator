@@ -163,7 +163,13 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
         }
         start = endLine + 1;
     }
-
+    if (lineCount != lineNumber)
+    {
+        for (auto& col: columns)
+        {
+            col.resize(lineNumber);
+        }
+    }
     return columns;
 }
 
