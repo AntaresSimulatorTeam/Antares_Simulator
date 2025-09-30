@@ -179,7 +179,6 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
             lineLen--;
         }
 
-
         // initialize columns on first row
         if (columns.empty())
         {
@@ -192,7 +191,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
             }
             columns.resize(row.size());
 
-            for (auto colIndex = 0; colIndex < columns.size(); ++colIndex)
+            for (std::size_t colIndex = 0; colIndex < columns.size(); ++colIndex)
             {
                 auto& column = columns[colIndex];
                 column.resize(lineCount);
