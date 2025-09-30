@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(one_line_one_column)
 
 BOOST_AUTO_TEST_CASE(one_line_two_columns)
 {
-    writeFile("one_by_two.csv", "123,456.789\n");
+    writeFile("one_by_two.csv", "123,456.789");
     auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, ',');
     const auto& one_by_two = repo.getDataSeries("one_by_two");
     BOOST_CHECK_EQUAL(one_by_two.name(), "one_by_two");
