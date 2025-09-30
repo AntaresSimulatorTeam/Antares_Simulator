@@ -58,46 +58,11 @@ inline void SkipWhiteSpaceAndSeparator(const char*& ptr, const char* last, char 
     }
 }
 
-static std::vector<double> ParseFirstRow(const char* first,
-                                         const char* last,
-                                         char sep = ' ',
-                                         const std::string& errorMessagePrefix = "")
-{
-    std::vector<double> row;
-
-    const char* ptr = first;
-
-    while (ptr < last)
-    {
-        SkipWhiteSpaceAndSeparator(ptr, last, sep);
-
-        // If we've reached the end, break
-        if (ptr >= last)
-        {
-            break;
-        }
-
-        double val = 0.;
-        const char* next = ParseOneDouble(ptr, last, val, errorMessagePrefix);
-        // Check if we parsed anything
-        if (next == ptr)
-        {
-            // Skip invalid characters and try again
-            ++ptr;
-            continue;
-        }
-
-        row.push_back(val);
-        ptr = next;
-    }
-
-    return row;
-}
-
-static void ParseRow(const char* first,
+static bool ParseRow(const char* first,
                      const char* last,
                      std::vector<std::vector<double>>& columns,
                      unsigned rowIndex,
+                     unsigned rowCount,
                      char sep = ' ',
                      const std::string& errorMessagePrefix = "")
 {
@@ -122,23 +87,36 @@ static void ParseRow(const char* first,
             ++ptr;
             continue;
         }
-        if (colIndex < columns.size())
+        // initialize columns on first row
+        if (rowIndex == 0)
         {
-            columns[colIndex][rowIndex] = val;
+            std::vector<double> col(rowCount);
+            col[rowIndex] = val;
+            columns.emplace_back(std::move(col));
             ptr = next;
             ++colIndex;
         }
         else
         {
-            throw std::invalid_argument(errorMessagePrefix
-                                        + ": rows have inconsistent number of columns");
+            if (colIndex < columns.size())
+            {
+                columns[colIndex][rowIndex] = val;
+                ptr = next;
+                ++colIndex;
+            }
+            else
+            {
+                throw std::invalid_argument(errorMessagePrefix
+                                            + ": rows have inconsistent number of columns");
+            }
         }
     }
-    if (colIndex != columns.size())
+    if (rowIndex != 0 && colIndex != columns.size())
     {
         throw std::invalid_argument(errorMessagePrefix
                                     + ": rows have inconsistent number of columns");
     }
+    return colIndex != 0;
 }
 
 static std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, char sep)
@@ -179,33 +157,11 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
             lineLen--;
         }
 
-
-        // initialize columns on first row
-        if (columns.empty())
+        if (ParseRow(start, start + lineLen, columns, lineNumber, lineCount, sep, fileName))
         {
-            auto row = ParseFirstRow(start, start + lineLen, sep, fileName);
-
-            // skip empty line
-            if (row.empty())
-            {
-                continue;
-            }
-            columns.resize(row.size());
-
-            for (auto colIndex = 0; colIndex < columns.size(); ++colIndex)
-            {
-                auto& column = columns[colIndex];
-                column.resize(lineCount);
-                column[0] = row[colIndex];
-            }
+            ++lineNumber;
         }
-        else
-        {
-            ParseRow(start, start + lineLen, columns, lineNumber, sep, fileName);
-        }
-
         start = endLine + 1;
-        ++lineNumber;
     }
 
     return columns;
