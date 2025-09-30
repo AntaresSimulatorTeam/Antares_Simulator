@@ -35,6 +35,12 @@ IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR():
     LoadingError("Incompatible options include.hurdleCost and curtailmentSharing.includeHurdleCost")
 {
 }
+
+IncompatibleSimulationModeForAdqPatch::IncompatibleSimulationModeForAdqPatch():
+    LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
+{
+}
+
 } // namespace Antares::Error
 
 namespace Antares::Data::AdequacyPatch

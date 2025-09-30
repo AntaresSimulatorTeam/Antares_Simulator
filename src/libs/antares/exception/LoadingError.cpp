@@ -183,11 +183,6 @@ CommandLineArguments::CommandLineArguments(uint errors):
 {
 }
 
-IncompatibleSimulationModeForAdqPatch::IncompatibleSimulationModeForAdqPatch():
-    LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
-{
-}
-
 IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text):
     LoadingError(text)
 {

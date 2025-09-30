@@ -180,12 +180,6 @@ public:
     explicit CommandLineArguments(uint errors);
 };
 
-class IncompatibleSimulationModeForAdqPatch final: public LoadingError
-{
-public:
-    IncompatibleSimulationModeForAdqPatch();
-};
-
 class IncompatibleOutputOptions final: public LoadingError
 {
 public:

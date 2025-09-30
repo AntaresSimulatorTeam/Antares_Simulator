@@ -42,6 +42,13 @@ class IncompatibleHurdleCostCSR final: public LoadingError
 public:
     IncompatibleHurdleCostCSR();
 };
+
+class IncompatibleSimulationModeForAdqPatch final: public LoadingError
+{
+public:
+    IncompatibleSimulationModeForAdqPatch();
+};
+
 } // namespace Antares::Error
 
 namespace Antares::Data::AdequacyPatch
