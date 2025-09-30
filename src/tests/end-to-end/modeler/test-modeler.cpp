@@ -110,8 +110,8 @@ public:
 
     Antares::Modeler::Data loadAll() override
     {
-        auto objective = fixture.variable("x");
-        auto var_node = fixture.variable("x");
+        auto objective = fixture.variable("x", 0);
+        auto var_node = fixture.variable("x", 0);
         auto zero = fixture.literal(0);
         auto ct_node = fixture.nodes.template create<
           Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
