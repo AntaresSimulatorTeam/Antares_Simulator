@@ -145,9 +145,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a13623a3a63da5fa15a050c052fa95839"><td class="memItemLeft" align="right" valign="top"><a id="a13623a3a63da5fa15a050c052fa95839"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copyGenerationTS</b> (const <a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html">DataSeriesHydro</a> &amp;source)</td></tr>
 <tr class="separator:a13623a3a63da5fa15a050c052fa95839"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ead368acbd776d6616bf4d71ddf1677"><td class="memItemLeft" align="right" valign="top"><a id="a2ead368acbd776d6616bf4d71ddf1677"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>copyMaxPowerTS</b> (const <a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html">DataSeriesHydro</a> &amp;source)</td></tr>
-<tr class="separator:a2ead368acbd776d6616bf4d71ddf1677"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Data</h2></td></tr>
 <tr class="memitem:a93a0b52ec251f04201b93278b6e644b1"><td class="memItemLeft" align="right" valign="top"><a id="a93a0b52ec251f04201b93278b6e644b1"></a>
@@ -190,6 +187,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>LoadMaxPower</b> (con
 <tr class="memitem:a9059611c7cee449d1916ad462cd60536"><td class="memItemLeft" align="right" valign="top"><a id="a9059611c7cee449d1916ad462cd60536"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>buildHourlyMaxPowerFromDailyTS</b> (const <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;::ColumnType &amp;DailyMaxGenPower, const <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;::ColumnType &amp;DailyMaxPumpPower)</td></tr>
 <tr class="separator:a9059611c7cee449d1916ad462cd60536"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d05de80cabc362f9a2f17f3ae929b88"><td class="memItemLeft" align="right" valign="top"><a id="a4d05de80cabc362f9a2f17f3ae929b88"></a>
+<a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getDailyMaxGenPowerFromHourlyTS</b> ()</td></tr>
+<tr class="separator:a4d05de80cabc362f9a2f17f3ae929b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab86670851635b2ec0fb0a6bec0833043"><td class="memItemLeft" align="right" valign="top"><a id="ab86670851635b2ec0fb0a6bec0833043"></a>
+<a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getDailyMaxPumpPowerFromHourlyTS</b> ()</td></tr>
+<tr class="separator:ab86670851635b2ec0fb0a6bec0833043"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ab15d36fd0a050b8f358197178c7d9f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a5ab15d36fd0a050b8f358197178c7d9f">saveToFolder</a> (const AreaName &amp;areaID, const AnyString &amp;folder, Parameters::Compatibility::HydroPmax hydroPmax) const</td></tr>
 <tr class="memdesc:a5ab15d36fd0a050b8f358197178c7d9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save data series for hydro into a folder (<code>input/hydro/series</code>)  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a5ab15d36fd0a050b8f358197178c7d9f">More...</a><br /></td></tr>
 <tr class="separator:a5ab15d36fd0a050b8f358197178c7d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
