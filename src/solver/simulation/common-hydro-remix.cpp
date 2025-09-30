@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -396,23 +396,20 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
           const auto dtgMrg = extractDTG_MRG(area, numSpace);
 
+          ListStorageForRemix listStorage;
+
           auto hydroStorage = extractHydroForRemix(area, problem, firstHourOfWeek);
-
-          checkInput(load, unsupE, spillage, dtgMrg, hydroStorage->initWithdrawal());
-
-          ListStorageForRemix listStorage = {hydroStorage};
+          listStorage.push_back(hydroStorage);
 
           if (includeSTS)
           {
               auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
-
-              // Checking input data is missing for all STS. To be done.
-
               listStorage.insert(listStorage.end(), stsForRemix.begin(), stsForRemix.end());
           }
 
           try
           {
+              checkInput(load, unsupE, spillage, dtgMrg, listStorage);
               shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage);
           }
           catch (std::exception& e)

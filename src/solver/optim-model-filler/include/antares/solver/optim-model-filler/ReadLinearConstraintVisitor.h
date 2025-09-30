@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -51,7 +51,7 @@ struct LinearConstraint
     unsigned int timeStep = 0;
 };
 
-class ReadLinearConstraintVisitor
+class ReadLinearConstraintVisitor final
     : public Expressions::Visitors::NodeVisitor<std::vector<LinearConstraint>>
 {
 public:

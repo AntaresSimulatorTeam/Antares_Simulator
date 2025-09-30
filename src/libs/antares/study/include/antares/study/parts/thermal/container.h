@@ -27,7 +27,7 @@
 
 namespace Antares::Data
 {
-class PartThermal
+class PartThermal final
 {
 public:
     //! \name Constructor

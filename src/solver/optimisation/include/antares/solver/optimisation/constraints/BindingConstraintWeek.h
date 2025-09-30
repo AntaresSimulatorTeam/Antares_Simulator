@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -33,7 +33,7 @@ struct BindingConstraintWeekData
  * represent 'Hourly Binding Constraint' type
  */
 
-class BindingConstraintWeek: private ConstraintFactory
+class BindingConstraintWeek final: private ConstraintFactory
 {
 public:
     BindingConstraintWeek(ConstraintBuilder& builder, BindingConstraintWeekData& data):

@@ -40,7 +40,7 @@ struct boost::hash<Antares::Optimization::PartialKey>
 namespace Antares::Optimization
 {
 
-class FullKey
+class FullKey final
 {
 public:
     FullKey(const std::string& component, const std::string& variable);
@@ -68,7 +68,7 @@ private:
     std::optional<unsigned int> timestep;
 };
 
-class FullKeyHash
+class FullKeyHash final
 {
 public:
     std::size_t operator()(const FullKey& p) const;

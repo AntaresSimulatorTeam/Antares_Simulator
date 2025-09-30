@@ -30,7 +30,7 @@
  */
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
-class DataSeriesRepoImporter
+class DataSeriesRepoImporter final
 {
 public:
     DataSeriesRepoImporter() = delete; // must not be used

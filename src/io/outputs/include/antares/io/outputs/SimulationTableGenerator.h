@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -71,7 +71,7 @@ Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
   Antares::Expressions::Visitors::TimeIndex timeIndex,
   bool forceExportForScenarioIndex);
 
-std::string BuildModelerConstraintName(const std::string& cid,
+std::string BuildModelerConstraintName(const std::string& componentId,
                                        const std::string& cname,
                                        const std::optional<unsigned>& ts);
 
@@ -104,6 +104,26 @@ void addPortEntries(ISimulationTable& simulationTable,
                     bool forceExportForScenarioIndex,
                     const Antares::Optimisation::EvaluationContextProvider& contextProvider);
 
+void addExtraOutputEntries(ISimulationTable& simulationTable,
+                           const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                           const Antares::ModelerStudy::SystemModel::Component& component,
+                           unsigned currentBlock,
+                           const TimeConversionMode& timeConversionMode,
+                           std::optional<unsigned> scenario,
+                           bool forceExportForScenarioIndex,
+                           const Antares::Optimisation::EvaluationContextProvider& contextProvider);
+
+void addEntriesForNode(ISimulationTable& simulationTable,
+                       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                       const Antares::ModelerStudy::SystemModel::Component& component,
+                       unsigned currentBlock,
+                       const TimeConversionMode& timeConversionMode,
+                       std::optional<unsigned> scenario,
+                       bool forceExportForScenarioIndex,
+                       const Antares::Optimisation::EvaluationContextProvider& contextProvider,
+                       const std::string& componentId,
+                       const std::string& outputName,
+                       const Antares::Expressions::Nodes::Node* rootNode);
 /**
  * Fill modeler outputs in the simulation table
  * @param simulationTable the simulation table to fill

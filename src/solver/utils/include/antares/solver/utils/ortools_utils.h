@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -84,7 +84,7 @@ MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName);
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
 
-class OrtoolsUtils
+class OrtoolsUtils final
 {
 public:
     struct SolverNames

@@ -175,7 +175,7 @@ public:
     }
 };
 
-class IntraModalConsistencyChecker
+class IntraModalConsistencyChecker final
 {
 public:
     IntraModalConsistencyChecker(const TimeSeriesType ts,

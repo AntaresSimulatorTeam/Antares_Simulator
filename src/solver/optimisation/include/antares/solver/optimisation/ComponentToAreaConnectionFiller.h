@@ -38,7 +38,8 @@ namespace Antares::Optimization
  * This class is responsible for adding variables, constraints, and objectives to the linear problem
  * based on the connections between components and areas in the Antares study.
  */
-class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
+class ComponentToAreaConnectionFiller final
+    : public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
     explicit ComponentToAreaConnectionFiller(
@@ -47,13 +48,10 @@ public:
       const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_);
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Optimisation::LinearProblemApi::ILinearProblemData& data,
                         const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:

@@ -28,7 +28,7 @@ namespace Antares::Data::Load
 /*!
 ** \brief Prepro Load
 */
-class Prepro
+class Prepro final
 {
 public:
     //! \name Constructor & Destructor

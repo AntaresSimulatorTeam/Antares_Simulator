@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -25,7 +25,7 @@
 
 namespace Antares::Optimization
 {
-class PartialKey
+class PartialKey final
 {
 public:
     PartialKey(const std::string& component_id, const std::string& variable_id);
@@ -41,7 +41,7 @@ private:
     std::string variable_id;
 };
 
-class PartialKeyHash
+class PartialKeyHash final
 {
 public:
     std::size_t operator()(const PartialKey& p) const;

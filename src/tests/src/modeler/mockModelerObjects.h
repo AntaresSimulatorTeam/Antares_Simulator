@@ -23,6 +23,7 @@
 #include <utility>
 
 #include "antares/expressions/IEvaluationContextProvider.h"
+#include "antares/study/system-model/component.h"
 
 class MockEvaluationContextProvider: public Antares::Expressions::IEvaluationContextProvider
 {
@@ -36,8 +37,21 @@ public:
     }
 
     Antares::Expressions::Visitors::EvaluationContext provide(
-      const Antares::ModelerStudy::SystemModel::Component& component) const
+      [[maybe_unused]] const Antares::ModelerStudy::SystemModel::Component& component) const
     {
         return context_;
     }
 };
+
+Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
+Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
+Antares::ModelerStudy::SystemModel::Component createComponent(const std::string& id = "component");
+Antares::ModelerStudy::SystemModel::Component createComponent(
+  const std::string& id,
+  std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameter_values);
+
+std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
+build_context_parameter_with(const std::string& id,
+                             const std::string& value,
+                             const Antares::Expressions::Visitors::ParameterType& type = Antares::
+                               Expressions::Visitors::ParameterType::CONSTANT);

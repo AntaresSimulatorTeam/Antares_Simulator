@@ -29,7 +29,7 @@
 
 namespace Antares::Data
 {
-class PartRenewable
+class PartRenewable final
 {
 public:
     //! \name Constructor

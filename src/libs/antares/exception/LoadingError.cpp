@@ -34,11 +34,6 @@ StudyFolderContainsNonASCIIchars::StudyFolderContainsNonASCIIchars(const std::st
 {
 }
 
-ReadingStudy::ReadingStudy():
-    LoadingError("Got a fatal error reading the study.")
-{
-}
-
 NoAreas::NoAreas():
     LoadingError("No area found. A valid study contains contains at least one.")
 {
@@ -185,21 +180,6 @@ InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
 CommandLineArguments::CommandLineArguments(uint errors):
     LoadingError("Invalid command-line arguments provided : " + std::to_string(errors)
                  + " error(s) found")
-{
-}
-
-IncompatibleSimulationModeForAdqPatch::IncompatibleSimulationModeForAdqPatch():
-    LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
-{
-}
-
-NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode():
-    LoadingError("Minimum one area must be inside adequacy patch mode when using adequacy patch")
-{
-}
-
-IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR():
-    LoadingError("Incompatible options include.hurdleCost and curtailmentSharing.includeHurdleCost")
 {
 }
 

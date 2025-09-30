@@ -25,7 +25,7 @@
 
 namespace Antares::Error
 {
-class InvalidArgumentError: public std::invalid_argument
+class InvalidArgumentError final: public std::invalid_argument
 {
 public:
     using std::invalid_argument::invalid_argument;

@@ -34,20 +34,20 @@ LegacyFiller::LegacyFiller(const PROBLEME_HEBDO* problemeHebdo, bool namedProble
 {
 }
 
-void LegacyFiller::addVariables(ILinearProblem& pb, ILinearProblemData&, const FillContext&)
+void LegacyFiller::addVariables(ILinearProblem& pb, const FillContext&)
 {
     // Create the variables and set objective cost.
     CopyVariables(pb);
 }
 
-void LegacyFiller::addConstraints(ILinearProblem& pb, ILinearProblemData&, const FillContext&)
+void LegacyFiller::addConstraints(ILinearProblem& pb, const FillContext&)
 {
     // Create constraints and set coefs
     CopyRows(pb);
     CopyMatrix(pb);
 }
 
-void LegacyFiller::addObjective(ILinearProblem&, ILinearProblemData&, const FillContext&)
+void LegacyFiller::addObjective(ILinearProblem&, const FillContext&)
 {
     // nothing to do: objective coefficients are set along with variables definition
 }

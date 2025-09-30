@@ -25,7 +25,7 @@
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
-class Scenario: public LinearProblemApi::IScenario
+class Scenario final: public LinearProblemApi::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -34,13 +34,13 @@ public:
 
     void setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber);
 
-    class AlreadyExists: public std::invalid_argument
+    class AlreadyExists final: public std::invalid_argument
     {
     public:
         explicit AlreadyExists(const std::string& groupId);
     };
 
-    class ScenarioNotExist: public std::invalid_argument
+    class ScenarioNotExist final: public std::invalid_argument
     {
     public:
         explicit ScenarioNotExist(const std::string& groupId, Year year);

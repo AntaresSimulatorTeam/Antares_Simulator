@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -30,7 +30,7 @@ namespace Benchmarking
 {
 class FileContent;
 
-class StudyInfoCollector
+class StudyInfoCollector final
 {
 public:
     StudyInfoCollector(const Antares::Data::Study& study):
@@ -63,7 +63,7 @@ struct OptimizationInfo
     unsigned int nbConstraints = 0;
 };
 
-class SimulationInfoCollector
+class SimulationInfoCollector final
 {
 public:
     SimulationInfoCollector(const OptimizationInfo& optInfo):

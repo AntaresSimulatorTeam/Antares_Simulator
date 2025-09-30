@@ -147,10 +147,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     // this limitation must be lifted later,
     // when appropriate solvers (e.g with warm start) is integrated.
     // TODO try to make this cleaner
-    linearProblemBuilder.build(ortoolsProblem,
-                               problemeHebdo->modelerData ? *problemeHebdo->modelerData->dataSeries
-                                                          : dummy_data,
-                               fillCtx);
+    linearProblemBuilder.build(ortoolsProblem, fillCtx);
 
     measure.tick();
 
