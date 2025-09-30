@@ -21,11 +21,12 @@ class VariableNode final: public Leaf<std::string>
 public:
     explicit VariableNode(
       const std::string& value,
-      Optimisation::TimeIndex time_index = Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
-      unsigned int index = 0):
+      unsigned int index,
+      Optimisation::TimeIndex time_index = Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
-        time_index_(time_index),
-        index_(index)
+        index_(index),
+        time_index_(time_index)
+
     {
     }
 
@@ -48,6 +49,6 @@ private:
     // Is the variable time-dependent / scenario-dependent ?
     const Optimisation::TimeIndex time_index_;
     // Local index within the component, starting from 0
-    const unsigned int index_;
+    const unsigned int index_ = 0;
 };
 } // namespace Antares::Expressions::Nodes

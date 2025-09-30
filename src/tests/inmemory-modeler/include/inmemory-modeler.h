@@ -105,6 +105,7 @@ struct LinearProblemBuildingFixture
 
     Antares::Expressions::Nodes::Node* variable(
       const std::string& varId,
+      unsigned int index,
       const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
         CONSTANT_IN_TIME_AND_SCENARIO);
 
