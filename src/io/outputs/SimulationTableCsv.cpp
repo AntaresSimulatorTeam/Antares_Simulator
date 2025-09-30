@@ -81,7 +81,6 @@ std::string extractFromOptional(const std::optional<T>& option)
 void SimulationTableCsv::write()
 {
     const size_t row_count = storage_.rowCount();
-    // const auto& nameToIndex = storage_.columnsNameToIndex();
     const auto& columns = storage_.columns();
 
     for (size_t row = 0; row < row_count; ++row)
@@ -97,6 +96,26 @@ void SimulationTableCsv::write()
             buffer_ << col->toString(row);
         }
         buffer_ << '\n';
+    }
+}
+
+void SimulationTableCsv::exportTable(std::vector<std::string>& header,
+                                     std::vector<std::vector<std::string>>& rows) const
+{
+    header = storage_.columnNames();
+    const size_t row_count = storage_.rowCount();
+    const auto& columns = storage_.columns();
+
+    rows.clear();
+    rows.resize(row_count);
+    for (size_t r = 0; r < row_count; ++r)
+    {
+        auto& outRow = rows[r];
+        outRow.reserve(columns.size());
+        for (const auto& col : columns)
+        {
+            outRow.push_back(col->toString(r));
+        }
     }
 }
 

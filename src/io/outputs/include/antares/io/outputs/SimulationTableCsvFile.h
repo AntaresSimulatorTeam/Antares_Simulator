@@ -33,5 +33,5 @@ public:
     void write() override;
 
 private:
-    std::ofstream file_;
+    std::filesystem::path output_file_;
 };

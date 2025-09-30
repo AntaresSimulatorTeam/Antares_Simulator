@@ -22,6 +22,8 @@
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 
 #include <antares/logs/logs.h>
+#include <antares/writer/table_writer_factory.h>
+#include <antares/writer/table_format.h>
 
 SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outputFolder,
                                                const std::string& simulationId):
@@ -33,17 +35,23 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
     }
     const auto simulationTableSuffix = std::string(simulationId.empty() ? "" : "--" + simulationId)
                                        + ".csv";
-    const auto simulationTableFile = outputFolder / ("simulation_table" + simulationTableSuffix);
-    file_.open(simulationTableFile);
-    if (!file_.is_open())
-    {
-        throw std::runtime_error("Cannot open file: " + simulationTableFile.string());
-    }
-    Antares::logs.info() << "Simulation table is written in: " << simulationTableFile.string();
+    output_file_ = outputFolder / ("simulation_table" + simulationTableSuffix);
+    Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
 void SimulationTableCsvFile::write()
 {
-    SimulationTableCsv::write();
-    file_ << buffer();
+    // Build table vectors
+    std::vector<std::string> header;
+    std::vector<std::vector<std::string>> rows;
+    exportTable(header, rows);
+
+    // Choose writer based on file extension
+    Antares::Writer::TableFormat fmt = Antares::Writer::TableFormat::CSV;
+    if (output_file_.extension() == ".parquet")
+    {
+        fmt = Antares::Writer::TableFormat::Parquet;
+    }
+    auto writer = Antares::Writer::makeTableWriter(fmt);
+    writer->writeTable(output_file_, header, rows);
 }
