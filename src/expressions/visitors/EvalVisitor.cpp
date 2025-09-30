@@ -92,7 +92,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
-          node->value(),
+          node->Index(),
           1 /* single timestep*/);
         return EvaluationResult(componentVariables[0]->solutionValue());
     }
@@ -100,7 +100,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> varValues(nbTimeStep, 0.0);
     const std::span componentVariables = optimContainer_.getComponentVariable(component_,
-                                                                              node->value(),
+                                                                              node->Index(),
                                                                               nbTimeStep);
     for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
     {

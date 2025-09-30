@@ -137,7 +137,7 @@ public:
       const Nodes::VariableNode* node) override
     {
         const auto variableStart = optimEntityContainer_.getVariableStartColumn(component_,
-                                                                                node->value());
+                                                                                node->Index());
         if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
         {
             Antares::Optimization::LinearExpression out;

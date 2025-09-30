@@ -40,20 +40,19 @@ void OptimEntityContainer::addFromSystemComponent(
 {
     const auto* model = component.getModel();
     const auto& variables = model->Variables();
-    std::unordered_map<std::string, unsigned int> variableIndexMap;
-    variableIndexMap.reserve(variables.size());
+    std::vector<unsigned int> modelVariableGlobalIndices;
+    modelVariableGlobalIndices.resize(variables.size());
 
-    unsigned int variableLocalIndex = 0;
-    for (const auto& variable: variables)
+    for (auto variableLocalIndex = 0; variableLocalIndex < variables.size(); ++variableLocalIndex)
     {
-        variableIndexMap[variable.Id()] = variableGlobalIndex_; // used in
+        modelVariableGlobalIndices[variableLocalIndex] = variableGlobalIndex_; // used in
         // ReadlinearExpressionVisitor
         ++variableGlobalIndex_;
         ++variableLocalIndex;
     }
     optimComponents_.push_back(
       {.index = component.Index(),
-       .variableIndexMap = variableIndexMap,
+       .modelVariableGlobalIndices = modelVariableGlobalIndices,
        .evaluationContext = Optimisation::EvaluationContext(&component,
                                                             data_,
                                                             &scenarioGroupRepository_->scenario(

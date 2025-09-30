@@ -92,13 +92,15 @@ void addVariableEntries(ISimulationTable& simulationTable,
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
     const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
-    for (const auto& modelVar: component.getModel()->Variables())
+    const auto& variables = component.getModel()->Variables();
+    for (auto varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
+        const auto& modelVar = variables[varIndex];
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
         const std::span componentVariables = optimEntityContainer.getComponentVariable(
           component,
-          modelVar.Id(),
+          varIndex,
           fillContext.getLocalNumberOfTimeSteps());
 
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)

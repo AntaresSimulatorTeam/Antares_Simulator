@@ -151,14 +151,17 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         }
     }
 
-    for (const auto& var: model_.variables)
+    const auto& variables = model_.variables;
+    for (auto index = 0; index < variables.size(); ++index)
     {
+        const auto& var = variables[index];
         if (var.id == identifier)
         {
             return static_cast<Node*>(
               registry_.create<VariableNode>(var.id,
                                              convertToTimeIndex(var.time_dependent,
-                                                                var.scenario_dependent)));
+                                                                var.scenario_dependent),
+                                             index));
         }
     }
     throw NoParameterOrVariableWithThisName(identifier);
