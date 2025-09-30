@@ -102,14 +102,15 @@ BOOST_AUTO_TEST_CASE(one_line_two_columns)
 {
     writeFile("one_by_two.csv", "123,456.789\n");
     auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, ',');
-    BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").name(), "one_by_two");
-    BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").getData(1, 0), 123);
-    BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").getData(2, 0), 456.789);
+    const auto& one_by_two = repo.getDataSeries("one_by_two");
+    BOOST_CHECK_EQUAL(one_by_two.name(), "one_by_two");
+    BOOST_CHECK_EQUAL(one_by_two.getData(1, 0), 123);
+    BOOST_CHECK_EQUAL(one_by_two.getData(2, 0), 456.789);
     BOOST_CHECK_EXCEPTION(
-      (void)repo.getDataSeries("one_by_two").getData(3, 0),
+      (void)one_by_two.getData(3, 0),
       TimeSeriesSet::RankTooBig,
       checkMessage("TS set 'one_by_two' : TS number 3 exceeds TS set's number of columns (2)"));
-    BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("one_by_two").getData(2, 1),
+    BOOST_CHECK_EXCEPTION((void)one_by_two.getData(2, 1),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'one_by_two' : hour 1 exceeds TS set's height"));
 }
