@@ -154,7 +154,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
     std::string fieldId = node->getFieldName();
 
     const auto* nodeToVisit = component_.nodeAtPortField(portId, fieldId);
-    return dispatch(nodeToVisit); 
+    return dispatch(nodeToVisit);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)

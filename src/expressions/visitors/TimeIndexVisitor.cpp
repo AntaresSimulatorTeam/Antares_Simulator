@@ -101,7 +101,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* node)
     std::string fieldId = node->getFieldName();
 
     const auto* nodeToVisit = component_.nodeAtPortField(portId, fieldId);
-    return dispatch(nodeToVisit); 
+    return dispatch(nodeToVisit);
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
