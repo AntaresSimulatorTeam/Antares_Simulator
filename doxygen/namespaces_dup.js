@@ -865,7 +865,6 @@ var namespaces_dup =
         [ "LoadingError", "classAntares_1_1Error_1_1LoadingError.html", null ],
         [ "StudyFolderDoesNotExist", "classAntares_1_1Error_1_1StudyFolderDoesNotExist.html", "classAntares_1_1Error_1_1StudyFolderDoesNotExist" ],
         [ "StudyFolderContainsNonASCIIchars", "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars.html", "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars" ],
-        [ "ReadingStudy", "classAntares_1_1Error_1_1ReadingStudy.html", "classAntares_1_1Error_1_1ReadingStudy" ],
         [ "NoAreas", "classAntares_1_1Error_1_1NoAreas.html", "classAntares_1_1Error_1_1NoAreas" ],
         [ "Duplicates", "classAntares_1_1Error_1_1Duplicates.html", "classAntares_1_1Error_1_1Duplicates" ],
         [ "InvalidFileName", "classAntares_1_1Error_1_1InvalidFileName.html", "classAntares_1_1Error_1_1InvalidFileName" ],
@@ -887,13 +886,14 @@ var namespaces_dup =
         [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea" ],
         [ "InvalidParametersForThermalClusters", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters.html", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters" ],
         [ "CommandLineArguments", "classAntares_1_1Error_1_1CommandLineArguments.html", "classAntares_1_1Error_1_1CommandLineArguments" ],
-        [ "IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch" ],
-        [ "NoAreaInsideAdqPatchMode", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode.html", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode" ],
-        [ "IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR" ],
         [ "IncompatibleOutputOptions", "classAntares_1_1Error_1_1IncompatibleOutputOptions.html", "classAntares_1_1Error_1_1IncompatibleOutputOptions" ],
         [ "IncompatibleCO2CostColumns", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns" ],
         [ "IncompatibleFuelCostColumns", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html", "classAntares_1_1Error_1_1IncompatibleFuelCostColumns" ],
-        [ "RuntimeError", "classAntares_1_1Error_1_1RuntimeError.html", null ]
+        [ "RuntimeError", "classAntares_1_1Error_1_1RuntimeError.html", null ],
+        [ "ReadingStudy", "classAntares_1_1Error_1_1ReadingStudy.html", "classAntares_1_1Error_1_1ReadingStudy" ],
+        [ "NoAreaInsideAdqPatchMode", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode.html", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode" ],
+        [ "IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR" ],
+        [ "IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch" ]
       ] ],
       [ "Expressions", null, [
         [ "Nodes", null, [
