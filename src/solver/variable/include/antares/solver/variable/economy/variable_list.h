@@ -25,18 +25,25 @@
 #include "links.h"
 #include "localMatchingRuleViolations.h"
 #include "loldCsr.h"
+#include "lolpCsr.h"
 #include "minDispatchableGenByPlant.h"
 #include "nbOfDispatchedUnits.h"
 #include "nbOfDispatchedUnitsByPlant.h"
+#include "dtgMarginAfterCsr.h"
 #include "operatingCost.h"
 #include "overallCost.h"
 #include "price.h"
+#include "nearPriceCap.h"
+#include "hydroCost.h"
 #include "productionByDispatchablePlant.h"
 #include "productionByRenewablePlant.h"
 #include "profitByPlant.h"
+#include "nonProportionalCost.h"
+#include "npCostByDispatchablePlant.h"
 #include "spilledEnergy.h"
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergyCsr.h"
+#include "max-mrg-csr.h"
 
 // Add here all economic variables to aggregate
 
@@ -52,12 +59,12 @@
       VCardSTstorageLevelsByCluster, VCardSTstorageCashFlowByCluster, VCardUnsupliedEnergy,      \
       VCardUnsupliedEnergyCSR, VCardDomesticUnsuppliedEnergy, VCardLMRViolations,                \
       VCardSpilledEnergy, VCardLOLD, VCardLOLD_CSR, VCardLOLP, VCardNearPriceCap, VCardLOLP_CSR, \
-      VCardAvailableDispatchGen, VCardDispatchableGenMargin, VCardDtgMarginCsr, VCardMarge,      \
-      VCardMaxMrgCsr, VCardNonProportionalCost, VCardNonProportionalCostByDispatchablePlant,     \
+      VCardAvailableDispatchGen, VCardDispatchableGenMargin, VCardDtgMarginCsr, VCardMARGE,      \
+      VCardMAX_MRG_CSR, VCardNonProportionalCost, VCardNonProportionalCostByDispatchablePlant,     \
       VCardNbOfDispatchedUnits, VCardNbOfDispatchedUnitsByPlant, VCardProfitByPlant,             \
       Variable::Economy::Links
 
 #define ECONOMY_SET_OF_AREAS_VARIABLES                                                     \
-    VCardMaxMrg, VCardPriceCSR, VCardNbOfDispatchedUnits, VCardNbOfDispatchedUnitsByPlant, \
+    VCardMARGE, VCardPriceCSR, VCardNbOfDispatchedUnits, VCardNbOfDispatchedUnitsByPlant, \
       VCardOperatingCost, VCardOverallCost, VCardThermalAirPollutantEmissions,             \
       VCardProductionByDispatchablePlant, VCardProductionByRenewablePlant, VCardProfitByPlant
