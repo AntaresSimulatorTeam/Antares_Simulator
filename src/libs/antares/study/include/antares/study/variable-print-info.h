@@ -81,8 +81,8 @@ class AllVariablesPrintInfo;
 class variablePrintInfoCollector final
 {
 public:
-    variablePrintInfoCollector(AllVariablesPrintInfo* allvarsprintinfo);
-    void add(const AnyString& name, uint dataLevel, uint fileLevel);
+    explicit variablePrintInfoCollector(AllVariablesPrintInfo* allvarsprintinfo);
+    void add(const AnyString& name, uint dataLevel, uint fileLevel) const;
 
 private:
     AllVariablesPrintInfo* allvarsinfo;

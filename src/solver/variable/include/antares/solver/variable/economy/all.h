@@ -37,6 +37,7 @@
 #include "nbOfDispatchedUnits.h"
 #include "operatingCost.h"
 #include "overallCost.h"
+#include "overallCostCsr.h"
 #include "priceCSR.h"
 #include "thermalAirPollutantEmissions.h"
 
@@ -66,17 +67,16 @@ liste centralisée using VariablesPerArea = typename
 MakeSpatialAggregate<ECONOMY_VARIABLES>::type;
 
 */
-using VariablesPerSetOfAreas = MakeSpatialAggregate<ECONOMY_VARIABLES>::type;
+using VariablesPerArea = MakeSpatialAggregate<ECONOMY_SINGLE_AREA_VARIABLES>::type;
+using VariablesPerSetOfAreas = MakeSpatialAggregate<ECONOMY_SET_OF_AREAS_VARIABLES>::type;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
-                                // End of variable list
   >
-
   VariablesPerBindingConstraints;
 
 typedef Join<
   // Variables for each area / links attached to the areas
-  Areas<Adequacy::VariablesPerArea>,
+  Areas<Economy::VariablesPerArea>,
   // Variables for each set of areas
   Join<SetsOfAreas<Adequacy::VariablesPerSetOfAreas>,
        // Variables for each binding constraint
