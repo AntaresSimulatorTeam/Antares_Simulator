@@ -63,7 +63,7 @@ library:
         - port: injection_port
           field: flow
           definition: total_gen
-      objectives:
+      objective-contributions:
         - id: objective
           expression: sum(gen_1_fixed_cost * on_off_gen1_p+ gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)
 

@@ -33,7 +33,7 @@ library:
           lower-bound: 0
           upper-bound: max_load
           variable-type: continuous
-      objectives:
+      objective-contributions:
         - id: objective
           expression: sum(curtailment * curtailment_price)
       ports:
