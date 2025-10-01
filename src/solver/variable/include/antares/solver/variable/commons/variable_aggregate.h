@@ -35,18 +35,21 @@ class SpatialAggregate;
 template<typename... Vars>
 using VariablesAggregate = Common::SpatialAggregate<Vars...>;
 
-// Recursive generator for nested SpatialAggregate<A, SpatialAggregate<B, ...> >
-template<typename... Vars>
+// Recursive generator for nested SpatialAggregate<Wrapper1<EndOfList>,
+// SpatialAggregate<Wrapper2<EndOfList>, ...> >
+template<template<typename> class... Vars>
 struct MakeSpatialAggregate;
 
-template<typename First, typename... Rest>
+template<template<typename> class First, template<typename> class... Rest>
 struct MakeSpatialAggregate<First, Rest...>
 {
-    using type = Common::SpatialAggregate<First, typename MakeSpatialAggregate<Rest...>::type>;
+    using type = Common::SpatialAggregate<First<Antares::Solver::Variable::Container::EndOfList>,
+                                          typename MakeSpatialAggregate<Rest...>::type>;
 };
 
-template<typename Last>
+template<template<typename> class Last>
 struct MakeSpatialAggregate<Last>
 {
-    using type = Common::SpatialAggregate<Last, Antares::Solver::Variable::Container::EndOfList>;
+    using type = Common::SpatialAggregate<Last<Antares::Solver::Variable::Container::EndOfList>,
+                                          Antares::Solver::Variable::Container::EndOfList>;
 };
