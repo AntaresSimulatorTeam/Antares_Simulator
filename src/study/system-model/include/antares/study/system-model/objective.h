@@ -31,7 +31,7 @@ namespace Antares::ModelerStudy::SystemModel
 class Objective final
 {
 public:
-    Objective(std::string id, Expression expression):
+    Objective(std::string id, Expression&& expression):
         id_(std::move(id)),
         expression_(std::move(expression))
     {

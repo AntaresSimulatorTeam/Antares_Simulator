@@ -301,7 +301,7 @@ library:
         BOOST_REQUIRE_EQUAL(lib.Models().size(), 7);
         auto& model0 = lib.Models().at("generator");
         BOOST_CHECK_EQUAL(model0.Id(), "generator");
-        BOOST_CHECK_EQUAL(model0.Objectives().at("objective").expression().Value(),
+        BOOST_CHECK_EQUAL(model0.Objectives()[0].expression().Value(),
                           "cost * generation");
         BOOST_CHECK_EQUAL(model0.ExtraOutputs().at("total_cost_in_millions").expression().Value(),
                           "sum(cost * generation) / 1000000");
@@ -470,7 +470,7 @@ library:
         checkConstraint(model6.Constraints().at("Min down time"),
                         "Min down time",
                         "t-d_min_down + 1 <= nb_units_max - nb_on");
-        BOOST_CHECK_EQUAL(model6.Objectives().at("objective").expression().Value(),
+        BOOST_CHECK_EQUAL(model6.Objectives()[0].expression().Value(),
                           "cost * generation");
     }
     catch (const YAML::Exception& e)

@@ -129,7 +129,7 @@ BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 1);
     BOOST_CHECK_EQUAL(lib.Models().at("model1").Id(), "model1");
-    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objectives().at("objective").expression().Value(),
+    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objectives()[0].expression().Value(),
                       "param1");
 }
 

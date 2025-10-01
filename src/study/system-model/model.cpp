@@ -133,7 +133,11 @@ ModelBuilder& ModelBuilder::withId(std::string_view id)
  */
 ModelBuilder& ModelBuilder::withObjectives(std::vector<Objective>&& objectives)
 {
-    fillMapFrom(model_.objectives_, objectives, uniqueIdChecker_);
+    model_.objectives_ = std::move(objectives);
+    for (const auto& obj: model_.objectives_)
+    {
+        uniqueIdChecker_.add(obj.Id());
+    }
     return *this;
 }
 
