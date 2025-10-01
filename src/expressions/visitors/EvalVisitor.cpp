@@ -28,7 +28,6 @@
 #include <antares/solver/optim-model-filler/EvaluationContextProvider.h>
 #include <antares/solver/optim-model-filler/VariableDictionary.h>
 #include "antares/expressions/ShiftVector.h"
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -73,17 +72,17 @@ EvaluationResult EvalVisitor::visit(const Nodes::DivisionNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::EqualNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    return dispatch(node->left()) == dispatch(node->right());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    return dispatch(node->left()) <= dispatch(node->right());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    return dispatch(node->left()) >= dispatch(node->right());
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
@@ -151,7 +150,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
+    const auto* nodeToVisit = component_.nodeAtPortField(portId, fieldId);
+    return dispatch(nodeToVisit);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)

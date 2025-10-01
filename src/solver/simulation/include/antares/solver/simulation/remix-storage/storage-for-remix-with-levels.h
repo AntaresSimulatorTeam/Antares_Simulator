@@ -19,8 +19,8 @@ public:
                               const std::vector<double> lowRuleCurve,
                               const std::vector<double> upRuleCurve,
                               const double initLevel,
-                              const double withdrawalEff = 1,
-                              const double injectionEff = 1);
+                              const double withdrawalEff,
+                              const double injectionEff);
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;

@@ -2,17 +2,7 @@ include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
 set(include_dir ${CMAKE_SOURCE_DIR}/solver/simulation/include)
 
-# Unit tests on hydro remix
 #-----------------------------
-add_boost_test(tests-on-hydro-remix
-        SRC
-            test-hydro-remix.cpp
-        LIBS
-            shave-peaks-by-remix-storage-gen
-            test_utils_unit)
-
-set_target_properties(tests-on-hydro-remix PROPERTIES FOLDER Unit-tests/storage-remix)
-
 # Unit tests on utils
 #-----------------------------
 add_boost_test(tests-on-remix-utils
@@ -26,6 +16,7 @@ add_boost_test(tests-on-remix-utils
 		
 set_target_properties(tests-on-remix-utils PROPERTIES FOLDER Unit-tests/storage-remix)
 
+#---------------------------------------
 # Unit tests on remix algo components
 #---------------------------------------
 add_boost_test(tests-on-shave-peak-by-remix-help
@@ -36,3 +27,28 @@ add_boost_test(tests-on-shave-peak-by-remix-help
             test_utils_unit)
 		
 set_target_properties(tests-on-shave-peak-by-remix-help PROPERTIES FOLDER Unit-tests/storage-remix)
+
+#-----------------------------
+# Unit tests on hydro remix
+#-----------------------------
+add_boost_test(tests-on-hydro-remix
+        SRC
+            test-hydro-remix.cpp
+        LIBS
+            shave-peaks-by-remix-storage-gen
+            test_utils_unit)
+
+set_target_properties(tests-on-hydro-remix PROPERTIES FOLDER Unit-tests/storage-remix)
+
+
+#-----------------------------
+# Unit tests on hydro remix
+#-----------------------------
+add_boost_test(tests-on-multi-storage-remix
+        SRC
+            tests-multi-storage-remix.cpp
+        LIBS
+            shave-peaks-by-remix-storage-gen
+            test_utils_unit)
+
+set_target_properties(tests-on-multi-storage-remix PROPERTIES FOLDER Unit-tests/storage-remix)

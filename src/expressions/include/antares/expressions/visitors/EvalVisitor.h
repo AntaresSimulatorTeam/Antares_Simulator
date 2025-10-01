@@ -21,6 +21,7 @@
 #pragma once
 
 #include <cmath>
+#include <functional>
 #include <sstream>
 #include <variant>
 
@@ -71,6 +72,21 @@ public:
     EvaluationResult operator*(const EvaluationResult& right) const
     {
         return evaluateBinaryOperation(right, std::multiplies<>());
+    }
+
+    EvaluationResult operator==(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::equal_to<>());
+    }
+
+    EvaluationResult operator<=(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::less_equal<>());
+    }
+
+    EvaluationResult operator>=(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::greater_equal<>());
     }
 
     struct SafeDivides
