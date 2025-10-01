@@ -67,7 +67,7 @@ liste centralisée using VariablesPerArea = typename
 MakeSpatialAggregate<ECONOMY_VARIABLES>::type;
 
 */
-using VariablesPerArea = MakeSpatialAggregate<ECONOMY_SINGLE_AREA_VARIABLES>::type;
+using VariablesPerArea = MakeVariableChain<ECONOMY_SINGLE_AREA_VARIABLES>::type;
 using VariablesPerSetOfAreas = MakeSpatialAggregate<ECONOMY_SET_OF_AREAS_VARIABLES>::type;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
