@@ -76,16 +76,10 @@ struct ApplyChain<Tail, Head, Rest...>
       NonProportionalCost, NonProportionalCostByDispatchablePlant, NbOfDispatchedUnits,           \
       NbOfDispatchedUnitsByPlant, ProfitByPlant
 
-// Compose the chain, ending with Links as the tail
-#define ECONOMY_SINGLE_AREA_VARIABLES \
-    typename ApplyChain<Variable::Economy::Links, ECONOMY_SINGLE_AREA_VARIABLES_CHAIN>::type
-
-#define ECONOMY_SET_OF_AREAS_VARIABLES                                                             \
-    VCardOverallCost, VCardOperatingCost, VCardPrice, VCardThermalAirPollutantEmissions,           \
-      VCardBalance, VCardRowBalance, VCardPSP, VCardMiscGenMinusRowPSP, VCardTimeSeriesValuesLoad, \
-      VCardTimeSeriesValuesHydro, VCardTimeSeriesValuesWind, VCardTimeSeriesValuesSolar,           \
-      VCardHydroStorage, VCardPumping, VCardReservoirLevel, VCardInflows, VCardOverflow,           \
-      VCardWaterValue, VCardHydroCost, VCardUnsupliedEnergy, VCardDomesticUnsuppliedEnergy,        \
-      VCardLMRViolations, VCardSpilledEnergy, VCardLOLD, VCardLOLP, VCardNearPriceCap,             \
-      VCardAvailableDispatchGen, VCardDispatchableGenMargin, VCardDtgMarginCsr, VCardMARGE,        \
-      VCardNonProportionalCost, VCardNbOfDispatchedUnits
+#define ECONOMY_SET_OF_AREAS_VARIABLES                                                         \
+    OverallCost, OperatingCost, Price, ThermalAirPollutantEmissions, Balance, RowBalance, PSP, \
+      MiscGenMinusRowPSP, TimeSeriesValuesLoad, TimeSeriesValuesHydro, TimeSeriesValuesWind,   \
+      TimeSeriesValuesSolar, HydroStorage, Pumping, ReservoirLevel, Inflows, Overflows,        \
+      WaterValue, HydroCost, UnsupliedEnergy, DomesticUnsuppliedEnergy, LMRViolations,         \
+      SpilledEnergy, LOLD, LOLP, NearPriceCap, AvailableDispatchGen, DispatchableGenMargin,    \
+      DtgMarginCsr, Marge, NonProportionalCost, NbOfDispatchedUnits
