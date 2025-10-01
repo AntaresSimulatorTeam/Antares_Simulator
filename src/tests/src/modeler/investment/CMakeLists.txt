@@ -1,6 +1,6 @@
 include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
-add_boost_test(optimConfig
+add_boost_test(investment
         SRC
         optimConfigBuilder.cpp
         LIBS

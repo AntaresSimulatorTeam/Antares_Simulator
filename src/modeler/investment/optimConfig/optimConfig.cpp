@@ -19,13 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/modeler/optimConfig/optimConfig.h"
+#include "antares/modeler/investment/optimConfig/optimConfig.h"
 
 #include <unordered_map>
 
 #include <antares/exception/RuntimeError.hpp>
 
-namespace Antares::Modeler::Config
+namespace Antares::Modeler::Investment
 {
 
 void OptimConfig::checkDuplicateModelIds() const
@@ -46,4 +46,4 @@ void OptimConfig::checkDuplicateModelIds() const
     }
 }
 
-} // namespace Antares::Modeler::Config
+} // namespace Antares::Modeler::Investment

@@ -25,11 +25,11 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/modeler/optimConfig/optimConfig.h"
+#include "antares/modeler/investment/optimConfig/optimConfig.h"
 
 BOOST_AUTO_TEST_SUITE(test_optim_config_builder)
 
-using namespace Antares::Modeler::Config;
+using namespace Antares::Modeler::Investment;
 
 BOOST_AUTO_TEST_CASE(TestVariable)
 {
