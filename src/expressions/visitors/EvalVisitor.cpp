@@ -150,7 +150,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
+    const auto* nodeToVisit = component_.nodeAtPortField(portId, fieldId);
+    return dispatch(nodeToVisit);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
