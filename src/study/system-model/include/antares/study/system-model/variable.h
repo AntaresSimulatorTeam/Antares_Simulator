@@ -23,6 +23,7 @@
 #include <string>
 
 #include <antares/expressions/expression.h>
+#include "antares/modeler/investment/optimConfig/optimConfig.h"
 
 #include "timeAndScenarioType.h"
 #include "valueType.h"
@@ -86,6 +87,7 @@ private:
     Expression upperBound_;
     TimeDependent timeDependent_ = TimeDependent::YES;
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;
+    Modeler::Investment::Location location_ = Modeler::Investment::Location::SUBPROBLEMS;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel
