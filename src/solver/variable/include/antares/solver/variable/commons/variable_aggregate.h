@@ -50,30 +50,3 @@ struct MakeSpatialAggregate<Last>
 {
     using type = Common::SpatialAggregate<Last, Antares::Solver::Variable::Container::EndOfList>;
 };
-
-// Variadic template to chain variable wrappers as Wrapper1<Wrapper2<...<EndOfList>...>>
-// Example: MakeVariableChain<A, B, C>::type => A<B<C<EndOfList>>>;
-// This is intended when variable cards are simple wrappers of the next type.
-template<typename... Vars>
-struct MakeVariableChain;
-
-// Base: no variable -> EndOfList
-template<>
-struct MakeVariableChain<>
-{
-    using type = Antares::Solver::Variable::Container::EndOfList;
-};
-
-// Recursive case when the first is a wrapper template
-template<template<class> class First, typename... Rest>
-struct MakeVariableChain<First, Rest...>
-{
-    using type = First<typename MakeVariableChain<Rest...>::type>;
-};
-
-// Terminal case when the last element is a concrete type (non-template)
-template<typename Last>
-struct MakeVariableChain<Last>
-{
-    using type = Last;
-};

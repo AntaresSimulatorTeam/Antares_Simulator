@@ -45,24 +45,40 @@
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergyCsr.h"
 
-// Add here all economic variables to aggregate
+// Variadic template to recursively apply wrappers ending with Tail
+// Usage: ApplyChain<Tail, Wrapper1, Wrapper2, ...>::type yields Wrapper1<Wrapper2<...<Tail>...>>
+template<typename Tail, template<typename> class... Wrappers>
+struct ApplyChain;
 
-#define ECONOMY_SINGLE_AREA_VARIABLES                                                            \
-    VCardOverallCost, VCardOverallCostCsr, VCardOperatingCost, VCardPrice, VCardPriceCSR,        \
-      VCardThermalAirPollutantEmissions, VCardProductionByDispatchablePlant,                     \
-      VCardMinDispatchableGenByPlant, VCardProductionByRenewablePlant, VCardBalance,             \
-      VCardRowBalance, VCardPSP, VCardMiscGenMinusRowPSP, VCardTimeSeriesValuesLoad,             \
-      VCardTimeSeriesValuesHydro, VCardTimeSeriesValuesWind, VCardTimeSeriesValuesSolar,         \
-      VCardDispatchableGeneration, VCardRenewableGeneration, VCardHydroStorage, VCardPumping,    \
-      VCardReservoirLevel, VCardInflows, VCardOverflow, VCardWaterValue, VCardHydroCost,         \
-      VCardSTSbyGroup, VCardSTstorageInjectionByCluster, VCardSTstorageWithdrawalByCluster,      \
-      VCardSTstorageLevelsByCluster, VCardSTstorageCashFlowByCluster, VCardUnsupliedEnergy,      \
-      VCardUnsupliedEnergyCSR, VCardDomesticUnsuppliedEnergy, VCardLMRViolations,                \
-      VCardSpilledEnergy, VCardLOLD, VCardLOLD_CSR, VCardLOLP, VCardNearPriceCap, VCardLOLP_CSR, \
-      VCardAvailableDispatchGen, VCardDispatchableGenMargin, VCardDtgMarginCsr, VCardMARGE,      \
-      VCardMAX_MRG_CSR, VCardNonProportionalCost, VCardNonProportionalCostByDispatchablePlant,   \
-      VCardNbOfDispatchedUnits, VCardNbOfDispatchedUnitsByPlant, VCardProfitByPlant,             \
-      Variable::Economy::Links
+template<typename Tail>
+struct ApplyChain<Tail>
+{
+    using type = Tail;
+};
+
+template<typename Tail, template<typename> class Head, template<typename> class... Rest>
+struct ApplyChain<Tail, Head, Rest...>
+{
+    using type = Head<typename ApplyChain<Tail, Rest...>::type>;
+};
+
+// List the wrapper templates in the desired order, ending with Links as the tail
+#define ECONOMY_SINGLE_AREA_VARIABLES_CHAIN                                                       \
+    OverallCost, OverallCostCsr, OperatingCost, Price, PriceCSR, ThermalAirPollutantEmissions,    \
+      ProductionByDispatchablePlant, MinDispatchableGenByPlant, ProductionByRenewablePlant,       \
+      Balance, RowBalance, PSP, MiscGenMinusRowPSP, TimeSeriesValuesLoad, TimeSeriesValuesHydro,  \
+      TimeSeriesValuesWind, TimeSeriesValuesSolar, DispatchableGeneration, RenewableGeneration,   \
+      HydroStorage, Pumping, ReservoirLevel, Inflows, Overflows, WaterValue, HydroCost,           \
+      STSbyGroup, STstorageInjectionByCluster, STstorageWithdrawalByCluster,                      \
+      STstorageLevelsByCluster, STstorageCashFlowByCluster, UnsupliedEnergy, UnsupliedEnergyCSR,  \
+      DomesticUnsuppliedEnergy, LMRViolations, SpilledEnergy, LOLD, LOLD_CSR, LOLP, NearPriceCap, \
+      LOLP_CSR, AvailableDispatchGen, DispatchableGenMargin, DtgMarginCsr, Marge, MaxMrgCsr,      \
+      NonProportionalCost, NonProportionalCostByDispatchablePlant, NbOfDispatchedUnits,           \
+      NbOfDispatchedUnitsByPlant, ProfitByPlant
+
+// Compose the chain, ending with Links as the tail
+#define ECONOMY_SINGLE_AREA_VARIABLES \
+    typename ApplyChain<Variable::Economy::Links, ECONOMY_SINGLE_AREA_VARIABLES_CHAIN>::type
 
 #define ECONOMY_SET_OF_AREAS_VARIABLES                                                             \
     VCardOverallCost, VCardOperatingCost, VCardPrice, VCardThermalAirPollutantEmissions,           \
