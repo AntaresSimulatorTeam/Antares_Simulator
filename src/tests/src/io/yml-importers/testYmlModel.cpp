@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
                       - id: "objective2"
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective1"
                         expression: "objective1"
                 - id: "model_id2"
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective2"
                         expression: "objective2"
         )"s;
@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters_default_values)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE(variables_properly_parsed)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -395,7 +395,7 @@ BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -437,7 +437,7 @@ BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
                   ports: []
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -472,7 +472,7 @@ BOOST_AUTO_TEST_CASE(ports_are_properly_parsed)
                         type: "port_type"
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -504,7 +504,7 @@ BOOST_AUTO_TEST_CASE(model_can_conatin_multiple_ports)
                         type: "port_type2"
                   port-field-definitions: []
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -537,7 +537,7 @@ BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
                         field: "field_name"
                         definition: "definition"
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -572,7 +572,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
                         field: "field_name2"
                         definition: "definition2"
                   constraints: []
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -606,7 +606,7 @@ BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
                   constraints:
                       - id: "constraint_name"
                         expression: "expression"
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -638,7 +638,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
                         expression: "expression1"
                       - id: "constraint_name2"
                         expression: "expression2"
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;
@@ -720,7 +720,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
                         expression: "expression1"
                       - id: "output_name2"
                         expression: "expression2"
-                  objectives:
+                  objective-contributions:
                       - id: "objective"
                         expression: "objective"
         )"s;

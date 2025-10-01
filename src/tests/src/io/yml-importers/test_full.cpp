@@ -126,7 +126,7 @@ library:
       binding-constraints:
         - id: balance
           expression: injection_port.flow = 0
-      objectives:
+      objective-contributions:
         - id: objective
           expression: cost * generation 
       extra-outputs:
@@ -268,7 +268,7 @@ library:
           expression: t-d_min_up + 1 <= nb_on
         - id: Min down time
           expression: t-d_min_down + 1 <= nb_units_max - nb_on
-      objectives:
+      objective-contributions:
         - id: objective
           expression: cost * generation 
     )"s;
