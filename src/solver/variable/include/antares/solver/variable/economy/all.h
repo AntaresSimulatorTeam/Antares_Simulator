@@ -75,13 +75,14 @@ typedef BindingConstMarginCost< // Marginal cost for a binding constraint
   >
   VariablesPerBindingConstraints;
 
-typedef Join<
-  // Variables for each area / links attached to the areas
-  Areas<Economy::VariablesPerArea>,
-  // Variables for each set of areas
-  Join<SetsOfAreas<Adequacy::VariablesPerSetOfAreas>,
-       // Variables for each binding constraint
-       BindingConstraints<VariablesPerBindingConstraints>>>
+typedef Join<Join<
+               // Variables for each area / links attached to the areas
+               Areas<Economy::VariablesPerArea>,
+               // Variables for each set of areas
+               Join<SetsOfAreas<Adequacy::VariablesPerSetOfAreas>,
+                    // Variables for each binding constraint
+                    BindingConstraints<VariablesPerBindingConstraints>>>,
+             Container::EndOfList>
   ItemList;
 
 /*!
