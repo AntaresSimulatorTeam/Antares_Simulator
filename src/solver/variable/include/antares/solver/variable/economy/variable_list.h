@@ -22,28 +22,28 @@
 #pragma once
 #include "STStorageCashFlowByCluster.h"
 #include "domesticUnsuppliedEnergy.h"
+#include "dtgMarginAfterCsr.h"
+#include "hydroCost.h"
 #include "links.h"
 #include "localMatchingRuleViolations.h"
 #include "loldCsr.h"
 #include "lolpCsr.h"
+#include "max-mrg-csr.h"
 #include "minDispatchableGenByPlant.h"
 #include "nbOfDispatchedUnits.h"
 #include "nbOfDispatchedUnitsByPlant.h"
-#include "dtgMarginAfterCsr.h"
+#include "nearPriceCap.h"
+#include "nonProportionalCost.h"
+#include "npCostByDispatchablePlant.h"
 #include "operatingCost.h"
 #include "overallCost.h"
 #include "price.h"
-#include "nearPriceCap.h"
-#include "hydroCost.h"
 #include "productionByDispatchablePlant.h"
 #include "productionByRenewablePlant.h"
 #include "profitByPlant.h"
-#include "nonProportionalCost.h"
-#include "npCostByDispatchablePlant.h"
 #include "spilledEnergy.h"
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergyCsr.h"
-#include "max-mrg-csr.h"
 
 // Add here all economic variables to aggregate
 
@@ -60,11 +60,16 @@
       VCardUnsupliedEnergyCSR, VCardDomesticUnsuppliedEnergy, VCardLMRViolations,                \
       VCardSpilledEnergy, VCardLOLD, VCardLOLD_CSR, VCardLOLP, VCardNearPriceCap, VCardLOLP_CSR, \
       VCardAvailableDispatchGen, VCardDispatchableGenMargin, VCardDtgMarginCsr, VCardMARGE,      \
-      VCardMAX_MRG_CSR, VCardNonProportionalCost, VCardNonProportionalCostByDispatchablePlant,     \
+      VCardMAX_MRG_CSR, VCardNonProportionalCost, VCardNonProportionalCostByDispatchablePlant,   \
       VCardNbOfDispatchedUnits, VCardNbOfDispatchedUnitsByPlant, VCardProfitByPlant,             \
       Variable::Economy::Links
 
-#define ECONOMY_SET_OF_AREAS_VARIABLES                                                     \
-    VCardMARGE, VCardPriceCSR, VCardNbOfDispatchedUnits, VCardNbOfDispatchedUnitsByPlant, \
-      VCardOperatingCost, VCardOverallCost, VCardThermalAirPollutantEmissions,             \
-      VCardProductionByDispatchablePlant, VCardProductionByRenewablePlant, VCardProfitByPlant
+#define ECONOMY_SET_OF_AREAS_VARIABLES                                                             \
+    VCardOverallCost, VCardOperatingCost, VCardPrice, VCardThermalAirPollutantEmissions,           \
+      VCardBalance, VCardRowBalance, VCardPSP, VCardMiscGenMinusRowPSP, VCardTimeSeriesValuesLoad, \
+      VCardTimeSeriesValuesHydro, VCardTimeSeriesValuesWind, VCardTimeSeriesValuesSolar,           \
+      VCardHydroStorage, VCardPumping, VCardReservoirLevel, VCardInflows, VCardOverflow,           \
+      VCardWaterValue, VCardHydroCost, VCardUnsupliedEnergy, VCardDomesticUnsuppliedEnergy,        \
+      VCardLMRViolations, VCardSpilledEnergy, VCardLOLD, VCardLOLP, VCardNearPriceCap,             \
+      VCardAvailableDispatchGen, VCardDispatchableGenMargin, VCardDtgMarginCsr, VCardMARGE,        \
+      VCardNonProportionalCost, VCardNbOfDispatchedUnits
