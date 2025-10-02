@@ -19,116 +19,165 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <algorithm>
-#include <fstream>
+#include <charconv>
 #include <ranges>
 #include <vector>
 
-#include <boost/algorithm/string.hpp>
+#include <boost/iostreams/device/mapped_file.hpp>
+#include <boost/iostreams/stream.hpp>
 
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
+
 namespace fs = std::filesystem;
 
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
 using namespace Optimisation::LinearProblemDataImpl;
 
-static std::vector<double> readLine(std::string line,
-                                    std::string csvSeparators,
-                                    const std::string fileName)
+inline const char* ParseOneDouble(const char* ptr,
+                                  const char* end,
+                                  double& value,
+                                  const std::string& errorMessagePrefix = "")
 {
-    std::vector<double> row;
-    std::vector<std::string> splitLine;
-    boost::split(splitLine, line, boost::is_any_of(csvSeparators));
-    std::transform(splitLine.begin(),
-                   splitLine.end(),
-                   std::inserter(row, row.end()),
-                   [fileName](std::string& s)
-                   {
-                       boost::trim(s);
-                       if (s.empty())
-                       {
-                           throw std::invalid_argument(
-                             fileName + ": columns have inconsistent number of rows");
-                       }
-                       try
-                       {
-                           return std::stod(s);
-                       }
-                       catch (const std::invalid_argument&)
-                       {
-                           throw std::invalid_argument(fileName + ": \"" + s
-                                                       + "\" is not a number");
-                       }
-                   });
-    return row;
+    auto [p, ec] = std::from_chars(ptr, end, value);
+    if (ec == std::errc::invalid_argument)
+    {
+        throw std::invalid_argument(errorMessagePrefix + ": \"" + *p + "\" is not a number");
+    }
+    return p;
 }
 
-static std::vector<std::vector<double>> csvToMatrix(const std::filesystem::path& path,
-                                                    std::string csvSeparators)
+inline void SkipWhiteSpaceAndSeparator(const char*& ptr, const char* last, char sep)
 {
-    std::vector<std::vector<double>> result;
-    std::ifstream infile(path, std::ios_base::binary | std::ios_base::in);
-    if (!infile.is_open())
+    // Skip leading whitespace and separators
+    while (ptr < last && (*ptr == sep || *ptr == ' ' || *ptr == '\t'))
     {
-        throw std::invalid_argument("Could not open file " + path.filename().string());
+        ++ptr;
     }
-    std::string line;
-    bool empty_line_found = false;
-    while (std::getline(infile, line))
+}
+
+static bool ParseRow(const char* first,
+                     const char* last,
+                     std::vector<std::vector<double>>& columns,
+                     unsigned rowIndex,
+                     unsigned rowCount,
+                     char sep = ' ',
+                     const std::string& errorMessagePrefix = "")
+{
+    const char* ptr = first;
+    unsigned colIndex = 0;
+    while (ptr < last)
     {
-        boost::trim(line);
-        if (line.empty())
+        SkipWhiteSpaceAndSeparator(ptr, last, sep);
+
+        // If we've reached the end, break
+        if (ptr >= last)
         {
-            empty_line_found = true;
+            break;
+        }
+
+        double val = 0.;
+        const char* next = ParseOneDouble(ptr, last, val, errorMessagePrefix);
+        // Check if we parsed anything
+        if (next == ptr)
+        {
+            // Skip invalid characters and try again
+            ++ptr;
             continue;
         }
-        if (empty_line_found)
+        // initialize columns on first row
+        if (rowIndex == 0)
         {
-            // only accept empty lines in the end of the file
-            throw std::invalid_argument(path.filename().string()
-                                        + ": empty line in the middle of the file");
+            std::vector<double> col(rowCount);
+            col[rowIndex] = val;
+            columns.emplace_back(std::move(col));
+            ptr = next;
+            ++colIndex;
         }
-        std::vector<double> row = readLine(line, csvSeparators, path.filename().string());
-        if (!result.empty() && row.size() != result[0].size())
+        else
         {
-            throw std::invalid_argument(path.filename().string()
-                                        + ": rows have inconsistent number of columns");
+            if (colIndex < columns.size())
+            {
+                columns[colIndex][rowIndex] = val;
+                ptr = next;
+                ++colIndex;
+            }
+            else
+            {
+                std::ostringstream oss;
+                oss << errorMessagePrefix << ": row (" << rowIndex << ") has more columns ("
+                    << colIndex + 1 << ") than the expected (" << columns.front().size() << ").";
+                throw std::invalid_argument(oss.str());
+            }
         }
-        result.push_back(row);
     }
-    return result;
+    if (rowIndex != 0 && colIndex != columns.size())
+    {
+        std::ostringstream oss;
+        oss << errorMessagePrefix << ": row (" << rowIndex << ") has less columns (" << colIndex
+            << ") than the expected (" << columns.front().size() << ").";
+        throw std::invalid_argument(oss.str());
+    }
+    return colIndex != 0;
 }
 
-static TimeSeriesSet matrixToTimeSeriesSet(std::string id, std::vector<std::vector<double>> matrix)
+static std::vector<std::vector<double>> readCSV(const std::filesystem::path& filename, char sep)
 {
-    // We have to transpose the matrix
-    // TODO: we may want to improve this by reading directly into the TimeSeriesSet object, or
-    // by creating a specific IDataSeries implementation
-    int nTimesteps = matrix.size();
-    TimeSeriesSet timeSeriesSet(id, nTimesteps);
-    if (nTimesteps == 0)
+    // Check file size first
+    std::error_code ec;
+    auto sz = std::filesystem::file_size(filename, ec);
+    if (ec)
     {
-        return timeSeriesSet;
+        throw std::invalid_argument("Error reading CSV file( " + filename.string()
+                                    + "):" + ec.message());
     }
-    int nSets = matrix[0].size();
-    for (int i = 0; i < nSets; ++i)
+    if (sz == 0)
     {
-        std::vector<double> set;
-        set.reserve(nTimesteps);
-        for (int j = 0; j < nTimesteps; ++j)
-        {
-            set.push_back(matrix[j][i]);
-        }
-        timeSeriesSet.add(set);
+        return {}; // empty or inaccessible
     }
-    return timeSeriesSet;
-}
+    const auto& fileName = filename.string();
+    boost::iostreams::mapped_file_source file(fileName);
 
-static TimeSeriesSet importFromFile(const std::filesystem::path& path, std::string csvSeparators)
-{
-    auto csvMatrix = csvToMatrix(path, csvSeparators);
-    return matrixToTimeSeriesSet(path.stem().string(), csvMatrix);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Failed to open file: " + fileName);
+    }
+
+    std::vector<std::vector<double>> columns;
+    const char* start = file.data();
+    const char* end = start + file.size();
+    unsigned lineCount = std::count(start, end, '\n') + 1;
+    unsigned lineNumber = 0;
+
+    while (start < end)
+    {
+        const char* endLine = static_cast<const char*>(memchr(start, '\n', end - start));
+        if (!endLine)
+        {
+            endLine = end;
+        }
+        // Handle Windows line endings
+        size_t lineLen = endLine - start;
+        if (lineLen > 0 && start[lineLen - 1] == '\r')
+        {
+            lineLen--;
+        }
+
+        if (ParseRow(start, start + lineLen, columns, lineNumber, lineCount, sep, fileName))
+        {
+            ++lineNumber;
+        }
+        start = endLine + 1;
+    }
+    if (lineCount != lineNumber)
+    {
+        for (auto& col: columns)
+        {
+            col.resize(lineNumber);
+        }
+    }
+    return columns;
 }
 
 bool hasRightExtension(const std::filesystem::directory_entry& e)
@@ -138,7 +187,7 @@ bool hasRightExtension(const std::filesystem::directory_entry& e)
 }
 
 DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::filesystem::path& path,
-                                                                 std::string csvSeparators)
+                                                                 char csvSeparator)
 {
     if (!is_directory(path))
     {
@@ -155,7 +204,8 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
         {
             continue;
         }
-        auto timeSeriesSet = std::make_unique<TimeSeriesSet>(importFromFile(entry, csvSeparators));
+        auto timeSeriesSet = std::make_unique<TimeSeriesSet>(entry.path().stem().string(),
+                                                             readCSV(entry, csvSeparator));
         repo.addDataSeries(std::move(timeSeriesSet));
     }
     return repo;
