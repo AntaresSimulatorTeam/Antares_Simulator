@@ -90,6 +90,50 @@ inline void List<NextT>::computeSummary(unsigned int year, unsigned int numSpace
 }
 
 template<class NextT>
+template<class V>
+inline void List<NextT>::yearEndSpatialAggregates(V& allVars,
+                                                  unsigned int year,
+                                                  unsigned int numSpace)
+{
+    // Next variable
+    NextT::yearEndSpatialAggregates(allVars, year, numSpace);
+}
+
+template<class NextT>
+template<class V, class SetT>
+inline void List<NextT>::yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set)
+{
+    // Next variable
+    NextT::yearEndSpatialAggregates(allVars, year, set);
+}
+
+template<class NextT>
+template<class V>
+inline void List<NextT>::computeSpatialAggregatesSummary(V& allVars,
+                                                         unsigned int year,
+                                                         unsigned int numSpace)
+{
+    // Next variable
+    NextT::computeSpatialAggregatesSummary(allVars, year, numSpace);
+}
+
+template<class NextT>
+template<class V>
+inline void List<NextT>::simulationEndSpatialAggregates(V& allVars)
+{
+    // Next variable
+    NextT::simulationEndSpatialAggregates(allVars);
+}
+
+template<class NextT>
+template<class V, class SetT>
+inline void List<NextT>::simulationEndSpatialAggregates(V& allVars, const SetT& set)
+{
+    // Next variable
+    NextT::simulationEndSpatialAggregates(allVars, set);
+}
+
+template<class NextT>
 inline void List<NextT>::hourBegin(unsigned int hourInTheYear)
 {
     NextT::hourBegin(hourInTheYear);
