@@ -21,8 +21,6 @@
 #ifndef __SOLVER_VARIABLE_AREA_H__
 #define __SOLVER_VARIABLE_AREA_H__
 
-#include "antares/solver/variable/commons/spatial_aggregates_utils.h"
-
 #include "state.h"
 
 namespace Antares::Solver::Variable
@@ -170,14 +168,15 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& v, unsigned int a, unsigned int b)
+    void computeSpatialAggregatesSummary(V&, unsigned int, unsigned int)
     {
-        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(v, a, b);
+        // do nothing
     }
 
     template<class V>
-    void simulationEndSpatialAggregates(V& v)
+    void simulationEndSpatialAggregates(V&)
     {
+        // do nothing
     }
 
     template<class VCardSearchT, class O>
