@@ -709,7 +709,6 @@ public:
         return 0;
     }
 
-
     [[nodiscard]] int constraintCount() const override
     {
         return constraints_.size();
@@ -1473,8 +1472,6 @@ BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_NoOptionalParams)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
-
 
 BOOST_AUTO_TEST_SUITE(MockLinearProblemTests)
 
