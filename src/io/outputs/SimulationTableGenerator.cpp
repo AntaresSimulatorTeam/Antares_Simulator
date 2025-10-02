@@ -91,7 +91,6 @@ void addVariableEntries(ISimulationTable& simulationTable,
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
-    const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
     const auto& variables = component.getModel()->Variables();
     for (auto varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
@@ -112,7 +111,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
                                     : TimeBlock{.block = currentBlock + 1,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
-            auto* var = componentVariables[timeStep.value_or(0)];
+            const auto& var = componentVariables[timeStep.value_or(0)];
             simulationTable.addEntry(
               {.block = tb.block,
                .component = componentId,
@@ -199,25 +198,23 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
-    const auto& constraintStart = optimEntityContainer.getConstraintStartLine();
-    const auto& solverConstraints = optimEntityContainer.getConstraints();
-    const auto& optimComponent = optimEntityContainer.getOptimComponent(component.Index());
-    const auto& modelConstraintsGlobalIndices = optimComponent.modelConstraintsGlobalIndices;
+
     unsigned constraintLocalIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
         const auto& constraintId = modelConstr.Id();
 
-        auto constraintGlobalIndex = modelConstraintsGlobalIndices.at(constraintLocalIndex);
-        TI idxType = optimComponent.modelConstraintsTimeIndex[constraintLocalIndex];
+        const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(
+          component,
+          constraintLocalIndex,
+          fillContext.getLocalNumberOfTimeSteps());
         ++constraintLocalIndex;
 
-        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+        auto idxType = updateTimeIndexIfShouldForceScenario(timeIndex, forceExportForScenarioIndex);
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
-            const auto* c = solverConstraints[constraintStart.at(constraintGlobalIndex)
-                                              + ts.value_or(0)];
+            const auto& c = componentConstraints[ts.value_or(0)];
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
                                   *ts + fillContext.getGlobalFirstTimeStep(),
                                   timeConversionMode,

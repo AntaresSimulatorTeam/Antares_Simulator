@@ -108,7 +108,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
 
         for (const auto& [index, coef]: linearExpression[localIndex])
         {
-            areaBalanceConstraint->setCoefficient(solverVariables.at(index), -coef);
+            areaBalanceConstraint->setCoefficient(solverVariables.at(index).get(), -coef);
         }
 
         double offset = linearExpression[localIndex].constant();

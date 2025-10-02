@@ -79,7 +79,9 @@ static void fillModelerComponents(
   Modeler::Data* modelerData,
   OptimEntityContainer& optimEntityContainer)
 {
-    for (const auto& component: modelerData->system->Components())
+    const auto& components = modelerData->system->Components();
+    optimEntityContainer.reserveOptimComponents(components.size());
+    for (const auto& component: components)
     {
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,

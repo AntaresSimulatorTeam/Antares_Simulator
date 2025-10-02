@@ -71,6 +71,15 @@ public:
         return optimComponent.evaluationContext;
     }
 
+    [[nodiscard]] std::pair<unsigned int, TimeIndex> getConstraintData(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      unsigned int index) const
+    {
+        const auto& optimComponent = optimComponents_.at(component.Index());
+        return {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),
+                optimComponent.modelConstraintsTimeIndex.at(index)};
+    }
+
     [[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
     {
         return constraintStartLine_;
@@ -83,41 +92,45 @@ public:
 
     void addStartColumn()
     {
-        variableStartColumn_.push_back(variables_.size());
+        variableStartColumn_.push_back(linearProblem_.variableCount());
     }
 
     void addStartLine()
     {
-        constraintStartLine_.push_back(constraints_.size());
+        constraintStartLine_.push_back(linearProblem_.constraintCount());
     }
 
-    [[nodiscard]] const std::vector<LinearProblemApi::IMipVariable*>& getVariables() const
+    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>>& getVariables()
+      const
     {
-        return variables_;
+        return linearProblem_.getVariables();
     }
 
-    [[nodiscard]] std::span<LinearProblemApi::IMipVariable* const> getComponentVariable(
-      const Antares::ModelerStudy::SystemModel::Component& component,
-      unsigned int index,
-      std::size_t nbTimeSteps) const
+    [[nodiscard]] std::span<const std::unique_ptr<LinearProblemApi::IMipVariable>>
+    getComponentVariable(const Antares::ModelerStudy::SystemModel::Component& component,
+                         unsigned int index,
+                         std::size_t nbTimeSteps) const
     {
+        const auto& variables = linearProblem_.getVariables();
         unsigned int startColumn = getVariableStartColumn(component, index);
-        return {variables_.begin() + startColumn, nbTimeSteps};
+        return {variables.data() + startColumn, nbTimeSteps};
     }
 
-    [[nodiscard]] const std::vector<LinearProblemApi::IMipConstraint*>& getConstraints() const
+    [[nodiscard]] std::pair<std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>>,
+                            TimeIndex>
+    getComponentConstraint(const Antares::ModelerStudy::SystemModel::Component& component,
+                           unsigned int index,
+                           std::size_t nbTimeSteps) const
     {
-        return constraints_;
+        const auto& constraints = linearProblem_.getConstraints();
+        const auto [startLine, timeIndex] = getConstraintData(component, index);
+        return {{constraints.data() + startLine, nbTimeSteps}, timeIndex};
     }
 
-    void registerVariable(LinearProblemApi::IMipVariable* variable)
+    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipConstraint>>&
+    getConstraints() const
     {
-        variables_.push_back(variable);
-    }
-
-    void registerConstraint(LinearProblemApi::IMipConstraint* constraint)
-    {
-        constraints_.push_back(constraint);
+        return linearProblem_.getConstraints();
     }
 
     [[nodiscard]] const OptimComponent& getOptimComponent(size_t index) const
@@ -131,19 +144,26 @@ public:
     }
 
     void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
+    void registerConstraint(const ModelerStudy::SystemModel::Component& component,
+                            const TimeIndex& timeIndex);
 
     unsigned int ConstraintGLobalIndex() const
     {
         return static_cast<unsigned int>(constraintStartLine_.size());
     }
 
+    void reserveOptimComponents(size_t size)
+    {
+        optimComponents_.reserve(size);
+    }
+
 private:
-    std::vector<LinearProblemApi::IMipVariable*> variables_;
+    // std::vector<LinearProblemApi::IMipVariable*> variables_;
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
     unsigned int variableGlobalIndex_ = 0;
     //---
-    std::vector<LinearProblemApi::IMipConstraint*> constraints_;
+    // std::vector<LinearProblemApi::IMipConstraint*> constraints_;
     std::vector<unsigned int> constraintStartLine_;
     LinearProblemApi::ILinearProblem& linearProblem_;
     const LinearProblemApi::ILinearProblemData* data_;

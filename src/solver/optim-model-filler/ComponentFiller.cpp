@@ -75,11 +75,11 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             auto year = buildOptional(dim.isScenarioDependent(),
                                       static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
-            optimEntityContainer_.registerVariable(
-              linear_problem_.addVariable(lb,
-                                          ub,
-                                          integer,
-                                          buildVariableName(compoId, variableId, year, ts)));
+
+            linear_problem_.addVariable(lb,
+                                        ub,
+                                        integer,
+                                        buildVariableName(compoId, variableId, year, ts));
         }
     }
 }
@@ -110,11 +110,10 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            optimEntityContainer_.registerVariable(
-              linear_problem_.addVariable(lb[t], /*use localIndex*/
-                                          ub,
-                                          integer,
-                                          buildVariableName(compoId, variableId, year, ts)));
+            linear_problem_.addVariable(lb[t], /*use localIndex*/
+                                        ub,
+                                        integer,
+                                        buildVariableName(compoId, variableId, year, ts));
         }
     }
 }
@@ -144,11 +143,10 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            optimEntityContainer_.registerVariable(
-              linear_problem_.addVariable(lb,
-                                          ub[t], /*use localIndex*/
-                                          integer,
-                                          buildVariableName(compoId, variableId, year, ts)));
+            linear_problem_.addVariable(lb,
+                                        ub[t], /*use localIndex*/
+                                        integer,
+                                        buildVariableName(compoId, variableId, year, ts));
         }
     }
 }
@@ -178,11 +176,11 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
             auto localIndex = s * dim.getNumberOfTimesteps() + t;
-            optimEntityContainer_.registerVariable(
-              linear_problem_.addVariable(lb[t], /*use localIndex*/
-                                          ub[t], /*use localIndex*/
-                                          integer,
-                                          buildVariableName(compoId, variableId, year, ts)));
+
+            linear_problem_.addVariable(lb[t], /*use localIndex*/
+                                        ub[t], /*use localIndex*/
+                                        integer,
+                                        buildVariableName(compoId, variableId, year, ts));
         }
     }
 }
@@ -278,13 +276,12 @@ void ComponentFiller::addStaticConstraint(const Optimisation::LinearConstraint& 
                                                              linear_constraint.ub[0],
                                                              component_.Id() + "." + constraint_id);
 
-    optimEntityContainer_.registerConstraint(ct);
     const auto& solverVariables = optimEntityContainer_.getVariables();
     const auto& coefsPerVar = linear_constraint.coef_per_var[0];
 
     for (const auto& [index, value]: coefsPerVar)
     {
-        ct->setCoefficient(solverVariables[index], value);
+        ct->setCoefficient(solverVariables[index].get(), value);
     }
 }
 
@@ -307,12 +304,11 @@ void ComponentFiller::addTimeDependentConstraints(
                                         linear_constraints.ub[t],
                                         component_.Id() + "." + constraint_id + '_'
                                           + std::to_string(t));
-            optimEntityContainer_.registerConstraint(ct);
 
             const auto& coefsPerVar = linear_constraints.coef_per_var[t];
             for (const auto& [index, value]: coefsPerVar)
             {
-                ct->setCoefficient(solverVariables[index], value);
+                ct->setCoefficient(solverVariables[index].get(), value);
             }
         }
     }
@@ -329,13 +325,10 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
         const auto& constraint = modelConstraints[constraintLocalIndex];
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        const auto gLobalIndex = optimEntityContainer_.ConstraintGLobalIndex();
-        auto& optimComponent = optimEntityContainer_.getOptimComponent(component_.Index());
-        optimComponent.modelConstraintsGlobalIndices.push_back(gLobalIndex);
         const auto timeIndex = getConstraintTimeIndex(root_node, component_);
-        optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);
 
-        optimEntityContainer_.addStartLine();
+        optimEntityContainer_.registerConstraint(component_, timeIndex);
+
         if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
             || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
         {
@@ -366,7 +359,7 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
     {
         for (const auto& [index, value]: expr)
         {
-            pb.setObjectiveCoefficient(solverVariables[index], value);
+            pb.setObjectiveCoefficient(solverVariables[index].get(), value);
         }
     }
 }
