@@ -21,7 +21,6 @@ set(SRC_Expressions
         visitors/InvalidNode.cpp
         visitors/NodeVisitor.cpp
 
-        hashable.cpp
 
         NodeRegistry.cpp
         include/antares/expressions/NodeRegistry.h
@@ -64,7 +63,6 @@ set(SRC_Expressions
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h
-        include/antares/expressions/hashable.h
         include/antares/expressions/expression.h
         include/antares/expressions/ShiftVector.h
         include/antares/expressions/nodes/TimeShiftNode.h
