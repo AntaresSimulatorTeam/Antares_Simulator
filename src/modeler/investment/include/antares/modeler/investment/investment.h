@@ -19,10 +19,11 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/modeler/investment/optimConfig/optimConfig.h"
+#include <antares/solver/modeler/data.h>
 
 namespace Antares::Modeler::Investment
 {
 
+bool markVariablesForInvestment(Modeler::Data& modelerData);
 
 } // namespace Antares::Modeler::Investment

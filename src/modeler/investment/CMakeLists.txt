@@ -23,6 +23,7 @@ add_library(Antares::investment ALIAS investment)
 target_link_libraries(investment
         PRIVATE
         Antares::modeler-optim-config
+        Antares::modeler-lib
         Antares::exception
         Antares::logs
 )

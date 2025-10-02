@@ -19,4 +19,41 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include "antares/modeler/investment/investment.h"
+
 #include <antares/logs/logs.h>
+
+namespace Antares::Modeler::Investment
+{
+
+bool markVariablesForInvestment(Modeler::Data& modelerData)
+{
+    const auto& optimConfig = modelerData.investmentOptimConfig.value();
+
+    bool ret = true;
+    for (const auto& model: optimConfig.models())
+    {
+        bool modelFound = false;
+        for (auto& [componentId, component]: modelerData.system->Components())
+        {
+            if (component.getModel()->Id() == model.id())
+            {
+                modelFound = true;
+                for (auto& [variableId, variable]: component.getModel()->Variables())
+                {
+                }
+            }
+        }
+
+        if (!modelFound)
+        {
+            logs.warning() << "No component found for investment model with ID '" + model.id()
+                                + "'.";
+            ret = false;
+        }
+    }
+
+    return ret;
+}
+
+} // namespace Antares::Modeler::Investment
