@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#if 0
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <yaml-cpp/exceptions.h>
@@ -419,6 +419,11 @@ library:
 
         const auto level = std::ranges::find_if(model5.Variables(),
                                                 [](const auto& v) { return v.Id() == "level"; });
+        const auto getConstraint =
+          [](const std::vector<SystemModel::Constraint>& constraints, const std::string& id)
+        {
+            return std::ranges::find_if(constraints, [&id](const auto& c) { return c.Id() == id; });
+        };
         checkVariable(*level,
                       "level",
                       "level_min",
@@ -426,7 +431,7 @@ library:
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::NO,
                       SystemModel::ScenarioDependent::NO);
-        checkConstraint(model5.Constraints().at("Level equation"),
+        checkConstraint(*getConstraint(model5.Constraints(), "Level equation"),
                         "Level equation",
                         "level - level - efficiency * injection + withdrawal = inflows");
 
@@ -456,7 +461,7 @@ library:
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::YES);
-        const auto nb_on = std::ranges::find_if(model2.Variables(),
+        const auto nb_on = std::ranges::find_if(model6.Variables(),
                                                 [](const auto& v) { return v.Id() == "nb_on"; });
 
         checkVariable(*nb_on,
@@ -466,7 +471,7 @@ library:
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::NO);
-        const auto nb_stop = std::ranges::find_if(model2.Variables(),
+        const auto nb_stop = std::ranges::find_if(model6.Variables(),
                                                   [](const auto& v)
                                                   { return v.Id() == "nb_stop"; });
         checkVariable(*nb_stop,
@@ -476,7 +481,7 @@ library:
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::NO);
-        const auto nb_start = std::ranges::find_if(model2.Variables(),
+        const auto nb_start = std::ranges::find_if(model6.Variables(),
                                                    [](const auto& v)
                                                    { return v.Id() == "nb_start"; });
         checkVariable(*nb_start,
@@ -486,19 +491,19 @@ library:
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::NO);
-        checkConstraint(model6.Constraints().at("Max generation"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Max generation"),
                         "Max generation",
                         "generation <= nb_on * p_max");
-        checkConstraint(model6.Constraints().at("Min generation"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Min generation"),
                         "Min generation",
                         "generation >= nb_on * p_min");
-        checkConstraint(model6.Constraints().at("Number of units variation"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Number of units variation"),
                         "Number of units variation",
                         "nb_on = nb_on + nb_start - nb_stop");
-        checkConstraint(model6.Constraints().at("Min up time"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Min up time"),
                         "Min up time",
                         "t-d_min_up + 1 <= nb_on");
-        checkConstraint(model6.Constraints().at("Min down time"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Min down time"),
                         "Min down time",
                         "t-d_min_down + 1 <= nb_units_max - nb_on");
         BOOST_CHECK_EQUAL(model6.Objective().Value(), "cost * generation");
@@ -509,4 +514,3 @@ library:
         BOOST_FAIL(e.what());
     }
 }
-#endif
