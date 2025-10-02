@@ -100,6 +100,11 @@ void Modeler::solve() const
         logs.info() << "Parameters loaded";
         const auto data = loader_.loadAll();
 
+        if (data.investmentOptimConfig.has_value())
+        {
+             // markVariablesForInvestment();
+        }
+
         Utils::TimeMeasurement measure;
 
         SystemLinearProblemBuilder system_linear_problem(data.system.get());
