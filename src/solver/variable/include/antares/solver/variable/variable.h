@@ -29,8 +29,6 @@
 #include <yuni/yuni.h>
 #include <yuni/core/static/if.h>
 
-#include "antares/solver/variable/commons/spatial_aggregates_utils.h"
-
 #include "categories.h"
 #include "container.h"
 #include "endoflist.h"
@@ -64,7 +62,7 @@ public:
     typedef typename Storage<VCardT>::ResultsType StoredResultType;
 
     static constexpr uint8_t categoryDataLevel = VCardType::categoryDataLevel;
-    static constexpr uint8_t categoryFileLevel = VCardT::categoryFileLevel;
+    static constexpr uint8_t categoryFileLevel = VCardType::categoryFileLevel;
 
     template<int CDataLevel, int CFile>
     struct Statistics
@@ -214,28 +212,16 @@ public:
     void yearEnd(uint year);
 
     template<class V>
-    void yearEndSpatialAggregates(V& allVars, uint year, unsigned int numSpace)
-    {
-        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(allVars, year, numSpace);
-    }
+    void yearEndSpatialAggregates(V& allVars, uint year, unsigned int numSpace);
 
     template<class V, class SetT>
-    void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set)
-    {
-        // No-op, kept for compatibility
-    }
+    void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set);
 
     template<class V>
-    void simulationEndSpatialAggregates(V& allVars)
-    {
-        Commons::SpatialAggregatesUtils::simulationEndSpatialAggregates(allVars);
-    }
+    void simulationEndSpatialAggregates(V& allVars);
 
     template<class V, class SetT>
-    void simulationEndSpatialAggregates(V& allVars, const SetT& set)
-    {
-    }
-
+    void simulationEndSpatialAggregates(V& allVars, const SetT& set);
     //@}
 
     //! \name Simulation Hours in the year
