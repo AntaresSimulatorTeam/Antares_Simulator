@@ -275,7 +275,7 @@ template<class NextT>
 template<class V>
 void BindingConstraints<NextT>::simulationEndSpatialAggregates(V& allVars)
 {
-    Commons::SpatialAggregatesUtils::simulationEndSpatialAggregates(allVars);
+    NextType::template simulationEndSpatialAggregates<V>(allVars);
 }
 
 template<class NextT>
