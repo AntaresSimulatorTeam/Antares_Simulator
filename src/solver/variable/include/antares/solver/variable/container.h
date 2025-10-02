@@ -26,7 +26,6 @@
 #include <yuni/core/string.h>
 
 #include <antares/logs/logs.h>
-#include "antares/solver/variable/commons/spatial_aggregates_utils.h"
 
 #include "categories.h"
 #include "endoflist.h"
@@ -115,35 +114,19 @@ public:
     void computeSummary(unsigned int year, unsigned int numSpace);
 
     template<class V>
-    void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace)
-    {
-        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(allVars, year, numSpace);
-    }
+    void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace);
 
     template<class V, class SetT>
-    void yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set)
-    {
-        // No-op, kept for compatibility
-    }
+    void yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set);
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace)
-    {
-        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(allVars, year, numSpace);
-    }
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace);
 
     template<class V>
-    void simulationEndSpatialAggregates(V& allVars)
-    {
-        Commons::SpatialAggregatesUtils::simulationEndSpatialAggregates(allVars);
-    }
+    void simulationEndSpatialAggregates(V& allVars);
 
     template<class V, class SetT>
-    void simulationEndSpatialAggregates(V& allVars, const SetT& set)
-    {
-        // No-op, kept for compatibility
-    }
-
+    void simulationEndSpatialAggregates(V& allVars, const SetT& set);
     //@}
 
     //! \name Hourly events
