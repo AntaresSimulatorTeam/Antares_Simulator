@@ -21,6 +21,7 @@
 #pragma once
 
 #include "state.h"
+#include "storage/results.h"
 
 namespace Antares::Solver::Variable
 {
