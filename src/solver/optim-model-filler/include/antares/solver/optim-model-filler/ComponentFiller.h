@@ -60,7 +60,8 @@ public:
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              Optimization::VariableDictionary& variableDictionary,
                              const LinearProblemApi::ILinearProblemData& data,
-                             const ScenarioGroupRepository& scenarioGroupRepository);
+                             const ScenarioGroupRepository& scenarioGroupRepository,
+                             bool isMasterProblem = false);
 
     void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
                       const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -86,6 +87,8 @@ private:
     const ModelerStudy::SystemModel::Component& component_;
     Optimization::VariableDictionary& variableDictionary_;
     const EvaluationContextProvider evaluationContextProvider_;
+
+    bool isMasterProblem_;
 };
 
 class VariablesBulkAddition

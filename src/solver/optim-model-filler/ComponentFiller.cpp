@@ -139,10 +139,12 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  Optimization::VariableDictionary& variableDictionary,
                                  const LinearProblemApi::ILinearProblemData& data,
-                                 const ScenarioGroupRepository& scenarioGroupRepository):
+                                 const ScenarioGroupRepository& scenarioGroupRepository,
+                                 bool isMasterProblem):
     component_(component),
     variableDictionary_(variableDictionary),
-    evaluationContextProvider_(data, scenarioGroupRepository)
+    evaluationContextProvider_(data, scenarioGroupRepository),
+    isMasterProblem_(isMasterProblem)
 {
 }
 
@@ -169,54 +171,61 @@ void ComponentFiller::addVariables(LinearProblemApi::ILinearProblem& pb,
         }
         return evaluator.dispatch(node.RootNode());
     };
+
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
-        namespace SM = ModelerStudy::SystemModel;
-        const auto& lb = valueOrDefault(variable.LowerBound(),
-                                        variable.Type() == SM::ValueType::BOOL ? 0
-                                                                               : -pb.infinity());
-        const auto& ub = valueOrDefault(variable.UpperBound(),
-                                        variable.Type() == SM::ValueType::BOOL ? 1 : pb.infinity());
-        const Optimization::PartialKey key(component_.Id(), variable.Id());
-        if (variable.isTimeDependent())
+        if ((variable.isInSubProblem() && !isMasterProblem_)
+            || (variable.isInMasterProblem() && isMasterProblem_))
         {
-            const Optimization::Dimensions dim(
-              Optimization::IntegerInterval{ctx.getYear(),
-                                            ctx.getYear()}, /*TODO Handle range of year ? */
-              Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
-                                            ctx.getLocalLastTimeStep()));
-            // std::visit to handle the 4 cases: double/double, vector/double,
-            // double/vector and vector/vector.
-            std::visit(
-              [&pb, &variable, this, &key, &dim](const auto& lb_, const auto& ub_)
-              {
-                  VariablesBulkAddition(pb, variableDictionary_)
-                    .addVariable(lb_,
-                                 ub_,
-                                 variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
-                                 dim,
-                                 key);
-              },
-              lb.value(),
-              ub.value());
-        }
-        else
-        {
-            // No time component
-            const Optimization::Dimensions dim({}, {});
+            namespace SM = ModelerStudy::SystemModel;
+            const auto& lb = valueOrDefault(variable.LowerBound(),
+                                            variable.Type() == SM::ValueType::BOOL
+                                              ? 0
+                                              : -pb.infinity());
+            const auto& ub = valueOrDefault(variable.UpperBound(),
+                                            variable.Type() == SM::ValueType::BOOL ? 1
+                                                                                   : pb.infinity());
+            const Optimization::PartialKey key(component_.Id(), variable.Id());
+            if (variable.isTimeDependent())
+            {
+                const Optimization::Dimensions dim(
+                  Optimization::IntegerInterval{ctx.getYear(),
+                                                ctx.getYear()}, /*TODO Handle range of year ? */
+                  Optimization::IntegerInterval(ctx.getLocalFirstTimeStep(),
+                                                ctx.getLocalLastTimeStep()));
+                // std::visit to handle the 4 cases: double/double, vector/double,
+                // double/vector and vector/vector.
+                std::visit(
+                  [&pb, &variable, this, &key, &dim](const auto& lb_, const auto& ub_)
+                  {
+                      VariablesBulkAddition(pb, variableDictionary_)
+                        .addVariable(lb_,
+                                     ub_,
+                                     variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT,
+                                     dim,
+                                     key);
+                  },
+                  lb.value(),
+                  ub.value());
+            }
+            else
+            {
+                // No time component
+                const Optimization::Dimensions dim({}, {});
 
-            variableDictionary_.addVariable(
-              dim,
-              key,
-              [&pb, &lb, &ub, &variable](const Optimization::MCYearAndTime&,
-                                         const std::string& name)
-              {
-                  return pb.addVariable(lb.valueAsDouble(),
-                                        ub.valueAsDouble(),
-                                        variable.Type()
-                                          != ModelerStudy::SystemModel::ValueType::FLOAT,
-                                        name);
-              });
+                variableDictionary_.addVariable(
+                  dim,
+                  key,
+                  [&pb, &lb, &ub, &variable](const Optimization::MCYearAndTime&,
+                                             const std::string& name)
+                  {
+                      return pb.addVariable(lb.valueAsDouble(),
+                                            ub.valueAsDouble(),
+                                            variable.Type()
+                                              != ModelerStudy::SystemModel::ValueType::FLOAT,
+                                            name);
+                  });
+            }
         }
     }
 }
