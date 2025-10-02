@@ -80,6 +80,23 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
+    void setLocation(Modeler::Investment::Location location)
+    {
+        location_ = location;
+    }
+
+    [[nodiscard]] bool isInSubProblem() const
+    {
+        return location_ == Modeler::Investment::Location::SUBPROBLEMS
+               || location_ == Modeler::Investment::Location::MASTER_AND_SUBPROBLEMS;
+    }
+
+    [[nodiscard]] bool isInMasterProblem() const
+    {
+        return location_ == Modeler::Investment::Location::MASTER
+               || location_ == Modeler::Investment::Location::MASTER_AND_SUBPROBLEMS;
+    }
+
 private:
     std::string id_;
     ValueType type_;
