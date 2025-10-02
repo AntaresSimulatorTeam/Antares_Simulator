@@ -24,7 +24,6 @@
 #include <yuni/yuni.h>
 
 #include <antares/study/study.h>
-#include "antares/solver/variable/commons/spatial_aggregates_utils.h"
 
 #include "state.h"
 #include "surveyresults.h"
@@ -148,9 +147,8 @@ public:
     }
 
     template<class V>
-    void yearEndSpatialAggregates(V& v, unsigned int a, uint b)
+    void yearEndSpatialAggregates(V&, unsigned int, uint)
     {
-        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(v, a, b);
     }
 
     template<class V, class SetT>
@@ -160,15 +158,13 @@ public:
     }
 
     template<class V>
-    static void computeSpatialAggregatesSummary(V& v, unsigned int a, unsigned int b)
+    static void computeSpatialAggregatesSummary(V&, unsigned int, unsigned int)
     {
-        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(v, a, b);
     }
 
     template<class V>
-    static void simulationEndSpatialAggregates(V& v)
+    static void simulationEndSpatialAggregates(V&)
     {
-        Commons::SpatialAggregatesUtils::simulationEndSpatialAggregates(v);
     }
 
     template<class V, class SetT>
