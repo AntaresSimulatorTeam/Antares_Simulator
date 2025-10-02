@@ -20,9 +20,7 @@
  */
 #pragma once
 
-#include "antares/solver/variable/commons/spatial_aggregates_utils.h"
-
-#include "storage/results.h"
+#include "state.h"
 
 namespace Antares::Solver::Variable
 {
@@ -150,13 +148,10 @@ public:
                                  uint numSpace) const;
 
     template<class V>
-    void yearEndSpatialAggregates(V& allVars, uint year, uint numSpace)
+    void yearEndSpatialAggregates(V&, uint, uint)
     {
-        Commons::SpatialAggregatesUtils::computeSpatialAggregatesSummary(allVars, year, numSpace);
+        // do nothing
     }
-
-    template<class V>
-    void simulationEndSpatialAggregates(V& allVars);
 
     template<class I>
     static void provideInformations(I& infos);
@@ -165,6 +160,9 @@ public:
     void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::Area* area);
     void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
+
+    template<class V>
+    void simulationEndSpatialAggregates(V& allVars);
 
     template<class VCardToFindT>
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
