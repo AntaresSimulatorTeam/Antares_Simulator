@@ -262,6 +262,43 @@ inline void SetsOfAreas<NextT>::provideInformations(I& infos)
 }
 
 template<class NextT>
+template<class V>
+void SetsOfAreas<NextT>::yearEndSpatialAggregates(V& allVars, uint year, uint numSpace)
+{
+    for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
+    {
+        assert(setindex < pOriginalSets.size());
+        pSetsOfAreas[setindex]->yearEndSpatialAggregates(allVars,
+                                                         year,
+                                                         *(pOriginalSets[setindex]),
+                                                         numSpace);
+    }
+}
+
+template<class NextT>
+template<class V>
+void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(V& allVars,
+                                                         unsigned int year,
+                                                         unsigned int numSpace)
+{
+    for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
+    {
+        assert(setindex < pOriginalSets.size());
+        pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(allVars, year, numSpace);
+    }
+}
+
+template<class NextT>
+template<class V>
+void SetsOfAreas<NextT>::simulationEndSpatialAggregates(V& allVars)
+{
+    for (uint i = 0; i != pSetsOfAreas.size(); ++i)
+    {
+        pSetsOfAreas[i]->simulationEndSpatialAggregates(allVars, *(pOriginalSets[i]));
+    }
+}
+
+template<class NextT>
 void SetsOfAreas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pSetsOfAreas.size(); ++i)
