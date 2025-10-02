@@ -28,7 +28,6 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
-#include "antares/study/study.h"
 
 using namespace Yuni;
 
@@ -67,6 +66,21 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
     }
 }
 
+static void ConvertHourlyTSintoDailyTS(const Matrix<double>::ColumnType& hourlyColumn,
+                                       Matrix<double>::ColumnType& dailyColumn)
+{
+    for (unsigned hour = 0; hour < HOURS_PER_YEAR; ++hour)
+    {
+        unsigned day = hour / HOURS_PER_DAY;
+        if (hour % HOURS_PER_DAY == 0)
+        {
+            dailyColumn[day] = 0.0; // start a new day sum
+        }
+
+        dailyColumn[day] += hourlyColumn[hour] / HOURS_PER_DAY;
+    }
+}
+
 DataSeriesHydro::DataSeriesHydro():
     ror(timeseriesNumbers),
     storage(timeseriesNumbers),
@@ -98,15 +112,6 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     source.ror.unloadFromMemory();
     source.storage.unloadFromMemory();
     source.mingen.unloadFromMemory();
-}
-
-void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
-{
-    maxHourlyGenPower.timeSeries = source.maxHourlyGenPower.timeSeries;
-    maxHourlyPumpPower.timeSeries = source.maxHourlyPumpPower.timeSeries;
-
-    source.maxHourlyGenPower.unloadFromMemory();
-    source.maxHourlyPumpPower.unloadFromMemory();
 }
 
 void DataSeriesHydro::reset()
@@ -189,6 +194,20 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
 
     ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower.timeSeries[0]);
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
+}
+
+Matrix<> DataSeriesHydro::getDailyMaxGenPowerFromHourlyTS()
+{
+    Matrix<> dailyTs(1, DAYS_PER_YEAR);
+    ConvertHourlyTSintoDailyTS(maxHourlyGenPower.timeSeries[0], dailyTs[0]);
+    return dailyTs;
+}
+
+Matrix<> DataSeriesHydro::getDailyMaxPumpPowerFromHourlyTS()
+{
+    Matrix<> dailyTs(1, DAYS_PER_YEAR);
+    ConvertHourlyTSintoDailyTS(maxHourlyPumpPower.timeSeries[0], dailyTs[0]);
+    return dailyTs;
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID,

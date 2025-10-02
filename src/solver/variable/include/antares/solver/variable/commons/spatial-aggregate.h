@@ -443,7 +443,6 @@ private:
                 // This means that, here :
                 // - for OverallCost, we sum the hourly values of var OverallCost for each
                 //   district's areas.
-                // - for LOLD, we sum the hourly values of var UNSP. ENRG for each district's areas
                 allVars.template computeSpatialAggregateWith<
                   typename VCardType::VCardForSpatialAggregate>(pValuesForTheCurrentYear[numSpace],
                                                                 *i /* the current area */,
@@ -460,8 +459,6 @@ private:
             if (VCardType::VCardOrigin::spatialAggregate
                 & Category::spatialAggregateSumThen1IfPositive)
             {
-                // This case applies (for instance) if VarT is LOLD : if any area in the district
-                // has any unsupplied E (even tiny), LOLD of district is 1.
                 VariableAccessorType::SetTo1IfPositive(pValuesForTheCurrentYear[numSpace]);
             }
             if (VCardType::VCardOrigin::spatialAggregate & Category::spatialAggregateOr)

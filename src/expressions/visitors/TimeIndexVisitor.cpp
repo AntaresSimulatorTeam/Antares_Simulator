@@ -95,9 +95,13 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
     return dispatch(neg->child());
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode*)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    throw std::invalid_argument("PortFieldNode not handled by visitor TimeIndexVisitor");
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
+    const auto* nodeToVisit = component_.nodeAtPortField(portId, fieldId);
+    return dispatch(nodeToVisit);
 }
 
 Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)

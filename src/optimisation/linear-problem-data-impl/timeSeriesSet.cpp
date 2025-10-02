@@ -35,7 +35,26 @@ TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
 {
 }
 
+TimeSeriesSet::TimeSeriesSet(std::string name, std::vector<std::vector<double>>&& tsSet):
+    IDataSeries::IDataSeries(name),
+    tsSet_(std::move(tsSet))
+{
+    if (!tsSet_.empty())
+    {
+        height_ = tsSet_[0].size();
+    }
+}
+
 void TimeSeriesSet::add(const std::vector<double>& ts)
+{
+    if (ts.size() != height_)
+    {
+        throw AddTSofWrongSize(name(), ts.size(), height_);
+    }
+    tsSet_.push_back(std::move(ts));
+}
+
+void TimeSeriesSet::add(std::vector<double>&& ts)
 {
     if (ts.size() != height_)
     {
