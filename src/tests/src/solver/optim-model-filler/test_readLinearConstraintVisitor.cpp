@@ -41,14 +41,13 @@ using namespace Antares::Optimisation;
 
 BOOST_AUTO_TEST_SUITE(_read_linear_constraint_visitor_)
 
-Antares::Optimisation::ScenarioGroupRepository createScenario()
+ScenarioGroupRepository createScenario()
 {
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
-    auto scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
-      "SCENARIO_GROUP");
+    ScenarioGroupRepository scenarioGroupRepository;
+    auto scenarioPtr = std::make_unique<LinearProblemDataImpl::Scenario>("SCENARIO_GROUP");
     scenarioPtr->setTimeSerieNumber(0, 1);
     scenarioGroupRepository.addScenario("SCENARIO_GROUP", std::move(scenarioPtr));
-    scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>("GROUP");
+    scenarioPtr = std::make_unique<LinearProblemDataImpl::Scenario>("GROUP");
     scenarioPtr->setTimeSerieNumber(0, 1);
     scenarioGroupRepository.addScenario("GROUP", std::move(scenarioPtr));
     return scenarioGroupRepository;
@@ -56,14 +55,13 @@ Antares::Optimisation::ScenarioGroupRepository createScenario()
 
 struct MyDummyFixture: Registry<Node>
 {
-    Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem
-      linearProblem; // TODO use mock
-    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario empty_scenario;
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem; // TODO use mock
+    LinearProblemDataImpl::LinearProblemData data;
+    LinearProblemApi::EmptyScenario empty_scenario;
+    ScenarioGroupRepository scenarioGroupRepository;
     SystemModel::Model m;
     SystemModel::ComponentBuilder componentBuilder;
-    Antares::Optimisation::OptimEntityContainer optimContainer;
+    OptimEntityContainer optimContainer;
     SystemModel::Component component = componentBuilder.withId("compo")
                                          .withModel(&m)
                                          .withScenarioGroupId("group")
@@ -90,7 +88,7 @@ struct MyDummyFixture: Registry<Node>
 
     ReadLinearConstraintVisitor visitor()
     {
-        Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+        LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
         return ReadLinearConstraintVisitor(ctx, component, optimContainer);
     }
 
@@ -148,7 +146,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
     Node* node = create<EqualNode>(lhs, rhs);
     setComponentParameterValues(
       {{"param1", Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT, "9."}});
-    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    const LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
 
     auto v = visitor();
     auto constraint = v.dispatch(node);
@@ -176,7 +174,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
     Node* node = create<LessThanOrEqualNode>(lhs, rhs);
     setComponentParameterValues(
       {{"param1", Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT, "10."}});
-    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    const LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
 
     auto v = visitor();
     auto constraint = v.dispatch(node);
@@ -207,7 +205,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
     Node* node = create<GreaterThanOrEqualNode>(lhs, rhs);
     setComponentParameterValues(
       {{"param1", Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT, "9."}});
-    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    const LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
     auto v = visitor();
     auto constraint = v.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb[0], -14);
