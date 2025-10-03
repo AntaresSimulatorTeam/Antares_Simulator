@@ -21,13 +21,12 @@ toc_depth: 2
 
 #### Removed features
 
-* [ANT-3638] Remove H cost from Ov cost (#3035)
+* [ANT-3638] Remove H COST from OV COST (#3035)
 * Remove special value "default" for scenario-group field (#2977)
 
 #### Improvements
 
 * Use boost::iostreams::mapped_file_source to improve CSV loading performance [ANT-3915] (#3089)
-* Save hydro gen and pump in legacy GUI [ANT-3140] (#3084)
 * Logs time used to build modeler problem [ANT-3759] (#3041)
 * Display correct problem size in logs [ANT-3716] (#3026)
 * Short term storage : simplify results data structure [ANT-3175] (#2991)
@@ -46,6 +45,8 @@ toc_depth: 2
 
 #### Bugfixes
 
+* Fix inconsistent LOLD for districts [ANT-3408] (#3117)
+* Save hydro gen and pump in legacy GUI [ANT-3140] (#3084)
 * ANT-3697 : fix contraint on weekly hydro generation amount [ANT-3697] (#3040)
 * Catch modeler loading error [ANT-3837] (#3063)
 * Modeler - fix various problems with time & scenarios [ANT-3712] (#2972)
