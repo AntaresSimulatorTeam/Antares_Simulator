@@ -46,6 +46,8 @@ public:
     using const_iterator = std::vector<std::pair<int, double>>::const_iterator;
     const_iterator begin() const;
     const_iterator end() const;
+    const std::pair<int, double>& operator[](std::size_t) const;
+    std::size_t size() const;
 
 private:
     bool hasCoefs() const;
