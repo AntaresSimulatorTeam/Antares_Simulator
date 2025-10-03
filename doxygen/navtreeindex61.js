@@ -1,14 +1,5 @@
 var NAVTREEINDEX61 =
 {
-"structMyDummyFixture.html#af0b0ef4b6275aded6e578ac51af5ff2b":[8,0,208,11],
-"structMyDummyFixture.html#afbff0d1e4d83f86fa00606ffd3f8e058":[8,0,208,14],
-"structMyDummyFixture.html#aff338a606b9c977a778dfdc9417d5452":[8,0,208,15],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html":[8,0,212],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html#a02f32d864d1d9fdf2addf08fdb2b3e5e":[8,0,212,2],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html#a7192fbd2b41e5a691cbd746431279147":[8,0,212,1],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html#a9bea088101603f5d94e925de2a6a74e0":[8,0,212,0],
-"structNbUnitsOutageLessThanNbUnitsStopData.html":[8,0,215],
-"structNbUnitsOutageLessThanNbUnitsStopData.html#a1b844496f8b91a9b7b32e136d2de92c5":[8,0,215,0],
 "structNbUnitsOutageLessThanNbUnitsStopData.html#a4f4c1de286c15a23e233f373c838d238":[8,0,215,1],
 "structNbUnitsOutageLessThanNbUnitsStopData.html#a8fb1511290c4decd9d7af5c5a9f37935":[8,0,215,2],
 "structNonCopyableFunctionObject.html":[8,0,217],
@@ -249,5 +240,14 @@ var NAVTREEINDEX61 =
 "structScenarioBuilderFixture.html":[8,0,262],
 "structScenarioBuilderFixture.html#a9b18ebfbf02d296d6e5911e3682ff24c":[8,0,262,1],
 "structScenarioBuilderFixture.html#abebd5db9126ba81270a30cfc8c6081ba":[8,0,262,0],
-"structShortTermStorageCumulativeConstraintData.html":[8,0,278]
+"structShortTermStorageCumulativeConstraintData.html":[8,0,278],
+"structShortTermStorageCumulativeConstraintData.html#a865fca8cd5bc823a72e30e4048955dd0":[8,0,278,0],
+"structShortTermStorageData.html":[8,0,279],
+"structShortTermStorageData.html#a6bc3fb1c47808a1f4bbe4006506dd14b":[8,0,279,0],
+"structShortTermStorageData.html#ab5d0e60ea524a657f778c3013b394fe5":[8,0,279,1],
+"structShortTermStorage_1_1PROPERTIES.html":[8,0,22,0],
+"structShortTermStorage_1_1PROPERTIES.html#a07e7f1143dd0a57ea62742bc4f5c1e44":[8,0,22,0,2],
+"structShortTermStorage_1_1PROPERTIES.html#a209e556530d8e38ef49b75f8f19c8d65":[8,0,22,0,1],
+"structShortTermStorage_1_1PROPERTIES.html#a2674957ecceae9505eea04135c633948":[8,0,22,0,0],
+"structShortTermStorage_1_1PROPERTIES.html#a2fbbabb39ee31b67a93a7cf947d6111b":[8,0,22,0,4]
 };

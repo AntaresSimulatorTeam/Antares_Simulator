@@ -1,14 +1,5 @@
 var NAVTREEINDEX55 =
 {
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html#ab844fe4e993d24219d19a94a0f302845":[8,0,0,11,0,4,3,1],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html#afb6da5bff6d06a6bb7590ebe7fad3dab":[8,0,0,11,0,4,3,0],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html":[8,0,0,11,0,4,1],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html#a5e8187d7936d2b1b3ad50357a102cfb9":[8,0,0,11,0,4,1,0],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html#aad36f022e5e23d34bfa61ead84449151":[8,0,0,11,0,4,1,2],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html#af8cb50bfea16f1bf20623325548bb489":[8,0,0,11,0,4,1,1],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html#afaae8fd70c7f29200e0f25594441d726":[8,0,0,11,0,4,1,3],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html":[8,0,0,11,0,4,6],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#a0a03b236c4b53d1b8fa02b85b7858efc":[8,0,0,11,0,4,6,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#a106daa73ce010711478b4a63889e9183":[8,0,0,11,0,4,6,2],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#ac87166ab4d9a6f882e8c7deab3bb2c65":[8,0,0,11,0,4,6,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#ad10a45d534b4eb0e1574369798e2bbed":[8,0,0,11,0,4,6,1],
@@ -249,5 +240,14 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html#ab104766e003e9658b8dd9a368dab3c09":[8,0,0,18,4,4,41,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFee.html#ab1ae6de95f8ac5895b968012331f8fcf":[8,0,0,18,4,4,41,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html":[8,0,0,18,4,4,43],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a19131fca284bf51dc32ffe2373f0892e":[8,0,0,18,4,4,43,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a19131fca284bf51dc32ffe2373f0892e":[8,0,0,18,4,4,43,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#a3cded9a6d6411a0f7f3dca37e172ed7b":[8,0,0,18,4,4,43,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionFeeAbs.html#ab99e83542726369da03946e9f25cf63d":[8,0,0,18,4,4,43,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html":[8,0,0,18,4,4,45],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a2fc2250a111a738459770f829ed95638":[8,0,0,18,4,4,45,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a380cd53234ca0d9402cace16893dc683":[8,0,0,18,4,4,45,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a91c021d0e49cd8e6795287c04dcb741b":[8,0,0,18,4,4,45,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability_1_1Multiple.html":[8,0,0,18,4,4,45,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html":[8,0,0,18,4,4,27],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#a68c5f04cdffeca83bfe4b6ee6127f315":[8,0,0,18,4,4,27,0]
 };

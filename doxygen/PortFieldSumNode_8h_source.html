@@ -150,38 +150,36 @@ $(document).ready(function(){initNavTree('PortFieldSumNode_8h_source.html',''); 
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;antares/expressions/hashable.h&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;antares/expressions/nodes/Leaf.h&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>Antares::Expressions::Nodes</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">   32</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">PortFieldSumNode</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Node</a>, <span class="keyword">public</span> <a class="code" href="classAntares_1_1Expressions_1_1Hashable.html">Hashable</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#a1ed000851f587d5953511064bf0f6bbe">PortFieldSumNode</a>(<span class="keyword">const</span> std::string&amp; port_name, <span class="keyword">const</span> std::string&amp; field_name);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> std::string&amp; <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#ac3831b1df5be5e32a42c24f4f35652dc">getPortName</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> std::string&amp; <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#a336691de165b906485655b35fb185933">getFieldName</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">PortFieldSumNode</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    std::string name()<span class="keyword"> const override</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;PortFieldSumNode&quot;</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::string port_name_;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    std::string field_name_;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;};</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;} <span class="comment">// namespace Antares::Expressions::Nodes</span></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Hashable_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Hashable.html">Antares::Expressions::Hashable</a></div><div class="ttdef"><b>Definition:</b> hashable.h:27</div></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;antares/expressions/nodes/Leaf.h&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>Antares::Expressions::Nodes</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">PortFieldSumNode</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Node</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#a1ed000851f587d5953511064bf0f6bbe">PortFieldSumNode</a>(<span class="keyword">const</span> std::string&amp; port_name, <span class="keyword">const</span> std::string&amp; field_name);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> std::string&amp; <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#ac3831b1df5be5e32a42c24f4f35652dc">getPortName</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> std::string&amp; <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#a336691de165b906485655b35fb185933">getFieldName</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">PortFieldSumNode</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    std::string name()<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;PortFieldSumNode&quot;</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::string port_name_;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::string field_name_;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;} <span class="comment">// namespace Antares::Expressions::Nodes</span></div>
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1Node_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a></div><div class="ttdoc">Base class for nodes in a syntax tree.</div><div class="ttdef"><b>Definition:</b> Node.h:30</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">Antares::Expressions::Nodes::PortFieldSumNode</a></div><div class="ttdoc">Represents a port field node where the expression is a sum.</div><div class="ttdef"><b>Definition:</b> PortFieldSumNode.h:33</div></div>
+<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">Antares::Expressions::Nodes::PortFieldSumNode</a></div><div class="ttdoc">Represents a port field node where the expression is a sum.</div><div class="ttdef"><b>Definition:</b> PortFieldSumNode.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode_html_a1ed000851f587d5953511064bf0f6bbe"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#a1ed000851f587d5953511064bf0f6bbe">Antares::Expressions::Nodes::PortFieldSumNode::PortFieldSumNode</a></div><div class="ttdeci">PortFieldSumNode(const std::string &amp;port_name, const std::string &amp;field_name)</div><div class="ttdoc">Constructs a port field sum node with the specified port and field names.</div><div class="ttdef"><b>Definition:</b> PortFieldSumNode.cpp:25</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode_html_a336691de165b906485655b35fb185933"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#a336691de165b906485655b35fb185933">Antares::Expressions::Nodes::PortFieldSumNode::getFieldName</a></div><div class="ttdeci">const std::string &amp; getFieldName() const</div><div class="ttdoc">Retrieves the field name.</div><div class="ttdef"><b>Definition:</b> PortFieldSumNode.cpp:37</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode_html_ac3831b1df5be5e32a42c24f4f35652dc"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#ac3831b1df5be5e32a42c24f4f35652dc">Antares::Expressions::Nodes::PortFieldSumNode::getPortName</a></div><div class="ttdeci">const std::string &amp; getPortName() const</div><div class="ttdoc">Retrieves the port name.</div><div class="ttdef"><b>Definition:</b> PortFieldSumNode.cpp:32</div></div>
+<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode_html_a336691de165b906485655b35fb185933"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#a336691de165b906485655b35fb185933">Antares::Expressions::Nodes::PortFieldSumNode::getFieldName</a></div><div class="ttdeci">const std::string &amp; getFieldName() const</div><div class="ttdoc">Retrieves the field name.</div><div class="ttdef"><b>Definition:</b> PortFieldSumNode.cpp:36</div></div>
+<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode_html_ac3831b1df5be5e32a42c24f4f35652dc"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#ac3831b1df5be5e32a42c24f4f35652dc">Antares::Expressions::Nodes::PortFieldSumNode::getPortName</a></div><div class="ttdeci">const std::string &amp; getPortName() const</div><div class="ttdoc">Retrieves the port name.</div><div class="ttdef"><b>Definition:</b> PortFieldSumNode.cpp:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

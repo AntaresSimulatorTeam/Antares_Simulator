@@ -1,14 +1,5 @@
 var NAVTREEINDEX64 =
 {
-"ui_2simulator_2application_2study_8cpp.html#af2715ffb1f553d4267e79610af5135a2":[7,0,0,115],
-"ui_2simulator_2application_2study_8cpp.html#af5cb196e85a926f2042c181f875e8fa4":[7,0,0,151],
-"ui_2simulator_2application_2study_8cpp.html#af5ed7f67584946fc5469e45228bacdef":[7,0,0,146],
-"ui_2simulator_2application_2study_8cpp.html#afb6427c81c7c297614b87e9cfc94a5d7":[7,0,0,83],
-"ui_2simulator_2application_2study_8cpp.html#afb98e9ca35fa68c4986758f9d96ed60d":[7,0,0,156],
-"ui_2simulator_2application_2study_8h.html#a460252950dddefc836281fd3f63568b9":[7,0,0,107],
-"ui_2simulator_2application_2study_8h.html#a8814a116a2489677f21c011483c27c97":[7,0,0,110],
-"ui_2simulator_2application_2study_8h.html#ab9b6c4c52878b5891c2515022d38f739":[7,0,0,159],
-"ui_2simulator_2application_2study_8h.html#ad4c7bc2aa5a0ff80434a4aaf574e7fb8":[7,0,0,71],
 "ui_2simulator_2application_2study_8h.html#ad4c7bc2aa5a0ff80434a4aaf574e7fb8a6d5b20263e48efa822d2bfbf3b377299":[7,0,0,71,2],
 "ui_2simulator_2application_2study_8h.html#ad4c7bc2aa5a0ff80434a4aaf574e7fb8aa3e3b05ad4367e7fc1c73836063643f7":[7,0,0,71,1],
 "ui_2simulator_2application_2study_8h.html#ad4c7bc2aa5a0ff80434a4aaf574e7fb8af39e7a97bc285e65279fb5b7b982a6e0":[7,0,0,71,3],

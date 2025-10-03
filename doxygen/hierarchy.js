@@ -591,10 +591,6 @@ var hierarchy =
     [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],
     [ "Antares::GUILocker", "classAntares_1_1GUILocker.html", null ],
     [ "boost::hash< Antares::Optimization::PartialKey >", "structboost_1_1hash_3_01Antares_1_1Optimization_1_1PartialKey_01_4.html", null ],
-    [ "Antares::Expressions::Hashable", "classAntares_1_1Expressions_1_1Hashable.html", [
-      [ "Antares::Expressions::Nodes::PortFieldNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html", null ],
-      [ "Antares::Expressions::Nodes::PortFieldSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html", null ]
-    ] ],
     [ "Antares::Solver::HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", null ],
     [ "Antares::Date::HourInterval", "structAntares_1_1Date_1_1HourInterval.html", null ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html", null ],
@@ -1422,7 +1418,6 @@ var hierarchy =
     [ "Antares::ModelerStudy::SystemModel::PortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortField.html", null ],
     [ "Antares::IO::Inputs::YmlModel::PortFieldDefinition", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html", null ],
     [ "Antares::ModelerStudy::SystemModel::PortFieldDefinition", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldDefinition.html", null ],
-    [ "Antares::Expressions::PortFieldHash", "structAntares_1_1Expressions_1_1PortFieldHash.html", null ],
     [ "Antares::ModelerStudy::SystemModel::PortFieldKey", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html", null ],
     [ "Antares::ModelerStudy::SystemModel::PortFieldKeyHash", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKeyHash.html", null ],
     [ "Antares::IO::Inputs::YmlModel::PortType", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html", null ],
