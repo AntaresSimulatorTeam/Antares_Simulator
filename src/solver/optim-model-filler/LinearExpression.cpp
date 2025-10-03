@@ -175,7 +175,7 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
     {
         // Multiplying two symbolic expressions would give quadratic terms,
         // which this representation cannot hold.
-        throw std::runtime_error("Quadratic term detected");
+        throw std::invalid_argument("A linear expression can't have quadratic terms.");
     }
     else if (!hasCoefs() && !other.hasCoefs())
     {
