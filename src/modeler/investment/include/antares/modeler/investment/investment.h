@@ -24,6 +24,10 @@
 namespace Antares::Modeler::Investment
 {
 
-bool markVariablesForInvestment(Modeler::Data& modelerData);
+class Investment
+{
+public:
+    static bool markVariablesForInvestment(Modeler::Data& modelerData);
+};
 
 } // namespace Antares::Modeler::Investment

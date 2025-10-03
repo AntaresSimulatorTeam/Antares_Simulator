@@ -80,7 +80,7 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
-    void setLocation(Modeler::Investment::Location location)
+    void setLocation(const Modeler::Investment::Location& location)
     {
         location_ = location;
     }

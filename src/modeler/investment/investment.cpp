@@ -26,7 +26,7 @@
 namespace Antares::Modeler::Investment
 {
 
-bool markVariablesForInvestment(Modeler::Data& modelerData)
+bool Investment::markVariablesForInvestment(Modeler::Data& modelerData)
 {
     const auto& optimConfig = modelerData.investmentOptimConfig.value();
 
@@ -34,13 +34,17 @@ bool markVariablesForInvestment(Modeler::Data& modelerData)
     for (const auto& model: optimConfig.models())
     {
         bool modelFound = false;
-        for (auto& [componentId, component]: modelerData.system->Components())
+        for (auto& [_, component]: modelerData.system->Components())
         {
             if (component.getModel()->Id() == model.id())
             {
                 modelFound = true;
-                for (auto& [variableId, variable]: component.getModel()->Variables())
+                for (const auto& modelDecompositionVar: model.modelDecomposition().variables())
                 {
+                    /*component.getModel()*/
+                    /*  ->Variables()*/
+                    /*  .at(modelDecompositionVar.id())*/
+                    /*  .setLocation(modelDecompositionVar.location());*/
                 }
             }
         }
