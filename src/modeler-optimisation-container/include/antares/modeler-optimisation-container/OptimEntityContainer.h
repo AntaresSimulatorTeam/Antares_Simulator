@@ -95,11 +95,6 @@ public:
         variableStartColumn_.push_back(linearProblem_.variableCount());
     }
 
-    void addStartLine()
-    {
-        constraintStartLine_.push_back(linearProblem_.constraintCount());
-    }
-
     [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>>& getVariables()
       const
     {
@@ -168,5 +163,10 @@ private:
     LinearProblemApi::ILinearProblem& linearProblem_;
     const LinearProblemApi::ILinearProblemData* data_;
     const ScenarioGroupRepository* scenarioGroupRepository_;
+
+    void addStartLine()
+    {
+        constraintStartLine_.push_back(linearProblem_.constraintCount());
+    }
 };
 } // namespace Antares::Optimisation
