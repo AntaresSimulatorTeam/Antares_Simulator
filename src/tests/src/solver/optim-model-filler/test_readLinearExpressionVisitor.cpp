@@ -51,7 +51,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, VisitorFixture<ReadLinearExpressionVisito
     Node* node = create<LiteralNode>(5.);
     auto linear_expression = visitor().dispatch(node);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
@@ -68,10 +68,10 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpre
     // 5 + param(3) = 8
     Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
     setComponentParameterValues({{"param", SystemModel::ParameterType::CONSTANT, "3."}});
-    // ReadLinearExpressionVisitor visitor(evaluationContextProvider, fillCtx, component);
-    // auto linear_expression = visitor.dispatch(sum).GetLinearExpressions().at(0);
-    // BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
-    // BOOST_CHECK(linear_expression.coefPerVar().empty());
+    auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 8.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
@@ -82,23 +82,17 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
                                                create<VariableNode>("var", 0));
     Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
     setComponentParameterValues({{"param", SystemModel::ParameterType::CONSTANT, "-5."}});
-    // auto linear_expression = visitor().dispatch(sum).GetLinearExpressions().at(0);
-    // BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-    //                     FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
-    //                   7.);
-}
+    auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1 /* timestep (constant expression) */);
 
-struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
-{
-    [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,
-                                 [[maybe_unused]] unsigned scenario,
-                                 unsigned hour) const override
-    {
-        return hour; // for test
-    }
-};
+    // Constant
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 55.);
+
+    // Coefs
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].first, 0);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].second, 7.);
+}
 
 BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisitor>)
 {
@@ -111,14 +105,18 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<TimeSumNode>(from, to, create<ParameterNode>("param")));
     setComponentParameterValues({{"param", SystemModel::ParameterType::TIMESERIE, "0_1_2"}});
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 2, 0, 2, 0};
-    // ReadLinearExpressionVisitor visitor(evaluationContextProvider, ctx, component);
-    // auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
-    // BOOST_REQUIRE_EQUAL(linear_expressions.size(), 3);
-    // BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 9.);
-    // BOOST_CHECK(linear_expressions.at(0).coefPerVar().empty());
-    // BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 10.);
-    // BOOST_CHECK(linear_expressions.at(1).coefPerVar().empty());
+    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+
+    auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3 /* timesteps */);
+
+    // Constants
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 9.);
+    BOOST_CHECK_EQUAL(linear_expression[1].constant(), 10.);
+
+    // Coefs
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[1].size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVisitor>)
@@ -130,11 +128,16 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVis
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<AllTimeSumNode>(create<ParameterNode>("param")));
     setComponentParameterValues({{"param", SystemModel::ParameterType::TIMESERIE, "0_1_2"}});
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 2, 0, 2, 0};
-    // ReadLinearExpressionVisitor visitor(evaluationContextProvider, ctx, component);
-    // auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
-    // BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 8.);
-    // BOOST_CHECK(linear_expressions.at(0).coefPerVar().empty());
+
+    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3 /* timesteps */);
+
+    // Constants
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 8.);
+
+    // Coefs
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
@@ -149,18 +152,22 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{hour_0, hour_1, hour_0, hour_1, 0};
-    // ReadLinearExpressionVisitor visitor(evaluationContextProvider, ctx, component);
-    // auto linear_expressions = visitor.dispatch(sum).GetLinearExpressions();
-    // BOOST_CHECK_EQUAL(linear_expressions.at(0).offset(), 60.);
-    // BOOST_CHECK_EQUAL(linear_expressions.at(1).offset(), 61.);
-    // BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().size(), 1);
-    // BOOST_CHECK_EQUAL(linear_expressions.at(0).coefPerVar().at(
-    //                     FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
-    //                   7.);
-    // BOOST_CHECK_EQUAL(linear_expressions.at(1).coefPerVar().at(
-    //                     FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 1)),
-    //                   7.);
+    ctx = LinearProblemApi::FillContext(hour_0, hour_1, hour_0, hour_1, 0);
+    auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 2 /* timesteps */);
+    // Constants
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 60.);
+    BOOST_CHECK_EQUAL(linear_expression[1].constant(), 61.);
+
+    // Coefs
+    auto checkAt = [&](unsigned int t)
+    {
+        BOOST_REQUIRE_EQUAL(linear_expression[t].size(), 1);
+        BOOST_CHECK_EQUAL(linear_expression[t][0].first, t);
+        BOOST_CHECK_EQUAL(linear_expression[t][0].second, 7.);
+    };
+    checkAt(0);
+    checkAt(1);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
@@ -168,9 +175,8 @@ BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_sy
 {
     ParameterNode p("param", Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     setComponentParameterValues({{"param", SystemModel::ParameterType::TIMESERIE, "0_1_2"}});
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 1, 0, 1, 0};
-    // ReadLinearExpressionVisitor visitor(evaluationContextProvider, ctx, component);
-    // BOOST_CHECK_THROW(visitor.dispatch(&p), Antares::Error::InvalidArgumentError);
+
+    BOOST_CHECK_THROW(visitor().dispatch(&p), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, VisitorFixture<ReadLinearExpressionVisitor>)
@@ -180,12 +186,16 @@ BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, VisitorFixture<ReadLinear
                                                create<VariableNode>("var", 0));
     Node* sum = create<SumNode>(create<LiteralNode>(60.), product);
     Node* neg = create<NegationNode>(sum);
-    // auto linear_expression = visitor().dispatch(neg).GetLinearExpressions().at(0);
-    // BOOST_CHECK_EQUAL(linear_expression.offset(), -60.);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-    //                     FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
-    //                   -7.);
+    auto linear_expression = visitor().dispatch(neg);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1 /* timesteps */);
+
+    // Constants
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), -60.);
+
+    // Coefs
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].first, 0);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].second, -7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, VisitorFixture<ReadLinearExpressionVisitor>)
@@ -194,12 +204,16 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, VisitorFixture<ReadLinearExpres
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var", 0));
     Node* sub = create<SubtractionNode>(create<LiteralNode>(60.), product);
-    // auto linear_expression = visitor().dispatch(sub).GetLinearExpressions().at(0);
-    // BOOST_CHECK_EQUAL(linear_expression.offset(), 60.);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-    //                     FullKey(component.Id(), "var", MCYearAndTime::MCYear{0}, 0)),
-    //                   -7.);
+    auto linear_expression = visitor().dispatch(sub);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1 /* timesteps */);
+
+    // Constants
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 60.);
+
+    // Coefs
+    BOOST_REQUIRE_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].first, 0);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].second, -7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_complex_expression, VisitorFixture<ReadLinearExpressionVisitor>)
@@ -224,16 +238,18 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, VisitorFixture<ReadLinearExpre
 
     setComponentParameterValues({{"param1", SystemModel::ParameterType::CONSTANT, "-2."},
                                  {"param2", SystemModel::ParameterType::CONSTANT, "8."}});
-    // ReadLinearExpressionVisitor visitor(evaluationContextProvider, fillCtx, component);
-    // auto linear_expression = visitor.dispatch(big_sum).GetLinearExpressions().at(0);
-    // BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-    //                     FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-    //                   4.);
-    // BOOST_CHECK_EQUAL(linear_expression.coefPerVar().at(
-    //                     FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-    //                   6.);
+    auto linear_expression = visitor().dispatch(big_sum);
+    // Constants
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 10.);
+
+    // Coefs
+    BOOST_REQUIRE_EQUAL(linear_expression[0].size(), 2);
+
+    BOOST_CHECK_EQUAL(linear_expression[0][0].first, 0);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].second, 4.);
+
+    BOOST_CHECK_EQUAL(linear_expression[0][1].first, 1);
+    BOOST_CHECK_EQUAL(linear_expression[0][1].second, 6.);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown,

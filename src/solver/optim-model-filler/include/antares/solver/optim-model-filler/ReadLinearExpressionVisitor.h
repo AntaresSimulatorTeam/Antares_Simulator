@@ -106,7 +106,7 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::DivisionNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        return dispatch(node->left()) / dispatch(node->right());
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
@@ -174,7 +174,7 @@ public:
         if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
             && systemParameter.type != Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
         {
-            throw std::runtime_error(
+            throw Antares::Error::InvalidArgumentError(
               "Parameter " + node->value()
               + " is declared constant in time and scenario in library but not in system");
         }

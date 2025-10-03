@@ -27,11 +27,31 @@ inline ScenarioGroupRepository createScenario()
     return scenarioGroupRepository;
 }
 
+struct MockLinearProblemData: LinearProblemApi::ILinearProblemData
+{
+    [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,
+                                 [[maybe_unused]] unsigned scenario,
+                                 unsigned hour) const override
+    {
+        return hour; // for test
+    }
+
+    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
+                                                  unsigned timeSeriesNumber,
+                                                  unsigned firstHour,
+                                                  unsigned lastHour) const override
+    {
+        return v_;
+    }
+
+    const std::vector<double> v_{0., 1., 2.};
+};
+
 template<class Visitor>
 struct VisitorFixture: Registry<Node>
 {
     LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem; // TODO use mock
-    LinearProblemDataImpl::LinearProblemData data;
+    MockLinearProblemData data;
     LinearProblemApi::EmptyScenario empty_scenario;
     ScenarioGroupRepository scenarioGroupRepository;
     SystemModel::Model m;
@@ -41,6 +61,7 @@ struct VisitorFixture: Registry<Node>
                                          .withModel(&m)
                                          .withScenarioGroupId("group")
                                          .build();
+    LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
 
     VisitorFixture():
         linearProblem(false, "sirius"),
@@ -63,7 +84,6 @@ struct VisitorFixture: Registry<Node>
 
     Visitor visitor()
     {
-        LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
         return Visitor(optimContainer, ctx, component);
     }
 

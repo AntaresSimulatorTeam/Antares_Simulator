@@ -125,6 +125,18 @@ LinearExpression& LinearExpression::operator-=(const LinearExpression& other)
     return *this;
 }
 
+LinearExpression LinearExpression::operator/(const LinearExpression& other) const
+{
+    if (other.hasCoefs())
+    {
+        throw std::invalid_argument("A linear expression can't have a variable as a dividend.");
+    }
+    double inv = 1.0 / other.constant();
+    LinearExpression out(*this);
+    out *= inv;
+    return out;
+}
+
 LinearExpression LinearExpression::operator-() const
 {
     LinearExpression ret;
@@ -433,6 +445,23 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
         expr = -expr;
     }
     return result;
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
+  const TimeDependentLinearExpression& other) const
+{
+    TimeDependentLinearExpression out(*this);
+    if (other.size() > out.size())
+    {
+        out.expandTo(other.size());
+    }
+    int t = 0;
+    for (auto& expr: out)
+    {
+        out[t] = out[t] / other[t];
+        t++;
+    }
+    return out;
 }
 
 } // namespace Antares::Optimization

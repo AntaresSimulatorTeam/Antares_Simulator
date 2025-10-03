@@ -30,15 +30,16 @@ class LinearExpression final
 {
 public:
     LinearExpression();
-    LinearExpression(double constant);
-    LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant);
-
+    explicit LinearExpression(double constant);
+    explicit LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant);
+    LinearExpression(const LinearExpression& other) = default;
     void removeDuplicateCoefficients();
 
     LinearExpression& operator*=(double factor);
     LinearExpression& operator+=(const LinearExpression& other);
     LinearExpression& operator-=(const LinearExpression& other);
     LinearExpression operator-() const;
+    LinearExpression operator/(const LinearExpression& other) const;
     LinearExpression& operator*=(const LinearExpression& other);
     void addVariable(int index, double value);
     double constant() const;
@@ -63,6 +64,7 @@ public:
     explicit TimeDependentLinearExpression(const std::span<const double>& values);
 
     explicit TimeDependentLinearExpression(LinearExpression&& expr);
+    TimeDependentLinearExpression(const TimeDependentLinearExpression& expr) = default;
     void expandTo(std::size_t nbTimesteps);
 
     std::vector<double> constant() const;
@@ -90,6 +92,7 @@ public:
     TimeDependentLinearExpression& operator*=(double factor);
 
     TimeDependentLinearExpression& operator*=(const TimeDependentLinearExpression& other);
+    TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
 
     TimeDependentLinearExpression operator-() const;
 
