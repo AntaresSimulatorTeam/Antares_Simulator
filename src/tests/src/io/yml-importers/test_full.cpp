@@ -419,9 +419,8 @@ library:
 
         const auto level = std::ranges::find_if(model5.Variables(),
                                                 [](const auto& v) { return v.Id() == "level"; });
-        const auto getConstraint =
-          [](const std::vector<SystemModel::Constraint>& constraints, const std::string& id)
-        {
+        const auto getConstraint = [](const std::vector<SystemModel::Constraint>& constraints,
+                                      const std::string& id) {
             return std::ranges::find_if(constraints, [&id](const auto& c) { return c.Id() == id; });
         };
         checkVariable(*level,
