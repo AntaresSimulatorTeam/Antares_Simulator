@@ -102,33 +102,26 @@ BOOST_AUTO_TEST_CASE(multiply_two_linear_expressions_containing_variables__excep
                           std::invalid_argument,
                           checkMessage("A linear expression can't have quadratic terms."));
 }
-#if 0
 
 BOOST_AUTO_TEST_CASE(divide_linear_expression_by_scalar)
 {
-    auto component = "compo";
-
-    LinearExpression linearExpression(4.,
-                                      {{FullKey(component, "var1"), -5.},
-                                       {FullKey(component, "var2"), 6.}});
-    LinearExpression someScalar(-2., {});
+    LinearExpression linearExpression({{0, -5.}, {1, 6.}}, 4.);
+    LinearExpression someScalar({}, -2.);
 
     auto product = linearExpression / someScalar;
 
-    BOOST_CHECK_EQUAL(product.offset(), -2.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var1")), 2.5);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var2")), -3.);
+    BOOST_CHECK_EQUAL(product.constant(), -2.);
+    BOOST_CHECK_EQUAL(product.size(), 2);
+    BOOST_CHECK_EQUAL(product[0].first, 0);
+    BOOST_CHECK_EQUAL(product[0].second, 2.5);
+    BOOST_CHECK_EQUAL(product[1].first, 1);
+    BOOST_CHECK_EQUAL(product[1].second, -3.);
 }
 
 BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
 {
-    auto component = "compo";
-
-    LinearExpression linearExpression(4.,
-                                      {{FullKey(component, "var1"), -5.},
-                                       {FullKey(component, "var2"), 6.}});
-    LinearExpression someScalar(-2., {});
+    LinearExpression linearExpression({{0, -5.}, {1, 6.}}, 4.);
+    LinearExpression someScalar({}, -2.);
 
     BOOST_CHECK_EXCEPTION(someScalar / linearExpression,
                           std::invalid_argument,
@@ -137,30 +130,25 @@ BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
 
 BOOST_AUTO_TEST_CASE(negate_linear_expression)
 {
-    auto component = "compo";
-
-    LinearExpression linearExpression(4.,
-                                      {{FullKey(component, "var1"), -5.},
-                                       {FullKey(component, "var2"), 6.}});
+    LinearExpression linearExpression({{0, -5.}, {1, 6.}}, 4.);
 
     auto negative = -linearExpression;
 
-    BOOST_CHECK_EQUAL(negative.offset(), -4.);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().at(FullKey(component, "var1")), 5.);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().at(FullKey(component, "var2")), -6.);
+    BOOST_CHECK_EQUAL(negative.constant(), -4.);
+    BOOST_CHECK_EQUAL(negative.size(), 2);
+    BOOST_CHECK_EQUAL(negative[0].first, 0);
+    BOOST_CHECK_EQUAL(negative[0].second, 5.);
+    BOOST_CHECK_EQUAL(negative[1].first, 1);
+    BOOST_CHECK_EQUAL(negative[1].second, -6.);
 }
-
-
-
 
 // Test default constructor
 BOOST_AUTO_TEST_CASE(DefaultConstructor)
 {
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    TimeDependentLinearExpression expr(context);
-    BOOST_TEST(expr.getSize() == 3); // Should create expressions for 3 timesteps
+    TimeDependentLinearExpression expr(3);
+    BOOST_CHECK_EQUAL(expr.size(), 3); // Should create expressions for 3 timesteps
 }
+#if 0
 
 // Test constructor with a single LinearExpression
 BOOST_AUTO_TEST_CASE(ConstructorWithLinearExpression)
