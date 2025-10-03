@@ -24,6 +24,7 @@
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/LinearExpression.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
@@ -51,8 +52,8 @@ public:
      */
     explicit ReadLinearExpressionVisitor(
       const OptimEntityContainer& optimEntityContainer,
-      const Antares::ModelerStudy::SystemModel::Component& component,
-      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext):
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+      const Antares::ModelerStudy::SystemModel::Component& component):
         optimEntityContainer_(optimEntityContainer),
         component_(component),
         nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps()),
@@ -111,19 +112,22 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::EqualNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        throw Antares::Error::InvalidArgumentError(
+          "A linear expression can't contain comparison operators.");
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::LessThanOrEqualNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        throw Antares::Error::InvalidArgumentError(
+          "A linear expression can't contain comparison operators.");
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::GreaterThanOrEqualNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        throw Antares::Error::InvalidArgumentError(
+          "A linear expression can't contain comparison operators.");
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
@@ -159,7 +163,8 @@ public:
             }
             return out;
         }
-        throw "the support of scenario dependent variables is not available for now";
+        throw Antares::Error::InvalidArgumentError(
+          "the support of scenario dependent variables is not available for now");
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
@@ -202,7 +207,8 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::PortFieldNode* node) override
     {
-        throw std::runtime_error("Not implemented");
+        throw Antares::Error::InvalidArgumentError(
+          "ReadLinearExpressionVisitor cannot visit PortFieldNodes");
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
@@ -218,7 +224,7 @@ public:
             auto* component = connexion_end.component();
             auto* port = connexion_end.port();
 
-            ReadLinearExpressionVisitor visitor(optimEntityContainer_, *component, fillContext_);
+            ReadLinearExpressionVisitor visitor(optimEntityContainer_, fillContext_, *component);
 
             const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
             to_return += visitor.dispatch(node);

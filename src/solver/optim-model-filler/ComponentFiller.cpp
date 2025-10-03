@@ -316,7 +316,7 @@ void ComponentFiller::addTimeDependentConstraints(
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
-    Optimisation::ReadLinearConstraintVisitor visitor(ctx, component_, optimEntityContainer_);
+    Optimisation::ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto& modelConstraints = component_.getModel()->Constraints();
     for (auto constraintLocalIndex = 0; constraintLocalIndex < modelConstraints.size();
@@ -350,7 +350,7 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
     }
 
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    ReadLinearExpressionVisitor visitor(optimEntityContainer_, component_, ctx);
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto linearExpression = visitor.visitRemoveDuplicates(model->Objective().RootNode());
 
