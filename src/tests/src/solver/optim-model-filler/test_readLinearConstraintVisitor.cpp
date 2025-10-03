@@ -75,6 +75,17 @@ struct MyDummyFixture: Registry<Node>
         optimContainer(linearProblem, &data, &scenarioGroupRepository)
     {
         optimContainer.addFromSystemComponent(component);
+        auto& optimComponent = optimContainer.getOptimComponent(0);
+        optimComponent.index = 0;
+        optimComponent.modelVariableGlobalIndices = {0, 1, 2};
+        {
+            optimContainer.addStartColumn();
+            linearProblem.addNumVariable(0, 1, "var1");
+            optimContainer.addStartColumn();
+            linearProblem.addNumVariable(0, 1, "var2");
+            optimContainer.addStartColumn();
+            linearProblem.addNumVariable(0, 1, "var3");
+        }
     }
 
     ReadLinearConstraintVisitor visitor()
@@ -143,13 +154,15 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
     auto constraint = v.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb[0], -14.);
     BOOST_CHECK_EQUAL(constraint.ub[0], -14.);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    // BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-    //                     FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-    //                   -2);
-    // BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-    //                     FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-    //                   -1);
+    BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
+    auto& linExpr = constraint.coef_per_var[0];
+    BOOST_REQUIRE_EQUAL(linExpr.size(), 2); // two coeffs
+    // var1
+    BOOST_CHECK_EQUAL(linExpr[0].first, 0);
+    BOOST_CHECK_EQUAL(linExpr[0].second, -2.);
+    // var2
+    BOOST_CHECK_EQUAL(linExpr[1].first, 1);
+    BOOST_CHECK_EQUAL(linExpr[1].second, -1.);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
@@ -169,16 +182,18 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
     auto constraint = v.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb[0], -std::numeric_limits<double>::infinity());
     BOOST_CHECK_EQUAL(constraint.ub[0], -1.);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 3);
-    // BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-    //                     FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-    //                   -1);
-    // BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-    //                     FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-    //                   -5);
-    // BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-    //                     FullKey(component.Id(), "var3", MCYearAndTime::MCYear{0}, 0)),
-    //                   1);
+    BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
+    auto& linExpr = constraint.coef_per_var[0];
+    BOOST_REQUIRE_EQUAL(linExpr.size(), 3); // 3 coeffs
+    // var1
+    BOOST_CHECK_EQUAL(linExpr[0].first, 0);
+    BOOST_CHECK_EQUAL(linExpr[0].second, -1.);
+    // var2
+    BOOST_CHECK_EQUAL(linExpr[1].first, 1);
+    BOOST_CHECK_EQUAL(linExpr[1].second, -5.);
+    // var3
+    BOOST_CHECK_EQUAL(linExpr[2].first, 2);
+    BOOST_CHECK_EQUAL(linExpr[2].second, 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
@@ -197,13 +212,16 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
     auto constraint = v.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb[0], -14);
     BOOST_CHECK_EQUAL(constraint.ub[0], std::numeric_limits<double>::infinity());
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    // BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-    //                     FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-    //                   -2);
-    // BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-    //                     FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-    //                   -1);
+
+    BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
+    auto& linExpr = constraint.coef_per_var[0];
+    BOOST_REQUIRE_EQUAL(linExpr.size(), 2); // 2 coeffs
+    // var1
+    BOOST_CHECK_EQUAL(linExpr[0].first, 0);
+    BOOST_CHECK_EQUAL(linExpr[0].second, -2.);
+    // var2
+    BOOST_CHECK_EQUAL(linExpr[1].first, 1);
+    BOOST_CHECK_EQUAL(linExpr[1].second, -1.);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)

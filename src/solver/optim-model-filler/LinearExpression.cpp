@@ -80,6 +80,16 @@ LinearExpression::LinearExpression(const std::vector<std::pair<int, double>>& co
 {
 }
 
+const std::pair<int, double>& LinearExpression::operator[](std::size_t n) const
+{
+    return coefs_[n];
+}
+
+std::size_t LinearExpression::size() const
+{
+    return coefs_.size();
+}
+
 void LinearExpression::removeDuplicateCoefficients()
 {
     removeDuplicates(coefs_);
