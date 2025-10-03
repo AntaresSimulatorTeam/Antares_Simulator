@@ -27,6 +27,7 @@
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/solver/utils/ortools_utils.h>
+#include "antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {

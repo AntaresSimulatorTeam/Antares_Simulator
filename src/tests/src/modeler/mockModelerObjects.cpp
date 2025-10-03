@@ -21,7 +21,6 @@
 
 #include "antares/study/system-model/component.h"
 
-#include "../../../io/outputs/include/antares/io/outputs/SimulationTableGenerator.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 

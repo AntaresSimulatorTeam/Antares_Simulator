@@ -24,7 +24,6 @@
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
-#include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
 
 namespace operations_research
 {

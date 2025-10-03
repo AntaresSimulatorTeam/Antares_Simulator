@@ -153,12 +153,9 @@ public:
     }
 
 private:
-    // std::vector<LinearProblemApi::IMipVariable*> variables_;
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
     unsigned int variableGlobalIndex_ = 0;
-    //---
-    // std::vector<LinearProblemApi::IMipConstraint*> constraints_;
     std::vector<unsigned int> constraintStartLine_;
     LinearProblemApi::ILinearProblem& linearProblem_;
     const LinearProblemApi::ILinearProblemData* data_;
