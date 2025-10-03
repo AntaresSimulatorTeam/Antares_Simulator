@@ -50,8 +50,11 @@ public:
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
+    friend class Modeler::Investment::Investment;
     System(std::string_view id, std::unordered_map<std::string, Component>&& components);
     std::string id_;
+
+protected:
     std::unordered_map<std::string, Component> components_;
 };
 
@@ -64,6 +67,8 @@ public:
 
 private:
     std::string id_;
+
+protected:
     std::unordered_map<std::string, Component> components_;
 };
 

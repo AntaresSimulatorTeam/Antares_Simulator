@@ -33,6 +33,11 @@
 #include "portFieldDefinition.h"
 #include "variable.h"
 
+namespace Antares::Modeler::Investment
+{
+    class Investment;
+}
+
 namespace Antares::ModelerStudy::SystemModel
 {
 struct PortFieldKey
@@ -109,16 +114,20 @@ public:
 
 private:
     friend class ModelBuilder;
+    friend class Modeler::Investment::Investment;
+
     std::string id_;
     Expression objective_;
 
     std::map<std::string, Parameter> parameters_;
-    std::map<std::string, Variable> variables_;
     std::map<std::string, Constraint> constraints_;
     std::map<std::string, Port> ports_;
     std::map<std::string, ExtraOutput> extraOutputs_;
 
     PortFieldMap portFieldDefinitions_;
+
+protected:
+    std::map<std::string, Variable> variables_;
 };
 
 // List of IDs used internally to check for uniqueness of IDs at component level

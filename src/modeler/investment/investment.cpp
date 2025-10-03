@@ -34,17 +34,15 @@ bool Investment::markVariablesForInvestment(Modeler::Data& modelerData)
     for (const auto& model: optimConfig.models())
     {
         bool modelFound = false;
-        for (auto& [_, component]: modelerData.system->Components())
+        for (auto& [_, component]: modelerData.system->components_)
         {
             if (component.getModel()->Id() == model.id())
             {
                 modelFound = true;
                 for (const auto& modelDecompositionVar: model.modelDecomposition().variables())
                 {
-                    /*component.getModel()*/
-                    /*  ->Variables()*/
-                    /*  .at(modelDecompositionVar.id())*/
-                    /*  .setLocation(modelDecompositionVar.location());*/
+                    auto& v = component.data_.model->variables_.at(modelDecompositionVar.id());
+                    v.setLocation(modelDecompositionVar.location());
                 }
             }
         }

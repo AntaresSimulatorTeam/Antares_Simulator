@@ -40,7 +40,7 @@ class ComponentData final
 {
 public:
     std::string id;
-    const Model* model = nullptr;
+    Model* model = nullptr;
     std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
 
@@ -108,6 +108,7 @@ public:
 private:
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
+    friend class Modeler::Investment::Investment;
     explicit Component(const ComponentData& component_data);
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
     std::map<std::string, std::string> portToAreaConnections_;
@@ -120,7 +121,7 @@ class ComponentBuilder final
 {
 public:
     ComponentBuilder& withId(std::string_view id);
-    ComponentBuilder& withModel(const Model* model);
+    ComponentBuilder& withModel(Model* model);
     ComponentBuilder& withParameterValues(
       std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);
