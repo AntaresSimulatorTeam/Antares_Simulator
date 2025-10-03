@@ -21,7 +21,6 @@
 
 #include "antares/study/system-model/component.h"
 
-
 using namespace Antares::ModelerStudy::SystemModel;
 
 Model createModelWithParameters(std::vector<Parameter>& params)
