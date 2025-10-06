@@ -70,7 +70,7 @@ void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob
     addToMap(pEntries, entryPath, entryContent, pMapMutex, pDurationCollector);
 }
 
-void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent)
+void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent, bool)
 {
     addToMap(pEntries, entryPath.string(), entryContent, pMapMutex, pDurationCollector);
 }
