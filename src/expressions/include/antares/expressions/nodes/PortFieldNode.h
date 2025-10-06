@@ -21,7 +21,6 @@
 #pragma once
 #include <string>
 
-#include <antares/expressions/hashable.h>
 #include <antares/expressions/nodes/Leaf.h>
 
 namespace Antares::Expressions::Nodes
@@ -29,7 +28,7 @@ namespace Antares::Expressions::Nodes
 /**
  * @brief Represents a port field node in a syntax tree.
  */
-class PortFieldNode: public Node, public Hashable
+class PortFieldNode: public Node
 {
 public:
     /**
