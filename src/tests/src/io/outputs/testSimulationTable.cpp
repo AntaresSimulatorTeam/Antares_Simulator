@@ -775,7 +775,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             else
             {
                 linearProblem->addVariable(0, 0, false, "");
-                ;
             }
         }
     }
