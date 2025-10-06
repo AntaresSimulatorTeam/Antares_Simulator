@@ -18,14 +18,14 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#if 0
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
+#include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 
@@ -105,4 +105,3 @@ BOOST_AUTO_TEST_CASE(set_should_fail_if_timeserie_exists)
                           Antares::Error::RuntimeError,
                           checkMessage("Time serie number for year 10 already exists."));
 }
-#endif
