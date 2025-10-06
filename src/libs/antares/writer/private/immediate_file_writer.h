@@ -35,13 +35,16 @@ public:
     ImmediateFileResultWriter(const std::filesystem::path& folderOutput, const bool noOutput);
     virtual ~ImmediateFileResultWriter();
     // Write to file immediately, creating directories if needed
-    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
+    void addEntryFromBuffer(const std::string& entryPath,
+                            Yuni::Clob& entryContent,
+                            bool debug = false) override;
     void addEntryFromBuffer(const std::filesystem::path& entryPath,
                             std::string& entryContent,
                             bool debug = false) override;
 
     void addEntryFromFile(const std::filesystem::path& entryPath,
-                          const std::filesystem::path& filePath) override;
+                          const std::filesystem::path& filePath,
+                          bool debug = false) override;
     void flush() override;
     bool needsTheJobQueue() const override;
     void finalize(bool verbose) override;

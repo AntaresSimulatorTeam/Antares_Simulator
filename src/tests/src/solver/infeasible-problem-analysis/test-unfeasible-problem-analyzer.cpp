@@ -345,7 +345,8 @@ struct NullWriterExtension final: Solver::NullResultWriter
 {
     // hack to read variables and constraints names
     void addEntryFromFile(const std::filesystem::path& entryPath,
-                          const std::filesystem::path&) override
+                          const std::filesystem::path&,
+                          [[maybe_unused]] bool debug = false) override
     {
         const std::ifstream mps(std::filesystem::temp_directory_path() / entryPath);
         mpsContent.str("");

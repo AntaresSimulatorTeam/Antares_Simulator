@@ -65,18 +65,30 @@ InMemoryWriter::InMemoryWriter(Benchmarking::DurationCollector& duration_collect
 
 InMemoryWriter::~InMemoryWriter() = default;
 
-void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
+void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent, bool debug)
 {
+    if (noOutput_ && !debug)
+    {
+        return;
+    }
     addToMap(pEntries, entryPath, entryContent, pMapMutex, pDurationCollector);
 }
 
-void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent, bool)
+void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent, bool debug)
 {
+    if (noOutput_ && !debug)
+    {
+        return;
+    }
     addToMap(pEntries, entryPath.string(), entryContent, pMapMutex, pDurationCollector);
 }
 
-void InMemoryWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath)
+void InMemoryWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath, bool debug)
 {
+    if (noOutput_ && !debug)
+    {
+        return;
+    }
     // Shamelessly copy-pasted from zip_writer.cpp
     // TODO refactor
     std::string buffer = IO::readFile(filePath);

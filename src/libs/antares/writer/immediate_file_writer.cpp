@@ -58,8 +58,14 @@ static bool prepareDirectoryHierarchy(const fs::path& root,
 
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
-                                                   Yuni::Clob& entryContent)
+                                                   Yuni::Clob& entryContent,
+                                                   bool debug)
 {
+    if (noOutput_ && !debug)
+    {
+        return;
+    }
+
     fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
     {
@@ -85,8 +91,14 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const fs::path& entryPath,
 }
 
 void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
-                                                 const fs::path& filePath)
+                                                 const fs::path& filePath,
+                                                 bool debug)
 {
+    if (noOutput_ && !debug)
+    {
+        return;
+    }
+
     fs::path fullPath;
     if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, fullPath))
     {
@@ -123,7 +135,7 @@ void ImmediateFileResultWriter::finalize(bool /*verbose*/)
     // Do nothing
 }
 
-void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
+void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&, bool)
 {
 }
 
@@ -131,7 +143,7 @@ void NullResultWriter::addEntryFromBuffer(const fs::path&, std::string&, bool)
 {
 }
 
-void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&)
+void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&, bool)
 {
 }
 

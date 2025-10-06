@@ -404,7 +404,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
         header.CopySettingsToIni(ini, false);
 
         std::string writeBuffer = ini.toString();
-        resultWriter.addEntryFromBuffer(path.c_str(), writeBuffer);
+        resultWriter.addEntryFromBuffer(path.c_str(), writeBuffer, true);
     }
 
     // Write parameters.ini
