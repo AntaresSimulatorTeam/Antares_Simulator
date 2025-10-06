@@ -71,9 +71,11 @@ public:
     void Provide(const FillContext& timeScenarioCtx)
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
-        // All LP variables coordinates (component id, variable id, scenario, time step)
+        const auto& components = system_->Components();
+        optimEntityContainer_.reserveOptimComponents(components.size());
 
-        for (const auto& component: system_->Components())
+        // All LP variables coordinates (component id, variable id, scenario, time step)
+        for (const auto& component: components)
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       optimEntityContainer_,

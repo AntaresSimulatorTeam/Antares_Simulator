@@ -18,7 +18,6 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#if 0
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
@@ -30,6 +29,7 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 #include "../modeler/mockModelerObjects.h"
+#include "UtilMocks.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -48,14 +48,53 @@ static Node* deepNegationTree(Registry<Node>& registry, double litValue, size_t 
     return node;
 }
 
+Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
+  const Component& component)
+{
+    Antares::Optimisation::ScenarioGroupRepository repository;
+    repository.addScenario(
+      component.getScenarioGroupId(),
+      std::make_unique<Antares::Optimisation::LinearProblemApi::EmptyScenario>());
+    return repository;
+}
+
+Antares::Optimisation::OptimEntityContainer getOptimEntityContainer(
+  MockLinearProblem& linearProblem,
+  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData* data,
+  Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository,
+  const std::vector<Component>& component)
+{
+    Antares::Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
+                                                                     data,
+                                                                     scenarioGroupRepository);
+
+    for (const auto& component: component)
+    {
+        optimEntityContainer.addFromSystemComponent(component);
+    }
+    return optimEntityContainer;
+}
+
 struct MyDummyFixture: Registry<Node>
 {
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
-    MockEvaluationContextProvider contextProvider = MockEvaluationContextProvider(
-      evaluationContext);
-    EvalVisitor evalVisitor{contextProvider, {0, 0, 0, 0, 0}, createComponent()};
+    Component component = createComponent();
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
+      = getscenarioGroupRepository(component);
+
+    // EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
+    // MockEvaluationContextProvider contextProvider = MockEvaluationContextProvider(
+    // evaluationContext);
+
+    // EvalVisitor evalVisitor{contextProvider, {0, 0, 0, 0, 0}, createComponent()};
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    Antares::Optimisation::OptimEntityContainer optimEntityContainer = getOptimEntityContainer(
+      linearProblem,
+      &data,
+      &scenarioGroupRepository,
+      {component});
+    EvalVisitor evalVisitor = EvalVisitor(optimEntityContainer, {0, 0, 0, 0, 0}, component);
 };
 
 BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)
@@ -108,4 +147,3 @@ BOOST_FIXTURE_TEST_CASE(wide_sum_tree, MyDummyFixture)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-#endif

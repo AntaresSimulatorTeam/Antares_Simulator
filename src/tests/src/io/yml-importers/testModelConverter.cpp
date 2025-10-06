@@ -17,7 +17,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#if 0
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <iostream>
@@ -294,9 +294,9 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
     BOOST_REQUIRE_EQUAL(model.Constraints().size(), 3);
-    auto& constraint1 = model.Constraints().at("constraint1");
-    auto& constraint2 = model.Constraints().at("constraint2");
-    auto& constraint3 = model.Constraints().at("constraint3");
+    auto& constraint1 = model.Constraints().at(0);
+    auto& constraint2 = model.Constraints().at(1);
+    auto& constraint3 = model.Constraints().at(2);
     BOOST_CHECK_EQUAL(constraint1.Id(), "constraint1");
     BOOST_CHECK_EQUAL(constraint1.expression().Value(), "expression1");
     BOOST_CHECK_EQUAL(constraint2.Id(), "constraint2");
@@ -473,4 +473,3 @@ BOOST_FIXTURE_TEST_CASE(model_extra_outputs_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(output2.Id(), "output2");
     BOOST_CHECK_EQUAL(output2.expression().Value(), "param1 / var1 * 95.4");
 }
-#endif
