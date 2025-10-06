@@ -232,7 +232,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    if (problemeHebdo->modelerData)
+    if (problemeHebdo->modelerData && !writer.noOutput())
     {
         unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                                   ? problemeHebdo->weekInTheYear
