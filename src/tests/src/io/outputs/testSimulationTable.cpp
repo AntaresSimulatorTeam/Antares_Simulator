@@ -775,7 +775,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             else
             {
                 linearProblem->addVariable(0, 0, false, "");
-                ;
             }
         }
     }
@@ -851,7 +850,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             scenarioGroupRepository->addScenario(compo.getScenarioGroupId(),
                                                  std::make_unique<Scenario>(
                                                    compo.getScenarioGroupId()));
-
             addRandomVariables(fillContext, linearProblem, compo);
             addRandomConstraints(fillContext, linearProblem, compo);
         }

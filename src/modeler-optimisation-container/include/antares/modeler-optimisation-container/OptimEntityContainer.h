@@ -148,6 +148,11 @@ public:
         return static_cast<unsigned int>(constraintStartLine_.size());
     }
 
+    void reserveOptimComponents(size_t size)
+    {
+        optimComponents_.reserve(size);
+    }
+
 private:
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
