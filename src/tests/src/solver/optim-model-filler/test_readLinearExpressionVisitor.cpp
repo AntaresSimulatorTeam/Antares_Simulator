@@ -66,8 +66,7 @@ std::pair<std::string, SystemModel::ParameterTypeAndValue> build_context_paramet
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // 5 + param(3) = 8
-    Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param"));
-    setComponentParameterValues({{"param", SystemModel::ParameterType::CONSTANT, "3."}});
+    Node* sum = create<SumNode>(create<LiteralNode>(5.), create<ParameterNode>("param_3"));
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 8.);
@@ -80,8 +79,9 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
     // 60 + param(-5) + 7 * var = { 55, {var : 7} }
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var", 0));
-    Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
-    setComponentParameterValues({{"param", SystemModel::ParameterType::CONSTANT, "-5."}});
+    Node* sum = create<SumNode>(create<LiteralNode>(60.),
+                                create<ParameterNode>("param_m5"),
+                                product);
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1 /* timestep (constant expression) */);
 
@@ -103,8 +103,8 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
     Node* from = create<LiteralNode>(-2.);
     Node* to = create<LiteralNode>(1.);
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
-                                create<TimeSumNode>(from, to, create<ParameterNode>("param")));
-    setComponentParameterValues({{"param", SystemModel::ParameterType::TIMESERIE, "0_1_2"}});
+                                create<TimeSumNode>(from, to, create<ParameterNode>("param_ts")));
+
     ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
 
     auto linear_expression = visitor().dispatch(sum);
@@ -126,8 +126,7 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVis
     // 5 +param.at(0) + param.at(1) + param.at(2)  --> 5 + 0 + 1  + 2  = 8
 
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
-                                create<AllTimeSumNode>(create<ParameterNode>("param")));
-    setComponentParameterValues({{"param", SystemModel::ParameterType::TIMESERIE, "0_1_2"}});
+                                create<AllTimeSumNode>(create<ParameterNode>("param_ts")));
 
     ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
     auto linear_expression = visitor().dispatch(sum);
@@ -147,8 +146,9 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
     // 60 + param_at_1 + 7 * var = { 61, {var : 7} }
     Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
                                                create<VariableNode>("var", 0));
-    Node* sum = create<SumNode>(create<LiteralNode>(60.), create<ParameterNode>("param"), product);
-    setComponentParameterValues({{"param", SystemModel::ParameterType::TIMESERIE, "0_1_2"}});
+    Node* sum = create<SumNode>(create<LiteralNode>(60.),
+                                create<ParameterNode>("param_ts"),
+                                product);
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
@@ -173,8 +173,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
 BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    ParameterNode p("param", Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-    setComponentParameterValues({{"param", SystemModel::ParameterType::TIMESERIE, "0_1_2"}});
+    ParameterNode p("param_ts", Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
 
     BOOST_CHECK_THROW(visitor().dispatch(&p), Antares::Error::InvalidArgumentError);
 }
@@ -236,8 +235,6 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, VisitorFixture<ReadLinearExpre
                                  create<VariableNode>("var2", 1)) // 6 * var2
     );
 
-    setComponentParameterValues({{"param1", SystemModel::ParameterType::CONSTANT, "-2."},
-                                 {"param2", SystemModel::ParameterType::CONSTANT, "8."}});
     auto linear_expression = visitor().dispatch(big_sum);
     // Constants
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 10.);

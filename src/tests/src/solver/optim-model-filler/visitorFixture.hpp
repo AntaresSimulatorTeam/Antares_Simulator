@@ -7,7 +7,8 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
-#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+
+#include "../../expressions/UtilMocks.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
@@ -50,23 +51,21 @@ struct MockLinearProblemData: LinearProblemApi::ILinearProblemData
 template<class Visitor>
 struct VisitorFixture: Registry<Node>
 {
-    LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem; // TODO use mock
+    MockLinearProblem linearProblem;
     MockLinearProblemData data;
     LinearProblemApi::EmptyScenario empty_scenario;
     ScenarioGroupRepository scenarioGroupRepository;
     SystemModel::Model m;
-    SystemModel::ComponentBuilder componentBuilder;
+
     OptimEntityContainer optimContainer;
-    SystemModel::Component component = componentBuilder.withId("compo")
-                                         .withModel(&m)
-                                         .withScenarioGroupId("group")
-                                         .build();
+    SystemModel::Component component;
     LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
 
     VisitorFixture():
-        linearProblem(false, "sirius"),
+        linearProblem(false),
         scenarioGroupRepository(createScenario()),
-        optimContainer(linearProblem, &data, &scenarioGroupRepository)
+        optimContainer(linearProblem, &data, &scenarioGroupRepository),
+        component(setupComponent())
     {
         optimContainer.addFromSystemComponents({component});
         auto& optimComponent = optimContainer.getOptimComponent(0);
@@ -87,7 +86,18 @@ struct VisitorFixture: Registry<Node>
         return Visitor(optimContainer, ctx, component);
     }
 
-    void setComponentParameterValues(
+private:
+    SystemModel::Component setupComponent()
+    {
+        return setComponentParameterValues(
+          {{"param_3", SystemModel::ParameterType::CONSTANT, "3."},
+           {"param_m5", SystemModel::ParameterType::CONSTANT, "-5."},
+           {"param_ts", SystemModel::ParameterType::TIMESERIE, "0_1_2"},
+           {"param1", SystemModel::ParameterType::CONSTANT, "-2."},
+           {"param2", SystemModel::ParameterType::CONSTANT, "8."}});
+    }
+
+    SystemModel::Component setComponentParameterValues(
       const std::vector<
         std::tuple<std::string, Antares::ModelerStudy::SystemModel::ParameterType, std::string>>&
         values)
@@ -107,10 +117,11 @@ struct VisitorFixture: Registry<Node>
         }
         SystemModel::ModelBuilder modelBuilder;
         m = modelBuilder.withId("model").withParameters(std::move(parameters)).build();
-        component = componentBuilder.withId("compo")
-                      .withModel(&m)
-                      .withScenarioGroupId("group")
-                      .withParameterValues(map)
-                      .build();
+        SystemModel::ComponentBuilder componentBuilder;
+        return componentBuilder.withId("compo")
+          .withModel(&m)
+          .withScenarioGroupId("group")
+          .withParameterValues(map)
+          .build();
     }
 };
