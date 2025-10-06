@@ -49,6 +49,14 @@ public:
     virtual void flush() = 0;
     virtual bool needsTheJobQueue() const = 0;
     virtual void finalize(bool verbose) = 0;
+
+    bool noOutput() const
+    {
+        return noOutput_;
+    }
+
+protected:
+    bool noOutput_ = false;
 };
 
 class NullResultWriter: public Solver::IResultWriter

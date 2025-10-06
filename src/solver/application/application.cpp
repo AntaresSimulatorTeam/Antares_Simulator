@@ -449,7 +449,8 @@ void Application::prepareWriter(const Antares::Data::Study& study,
     resultWriter = resultWriterFactory(study.parameters.resultFormat,
                                        study.folderOutput,
                                        ioQueueService,
-                                       duration_collector);
+                                       duration_collector,
+                                       study.parameters.noOutput);
 }
 
 void Application::writeComment(Data::Study& study)

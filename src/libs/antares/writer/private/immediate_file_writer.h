@@ -32,7 +32,7 @@ namespace Antares::Solver
 class ImmediateFileResultWriter final: public IResultWriter
 {
 public:
-    ImmediateFileResultWriter(const std::filesystem::path& folderOutput);
+    ImmediateFileResultWriter(const std::filesystem::path& folderOutput, const bool noOutput);
     virtual ~ImmediateFileResultWriter();
     // Write to file immediately, creating directories if needed
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;

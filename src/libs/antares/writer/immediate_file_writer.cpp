@@ -30,9 +30,10 @@ namespace fs = std::filesystem;
 
 namespace Antares::Solver
 {
-ImmediateFileResultWriter::ImmediateFileResultWriter(const fs::path& folderOutput):
+ImmediateFileResultWriter::ImmediateFileResultWriter(const fs::path& folderOutput, const bool noOutput):
     pOutputFolder(folderOutput)
 {
+    noOutput_ = noOutput;
 }
 
 ImmediateFileResultWriter::~ImmediateFileResultWriter() = default;

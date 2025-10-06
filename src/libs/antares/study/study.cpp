@@ -374,7 +374,7 @@ void Study::prepareOutput()
 {
     pStartTime = DateTime::Now();
 
-    if (parameters.noOutput || !usedByTheSolver)
+    if (!usedByTheSolver)
     {
         return;
     }

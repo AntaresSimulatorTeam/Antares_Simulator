@@ -112,12 +112,14 @@ void ZipWriteJob<ContentT>::writeEntry()
 // Class ZipWriter
 ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
                      const fs::path& archivePath,
-                     Benchmarking::DurationCollector& duration_collector):
+                     Benchmarking::DurationCollector& duration_collector,
+                     bool noOutput):
     pQueueService(qs),
     pState(ZipState::can_receive_data),
     pArchivePath(archivePath.string() + ".zip"),
     pDurationCollector(duration_collector)
 {
+    noOutput_ = noOutput;
     pZipHandle = mz_zip_writer_create();
 
     // conversion in 2 steps to avoid weird behavior differences for linux and windows

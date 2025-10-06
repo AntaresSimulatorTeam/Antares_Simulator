@@ -38,5 +38,6 @@ namespace Antares::Solver
 IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
                                        const std::filesystem::path& folderOutput,
                                        std::shared_ptr<Yuni::Job::QueueService> qs,
-                                       Benchmarking::DurationCollector& duration_collector);
+                                       Benchmarking::DurationCollector& duration_collector,
+                                       bool noOutput = false);
 }
