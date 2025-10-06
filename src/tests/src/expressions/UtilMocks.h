@@ -1,4 +1,5 @@
 #pragma once
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
 class MockMipVariable: public Antares::Optimisation::LinearProblemApi::IMipVariable
@@ -296,4 +297,49 @@ private:
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable>> variables_;
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>>
       constraints_;
+};
+
+Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
+  const Antares::ModelerStudy::SystemModel::Component& component)
+{
+    Antares::Optimisation::ScenarioGroupRepository repository;
+    repository.addScenario(
+      component.getScenarioGroupId(),
+      std::make_unique<Antares::Optimisation::LinearProblemApi::EmptyScenario>());
+    return repository;
+}
+
+Antares::Optimisation::OptimEntityContainer getOptimEntityContainer(
+  MockLinearProblem& linearProblem,
+  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData* data,
+  Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository,
+  const std::vector<Antares::ModelerStudy::SystemModel::Component>& component)
+{
+    Antares::Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
+                                                                     data,
+                                                                     scenarioGroupRepository);
+
+    for (const auto& component: component)
+    {
+        optimEntityContainer.addFromSystemComponent(component);
+    }
+    return optimEntityContainer;
+}
+
+struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>
+{
+    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
+    Antares::ModelerStudy::SystemModel::Component component = createComponent();
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
+      = getscenarioGroupRepository(component);
+
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    Antares::Optimisation::OptimEntityContainer optimEntityContainer = getOptimEntityContainer(
+      linearProblem,
+      &data,
+      &scenarioGroupRepository,
+      {component});
+    Antares::Expressions::Visitors::EvalVisitor evalVisitor = Antares::Expressions::Visitors::
+      EvalVisitor(optimEntityContainer, {0, 0, 0, 0, 0}, component);
 };
