@@ -313,15 +313,15 @@ Antares::Optimisation::OptimEntityContainer getOptimEntityContainer(
   MockLinearProblem& linearProblem,
   Antares::Optimisation::LinearProblemDataImpl::LinearProblemData* data,
   Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository,
-  const std::vector<Antares::ModelerStudy::SystemModel::Component>& component)
+  const std::vector<Antares::ModelerStudy::SystemModel::Component*>& component)
 {
     Antares::Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
                                                                      data,
                                                                      scenarioGroupRepository);
 
-    for (const auto& component: component)
+    for (const auto* component: component)
     {
-        optimEntityContainer.addFromSystemComponent(component);
+        optimEntityContainer.addFromSystemComponent(*component);
     }
     return optimEntityContainer;
 }
@@ -339,7 +339,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
       linearProblem,
       &data,
       &scenarioGroupRepository,
-      {component});
+      {&component});
     Antares::Expressions::Visitors::EvalVisitor evalVisitor = Antares::Expressions::Visitors::
       EvalVisitor(optimEntityContainer, {0, 0, 0, 0, 0}, component);
 };
