@@ -309,22 +309,6 @@ Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
     return repository;
 }
 
-Antares::Optimisation::OptimEntityContainer getOptimEntityContainer(
-  MockLinearProblem& linearProblem,
-  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData* data,
-  Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository,
-  const std::vector<Antares::ModelerStudy::SystemModel::Component*>& component)
-{
-    Antares::Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
-                                                                     data,
-                                                                     scenarioGroupRepository);
-
-    for (const auto* component: component)
-    {
-        optimEntityContainer.addFromSystemComponent(*component);
-    }
-    return optimEntityContainer;
-}
 
 struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>
 {
@@ -336,11 +320,15 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
 
     MockLinearProblem linearProblem = MockLinearProblem(true);
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
-    Antares::Optimisation::OptimEntityContainer optimEntityContainer = getOptimEntityContainer(
-      linearProblem,
-      &data,
-      &scenarioGroupRepository,
-      {&component});
+
+    Antares::Optimisation::OptimEntityContainer optimEntityContainer = Antares::Optimisation::
+      OptimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+
     Antares::Expressions::Visitors::EvalVisitor evalVisitor = Antares::Expressions::Visitors::
       EvalVisitor(optimEntityContainer, ctx, component);
+
+    MyDummyFixture()
+    {
+        optimEntityContainer.addFromSystemComponent(component);
+    }
 };
