@@ -58,16 +58,16 @@ struct VisitorFixture: Registry<Node>
     SystemModel::Model m;
 
     OptimEntityContainer optimContainer;
-    SystemModel::Component component;
+    std::vector<SystemModel::Component> components;
     LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
 
     VisitorFixture():
         linearProblem(false),
         scenarioGroupRepository(createScenario()),
         optimContainer(linearProblem, &data, &scenarioGroupRepository),
-        component(setupComponent())
+        components(1, setupComponent())
     {
-        optimContainer.addFromSystemComponents({component});
+        optimContainer.addFromSystemComponents(components);
         auto& optimComponent = optimContainer.getOptimComponent(0);
         optimComponent.index = 0;
         optimComponent.modelVariableGlobalIndices = {0, 1, 2};
@@ -83,7 +83,7 @@ struct VisitorFixture: Registry<Node>
 
     Visitor visitor()
     {
-        return Visitor(optimContainer, ctx, component);
+        return Visitor(optimContainer, ctx, components[0]);
     }
 
 private:
