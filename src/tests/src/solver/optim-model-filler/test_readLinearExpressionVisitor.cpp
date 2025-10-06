@@ -55,14 +55,6 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, VisitorFixture<ReadLinearExpressionVisito
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
-std::pair<std::string, SystemModel::ParameterTypeAndValue> build_context_parameter_with(
-  const std::string& id,
-  const std::string& value,
-  const SystemModel::ParameterType& type = SystemModel::ParameterType::CONSTANT)
-{
-    return {id, {.id = id, .type = type, .value = value}};
-}
-
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // 5 + param(3) = 8
