@@ -68,7 +68,7 @@ struct VisitorFixture: Registry<Node>
         scenarioGroupRepository(createScenario()),
         optimContainer(linearProblem, &data, &scenarioGroupRepository)
     {
-        optimContainer.addFromSystemComponent(component);
+        optimContainer.addFromSystemComponents({component});
         auto& optimComponent = optimContainer.getOptimComponent(0);
         optimComponent.index = 0;
         optimComponent.modelVariableGlobalIndices = {0, 1, 2};

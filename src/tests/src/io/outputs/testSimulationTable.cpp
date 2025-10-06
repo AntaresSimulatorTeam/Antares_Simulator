@@ -844,14 +844,14 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
     void AddRandomVariablesAndContraints(const FillContext& fillContext,
                                          MockLinearProblem* linearProblem)
     {
-        optimEntityContainer->reserveOptimComponents(components.size());
+        optimEntityContainer->addFromSystemComponents(components);
         for (const auto& compo: components)
         {
             const auto& compoId = compo.Id();
             scenarioGroupRepository->addScenario(compo.getScenarioGroupId(),
                                                  std::make_unique<Scenario>(
                                                    compo.getScenarioGroupId()));
-            optimEntityContainer->addFromSystemComponent(compo);
+
             addRandomVariables(fillContext, linearProblem, compo);
             addRandomConstraints(fillContext, linearProblem, compo);
         }

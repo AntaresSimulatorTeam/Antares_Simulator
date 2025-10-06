@@ -62,16 +62,13 @@ Antares::Optimisation::OptimEntityContainer getOptimEntityContainer(
   MockLinearProblem& linearProblem,
   Antares::Optimisation::LinearProblemDataImpl::LinearProblemData* data,
   Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository,
-  const std::vector<Component>& component)
+  const std::vector<Component>& components)
 {
     Antares::Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
                                                                      data,
                                                                      scenarioGroupRepository);
 
-    for (const auto& component: component)
-    {
-        optimEntityContainer.addFromSystemComponent(component);
-    }
+    optimEntityContainer.addFromSystemComponents(components);
     return optimEntityContainer;
 }
 

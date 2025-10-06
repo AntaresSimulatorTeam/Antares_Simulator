@@ -80,7 +80,8 @@ static void fillModelerComponents(
   OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
-    optimEntityContainer.reserveOptimComponents(components.size());
+    optimEntityContainer.addFromSystemComponents(components);
+
     for (const auto& component: components)
     {
         fillersCollection.push_back(
@@ -88,8 +89,6 @@ static void fillModelerComponents(
                                             optimEntityContainer,
                                             *modelerData->dataSeries,
                                             modelerData->scenarioGroupRepository));
-
-        optimEntityContainer.addFromSystemComponent(component);
     }
 }
 
