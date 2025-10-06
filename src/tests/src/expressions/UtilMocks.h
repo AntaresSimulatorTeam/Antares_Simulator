@@ -156,6 +156,7 @@ public:
     {
         // variables_.push_back(std::move(RandomVariable()));
         // return variables_.back().get();
+        variableCount_++;
         return nullptr;
     }
 
@@ -164,6 +165,7 @@ public:
     {
         // constraints_.push_back(std::move(RandomConstraint()));
         // return constraints_.back().get();
+        constraintCount_++;
         return nullptr;
     }
 
@@ -189,6 +191,7 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipVariable*
     addNumVariable(double lb, double ub, const std::string& name) override
     {
+        variableCount_++;
         // variables_.push_back(std::move(RandomVariable()));
         // return variables_.back().get();
         return nullptr;
@@ -197,6 +200,7 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipVariable*
     addIntVariable(double lb, double ub, const std::string& name) override
     {
+        variableCount_++;
         // variables_.push_back(std::move(RandomVariable()));
         // return variables_.back().get();
         return nullptr;
@@ -259,12 +263,12 @@ public:
 
     [[nodiscard]] int variableCount() const override
     {
-        return variables_.size();
+        return variableCount_;
     }
 
     [[nodiscard]] int constraintCount() const override
     {
-        return constraints_.size();
+        return constraintCount_;
     }
 
     double getObjectiveCoefficient(
@@ -296,4 +300,6 @@ private:
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable>> variables_;
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>>
       constraints_;
+    int variableCount_ = 0;
+    int constraintCount_ = 0;
 };

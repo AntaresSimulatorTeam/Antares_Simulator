@@ -40,7 +40,7 @@ BOOST_FIXTURE_TEST_CASE(test_name, VisitorFixture<ReadLinearConstraintVisitor>)
 
 BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, VisitorFixture<ReadLinearConstraintVisitor>)
 {
-    // 5 + var1 = var2 + 3 * var1 - param1(-2)  ==> -2 * var1 - var2 = 7
+    // 5 + var1 = var2 + 3 * var1 - param1(-2)  ==> -2 * var1 - var2 = -3
     Node* lhs = create<SumNode>(create<LiteralNode>(5.), create<VariableNode>("var1", 0));
     Node* rhs = create<SumNode>(create<VariableNode>("var2", 1),
                                 create<MultiplicationNode>(create<LiteralNode>(3.),
@@ -52,8 +52,8 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, VisitorFixture<ReadLinearConstrai
 
     auto v = visitor();
     auto constraint = v.dispatch(node);
-    BOOST_CHECK_EQUAL(constraint.lb[0], 7.);
-    BOOST_CHECK_EQUAL(constraint.ub[0], 7.);
+    BOOST_CHECK_EQUAL(constraint.lb[0], -3.);
+    BOOST_CHECK_EQUAL(constraint.ub[0], -3.);
     BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
     auto& linExpr = constraint.coef_per_var[0];
     BOOST_REQUIRE_EQUAL(linExpr.size(), 2); // two coeffs
@@ -68,7 +68,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, VisitorFixture<ReadLinearConstrai
 BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node,
                         VisitorFixture<ReadLinearConstraintVisitor>)
 {
-    // -9 + var3 <= var1 + 5 * var2 - param1(-2)  ==> - var1 - 5 * var2 + var3 <= 7
+    // -9 + var3 <= var1 + 5 * var2 - param1(-2)  ==> - var1 - 5 * var2 + var3 <= 11
     Node* lhs = create<SumNode>(create<LiteralNode>(-9.), create<VariableNode>("var3", 2));
     Node* rhs = create<SumNode>(create<VariableNode>("var1", 0),
                                 create<MultiplicationNode>(create<LiteralNode>(5.),
@@ -81,7 +81,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node,
     auto v = visitor();
     auto constraint = v.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb[0], -std::numeric_limits<double>::infinity());
-    BOOST_CHECK_EQUAL(constraint.ub[0], 7.);
+    BOOST_CHECK_EQUAL(constraint.ub[0], 11.);
     BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
     auto& linExpr = constraint.coef_per_var[0];
     BOOST_REQUIRE_EQUAL(linExpr.size(), 3); // 3 coeffs
@@ -99,7 +99,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node,
 BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node,
                         VisitorFixture<ReadLinearConstraintVisitor>)
 {
-    // 5 + var1 >= var2 + 3 * var1 - param1(-2)  ==> -2 * var1 - var2 >= 7
+    // 5 + var1 >= var2 + 3 * var1 - param1(-2)  ==> -2 * var1 - var2 >= -3
     Node* lhs = create<SumNode>(create<LiteralNode>(5.), create<VariableNode>("var1", 0));
     Node* rhs = create<SumNode>(create<VariableNode>("var2", 1),
                                 create<MultiplicationNode>(create<LiteralNode>(3.),
@@ -109,7 +109,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node,
     const LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
     auto v = visitor();
     auto constraint = v.dispatch(node);
-    BOOST_CHECK_EQUAL(constraint.lb[0], 7);
+    BOOST_CHECK_EQUAL(constraint.lb[0], -3.);
     BOOST_CHECK_EQUAL(constraint.ub[0], std::numeric_limits<double>::infinity());
 
     BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
