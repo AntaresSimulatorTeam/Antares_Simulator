@@ -147,7 +147,8 @@ struct ComponentToAreaConnectionFillerFixture
         scenarioPtr->setTimeSerieNumber(0, 1);
         scenarioGroupRepository.addScenario("SG", std::move(scenarioPtr));
     }
-void setData(const std::vector<double>& some_param_value)
+
+    void setData(const std::vector<double>& some_param_value)
     {
         auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
         tss->add(some_param_value);

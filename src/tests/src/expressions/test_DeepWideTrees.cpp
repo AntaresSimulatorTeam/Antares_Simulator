@@ -24,11 +24,9 @@
 
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/CloneVisitor.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
-#include "../modeler/mockModelerObjects.h"
 #include "UtilMocks.h"
 
 using namespace Antares::Expressions;
@@ -48,67 +46,18 @@ static Node* deepNegationTree(Registry<Node>& registry, double litValue, size_t 
     return node;
 }
 
-Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
-  const Component& component)
-{
-    Antares::Optimisation::ScenarioGroupRepository repository;
-    repository.addScenario(
-      component.getScenarioGroupId(),
-      std::make_unique<Antares::Optimisation::LinearProblemApi::EmptyScenario>());
-    return repository;
-}
-
-Antares::Optimisation::OptimEntityContainer getOptimEntityContainer(
-  MockLinearProblem& linearProblem,
-  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData* data,
-  Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository,
-  const std::vector<Component>& component)
-{
-    Antares::Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
-                                                                     data,
-                                                                     scenarioGroupRepository);
-
-    for (const auto& component: component)
-    {
-        optimEntityContainer.addFromSystemComponent(component);
-    }
-    return optimEntityContainer;
-}
-
-struct MyDummyFixture: Registry<Node>
-{
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    Component component = createComponent();
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
-      = getscenarioGroupRepository(component);
-
-    // EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
-    // MockEvaluationContextProvider contextProvider = MockEvaluationContextProvider(
-    // evaluationContext);
-
-    // EvalVisitor evalVisitor{contextProvider, {0, 0, 0, 0, 0}, createComponent()};
-    MockLinearProblem linearProblem = MockLinearProblem(true);
-    Antares::Optimisation::OptimEntityContainer optimEntityContainer = getOptimEntityContainer(
-      linearProblem,
-      &data,
-      &scenarioGroupRepository,
-      {component});
-    EvalVisitor evalVisitor = EvalVisitor(optimEntityContainer, {0, 0, 0, 0, 0}, component);
-};
-
 BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)
 {
     Node* node = deepNegationTree(*this, 42., 1000);
     // (-1)^1000 = 1
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), 42.);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(node).valueAsDouble(), 42.);
 }
 
 BOOST_FIXTURE_TEST_CASE(deep_tree_odd, MyDummyFixture)
 {
     Node* node = deepNegationTree(*this, 42., 1001);
     // (-1)^1001 = -1
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), -42.);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(node).valueAsDouble(), -42.);
 }
 
 static Node* deepAddTree(Registry<Node>& registry, SumNode* root, int depth)
@@ -131,7 +80,7 @@ BOOST_FIXTURE_TEST_CASE(binary_tree, MyDummyFixture)
     SumNode* root = create<SumNode>(nullptr, nullptr);
     Node* node = deepAddTree(*this, root, 10);
     // We expect 1024 = 2^10 literal nodes, each carrying value 42.
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node).valueAsDouble(), 42. * 1024);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(node).valueAsDouble(), 42. * 1024);
 }
 
 BOOST_FIXTURE_TEST_CASE(wide_sum_tree, MyDummyFixture)
@@ -143,7 +92,8 @@ BOOST_FIXTURE_TEST_CASE(wide_sum_tree, MyDummyFixture)
         op = create<LiteralNode>(1.);
     }
     SumNode root(std::move(operands));
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&root).valueAsDouble(), nb_operands * 1.);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&root).valueAsDouble(),
+                      nb_operands * 1.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
