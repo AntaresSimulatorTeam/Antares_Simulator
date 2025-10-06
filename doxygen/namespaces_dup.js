@@ -930,8 +930,6 @@ var namespaces_dup =
           [ "AstDOTStyleVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1AstDOTStyleVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1AstDOTStyleVisitor" ],
           [ "CloneVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor" ],
           [ "CompareVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1CompareVisitor.html", "classAntares_1_1Expressions_1_1Visitors_1_1CompareVisitor" ],
-          [ "ParameterTypeAndValue", "structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html", "structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue" ],
-          [ "EvaluationContext", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext" ],
           [ "EvalVisitorDivisionException", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorDivisionException.html", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorDivisionException" ],
           [ "EvalVisitorNotImplemented", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented.html", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented" ],
           [ "EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult" ],
@@ -948,16 +946,6 @@ var namespaces_dup =
             [ "LINEAR", "LinearStatus_8h.html#af50e1b25870322fcafecb056c48bef0daaac544aacc3615aada24897a215f5046", null ],
             [ "NON_LINEAR", "LinearStatus_8h.html#af50e1b25870322fcafecb056c48bef0da1ff39f0ee280d1c9e03bdcb64531f815", null ]
           ] ],
-          [ "ParameterType", "EvaluationContext_8h.html#a8fd6a8d5da3887749e0d01f006900805", [
-            [ "CONSTANT", "EvaluationContext_8h.html#a8fd6a8d5da3887749e0d01f006900805a8d6b5cada83510220f59e00ce86d4d92", null ],
-            [ "TIMESERIE", "EvaluationContext_8h.html#a8fd6a8d5da3887749e0d01f006900805afbf3aba0c9e7398d988d2e3f73effce3", null ]
-          ] ],
-          [ "TimeIndex", "TimeIndex_8h.html#a9f9cbf121addbcb208d307f6482cfe15", [
-            [ "CONSTANT_IN_TIME_AND_SCENARIO", "TimeIndex_8h.html#a9f9cbf121addbcb208d307f6482cfe15af345732ff2a78575909e4a8e03a21bda", null ],
-            [ "VARYING_IN_TIME_ONLY", "TimeIndex_8h.html#a9f9cbf121addbcb208d307f6482cfe15af22c09d6a3d286c13601c93951b6bae8", null ],
-            [ "VARYING_IN_SCENARIO_ONLY", "TimeIndex_8h.html#a9f9cbf121addbcb208d307f6482cfe15a091abf8282e083e408851c8f94a9404d", null ],
-            [ "VARYING_IN_TIME_AND_SCENARIO", "TimeIndex_8h.html#a9f9cbf121addbcb208d307f6482cfe15af96b5b73f8ffe3bc24d33d212791b794", null ]
-          ] ],
           [ "AddFiliation", "AstDOTStyleVisitor_8cpp.html#a771cabc3d909e50c5226a58a08bc85d1", null ],
           [ "computeBinaryOperation", "EvalVisitor_8h.html#a32a96753eb3165b517fb1d3a2b4a13fd", null ],
           [ "computeBinaryOperation", "EvalVisitor_8h.html#a52257c6673cca2d5798e885f0bd7460b", null ],
@@ -972,12 +960,10 @@ var namespaces_dup =
           [ "operator-", "LinearStatus_8h.html#afd6fbaf8fbb07ee1a5a8763b87b8becd", null ],
           [ "operator-", "LinearStatus_8h.html#af71df5e028efb45b1f5e93fd269bf058", null ],
           [ "operator/", "LinearStatus_8h.html#a2107c367587a1b8952c3d2015b64e955", null ],
-          [ "operator|", "TimeIndex_8h.html#a3ae3c84f2387d22e85ab218aea08a5bd", null ],
           [ "pair", "LinearStatus_8h.html#aa8b1e3f8d2f183e7432dde28d9bb3515", null ],
           [ "ProcessElementLegend", "AstDOTStyleVisitor_8cpp.html#a11bbd5b1795cb8de53364f93836932bf", null ],
           [ "tryVisit", "NodeVisitor_8h.html#a1223b5e8ad3c7f529adba9a8c80778d2", null ]
         ] ],
-        [ "IEvaluationContextProvider", "classAntares_1_1Expressions_1_1IEvaluationContextProvider.html", "classAntares_1_1Expressions_1_1IEvaluationContextProvider" ],
         [ "IName", "classAntares_1_1Expressions_1_1IName.html", "classAntares_1_1Expressions_1_1IName" ],
         [ "NodeRegistry", "classAntares_1_1Expressions_1_1NodeRegistry.html", "classAntares_1_1Expressions_1_1NodeRegistry" ],
         [ "Registry", "classAntares_1_1Expressions_1_1Registry.html", "classAntares_1_1Expressions_1_1Registry" ]
@@ -1194,9 +1180,26 @@ var namespaces_dup =
             [ "System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System" ]
           ] ]
         ] ],
+        [ "TimeBlock", "structAntares_1_1IO_1_1TimeBlock.html", "structAntares_1_1IO_1_1TimeBlock" ],
+        [ "TimeConversionMode", "SimulationTableGenerator_8h.html#a28fe3ed828eaf40c027319968f512d0f", [
+          [ "SingleBlock", "SimulationTableGenerator_8h.html#a28fe3ed828eaf40c027319968f512d0fa95e3727fd5f0aede28af2086f421b699", null ],
+          [ "DailyBlocks", "SimulationTableGenerator_8h.html#a28fe3ed828eaf40c027319968f512d0fadd38c1a30e05c3a66419dc5abed2771b", null ],
+          [ "WeeklyBlocks", "SimulationTableGenerator_8h.html#a28fe3ed828eaf40c027319968f512d0fa5ae68a535ceaa166cf8c89637789763c", null ]
+        ] ],
+        [ "addConstraintEntries", "SimulationTableGenerator_8h.html#a4fec0d8f814234d5f336f07ea15c2356", null ],
+        [ "addEntriesForNode", "SimulationTableGenerator_8h.html#a729cafa07950393460b0d22ce7f2e271", null ],
+        [ "addExtraOutputEntries", "SimulationTableGenerator_8h.html#a68c51d1b10fc196c84c6ff6cf3811c0e", null ],
+        [ "addObjectiveValue", "SimulationTableGenerator_8cpp.html#a6a09bc6729ee732fb083e691a8da93e6", null ],
+        [ "addPortEntries", "SimulationTableGenerator_8h.html#a0f568bba12b15f1e2ceb1c1c348336e7", null ],
+        [ "addVariableEntries", "SimulationTableGenerator_8h.html#a79530b4326989da386fb9e50d234efe9", null ],
+        [ "BuildModelerConstraintName", "SimulationTableGenerator_8h.html#a7e1b7596867efae20fff5220a1fedff7", null ],
+        [ "convertBlockTimeStepToAbsoluteTimeStep", "SimulationTableGenerator_8h.html#ac4f09654961d16c7fc066f96508d2fa9", null ],
         [ "fileSetContent", "file_8cpp.html#a2d0c92d569f739fb52bbf5e0b1b4fef2", null ],
+        [ "FillSimulationTable", "SimulationTableGenerator_8h.html#ac8aaf36a5d773dd9807dea543068b3a1", null ],
+        [ "handleDependingOnTimeIndex", "SimulationTableGenerator_8cpp.html#a07e471bb2974c2c58f7f5889af002064", null ],
         [ "readFile", "file_8cpp.html#a752414a7e2eb33d25b41deeb4167d3c9", null ],
-        [ "readFile", "file_8h.html#a29b940cfba7d5fda23c8d4ec4e5bffb0", null ]
+        [ "readFile", "file_8h.html#a29b940cfba7d5fda23c8d4ec4e5bffb0", null ],
+        [ "updateTimeIndexIfShouldForceScenario", "SimulationTableGenerator_8h.html#a5662d3beaa8cfb122c80892510a133fd", null ]
       ] ],
       [ "Locale", null, [
         [ "Init", "locales_8cpp.html#a79feb0ae930c8cd7de7b3c1380c71809", null ],
@@ -1247,6 +1250,7 @@ var namespaces_dup =
       [ "ModelerStudy", null, [
         [ "SystemModel", null, [
           [ "Expression", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression" ],
+          [ "ParameterTypeAndValue", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue" ],
           [ "ComponentData", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData" ],
           [ "Component", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component" ],
           [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder" ],
@@ -1274,6 +1278,10 @@ var namespaces_dup =
             [ "Sender", "study_2system-model_2include_2antares_2study_2system-model_2connection_8h.html#a30dcd9191930b1afa420e123a7234456a8aace3ec18d83874d22850b7eee93c7d", null ],
             [ "Receiver", "study_2system-model_2include_2antares_2study_2system-model_2connection_8h.html#a30dcd9191930b1afa420e123a7234456aa9d093d11bc6e98b0c8e586ffa545c85", null ]
           ] ],
+          [ "ParameterType", "study_2system-model_2include_2antares_2study_2system-model_2component_8h.html#a620a0eceac0574c76cf43bf9ec593f31", [
+            [ "CONSTANT", "study_2system-model_2include_2antares_2study_2system-model_2component_8h.html#a620a0eceac0574c76cf43bf9ec593f31a8d6b5cada83510220f59e00ce86d4d92", null ],
+            [ "TIMESERIE", "study_2system-model_2include_2antares_2study_2system-model_2component_8h.html#a620a0eceac0574c76cf43bf9ec593f31afbf3aba0c9e7398d988d2e3f73effce3", null ]
+          ] ],
           [ "ScenarioDependent", "timeAndScenarioType_8h.html#a9fcb90f553c0df726b365defc71d4d2b", [
             [ "NO", "timeAndScenarioType_8h.html#a9fcb90f553c0df726b365defc71d4d2bac2f3f489a00553e7a01d369c103c7251", null ],
             [ "YES", "timeAndScenarioType_8h.html#a9fcb90f553c0df726b365defc71d4d2ba7469a286259799e5b37e5db9296f00b3", null ]
@@ -1293,30 +1301,48 @@ var namespaces_dup =
           [ "operator<<", "enum__operators_8h.html#a5b42803d363465d2075144cd54313270", null ]
         ] ]
       ] ],
-      [ "Optimisation", null, [
-        [ "LinearProblemApi", "namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html", "namespaceAntares_1_1Optimisation_1_1LinearProblemApi" ],
-        [ "LinearProblemDataImpl", null, [
-          [ "IDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries" ],
-          [ "DataSeriesRepository", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository" ],
-          [ "LinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData" ],
-          [ "Scenario", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario" ],
-          [ "TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet" ]
-        ] ],
-        [ "LinearProblemMpsolverImpl", null, [
-          [ "OrtoolsLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem" ],
-          [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
-          [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
-          [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ],
-          [ "convertOrtoolsBasisStatus", "convertOrtoolsBasisStatus_8cpp.html#a82d1e8a5093f3f009bf7c358f7ec432f", null ]
-        ] ],
-        [ "ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", "classAntares_1_1Optimisation_1_1ComponentFiller" ],
-        [ "VariablesBulkAddition", "classAntares_1_1Optimisation_1_1VariablesBulkAddition.html", "classAntares_1_1Optimisation_1_1VariablesBulkAddition" ],
-        [ "EvaluationContextProvider", "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html", "classAntares_1_1Optimisation_1_1EvaluationContextProvider" ],
-        [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository" ],
-        [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ],
-        [ "checkTimeSteps", "ComponentFiller_8cpp.html#a156d5abad9c6bc2cf8dfb5919a160ad4", null ]
+      [ "Optimisation", "namespaceAntares_1_1Optimisation.html", "namespaceAntares_1_1Optimisation" ],
+      [ "Optimization", null, [
+        [ "ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis" ],
+        [ "InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", "classAntares_1_1Optimization_1_1InfeasibleProblemReport" ],
+        [ "UnfeasibilityAnalysis", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis" ],
+        [ "UnfeasiblePbAnalyzer", "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html", "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer" ],
+        [ "VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", "structAntares_1_1Optimization_1_1VariableBounds" ],
+        [ "VariablesBoundsConsistency", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency" ],
+        [ "WatchedConstraint", "classAntares_1_1Optimization_1_1WatchedConstraint.html", "classAntares_1_1Optimization_1_1WatchedConstraint" ],
+        [ "HourlyBC", "classAntares_1_1Optimization_1_1HourlyBC.html", "classAntares_1_1Optimization_1_1HourlyBC" ],
+        [ "DailyBC", "classAntares_1_1Optimization_1_1DailyBC.html", "classAntares_1_1Optimization_1_1DailyBC" ],
+        [ "WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", "classAntares_1_1Optimization_1_1WeeklyBC" ],
+        [ "FictitiousLoad", "classAntares_1_1Optimization_1_1FictitiousLoad.html", "classAntares_1_1Optimization_1_1FictitiousLoad" ],
+        [ "HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", "classAntares_1_1Optimization_1_1HydroLevel" ],
+        [ "STS", "classAntares_1_1Optimization_1_1STS.html", "classAntares_1_1Optimization_1_1STS" ],
+        [ "HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", "classAntares_1_1Optimization_1_1HydroProduction" ],
+        [ "STSAdditionalConstraint", "classAntares_1_1Optimization_1_1STSAdditionalConstraint.html", "classAntares_1_1Optimization_1_1STSAdditionalConstraint" ],
+        [ "ConstraintsFactory", "classAntares_1_1Optimization_1_1ConstraintsFactory.html", "classAntares_1_1Optimization_1_1ConstraintsFactory" ],
+        [ "LinearExpression", "classAntares_1_1Optimization_1_1LinearExpression.html", "classAntares_1_1Optimization_1_1LinearExpression" ],
+        [ "TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression" ],
+        [ "MCYearAndTime", "structAntares_1_1Optimization_1_1MCYearAndTime.html", "structAntares_1_1Optimization_1_1MCYearAndTime" ],
+        [ "DefaultScenario", "classAntares_1_1Optimization_1_1DefaultScenario.html", "classAntares_1_1Optimization_1_1DefaultScenario" ],
+        [ "ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller" ],
+        [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
+        [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
+        [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", "classAntares_1_1Optimization_1_1BasisStatusImpl" ],
+        [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", "classAntares_1_1Optimization_1_1BasisStatus" ],
+        [ "STSInjectionSum", "watched-constraints_8h.html#a512aba669c091827c6b436d0b3408192", null ],
+        [ "STSNettingSum", "watched-constraints_8h.html#a92ecfd5cfe8111fcc5761687e57227fa", null ],
+        [ "STSWithdrawalSum", "watched-constraints_8h.html#aac13d5895b888127d4d62045556476ba", null ],
+        [ "format_as", "MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
+        [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
+        [ "Helper", "watched-constraints_8cpp.html#a9957d3cc982e75341f07ae9e56c1e0e5", null ],
+        [ "lessTypeName", "report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3", null ],
+        [ "makeUnfeasiblePbAnalyzer", "unfeasible-pb-analyzer_8h.html#a14f36c0006d50ed493aa40606b57bb4b", null ],
+        [ "operator<<", "MCYearAndTime_8h.html#a4acd8157dc362e4991f60f2436acc4f4", null ],
+        [ "operator<<", "MCYearAndTime_8h.html#a577631761643b7e0a0785e4a82b75f34", null ],
+        [ "sameType", "report_8cpp.html#a1418a64099521dabe8235df401f4f0cc", null ],
+        [ "INJECTION", "watched-constraints_8h.html#a520b3b8184f58d9c8cb41588b5514d8c", null ],
+        [ "NETTING", "watched-constraints_8h.html#a5afa496b079694f802024e34366de8a7", null ],
+        [ "WITHDRAWAL", "watched-constraints_8h.html#a49826da5a72d4e5d0264543dea5727c0", null ]
       ] ],
-      [ "Optimization", "namespaceAntares_1_1Optimization.html", "namespaceAntares_1_1Optimization" ],
       [ "Private", null, [
         [ "Component", null, [
           [ "CustomWxButton", "classAntares_1_1Private_1_1Component_1_1CustomWxButton.html", "classAntares_1_1Private_1_1Component_1_1CustomWxButton" ]
@@ -2509,9 +2535,6 @@ var namespaces_dup =
       [ "SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", "classBenchmarking_1_1SimulationInfoCollector" ],
       [ "operator<<", "DurationCollector_8cpp.html#a809b83640ed2a281114744389980bffc", null ]
     ] ],
-    [ "boost", null, [
-      [ "hash< Antares::Optimization::PartialKey >", "structboost_1_1hash_3_01Antares_1_1Optimization_1_1PartialKey_01_4.html", "structboost_1_1hash_3_01Antares_1_1Optimization_1_1PartialKey_01_4" ]
-    ] ],
     [ "check_general", null, [
       [ "check_interface", "classcheck__general_1_1check__interface.html", "classcheck__general_1_1check__interface" ],
       [ "check_list", "classcheck__general_1_1check__list.html", "classcheck__general_1_1check__list" ]
@@ -2819,7 +2842,7 @@ var namespaces_dup =
         [ "VariableData", "structTest_1_1Modeler_1_1VariableData.html", "structTest_1_1Modeler_1_1VariableData" ],
         [ "ConstraintData", "structTest_1_1Modeler_1_1ConstraintData.html", "structTest_1_1Modeler_1_1ConstraintData" ],
         [ "LinearProblemBuildingFixture", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture" ],
-        [ "build_context_parameter_with", "inmemory-modeler_8h.html#a487d3f0e57742f36ba536b38ee210426", null ]
+        [ "build_context_parameter_with", "inmemory-modeler_8h.html#a07fe5876f9773e1f2e07cd93aae5f6a0", null ]
       ] ],
       [ "BasisStatus", "classTest_1_1BasisStatus.html", "classTest_1_1BasisStatus" ]
     ] ],

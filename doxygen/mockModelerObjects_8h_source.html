@@ -151,44 +151,30 @@ $(document).ready(function(){initNavTree('mockModelerObjects_8h_source.html','')
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;antares/expressions/IEvaluationContextProvider.h&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;antares/study/system-model/component.h&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classMockEvaluationContextProvider.html">   28</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMockEvaluationContextProvider.html">MockEvaluationContextProvider</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Expressions_1_1IEvaluationContextProvider.html">Antares::Expressions::IEvaluationContextProvider</a></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">Antares::Expressions::Visitors::EvaluationContext</a> context_;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classMockEvaluationContextProvider.html">MockEvaluationContextProvider</a>(<a class="code" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">Antares::Expressions::Visitors::EvaluationContext</a> context):</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        context_(std::move(context))</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">Antares::Expressions::Visitors::EvaluationContext</a> provide(</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      [[maybe_unused]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a>&amp; component)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordflow">return</span> context_;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;};</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithParameters();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithoutParameters();</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> createComponent(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span> = <span class="stringliteral">&quot;component&quot;</span>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> createComponent(</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  std::map&lt;std::string, Antares::Expressions::Visitors::ParameterTypeAndValue&gt; parameter_values);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;std::pair&lt;std::string, Antares::Expressions::Visitors::ParameterTypeAndValue&gt;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;build_context_parameter_with(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                             <span class="keyword">const</span> std::string&amp; value,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                             <span class="keyword">const</span> Antares::Expressions::Visitors::ParameterType&amp; type = Antares::</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                               Expressions::Visitors::ParameterType::CONSTANT);</div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1IEvaluationContextProvider_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1IEvaluationContextProvider.html">Antares::Expressions::IEvaluationContextProvider</a></div><div class="ttdef"><b>Definition:</b> IEvaluationContextProvider.h:30</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">Antares::Expressions::Visitors::EvaluationContext</a></div><div class="ttdoc">Represents the context for evaluating expressions.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:36</div></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition:</b> component.h:60</div></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;antares/study/system-model/component.h&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithParameters(</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  std::vector&lt;Antares::ModelerStudy::SystemModel::Parameter&gt; params);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithParameters();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithoutParameters();</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> createComponent(</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a>&amp; model,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span> = <span class="stringliteral">&quot;component&quot;</span>,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keywordtype">unsigned</span> index = 0);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> createComponent(</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a>&amp; model,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  std::map&lt;std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue&gt; parameter_values,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="keywordtype">unsigned</span> index = 0);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;std::pair&lt;std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue&gt;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;build_context_parameter_with(</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keyword">const</span> std::string&amp; value,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keyword">const</span> Antares::ModelerStudy::SystemModel::ParameterType&amp; type = Antares::ModelerStudy::</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    SystemModel::ParameterType::CONSTANT);</div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition:</b> component.h:74</div></div>
 <div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Model_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a></div><div class="ttdef"><b>Definition:</b> model.h:59</div></div>
-<div class="ttc" id="aclassMockEvaluationContextProvider_html"><div class="ttname"><a href="classMockEvaluationContextProvider.html">MockEvaluationContextProvider</a></div><div class="ttdef"><b>Definition:</b> mockModelerObjects.h:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

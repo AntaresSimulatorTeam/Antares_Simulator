@@ -149,18 +149,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af600250c2c5cb95b34f9e9dab3b4e0dd"><td class="memItemLeft" align="right" valign="top"><a id="af600250c2c5cb95b34f9e9dab3b4e0dd"></a>
 <a class="el" href="structAntares_1_1Modeler_1_1Data.html">Antares::Modeler::Data</a>&#160;</td><td class="memItemRight" valign="bottom"><b>loadAll</b> () override</td></tr>
 <tr class="separator:af600250c2c5cb95b34f9e9dab3b4e0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4787effdb98270f9a6e46b9186cc0264"><td class="memItemLeft" align="right" valign="top"><a id="a4787effdb98270f9a6e46b9186cc0264"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setComponents</b> (const std::unordered_map&lt; std::string, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt; &amp;compos)</td></tr>
-<tr class="separator:a4787effdb98270f9a6e46b9186cc0264"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a766945fe4b0776fcaae5e14557304d40"><td class="memItemLeft" align="right" valign="top"><a id="a766945fe4b0776fcaae5e14557304d40"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setComponents</b> (const std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt; &amp;compos)</td></tr>
+<tr class="separator:a766945fe4b0776fcaae5e14557304d40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acecd8ee838614e5ea09910ce8d06b956"><td class="memItemLeft" align="right" valign="top"><a id="acecd8ee838614e5ea09910ce8d06b956"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setModels</b> (Models &amp;&amp;map)</td></tr>
 <tr class="separator:acecd8ee838614e5ea09910ce8d06b956"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a0601dad50fab533593ee25f426dba6"><td class="memItemLeft" align="right" valign="top"><a id="a0a0601dad50fab533593ee25f426dba6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setLowerBoundToParameter</b> (const std::string &amp;parameterId)</td></tr>
 <tr class="separator:a0a0601dad50fab533593ee25f426dba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f49b958dbfb0b22487dd89dd290497e"><td class="memItemLeft" align="right" valign="top"><a id="a0f49b958dbfb0b22487dd89dd290497e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addParameter</b> (const std::string &amp;str, const Antares::Expressions::Visitors::ParameterType &amp;type=Antares::Expressions::Visitors::ParameterType::TIMESERIE)</td></tr>
-<tr class="separator:a0f49b958dbfb0b22487dd89dd290497e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cd6d2e036f4655e6dd23cb07dc9777e"><td class="memItemLeft" align="right" valign="top"><a id="a8cd6d2e036f4655e6dd23cb07dc9777e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addParameter</b> (const std::string &amp;str, const PT &amp;type=PT::TIMESERIE)</td></tr>
+<tr class="separator:a8cd6d2e036f4655e6dd23cb07dc9777e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0886d592cc939c77ecbf020b04a4bff4"><td class="memItemLeft" align="right" valign="top"><a id="a0886d592cc939c77ecbf020b04a4bff4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addScenario</b> (const std::string &amp;str, int year, int timeSeriesNumber)</td></tr>
 <tr class="separator:a0886d592cc939c77ecbf020b04a4bff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,14 +170,14 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a07f0ccbe3e139e921f8f7cb159151a4d"><td class="memItemLeft" align="right" valign="top"><a id="a07f0ccbe3e139e921f8f7cb159151a4d"></a>
 Models&#160;</td><td class="memItemRight" valign="bottom"><b>models</b></td></tr>
 <tr class="separator:a07f0ccbe3e139e921f8f7cb159151a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53bcf979b8724dedbb2844ca38ad4ffb"><td class="memItemLeft" align="right" valign="top"><a id="a53bcf979b8724dedbb2844ca38ad4ffb"></a>
-std::unordered_map&lt; std::string, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>components</b></td></tr>
-<tr class="separator:a53bcf979b8724dedbb2844ca38ad4ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc10aea4b4628ede37f235c6857767fa"><td class="memItemLeft" align="right" valign="top"><a id="acc10aea4b4628ede37f235c6857767fa"></a>
+std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>components</b></td></tr>
+<tr class="separator:acc10aea4b4628ede37f235c6857767fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f74788672495e470c382f705ceb8812"><td class="memItemLeft" align="right" valign="top"><a id="a6f74788672495e470c382f705ceb8812"></a>
 <a class="el" href="classFixture.html">Fixture</a>&#160;</td><td class="memItemRight" valign="bottom"><b>fixture</b></td></tr>
 <tr class="separator:a6f74788672495e470c382f705ceb8812"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe0062fba00038b519cbe4351520c187"><td class="memItemLeft" align="right" valign="top"><a id="abe0062fba00038b519cbe4351520c187"></a>
-std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> = std::make_unique&lt;<a class="el" href="classEmptyDataSeries.html">EmptyDataSeries</a>&gt;()</td></tr>
+std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> = std::make_unique&lt;<a class="el" href="classConstantDataSeries.html">ConstantDataSeries</a>&gt;(0.)</td></tr>
 <tr class="separator:abe0062fba00038b519cbe4351520c187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71ca43adddebf98c98480d5f12bbe773"><td class="memItemLeft" align="right" valign="top"><a id="a71ca43adddebf98c98480d5f12bbe773"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lower_bound</b> = fixture.literal(0.0)</td></tr>
@@ -185,9 +185,9 @@ std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearPr
 <tr class="memitem:a27fff0f0d5e4d0a76b7e49ec5a84ebf9"><td class="memItemLeft" align="right" valign="top"><a id="a27fff0f0d5e4d0a76b7e49ec5a84ebf9"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>timeDependent</b> {false}</td></tr>
 <tr class="separator:a27fff0f0d5e4d0a76b7e49ec5a84ebf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3050ef0f05f710b4d4969bafa091b7c7"><td class="memItemLeft" align="right" valign="top"><a id="a3050ef0f05f710b4d4969bafa091b7c7"></a>
-std::map&lt; std::string, <a class="el" href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">Antares::Expressions::Visitors::ParameterTypeAndValue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parameters</b> {}</td></tr>
-<tr class="separator:a3050ef0f05f710b4d4969bafa091b7c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af19a47c4f1b1c41b30c91645067b80ed"><td class="memItemLeft" align="right" valign="top"><a id="af19a47c4f1b1c41b30c91645067b80ed"></a>
+std::map&lt; std::string, <a class="el" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html">PTV</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parameters</b> {}</td></tr>
+<tr class="separator:af19a47c4f1b1c41b30c91645067b80ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb2edca68592feb44149a5625b3e5f6d"><td class="memItemLeft" align="right" valign="top"><a id="adb2edca68592feb44149a5625b3e5f6d"></a>
 std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parameterIds</b> {}</td></tr>
 <tr class="separator:adb2edca68592feb44149a5625b3e5f6d"><td class="memSeparator" colspan="2">&#160;</td></tr>

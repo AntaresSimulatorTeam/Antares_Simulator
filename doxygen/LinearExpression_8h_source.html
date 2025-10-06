@@ -128,7 +128,7 @@ $(document).ready(function(){initNavTree('LinearExpression_8h_source.html',''); 
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2024, RTE (https://www.rte-france.com)</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
@@ -147,82 +147,87 @@ $(document).ready(function(){initNavTree('LinearExpression_8h_source.html',''); 
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;span&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;variant&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;antares/solver/optim-model-filler/FullKey.h&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimization.html">Antares::Optimization</a></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1LinearExpression.html">   29</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> final</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> MapType, <span class="keyword">typename</span> UnaryOp = std::<span class="keywordtype">id</span>entity&gt;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">void</span> add_maps(MapType&amp; left, <span class="keyword">const</span> MapType&amp; right, UnaryOp op = std::identity{})</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;{</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [key, value]: right)</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">auto</span> it = left.find(key);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">if</span> (it != left.end())</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            <span class="comment">// Key exists in left, add the values</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            it-&gt;second += op(value);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        {</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="comment">// Key does not exist in left, insert the pair</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            left.emplace(key, op(value));</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        }</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;}</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keyword">using</span> FullKeyMap = std::unordered_map&lt;FullKey, double, FullKeyHash&gt;;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;FullKeyMap <a class="code" href="namespaceAntares_1_1Optimization.html#a7190f8e021109840878686b5bf2f2ded">scale_map</a>(<span class="keyword">const</span> FullKeyMap&amp; map, <span class="keywordtype">double</span> scale);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword">using</span> RawTerm = std::pair&lt;FullKey, double&gt;;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1LinearExpression.html">  136</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> final</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;{</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00140"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1LinearExpression.html#a892a378fe885f50d122444e36cf6cd1a">  140</a></span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a892a378fe885f50d122444e36cf6cd1a">LinearExpression</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a892a378fe885f50d122444e36cf6cd1a">LinearExpression</a>(<span class="keywordtype">double</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a7f461cc34aa1a1a7ebb76c01608cd8c0">offset</a>, FullKeyMap coef_per_var);</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a8d9e530b98ad5e82fdf61bd2b6635d06">operator+</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; other) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a21bddbc6ba6b61339e58c4b68cbbdc20">operator-</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; other) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a8a6bd2e80aedcf4f9295889d7d3d4ef4">operator*</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; other) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a11a4d9233621b309b2c8fdb618970b04">operator/</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; other) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a21bddbc6ba6b61339e58c4b68cbbdc20">operator-</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a7f461cc34aa1a1a7ebb76c01608cd8c0">offset</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keyword">const</span> FullKeyMap&amp; <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html#a105e25aae6d5d3c3a404908f7489e2a0">coefPerVar</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; operator+=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; value);</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">void</span> materialize() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordtype">void</span> invalidate()</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    {</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        am_I_valid_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    }</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordtype">double</span> offset_ = 0;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keyword">mutable</span> FullKeyMap unique_terms_; <span class="comment">// aggregated unique sums</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    std::vector&lt;RawTerm&gt; terms_;      <span class="comment">// may contain duplicates</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keyword">mutable</span> <span class="keywordtype">bool</span> am_I_valid_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;};</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html">Antares::Optimization::LinearExpression</a></div><div class="ttdef"><b>Definition:</b> LinearExpression.h:137</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html_a105e25aae6d5d3c3a404908f7489e2a0"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html#a105e25aae6d5d3c3a404908f7489e2a0">Antares::Optimization::LinearExpression::coefPerVar</a></div><div class="ttdeci">const FullKeyMap &amp; coefPerVar() const</div><div class="ttdoc">Get the non-zero coefficients per variable ID.</div><div class="ttdef"><b>Definition:</b> LinearExpression.cpp:98</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html_a11a4d9233621b309b2c8fdb618970b04"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html#a11a4d9233621b309b2c8fdb618970b04">Antares::Optimization::LinearExpression::operator/</a></div><div class="ttdeci">LinearExpression operator/(const LinearExpression &amp;other) const</div><div class="ttdef"><b>Definition:</b> LinearExpression.cpp:151</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html_a21bddbc6ba6b61339e58c4b68cbbdc20"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html#a21bddbc6ba6b61339e58c4b68cbbdc20">Antares::Optimization::LinearExpression::operator-</a></div><div class="ttdeci">LinearExpression operator-() const</div><div class="ttdoc">Multiply linear expression by -1.</div><div class="ttdef"><b>Definition:</b> LinearExpression.cpp:166</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html_a7f461cc34aa1a1a7ebb76c01608cd8c0"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html#a7f461cc34aa1a1a7ebb76c01608cd8c0">Antares::Optimization::LinearExpression::offset</a></div><div class="ttdeci">double offset() const</div><div class="ttdoc">Get the offset.</div><div class="ttdef"><b>Definition:</b> LinearExpression.cpp:176</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html_a892a378fe885f50d122444e36cf6cd1a"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html#a892a378fe885f50d122444e36cf6cd1a">Antares::Optimization::LinearExpression::LinearExpression</a></div><div class="ttdeci">LinearExpression()=default</div><div class="ttdoc">Build a linear expression with zero offset and zero coefficients.</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html_a8a6bd2e80aedcf4f9295889d7d3d4ef4"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html#a8a6bd2e80aedcf4f9295889d7d3d4ef4">Antares::Optimization::LinearExpression::operator*</a></div><div class="ttdeci">LinearExpression operator*(const LinearExpression &amp;other) const</div><div class="ttdef"><b>Definition:</b> LinearExpression.cpp:124</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html_a8d9e530b98ad5e82fdf61bd2b6635d06"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html#a8d9e530b98ad5e82fdf61bd2b6635d06">Antares::Optimization::LinearExpression::operator+</a></div><div class="ttdeci">LinearExpression operator+(const LinearExpression &amp;other) const</div><div class="ttdoc">Sum two linear expressions.</div><div class="ttdef"><b>Definition:</b> LinearExpression.cpp:91</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimization_html"><div class="ttname"><a href="namespaceAntares_1_1Optimization.html">Antares::Optimization</a></div><div class="ttdef"><b>Definition:</b> SimulationTableGenerator.h:44</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimization_html_a7190f8e021109840878686b5bf2f2ded"><div class="ttname"><a href="namespaceAntares_1_1Optimization.html#a7190f8e021109840878686b5bf2f2ded">Antares::Optimization::scale_map</a></div><div class="ttdeci">FullKeyMap scale_map(const FullKeyMap &amp;map, double scale)</div><div class="ttdef"><b>Definition:</b> LinearExpression.cpp:35</div></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>(<span class="keywordtype">double</span> constant);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>(<span class="keyword">const</span> std::vector&lt;std::pair&lt;int, double&gt;&gt;&amp; coefs, <span class="keywordtype">double</span> constant);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> removeDuplicateCoefficients();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; operator*=(<span class="keywordtype">double</span> factor);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; operator+=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; other);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; operator-=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; other);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> operator-() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; operator*=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; other);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> addVariable(<span class="keywordtype">int</span> index, <span class="keywordtype">double</span> value);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">double</span> constant() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">using</span> const_iterator = std::vector&lt;std::pair&lt;int, double&gt;&gt;::const_iterator;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    const_iterator begin() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    const_iterator end() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> std::pair&lt;int, double&gt;&amp; operator[](std::size_t) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::size_t size() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">bool</span> hasCoefs() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::vector&lt;std::pair&lt;int, double&gt;&gt; coefs_;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">double</span> constant_ = 0.;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">   58</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a> final</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>(std::size_t nbTimesteps);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>(<span class="keyword">const</span> std::span&lt;const double&gt;&amp; values);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>(<a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp;&amp; expr);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> expandTo(std::size_t nbTimesteps);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    std::vector&lt;double&gt; constant() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> removeDuplicateCoefficients();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::size_t size() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>* begin();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>* end();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>* begin() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>* end() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; operator[](std::size_t idx);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&amp; operator[](std::size_t idx) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&amp; operator+=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&amp; other);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&amp; operator-=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&amp; other);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">void</span> rotate(<span class="keywordtype">int</span> shift);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&amp; operator*=(<span class="keywordtype">double</span> factor);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&amp; operator*=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a>&amp; other);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">TimeDependentLinearExpression</a> operator-() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    std::variant&lt;LinearExpression, std::vector&lt;LinearExpression&gt;&gt; v_;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;};</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="ttc" id="aclassAntares_1_1Optimization_1_1LinearExpression_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LinearExpression.html">Antares::Optimization::LinearExpression</a></div><div class="ttdef"><b>Definition:</b> LinearExpression.h:30</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimization_1_1TimeDependentLinearExpression_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">Antares::Optimization::TimeDependentLinearExpression</a></div><div class="ttdef"><b>Definition:</b> LinearExpression.h:59</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

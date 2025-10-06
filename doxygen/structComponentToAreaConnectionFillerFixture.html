@@ -134,12 +134,15 @@ $(document).ready(function(){initNavTree('structComponentToAreaConnectionFillerF
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a6950cf025b29dd955d2da79bf8f5ef62"><td class="memItemLeft" align="right" valign="top"><a id="a6950cf025b29dd955d2da79bf8f5ef62"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setData</b> (const std::vector&lt; double &gt; &amp;some_param_value)</td></tr>
+<tr class="separator:a6950cf025b29dd955d2da79bf8f5ef62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f29778fa2665a006a4017a5e3140631"><td class="memItemLeft" align="right" valign="top"><a id="a4f29778fa2665a006a4017a5e3140631"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpModelerSystem</b> ()</td></tr>
 <tr class="separator:a4f29778fa2665a006a4017a5e3140631"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cf4c61767da1ca90f177532c91f40ea"><td class="memItemLeft" align="right" valign="top"><a id="a6cf4c61767da1ca90f177532c91f40ea"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpModelerVariables</b> (unsigned int ts_start, unsigned int ts_end)</td></tr>
-<tr class="separator:a6cf4c61767da1ca90f177532c91f40ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdd99c669cba7535c9a9f28add929544"><td class="memItemLeft" align="right" valign="top"><a id="afdd99c669cba7535c9a9f28add929544"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpModelerVariables</b> (unsigned int ts_start, unsigned int ts_end, <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Optimisation::OptimEntityContainer</a> &amp;optimEntityContainer)</td></tr>
+<tr class="separator:afdd99c669cba7535c9a9f28add929544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac184dd7bdb22f1bfd0c04699d425b5ce"><td class="memItemLeft" align="right" valign="top"><a id="ac184dd7bdb22f1bfd0c04699d425b5ce"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addEmptyConstraintsToLinearProblem</b> (std::vector&lt; std::string &gt; &amp;names, double rhs)</td></tr>
 <tr class="separator:ac184dd7bdb22f1bfd0c04699d425b5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,18 +152,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addEmptyConstraints</
 <tr class="memitem:a83fe9a1fd25d582a4e03350455053f51"><td class="memItemLeft" align="right" valign="top"><a id="a83fe9a1fd25d582a4e03350455053f51"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpLegacyLp</b> (std::vector&lt; std::string &gt; &amp;constraintNames, bool useNamedProblems, double rhs)</td></tr>
 <tr class="separator:a83fe9a1fd25d582a4e03350455053f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a500115b4a4f585bf959bb0ae59352796"><td class="memItemLeft" align="right" valign="top"><a id="a500115b4a4f585bf959bb0ae59352796"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>fillProblem</b> (unsigned int ts_start, unsigned int ts_end, std::vector&lt; double &gt; some_param_value)</td></tr>
-<tr class="separator:a500115b4a4f585bf959bb0ae59352796"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae99e0c3e0af9a4ccb8fbc26cfd473995"><td class="memItemLeft" align="right" valign="top"><a id="ae99e0c3e0af9a4ccb8fbc26cfd473995"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>fillProblem</b> (const FillContext &amp;fillCtx, <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Optimisation::OptimEntityContainer</a> &amp;optimEntityContainer)</td></tr>
+<tr class="separator:ae99e0c3e0af9a4ccb8fbc26cfd473995"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a536168e56f7d23bace96ae4c600d897d"><td class="memItemLeft" align="right" valign="top"><a id="a536168e56f7d23bace96ae4c600d897d"></a>
 std::unique_ptr&lt; <a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>problemeHebdo</b></td></tr>
 <tr class="separator:a536168e56f7d23bace96ae4c600d897d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44adfa5caa650230b94dd4c4cda5ffde"><td class="memItemLeft" align="right" valign="top"><a id="a44adfa5caa650230b94dd4c4cda5ffde"></a>
-VariableDictionary&#160;</td><td class="memItemRight" valign="bottom"><b>modelerVariableDictionary</b></td></tr>
-<tr class="separator:a44adfa5caa650230b94dd4c4cda5ffde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0352e1127b06c81b0cb3032dbee874e1"><td class="memItemLeft" align="right" valign="top"><a id="a0352e1127b06c81b0cb3032dbee874e1"></a>
 std::unique_ptr&lt; <a class="el" href="structAntares_1_1Modeler_1_1Data.html">Modeler::Data</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>modelerData</b></td></tr>
 <tr class="separator:a0352e1127b06c81b0cb3032dbee874e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,6 +173,9 @@ std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_
 <tr class="memitem:a2e559e571c28637117cec35195ca3d44"><td class="memItemLeft" align="right" valign="top"><a id="a2e559e571c28637117cec35195ca3d44"></a>
 <a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Optimisation::ScenarioGroupRepository</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioGroupRepository</b></td></tr>
 <tr class="separator:a2e559e571c28637117cec35195ca3d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4113c6ec7f3b0cb9cdc33585754c6d7c"><td class="memItemLeft" align="right" valign="top"><a id="a4113c6ec7f3b0cb9cdc33585754c6d7c"></a>
+std::remove_reference_t&lt; LinearProblemData &amp; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>data</b></td></tr>
+<tr class="separator:a4113c6ec7f3b0cb9cdc33585754c6d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/tests/src/solver/optimisation/test_componentToAreaConnectionFiller.cpp</li>

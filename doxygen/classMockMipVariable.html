@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('classMockMipVariable.html',''); initRe
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classMockMipVariable-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">MockMipVariable Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
+<div class="title">MockMipVariable Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
@@ -137,51 +137,47 @@ Inheritance diagram for MockMipVariable:</div>
   <img src="classMockMipVariable.png" usemap="#MockMipVariable_map" alt=""/>
   <map id="MockMipVariable_map" name="MockMipVariable_map">
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html" alt="Antares::Optimisation::LinearProblemApi::IMipVariable" shape="rect" coords="325,56,640,80"/>
-<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html" alt="Antares::Optimisation::LinearProblemApi::IMipVariable" shape="rect" coords="1300,56,1615,80"/>
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html" title="Used to handle bounds for IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasBounds" shape="rect" coords="0,0,315,24"/>
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html" title="Inherited by IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasName" shape="rect" coords="325,0,640,24"/>
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html" alt="Antares::Optimisation::LinearProblemApi::IHasStatus" shape="rect" coords="650,0,965,24"/>
-<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html" title="Used to handle bounds for IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasBounds" shape="rect" coords="975,0,1290,24"/>
-<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html" title="Inherited by IMipVariable and IMipConstraint." alt="Antares::Optimisation::LinearProblemApi::IHasName" shape="rect" coords="1300,0,1615,24"/>
-<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html" alt="Antares::Optimisation::LinearProblemApi::IHasStatus" shape="rect" coords="1625,0,1940,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abfdf12d894c589832a5349145870362d"><td class="memItemLeft" align="right" valign="top"><a id="abfdf12d894c589832a5349145870362d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>MockMipVariable</b> (double lb, double ub, bool integer, const std::string &amp;name)</td></tr>
-<tr class="separator:abfdf12d894c589832a5349145870362d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6cb9fa1c9c615f7b176832b3d7f2e75"><td class="memItemLeft" align="right" valign="top"><a id="af6cb9fa1c9c615f7b176832b3d7f2e75"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MockMipVariable</b> (double value, Antares::Optimisation::LinearProblemApi::MipBasisStatus status, bool integer=false)</td></tr>
+<tr class="separator:af6cb9fa1c9c615f7b176832b3d7f2e75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cb67aad284236f38cc4112a9dad3c36"><td class="memItemLeft" align="right" valign="top"><a id="a2cb67aad284236f38cc4112a9dad3c36"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>solutionValue</b> () const override</td></tr>
+<tr class="separator:a2cb67aad284236f38cc4112a9dad3c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0df71729969c09f9ce96aec3ba75a116"><td class="memItemLeft" align="right" valign="top"><a id="a0df71729969c09f9ce96aec3ba75a116"></a>
+Antares::Optimisation::LinearProblemApi::MipBasisStatus&#160;</td><td class="memItemRight" valign="bottom"><b>getMipBasisStatus</b> () const override</td></tr>
+<tr class="separator:a0df71729969c09f9ce96aec3ba75a116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8491c358ff4528c617df72ff2e8fdbe4"><td class="memItemLeft" align="right" valign="top"><a id="a8491c358ff4528c617df72ff2e8fdbe4"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInteger</b> () const override</td></tr>
 <tr class="separator:a8491c358ff4528c617df72ff2e8fdbe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ac7e2d7467c423ccf8d312c7a62bc91"><td class="memItemLeft" align="right" valign="top"><a id="a0ac7e2d7467c423ccf8d312c7a62bc91"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setLb</b> (double lb) override</td></tr>
-<tr class="separator:a0ac7e2d7467c423ccf8d312c7a62bc91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1097002bb5e2dad854309ce4e620a3d"><td class="memItemLeft" align="right" valign="top"><a id="af1097002bb5e2dad854309ce4e620a3d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setUb</b> (double ub) override</td></tr>
-<tr class="separator:af1097002bb5e2dad854309ce4e620a3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87ad9b49a2ecb70adfdcdc32cf9bd595"><td class="memItemLeft" align="right" valign="top"><a id="a87ad9b49a2ecb70adfdcdc32cf9bd595"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setBounds</b> (double lb, double ub) override</td></tr>
-<tr class="separator:a87ad9b49a2ecb70adfdcdc32cf9bd595"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa30ae127921193bc8e376f35a386dff8"><td class="memItemLeft" align="right" valign="top"><a id="aa30ae127921193bc8e376f35a386dff8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLb</b> (double) override</td></tr>
+<tr class="separator:aa30ae127921193bc8e376f35a386dff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d475a750b75160d32835918dd48a9a6"><td class="memItemLeft" align="right" valign="top"><a id="a3d475a750b75160d32835918dd48a9a6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setUb</b> (double) override</td></tr>
+<tr class="separator:a3d475a750b75160d32835918dd48a9a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee318be77be770fa41b15f73a9fe6dd4"><td class="memItemLeft" align="right" valign="top"><a id="aee318be77be770fa41b15f73a9fe6dd4"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>getLb</b> () const override</td></tr>
 <tr class="separator:aee318be77be770fa41b15f73a9fe6dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04e08742f544c69a1352bf1b2e22c014"><td class="memItemLeft" align="right" valign="top"><a id="a04e08742f544c69a1352bf1b2e22c014"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>getUb</b> () const override</td></tr>
 <tr class="separator:a04e08742f544c69a1352bf1b2e22c014"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87ad9b49a2ecb70adfdcdc32cf9bd595"><td class="memItemLeft" align="right" valign="top"><a id="a87ad9b49a2ecb70adfdcdc32cf9bd595"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setBounds</b> (double lb, double ub) override</td></tr>
+<tr class="separator:a87ad9b49a2ecb70adfdcdc32cf9bd595"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdd76cc0fae5672910cd2728fc189ba7"><td class="memItemLeft" align="right" valign="top"><a id="acdd76cc0fae5672910cd2728fc189ba7"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const override</td></tr>
 <tr class="separator:acdd76cc0fae5672910cd2728fc189ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab54fae166c9a12f4b714c9333a427c4e"><td class="memItemLeft" align="right" valign="top"><a id="ab54fae166c9a12f4b714c9333a427c4e"></a>
-MipBasisStatus&#160;</td><td class="memItemRight" valign="bottom"><b>getMipBasisStatus</b> () const override</td></tr>
-<tr class="separator:ab54fae166c9a12f4b714c9333a427c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cb67aad284236f38cc4112a9dad3c36"><td class="memItemLeft" align="right" valign="top"><a id="a2cb67aad284236f38cc4112a9dad3c36"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>solutionValue</b> () const override</td></tr>
-<tr class="separator:a2cb67aad284236f38cc4112a9dad3c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/tests/src/solver/optim-model-filler/test_componentFiller.cpp</li>
+<li>src/tests/src/expressions/<a class="el" href="UtilMocks_8h_source.html">UtilMocks.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -124,129 +124,65 @@ $(document).ready(function(){initNavTree('classAntares_1_1Optimization_1_1Linear
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classAntares_1_1Optimization_1_1LinearExpression-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Optimization::LinearExpression Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="LinearExpression_8h_source.html">LinearExpression.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ade67621faa8cbff2cb0ed021667ad99d"><td class="memItemLeft" align="right" valign="top"><a id="ade67621faa8cbff2cb0ed021667ad99d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = std::vector&lt; std::pair&lt; int, double &gt; &gt;::const_iterator</td></tr>
+<tr class="separator:ade67621faa8cbff2cb0ed021667ad99d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a892a378fe885f50d122444e36cf6cd1a"><td class="memItemLeft" align="right" valign="top"><a id="a892a378fe885f50d122444e36cf6cd1a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a892a378fe885f50d122444e36cf6cd1a">LinearExpression</a> ()=default</td></tr>
-<tr class="memdesc:a892a378fe885f50d122444e36cf6cd1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a linear expression with zero offset and zero coefficients. <br /></td></tr>
-<tr class="separator:a892a378fe885f50d122444e36cf6cd1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af90fa939e915ebac1b82b4a9d78b856e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#af90fa939e915ebac1b82b4a9d78b856e">LinearExpression</a> (double <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a7f461cc34aa1a1a7ebb76c01608cd8c0">offset</a>, FullKeyMap coef_per_var)</td></tr>
-<tr class="separator:af90fa939e915ebac1b82b4a9d78b856e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d9e530b98ad5e82fdf61bd2b6635d06"><td class="memItemLeft" align="right" valign="top"><a id="a8d9e530b98ad5e82fdf61bd2b6635d06"></a>
-<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a8d9e530b98ad5e82fdf61bd2b6635d06">operator+</a> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other) const</td></tr>
-<tr class="memdesc:a8d9e530b98ad5e82fdf61bd2b6635d06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum two linear expressions. <br /></td></tr>
-<tr class="separator:a8d9e530b98ad5e82fdf61bd2b6635d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79580b36e9bc49995be2acc0b464edd9"><td class="memItemLeft" align="right" valign="top"><a id="a79580b36e9bc49995be2acc0b464edd9"></a>
-<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a79580b36e9bc49995be2acc0b464edd9">operator-</a> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other) const</td></tr>
-<tr class="memdesc:a79580b36e9bc49995be2acc0b464edd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract two linear expressions. <br /></td></tr>
-<tr class="separator:a79580b36e9bc49995be2acc0b464edd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a6bd2e80aedcf4f9295889d7d3d4ef4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a8a6bd2e80aedcf4f9295889d7d3d4ef4">operator*</a> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other) const</td></tr>
-<tr class="separator:a8a6bd2e80aedcf4f9295889d7d3d4ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11a4d9233621b309b2c8fdb618970b04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a11a4d9233621b309b2c8fdb618970b04">operator/</a> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other) const</td></tr>
-<tr class="separator:a11a4d9233621b309b2c8fdb618970b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7d08b267de99f53a6312a2c6bc5fc80"><td class="memItemLeft" align="right" valign="top"><a id="ab7d08b267de99f53a6312a2c6bc5fc80"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>LinearExpression</b> (double constant)</td></tr>
+<tr class="separator:ab7d08b267de99f53a6312a2c6bc5fc80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a588604c52f984aca4bcc128db9044d83"><td class="memItemLeft" align="right" valign="top"><a id="a588604c52f984aca4bcc128db9044d83"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>LinearExpression</b> (const std::vector&lt; std::pair&lt; int, double &gt;&gt; &amp;coefs, double constant)</td></tr>
+<tr class="separator:a588604c52f984aca4bcc128db9044d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a810abeeca01c94b7442ba565e7d26613"><td class="memItemLeft" align="right" valign="top"><a id="a810abeeca01c94b7442ba565e7d26613"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>removeDuplicateCoefficients</b> ()</td></tr>
+<tr class="separator:a810abeeca01c94b7442ba565e7d26613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaa16e91425bcf118587d40f7a71e02d"><td class="memItemLeft" align="right" valign="top"><a id="aaaa16e91425bcf118587d40f7a71e02d"></a>
+<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*=</b> (double factor)</td></tr>
+<tr class="separator:aaaa16e91425bcf118587d40f7a71e02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf639a5bc92e92f466c453e2aecb8a79"><td class="memItemLeft" align="right" valign="top"><a id="adf639a5bc92e92f466c453e2aecb8a79"></a>
+<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other)</td></tr>
+<tr class="separator:adf639a5bc92e92f466c453e2aecb8a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af72ff2d45f0b393c7a0730db8a6779d2"><td class="memItemLeft" align="right" valign="top"><a id="af72ff2d45f0b393c7a0730db8a6779d2"></a>
+<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other)</td></tr>
+<tr class="separator:af72ff2d45f0b393c7a0730db8a6779d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21bddbc6ba6b61339e58c4b68cbbdc20"><td class="memItemLeft" align="right" valign="top"><a id="a21bddbc6ba6b61339e58c4b68cbbdc20"></a>
-<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a21bddbc6ba6b61339e58c4b68cbbdc20">operator-</a> () const</td></tr>
-<tr class="memdesc:a21bddbc6ba6b61339e58c4b68cbbdc20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply linear expression by -1. <br /></td></tr>
+<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> () const</td></tr>
 <tr class="separator:a21bddbc6ba6b61339e58c4b68cbbdc20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f461cc34aa1a1a7ebb76c01608cd8c0"><td class="memItemLeft" align="right" valign="top"><a id="a7f461cc34aa1a1a7ebb76c01608cd8c0"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a7f461cc34aa1a1a7ebb76c01608cd8c0">offset</a> () const</td></tr>
-<tr class="memdesc:a7f461cc34aa1a1a7ebb76c01608cd8c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the offset. <br /></td></tr>
-<tr class="separator:a7f461cc34aa1a1a7ebb76c01608cd8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a105e25aae6d5d3c3a404908f7489e2a0"><td class="memItemLeft" align="right" valign="top"><a id="a105e25aae6d5d3c3a404908f7489e2a0"></a>
-const FullKeyMap &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html#a105e25aae6d5d3c3a404908f7489e2a0">coefPerVar</a> () const</td></tr>
-<tr class="memdesc:a105e25aae6d5d3c3a404908f7489e2a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the non-zero coefficients per variable ID. <br /></td></tr>
-<tr class="separator:a105e25aae6d5d3c3a404908f7489e2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ca755877386f0a6eef40303520566bb"><td class="memItemLeft" align="right" valign="top"><a id="a2ca755877386f0a6eef40303520566bb"></a>
-<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;value)</td></tr>
-<tr class="separator:a2ca755877386f0a6eef40303520566bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac552f9f81fab0ae9ebd0207ea964b573"><td class="memItemLeft" align="right" valign="top"><a id="ac552f9f81fab0ae9ebd0207ea964b573"></a>
+<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*=</b> (const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;other)</td></tr>
+<tr class="separator:ac552f9f81fab0ae9ebd0207ea964b573"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab870699edb8be7bc92f0a858d4fe24eb"><td class="memItemLeft" align="right" valign="top"><a id="ab870699edb8be7bc92f0a858d4fe24eb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addVariable</b> (int index, double value)</td></tr>
+<tr class="separator:ab870699edb8be7bc92f0a858d4fe24eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a001af0a89872effba90f21cb78613f67"><td class="memItemLeft" align="right" valign="top"><a id="a001af0a89872effba90f21cb78613f67"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>constant</b> () const</td></tr>
+<tr class="separator:a001af0a89872effba90f21cb78613f67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33d263872cf8e7b4c1e556789b0a3dcd"><td class="memItemLeft" align="right" valign="top"><a id="a33d263872cf8e7b4c1e556789b0a3dcd"></a>
+const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
+<tr class="separator:a33d263872cf8e7b4c1e556789b0a3dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6690fab36052219d64b00479ed16e2f0"><td class="memItemLeft" align="right" valign="top"><a id="a6690fab36052219d64b00479ed16e2f0"></a>
+const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
+<tr class="separator:a6690fab36052219d64b00479ed16e2f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ca0e53c482d7282e2f1cab05dd470a8"><td class="memItemLeft" align="right" valign="top"><a id="a4ca0e53c482d7282e2f1cab05dd470a8"></a>
+const std::pair&lt; int, double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (std::size_t) const</td></tr>
+<tr class="separator:a4ca0e53c482d7282e2f1cab05dd470a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c21d5d2c3be0143604b1e67db38f7c2"><td class="memItemLeft" align="right" valign="top"><a id="a8c21d5d2c3be0143604b1e67db38f7c2"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
+<tr class="separator:a8c21d5d2c3be0143604b1e67db38f7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Linear Expression Represents an expression that is linear in regard to an optimization problem's variables. It can be fully defined by:</p><ul>
-<li>the non-zero coefficients of the variables</li>
-<li>a scalar offset </li>
-</ul>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af90fa939e915ebac1b82b4a9d78b856e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af90fa939e915ebac1b82b4a9d78b856e">&#9670;&nbsp;</a></span>LinearExpression()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Antares::Optimization::LinearExpression::LinearExpression </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>offset</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">FullKeyMap&#160;</td>
-          <td class="paramname"><em>coef_per_var</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Build a linear expression with a given offset and a given map of non-zero coefficients per variable ID </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8a6bd2e80aedcf4f9295889d7d3d4ef4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a6bd2e80aedcf4f9295889d7d3d4ef4">&#9670;&nbsp;</a></span>operator*()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> Antares::Optimization::LinearExpression::operator* </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Multiply two linear expressions Only one can have non-zero coefficients, otherwise the result cannot be linear </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2Antares_Simulator_2Antares_Simulator_2src_2solver_2optim-model-filler_2incded944f66be02da26cbf01c7e1339e09.html#a5">/home/runner/work/Antares_Simulator/Antares_Simulator/src/solver/optim-model-filler/include/antares/solver/optim-model-filler/LinearExpression.h</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="a11a4d9233621b309b2c8fdb618970b04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11a4d9233621b309b2c8fdb618970b04">&#9670;&nbsp;</a></span>operator/()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> Antares::Optimization::LinearExpression::operator/ </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Divide two linear expressions Only first expression can have non-zero coefficients, otherwise the result cannot be linear </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2Antares_Simulator_2Antares_Simulator_2src_2solver_2optim-model-filler_2incded944f66be02da26cbf01c7e1339e09.html#a6">/home/runner/work/Antares_Simulator/Antares_Simulator/src/solver/optim-model-filler/include/antares/solver/optim-model-filler/LinearExpression.h</a>.</dd>
-</dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/solver/optim-model-filler/include/antares/solver/optim-model-filler/<a class="el" href="LinearExpression_8h_source.html">LinearExpression.h</a></li>
 <li>src/solver/optim-model-filler/LinearExpression.cpp</li>
@@ -256,7 +192,7 @@ const FullKeyMap &amp;&#160;</td><td class="memItemRight" valign="bottom"><a cla
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><a class="el" href="namespaceAntares_1_1Optimization.html">Optimization</a></li><li class="navelem"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Optimization</b></li><li class="navelem"><a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

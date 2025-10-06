@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: PredfinedSolutionLinearProblemMock Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('structPredfinedSolutionLinearProblemMock.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structPredfinedSolutionLinearProblemMock-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">PredfinedSolutionLinearProblemMock Struct Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for PredfinedSolutionLinearProblemMock:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="structPredfinedSolutionLinearProblemMock.png" usemap="#PredfinedSolutionLinearProblemMock_map" alt=""/>
+  <map id="PredfinedSolutionLinearProblemMock_map" name="PredfinedSolutionLinearProblemMock_map">
+<area href="classMockLinearProblem.html" alt="MockLinearProblem" shape="rect" coords="169,56,497,80"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html" alt="Antares::Optimisation::LinearProblemApi::ILinearProblem" shape="rect" coords="0,0,328,24"/>
+<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html" alt="Antares::Optimisation::LinearProblemApi::ILinearProblem" shape="rect" coords="338,0,666,24"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aa850951e7d48f862083b1ebf397b437d"><td class="memItemLeft" align="right" valign="top"><a id="aa850951e7d48f862083b1ebf397b437d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>PredfinedSolutionLinearProblemMock</b> (bool lp)</td></tr>
+<tr class="separator:aa850951e7d48f862083b1ebf397b437d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa041c856336474bf029e4001a01c8063"><td class="memItemLeft" align="right" valign="top"><a id="aa041c856336474bf029e4001a01c8063"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addVariableValue</b> (double value)</td></tr>
+<tr class="separator:aa041c856336474bf029e4001a01c8063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classMockLinearProblem"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classMockLinearProblem')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a></td></tr>
+<tr class="memitem:ab85a3462ecf51ac9eda81da4516f2b2b inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ab85a3462ecf51ac9eda81da4516f2b2b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MockLinearProblem</b> (bool isLP)</td></tr>
+<tr class="separator:ab85a3462ecf51ac9eda81da4516f2b2b inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc3a3f70d70fa3570a18b8a750d48c6 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a0cc3a3f70d70fa3570a18b8a750d48c6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLP</b> () const override</td></tr>
+<tr class="separator:a0cc3a3f70d70fa3570a18b8a750d48c6 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab16b3549105c67bf23b1a43475fc5ab5 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ab16b3549105c67bf23b1a43475fc5ab5"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">Antares::Optimisation::LinearProblemApi::IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lookupConstraint</b> (const std::string &amp;name) const override</td></tr>
+<tr class="separator:ab16b3549105c67bf23b1a43475fc5ab5 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba6a979382beb626592f6b8275907d30 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="aba6a979382beb626592f6b8275907d30"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#aba6a979382beb626592f6b8275907d30">addVariable</a> (double, double, bool, const std::string &amp;) override</td></tr>
+<tr class="memdesc:aba6a979382beb626592f6b8275907d30 inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous or integer variable. <br /></td></tr>
+<tr class="separator:aba6a979382beb626592f6b8275907d30 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1463693033250f46f6608ce37fa8000 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ae1463693033250f46f6608ce37fa8000"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">Antares::Optimisation::LinearProblemApi::IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#ae1463693033250f46f6608ce37fa8000">addConstraint</a> (double, double, const std::string &amp;) override</td></tr>
+<tr class="memdesc:ae1463693033250f46f6608ce37fa8000 inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a bounded constraint to the problem. <br /></td></tr>
+<tr class="separator:ae1463693033250f46f6608ce37fa8000 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d5d32dc23d27e63cdfff60669abaf8a inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a0d5d32dc23d27e63cdfff60669abaf8a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a0d5d32dc23d27e63cdfff60669abaf8a">setObjectiveCoefficient</a> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> *, double) override</td></tr>
+<tr class="memdesc:a0d5d32dc23d27e63cdfff60669abaf8a inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the objective coefficient for a given variable. <br /></td></tr>
+<tr class="separator:a0d5d32dc23d27e63cdfff60669abaf8a inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11f5b24f6205dd165a608fb2d491d118 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a11f5b24f6205dd165a608fb2d491d118"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Antares::Optimisation::LinearProblemApi::IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a11f5b24f6205dd165a608fb2d491d118">solve</a> (bool) override</td></tr>
+<tr class="memdesc:a11f5b24f6205dd165a608fb2d491d118 inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a IMipSolution. <br /></td></tr>
+<tr class="separator:a11f5b24f6205dd165a608fb2d491d118 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18bdd1810ea90971f3a4ae3283aa1892 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a18bdd1810ea90971f3a4ae3283aa1892"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>WriteLP</b> (const std::string &amp;) const override</td></tr>
+<tr class="separator:a18bdd1810ea90971f3a4ae3283aa1892 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d75747090e5286e43be590d0eb05ba inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a76d75747090e5286e43be590d0eb05ba"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b> () const override</td></tr>
+<tr class="separator:a76d75747090e5286e43be590d0eb05ba inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5f37252b7d2a1de22089e8ebc47db2f inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ac5f37252b7d2a1de22089e8ebc47db2f"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#ac5f37252b7d2a1de22089e8ebc47db2f">addNumVariable</a> (double lb, double ub, const std::string &amp;name) override</td></tr>
+<tr class="memdesc:ac5f37252b7d2a1de22089e8ebc47db2f inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous variable. <br /></td></tr>
+<tr class="separator:ac5f37252b7d2a1de22089e8ebc47db2f inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07cb9eb140bcb72d796147c4dfa43516 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a07cb9eb140bcb72d796147c4dfa43516"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a07cb9eb140bcb72d796147c4dfa43516">addIntVariable</a> (double lb, double ub, const std::string &amp;name) override</td></tr>
+<tr class="memdesc:a07cb9eb140bcb72d796147c4dfa43516 inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a integer variable. <br /></td></tr>
+<tr class="separator:a07cb9eb140bcb72d796147c4dfa43516 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e35308745b6a6614a817d8a6e320759 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a3e35308745b6a6614a817d8a6e320759"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (std::size_t t) const override</td></tr>
+<tr class="separator:a3e35308745b6a6614a817d8a6e320759 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec49ee7440182a775ed6666ec0af4116 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="aec49ee7440182a775ed6666ec0af4116"></a>
+const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariables</b> () const override</td></tr>
+<tr class="separator:aec49ee7440182a775ed6666ec0af4116 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c4c82b9a14be53bf6b94cf4ab93c7de inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a6c4c82b9a14be53bf6b94cf4ab93c7de"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">Antares::Optimisation::LinearProblemApi::IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraint</b> (std::size_t) const override</td></tr>
+<tr class="separator:a6c4c82b9a14be53bf6b94cf4ab93c7de inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dd598da95abddcc726c0d955395ad12 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a1dd598da95abddcc726c0d955395ad12"></a>
+const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">Antares::Optimisation::LinearProblemApi::IMipConstraint</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraints</b> () const override</td></tr>
+<tr class="separator:a1dd598da95abddcc726c0d955395ad12 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c89acff02ab8222019a512a44615718 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a1c89acff02ab8222019a512a44615718"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lookupVariable</b> (const std::string &amp;name) const override</td></tr>
+<tr class="separator:a1c89acff02ab8222019a512a44615718 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af78b0d69d93e854f1a5542806176d54a inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="af78b0d69d93e854f1a5542806176d54a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>variableCount</b> () const override</td></tr>
+<tr class="separator:af78b0d69d93e854f1a5542806176d54a inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8995cf8176cf34aeccdea065ae3b7b4 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ac8995cf8176cf34aeccdea065ae3b7b4"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>constraintCount</b> () const override</td></tr>
+<tr class="separator:ac8995cf8176cf34aeccdea065ae3b7b4 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3b11e2f74f3d08bd640f202f40d2a10 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ac3b11e2f74f3d08bd640f202f40d2a10"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectiveCoefficient</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> *var) const override</td></tr>
+<tr class="separator:ac3b11e2f74f3d08bd640f202f40d2a10 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a278425f71e237e9bdf318631d60543fc inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a278425f71e237e9bdf318631d60543fc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a278425f71e237e9bdf318631d60543fc">setMinimization</a> () override</td></tr>
+<tr class="memdesc:a278425f71e237e9bdf318631d60543fc inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the optimization direction to minimize. <br /></td></tr>
+<tr class="separator:a278425f71e237e9bdf318631d60543fc inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4562e02de024ff6c13df264d363aab9a inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a4562e02de024ff6c13df264d363aab9a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a4562e02de024ff6c13df264d363aab9a">setMaximization</a> () override</td></tr>
+<tr class="memdesc:a4562e02de024ff6c13df264d363aab9a inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the optimization direction to maximize. <br /></td></tr>
+<tr class="separator:a4562e02de024ff6c13df264d363aab9a inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae920d2fbdb93c8aef5643c517f17d1c7 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ae920d2fbdb93c8aef5643c517f17d1c7"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMinimization</b> () const override</td></tr>
+<tr class="separator:ae920d2fbdb93c8aef5643c517f17d1c7 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f7df22e90eb7a081b25bb861b669588 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a4f7df22e90eb7a081b25bb861b669588"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMaximization</b> () const override</td></tr>
+<tr class="separator:a4f7df22e90eb7a081b25bb861b669588 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab85a3462ecf51ac9eda81da4516f2b2b inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ab85a3462ecf51ac9eda81da4516f2b2b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MockLinearProblem</b> (bool isLP)</td></tr>
+<tr class="separator:ab85a3462ecf51ac9eda81da4516f2b2b inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc3a3f70d70fa3570a18b8a750d48c6 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a0cc3a3f70d70fa3570a18b8a750d48c6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLP</b> () const override</td></tr>
+<tr class="separator:a0cc3a3f70d70fa3570a18b8a750d48c6 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f264bbab24a686023891fdd3130456a inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a3f264bbab24a686023891fdd3130456a"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">LinearProblemApi::IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lookupConstraint</b> (const std::string &amp;name) const override</td></tr>
+<tr class="separator:a3f264bbab24a686023891fdd3130456a inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c70087ae820502862e964cb4eb91dc8 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a2c70087ae820502862e964cb4eb91dc8"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a2c70087ae820502862e964cb4eb91dc8">addVariable</a> (double, double, bool, const std::string &amp;) override</td></tr>
+<tr class="memdesc:a2c70087ae820502862e964cb4eb91dc8 inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous or integer variable. <br /></td></tr>
+<tr class="separator:a2c70087ae820502862e964cb4eb91dc8 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00f9abc99d9b72a216483ba478c28563 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a00f9abc99d9b72a216483ba478c28563"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a00f9abc99d9b72a216483ba478c28563">addConstraint</a> (double, double, const std::string &amp;) override</td></tr>
+<tr class="memdesc:a00f9abc99d9b72a216483ba478c28563 inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a bounded constraint to the problem. <br /></td></tr>
+<tr class="separator:a00f9abc99d9b72a216483ba478c28563 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2c863b15a6b07aa93af2b25de8124e5 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ac2c863b15a6b07aa93af2b25de8124e5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#ac2c863b15a6b07aa93af2b25de8124e5">setObjectiveCoefficient</a> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *, double) override</td></tr>
+<tr class="memdesc:ac2c863b15a6b07aa93af2b25de8124e5 inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the objective coefficient for a given variable. <br /></td></tr>
+<tr class="separator:ac2c863b15a6b07aa93af2b25de8124e5 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8537f266ecbbcb9e1f7719497e0a157a inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a8537f266ecbbcb9e1f7719497e0a157a"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a8537f266ecbbcb9e1f7719497e0a157a">solve</a> (bool) override</td></tr>
+<tr class="memdesc:a8537f266ecbbcb9e1f7719497e0a157a inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a IMipSolution. <br /></td></tr>
+<tr class="separator:a8537f266ecbbcb9e1f7719497e0a157a inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18bdd1810ea90971f3a4ae3283aa1892 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a18bdd1810ea90971f3a4ae3283aa1892"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>WriteLP</b> (const std::string &amp;) const override</td></tr>
+<tr class="separator:a18bdd1810ea90971f3a4ae3283aa1892 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d75747090e5286e43be590d0eb05ba inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a76d75747090e5286e43be590d0eb05ba"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b> () const override</td></tr>
+<tr class="separator:a76d75747090e5286e43be590d0eb05ba inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a4763f066cb88d625a6ae16846557e2 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a4a4763f066cb88d625a6ae16846557e2"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a4a4763f066cb88d625a6ae16846557e2">addNumVariable</a> (double lb, double ub, const std::string &amp;name) override</td></tr>
+<tr class="memdesc:a4a4763f066cb88d625a6ae16846557e2 inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous variable. <br /></td></tr>
+<tr class="separator:a4a4763f066cb88d625a6ae16846557e2 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7546094774c93d49d654d09984ee22f inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ac7546094774c93d49d654d09984ee22f"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#ac7546094774c93d49d654d09984ee22f">addIntVariable</a> (double lb, double ub, const std::string &amp;name) override</td></tr>
+<tr class="memdesc:ac7546094774c93d49d654d09984ee22f inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a integer variable. <br /></td></tr>
+<tr class="separator:ac7546094774c93d49d654d09984ee22f inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ed4ac8c31cf390fb1a1d2ab9c1aa74a inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a2ed4ac8c31cf390fb1a1d2ab9c1aa74a"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (std::size_t t) const override</td></tr>
+<tr class="separator:a2ed4ac8c31cf390fb1a1d2ab9c1aa74a inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8389546d62bb283cb7d05d0451e7d960 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a8389546d62bb283cb7d05d0451e7d960"></a>
+const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariables</b> () const override</td></tr>
+<tr class="separator:a8389546d62bb283cb7d05d0451e7d960 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06d37374ee03257d5db7a5e9bcc9793f inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a06d37374ee03257d5db7a5e9bcc9793f"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraint</b> (std::size_t) const override</td></tr>
+<tr class="separator:a06d37374ee03257d5db7a5e9bcc9793f inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84d9b601eb3f3e2189e9026113c9572c inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a84d9b601eb3f3e2189e9026113c9572c"></a>
+const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraints</b> () const override</td></tr>
+<tr class="separator:a84d9b601eb3f3e2189e9026113c9572c inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd782f8649088ff50d3cee1506087783 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="abd782f8649088ff50d3cee1506087783"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lookupVariable</b> (const std::string &amp;name) const override</td></tr>
+<tr class="separator:abd782f8649088ff50d3cee1506087783 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af78b0d69d93e854f1a5542806176d54a inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="af78b0d69d93e854f1a5542806176d54a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>variableCount</b> () const override</td></tr>
+<tr class="separator:af78b0d69d93e854f1a5542806176d54a inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8995cf8176cf34aeccdea065ae3b7b4 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ac8995cf8176cf34aeccdea065ae3b7b4"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>constraintCount</b> () const override</td></tr>
+<tr class="separator:ac8995cf8176cf34aeccdea065ae3b7b4 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5417beedd3599858582e3bcce76681b0 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a5417beedd3599858582e3bcce76681b0"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectiveCoefficient</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> *var) const override</td></tr>
+<tr class="separator:a5417beedd3599858582e3bcce76681b0 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a278425f71e237e9bdf318631d60543fc inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a278425f71e237e9bdf318631d60543fc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a278425f71e237e9bdf318631d60543fc">setMinimization</a> () override</td></tr>
+<tr class="memdesc:a278425f71e237e9bdf318631d60543fc inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the optimization direction to minimize. <br /></td></tr>
+<tr class="separator:a278425f71e237e9bdf318631d60543fc inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4562e02de024ff6c13df264d363aab9a inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a4562e02de024ff6c13df264d363aab9a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a4562e02de024ff6c13df264d363aab9a">setMaximization</a> () override</td></tr>
+<tr class="memdesc:a4562e02de024ff6c13df264d363aab9a inherit pub_methods_classMockLinearProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the optimization direction to maximize. <br /></td></tr>
+<tr class="separator:a4562e02de024ff6c13df264d363aab9a inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae920d2fbdb93c8aef5643c517f17d1c7 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="ae920d2fbdb93c8aef5643c517f17d1c7"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMinimization</b> () const override</td></tr>
+<tr class="separator:ae920d2fbdb93c8aef5643c517f17d1c7 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f7df22e90eb7a081b25bb861b669588 inherit pub_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a4f7df22e90eb7a081b25bb861b669588"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMaximization</b> () const override</td></tr>
+<tr class="separator:a4f7df22e90eb7a081b25bb861b669588 inherit pub_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_static_methods_classMockLinearProblem"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classMockLinearProblem')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a></td></tr>
+<tr class="memitem:a21b8cc4ab78fb5e28ec8ff1d3e28fdfa inherit pub_static_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a21b8cc4ab78fb5e28ec8ff1d3e28fdfa"></a>
+static std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>RandomVariable</b> ()</td></tr>
+<tr class="separator:a21b8cc4ab78fb5e28ec8ff1d3e28fdfa inherit pub_static_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1127518c6f5a204afa9a5442ac77ac31 inherit pub_static_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a1127518c6f5a204afa9a5442ac77ac31"></a>
+static std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">Antares::Optimisation::LinearProblemApi::IMipConstraint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>RandomConstraint</b> ()</td></tr>
+<tr class="separator:a1127518c6f5a204afa9a5442ac77ac31 inherit pub_static_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06d8ad9109e0feb69123ddfac71f2f70 inherit pub_static_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a06d8ad9109e0feb69123ddfac71f2f70"></a>
+static std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">IMipVariable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>RandomVariable</b> ()</td></tr>
+<tr class="separator:a06d8ad9109e0feb69123ddfac71f2f70 inherit pub_static_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11d11d5764390f58aba4ab1d293039f8 inherit pub_static_methods_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a11d11d5764390f58aba4ab1d293039f8"></a>
+static std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">IMipConstraint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>RandomConstraint</b> ()</td></tr>
+<tr class="separator:a11d11d5764390f58aba4ab1d293039f8 inherit pub_static_methods_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classMockLinearProblem"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classMockLinearProblem')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a></td></tr>
+<tr class="memitem:aee16a287b2f87dede7894bb57cab544a inherit pro_attribs_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="aee16a287b2f87dede7894bb57cab544a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLP_</b></td></tr>
+<tr class="separator:aee16a287b2f87dede7894bb57cab544a inherit pro_attribs_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf46755ff9d111faf013424c8b5ac773 inherit pro_attribs_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="acf46755ff9d111faf013424c8b5ac773"></a>
+std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>variables_</b></td></tr>
+<tr class="separator:acf46755ff9d111faf013424c8b5ac773 inherit pro_attribs_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46f3d6cab52e01d560dbbd3cf6b35252 inherit pro_attribs_classMockLinearProblem"><td class="memItemLeft" align="right" valign="top"><a id="a46f3d6cab52e01d560dbbd3cf6b35252"></a>
+std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">Antares::Optimisation::LinearProblemApi::IMipConstraint</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>constraints_</b></td></tr>
+<tr class="separator:a46f3d6cab52e01d560dbbd3cf6b35252 inherit pro_attribs_classMockLinearProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/tests/src/expressions/<a class="el" href="UtilMocks_8h_source.html">UtilMocks.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="structPredfinedSolutionLinearProblemMock.html">PredfinedSolutionLinearProblemMock</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
+</body>
+</html>

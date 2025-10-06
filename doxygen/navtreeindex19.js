@@ -1,13 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ad595d5490507f25caf0ee32e2121c3ac":[8,0,0,8,0,0,4],
-"classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ae636626919c90c5139c28d0a34b913d1":[8,0,0,8,0,0,0],
-"classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#aea8f8f1d39614cfaaa1339206bdafee9":[8,0,0,8,0,0,6],
-"classAntares_1_1FatalError.html":[8,0,0,36],
-"classAntares_1_1FileTreeStudyLoader.html":[8,0,0,35],
-"classAntares_1_1FileTreeStudyLoader.html#a06769b5dfbddcbc4ea08c2a32c547194":[8,0,0,35,1],
-"classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019":[8,0,0,35,2],
-"classAntares_1_1FileTreeStudyLoader.html#af23c335e62797005c5dd7e7fe25b8f1d":[8,0,0,35,0],
 "classAntares_1_1Forms_1_1ApplWnd.html":[8,0,0,9,6],
 "classAntares_1_1Forms_1_1ApplWnd.html#a0302f49787d5b0f0c848598438024f3f":[8,0,0,9,6,36],
 "classAntares_1_1Forms_1_1ApplWnd.html#a04d6a7313bd189e19b40954a8030aa85":[8,0,0,9,6,49],
@@ -249,5 +241,13 @@ var NAVTREEINDEX19 =
 "classAntares_1_1I__mtx__to__buffer__dumper.html#aac0ff5cc193a8af673bff3312d4cac08":[8,0,0,27,1],
 "classAntares_1_1I__mtx__to__buffer__dumper.html#ac6277422a8cbafa01e40b889ae0585a7":[8,0,0,27,7],
 "classAntares_1_1I__mtx__to__buffer__dumper.html#addd23aea530e860af1184948841c2c78":[8,0,0,27,5],
-"classAntares_1_1IniFile.html":[8,0,0,37]
+"classAntares_1_1IniFile.html":[8,0,0,37],
+"classAntares_1_1IniFile.html#a00a4ab7ba3da35393f7d334396177126":[8,0,0,37,20],
+"classAntares_1_1IniFile.html#a01aed3c0fb4625e725e5f7274ba997ec":[8,0,0,37,15],
+"classAntares_1_1IniFile.html#a06acf136758c4ce722cdc0afc88eb8cd":[8,0,0,37,22],
+"classAntares_1_1IniFile.html#a072c2782308977e7a081f799b159ee05":[8,0,0,37,10],
+"classAntares_1_1IniFile.html#a2d6fd096ed353185ffb459562cd55c9b":[8,0,0,37,8],
+"classAntares_1_1IniFile.html#a36b611ee4924c2e02d293ddd22f59bf0":[8,0,0,37,16],
+"classAntares_1_1IniFile.html#a48712ebe4688a922dfc30e348b67a263":[8,0,0,37,6],
+"classAntares_1_1IniFile.html#a5693d2cdf4825febbb2395e867bf079d":[8,0,0,37,5]
 };

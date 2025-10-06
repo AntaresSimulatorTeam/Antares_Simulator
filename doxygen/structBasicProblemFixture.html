@@ -125,6 +125,7 @@ $(document).ready(function(){initNavTree('structBasicProblemFixture.html',''); i
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structBasicProblemFixture-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">BasicProblemFixture Struct Reference</div>  </div>
@@ -142,6 +143,21 @@ Inheritance diagram for BasicProblemFixture:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a747b7be2857828ab0b6feab97c66e93c"><td class="memItemLeft" align="right" valign="top"><a id="a747b7be2857828ab0b6feab97c66e93c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addRandomVariables</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;fillContext, <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a> *linearProblem, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a> &amp;compo) const</td></tr>
+<tr class="separator:a747b7be2857828ab0b6feab97c66e93c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1978c05b0ad1387ca3ae897b9fe5a699"><td class="memItemLeft" align="right" valign="top"><a id="a1978c05b0ad1387ca3ae897b9fe5a699"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addRandomConstraints</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;fillContext, <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a> *linearProblem, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a> &amp;compo)</td></tr>
+<tr class="separator:a1978c05b0ad1387ca3ae897b9fe5a699"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e17f314e6680796a5e840d6baa65b32"><td class="memItemLeft" align="right" valign="top"><a id="a6e17f314e6680796a5e840d6baa65b32"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setOptimEntityContainer</b> (<a class="el" href="classMockLinearProblem.html">MockLinearProblem</a> *linearProblem)</td></tr>
+<tr class="separator:a6e17f314e6680796a5e840d6baa65b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca2baa4d20185f045643e77254e1a801"><td class="memItemLeft" align="right" valign="top"><a id="aca2baa4d20185f045643e77254e1a801"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>PrepareData</b> ()</td></tr>
+<tr class="separator:aca2baa4d20185f045643e77254e1a801"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe6fa8ad0dc387898733c97b7849b15e"><td class="memItemLeft" align="right" valign="top"><a id="abe6fa8ad0dc387898733c97b7849b15e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>AddRandomVariablesAndContraints</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;fillContext, <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a> *linearProblem)</td></tr>
+<tr class="separator:abe6fa8ad0dc387898733c97b7849b15e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a380c59a3e6aef2db1c4bf8caf53aab7f"><td class="memItemLeft" align="right" valign="top"><a id="a380c59a3e6aef2db1c4bf8caf53aab7f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>build</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;fillContext={0, 4, 0, 4, 0}, <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a> *linearProblem=nullptr)</td></tr>
 <tr class="separator:a380c59a3e6aef2db1c4bf8caf53aab7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,18 +171,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>createModelWithSystem
 <tr class="memitem:a2a6335129e9df8ea3505ceb39e455d72 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a2a6335129e9df8ea3505ceb39e455d72"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>createModelWithOneFloatVar</b> (const std::string &amp;modelId, const std::vector&lt; std::string &gt; &amp;parameterIds, const std::string &amp;varId, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *lb, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *ub, const std::vector&lt; <a class="el" href="structTest_1_1Modeler_1_1ConstraintData.html">ConstraintData</a> &gt; &amp;constraintsData, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *objective=nullptr, bool time_dependent=false)</td></tr>
 <tr class="separator:a2a6335129e9df8ea3505ceb39e455d72 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72a9b37af22414ef4c063644ada0087a inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a72a9b37af22414ef4c063644ada0087a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>createComponent</b> (const std::string &amp;modelId, const std::string &amp;componentId, std::map&lt; std::string, <a class="el" href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">Antares::Expressions::Visitors::ParameterTypeAndValue</a> &gt; parameterValues={}, std::string scenarioGroupId=&quot;&quot;)</td></tr>
-<tr class="separator:a72a9b37af22414ef4c063644ada0087a inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1ea73fc8292ac77372525f383dcb260 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="ab1ea73fc8292ac77372525f383dcb260"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createComponent</b> (const std::string &amp;modelId, const std::string &amp;componentId, std::map&lt; std::string, <a class="el" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html">Antares::ModelerStudy::SystemModel::ParameterTypeAndValue</a> &gt; parameterValues={}, std::string scenarioGroupId=&quot;&quot;)</td></tr>
+<tr class="separator:ab1ea73fc8292ac77372525f383dcb260 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0124789e79614bb1b13befb3783d3e1f inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a0124789e79614bb1b13befb3783d3e1f"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>literal</b> (double value)</td></tr>
 <tr class="separator:a0124789e79614bb1b13befb3783d3e1f inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b4138016d9129b89249ad42e6881d3a inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a4b4138016d9129b89249ad42e6881d3a"></a>
-<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parameter</b> (const std::string &amp;paramId, const Antares::Expressions::Visitors::TimeIndex &amp;timeIndex=Antares::Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)</td></tr>
-<tr class="separator:a4b4138016d9129b89249ad42e6881d3a inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af96f1752a3ef4d9e857779e54e6fce92 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="af96f1752a3ef4d9e857779e54e6fce92"></a>
-<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>variable</b> (const std::string &amp;varId, const Antares::Expressions::Visitors::TimeIndex &amp;timeIndex=Antares::Expressions::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)</td></tr>
-<tr class="separator:af96f1752a3ef4d9e857779e54e6fce92 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68fbf98ebda4d48ec2c7a7fbc0f95d23 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a68fbf98ebda4d48ec2c7a7fbc0f95d23"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parameter</b> (const std::string &amp;paramId, const <a class="el" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Antares::Optimisation::TimeIndex</a> &amp;timeIndex=Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)</td></tr>
+<tr class="separator:a68fbf98ebda4d48ec2c7a7fbc0f95d23 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a2287920b8df7e890124c907887fd9 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="ae2a2287920b8df7e890124c907887fd9"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>variable</b> (const std::string &amp;varId, unsigned int index, const <a class="el" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Antares::Optimisation::TimeIndex</a> &amp;timeIndex=Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)</td></tr>
+<tr class="separator:ae2a2287920b8df7e890124c907887fd9 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09be4a6a7d17e05b023c20429a521be9 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a09be4a6a7d17e05b023c20429a521be9"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>multiply</b> (<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *node1, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *node2)</td></tr>
 <tr class="separator:a09be4a6a7d17e05b023c20429a521be9 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,8 +202,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>buildLinearProblem</b
 <a class="el" href="structAntares_1_1Modeler_1_1Data.html">Antares::Modeler::Data</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getModelerData</b> ()</td></tr>
 <tr class="separator:ae38c17ab9cfd3e91e2db696c4871e6bb inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ab7619ea9427772a6e71c97bda525a577"><td class="memItemLeft" align="right" valign="top"><a id="ab7619ea9427772a6e71c97bda525a577"></a>
+std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioGroupRepository</b> = nullptr</td></tr>
+<tr class="separator:ab7619ea9427772a6e71c97bda525a577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99cb1176b9e498c7e868b38ae0f547b2"><td class="memItemLeft" align="right" valign="top"><a id="a99cb1176b9e498c7e868b38ae0f547b2"></a>
+std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>optimEntityContainer</b> = nullptr</td></tr>
+<tr class="separator:a99cb1176b9e498c7e868b38ae0f547b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html">Test::Modeler::LinearProblemBuildingFixture</a></td></tr>
 <tr class="memitem:a22072256571b15423461e5559b1099ed inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a22072256571b15423461e5559b1099ed"></a>
 std::unordered_map&lt; std::string, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>models</b></td></tr>
@@ -195,9 +217,9 @@ std::unordered_map&lt; std::string, <a class="el" href="classAntares_1_1ModelerS
 <tr class="memitem:a90714322aa2a86f639a757d72b554329 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a90714322aa2a86f639a757d72b554329"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Registry.html">Antares::Expressions::Registry</a>&lt; <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nodes</b></td></tr>
 <tr class="separator:a90714322aa2a86f639a757d72b554329 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a449dbaa9c27a6cb8b7a02c7c5950c298 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a449dbaa9c27a6cb8b7a02c7c5950c298"></a>
-std::unordered_map&lt; std::string, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>components</b></td></tr>
-<tr class="separator:a449dbaa9c27a6cb8b7a02c7c5950c298 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26dbada2cd3484b8e1c4dd29c754e91c inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a26dbada2cd3484b8e1c4dd29c754e91c"></a>
+std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>components</b></td></tr>
+<tr class="separator:a26dbada2cd3484b8e1c4dd29c754e91c inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc9a10e2848577bce276e87d368bb5d9 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="acc9a10e2848577bce276e87d368bb5d9"></a>
 std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pb</b></td></tr>
 <tr class="separator:acc9a10e2848577bce276e87d368bb5d9 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>

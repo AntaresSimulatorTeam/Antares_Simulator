@@ -143,20 +143,26 @@ Inheritance diagram for Antares::Optimisation::LinearProblemApi::VarFillerContex
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a63460795a6c94bb652920fc083d58732"><td class="memItemLeft" align="right" valign="top"><a id="a63460795a6c94bb652920fc083d58732"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addVariables</b> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">ILinearProblem</a> &amp;pb, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;ctx) override</td></tr>
-<tr class="separator:a63460795a6c94bb652920fc083d58732"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44c805318e21bc625b88e1b30916ca14"><td class="memItemLeft" align="right" valign="top"><a id="a44c805318e21bc625b88e1b30916ca14"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addConstraints</b> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">ILinearProblem</a> &amp;pb, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;ctx) override</td></tr>
-<tr class="separator:a44c805318e21bc625b88e1b30916ca14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfbf0ca0815ccd0297059bac3ec918a5"><td class="memItemLeft" align="right" valign="top"><a id="abfbf0ca0815ccd0297059bac3ec918a5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addObjective</b> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">ILinearProblem</a> &amp;pb, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;ctx) override</td></tr>
-<tr class="separator:abfbf0ca0815ccd0297059bac3ec918a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac42041aef2ba5c21b0711c452845fd0a"><td class="memItemLeft" align="right" valign="top"><a id="ac42041aef2ba5c21b0711c452845fd0a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VarFillerContext</b> (<a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a> &amp;optimEntityContainer)</td></tr>
+<tr class="separator:ac42041aef2ba5c21b0711c452845fd0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad10c0e990767639aa6b94e90c28bfc5b"><td class="memItemLeft" align="right" valign="top"><a id="ad10c0e990767639aa6b94e90c28bfc5b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addVariables</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;ctx) override</td></tr>
+<tr class="separator:ad10c0e990767639aa6b94e90c28bfc5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31ea0c0c5b753b49cf3474dfd77e9468"><td class="memItemLeft" align="right" valign="top"><a id="a31ea0c0c5b753b49cf3474dfd77e9468"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addConstraints</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;ctx) override</td></tr>
+<tr class="separator:a31ea0c0c5b753b49cf3474dfd77e9468"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af18d1f56b62d3be33381247a967eea3d"><td class="memItemLeft" align="right" valign="top"><a id="af18d1f56b62d3be33381247a967eea3d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addObjective</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> &amp;ctx) override</td></tr>
+<tr class="separator:af18d1f56b62d3be33381247a967eea3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a74a479f0c9a8ce51746a8a4edd1d7e58"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; int, 3 &gt;, 5 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>timeseries</b></td></tr>
 <tr class="separator:a74a479f0c9a8ce51746a8a4edd1d7e58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50898eafdb47f91267ae4b4b35cfc021"><td class="memItemLeft" align="right" valign="top"><a id="a50898eafdb47f91267ae4b4b35cfc021"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>optimEntityContainer_</b></td></tr>
+<tr class="separator:a50898eafdb47f91267ae4b4b35cfc021"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a74a479f0c9a8ce51746a8a4edd1d7e58"></a>
@@ -183,7 +189,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Optimisation</b></li><li class="navelem"><a class="el" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">LinearProblemApi</a></li><li class="navelem"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html">VarFillerContext</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><a class="el" href="namespaceAntares_1_1Optimisation.html">Optimisation</a></li><li class="navelem"><a class="el" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">LinearProblemApi</a></li><li class="navelem"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html">VarFillerContext</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

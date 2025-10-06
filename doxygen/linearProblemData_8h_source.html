@@ -173,15 +173,19 @@ $(document).ready(function(){initNavTree('linearProblemData_8h_source.html','');
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getData(<span class="keyword">const</span> std::string&amp; dataSetId,</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                                 LinearProblemApi::IScenario::TimeSeriesNumber timeSeriesNumber,</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                                 <span class="keywordtype">unsigned</span> hour) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> addDataSeries(std::unique_ptr&lt;IDataSeries&gt; dataSeries);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html">DataSeriesRepository</a> dataSeriesRepository_;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;};</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    [[nodiscard]] std::span&lt;const double&gt; getData(<span class="keyword">const</span> std::string&amp; dataSetId,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                                  <span class="keywordtype">unsigned</span> timeSeriesNumber,</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                                                  <span class="keywordtype">unsigned</span> firstHour,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                                                  <span class="keywordtype">unsigned</span> lastHour) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">void</span> addDataSeries(std::unique_ptr&lt;IDataSeries&gt; dataSeries);</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemDataImpl</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></div><div class="ttdoc">Interface for linear problem data. Provides a method to retrieve data for a specific dataset,...</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:113</div></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html">DataSeriesRepository</a> dataSeriesRepository_;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemDataImpl</span></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></div><div class="ttdoc">Interface for linear problem data. Provides a method to retrieve data for a specific dataset,...</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:114</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html">Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository</a></div><div class="ttdef"><b>Definition:</b> dataSeriesRepo.h:36</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html">Antares::Optimisation::LinearProblemDataImpl::LinearProblemData</a></div><div class="ttdef"><b>Definition:</b> linearProblemData.h:35</div></div>
 </div><!-- fragment --></div><!-- contents -->

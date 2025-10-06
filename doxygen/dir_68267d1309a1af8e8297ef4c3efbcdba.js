@@ -6,6 +6,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "io", "dir_c184e51c84f2c3f0345bbc8a0d75d3e1.html", "dir_c184e51c84f2c3f0345bbc8a0d75d3e1" ],
     [ "libs", "dir_87a455bccb09a92130c26a11a880c98a.html", "dir_87a455bccb09a92130c26a11a880c98a" ],
     [ "modeler", "dir_45215590e5c4d98109af9f0f9921f13a.html", "dir_45215590e5c4d98109af9f0f9921f13a" ],
+    [ "modeler-optimisation-container", "dir_dde8710a3eb13b70fc17b26b494f74f2.html", "dir_dde8710a3eb13b70fc17b26b494f74f2" ],
     [ "optimisation", "dir_df940598938059c8102df77332c101e5.html", "dir_df940598938059c8102df77332c101e5" ],
     [ "solver", "dir_041db6ad6a3d44280e40e5af409429cb.html", "dir_041db6ad6a3d44280e40e5af409429cb" ],
     [ "study", "dir_a59c10f68ae6f7b645d194ef527e5ef7.html", "dir_a59c10f68ae6f7b645d194ef527e5ef7" ],

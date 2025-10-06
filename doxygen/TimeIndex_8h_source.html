@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/expressions/include/antares/expressions/visitors/TimeIndex.h Source File</title>
+<title>Antares Simulator: src/modeler-optimisation-container/include/antares/modeler-optimisation-container/TimeIndex.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -149,9 +149,9 @@ $(document).ready(function(){initNavTree('TimeIndex_8h_source.html',''); initRes
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">namespace </span>Antares::Expressions::Visitors</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">enum class</span> TimeIndex : unsigned int</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">   28</a></span>&#160;<span class="keyword">enum class</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a> : unsigned int</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    CONSTANT_IN_TIME_AND_SCENARIO = 0,</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    VARYING_IN_TIME_ONLY = 1,</div>
@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('TimeIndex_8h_source.html',''); initRes
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    VARYING_IN_TIME_AND_SCENARIO = 3</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;};</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;constexpr TimeIndex operator|(<span class="keyword">const</span> TimeIndex&amp; left, <span class="keyword">const</span> TimeIndex&amp; right)</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="namespaceAntares_1_1Optimisation.html#aaa8ef259fea24e6b7402d5a380d08154">   44</a></span>&#160;constexpr <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a> <a class="code" href="namespaceAntares_1_1Optimisation.html#aaa8ef259fea24e6b7402d5a380d08154">operator|</a>(<span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a>&amp; left, <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a>&amp; right)</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">     0 | x = x</span></div>
@@ -168,17 +168,20 @@ $(document).ready(function(){initNavTree('TimeIndex_8h_source.html',''); initRes
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">     1 | 2 = 3</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">     2 | 2 = 2</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>TimeIndex<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(left)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a><span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(left)</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                                  | <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(right));</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;} <span class="comment">// namespace Antares::Expressions::Visitors</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;} <span class="comment">// namespace Antares::Optimisation</span></div>
+<div class="ttc" id="anamespaceAntares_1_1Optimisation_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:9</div></div>
+<div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a4f756d9a72af3d0a7f2c41ee8b7782e0"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Antares::Optimisation::TimeIndex</a></div><div class="ttdeci">TimeIndex</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> TimeIndex.h:29</div></div>
+<div class="ttc" id="anamespaceAntares_1_1Optimisation_html_aaa8ef259fea24e6b7402d5a380d08154"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#aaa8ef259fea24e6b7402d5a380d08154">Antares::Optimisation::operator|</a></div><div class="ttdeci">constexpr TimeIndex operator|(const TimeIndex &amp;left, const TimeIndex &amp;right)</div><div class="ttdoc">Combines two TimeIndex values.</div><div class="ttdef"><b>Definition:</b> TimeIndex.h:44</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a46804c238c82b8f14fa9386c13825af.html">expressions</a></li><li class="navelem"><a class="el" href="dir_432673341fda9fdda342856bdfa291ab.html">include</a></li><li class="navelem"><a class="el" href="dir_2029e7711f29bb6b96dc5870729a8848.html">antares</a></li><li class="navelem"><a class="el" href="dir_19ff128a63cbd20da0e3cb306cc82c00.html">expressions</a></li><li class="navelem"><a class="el" href="dir_da561f49584e8b544d49113b783d491a.html">visitors</a></li><li class="navelem"><b>TimeIndex.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_dde8710a3eb13b70fc17b26b494f74f2.html">modeler-optimisation-container</a></li><li class="navelem"><a class="el" href="dir_528ed22b4bc5a894f667fadf1a0b3149.html">include</a></li><li class="navelem"><a class="el" href="dir_08305d0335bff9d217f1701185279828.html">antares</a></li><li class="navelem"><a class="el" href="dir_bf277638dbbb823f1a408d6a2ae883e1.html">modeler-optimisation-container</a></li><li class="navelem"><b>TimeIndex.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

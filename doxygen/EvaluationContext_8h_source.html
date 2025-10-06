@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/expressions/include/antares/expressions/visitors/EvaluationContext.h Source File</title>
+<title>Antares Simulator: src/modeler-optimisation-container/include/antares/modeler-optimisation-container/EvaluationContext.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -130,87 +130,81 @@ $(document).ready(function(){initNavTree('EvaluationContext_8h_source.html','');
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">    7</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">IScenario</a>;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">ILinearProblemData</a>;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemApi</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>Antares::Expressions::Visitors</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">enum class</span> ParameterType : unsigned int</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    CONSTANT = 0,</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    TIMESERIE = 1</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="comment">// TODO: add varying_in_scenario_only, varying_in_time_and_scenario, and handle them in visitors</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// this struct contains more or less the same infos as the one in system.h</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">   23</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">ParameterTypeAndValue</a></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    std::string id;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    ParameterType type;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::string value;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;};</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">EvaluationContext</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#a60a6a525b92143a57cfff56d1fcc3fa9">EvaluationContext</a>(std::map&lt;std::string, ParameterTypeAndValue&gt; system_parameters,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                               std::map&lt;std::string, double&gt; variables,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                               <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a>&amp; data,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                               <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Optimisation::LinearProblemApi::IScenario</a>&amp; scenario);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> <a class="code" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#a28e992c2c8f078d0483fe8e4eb180864">getVariableValue</a>(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;span&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/study/system-model/component.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">class </span>IScenario;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">class </span>ILinearProblemData;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemApi</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1EvaluationContext.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1EvaluationContext.html">EvaluationContext</a></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1EvaluationContext.html#ae680ad0aba4a3b46e02a89e779b3641c">EvaluationContext</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>* component,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                               <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a>* data,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                               <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Optimisation::LinearProblemApi::IScenario</a>* scenario);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> <a class="code" href="classAntares_1_1Optimisation_1_1EvaluationContext.html#a98c3ed84807e0a01d192c757abe3f95d">getSystemParameterValueAsDouble</a>(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    [[nodiscard]] std::string getSystemParameterValue(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getParameterValue(<span class="keyword">const</span> std::string&amp; key,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                                           <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                                           <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hour) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::span&lt;const double&gt; getParameterValue(<span class="keyword">const</span> std::string&amp; key,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                              <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                                              <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> firstHour,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                                              <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lastHour) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> <a class="code" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#ac6d2bf6b8939a28f3045477b0c2eb6c9">getSystemParameterValueAsDouble</a>(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    [[nodiscard]] std::string getSystemParameterValue(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getParameterValue(<span class="keyword">const</span> std::string&amp; key,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                                           <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                                           <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hour) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    [[nodiscard]] ParameterType getParameterType(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    [[nodiscard]] <a class="code" href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">ParameterTypeAndValue</a> getParameter(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a>&amp; data() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    [[nodiscard]] ModelerStudy::SystemModel::ParameterType getParameterType(</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    [[nodiscard]] <a class="code" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html">ModelerStudy::SystemModel::ParameterTypeAndValue</a> getParameter(</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a>&amp; data() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Optimisation::LinearProblemApi::IScenario</a>&amp; scenario() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="structAntares_1_1Optimisation_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html">   70</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structAntares_1_1Optimisation_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html">CouldNotEvaluateConstantParameter</a>: T</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">using</span> T::T;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    };</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>* component_;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Optimisation::LinearProblemApi::IScenario</a>&amp; scenario() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html">   83</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html">CouldNotEvaluateConstantParameter</a>: T</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">using</span> T::T;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    };</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    std::map&lt;std::string, ParameterTypeAndValue&gt; parameters_types_and_values_;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    std::map&lt;std::string, double&gt; variables_;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a>&amp; data_;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Optimisation::LinearProblemApi::IScenario</a>&amp; scenario_;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;} <span class="comment">// namespace Antares::Expressions::Visitors</span></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html">Antares::Expressions::Visitors::EvaluationContext</a></div><div class="ttdoc">Represents the context for evaluating expressions.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:36</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_html_a28e992c2c8f078d0483fe8e4eb180864"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#a28e992c2c8f078d0483fe8e4eb180864">Antares::Expressions::Visitors::EvaluationContext::getVariableValue</a></div><div class="ttdeci">double getVariableValue(const std::string &amp;key) const</div><div class="ttdoc">Retrieves the value of a variable.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.cpp:41</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_html_a60a6a525b92143a57cfff56d1fcc3fa9"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#a60a6a525b92143a57cfff56d1fcc3fa9">Antares::Expressions::Visitors::EvaluationContext::EvaluationContext</a></div><div class="ttdeci">EvaluationContext(std::map&lt; std::string, ParameterTypeAndValue &gt; system_parameters, std::map&lt; std::string, double &gt; variables, const Optimisation::LinearProblemApi::ILinearProblemData &amp;data, const Optimisation::LinearProblemApi::IScenario &amp;scenario)</div><div class="ttdoc">Constructs an evaluation context with the specified parameter and variable values.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.cpp:30</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_html_ac6d2bf6b8939a28f3045477b0c2eb6c9"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext.html#ac6d2bf6b8939a28f3045477b0c2eb6c9">Antares::Expressions::Visitors::EvaluationContext::getSystemParameterValueAsDouble</a></div><div class="ttdeci">double getSystemParameterValueAsDouble(const std::string &amp;key) const</div><div class="ttdoc">Retrieves the value of a parameter.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.cpp:64</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></div><div class="ttdoc">Interface for linear problem data. Provides a method to retrieve data for a specific dataset,...</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:113</div></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a>* data_;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Optimisation::LinearProblemApi::IScenario</a>* scenario_;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;} <span class="comment">// namespace Antares::Optimisation</span></div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition:</b> component.h:74</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1EvaluationContext_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1EvaluationContext.html">Antares::Optimisation::EvaluationContext</a></div><div class="ttdoc">Represents the context for evaluating expressions.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:25</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1EvaluationContext_html_a98c3ed84807e0a01d192c757abe3f95d"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1EvaluationContext.html#a98c3ed84807e0a01d192c757abe3f95d">Antares::Optimisation::EvaluationContext::getSystemParameterValueAsDouble</a></div><div class="ttdeci">double getSystemParameterValueAsDouble(const std::string &amp;key) const</div><div class="ttdoc">Retrieves the value of a parameter.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.cpp:57</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1EvaluationContext_html_ae680ad0aba4a3b46e02a89e779b3641c"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1EvaluationContext.html#ae680ad0aba4a3b46e02a89e779b3641c">Antares::Optimisation::EvaluationContext::EvaluationContext</a></div><div class="ttdeci">EvaluationContext(const ModelerStudy::SystemModel::Component *component, const Optimisation::LinearProblemApi::ILinearProblemData *data, const Optimisation::LinearProblemApi::IScenario *scenario)</div><div class="ttdoc">Constructs an evaluation context with the specified parameter and variable values.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.cpp:30</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></div><div class="ttdoc">Interface for linear problem data. Provides a method to retrieve data for a specific dataset,...</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:114</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Antares::Optimisation::LinearProblemApi::IScenario</a></div><div class="ttdoc">Interface for scenarios in the linear problem API. A scenario is an association of years to their res...</div><div class="ttdef"><b>Definition:</b> IScenario.h:36</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimisation_1_1LinearProblemApi_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div><div class="ttdoc">Namespace for the classes related to the linear problem API.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:8</div></div>
-<div class="ttc" id="astructAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter_html"><div class="ttname"><a href="structAntares_1_1Expressions_1_1Visitors_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html">Antares::Expressions::Visitors::EvaluationContext::CouldNotEvaluateConstantParameter</a></div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:84</div></div>
-<div class="ttc" id="astructAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue_html"><div class="ttname"><a href="structAntares_1_1Expressions_1_1Visitors_1_1ParameterTypeAndValue.html">Antares::Expressions::Visitors::ParameterTypeAndValue</a></div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:24</div></div>
+<div class="ttc" id="anamespaceAntares_1_1Optimisation_1_1LinearProblemApi_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div><div class="ttdoc">Namespace for the classes related to the linear problem API.</div><div class="ttdef"><b>Definition:</b> SimulationTableGenerator.h:41</div></div>
+<div class="ttc" id="anamespaceAntares_1_1Optimisation_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:9</div></div>
+<div class="ttc" id="astructAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue_html"><div class="ttname"><a href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html">Antares::ModelerStudy::SystemModel::ParameterTypeAndValue</a></div><div class="ttdef"><b>Definition:</b> component.h:42</div></div>
+<div class="ttc" id="astructAntares_1_1Optimisation_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter_html"><div class="ttname"><a href="structAntares_1_1Optimisation_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html">Antares::Optimisation::EvaluationContext::CouldNotEvaluateConstantParameter</a></div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:71</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a46804c238c82b8f14fa9386c13825af.html">expressions</a></li><li class="navelem"><a class="el" href="dir_432673341fda9fdda342856bdfa291ab.html">include</a></li><li class="navelem"><a class="el" href="dir_2029e7711f29bb6b96dc5870729a8848.html">antares</a></li><li class="navelem"><a class="el" href="dir_19ff128a63cbd20da0e3cb306cc82c00.html">expressions</a></li><li class="navelem"><a class="el" href="dir_da561f49584e8b544d49113b783d491a.html">visitors</a></li><li class="navelem"><b>EvaluationContext.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_dde8710a3eb13b70fc17b26b494f74f2.html">modeler-optimisation-container</a></li><li class="navelem"><a class="el" href="dir_528ed22b4bc5a894f667fadf1a0b3149.html">include</a></li><li class="navelem"><a class="el" href="dir_08305d0335bff9d217f1701185279828.html">antares</a></li><li class="navelem"><a class="el" href="dir_bf277638dbbb823f1a408d6a2ae883e1.html">modeler-optimisation-container</a></li><li class="navelem"><b>EvaluationContext.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

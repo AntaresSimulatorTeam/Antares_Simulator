@@ -137,7 +137,6 @@ Inheritance diagram for MockLinearProblemData:</div>
   <img src="structMockLinearProblemData.png" usemap="#MockLinearProblemData_map" alt=""/>
   <map id="MockLinearProblemData_map" name="MockLinearProblemData_map">
 <area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html" title="Interface for linear problem data. Provides a method to retrieve data for a specific dataset,..." alt="Antares::Optimisation::LinearProblemApi::ILinearProblemData" shape="rect" coords="0,0,354,24"/>
-<area href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html" title="Interface for linear problem data. Provides a method to retrieve data for a specific dataset,..." alt="Antares::Optimisation::LinearProblemApi::ILinearProblemData" shape="rect" coords="364,0,718,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -146,17 +145,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a808c41967b7bac1df08fb3c6f9de711f"><td class="memItemLeft" align="right" valign="top"><a id="a808c41967b7bac1df08fb3c6f9de711f"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> ([[maybe_unused]] const std::string &amp;dataSetId, [[maybe_unused]] const unsigned scenario, unsigned hour) const override</td></tr>
 <tr class="separator:a808c41967b7bac1df08fb3c6f9de711f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7856971bf8e1c5693dd3e1b61522471b"><td class="memItemLeft" align="right" valign="top"><a id="a7856971bf8e1c5693dd3e1b61522471b"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> ([[maybe_unused]] const std::string &amp;dataSetId, [[maybe_unused]] unsigned scenario, unsigned hour) const override</td></tr>
-<tr class="separator:a7856971bf8e1c5693dd3e1b61522471b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bcbf2377c723b3d73218a500404d17c"><td class="memItemLeft" align="right" valign="top"><a id="a7bcbf2377c723b3d73218a500404d17c"></a>
+std::span&lt; const double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned timeSeriesNumber, unsigned firstHour, unsigned lastHour) const override</td></tr>
+<tr class="separator:a7bcbf2377c723b3d73218a500404d17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></td></tr>
 <tr class="memitem:a0a188e2921abcb871fe497d86668565b inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData"><td class="memItemLeft" align="right" valign="top"><a id="a0a188e2921abcb871fe497d86668565b"></a>
 virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned timeSeriesNumber, unsigned hour) const =0</td></tr>
 <tr class="separator:a0a188e2921abcb871fe497d86668565b inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following files:<ul>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/tests/src/expressions/test_PrintAndEvalVisitors.cpp</li>
-<li>src/tests/src/solver/optim-model-filler/test_readLinearExpressionVisitor.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
