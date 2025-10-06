@@ -72,7 +72,7 @@ void SimulationComments::saveUsingWriter(Solver::IResultWriter& writer,
     String b = folder;
     b << SEP << "comments.txt";
     std::string comments_copy = comments.c_str();
-    writer.addEntryFromBuffer(b.c_str(), comments_copy);
+    writer.addEntryFromBuffer(b.c_str(), comments_copy, true);
 }
 
 bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)

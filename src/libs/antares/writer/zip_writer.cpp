@@ -151,7 +151,9 @@ ZipWriter::~ZipWriter()
     }
 }
 
-void ZipWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent, bool debug)
+void ZipWriter::addEntryFromBuffer(const std::string& entryPath,
+                                   Yuni::Clob& entryContent,
+                                   bool debug)
 {
     if (noOutput_ && !debug)
     {

@@ -113,7 +113,7 @@ void annualCostsStatistics::writeSystemCostToOutput(IResultWriter& writer)
     buffer << "MAX : " << std::round(systemCost.costMax) << '\n';
 
     std::string s = buffer.str();
-    writer.addEntryFromBuffer(systemCostFilename, s);
+    writer.addEntryFromBuffer(systemCostFilename, s, true);
 }
 
 void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) const
@@ -130,7 +130,7 @@ void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) c
            << criterionCost2.costMax << endl;
 
     std::string s = buffer.str(); // TODO allow std::string&& in addEntryFromBuffer
-    writer.addEntryFromBuffer(criterionsCostsFilename, s);
+    writer.addEntryFromBuffer(criterionsCostsFilename, s, true);
 }
 
 void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
@@ -142,7 +142,7 @@ void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
     buffer << "MAX (ms) : " << updateTime.costMax << "\n";
 
     std::string s = buffer.str();
-    writer.addEntryFromBuffer(updateTimeFilename, s);
+    writer.addEntryFromBuffer(updateTimeFilename, s, true);
 }
 
 void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer) const
@@ -161,7 +161,7 @@ void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer)
     buffer << "MAX (ms) : " << optimizationTime2.costMax << "\n";
 
     std::string s = buffer.str();
-    writer.addEntryFromBuffer(optimizationTimeFilename, s);
+    writer.addEntryFromBuffer(optimizationTimeFilename, s, true);
 }
 
 } // namespace Antares::Solver::Simulation

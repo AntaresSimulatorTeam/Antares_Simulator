@@ -459,7 +459,7 @@ void Application::writeComment(Data::Study& study)
 
     if (!pSettings.commentFile.empty())
     {
-        resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+        resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str(), true);
 
         pSettings.commentFile.clear();
     }
@@ -508,7 +508,7 @@ void Application::writeExectutionInfo()
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
     std::string content = file_content.saveToBufferAsIni();
-    resultWriter->addEntryFromBuffer(exec_info_path, content);
+    resultWriter->addEntryFromBuffer(exec_info_path, content, true);
 }
 
 Application::~Application()
@@ -528,7 +528,7 @@ Application::~Application()
         }; // Catching log exception
 
         // Copy the log file if a result writer is available
-        if (!pStudy->parameters.noOutput && resultWriter)
+        if (resultWriter)
         {
             pStudy->importLogsToOutputFolder(*resultWriter);
         }

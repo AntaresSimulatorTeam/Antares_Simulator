@@ -413,7 +413,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
         dest << "about-the-study" << SEP << "parameters.ini";
 
         buffer.clear() << folderSettings << SEP << "generaldata.ini";
-        resultWriter.addEntryFromFile(dest.c_str(), buffer.c_str());
+        resultWriter.addEntryFromFile(dest.c_str(), buffer.c_str(), true);
     }
 
     // antares-output.info
@@ -430,7 +430,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     f << "\ntimestamp = " << pStartTime;
     f << "\n\n";
     auto output = f.str();
-    resultWriter.addEntryFromBuffer(path.c_str(), output);
+    resultWriter.addEntryFromBuffer(path.c_str(), output, true);
 
     if (usedByTheSolver and !parameters.noOutput)
     {
@@ -446,7 +446,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
                 }
             }
             areas.each([&buffer](const Data::Area& area) { buffer << area.name << "\r\n"; });
-            resultWriter.addEntryFromBuffer(path.c_str(), buffer);
+            resultWriter.addEntryFromBuffer(path.c_str(), buffer, true);
         }
 
         // Write all available links as a reminder
@@ -454,7 +454,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
             path.clear() << "about-the-study" << SEP << "links.txt";
             Yuni::Clob buffer;
             areas.saveLinkListToBuffer(buffer);
-            resultWriter.addEntryFromBuffer(path.c_str(), buffer);
+            resultWriter.addEntryFromBuffer(path.c_str(), buffer, true);
         }
     }
 }

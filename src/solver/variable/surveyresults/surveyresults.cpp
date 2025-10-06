@@ -803,7 +803,7 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     }
 
     // mc-ind & mc-all
-    pResultWriter.addEntryFromBuffer(data.filename.c_str(), data.fileBuffer);
+    pResultWriter.addEntryFromBuffer(data.filename.c_str(), data.fileBuffer, true);
 }
 
 void SurveyResults::exportGridInfos()
