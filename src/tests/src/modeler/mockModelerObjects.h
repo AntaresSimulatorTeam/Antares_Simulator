@@ -26,8 +26,11 @@
 
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
 Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
-Antares::ModelerStudy::SystemModel::Component createComponent(const std::string& id = "component");
 Antares::ModelerStudy::SystemModel::Component createComponent(
+  const Antares::ModelerStudy::SystemModel::Model& model,
+  const std::string& id = "component");
+Antares::ModelerStudy::SystemModel::Component createComponent(
+  const Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id,
   std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
     parameter_values);

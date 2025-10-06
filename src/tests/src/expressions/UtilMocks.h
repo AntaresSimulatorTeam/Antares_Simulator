@@ -314,7 +314,8 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
 {
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    Antares::ModelerStudy::SystemModel::Component component = createComponent();
+    Antares::ModelerStudy::SystemModel::Model model = createModelWithoutParameters();
+    Antares::ModelerStudy::SystemModel::Component component = createComponent(model);
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
       = getscenarioGroupRepository(component);
 
@@ -324,11 +325,14 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
     Antares::Optimisation::OptimEntityContainer optimEntityContainer = Antares::Optimisation::
       OptimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
-    Antares::Expressions::Visitors::EvalVisitor evalVisitor = Antares::Expressions::Visitors::
-      EvalVisitor(optimEntityContainer, ctx, component);
+    std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> evalVisitor;
 
     MyDummyFixture()
     {
         optimEntityContainer.addFromSystemComponent(component);
+        evalVisitor = std::make_unique<Antares::Expressions::Visitors::EvalVisitor>(
+          optimEntityContainer,
+          ctx,
+          component);
     }
 };

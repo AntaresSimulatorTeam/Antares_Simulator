@@ -45,9 +45,8 @@ std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
 }
 
 /*{build_context_parameter_with("param1", "5"), build_context_parameter_with("param2", "3")})*/
-Component createComponent(const std::string& id = "component")
+Component createComponent(const Model& model, const std::string& id = "component")
 {
-    Model model = createModelWithoutParameters();
     ComponentBuilder component_builder;
     return component_builder.withId(id)
       .withModel(&model)
@@ -56,7 +55,8 @@ Component createComponent(const std::string& id = "component")
       .build();
 }
 
-Component createComponent(const std::string& id,
+Component createComponent(const Model& model,
+                          const std::string& id,
                           std::map<std::string, ParameterTypeAndValue> parameter_values)
 {
     std::vector<Parameter> params;
@@ -65,7 +65,7 @@ Component createComponent(const std::string& id,
         params.emplace_back(param_id, TimeDependent::NO, ScenarioDependent::NO);
     }
 
-    Model model = createModelWithParameters(params);
+//    Model model = createModelWithParameters(params);
     ComponentBuilder component_builder;
     return component_builder.withId(id)
       .withModel(&model)
