@@ -158,16 +158,6 @@ struct ComponentToAreaConnectionFillerFixture
         data = std::move(d);
     }
 
-    void setData(const std::vector<double>& some_param_value)
-    {
-        auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
-        tss->add(some_param_value);
-        DataSeriesRepository ds;
-        ds.addDataSeries(std::move(tss));
-        LinearProblemData d(std::move(ds));
-        data = std::move(d);
-    }
-
     void setUpModelerSystem()
     {
         IO::Inputs::YmlModel::Parser parserModel;
