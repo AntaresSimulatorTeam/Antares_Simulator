@@ -19,12 +19,13 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/study/system-model/component.h"
+#include "mockModelerObjects.h"
 
+#include "antares/study/system-model/component.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 
-Model createModelWithParameters(std::vector<Parameter>& params)
+Model createModelWithParameters(std::vector<Parameter> params)
 {
     ModelBuilder model_builder;
     return model_builder.withId("model").withParameters(std::move(params)).build();
@@ -39,16 +40,17 @@ Model createModelWithoutParameters()
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type = ParameterType::CONSTANT)
+  const ParameterType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
 
 /*{build_context_parameter_with("param1", "5"), build_context_parameter_with("param2", "3")})*/
-Component createComponent(const Model& model, const std::string& id = "component")
+Component createComponent(const Model& model, const std::string& id, unsigned index)
 {
     ComponentBuilder component_builder;
     return component_builder.withId(id)
+      .withIndex(index)
       .withModel(&model)
       .withParameterValues({})
       .withScenarioGroupId("scenario_group")
@@ -57,17 +59,12 @@ Component createComponent(const Model& model, const std::string& id = "component
 
 Component createComponent(const Model& model,
                           const std::string& id,
-                          std::map<std::string, ParameterTypeAndValue> parameter_values)
+                          std::map<std::string, ParameterTypeAndValue> parameter_values,
+                          unsigned index)
 {
-    std::vector<Parameter> params;
-    for (const auto& [param_id, _]: parameter_values)
-    {
-        params.emplace_back(param_id, TimeDependent::NO, ScenarioDependent::NO);
-    }
-
-//    Model model = createModelWithParameters(params);
     ComponentBuilder component_builder;
     return component_builder.withId(id)
+      .withIndex(index)
       .withModel(&model)
       .withParameterValues(parameter_values)
       .withScenarioGroupId("scenario_group")

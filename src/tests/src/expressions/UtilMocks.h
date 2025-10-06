@@ -2,6 +2,8 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
+#include "../modeler/mockModelerObjects.h"
+
 class MockMipVariable: public Antares::Optimisation::LinearProblemApi::IMipVariable
 {
 public:
@@ -292,14 +294,30 @@ public:
         return !isMinimization();
     }
 
-private:
+protected:
     bool isLP_;
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable>> variables_;
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>>
       constraints_;
 };
 
-Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
+struct PredfinedSolutionLinearProblemMock: MockLinearProblem
+{
+    PredfinedSolutionLinearProblemMock(bool lp):
+        MockLinearProblem(lp)
+    {
+    }
+
+    void addVariableValue(double value)
+    {
+        variables_.push_back(std::make_unique<MockMipVariable>(
+          value,
+          Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND,
+          false));
+    }
+};
+
+inline Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
     Antares::Optimisation::ScenarioGroupRepository repository;
@@ -315,9 +333,10 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::ModelerStudy::SystemModel::Model model = createModelWithoutParameters();
-    Antares::ModelerStudy::SystemModel::Component component = createComponent(model);
+    std::vector<Antares::ModelerStudy::SystemModel::Component> components = {
+      std::move(createComponent(model))};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
-      = getscenarioGroupRepository(component);
+      = getscenarioGroupRepository(components.front());
 
     MockLinearProblem linearProblem = MockLinearProblem(true);
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
@@ -325,14 +344,26 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
     Antares::Optimisation::OptimEntityContainer optimEntityContainer = Antares::Optimisation::
       OptimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
-    std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> evalVisitor;
+    std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> defaultComponentEvalVisitor;
 
     MyDummyFixture()
     {
-        optimEntityContainer.addFromSystemComponent(component);
-        evalVisitor = std::make_unique<Antares::Expressions::Visitors::EvalVisitor>(
-          optimEntityContainer,
-          ctx,
-          component);
+        for (const auto& compo: components)
+        {
+            optimEntityContainer.addFromSystemComponent(compo);
+            defaultComponentEvalVisitor = std::make_unique<
+              Antares::Expressions::Visitors::EvalVisitor>(optimEntityContainer, ctx, compo);
+        }
+    }
+
+    Antares::ModelerStudy::SystemModel::Component* addComponent(
+      const std::string& id,
+      const Antares::ModelerStudy::SystemModel::Model& model,
+      std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
+        paramsAndValues)
+    {
+        components.emplace_back(createComponent(model, id, paramsAndValues, components.size()));
+        optimEntityContainer.addFromSystemComponent(components.back());
+        return &components.back();
     }
 };
