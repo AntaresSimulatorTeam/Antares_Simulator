@@ -46,8 +46,6 @@ static Node* deepNegationTree(Registry<Node>& registry, double litValue, size_t 
     return node;
 }
 
-
-
 BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)
 {
     Node* node = deepNegationTree(*this, 42., 1000);

@@ -327,7 +327,6 @@ inline Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository
     return repository;
 }
 
-
 struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>
 {
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
