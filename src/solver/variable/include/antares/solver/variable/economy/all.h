@@ -69,8 +69,7 @@ MakeSpatialAggregate<ECONOMY_VARIABLES>::type;
 */
 using VariablesPerArea = ApplyChain<Variable::Economy::Links,
                                     ECONOMY_SINGLE_AREA_VARIABLES_CHAIN>::type;
-using VariablesPerSetOfAreas = ApplyChain<Container::EndOfList,
-                                          ECONOMY_SET_OF_AREAS_VARIABLES>::type;
+using VariablesPerSetOfAreas = ApplyChainSpatialAgregate<ECONOMY_SET_OF_AREAS_VARIABLES>::type;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
   >
