@@ -1,5 +1,9 @@
 #pragma once
+
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
+
+#include "../modeler/mockModelerObjects.h"
 
 class MockMipVariable: public Antares::Optimisation::LinearProblemApi::IMipVariable
 {
@@ -295,7 +299,7 @@ public:
         return !isMinimization();
     }
 
-private:
+protected:
     bool isLP_;
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable>> variables_;
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>>

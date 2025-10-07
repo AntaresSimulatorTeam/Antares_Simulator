@@ -48,8 +48,6 @@ BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, VisitorFixture<ReadLinearConstrai
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<EqualNode>(lhs, rhs);
 
-    const LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
-
     auto v = visitor();
     auto constraint = v.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb[0], -3.);
@@ -75,8 +73,6 @@ BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node,
                                                            create<VariableNode>("var2", 1)),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<LessThanOrEqualNode>(lhs, rhs);
-
-    const LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
 
     auto v = visitor();
     auto constraint = v.dispatch(node);
@@ -106,7 +102,6 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node,
                                                            create<VariableNode>("var1", 0)),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<GreaterThanOrEqualNode>(lhs, rhs);
-    const LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
     auto v = visitor();
     auto constraint = v.dispatch(node);
     BOOST_CHECK_EQUAL(constraint.lb[0], -3.);

@@ -25,7 +25,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
+#include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 

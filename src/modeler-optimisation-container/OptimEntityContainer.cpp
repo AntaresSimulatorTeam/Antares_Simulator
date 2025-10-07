@@ -72,5 +72,4 @@ void OptimEntityContainer::registerConstraint(const ModelerStudy::SystemModel::C
     optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);
     addStartLine();
 }
-
 } // namespace Antares::Optimisation

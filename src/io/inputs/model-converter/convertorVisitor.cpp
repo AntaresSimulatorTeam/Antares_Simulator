@@ -152,7 +152,7 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
     }
 
     const auto& variables = model_.variables;
-    for (auto index = 0; index < variables.size(); ++index)
+    for (std::size_t index = 0; index < variables.size(); ++index)
     {
         const auto& var = variables[index];
         if (var.id == identifier)

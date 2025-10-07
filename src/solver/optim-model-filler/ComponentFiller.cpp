@@ -108,9 +108,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               dim.isScenarioDependent(),
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
-            auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            linear_problem_.addVariable(lb[t], /*use localIndex*/
+            linear_problem_.addVariable(lb[t],
                                         ub,
                                         integer,
                                         buildVariableName(compoId, variableId, year, ts));
@@ -141,10 +140,9 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               dim.isScenarioDependent(),
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
-            auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
             linear_problem_.addVariable(lb,
-                                        ub[t], /*use localIndex*/
+                                        ub[t],
                                         integer,
                                         buildVariableName(compoId, variableId, year, ts));
         }
@@ -175,10 +173,9 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
               dim.isScenarioDependent(),
               static_cast<Optimization::MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
-            auto localIndex = s * dim.getNumberOfTimesteps() + t;
 
-            linear_problem_.addVariable(lb[t], /*use localIndex*/
-                                        ub[t], /*use localIndex*/
+            linear_problem_.addVariable(lb[t],
+                                        ub[t],
                                         integer,
                                         buildVariableName(compoId, variableId, year, ts));
         }
@@ -187,11 +184,9 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
 
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  OptimEntityContainer& optimEntityContainer,
-                                 const LinearProblemApi::ILinearProblemData& data,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
-    data_(data),
     scenarioGroupRepository_(scenarioGroupRepository)
 {
 }
@@ -221,7 +216,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
     };
     const auto& variables = component_.getModel()->Variables();
     auto& pb = optimEntityContainer_.Problem();
-    for (auto i = 0; i < variables.size(); ++i)
+    for (std::size_t i = 0; i < variables.size(); ++i)
     {
         const auto& variable = variables[i];
         namespace SM = ModelerStudy::SystemModel;
@@ -359,7 +354,8 @@ void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillCon
     {
         for (const auto& [index, value]: expr)
         {
-            pb.setObjectiveCoefficient(solverVariables[index].get(), value);
+            pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
+                                       value);
         }
     }
 }

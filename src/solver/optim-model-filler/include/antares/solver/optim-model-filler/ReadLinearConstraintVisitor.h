@@ -60,9 +60,9 @@ class ReadLinearConstraintVisitor final: public Expressions::Visitors::NodeVisit
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
-      const Optimisation::OptimEntityContainer& variableContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const ModelerStudy::SystemModel::Component& component);
+      const ModelerStudy::SystemModel::Component& component,
+      const Optimisation::OptimEntityContainer& variableContainer);
 
     std::string name() const override;
 

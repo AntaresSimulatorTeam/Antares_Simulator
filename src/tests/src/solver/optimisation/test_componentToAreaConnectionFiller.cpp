@@ -375,6 +375,7 @@ BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
     Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
                                                             &data,
                                                             &scenarioGroupRepository);
+
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever"});
