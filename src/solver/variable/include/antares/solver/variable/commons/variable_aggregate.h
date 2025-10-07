@@ -22,34 +22,3 @@
 #pragma once
 
 #include "antares/solver/variable/container.h"
-
-namespace Common
-{
-template<typename... Vars>
-class SpatialAggregate;
-}
-
-// Generic alias to aggregate a list of variables
-// Usable to factorize variable list typedefs
-// Example: using MyVars = VariablesAggregate<A, B, C>;
-template<typename... Vars>
-using VariablesAggregate = Common::SpatialAggregate<Vars...>;
-
-// Recursive generator for nested SpatialAggregate<Wrapper1<EndOfList>,
-// SpatialAggregate<Wrapper2<EndOfList>, ...> >
-template<template<typename> class... Vars>
-struct MakeSpatialAggregate;
-
-template<template<typename> class First, template<typename> class... Rest>
-struct MakeSpatialAggregate<First, Rest...>
-{
-    using type = Common::SpatialAggregate<First<Antares::Solver::Variable::Container::EndOfList>,
-                                          typename MakeSpatialAggregate<Rest...>::type>;
-};
-
-template<template<typename> class Last>
-struct MakeSpatialAggregate<Last>
-{
-    using type = Common::SpatialAggregate<Last<Antares::Solver::Variable::Container::EndOfList>,
-                                          Antares::Solver::Variable::Container::EndOfList>;
-};
