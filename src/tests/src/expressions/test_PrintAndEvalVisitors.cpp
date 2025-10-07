@@ -732,12 +732,15 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
     auto param = build_context_parameter_with("my-param", value, param_type);
     const auto compoName = "1245";
-    const auto compo = createComponent(model, compoName, {param});
+    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
+      createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
-      compo);
+      components.front());
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-
-    EvalVisitor visitor(optimContainer, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0}, compo);
+    optimContainer.addFromSystemComponents(components);
+    EvalVisitor visitor(optimContainer,
+                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
+                        components.front());
 
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
