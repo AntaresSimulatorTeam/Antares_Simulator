@@ -78,11 +78,6 @@ struct MyDummyFixture: Registry<Node>
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
       = getscenarioGroupRepository(component);
 
-    // EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
-    // MockEvaluationContextProvider contextProvider = MockEvaluationContextProvider(
-    // evaluationContext);
-
-    // EvalVisitor evalVisitor{contextProvider, {0, 0, 0, 0, 0}, createComponent()};
     MockLinearProblem linearProblem = MockLinearProblem(true);
     Antares::Optimisation::OptimEntityContainer optimEntityContainer = getOptimEntityContainer(
       linearProblem,

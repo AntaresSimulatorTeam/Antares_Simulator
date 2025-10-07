@@ -80,7 +80,6 @@ public:
                                                                       optimEntityContainer_,
                                                                       scenarioGroupRepository_);
             fillers.push_back(std::move(cf));
-            optimEntityContainer_.addFromSystemComponent(component);
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);

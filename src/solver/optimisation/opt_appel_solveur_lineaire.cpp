@@ -80,13 +80,12 @@ static void fillModelerComponents(
   OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
-    optimEntityContainer.reserveOptimComponents(components.size());
+    optimEntityContainer.addFromSystemComponents(components);
     for (const auto& component: components)
     {
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
-                                            *modelerData->dataSeries,
                                             modelerData->scenarioGroupRepository));
     }
 }
