@@ -114,12 +114,12 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
                      const fs::path& archivePath,
                      Benchmarking::DurationCollector& duration_collector,
                      bool noOutput):
+    IResultWriter(noOutput),
     pQueueService(qs),
     pState(ZipState::can_receive_data),
     pArchivePath(archivePath.string() + ".zip"),
     pDurationCollector(duration_collector)
 {
-    noOutput_ = noOutput;
     pZipHandle = mz_zip_writer_create();
 
     // conversion in 2 steps to avoid weird behavior differences for linux and windows
@@ -155,16 +155,18 @@ void ZipWriter::addEntryFromBuffer(const std::string& entryPath,
                                    Yuni::Clob& entryContent,
                                    bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }
     addEntryFromBufferHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent, bool forceWrite)
+void ZipWriter::addEntryFromBuffer(const fs::path& entryPath,
+                                   std::string& entryContent,
+                                   bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }
@@ -188,9 +190,11 @@ static std::string readFile(const fs::path& filePath)
     return content;
 }
 
-void ZipWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath, bool forceWrite)
+void ZipWriter::addEntryFromFile(const fs::path& entryPath,
+                                 const fs::path& filePath,
+                                 bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }

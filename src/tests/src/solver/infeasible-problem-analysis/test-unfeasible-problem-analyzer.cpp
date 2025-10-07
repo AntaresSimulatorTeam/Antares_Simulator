@@ -343,6 +343,8 @@ struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
 
 struct NullWriterExtension final: Solver::NullResultWriter
 {
+    NullWriterExtension() = default;
+
     // hack to read variables and constraints names
     void addEntryFromFile(const std::filesystem::path& entryPath,
                           const std::filesystem::path&,
