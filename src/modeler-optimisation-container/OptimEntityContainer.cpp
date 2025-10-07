@@ -38,6 +38,7 @@ OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& lin
 void OptimEntityContainer::addFromSystemComponents(
   const std::vector<Antares::ModelerStudy::SystemModel::Component>& components)
 {
+    optimComponents_.clear();
     optimComponents_.reserve(components.size());
     for (const auto& component: components)
     {

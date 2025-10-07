@@ -736,7 +736,6 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       compo);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(compo);
 
     EvalVisitor visitor(optimContainer, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0}, compo);
 
@@ -779,7 +778,6 @@ EvaluationResult CreateAndEvaluateTimeNode(const right& p)
       compo);
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(compo);
 
     EvalVisitor visitor(optimContainer, {first, last /*two hours*/, first, last, 0}, compo);
 
@@ -829,7 +827,6 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
       compo);
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(compo);
 
     EvalVisitor visitor(optimContainer, {first, last /*three hours*/, first, last, 0}, compo);
 
@@ -869,7 +866,6 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
       compo);
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(compo);
 
     EvalVisitor visitor(optimContainer, {first, last /*three hours*/, first, last, 0}, compo);
     return visitor.dispatch(&root);
@@ -904,7 +900,6 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       compo);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(compo);
 
     EvalVisitor visitor(optimContainer, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0}, compo);
     const auto eval = visitor.dispatch(&root).valuesAsVector();
@@ -963,7 +958,7 @@ void evaluate_time_dependent_operation()
       compo);
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(compo);
+
     EvalVisitor visitor(optimContainer, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0}, compo);
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
@@ -995,7 +990,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
       compo);
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(compo);
+
     EvalVisitor visitor(optimContainer,
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
                         compo);
@@ -1035,7 +1030,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
       compo);
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(compo);
+
     EvalVisitor visitor(optimContainer,
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
                         compo);
@@ -1419,7 +1414,6 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
       component);
     auto linearProblem = PredfinedSolutionLinearProblemMock(true);
     OptimEntityContainer optimContainer(linearProblem, &testData, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponent(component);
 
     optimContainer.addStartColumn();
     linearProblem.addVariableValue(12.5); // my_const_variable
