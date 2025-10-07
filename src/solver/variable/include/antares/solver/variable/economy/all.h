@@ -79,7 +79,7 @@ typedef Join<Join<
                // Variables for each area / links attached to the areas
                Areas<Economy::VariablesPerArea>,
                // Variables for each set of areas
-               Join<SetsOfAreas<Adequacy::VariablesPerSetOfAreas>,
+               Join<SetsOfAreas<Economy::VariablesPerSetOfAreas>,
                     // Variables for each binding constraint
                     BindingConstraints<VariablesPerBindingConstraints>>>,
              Container::EndOfList>
