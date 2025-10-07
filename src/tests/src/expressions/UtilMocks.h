@@ -321,6 +321,7 @@ struct PredfinedSolutionLinearProblemMock: MockLinearProblem
           value,
           Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND,
           false));
+        variableCount_++;
     }
 };
 
