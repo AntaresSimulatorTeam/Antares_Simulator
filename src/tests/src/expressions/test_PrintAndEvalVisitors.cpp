@@ -1441,8 +1441,8 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     LinearProblemDataImpl::LinearProblemData testData;
 
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
-      components.front());
-    auto linearProblem = PredfinedSolutionLinearProblemMock(true);
+      components.back());
+    PredfinedSolutionLinearProblemMock linearProblem(true);
     OptimEntityContainer optimContainer(linearProblem, &testData, &scenarioGroupRepo);
     optimContainer.addFromSystemComponents(components);
 
@@ -1460,7 +1460,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
                                       0,
                                       TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
 
-    EvalVisitor visitor(optimContainer, fillContext, components.front());
+    EvalVisitor visitor(optimContainer, fillContext, components.back());
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 
