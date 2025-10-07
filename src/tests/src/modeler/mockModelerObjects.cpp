@@ -37,6 +37,13 @@ Model createModelWithoutParameters()
     return model_builder.withId("model").build();
 }
 
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
+  const std::string& id,
+  const std::string& value,
+  const ParameterType& type)
+{
+    return {id, {.id = id, .type = type, .value = value}};
+}
 Component createComponent(const Model& model, const std::string& id, unsigned index)
 {
     ComponentBuilder component_builder;
