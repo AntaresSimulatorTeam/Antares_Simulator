@@ -51,7 +51,7 @@ library:
         - id: ens_cost_contribution
           expression: ens_cost * unsupplied_energy
         - id: loss_of_load
-          expression: is_true(unsupplied_energy >= lol_threshold)
+          expression: unsupplied_energy >= lol_threshold
 
     - id: load
       parameters:
