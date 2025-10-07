@@ -46,47 +46,6 @@ static Node* deepNegationTree(Registry<Node>& registry, double litValue, size_t 
     return node;
 }
 
-Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
-  const Component& component)
-{
-    Antares::Optimisation::ScenarioGroupRepository repository;
-    repository.addScenario(
-      component.getScenarioGroupId(),
-      std::make_unique<Antares::Optimisation::LinearProblemApi::EmptyScenario>());
-    return repository;
-}
-
-Antares::Optimisation::OptimEntityContainer getOptimEntityContainer(
-  MockLinearProblem& linearProblem,
-  Antares::Optimisation::LinearProblemDataImpl::LinearProblemData* data,
-  Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository,
-  const std::vector<Component>& components)
-{
-    Antares::Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
-                                                                     data,
-                                                                     scenarioGroupRepository);
-
-    optimEntityContainer.addFromSystemComponents(components);
-    return optimEntityContainer;
-}
-
-struct MyDummyFixture: Registry<Node>
-{
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    Component component = createComponent();
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
-      = getscenarioGroupRepository(component);
-
-    MockLinearProblem linearProblem = MockLinearProblem(true);
-    Antares::Optimisation::OptimEntityContainer optimEntityContainer = getOptimEntityContainer(
-      linearProblem,
-      &data,
-      &scenarioGroupRepository,
-      {component});
-    EvalVisitor evalVisitor = EvalVisitor(optimEntityContainer, {0, 0, 0, 0, 0}, component);
-};
-
 BOOST_FIXTURE_TEST_CASE(deep_tree_even, MyDummyFixture)
 {
     Node* node = deepNegationTree(*this, 42., 1000);
