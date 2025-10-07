@@ -146,31 +146,89 @@ struct ApplyChainSpatialAgregate<Head, Rest...>
       SpatialAggregate<Head, typename ApplyChainSpatialAgregate<Rest...>::type>;
 };
 
-// List the wrapper templates in the desired order, ending with Links as the tail
-#define ECONOMY_SINGLE_AREA_VARIABLES_CHAIN                                                       \
-    OverallCost, OverallCostCsr, OperatingCost, Price, PriceCSR, ThermalAirPollutantEmissions,    \
-      ProductionByDispatchablePlant, MinDispatchableGenByPlant, ProductionByRenewablePlant,       \
-      Balance, RowBalance, PSP, MiscGenMinusRowPSP, TimeSeriesValuesLoad, TimeSeriesValuesHydro,  \
-      TimeSeriesValuesWind, TimeSeriesValuesSolar, DispatchableGeneration, RenewableGeneration,   \
-      HydroStorage, Pumping, ReservoirLevel, Inflows, Overflows, WaterValue, HydroCost,           \
-      STSbyGroup, STstorageInjectionByCluster, STstorageWithdrawalByCluster,                      \
-      STstorageLevelsByCluster, STstorageCashFlowByCluster, UnsupliedEnergy, UnsupliedEnergyCSR,  \
-      DomesticUnsuppliedEnergy, LMRViolations, SpilledEnergy, LOLD, LOLD_CSR, LOLP, NearPriceCap, \
-      LOLP_CSR, AvailableDispatchGen, DispatchableGenMargin, DtgMarginCsr, Marge, MaxMrgCsr,      \
-      NonProportionalCost, NonProportionalCostByDispatchablePlant, NbOfDispatchedUnits,           \
-      NbOfDispatchedUnitsByPlant, ProfitByPlant
-
-#define ECONOMY_SET_OF_AREAS_VARIABLES                                                         \
-    OverallCost, OperatingCost, Price, ThermalAirPollutantEmissions, Balance, RowBalance, PSP, \
-      MiscGenMinusRowPSP, TimeSeriesValuesLoad, TimeSeriesValuesHydro, TimeSeriesValuesWind,   \
-      TimeSeriesValuesSolar, HydroStorage, Pumping, ReservoirLevel, Inflows, Overflows,        \
-      WaterValue, HydroCost, UnsupliedEnergy, DomesticUnsuppliedEnergy, LMRViolations,         \
-      SpilledEnergy, LOLD, LOLP, NearPriceCap, AvailableDispatchGen, DispatchableGenMargin,    \
-      DtgMarginCsr, Marge, NonProportionalCost, NbOfDispatchedUnits
-
 using VariablesPerArea = ApplyChain<Variable::Economy::Links,
-                                    ECONOMY_SINGLE_AREA_VARIABLES_CHAIN>::type;
-using VariablesPerSetOfAreas = ApplyChainSpatialAgregate<ECONOMY_SET_OF_AREAS_VARIABLES>::type;
+                                    OverallCost,
+                                    OverallCostCsr,
+                                    OperatingCost,
+                                    Price,
+                                    PriceCSR,
+                                    ThermalAirPollutantEmissions,
+                                    ProductionByDispatchablePlant,
+                                    MinDispatchableGenByPlant,
+                                    ProductionByRenewablePlant,
+                                    Balance,
+                                    RowBalance,
+                                    PSP,
+                                    MiscGenMinusRowPSP,
+                                    TimeSeriesValuesLoad,
+                                    TimeSeriesValuesHydro,
+                                    TimeSeriesValuesWind,
+                                    TimeSeriesValuesSolar,
+                                    DispatchableGeneration,
+                                    RenewableGeneration,
+                                    HydroStorage,
+                                    Pumping,
+                                    ReservoirLevel,
+                                    Inflows,
+                                    Overflows,
+                                    WaterValue,
+                                    HydroCost,
+                                    STSbyGroup,
+                                    STstorageInjectionByCluster,
+                                    STstorageWithdrawalByCluster,
+                                    STstorageLevelsByCluster,
+                                    STstorageCashFlowByCluster,
+                                    UnsupliedEnergy,
+                                    UnsupliedEnergyCSR,
+                                    DomesticUnsuppliedEnergy,
+                                    LMRViolations,
+                                    SpilledEnergy,
+                                    LOLD,
+                                    LOLD_CSR,
+                                    LOLP,
+                                    NearPriceCap,
+                                    LOLP_CSR,
+                                    AvailableDispatchGen,
+                                    DispatchableGenMargin,
+                                    DtgMarginCsr,
+                                    Marge,
+                                    MaxMrgCsr,
+                                    NonProportionalCost,
+                                    NonProportionalCostByDispatchablePlant,
+                                    NbOfDispatchedUnits>::type;
+
+using VariablesPerSetOfAreas = ApplyChainSpatialAgregate<OverallCost,
+                                                         OperatingCost,
+                                                         Price,
+                                                         ThermalAirPollutantEmissions,
+                                                         Balance,
+                                                         RowBalance,
+                                                         PSP,
+                                                         MiscGenMinusRowPSP,
+                                                         TimeSeriesValuesLoad,
+                                                         TimeSeriesValuesHydro,
+                                                         TimeSeriesValuesWind,
+                                                         TimeSeriesValuesSolar,
+                                                         HydroStorage,
+                                                         Pumping,
+                                                         ReservoirLevel,
+                                                         Inflows,
+                                                         Overflows,
+                                                         WaterValue,
+                                                         HydroCost,
+                                                         UnsupliedEnergy,
+                                                         DomesticUnsuppliedEnergy,
+                                                         LMRViolations,
+                                                         SpilledEnergy,
+                                                         LOLD,
+                                                         LOLP,
+                                                         NearPriceCap,
+                                                         AvailableDispatchGen,
+                                                         DispatchableGenMargin,
+                                                         DtgMarginCsr,
+                                                         Marge,
+                                                         NonProportionalCost,
+                                                         NbOfDispatchedUnits>::type;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
   >
