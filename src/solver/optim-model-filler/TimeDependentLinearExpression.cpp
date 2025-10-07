@@ -19,10 +19,10 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
+
 #include <algorithm>
 #include <stdexcept>
-
-#include "antares/solver/optim-model-filler/LinearExpression.h"
 
 namespace Antares::Optimization
 {

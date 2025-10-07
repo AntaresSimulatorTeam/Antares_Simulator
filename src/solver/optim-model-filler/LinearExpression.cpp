@@ -19,10 +19,10 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/optim-model-filler/LinearExpression.h"
-
 #include <algorithm>
 #include <stdexcept>
+
+#include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
 
 namespace
 {
@@ -165,11 +165,7 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
         // which this representation cannot hold.
         throw std::runtime_error("Quadratic term detected");
     }
-    else if (!hasCoefs() && !other.hasCoefs())
-    {
-        // constant * constant
-        constant_ *= other.constant_;
-    }
+
     else if (hasCoefs() && !other.hasCoefs())
     {
         // linear * constant
@@ -177,9 +173,8 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
         {
             coef *= other.constant_;
         }
-        constant_ *= other.constant_;
     }
-    else // (!hasCoefs() && other.hasCoefs())
+    else if (!hasCoefs() && other.hasCoefs())
     {
         // constant * linear
         coefs_ = other.coefs_;
@@ -187,8 +182,9 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
         {
             coef *= constant_; // use this->constant as multiplier
         }
-        constant_ *= other.constant_;
     }
+    // Also if (!hasCoefs() && !other.hasCoefs())
+    constant_ *= other.constant_;
     return *this;
 }
 

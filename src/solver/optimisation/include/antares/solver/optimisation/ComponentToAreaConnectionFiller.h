@@ -22,7 +22,7 @@
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
-#include "antares/solver/optim-model-filler/LinearExpression.h"
+#include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
 

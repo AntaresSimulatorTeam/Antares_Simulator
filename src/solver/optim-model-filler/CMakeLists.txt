@@ -13,6 +13,7 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/MCYearAndTime.h
         include/antares/solver/optim-model-filler/Dimensions.h
         include/antares/solver/optim-model-filler/LinearExpression.h
+        include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})

@@ -21,12 +21,10 @@
 
 #pragma once
 
-#include <limits>
-
 #include <antares/expressions/visitors/NodeVisitor.h>
 
-#include "LinearExpression.h"
 #include "ReadLinearExpressionVisitor.h"
+#include "TimeDependentLinearExpression.h"
 
 namespace Antares::Optimisation
 {
