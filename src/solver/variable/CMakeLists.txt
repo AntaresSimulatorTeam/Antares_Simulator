@@ -76,6 +76,7 @@ source_group("variable\\adequacy" FILES ${SRC_VARIABLE_ADEQUACY})
 set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
         include/antares/solver/variable/economy/links.h
+        include/antares/solver/variable/economy/TemplateChain.h
 
         # Variables for Economy
         include/antares/solver/variable/economy/max-mrg-utils.h

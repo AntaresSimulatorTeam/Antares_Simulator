@@ -78,6 +78,7 @@
 #include "antares/solver/variable/economy/waterValue.h"
 
 #include "STStorageCashFlowByCluster.h"
+#include "TemplateChain.h"
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "dtgMarginAfterCsr.h"
@@ -106,40 +107,8 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-// Variadic template to recursively apply wrappers ending with Tail
-// Usage: ApplyChain<Tail, Wrapper1, Wrapper2, ...>::type yields Wrapper1<Wrapper2<...<Tail>...>>
-template<typename Tail, template<typename> class... Wrappers>
-struct ApplyChain;
 
-template<typename Tail>
-struct ApplyChain<Tail>
-{
-    using type = Tail;
-};
-
-template<typename Tail, template<typename> class Head, template<typename> class... Rest>
-struct ApplyChain<Tail, Head, Rest...>
-{
-    using type = Head<typename ApplyChain<Tail, Rest...>::type>;
-};
-
-template<template<typename> class... Wrappers>
-struct ApplyChainSpatialAgregate;
-
-template<template<typename> class Last>
-struct ApplyChainSpatialAgregate<Last>
-{
-    using type = Antares::Solver::Variable::Common::SpatialAggregate<Last>;
-};
-
-template<template<typename> class Head, template<typename> class... Rest>
-struct ApplyChainSpatialAgregate<Head, Rest...>
-{
-    using type = Antares::Solver::Variable::Common::
-      SpatialAggregate<Head, typename ApplyChainSpatialAgregate<Rest...>::type>;
-};
-
-using VariablesPerArea = ApplyChain<Variable::Economy::Links,
+using VariablesPerArea = ApplyChain<Links,
                                     OverallCost,
                                     OverallCostCsr,
                                     OperatingCost,
@@ -229,9 +198,9 @@ typedef BindingConstMarginCost< // Marginal cost for a binding constraint
 
 typedef Join<Join<
                // Variables for each area / links attached to the areas
-               Areas<Economy::VariablesPerArea>,
+               Areas<VariablesPerArea>,
                // Variables for each set of areas
-               Join<SetsOfAreas<Economy::VariablesPerSetOfAreas>,
+               Join<SetsOfAreas<VariablesPerSetOfAreas>,
                     // Variables for each binding constraint
                     BindingConstraints<VariablesPerBindingConstraints>>>,
              Container::EndOfList>
