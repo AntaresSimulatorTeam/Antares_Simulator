@@ -58,7 +58,6 @@ public:
     /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              OptimEntityContainer& optimEntityContainer,
-                             const LinearProblemApi::ILinearProblemData& data,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -79,7 +78,6 @@ private:
 
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
-    const LinearProblemApi::ILinearProblemData& data_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 

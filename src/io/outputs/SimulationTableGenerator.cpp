@@ -92,7 +92,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
     const auto& variables = component.getModel()->Variables();
-    for (auto varIndex = 0; varIndex < variables.size(); ++varIndex)
+    for (std::size_t varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
         const auto& modelVar = variables[varIndex];
         bool scenDep = modelVar.IsScenarioDependent();
@@ -305,7 +305,6 @@ void addPortEntries(ISimulationTable& simulationTable,
                     bool forceExportForScenarioIndex)
 {
     const auto& cid = component.Id();
-    const auto& evalContext = optimEntityContainer.getEvaluationContext(component);
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {

@@ -59,7 +59,6 @@ public:
       const LinearProblemApi::ILinearProblemData& dataSeries,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
         system_(system),
-        linearProblem_(pb),
         dataSeries_(dataSeries),
         scenarioGroupRepository_(scenarioGroupRepository),
         optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository)
@@ -79,7 +78,6 @@ public:
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       optimEntityContainer_,
-                                                                      dataSeries_,
                                                                       scenarioGroupRepository_);
             fillers.push_back(std::move(cf));
             optimEntityContainer_.addFromSystemComponent(component);
@@ -97,7 +95,6 @@ public:
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    ILinearProblem& linearProblem_;
     const LinearProblemApi::ILinearProblemData& dataSeries_;
     const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
     Optimisation::OptimEntityContainer optimEntityContainer_;

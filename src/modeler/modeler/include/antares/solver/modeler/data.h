@@ -28,6 +28,8 @@
 namespace Antares::Modeler
 {
 
+struct ModelParameters;
+
 struct Data
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;

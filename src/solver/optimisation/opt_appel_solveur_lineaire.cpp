@@ -86,7 +86,6 @@ static void fillModelerComponents(
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
-                                            *modelerData->dataSeries,
                                             modelerData->scenarioGroupRepository));
 
         optimEntityContainer.addFromSystemComponent(component);

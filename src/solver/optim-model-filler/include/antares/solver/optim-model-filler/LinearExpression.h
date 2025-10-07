@@ -30,8 +30,8 @@ class LinearExpression final
 {
 public:
     LinearExpression();
-    LinearExpression(double constant);
-    LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant);
+    explicit LinearExpression(double constant);
+    explicit LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant);
 
     void removeDuplicateCoefficients();
 

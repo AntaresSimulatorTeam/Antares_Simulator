@@ -43,7 +43,8 @@ void OptimEntityContainer::addFromSystemComponent(
     std::vector<unsigned int> modelVariableGlobalIndices;
     modelVariableGlobalIndices.resize(variables.size());
 
-    for (auto variableLocalIndex = 0; variableLocalIndex < variables.size(); ++variableLocalIndex)
+    for (std::size_t variableLocalIndex = 0; variableLocalIndex < variables.size();
+         ++variableLocalIndex)
     {
         modelVariableGlobalIndices[variableLocalIndex] = variableGlobalIndex_; // used in
         // ReadlinearExpressionVisitor
