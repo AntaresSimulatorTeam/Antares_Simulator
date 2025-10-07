@@ -27,65 +27,39 @@
 namespace Antares::Optimization
 {
 
-TimeDependentLinearExpression::TimeDependentLinearExpression(std::size_t nbTimesteps)
+TimeDependentLinearExpression::TimeDependentLinearExpression(std::size_t nbTimesteps):
+    v_(nbTimesteps)
 {
-    if (nbTimesteps == 1)
-    {
-        v_.emplace<LinearExpression>();
-    }
-    else
-    {
-        v_.emplace<std::vector<LinearExpression>>(nbTimesteps);
-    }
 }
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(const std::span<const double>& values)
 {
-    if (values.size() == 1)
+    v_.reserve(values.size());
+    for (const double& v: values)
     {
-        v_.emplace<LinearExpression>(values[0]);
-    }
-    else
-    {
-        auto& out = v_.emplace<std::vector<LinearExpression>>();
-        out.reserve(values.size());
-        for (const double& v: values)
-        {
-            out.emplace_back(v);
-        }
+        v_.emplace_back(v);
     }
 }
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(LinearExpression&& expr):
-    v_(std::move(expr))
+    v_(1, std::move(expr))
 {
 }
 
 void TimeDependentLinearExpression::expandTo(std::size_t nbTimesteps)
 {
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        v_.emplace<std::vector<LinearExpression>>(nbTimesteps, *expr);
-    }
+    v_.resize(nbTimesteps, v_[0]);
 }
 
 std::vector<double> TimeDependentLinearExpression::constant() const
 {
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
+    std::vector<double> ret;
+    ret.reserve(this->size());
+    for (const auto& x: *this)
     {
-        return {expr->constant()};
+        ret.push_back(x.constant());
     }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        std::vector<double> ret;
-        ret.reserve(expr->size());
-        for (const auto& x: *expr)
-        {
-            ret.push_back(x.constant());
-        }
-        return ret;
-    }
-    throw std::runtime_error("Invalid variant");
+    return ret;
 }
 
 void TimeDependentLinearExpression::mergeDuplicateCoefficients()
@@ -96,95 +70,53 @@ void TimeDependentLinearExpression::mergeDuplicateCoefficients()
     }
 }
 
-LinearExpression* TimeDependentLinearExpression::begin()
+TimeDependentLinearExpression::iterator TimeDependentLinearExpression::begin()
 {
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return expr;
-    }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->data();
-    }
-    throw std::runtime_error("Invalid variant");
+    return v_.begin();
 }
 
-const LinearExpression* TimeDependentLinearExpression::begin() const
+TimeDependentLinearExpression::const_iterator TimeDependentLinearExpression::begin() const
 {
-    if (const auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return expr;
-    }
-    if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->data();
-    }
-    throw std::runtime_error("Invalid variant");
+    return v_.begin();
 }
 
-LinearExpression* TimeDependentLinearExpression::end()
+TimeDependentLinearExpression::iterator TimeDependentLinearExpression::end()
 {
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return expr + 1;
-    }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->data() + expr->size();
-    }
-    throw std::runtime_error("Invalid variant");
+    return v_.end();
 }
 
-const LinearExpression* TimeDependentLinearExpression::end() const
+TimeDependentLinearExpression::const_iterator TimeDependentLinearExpression::end() const
 {
-    if (const auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return expr + 1;
-    }
-    if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->data() + expr->size();
-    }
-    throw std::runtime_error("Invalid variant");
+    return v_.end();
 }
 
 LinearExpression& TimeDependentLinearExpression::operator[](std::size_t idx)
 {
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
+    if (size() == 1)
     {
-        return *expr;
+        return v_[0];
     }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
+    else
     {
-        return expr->operator[](idx);
+        return v_[idx];
     }
-    throw std::runtime_error("Invalid variant");
 }
 
 const LinearExpression& TimeDependentLinearExpression::operator[](std::size_t idx) const
 {
-    if (const auto* expr = std::get_if<LinearExpression>(&v_))
+    if (size() == 1)
     {
-        return *expr;
+        return v_[0];
     }
-    if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
+    else
     {
-        return expr->operator[](idx);
+        return v_[idx];
     }
-    throw std::runtime_error("Invalid variant");
 }
 
 std::size_t TimeDependentLinearExpression::size() const
 {
-    if (const auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return 1;
-    }
-    if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->size();
-    }
-    throw std::runtime_error("Invalid variant");
+    return v_.size();
 }
 
 TimeDependentLinearExpression& TimeDependentLinearExpression::operator+=(
@@ -217,17 +149,15 @@ TimeDependentLinearExpression& TimeDependentLinearExpression::operator-=(
 
 void TimeDependentLinearExpression::rotate(int shift)
 {
-    if (shift == 0)
+    if (shift == 0 || size() <= 1)
     {
         // Nothing to do
         return;
     }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_); expr && !expr->empty())
-    {
-        const int n = static_cast<int>(expr->size());
-        const int k = ((shift % n) + n) % n;
-        std::rotate(expr->begin(), expr->begin() + k, expr->end());
-    }
+
+    const int n = static_cast<int>(this->size());
+    const int k = ((shift % n) + n) % n;
+    std::rotate(this->begin(), this->begin() + k, this->end());
 }
 
 TimeDependentLinearExpression& TimeDependentLinearExpression::operator*=(double factor)
@@ -257,10 +187,7 @@ TimeDependentLinearExpression& TimeDependentLinearExpression::operator*=(
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {
     TimeDependentLinearExpression result = *this;
-    for (auto& expr: result)
-    {
-        expr = -expr;
-    }
+    result *= -1.0;
     return result;
 }
 } // namespace Antares::Optimization

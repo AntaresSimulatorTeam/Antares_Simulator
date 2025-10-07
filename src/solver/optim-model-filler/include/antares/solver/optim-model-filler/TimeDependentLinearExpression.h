@@ -40,11 +40,13 @@ public:
 
     std::size_t size() const;
 
-    LinearExpression* begin();
-    LinearExpression* end();
+    using iterator = std::vector<LinearExpression>::iterator;
+    iterator begin();
+    iterator end();
 
-    const LinearExpression* begin() const;
-    const LinearExpression* end() const;
+    using const_iterator = std::vector<LinearExpression>::const_iterator;
+    const_iterator begin() const;
+    const_iterator end() const;
 
     LinearExpression& operator[](std::size_t idx);
 
@@ -65,7 +67,7 @@ public:
 private:
     void expandTo(std::size_t nbTimesteps);
 
-    std::variant<LinearExpression, std::vector<LinearExpression>> v_;
+    std::vector<LinearExpression> v_;
 };
 
 } // namespace Antares::Optimization

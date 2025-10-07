@@ -21,7 +21,6 @@
 #pragma once
 
 #include <utility>
-#include <variant>
 #include <vector>
 
 namespace Antares::Optimization
