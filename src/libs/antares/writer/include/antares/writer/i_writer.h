@@ -69,7 +69,7 @@ public:
 private:
     /// Store study.parameters.noOutput, we need it to avoid writing some files when this parameter
     /// is set like results or simulation table
-    bool noOutput_ = false;
+    const bool noOutput_ = false;
 };
 
 class NullResultWriter: public Solver::IResultWriter
