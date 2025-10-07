@@ -106,13 +106,6 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-/*
-// Toutes les variables économiques pour une zone, factorisées via un template générique et une
-liste centralisée using VariablesPerArea = typename
-MakeSpatialAggregate<ECONOMY_VARIABLES>::type;
-
-*/
-
 // Variadic template to recursively apply wrappers ending with Tail
 // Usage: ApplyChain<Tail, Wrapper1, Wrapper2, ...>::type yields Wrapper1<Wrapper2<...<Tail>...>>
 template<typename Tail, template<typename> class... Wrappers>
