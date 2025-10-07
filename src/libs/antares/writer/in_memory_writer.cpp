@@ -67,9 +67,9 @@ InMemoryWriter::~InMemoryWriter() = default;
 
 void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath,
                                         Yuni::Clob& entryContent,
-                                        bool debug)
+                                        bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }
@@ -78,9 +78,9 @@ void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath,
 
 void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath,
                                         std::string& entryContent,
-                                        bool debug)
+                                        bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }
@@ -89,9 +89,9 @@ void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath,
 
 void InMemoryWriter::addEntryFromFile(const fs::path& entryPath,
                                       const fs::path& filePath,
-                                      bool debug)
+                                      bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }

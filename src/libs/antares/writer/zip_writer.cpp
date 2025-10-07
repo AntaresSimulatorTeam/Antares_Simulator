@@ -153,18 +153,18 @@ ZipWriter::~ZipWriter()
 
 void ZipWriter::addEntryFromBuffer(const std::string& entryPath,
                                    Yuni::Clob& entryContent,
-                                   bool debug)
+                                   bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }
     addEntryFromBufferHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent, bool debug)
+void ZipWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent, bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }
@@ -188,9 +188,9 @@ static std::string readFile(const fs::path& filePath)
     return content;
 }
 
-void ZipWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath, bool debug)
+void ZipWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath, bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }

@@ -59,9 +59,9 @@ static bool prepareDirectoryHierarchy(const fs::path& root,
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    Yuni::Clob& entryContent,
-                                                   bool debug)
+                                                   bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }
@@ -76,9 +76,9 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addEntryFromBuffer(const fs::path& entryPath,
                                                    std::string& entryContent,
-                                                   bool debug)
+                                                   bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }
@@ -92,9 +92,9 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const fs::path& entryPath,
 
 void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
                                                  const fs::path& filePath,
-                                                 bool debug)
+                                                 bool forceWrite)
 {
-    if (noOutput_ && !debug)
+    if (noOutput_ && !forceWrite)
     {
         return;
     }
