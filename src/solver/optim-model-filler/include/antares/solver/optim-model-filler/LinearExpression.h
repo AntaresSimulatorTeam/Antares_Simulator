@@ -33,7 +33,7 @@ public:
     explicit LinearExpression(double constant);
     explicit LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant);
 
-    void removeDuplicateCoefficients();
+    void mergeDuplicateCoefficients();
 
     LinearExpression& operator*=(double factor);
     LinearExpression& operator+=(const LinearExpression& other);
@@ -67,7 +67,7 @@ public:
 
     std::vector<double> constant() const;
 
-    void removeDuplicateCoefficients();
+    void mergeDuplicateCoefficients();
 
     std::size_t size() const;
 

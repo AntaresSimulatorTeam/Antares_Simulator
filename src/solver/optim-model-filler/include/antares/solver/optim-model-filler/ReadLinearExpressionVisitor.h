@@ -62,11 +62,11 @@ public:
     {
     }
 
-    Antares::Optimization::TimeDependentLinearExpression visitRemoveDuplicates(
+    Antares::Optimization::TimeDependentLinearExpression visitMergeDuplicates(
       const Nodes::Node* node)
     {
         auto expr = dispatch(node);
-        expr.removeDuplicateCoefficients();
+        expr.mergeDuplicateCoefficients();
         return expr;
     }
 
