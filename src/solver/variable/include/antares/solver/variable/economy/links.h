@@ -34,23 +34,22 @@
 #include "antares/solver/variable/economy/links/marginalCost.h"
 
 #include "../commons/links/links.h"
+#include "TemplateChain.h"
 
 namespace Antares::Solver::Variable::Economy
 {
 /*!
 ** \brief All variables for a single link (economy)
 */
-typedef FlowLinear             // Flow linear
-  <FlowLinearAbs               // Flow linear Abs
-   <LoopFlow                   // Loop flow
-    <FlowQuad                  // Flow Quad
-     <CongestionFee            // Congestion Fee
-      <CongestionFeeAbs        // Congestion Fee (Abs)
-       <MarginalCost           // Marginal Cost
-        <CongestionProbability // Congestion Probability (+/-)
-         <HurdleCosts          // Hurdle costs
-          <>>>>>>>>>
-    VariablePerLink;
+using VariablePerLink = ChainLinks<FlowLinear,            // Flow linear
+                                   FlowLinearAbs,         // Flow linear Abs
+                                   LoopFlow,              // Loop flow
+                                   FlowQuad,              // Flow Quad
+                                   CongestionFee,         // Congestion Fee
+                                   CongestionFeeAbs,      // Congestion Fee (Abs)
+                                   MarginalCost,          // Marginal Cost
+                                   CongestionProbability, // Congestion Probability (+/-)
+                                   HurdleCosts>;          // Hurdle costs
 
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 
