@@ -59,6 +59,7 @@ void addToMap(InMemoryWriter::MapType& entries,
 } // namespace
 
 InMemoryWriter::InMemoryWriter(Benchmarking::DurationCollector& duration_collector):
+    IResultWriter(false),
     pDurationCollector(duration_collector)
 {
 }
@@ -69,7 +70,7 @@ void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath,
                                         Yuni::Clob& entryContent,
                                         bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }
@@ -80,7 +81,7 @@ void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath,
                                         std::string& entryContent,
                                         bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }
@@ -91,7 +92,7 @@ void InMemoryWriter::addEntryFromFile(const fs::path& entryPath,
                                       const fs::path& filePath,
                                       bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }

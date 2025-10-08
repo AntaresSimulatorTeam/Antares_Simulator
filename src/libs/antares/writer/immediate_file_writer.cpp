@@ -30,11 +30,10 @@ namespace fs = std::filesystem;
 
 namespace Antares::Solver
 {
-ImmediateFileResultWriter::ImmediateFileResultWriter(const fs::path& folderOutput,
-                                                     const bool noOutput):
+ImmediateFileResultWriter::ImmediateFileResultWriter(const fs::path& folderOutput, bool noOutput):
+    IResultWriter(noOutput),
     pOutputFolder(folderOutput)
 {
-    noOutput_ = noOutput;
 }
 
 ImmediateFileResultWriter::~ImmediateFileResultWriter() = default;
@@ -61,7 +60,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    Yuni::Clob& entryContent,
                                                    bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }
@@ -78,7 +77,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const fs::path& entryPath,
                                                    std::string& entryContent,
                                                    bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }
@@ -94,7 +93,7 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
                                                  const fs::path& filePath,
                                                  bool forceWrite)
 {
-    if (noOutput_ && !forceWrite)
+    if (noOutput() && !forceWrite)
     {
         return;
     }
@@ -133,6 +132,11 @@ bool ImmediateFileResultWriter::needsTheJobQueue() const
 void ImmediateFileResultWriter::finalize(bool /*verbose*/)
 {
     // Do nothing
+}
+
+NullResultWriter::NullResultWriter():
+    IResultWriter(false)
+{
 }
 
 void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&, bool)

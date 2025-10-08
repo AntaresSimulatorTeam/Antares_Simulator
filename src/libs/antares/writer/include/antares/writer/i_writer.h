@@ -33,6 +33,11 @@ namespace Antares::Solver
 class IResultWriter
 {
 public:
+    IResultWriter(bool noOutput):
+        noOutput_(noOutput)
+    {
+    }
+
     using Ptr = std::shared_ptr<IResultWriter>;
     virtual void addEntryFromBuffer(const std::string& entryPath,
                                     Yuni::Clob& entryContent,
@@ -61,14 +66,16 @@ public:
         return noOutput_;
     }
 
-protected:
+private:
     /// Store study.parameters.noOutput, we need it to avoid writing some files when this parameter
     /// is set like results or simulation table
-    bool noOutput_ = false;
+    const bool noOutput_ = false;
 };
 
 class NullResultWriter: public Solver::IResultWriter
 {
+public:
+    NullResultWriter();
     void addEntryFromBuffer(const std::string&, Yuni::Clob&, bool forceWrite = false) override;
     void addEntryFromBuffer(const std::filesystem::path&,
                             std::string&,
