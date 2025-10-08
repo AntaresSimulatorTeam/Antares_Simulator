@@ -21,13 +21,10 @@
  */
 
 #pragma once
-#include <type_traits> // detection idiom for ChainLinks base case
-
-#include <antares/solver/variable/container.h> // for Container::EndOfList
+#include <antares/solver/variable/commons/spatial-aggregate.h>
 
 namespace Antares::Solver::Variable::Economy
 {
-
 // Variadic template to recursively apply wrappers ending with Tail
 // Usage: ApplyChain<Tail, Wrapper1, Wrapper2, ...>::type yields Wrapper1<Wrapper2<...<Tail>...>>
 template<typename Tail, template<typename> class... Wrappers>
@@ -44,7 +41,7 @@ struct ApplyChain<Tail, Head, Rest...>
 {
     using type = Head<typename ApplyChain<Tail, Rest...>::type>;
 };
-// Common::SpatialAggregate<W1, Common::SpatialAggregate<W2, ...>>
+
 template<template<typename> class... Wrappers>
 struct ApplyChainSpatialAgregate;
 
@@ -59,20 +56,4 @@ struct ApplyChainSpatialAgregate<Head, Rest...>
 {
     using type = Common::SpatialAggregate<Head, typename ApplyChainSpatialAgregate<Rest...>::type>;
 };
-
-template<template<typename> class... Wrappers>
-struct ChainLinks;
-
-template<template<typename> class Last>
-struct ChainLinks<Last>
-{
-    using type = Last;
-};
-
-// Recursive case
-template<template<typename> class Head, template<typename> class... Rest>
-struct ChainLinks<Head, Rest...>
-{
-    using type = Head<typename ChainLinks<Rest...>::type>;
-
 } // namespace Antares::Solver::Variable::Economy
