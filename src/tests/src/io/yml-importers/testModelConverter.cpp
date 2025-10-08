@@ -177,17 +177,20 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
-    BOOST_REQUIRE_EQUAL(model.Variables().size(), 2);
-    auto& variable1 = model.Variables().at("var1");
-    auto& variable2 = model.Variables().at("var2");
-    BOOST_CHECK_EQUAL(variable1.Id(), "var1");
-    BOOST_CHECK_EQUAL(variable1.LowerBound().Value(), "7");
-    BOOST_CHECK_EQUAL(variable1.UpperBound().Value(), "pmax");
-    BOOST_CHECK_EQUAL(variable1.Type(), SystemModel::ValueType::BOOL);
-    BOOST_CHECK_EQUAL(variable2.Id(), "var2");
-    BOOST_CHECK_EQUAL(variable2.LowerBound().Value(), "99999999.9999999");
-    BOOST_CHECK_EQUAL(variable2.UpperBound().Value(), "var1");
-    BOOST_CHECK_EQUAL(variable2.Type(), SystemModel::ValueType::INTEGER);
+    const auto& vars = model.Variables();
+    BOOST_REQUIRE_EQUAL(vars.size(), 2);
+    const auto variable1 = std::ranges::find_if(vars,
+                                                [](const auto& v) { return v.Id() == "var1"; });
+    const auto variable2 = std::ranges::find_if(vars,
+                                                [](const auto& v) { return v.Id() == "var2"; });
+    BOOST_CHECK(variable1 != vars.cend());
+    BOOST_CHECK_EQUAL(variable1->LowerBound().Value(), "7");
+    BOOST_CHECK_EQUAL(variable1->UpperBound().Value(), "pmax");
+    BOOST_CHECK_EQUAL(variable1->Type(), SystemModel::ValueType::BOOL);
+    BOOST_CHECK(variable2 != vars.cend());
+    BOOST_CHECK_EQUAL(variable2->LowerBound().Value(), "99999999.9999999");
+    BOOST_CHECK_EQUAL(variable2->UpperBound().Value(), "var1");
+    BOOST_CHECK_EQUAL(variable2->Type(), SystemModel::ValueType::INTEGER);
 }
 
 // wrong variable ValueType
@@ -291,9 +294,9 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
     BOOST_REQUIRE_EQUAL(model.Constraints().size(), 3);
-    auto& constraint1 = model.Constraints().at("constraint1");
-    auto& constraint2 = model.Constraints().at("constraint2");
-    auto& constraint3 = model.Constraints().at("constraint3");
+    auto& constraint1 = model.Constraints().at(0);
+    auto& constraint2 = model.Constraints().at(1);
+    auto& constraint3 = model.Constraints().at(2);
     BOOST_CHECK_EQUAL(constraint1.Id(), "constraint1");
     BOOST_CHECK_EQUAL(constraint1.expression().Value(), "expression1");
     BOOST_CHECK_EQUAL(constraint2.Id(), "constraint2");

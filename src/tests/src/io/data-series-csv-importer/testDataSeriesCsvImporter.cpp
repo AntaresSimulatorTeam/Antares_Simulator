@@ -44,60 +44,52 @@ struct CsvCreationFixture
         filesystem::create_directories(temp_path);
     }
 
-    void writeFile(string filename, string content);
+    std::filesystem::path writeFile(string filename, string content);
+
+    ~CsvCreationFixture()
+    {
+        if (filesystem::exists(temp_path))
+        {
+            filesystem::remove_all(temp_path);
+        }
+    }
 };
 
-void CsvCreationFixture::writeFile(const string filename, const string content)
+std::filesystem::path CsvCreationFixture::writeFile(const string filename, const string content)
 {
     auto filepath = temp_path / (filename);
     std::ofstream outfile(filepath);
     outfile << content;
     outfile.close();
+    return filepath;
 }
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
 
-BOOST_AUTO_TEST_CASE(inconsistent_columns)
+BOOST_AUTO_TEST_CASE(row_two_has_less_columns)
 {
-    writeFile("wrong.csv", "1;2\n3");
-    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ";"),
+    const auto filePath = writeFile("wrong.csv", "1;2\n3");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
                           std::invalid_argument,
-                          checkMessage("wrong.csv: rows have inconsistent number of columns"));
+                          checkMessage(filePath.string()
+                                       + ": row (1) has less columns (1) than the expected (2)."));
 }
 
-BOOST_AUTO_TEST_CASE(inconsistent_rows)
+BOOST_AUTO_TEST_CASE(row_two_has_more_columns)
 {
-    writeFile("wrong2.csv", "1;2\n;3");
-    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ";"),
+    const auto filePath = writeFile("wrong.csv", "1;2\n3;4;5");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
                           std::invalid_argument,
-                          checkMessage("wrong2.csv: columns have inconsistent number of rows"));
+                          checkMessage(filePath.string()
+                                       + ": row (1) has more columns (3) than the expected (2)."));
 }
 
 BOOST_AUTO_TEST_CASE(not_a_number)
 {
-    writeFile("wrong.csv", "1;2\nXy;3");
-    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ";"),
+    const auto filePath = writeFile("wrong.csv", "1;2\nXy;3");
+    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
                           std::invalid_argument,
-                          checkMessage("wrong.csv: \"Xy\" is not a number"));
-}
-
-BOOST_AUTO_TEST_CASE(empty_line)
-{
-    writeFile("wrong.csv", "1;2\n\n3;4");
-    BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ";"),
-                          std::invalid_argument,
-                          checkMessage("wrong.csv: empty line in the middle of the file"));
-}
-
-BOOST_AUTO_TEST_CASE(empty_file)
-{
-    writeFile("empty.csv", "");
-    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
-    BOOST_CHECK_EQUAL(repo.getDataSeries("empty").name(), "empty");
-    BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("empty").getData(1, 0),
-                          TimeSeriesSet::Empty,
-                          checkMessage(
-                            "TS set 'empty' : empty, requesting a value makes no sense"));
+                          checkMessage(filePath.string() + ": \"X\" is not a number"));
 }
 
 BOOST_AUTO_TEST_CASE(one_line_one_column)
@@ -118,7 +110,7 @@ BOOST_AUTO_TEST_CASE(one_line_one_column)
 BOOST_AUTO_TEST_CASE(one_line_two_columns)
 {
     writeFile("one_by_two.csv", "123,456.789\n");
-    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, ",");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, ',');
     BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").name(), "one_by_two");
     BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").getData(1, 0), 123);
     BOOST_CHECK_EQUAL(repo.getDataSeries("one_by_two").getData(2, 0), 456.789);
@@ -163,26 +155,6 @@ BOOST_AUTO_TEST_CASE(two_lines_two_columns)
     BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("two_by_two").getData(2, 2),
                           TimeSeriesSet::HourTooBig,
                           checkMessage("TS set 'two_by_two' : hour 2 exceeds TS set's height"));
-}
-
-BOOST_AUTO_TEST_CASE(two_lines_three_columns_three_separators)
-{
-    writeFile("2x3.csv", "1\t2;3\n4,5\t6");
-    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, "\t,;");
-    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").name(), "2x3");
-    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(1, 0), 1);
-    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(1, 1), 4);
-    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(2, 0), 2);
-    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(2, 1), 5);
-    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(3, 0), 3);
-    BOOST_CHECK_EQUAL(repo.getDataSeries("2x3").getData(3, 1), 6);
-    BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("2x3").getData(4, 1),
-                          TimeSeriesSet::RankTooBig,
-                          checkMessage(
-                            "TS set '2x3' : TS number 4 exceeds TS set's number of columns (3)"));
-    BOOST_CHECK_EXCEPTION((void)repo.getDataSeries("2x3").getData(3, 2),
-                          TimeSeriesSet::HourTooBig,
-                          checkMessage("TS set '2x3' : hour 2 exceeds TS set's height"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

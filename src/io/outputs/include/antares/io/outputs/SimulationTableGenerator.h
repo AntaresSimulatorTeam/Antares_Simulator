@@ -20,25 +20,31 @@
 */
 #pragma once
 #include <string>
-#include <unordered_map>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/component.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
-#include "antares/solver/modeler/data.h"
-#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
 
 #include "ISimulationTable.h"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::Modeler
+{
+struct Data;
+}
+
+namespace Antares::Optimisation
+{
+class OptimEntityContainer;
+
+namespace LinearProblemApi
 {
 class ILinearProblem;
 
 class IMipSolution;
 class FillContext;
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace LinearProblemApi
+} // namespace Antares::Optimisation
 
 namespace Antares::Optimization
 {
@@ -50,6 +56,8 @@ namespace Antares::ModelerStudy::SystemModel
 class Component;
 }
 
+namespace Antares::IO
+{
 struct TimeBlock
 {
     unsigned int block;
@@ -67,8 +75,8 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  unsigned currentBlock);
 
-Antares::Expressions::Visitors::TimeIndex updateTimeIndexIfShouldForceScenario(
-  Antares::Expressions::Visitors::TimeIndex timeIndex,
+Antares::Optimisation::TimeIndex updateTimeIndexIfShouldForceScenario(
+  Antares::Optimisation::TimeIndex timeIndex,
   bool forceExportForScenarioIndex);
 
 std::string BuildModelerConstraintName(const std::string& componentId,
@@ -80,6 +88,7 @@ void addVariableEntries(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   const Antares::ModelerStudy::SystemModel::Component& component,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   std::optional<unsigned> scenario);
@@ -89,38 +98,38 @@ void addConstraintEntries(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   const Antares::ModelerStudy::SystemModel::Component& component,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   std::optional<unsigned> scenario,
-  bool forceExportForScenarioIndex,
-  const Antares::Optimisation::EvaluationContextProvider& contextProvider);
+  bool forceExportForScenarioIndex);
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                     const Antares::ModelerStudy::SystemModel::Component& component,
+                    const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
                     std::optional<unsigned> scenario,
-                    bool forceExportForScenarioIndex,
-                    const Antares::Optimisation::EvaluationContextProvider& contextProvider);
+                    bool forceExportForScenarioIndex);
 
 void addExtraOutputEntries(ISimulationTable& simulationTable,
                            const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                            const Antares::ModelerStudy::SystemModel::Component& component,
+                           const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                            unsigned currentBlock,
                            const TimeConversionMode& timeConversionMode,
                            std::optional<unsigned> scenario,
-                           bool forceExportForScenarioIndex,
-                           const Antares::Optimisation::EvaluationContextProvider& contextProvider);
+                           bool forceExportForScenarioIndex);
 
 void addEntriesForNode(ISimulationTable& simulationTable,
                        const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                        const Antares::ModelerStudy::SystemModel::Component& component,
+                       const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                        unsigned currentBlock,
                        const TimeConversionMode& timeConversionMode,
                        std::optional<unsigned> scenario,
                        bool forceExportForScenarioIndex,
-                       const Antares::Optimisation::EvaluationContextProvider& contextProvider,
                        const std::string& componentId,
                        const std::string& outputName,
                        const Antares::Expressions::Nodes::Node* rootNode);
@@ -129,6 +138,8 @@ void addEntriesForNode(ISimulationTable& simulationTable,
  * @param simulationTable the simulation table to fill
  * @param linearProblem the linear problem containing the optimal solution
  * @param objectiveValue the overall objective value
+ * @param modelerData
+ * @param optimEntityContainer
  * @param components list of modeler components
  * @param dataSeries the input data series
  * @param fillContext the fill context used to fill the linear problem
@@ -142,7 +153,9 @@ void FillSimulationTable(
   const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   double objectiveValue,
   const Antares::Modeler::Data& modelerData,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock,
   const TimeConversionMode& timeConversionMode,
   bool forceExportForScenarioIndex = false);
+} // namespace Antares::IO

@@ -29,121 +29,127 @@ using namespace Antares::ModelerStudy::SystemModel;
 namespace Antares::Expressions::Visitors
 {
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
 {
     const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
-                           [this](TimeIndex sum, Nodes::Node* operand)
+                           Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                           [this](Optimisation::TimeIndex sum, Nodes::Node* operand)
                            { return sum | dispatch(operand); });
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
 {
     return dispatch(sub->left()) | dispatch(sub->right());
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::MultiplicationNode* mult)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::MultiplicationNode* mult)
 {
     return dispatch(mult->left()) | dispatch(mult->right());
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::DivisionNode* div)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::DivisionNode* div)
 {
     return dispatch(div->left()) | dispatch(div->right());
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::EqualNode* equ)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::EqualNode* equ)
 {
     return dispatch(equ->left()) | dispatch(equ->right());
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode* lt)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode* lt)
 {
     return dispatch(lt->left()) | dispatch(lt->right());
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
 {
     return dispatch(gt->left()) | dispatch(gt->right());
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::VariableNode* var)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::VariableNode* var)
 {
     return var->timeIndex();
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
 {
     const auto systemParameter = context_.getParameter(param->value());
     if (systemParameter.type == ParameterType::CONSTANT)
     {
-        return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+        return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
         // TODO: handle more cases, but ParameterType must be exhaustive first
     }
     return param->timeIndex();
 }
 
-TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)
+Optimisation::TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)
 {
-    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
 {
     return dispatch(neg->child());
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode*)
-{
-    throw std::invalid_argument("PortFieldNode not handled by visitor TimeIndexVisitor");
-}
-
-TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* node)
 {
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
 
-    TimeIndex to_return = TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    const auto* nodeToVisit = component_.nodeAtPortField(portId, fieldId);
+    return dispatch(nodeToVisit);
+}
+
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
+{
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
+    auto to_return = Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        TimeIndexVisitor visitor(*component, contextProvider_);
+        TimeIndexVisitor visitor(optimEntityContainer_, *component);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
     return to_return;
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
     return dispatch(timeShiftNode->left());
 }
 
-TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
+Optimisation::TimeIndex TimeIndexVisitor::visit(
+  [[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
 {
-    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
 {
     // TODO  case from = to
     return dispatch(timeSumNode->expression());
 }
 
-TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
+Optimisation::TimeIndex TimeIndexVisitor::visit(
+  [[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
-    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-TimeIndexVisitor::TimeIndexVisitor(const Component& component,
-                                   const IEvaluationContextProvider& contextProvider):
+TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
+                                   const ModelerStudy::SystemModel::Component& component):
+    optimEntityContainer_(optimEntityContainer),
     component_(component),
-    contextProvider_(contextProvider),
-    context_(contextProvider.provide(component)) // TODO perf: avoid this copy
+    context_(optimEntityContainer.getEvaluationContext(component))
 {
 }
 

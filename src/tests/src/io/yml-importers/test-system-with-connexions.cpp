@@ -115,31 +115,38 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
     YmlSystem::System system = parserSystem.parse(systemYaml);
     auto systemModel = SystemConverter::convert(system, libraries);
 
-    const auto component_N = systemModel.Components().at("N");
+    const auto& components = systemModel.Components();
+    const auto component_N = std::ranges::find_if(components,
+                                                  [](const auto& component)
+                                                  { return component.Id() == "N"; });
 
     const std::string port_id = "injection_port";
-    auto connections_to_N = component_N.componentConnectionsViaPort(port_id);
+    auto connections_to_N = component_N->componentConnectionsViaPort(port_id);
 
     BOOST_CHECK_EQUAL(connections_to_N.size(), 1);
     BOOST_CHECK_EQUAL(connections_to_N[0].port()->Id(), "some_other_port");
     BOOST_CHECK_EQUAL(connections_to_N[0].component()->Id(), "NG");
 
     // Symmetrically, check connexions of NG
-    const auto component_NG = systemModel.Components().at("NG");
-    auto connections_to_NG = component_NG.componentConnectionsViaPort("some_other_port");
+    const auto component_NG = std::ranges::find_if(components,
+                                                   [](const auto& component)
+                                                   { return component.Id() == "NG"; });
+    auto connections_to_NG = component_NG->componentConnectionsViaPort("some_other_port");
 
     BOOST_CHECK_EQUAL(connections_to_NG.size(), 1);
     BOOST_CHECK_EQUAL(connections_to_NG[0].port()->Id(), "injection_port");
     BOOST_CHECK_EQUAL(connections_to_NG[0].component()->Id(), "N");
 
     // Check area connections
-    BOOST_CHECK_EQUAL(component_N.areaConnectedToPort("injection_port").has_value(), false);
+    BOOST_CHECK_EQUAL(component_N->areaConnectedToPort("injection_port").has_value(), false);
 
-    BOOST_CHECK_EQUAL(component_NG.areaConnectedToPort("some_other_port").has_value(), true);
-    BOOST_CHECK_EQUAL(component_NG.areaConnectedToPort("some_other_port").value(), "some_area");
+    BOOST_CHECK_EQUAL(component_NG->areaConnectedToPort("some_other_port").has_value(), true);
+    BOOST_CHECK_EQUAL(component_NG->areaConnectedToPort("some_other_port").value(), "some_area");
 
-    const auto component_NL = systemModel.Components().at("NL");
-    BOOST_CHECK_EQUAL(component_NL.areaConnectedToPort("injection_port").has_value(), true);
-    BOOST_CHECK_EQUAL(component_NL.areaConnectedToPort("injection_port").value(),
+    const auto component_NL = std::ranges::find_if(components,
+                                                   [](const auto& component)
+                                                   { return component.Id() == "NL"; });
+    BOOST_CHECK_EQUAL(component_NL->areaConnectedToPort("injection_port").has_value(), true);
+    BOOST_CHECK_EQUAL(component_NL->areaConnectedToPort("injection_port").value(),
                       "some_other_area");
 }
