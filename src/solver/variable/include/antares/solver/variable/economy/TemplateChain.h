@@ -27,7 +27,6 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-
 // Variadic template to recursively apply wrappers ending with Tail
 // Usage: ApplyChain<Tail, Wrapper1, Wrapper2, ...>::type yields Wrapper1<Wrapper2<...<Tail>...>>
 template<typename Tail, template<typename> class... Wrappers>
@@ -63,10 +62,10 @@ struct ApplyChainSpatialAgregate<Head, Rest...>
 template<template<typename> class... Wrappers>
 struct ChainLinks;
 
-template<template<typename> class Last>
+template<template<typename = void> class Last>
 struct ChainLinks<Last>
 {
-    using type = Last;
+    using type = Last<>;
 };
 
 // Recursive case
@@ -74,5 +73,14 @@ template<template<typename> class Head, template<typename> class... Rest>
 struct ChainLinks<Head, Rest...>
 {
     using type = Head<typename ChainLinks<Rest...>::type>;
+};
 
+template<typename C1, typename C2>
+struct Fuse;
+
+template<template<typename = void> class... W1, template<typename = void> class... W2>
+struct Fuse<ChainLinks<W1...>, ChainLinks<W2...>>
+{
+    using type = typename ChainLinks<W1..., W2...>::type;
+};
 } // namespace Antares::Solver::Variable::Economy
