@@ -5,7 +5,7 @@ var structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model =
     [ "description", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a82c0cdeb8dad0a3270583083abfd74b7", null ],
     [ "extra_outputs", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a47eea7a8ca9da089ad35e1a4219fb844", null ],
     [ "id", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#aefd931eb14e56b25dd9393dc106c7bc2", null ],
-    [ "objective", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a87e4cda13a80440fc1dfa4ac48239b48", null ],
+    [ "objectives", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a7d4b503011eacf135860c56e7c6915ef", null ],
     [ "parameters", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a1eea023dcba20540618d61892d406a43", null ],
     [ "port_field_definitions", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a7d9ba1b40423e497bedb21d06f00db77", null ],
     [ "ports", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a2fc2fec418bbc6d140af4376c0089254", null ],

@@ -142,8 +142,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -242,6 +242,7 @@ var hierarchy =
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::ExtraOutput >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::Library >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::Model >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_01_4.html", null ],
+    [ "YAML::convert< Antares::IO::Inputs::YmlModel::Objective >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::Parameter >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::Port >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::PortFieldDefinition >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition_01_4.html", null ],
@@ -1263,6 +1264,8 @@ var hierarchy =
     [ "object", null, [
       [ "benchmark.StudyList", "classbenchmark_1_1StudyList.html", null ]
     ] ],
+    [ "Antares::IO::Inputs::YmlModel::Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html", null ],
+    [ "Antares::ModelerStudy::SystemModel::Objective", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html", null ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
     ] ],

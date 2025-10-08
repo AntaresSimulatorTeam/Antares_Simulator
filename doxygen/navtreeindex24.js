@@ -1,10 +1,14 @@
 var NAVTREEINDEX24 =
 {
+"classAntares_1_1Optimization_1_1InfeasibleProblemReport.html":[8,0,0,16,1],
+"classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#a0b771fd2aeee5e646cb9dce997225ee8":[8,0,0,16,1,2],
+"classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#a13cd744b3802b1278f4ae70c5222b0f4":[8,0,0,16,1,3],
+"classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#a1629a1f8daeb7c6fa3d554690e5ca68a":[8,0,0,16,1,1],
 "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#a274200299d24f3b315e64d11889a9fa3":[8,0,0,16,1,4],
 "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#ac6f530525ccca32d03d7fe69efc9474b":[8,0,0,16,1,0],
 "classAntares_1_1Optimization_1_1LegacyFiller.html":[8,0,0,16,21],
 "classAntares_1_1Optimization_1_1LegacyFiller.html#a02da15836278b369ed9f184377384b2d":[8,0,0,16,21,3],
-"classAntares_1_1Optimization_1_1LegacyFiller.html#a6ccb113f7c732ace1d5df2c44e336b7f":[8,0,0,16,21,2],
+"classAntares_1_1Optimization_1_1LegacyFiller.html#a893c7064c63aa06ada7c7727f5e9edcb":[8,0,0,16,21,2],
 "classAntares_1_1Optimization_1_1LegacyFiller.html#a97b1ec66c5617c52c065aa5d64450346":[8,0,0,16,21,1],
 "classAntares_1_1Optimization_1_1LegacyFiller.html#af3ce2fbebf7278ae8e576c97972fdc2e":[8,0,0,16,21,0],
 "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html":[8,0,0,16,22],
@@ -245,9 +249,5 @@ var NAVTREEINDEX24 =
 "classAntares_1_1Private_1_1Window_1_1ActionPanel.html#ae9539e5f5a9bd8257c071f7fe41bb6b7":[8,0,0,17,4,0,25],
 "classAntares_1_1Private_1_1Window_1_1ActionPanel.html#aeb62294743c0d7713d69b216c0640128":[8,0,0,17,4,0,4],
 "classAntares_1_1Private_1_1Window_1_1ActionPanel.html#aef8e606042784a854e3aa12de81b5d79":[8,0,0,17,4,0,11],
-"classAntares_1_1Private_1_1Window_1_1MemoryStatisticsData.html":[8,0,0,17,4,1],
-"classAntares_1_1Private_1_1Window_1_1MemoryStatisticsData.html#a067f52c0130f5a7af1ea299ba64f0ed9":[8,0,0,17,4,1,4],
-"classAntares_1_1Private_1_1Window_1_1MemoryStatisticsData.html#a123682e9d4b81b4faca2f1b060ec2d09":[8,0,0,17,4,1,5],
-"classAntares_1_1Private_1_1Window_1_1MemoryStatisticsData.html#a13503bd21d7bf2228cc6870ad371dc56":[8,0,0,17,4,1,1],
-"classAntares_1_1Private_1_1Window_1_1MemoryStatisticsData.html#a4dff4244eba23d3716328b73919e94d9":[8,0,0,17,4,1,0]
+"classAntares_1_1Private_1_1Window_1_1MemoryStatisticsData.html":[8,0,0,17,4,1]
 };

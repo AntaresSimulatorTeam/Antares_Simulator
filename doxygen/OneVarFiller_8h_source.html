@@ -145,7 +145,7 @@ $(document).ready(function(){initNavTree('OneVarFiller_8h_source.html',''); init
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">void</span> addVariables(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a>&amp; ctx) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> addConstraints(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a>&amp; ctx) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> addObjective(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a>&amp; ctx) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> addObjectives(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a>&amp; ctx) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::string added_var_name_ = <span class="stringliteral">&quot;var-by-OneVarFiller&quot;</span>;</div>
@@ -161,7 +161,7 @@ $(document).ready(function(){initNavTree('OneVarFiller_8h_source.html',''); init
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> OneVarFiller::addObjective([[maybe_unused]] <span class="keyword">const</span> FillContext&amp; ctx)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> OneVarFiller::addObjectives([[maybe_unused]] <span class="keyword">const</span> FillContext&amp; ctx)</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">auto</span>* var = optimEntityContainer_.Problem().lookupVariable(added_var_name_);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    optimEntityContainer_.Problem().<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87">setObjectiveCoefficient</a>(var, 1);</div>

@@ -7,7 +7,7 @@ var classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model =
     [ "Constraints", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html#a476f927bef063d025ca49607e2824b56", null ],
     [ "ExtraOutputs", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html#a66fba18a61a6c1ad2d8e38ff32322b65", null ],
     [ "Id", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html#ab62aaa958e3bdd241e3f44f2d924cda5", null ],
-    [ "Objective", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html#a137f2072c3891d6cd91e3494e5323a6b", null ],
+    [ "Objectives", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html#af23c0a19055f25edb309e5a0924c227a", null ],
     [ "operator=", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html#ac71364ce4afa7de2ca4da0d838cce62e", null ],
     [ "operator=", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html#aa0df9a996e26d66d5b699ce69b70b829", null ],
     [ "Parameters", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html#adb493f6858b5699465cd2bda715f8cb7", null ],

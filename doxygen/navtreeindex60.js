@@ -1,5 +1,14 @@
 var NAVTREEINDEX60 =
 {
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a807df113e5154e0ae6409835468004cc":[8,0,10,0,0],
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#ace0d639bdeda3bf52323cde0d8a5abe9":[8,0,10,0,2],
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#ad1c222d7c223d579cfc5329c268d1bbf":[8,0,10,0,1],
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#ae6775bb91f2c1591e303a4bd8f6b0562":[8,0,10,0,6],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html":[8,0,10,5],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#a0698ebf23743dde251428fb33b1e2b3a":[8,0,10,5,6],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#a19b7af227a8d9467dfc04f9118bb200a":[8,0,10,5,4],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#a6ab98ad743f19097d5aa81e36f08a262":[8,0,10,5,5],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#a808ced55442a78b0a3619a2421b4dca6":[8,0,10,5,2],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#ad51e5fd4864345a72eae363be2a77ba3":[8,0,10,5,3],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#ad8ef7b2bb2ec3bc2cd603f1c8390a78b":[8,0,10,5,1],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html#aed680c32b6118afffd91dc1dd5d61cca":[8,0,10,5,0],
@@ -240,14 +249,5 @@ var NAVTREEINDEX60 =
 "structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[8,0,180,2],
 "structMaxHydroPowerData.html#a57a9210a5c1484c39d03612d025296a6":[8,0,180,1],
 "structMaxHydroPowerData.html#a9937e11e27e4f9d41b1052320f8008cc":[8,0,180,0],
-"structMaxPumpingData.html":[8,0,182],
-"structMaxPumpingData.html#aa377de6e25e2ccfee9400d0f233df7a1":[8,0,182,0],
-"structMaxPumpingData.html#aecf11efd0d07851c4e7b7422855b36b0":[8,0,182,1],
-"structMinDownTimeData.html":[8,0,185],
-"structMinDownTimeData.html#a25fbdeb8bd2a6b48f223a2afc46d9d9d":[8,0,185,0],
-"structMinDownTimeData.html#ab2fd94e338af9d85bd906efeb289f04e":[8,0,185,1],
-"structMinDownTimeData.html#ac26197b0f4ac8429161825ce6385db29":[8,0,185,2],
-"structMinHydroPowerData.html":[8,0,188],
-"structMinHydroPowerData.html#a24a0318ec864d5d3cccc16fdf449db18":[8,0,188,2],
-"structMinHydroPowerData.html#ae608d18b4923971be95eacb3b4d1802e":[8,0,188,0]
+"structMaxPumpingData.html":[8,0,182]
 };

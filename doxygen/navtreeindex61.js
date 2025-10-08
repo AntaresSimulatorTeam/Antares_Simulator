@@ -1,5 +1,14 @@
 var NAVTREEINDEX61 =
 {
+"structMaxPumpingData.html#aa377de6e25e2ccfee9400d0f233df7a1":[8,0,182,0],
+"structMaxPumpingData.html#aecf11efd0d07851c4e7b7422855b36b0":[8,0,182,1],
+"structMinDownTimeData.html":[8,0,185],
+"structMinDownTimeData.html#a25fbdeb8bd2a6b48f223a2afc46d9d9d":[8,0,185,0],
+"structMinDownTimeData.html#ab2fd94e338af9d85bd906efeb289f04e":[8,0,185,1],
+"structMinDownTimeData.html#ac26197b0f4ac8429161825ce6385db29":[8,0,185,2],
+"structMinHydroPowerData.html":[8,0,188],
+"structMinHydroPowerData.html#a24a0318ec864d5d3cccc16fdf449db18":[8,0,188,2],
+"structMinHydroPowerData.html#ae608d18b4923971be95eacb3b4d1802e":[8,0,188,0],
 "structMinHydroPowerData.html#af66d42ef2021b6be1733e1bd218fb62d":[8,0,188,1],
 "structMockConstraint_1_1MockExpression.html":[8,0,191,0],
 "structMockConstraint_1_1MockExpression.html#a84d2f98c7732a9412d80b18073294c8c":[8,0,191,0,1],
@@ -240,14 +249,5 @@ var NAVTREEINDEX61 =
 "structRESULTATS__HORAIRES.html#a602ae9ed9349991cfc016fd12a28abcd":[8,0,254,9],
 "structRESULTATS__HORAIRES.html#a77adaab0de7e898f18c4e6fd0c0eff69":[8,0,254,4],
 "structRESULTATS__HORAIRES.html#a77b91a97bd3d30b7a7f53c24287243f9":[8,0,254,8],
-"structRESULTATS__HORAIRES.html#a7e1a4aa664fb707325ef10f62e3d8b7b":[8,0,254,10],
-"structRESULTATS__HORAIRES.html#a834357dc159acb513c449962c56bc73c":[8,0,254,5],
-"structRESULTATS__HORAIRES.html#a952f27f24149787d23b6d02ee426c1dd":[8,0,254,6],
-"structRESULTATS__HORAIRES.html#ab470ef496f7b680728446a62606717a0":[8,0,254,0],
-"structRESULTATS__HORAIRES.html#ac6f788177bfcb83cf2d1d4095807ee8d":[8,0,254,3],
-"structRESULTATS__HORAIRES.html#ad19d33829454007a9a82f465beae57ad":[8,0,254,2],
-"structRESULTATS__HORAIRES.html#ad1b7f4213f5fa2d8f0a5d3c321227561":[8,0,254,13],
-"structRESULTATS__HORAIRES.html#ad39178e50f44fbc3c8f9188883bdd7fc":[8,0,254,1],
-"structRawConnection.html":[8,0,248],
-"structRawConnection.html#a10d4d12dffd2454f5b58c48b34811e5b":[8,0,248,3]
+"structRESULTATS__HORAIRES.html#a7e1a4aa664fb707325ef10f62e3d8b7b":[8,0,254,10]
 };
