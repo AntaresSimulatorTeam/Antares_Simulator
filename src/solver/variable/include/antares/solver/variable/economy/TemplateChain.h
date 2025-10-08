@@ -62,7 +62,7 @@ struct ApplyChainSpatialAgregate<Head, Rest...>
 template<template<typename> class... Wrappers>
 struct ChainLinks;
 
-template<template<typename = void> class Last>
+template<template<typename = Container::EndOfList> class Last>
 struct ChainLinks<Last>
 {
     using type = Last<>;

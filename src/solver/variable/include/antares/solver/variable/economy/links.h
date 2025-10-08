@@ -41,7 +41,8 @@ namespace Antares::Solver::Variable::Economy
 /*!
 ** \brief All variables for a single link (economy)
 */
-using VariablePerLink = ChainLinks<FlowLinear,            // Flow linear
+using VariablePerLink = ApplyChain<Container::EndOfList,
+                                   FlowLinear,            // Flow linear
                                    FlowLinearAbs,         // Flow linear Abs
                                    LoopFlow,              // Loop flow
                                    FlowQuad,              // Flow Quad
