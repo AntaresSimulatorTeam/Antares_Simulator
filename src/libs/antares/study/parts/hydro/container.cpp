@@ -800,8 +800,14 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
                      const uint day)
 {
     assert((level >= 0. && level <= 100. + 1e-6) && "getWaterValue function : invalid level");
-    double levelUp = ceil((int)level);
-    double levelDown = floor((int)level);
+    double levelUp = ceil(level);
+    double levelDown = floor(level);
+
+    // if level has value like 100.0000001 because of numerical precision problems and we ceil it
+    if (levelUp > 100)
+    {
+        levelUp = 100;
+    }
 
     if ((int)(levelUp) == (int)(levelDown))
     {
@@ -817,8 +823,14 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
 {
     assert((level >= 0. && level <= 100. + 1e-6) && "getWeeklyModulation function : invalid level");
     double valueToReturn = 1.;
-    double levelUp = ceil((int)level);
-    double levelDown = floor((int)level);
+    double levelUp = ceil(level);
+    double levelDown = floor(level);
+
+    // if level has value like 100.0000001 because of numerical precision problems and we ceil it
+    if (levelUp > 100)
+    {
+        levelUp = 100;
+    }
 
     if ((int)(levelUp) == (int)(levelDown))
     {
