@@ -1,0 +1,160 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+library:
+  id: library-eo
+  description: Library for test cases on extra-outputs
+
+
+  port-types:
+    - id: flow
+      description: A port which transfers power flow
+      fields:
+        - id: flow
+
+  models:
+    - id: area
+      parameters:
+        - id: spillage_cost
+        - id: ens_cost
+        - id: lol_threshold
+          time-dependent: false
+          scenario-dependent: false
+
+      variables:
+        - id: spillage
+          lower-bound: 0
+          upper-bound: 1000000
+          variable-type: continuous
+        - id: unsupplied_energy
+          lower-bound: 0
+          upper-bound: 1000000
+          variable-type: continuous
+      ports:
+        - id: balance_port
+          type: flow
+      binding-constraints:
+        - id: balance
+          expression: sum_connections(balance_port.flow) = spillage - unsupplied_energy
+      objective: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)
+      extra-outputs:
+        - id: spill_cost_contribution
+          expression: spillage_cost * spillage
+        - id: ens_cost_contribution
+          expression: ens_cost * unsupplied_energy
+        - id: loss_of_load
+          expression: unsupplied_energy >= lol_threshold
+
+    - id: load
+      parameters:
+        - id: load
+          time-dependent: true
+          scenario-dependent: false
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: -load
+      extra-outputs:
+        - id: load_parameter
+          expression: load #test with only a parameter
+
+    - id: simple_gen
+      parameters:
+        - id: p_min_cluster
+          scenario-dependent: false
+          time-dependent: true
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false
+          time-dependent: true
+        - id: marginal_generation_cost
+          scenario-dependent: false
+          time-dependent: false
+      variables:
+        - id: generation
+          lower-bound: p_min_cluster
+          upper-bound: p_max_cluster
+          variable-type: continuous
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+
+      objective: sum(marginal_generation_cost * generation)
+      extra-outputs:
+        - id: generation_cost
+          expression: marginal_generation_cost * generation
+        - id: squared_generation_cost #test to manage a quadratic expression
+          expression: marginal_generation_cost * generation * marginal_generation_cost * generation
+        - id: total_generation_cost
+          expression: sum(marginal_generation_cost * generation)
+
+
+    - id: short-term-storage
+      parameters:
+        - id: reservoir_capacity
+          time-dependent: false
+          scenario-dependent: false
+        - id: injection_nominal_capacity
+          time-dependent: false
+          scenario-dependent: false
+        - id: withdrawal_nominal_capacity
+          time-dependent: false
+          scenario-dependent: false
+        - id: efficiency_injection
+          time-dependent: false
+          scenario-dependent: false
+        - id: efficiency_withdrawal
+          time-dependent: false
+          scenario-dependent: false
+        - id: inflows
+          time-dependent: true
+          scenario-dependent: false
+        - id: initial_level
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: p_injection
+          lower-bound: 0
+          upper-bound: injection_nominal_capacity # p_max_injection_modulation is a timeseries with adimensional values between 0 and 1
+          variable-type: continuous
+        - id: p_withdrawal
+          lower-bound: 0
+          upper-bound: withdrawal_nominal_capacity # p_max_withdrawal_modulation is a timeseries with adimensional values between 0 and 1
+          variable-type: continuous
+        - id: level
+          lower-bound: 0
+          upper-bound: reservoir_capacity
+          variable-type: continuous
+      ports:
+        - id: injection_port
+          type: flow
+      port-field-definitions:
+        - port: injection_port
+          field: flow
+          definition: p_withdrawal - p_injection
+      constraints:
+        - id: initial_level_constraint
+          expression: level[0] = initial_level * reservoir_capacity
+        - id: Level equation
+          expression: level[t+1] = level + efficiency_injection * p_injection - efficiency_withdrawal * p_withdrawal + inflows
+      extra-outputs:
+        - id: soc_rate
+          expression: level/reservoir_capacity
+        - id: cumulative_withdrawal
+          expression : sum(p_withdrawal)
+        - id: constant_expression
+          expression : efficiency_injection/efficiency_withdrawal
