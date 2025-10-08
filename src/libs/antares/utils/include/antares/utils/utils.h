@@ -77,6 +77,7 @@ public:
     long duration_ms() const;
     std::string toString() const;
     std::string toStringInSeconds() const;
+    void reset();
 
 private:
     clock::time_point start_;

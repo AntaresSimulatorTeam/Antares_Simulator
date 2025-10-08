@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "mipConstraint.h"
@@ -52,6 +53,8 @@ public:
       = 0;
 
     // Variables observers
+    [[nodiscard]] virtual const std::vector<std::unique_ptr<IMipVariable>>& getVariables() const
+      = 0;
     [[nodiscard]] virtual IMipVariable* getVariable(std::size_t index) const = 0;
     [[nodiscard]] virtual IMipVariable* lookupVariable(const std::string& name) const = 0;
     [[nodiscard]] virtual int variableCount() const = 0;
@@ -60,8 +63,12 @@ public:
     virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
 
     // Constraints observers
+    [[nodiscard]] virtual const std::vector<std::unique_ptr<IMipConstraint>>& getConstraints() const
+      = 0;
     [[nodiscard]] virtual IMipConstraint* getConstraint(std::size_t index) const = 0;
-    [[nodiscard]] virtual IMipConstraint* lookupConstraint(const std::string& name) const = 0;
+    [[nodiscard]] virtual LinearProblemApi::IMipConstraint* lookupConstraint(
+      const std::string& name) const
+      = 0;
     [[nodiscard]] virtual int constraintCount() const = 0;
 
     /// Set the objective coefficient for a given variable

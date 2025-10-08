@@ -253,9 +253,9 @@ void Study::loadModelerComponents()
  */
 void Study::checkModelerDataCompatibility() const
 {
-    for (auto& component: modelerInput_->system->Components() | std::views::values)
+    for (auto& component: modelerInput_->system->Components())
     {
-        for (auto& variable: component.getModel()->Variables() | std::views::values)
+        for (auto& variable: component.getModel()->Variables())
         {
             if (!variable.IsScenarioDependent())
             {

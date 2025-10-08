@@ -29,14 +29,16 @@
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-  const Optimisation::EvaluationContextProvider& evalContextProvider,
+
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const Component& component):
-    linear_expression_visitor_(evalContextProvider, fillContext, component)
+  const Component& component,
+
+  const Optimisation::OptimEntityContainer& optimEntityContainer):
+    linear_expression_visitor_(optimEntityContainer, component, fillContext)
 {
 }
 
@@ -45,59 +47,46 @@ std::string ReadLinearConstraintVisitor::name() const
     return "ReadLinearConstraintVisitor";
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const EqualNode* node)
+std::vector<double> operator-(const std::vector<double>& in)
 {
-    auto left = linear_expression_visitor_.dispatch(node->left());
-    left -= linear_expression_visitor_.dispatch(node->right());
-
-    const auto& leftMinusRightLinearExpression = left.GetLinearExpressions();
-    std::vector<LinearConstraint> constraints;
-    constraints.reserve(leftMinusRightLinearExpression.size());
-
-    for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
+    std::vector<double> ret(in);
+    for (double& x: ret)
     {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
-                                                  .lb = -value.offset(),
-                                                  .ub = -value.offset(),
-                                                  .timeStep = timeStep});
+        x = -x;
     }
-    return constraints;
+    return ret;
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
+LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right());
-
-    const auto& leftMinusRightLinearExpression = left.GetLinearExpressions();
-    std::vector<LinearConstraint> constraints;
-    constraints.reserve(leftMinusRightLinearExpression.size());
-
-    for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
-    {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
-                                                  .ub = -value.offset(),
-                                                  .timeStep = timeStep});
-    }
-    return constraints;
+    left.removeDuplicateCoefficients();
+    const std::vector<double> offset = -left.constant();
+    return {.coef_per_var = left, .lb = offset, .ub = offset};
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
+LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
+    left -= linear_expression_visitor_.dispatch(node->right()); // TODO
+    left.removeDuplicateCoefficients();
+    const std::vector<double> offset = left.constant();
+
+    return {.coef_per_var = left,
+            .lb = std::vector<double>(left.size(), -std::numeric_limits<double>::infinity()),
+            .ub = -left.constant()};
+}
+
+LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
+{
+    auto left = linear_expression_visitor_.dispatch(node->left());
+
     left -= linear_expression_visitor_.dispatch(node->right());
-
-    const auto& leftMinusRightLinearExpression = left.GetLinearExpressions();
-    std::vector<LinearConstraint> constraints;
-    constraints.reserve(leftMinusRightLinearExpression.size());
-
-    for (const auto& [timeStep, value]: leftMinusRightLinearExpression)
-    {
-        constraints.emplace_back(LinearConstraint{.coef_per_var = value.coefPerVar(),
-                                                  .lb = -value.offset(),
-                                                  .timeStep = timeStep});
-    }
-    return constraints;
+    left.removeDuplicateCoefficients();
+    return {.coef_per_var = left,
+            .lb = -left.constant(),
+            .ub = std::vector<double>(left.size(), std::numeric_limits<double>::infinity())};
 }
 
 static Error::InvalidArgumentError IllegalNodeException()
@@ -105,73 +94,73 @@ static Error::InvalidArgumentError IllegalNodeException()
     return Error::InvalidArgumentError("Root node of a constraint must be a comparator.");
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const SumNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const SumNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const SubtractionNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const SubtractionNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const MultiplicationNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const MultiplicationNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const DivisionNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const DivisionNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const NegationNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const NegationNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const VariableNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const VariableNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const ParameterNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const ParameterNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const LiteralNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const LiteralNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const PortFieldNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const PortFieldSumNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const PortFieldSumNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeShiftNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const TimeShiftNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeIndexNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const TimeIndexNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const TimeSumNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const TimeSumNode*)
 {
     throw IllegalNodeException();
 }
 
-std::vector<LinearConstraint> ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
 {
     throw IllegalNodeException();
 }
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

@@ -36,7 +36,7 @@ public:
     DataSeriesRepoImporter() = delete; // must not be used
     static Optimisation::LinearProblemDataImpl::DataSeriesRepository importFromDirectory(
       const std::filesystem::path&,
-      std::string csvSeparators = "\t");
+      char csvSeparator = '\t');
 };
 
 } // namespace Antares::IO::Inputs::DataSeriesCsvImporter

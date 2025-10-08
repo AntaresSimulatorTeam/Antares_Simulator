@@ -27,6 +27,7 @@
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/solver/utils/ortools_utils.h>
+#include "antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -38,10 +39,10 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
     isLP_ = !isMip; // we don't care about pure integer prob
 }
 
-OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
-                                                      double ub,
-                                                      bool integer,
-                                                      const std::string& name)
+LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
+                                                                  double ub,
+                                                                  bool integer,
+                                                                  const std::string& name)
 {
     if (ub < lb)
     {
@@ -60,29 +61,35 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return variables_.back().get();
 }
 
-OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
-                                                         double ub,
-                                                         const std::string& name)
+const std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>>&
+OrtoolsLinearProblem::getVariables() const
+{
+    return variables_;
+}
+
+LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
+                                                                     double ub,
+                                                                     const std::string& name)
 {
     return addVariable(lb, ub, false, name);
 }
 
-OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
-                                                         double ub,
-                                                         const std::string& name)
+LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
+                                                                     double ub,
+                                                                     const std::string& name)
 {
     return addVariable(lb, ub, true, name);
 }
 
-OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(std::size_t index) const
+LinearProblemApi::IMipVariable* OrtoolsLinearProblem::getVariable(std::size_t index) const
 {
     return variables_.at(index).get();
 }
 
-OrtoolsMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name) const
+LinearProblemApi::IMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name) const
 {
     auto it = std::ranges::find_if(variables_,
-                                   [&name](const std::unique_ptr<OrtoolsMipVariable>& v)
+                                   [&name](const std::unique_ptr<LinearProblemApi::IMipVariable>& v)
                                    { return v->getName() == name; });
     if (it != variables_.end())
     {
@@ -91,10 +98,12 @@ OrtoolsMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name
     return nullptr;
 }
 
-OrtoolsMipConstraint* OrtoolsLinearProblem::lookupConstraint(const std::string& name) const
+LinearProblemApi::IMipConstraint* OrtoolsLinearProblem::lookupConstraint(
+  const std::string& name) const
 {
     auto it = std::ranges::find_if(constraints_,
-                                   [&name](const std::unique_ptr<OrtoolsMipConstraint>& c)
+                                   [&name](
+                                     const std::unique_ptr<LinearProblemApi::IMipConstraint>& c)
                                    { return c->getName() == name; });
     if (it != constraints_.end())
     {
@@ -108,9 +117,9 @@ int OrtoolsLinearProblem::variableCount() const
     return mpSolver_->NumVariables();
 }
 
-OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
-                                                          double ub,
-                                                          const std::string& name)
+LinearProblemApi::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
+                                                                      double ub,
+                                                                      const std::string& name)
 {
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
 
@@ -123,7 +132,13 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     return constraints_.back().get();
 }
 
-OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(std::size_t index) const
+const std::vector<std::unique_ptr<LinearProblemApi::IMipConstraint>>&
+OrtoolsLinearProblem::getConstraints() const
+{
+    return constraints_;
+}
+
+LinearProblemApi::IMipConstraint* OrtoolsLinearProblem::getConstraint(std::size_t index) const
 {
     return constraints_.at(index).get();
 }

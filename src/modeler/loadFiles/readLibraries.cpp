@@ -88,7 +88,6 @@ std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& st
         libraries.push_back(loadSingleLibrary(entry.path()));
         logs.info() << "Library loaded: " << libraries.back().Id();
     }
-
     return libraries;
 }
 } // namespace Antares::Solver::LoadFiles

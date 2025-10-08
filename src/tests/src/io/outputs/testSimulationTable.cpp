@@ -18,6 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <filesystem>
@@ -31,17 +32,16 @@
 // Mock includes for testing - replace with actual includes
 #include <inmemory-modeler.h>
 
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
-#include "antares/optimisation/linear-problem-api/mipConstraint.h"
-#include "antares/optimisation/linear-problem-api/mipSolution.h"
-#include "antares/optimisation/linear-problem-api/mipVariable.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
-#include "antares/solver/optim-model-filler/PartialKey.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
@@ -51,8 +51,11 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
 using namespace std;
 using namespace Antares::Optimization;
+using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::IO;
+using namespace Antares::Expressions::Visitors;
 
 auto count_lines = [](std::string_view s)
 {
@@ -198,7 +201,7 @@ BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
 BOOST_AUTO_TEST_CASE(TestUpdateTimeIndexIfShouldForceScenario)
 {
-    using TI = Antares::Expressions::Visitors::TimeIndex;
+    using TI = Antares::Optimisation::TimeIndex;
     // bool = false => no value should change
     BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
                 == TI::CONSTANT_IN_TIME_AND_SCENARIO);
@@ -432,34 +435,31 @@ BOOST_AUTO_TEST_SUITE(VariableDictionaryTests)
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_AllParameters)
 {
-    PartialKey key("component1", "variable1");
-    std::string result = Antares::Optimization::VariableDictionary::buildVariableName(
-      key,
-      MCYearAndTime::MCYear{5u},
-      10u);
+    std::string result = buildVariableName("component1",
+                                           "variable1",
+                                           MCYearAndTime::MCYear{5u},
+                                           10u);
     BOOST_CHECK_EQUAL(result, "component1.variable1_s5_t10");
 }
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_OnlyScenario)
 {
-    PartialKey key("component1", "variable1");
-    std::string result = VariableDictionary::buildVariableName(key,
-                                                               MCYearAndTime::MCYear{5u},
-                                                               std::nullopt);
+    std::string result = buildVariableName("component1",
+                                           "variable1",
+                                           MCYearAndTime::MCYear{5u},
+                                           std::nullopt);
     BOOST_CHECK_EQUAL(result, "component1.variable1_s5");
 }
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_OnlyTimestep)
 {
-    PartialKey key("component1", "variable1");
-    std::string result = VariableDictionary::buildVariableName(key, std::nullopt, 10u);
+    std::string result = buildVariableName("component1", "variable1", std::nullopt, 10u);
     BOOST_CHECK_EQUAL(result, "component1.variable1_t10");
 }
 
 BOOST_AUTO_TEST_CASE(BuildVariableName_NoOptionalParams)
 {
-    PartialKey key("component1", "variable1");
-    std::string result = VariableDictionary::buildVariableName(key, std::nullopt, std::nullopt);
+    std::string result = buildVariableName("component1", "variable1", std::nullopt, std::nullopt);
     BOOST_CHECK_EQUAL(result, "component1.variable1");
 }
 
@@ -606,33 +606,23 @@ public:
         return isLP_;
     }
 
-    IMipConstraint* lookupConstraint(const std::string& name) const override
+    LinearProblemApi::IMipConstraint* lookupConstraint(const std::string& name) const override
     {
         static MockMipConstraint mockConstraint(MipBasisStatus::BASIC);
-        return constraintExists(name) ? &mockConstraint : nullptr;
-    }
-
-    void setConstraintExists(const std::string& name, bool exists)
-    {
-        if (exists)
-        {
-            existingConstraints_.insert(name);
-        }
-        else
-        {
-            existingConstraints_.erase(name);
-        }
+        return &mockConstraint;
     }
 
     // ILinearProblem interface (minimal implementation for testing)
     IMipVariable* addVariable(double, double, bool, const std::string&) override
     {
-        return nullptr;
+        variables_.push_back(std::move(RandomVariable()));
+        return variables_.back().get();
     }
 
     IMipConstraint* addConstraint(double, double, const std::string&) override
     {
-        return nullptr;
+        constraints_.push_back(std::move(RandomConstraint()));
+        return constraints_.back().get();
     }
 
     void setObjectiveCoefficient(IMipVariable*, double) override
@@ -653,39 +643,65 @@ public:
         return std::numeric_limits<double>::infinity();
     }
 
-private:
-    bool isLP_;
-    std::set<std::string> existingConstraints_;
-
-    bool constraintExists(const std::string& name) const
+    LinearProblemApi::IMipVariable* addNumVariable(double lb,
+                                                   double ub,
+                                                   const std::string& name) override
     {
-        return existingConstraints_.count(name) > 0;
+        variables_.push_back(std::move(RandomVariable()));
+        return variables_.back().get();
     }
 
-    IMipVariable* addNumVariable(double lb, double ub, const std::string& name) override
+    LinearProblemApi::IMipVariable* addIntVariable(double lb,
+                                                   double ub,
+                                                   const std::string& name) override
     {
-        return nullptr;
+        variables_.push_back(std::move(RandomVariable()));
+        return variables_.back().get();
     }
 
-    IMipVariable* addIntVariable(double lb, double ub, const std::string& name) override
+    static std::unique_ptr<IMipVariable> RandomVariable()
     {
-        return nullptr;
+        std::unique_ptr<IMipVariable> mockMipVariable = std::make_unique<MockMipVariable>(
+          12.25,
+          MipBasisStatus::AT_LOWER_BOUND,
+          false);
+        return std::move(mockMipVariable);
     }
 
-    static IMipVariable* RandomVariable()
+    static std::unique_ptr<IMipConstraint> RandomConstraint()
     {
-        static MockMipVariable mockMipVariable(12.25, MipBasisStatus::AT_LOWER_BOUND, false);
-        return &mockMipVariable;
+        std::unique_ptr<IMipConstraint> mockMipConstraint = std::make_unique<MockMipConstraint>(
+          MipBasisStatus::AT_LOWER_BOUND);
+        return std::move(mockMipConstraint);
     }
 
-    [[nodiscard]] IMipVariable* getVariable(std::size_t index) const override
+    [[nodiscard]] IMipVariable* getVariable(std::size_t t) const override
     {
-        return RandomVariable();
+        return variables_.at(t).get();
     }
 
-    [[nodiscard]] IMipVariable* lookupVariable(const std::string& name) const override
+    [[nodiscard]]
+    const std::vector<std::unique_ptr<IMipVariable>>& getVariables() const override
     {
-        return RandomVariable();
+        return variables_;
+    }
+
+    [[nodiscard]]
+    IMipConstraint* getConstraint(std::size_t) const override
+    {
+        return RandomConstraint().get();
+    }
+
+    [[nodiscard]]
+    const std::vector<std::unique_ptr<IMipConstraint>>& getConstraints() const override
+    {
+        return constraints_;
+    }
+
+    [[nodiscard]] LinearProblemApi::IMipVariable* lookupVariable(
+      const std::string& name) const override
+    {
+        return RandomVariable().get();
     }
 
     [[nodiscard]] int variableCount() const override
@@ -693,14 +709,9 @@ private:
         return 0;
     }
 
-    [[nodiscard]] IMipConstraint* getConstraint(std::size_t index) const override
-    {
-        return nullptr;
-    }
-
     [[nodiscard]] int constraintCount() const override
     {
-        return existingConstraints_.size();
+        return constraints_.size();
     }
 
     double getObjectiveCoefficient(const IMipVariable* var) const override
@@ -725,6 +736,11 @@ private:
     {
         return !isMinimization();
     }
+
+private:
+    bool isLP_;
+    std::vector<std::unique_ptr<IMipVariable>> variables_;
+    std::vector<std::unique_ptr<IMipConstraint>> constraints_;
 };
 
 struct MockMipSolution: IMipSolution
@@ -742,8 +758,64 @@ struct MockMipSolution: IMipSolution
 
 struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
 {
-    void build(const FillContext& fillContext = {0, 4, 0, 4, 0},
-               MockLinearProblem* linearProblem = nullptr)
+    void addRandomVariables(const FillContext& fillContext,
+                            MockLinearProblem* linearProblem,
+                            const Component& compo) const
+    {
+        for (const auto& var: compo.getModel()->Variables())
+        {
+            optimEntityContainer->addStartColumn();
+            if (var.isTimeDependent())
+            {
+                for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
+                {
+                    linearProblem->addVariable(0, 0, false, "");
+                }
+            }
+            else
+            {
+                linearProblem->addVariable(0, 0, false, "");
+            }
+        }
+    }
+
+    void addRandomConstraints(const FillContext& fillContext,
+                              MockLinearProblem* linearProblem,
+                              const Component& compo)
+    {
+        const auto* model = compo.getModel();
+
+        for (const auto& constraint: model->Constraints())
+        {
+            const auto& constraintId = constraint.Id();
+            const auto cstrTimeIndex = TimeIndexVisitor(*optimEntityContainer, compo)
+                                         .dispatch(constraint.expression().RootNode());
+            optimEntityContainer->registerConstraint(compo, cstrTimeIndex);
+            if (cstrTimeIndex == TimeIndex::VARYING_IN_TIME_ONLY
+                || cstrTimeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+            {
+                for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
+                {
+                    linearProblem->addConstraint(0, 0, "");
+                }
+            }
+            else
+            {
+                linearProblem->addConstraint(0, 0, "");
+            }
+        }
+    }
+
+    void setOptimEntityContainer(MockLinearProblem* linearProblem)
+    {
+        scenarioGroupRepository = std::make_unique<ScenarioGroupRepository>();
+        optimEntityContainer = std::make_unique<OptimEntityContainer>(
+          *linearProblem,
+          &dummy_data_,
+          scenarioGroupRepository.get());
+    }
+
+    void PrepareData()
     {
         std::vector<Test::Modeler::VariableData> variablesData = {
           {"var1", ValueType::FLOAT, nullptr, nullptr, false, false}, // Neither time nor scenario
@@ -753,8 +825,8 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
           {"var4", ValueType::FLOAT, nullptr, nullptr, true, true}    // Both time and scenario
                                                                       // dependent
         };
-        auto var1_node = variable("var1");
-        auto var4_node = variable("var4");
+        auto var1_node = variable("var1", 0);
+        auto var4_node = variable("var4", 8954);
         auto three = literal(3);
         auto ct1_node = nodes.create<Antares::Expressions::Nodes::LessThanOrEqualNode>(var1_node,
                                                                                        three);
@@ -764,29 +836,46 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         std::vector<Test::Modeler::ConstraintData> constraintsData = {{"constraint1", ct1_node},
                                                                       {"constraint2", ct2_node}};
         createModel("model", {}, variablesData, constraintsData, nullptr);
-        createComponent("model", "comp1");
-        createComponent("model", "comp2");
-        auto f = [](const MCYearAndTime&, const std::string& name)
+        createComponent("model", "comp1", {}, "Shutter Island");
+        createComponent("model", "comp2", {}, "Inside Man");
+    }
+
+    void AddRandomVariablesAndContraints(const FillContext& fillContext,
+                                         MockLinearProblem* linearProblem)
+    {
+        optimEntityContainer->reserveOptimComponents(components.size());
+        for (const auto& compo: components)
         {
-            static MockMipVariable mockVar(123.45, MipBasisStatus::FREE);
-            return &mockVar;
-        };
-        for (const auto& [compoId, compo]: components)
-        {
-            const auto* model = compo.getModel();
-            if (linearProblem)
-            {
-                for (const auto& constraintId: model->Constraints() | views::keys)
-                {
-                    // Set up some constraints to exist
-                    linearProblem->setConstraintExists(compoId + '.' + constraintId, true);
-                }
-            }
+            const auto& compoId = compo.Id();
+            scenarioGroupRepository->addScenario(compo.getScenarioGroupId(),
+                                                 std::make_unique<Scenario>(
+                                                   compo.getScenarioGroupId()));
+            optimEntityContainer->addFromSystemComponent(compo);
+            addRandomVariables(fillContext, linearProblem, compo);
+            addRandomConstraints(fillContext, linearProblem, compo);
         }
     }
+
+    void build(const FillContext& fillContext = {0, 4, 0, 4, 0},
+               MockLinearProblem* linearProblem = nullptr)
+    {
+        if (!linearProblem)
+        {
+            return;
+        }
+
+        PrepareData();
+        setOptimEntityContainer(linearProblem);
+        AddRandomVariablesAndContraints(fillContext, linearProblem);
+    }
+
+    std::unique_ptr<ScenarioGroupRepository> scenarioGroupRepository = nullptr;
+
+    std::unique_ptr<OptimEntityContainer> optimEntityContainer = nullptr;
 };
 
 struct TempDirFixture
+
 {
     TempDirFixture()
     {
@@ -931,13 +1020,16 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {
     SimulationTableCsv table;
     MockLinearProblem linearProblem(true);
-    build();
     const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
+    build(fillContext, &linearProblem);
+
+    const auto& component = components.front();
 
     addVariableEntries(table,
                        linearProblem,
                        fillContext,
-                       components.begin()->second,
+                       component,
+                       *optimEntityContainer,
                        1,
                        TimeConversionMode::SingleBlock,
                        0);
@@ -1091,6 +1183,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
                                              linearProblem,
                                              45.0,
                                              getModelerData(),
+                                             *optimEntityContainer,
                                              fillContext,
                                              1,
                                              TimeConversionMode::SingleBlock););
@@ -1375,35 +1468,6 @@ BOOST_AUTO_TEST_CASE(BuildModelerConstraintName_NoOptionalParams)
 {
     std::string result = BuildModelerConstraintName("comp1", "constraint1", std::nullopt);
     BOOST_CHECK_EQUAL(result, "comp1.constraint1");
-}
-
-BOOST_AUTO_TEST_SUITE_END()
-
-BOOST_AUTO_TEST_SUITE(ExtractFromOptionalTests)
-
-// Test the template function used in SimulationTableCsv
-template<typename T>
-std::string extractFromOptional(const std::optional<T>& option)
-{
-    return option.has_value() ? std::to_string(option.value()) : "None";
-}
-
-BOOST_AUTO_TEST_CASE(ExtractFromOptional_HasValue)
-{
-    std::optional<int> value = 42;
-    BOOST_CHECK_EQUAL(extractFromOptional(value), "42");
-
-    std::optional<double> doubleValue = 3.14159;
-    BOOST_CHECK_EQUAL(extractFromOptional(doubleValue), "3.141590");
-}
-
-BOOST_AUTO_TEST_CASE(ExtractFromOptional_NoValue)
-{
-    std::optional<int> empty;
-    BOOST_CHECK_EQUAL(extractFromOptional(empty), "None");
-
-    std::optional<double> emptyDouble;
-    BOOST_CHECK_EQUAL(extractFromOptional(emptyDouble), "None");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

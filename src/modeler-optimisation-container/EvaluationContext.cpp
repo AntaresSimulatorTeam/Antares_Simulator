@@ -19,28 +19,21 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/expressions/visitors/EvaluationContext.h>
+#include <antares/modeler-optimisation-container/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 
-namespace Antares::Expressions::Visitors
+namespace Antares::Optimisation
 {
-EvaluationContext::EvaluationContext(std::map<std::string, ParameterTypeAndValue> system_parameters,
-                                     std::map<std::string, double> variables,
-                                     const ILinearProblemData& data,
-                                     const IScenario& scenario):
-    parameters_types_and_values_(std::move(system_parameters)),
-    variables_(std::move(variables)),
+EvaluationContext::EvaluationContext(const ModelerStudy::SystemModel::Component* component,
+                                     const ILinearProblemData* data,
+                                     const IScenario* scenario):
+    component_(component),
     data_(data),
     scenario_(scenario)
 {
-}
-
-double EvaluationContext::getVariableValue(const std::string& key) const
-{
-    return variables_.at(key);
 }
 
 static double convertToDouble(const std::string& key, const std::string& value)
@@ -63,8 +56,9 @@ static double convertToDouble(const std::string& key, const std::string& value)
 
 double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key) const
 {
-    const auto it = parameters_types_and_values_.find(key);
-    if (it == parameters_types_and_values_.end())
+    const auto& parameters_types_and_values = component_->getParameterValues();
+    const auto it = parameters_types_and_values.find(key);
+    if (it == parameters_types_and_values.end())
     {
         throw CouldNotEvaluateConstantParameter<std::out_of_range>(
           "Parameter '" + key + "' not found in system parameters.");
@@ -74,34 +68,53 @@ double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key
 
 std::string EvaluationContext::getSystemParameterValue(const std::string& key) const
 {
-    return parameters_types_and_values_.at(key).value;
+    const auto& parameters_types_and_values = component_->getParameterValues();
+    return parameters_types_and_values.at(key).value;
 }
 
 double EvaluationContext::getParameterValue(const std::string& key,
                                             unsigned int year,
                                             unsigned int hour) const
 {
-    IScenario::TimeSeriesNumber time_series_number = scenario_.getData(year);
-    return data_.getData(parameters_types_and_values_.at(key).value, time_series_number, hour);
+    IScenario::TimeSeriesNumber time_series_number = scenario_->getData(year);
+    const auto& parameters_types_and_values = component_->getParameterValues();
+    return data_->getData(parameters_types_and_values.at(key).value, time_series_number, hour);
 }
 
-ParameterType EvaluationContext::getParameterType(const std::string& key) const
+std::span<const double> EvaluationContext::getParameterValue(const std::string& key,
+                                                             unsigned int year,
+                                                             unsigned int firstHour,
+                                                             unsigned int lastHour) const
 {
-    return parameters_types_and_values_.at(key).type;
+    IScenario::TimeSeriesNumber time_series_number = scenario_->getData(year);
+    const auto& parameters_types_and_values = component_->getParameterValues();
+    return data_->getData(parameters_types_and_values.at(key).value,
+                          time_series_number,
+                          firstHour,
+                          lastHour);
 }
 
-ParameterTypeAndValue EvaluationContext::getParameter(const std::string& key) const
+ModelerStudy::SystemModel::ParameterType EvaluationContext::getParameterType(
+  const std::string& key) const
 {
-    return parameters_types_and_values_.at(key);
+    const auto& parameters_types_and_values = component_->getParameterValues();
+    return parameters_types_and_values.at(key).type;
+}
+
+ModelerStudy::SystemModel::ParameterTypeAndValue EvaluationContext::getParameter(
+  const std::string& key) const
+{
+    const auto& parameters_types_and_values = component_->getParameterValues();
+    return parameters_types_and_values.at(key);
 }
 
 const ILinearProblemData& EvaluationContext::data() const
 {
-    return data_;
+    return *data_;
 }
 
 const Optimisation::LinearProblemApi::IScenario& EvaluationContext::scenario() const
 {
-    return scenario_;
+    return *scenario_;
 }
-} // namespace Antares::Expressions::Visitors
+} // namespace Antares::Optimisation

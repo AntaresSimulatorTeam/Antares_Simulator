@@ -36,4 +36,14 @@ double LinearProblemData::getData(const std::string& dataSetId,
     return dataSeriesRepository_.getDataSeries(dataSetId).getData(timeSeriesNumber, hour);
 }
 
+std::span<const double> LinearProblemData::getData(const std::string& dataSetId,
+                                                   unsigned timeSeriesNumber,
+                                                   unsigned firstHour,
+                                                   unsigned lastHour) const
+{
+    return dataSeriesRepository_.getDataSeries(dataSetId).getData(timeSeriesNumber,
+                                                                  firstHour,
+                                                                  lastHour);
+}
+
 } // namespace Antares::Optimisation::LinearProblemDataImpl

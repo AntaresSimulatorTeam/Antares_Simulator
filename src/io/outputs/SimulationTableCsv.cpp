@@ -72,12 +72,6 @@ void SimulationTableCsv::writeHeader()
 
 const std::string NONE = "None";
 
-template<typename T>
-std::string extractFromOptional(const std::optional<T>& option)
-{
-    return option.has_value() ? std::to_string(option.value()) : NONE;
-}
-
 void SimulationTableCsv::write()
 {
     const size_t row_count = storage_.rowCount();

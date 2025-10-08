@@ -97,6 +97,7 @@ set(TARGET_LIBS #No alias
         antlr-interface
         antares-study-system-model
         load-modeler-files
+        modeler-optimisation-container
         expressions
         optim-model-filler
         yml-system
