@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(identifier)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objectives = {{"objectives", ""}},
+      .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objectives = {{"objectives", ""}},
+      .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objectives", ""}},
+                          .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objectives", ""}},
+                          .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
@@ -277,7 +277,7 @@ ExpressionToNodeConvertorEmptyModel createMediumExpression()
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objectives = {{"objectives", ""}},
+      .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
 
     return {std::move(model)};

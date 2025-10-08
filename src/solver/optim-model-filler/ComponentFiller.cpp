@@ -280,18 +280,11 @@ void ComponentFiller::addConstraints(LinearProblemApi::ILinearProblem& pb,
 void ComponentFiller::addObjectives(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                     const Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    auto model = component_.getModel();
-    if (model->Objectives().empty())
-    {
-        return;
-    }
+    const auto* model = component_.getModel();
+    Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_, ctx, component_);
 
     for (const auto& objective: model->Objectives())
     {
-        Optimization::ReadLinearExpressionVisitor visitor(evaluationContextProvider_,
-                                                          ctx,
-                                                          component_);
-
         const auto timeDependentLinearExpression = visitor.dispatch(
           objective.expression().RootNode());
         const auto& linear_expressions = timeDependentLinearExpression.GetLinearExpressions();

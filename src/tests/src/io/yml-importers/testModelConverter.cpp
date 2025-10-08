@@ -113,7 +113,7 @@ BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
 }
 
 // Test library with models
-BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
+BOOST_FIXTURE_TEST_CASE(model_with_one_objective_properly_translated, Fixture)
 {
     YmlModel::Model model1{.id = "model1",
                            .description = "description",
@@ -123,7 +123,7 @@ BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
                            .port_field_definitions = {},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objectives = {{"objective", "param1"}},
+                           .objectives = {{"objective-id", "param1"}},
                            .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
@@ -172,7 +172,7 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objectives = {{"objective", "var1"}},
+      .objectives = {{"objective-id", "var1"}},
       .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
