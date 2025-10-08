@@ -139,7 +139,7 @@ using VariablesPerArea = Common::ComposeAll<OverallCost,
                                             NbOfDispatchedUnits,
                                             NbOfDispatchedUnitsByPlant,
                                             ProfitByPlant,
-                                            Variable::Links>::type;
+                                            Links>::type;
 
 /*!
 ** \brief All variables for a single set of areas (economy)
