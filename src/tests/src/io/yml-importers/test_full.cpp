@@ -300,10 +300,10 @@ library:
         BOOST_CHECK_EQUAL(model0.Objective().Value(), "cost * generation");
         BOOST_CHECK_EQUAL(model0.ExtraOutputs().at("total_cost_in_millions").expression().Value(),
                           "sum(cost * generation) / 1000000");
-
+        const auto& model0Variables = model0.Variables();
         BOOST_REQUIRE_EQUAL(model0.Constraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model0.Parameters().size(), 2);
-        BOOST_REQUIRE_EQUAL(model0.Variables().size(), 1);
+        BOOST_REQUIRE_EQUAL(model0Variables.size(), 1);
         BOOST_REQUIRE_EQUAL(model0.Ports().size(), 1);
         BOOST_CHECK_EQUAL(model0.Ports().at("injection_port").Type().Id(),
                           "flow_with_area_connection");
@@ -312,7 +312,10 @@ library:
         checkParameter(model0.Parameters().at("cost"), "cost", false, false);
         checkParameter(model0.Parameters().at("p_max"), "p_max", false, false);
 
-        checkVariable(model0.Variables().at("generation"),
+        const auto generation = std::ranges::find_if(model0Variables,
+                                                     [](const auto& v)
+                                                     { return v.Id() == "generation"; });
+        checkVariable(*generation,
                       "generation",
                       "0",
                       "p_max",
@@ -337,7 +340,10 @@ library:
         BOOST_REQUIRE_EQUAL(model2.PortFieldDefinitions().size(), 1);
 
         checkParameter(model2.Parameters().at("cost"), "cost", false, false);
-        checkVariable(model2.Variables().at("spillage"),
+        const auto spillage = std::ranges::find_if(model2.Variables(),
+                                                   [](const auto& v)
+                                                   { return v.Id() == "spillage"; });
+        checkVariable(*spillage,
                       "spillage",
                       "0",
                       "",
@@ -353,7 +359,13 @@ library:
         BOOST_REQUIRE_EQUAL(model3.Ports().size(), 1);
         BOOST_REQUIRE_EQUAL(model3.PortFieldDefinitions().size(), 1);
         checkParameter(model3.Parameters().at("cost"), "cost", false, false);
-        checkVariable(model3.Variables().at("unsupplied_energy"),
+        const auto unsupplied_energy = std::ranges::find_if(model3.Variables(),
+                                                            [](const auto& v) {
+                                                                return v.Id()
+                                                                       == "unsupplied_energy";
+                                                            });
+
+        checkVariable(*unsupplied_energy,
                       "unsupplied_energy",
                       "0",
                       "",
@@ -383,28 +395,42 @@ library:
         checkParameter(model5.Parameters().at("p_max_withdrawal"), "p_max_withdrawal", true, true);
         checkParameter(model5.Parameters().at("p_max_injection"), "p_max_injection", true, true);
         checkParameter(model5.Parameters().at("inflows"), "inflows", true, true);
-        checkVariable(model5.Variables().at("injection"),
+
+        const auto injection = std::ranges::find_if(model5.Variables(),
+                                                    [](const auto& v)
+                                                    { return v.Id() == "injection"; });
+        checkVariable(*injection,
                       "injection",
                       "0",
                       "p_max_injection",
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::NO,
                       SystemModel::ScenarioDependent::NO);
-        checkVariable(model5.Variables().at("withdrawal"),
+        const auto withdrawal = std::ranges::find_if(model5.Variables(),
+                                                     [](const auto& v)
+                                                     { return v.Id() == "withdrawal"; });
+        checkVariable(*withdrawal,
                       "withdrawal",
                       "0",
                       "p_max_withdrawal",
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::NO,
                       SystemModel::ScenarioDependent::NO);
-        checkVariable(model5.Variables().at("level"),
+
+        const auto level = std::ranges::find_if(model5.Variables(),
+                                                [](const auto& v) { return v.Id() == "level"; });
+        const auto getConstraint = [](const std::vector<SystemModel::Constraint>& constraints,
+                                      const std::string& id) {
+            return std::ranges::find_if(constraints, [&id](const auto& c) { return c.Id() == id; });
+        };
+        checkVariable(*level,
                       "level",
                       "level_min",
                       "level_max",
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::NO,
                       SystemModel::ScenarioDependent::NO);
-        checkConstraint(model5.Constraints().at("Level equation"),
+        checkConstraint(*getConstraint(model5.Constraints(), "Level equation"),
                         "Level equation",
                         "level - level - efficiency * injection + withdrawal = inflows");
 
@@ -422,47 +448,61 @@ library:
         checkParameter(model6.Parameters().at("d_min_down"), "d_min_down", true, true);
         checkParameter(model6.Parameters().at("nb_units_max"), "nb_units_max", true, true);
         checkParameter(model6.Parameters().at("nb_failures"), "nb_failures", true, true);
-        checkVariable(model6.Variables().at("generation"),
+
+        const auto model6Generation = std::ranges::find_if(model6.Variables(),
+                                                           [](const auto& v)
+                                                           { return v.Id() == "generation"; });
+
+        checkVariable(*model6Generation,
                       "generation",
                       "0",
                       "nb_units_max * p_max",
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::YES);
-        checkVariable(model6.Variables().at("nb_on"),
+        const auto nb_on = std::ranges::find_if(model6.Variables(),
+                                                [](const auto& v) { return v.Id() == "nb_on"; });
+
+        checkVariable(*nb_on,
                       "nb_on",
                       "0",
                       "nb_units_max",
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::NO);
-        checkVariable(model6.Variables().at("nb_stop"),
+        const auto nb_stop = std::ranges::find_if(model6.Variables(),
+                                                  [](const auto& v)
+                                                  { return v.Id() == "nb_stop"; });
+        checkVariable(*nb_stop,
                       "nb_stop",
                       "0",
                       "nb_units_max",
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::NO);
-        checkVariable(model6.Variables().at("nb_start"),
+        const auto nb_start = std::ranges::find_if(model6.Variables(),
+                                                   [](const auto& v)
+                                                   { return v.Id() == "nb_start"; });
+        checkVariable(*nb_start,
                       "nb_start",
                       "0",
                       "nb_units_max",
                       SystemModel::ValueType::FLOAT,
                       SystemModel::TimeDependent::YES,
                       SystemModel::ScenarioDependent::NO);
-        checkConstraint(model6.Constraints().at("Max generation"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Max generation"),
                         "Max generation",
                         "generation <= nb_on * p_max");
-        checkConstraint(model6.Constraints().at("Min generation"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Min generation"),
                         "Min generation",
                         "generation >= nb_on * p_min");
-        checkConstraint(model6.Constraints().at("Number of units variation"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Number of units variation"),
                         "Number of units variation",
                         "nb_on = nb_on + nb_start - nb_stop");
-        checkConstraint(model6.Constraints().at("Min up time"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Min up time"),
                         "Min up time",
                         "t-d_min_up + 1 <= nb_on");
-        checkConstraint(model6.Constraints().at("Min down time"),
+        checkConstraint(*getConstraint(model6.Constraints(), "Min down time"),
                         "Min down time",
                         "t-d_min_down + 1 <= nb_units_max - nb_on");
         BOOST_CHECK_EQUAL(model6.Objective().Value(), "cost * generation");

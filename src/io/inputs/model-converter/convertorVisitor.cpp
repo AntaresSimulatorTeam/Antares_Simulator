@@ -131,11 +131,11 @@ static constexpr unsigned int convertBool(bool in)
     return in ? 1 : 0;
 }
 
-static constexpr Expressions::Visitors::TimeIndex convertToTimeIndex(bool timedependent,
-                                                                     bool scenariodependent)
+static constexpr Optimisation::TimeIndex convertToTimeIndex(bool timedependent,
+                                                            bool scenariodependent)
 {
-    return static_cast<Expressions::Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
-                                                         | convertBool(timedependent));
+    return static_cast<Optimisation::TimeIndex>((convertBool(scenariodependent) << 1)
+                                                | convertBool(timedependent));
 }
 
 Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
@@ -151,12 +151,15 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         }
     }
 
-    for (const auto& var: model_.variables)
+    const auto& variables = model_.variables;
+    for (std::size_t index = 0; index < variables.size(); ++index)
     {
+        const auto& var = variables[index];
         if (var.id == identifier)
         {
             return static_cast<Node*>(
               registry_.create<VariableNode>(var.id,
+                                             index,
                                              convertToTimeIndex(var.time_dependent,
                                                                 var.scenario_dependent)));
         }

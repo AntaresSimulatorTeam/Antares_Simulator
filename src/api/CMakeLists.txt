@@ -27,13 +27,14 @@ target_include_directories(solver_api
         PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
 )
-
+find_package(Boost REQUIRED COMPONENTS iostreams)
 target_link_libraries(solver_api
         PRIVATE
         Antares::file-tree-study-loader
         Antares::study
         Antares::study-loader
         antares-solver-simulation
+        Boost::iostreams
         PUBLIC
         Antares::optimization-options
         Antares::lps

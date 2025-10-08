@@ -17,6 +17,7 @@ set_target_properties(antares-modeler PROPERTIES OUTPUT_NAME ${exec_name})
 
 target_link_libraries(antares-modeler
         PRIVATE
+        Antares::modeler-optimisation-container
         Antares::modeler-lib
         Antares::modeler-simulation-table
         Antares::logs

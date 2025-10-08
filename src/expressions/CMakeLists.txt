@@ -13,7 +13,6 @@ set(SRC_Expressions
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
         visitors/EvalVisitor.cpp
-        visitors/EvaluationContext.cpp
         visitors/LinearityVisitor.cpp
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
@@ -21,7 +20,6 @@ set(SRC_Expressions
         visitors/InvalidNode.cpp
         visitors/NodeVisitor.cpp
 
-        hashable.cpp
 
         NodeRegistry.cpp
         include/antares/expressions/NodeRegistry.h
@@ -52,19 +50,16 @@ set(SRC_Expressions
         include/antares/expressions/visitors/CloneVisitor.h
         include/antares/expressions/visitors/CompareVisitor.h
         include/antares/expressions/visitors/EvalVisitor.h
-        include/antares/expressions/visitors/EvaluationContext.h
         include/antares/expressions/visitors/LinearStatus.h
         include/antares/expressions/visitors/LinearityVisitor.h
         include/antares/expressions/visitors/NodeVisitor.h
         include/antares/expressions/visitors/PrintVisitor.h
         include/antares/expressions/visitors/TimeIndexVisitor.h
-        include/antares/expressions/visitors/TimeIndex.h
         include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/InvalidNode.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h
-        include/antares/expressions/hashable.h
         include/antares/expressions/expression.h
         include/antares/expressions/ShiftVector.h
         include/antares/expressions/nodes/TimeShiftNode.h
@@ -88,6 +83,7 @@ target_link_libraries(expressions
         Antares::logs
         #TODO i need LinearProblemData
         linear-problem-api
+        Antares::modeler-optimisation-container
         PRIVATE
         Antares::antares-study-system-model
         Antares::exception

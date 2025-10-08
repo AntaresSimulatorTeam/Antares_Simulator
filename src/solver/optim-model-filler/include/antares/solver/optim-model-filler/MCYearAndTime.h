@@ -22,6 +22,7 @@
 
 #pragma once
 #include <fmt/format.h>
+#include <ostream>
 
 namespace Antares::Optimization
 {

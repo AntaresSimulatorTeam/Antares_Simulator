@@ -21,7 +21,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <mockModelerObjects.h>
 #include <stdexcept>
 
 #include <boost/mpl/list.hpp>
@@ -35,10 +34,13 @@
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include "antares/expressions/ShiftVector.h"
 
+#include "UtilMocks.h"
+
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Optimisation;
 
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
 
@@ -51,40 +53,61 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
         {
             return 123.45; // Mock return value for testing
         }
+
+        [[nodiscard]] virtual std::span<const double> getData(const std::string& dataSetId,
+                                                              unsigned timeSeriesNumber,
+                                                              unsigned firstHour,
+                                                              unsigned lastHour) const
+        {
+            static std::vector<double> data = {123.45};
+            return data;
+        }
     } mockData;
 
+    const auto valid_number = "valid_number";
+    const auto invalid_number = "invalid_number";
+    const auto out_of_range = "out_of_range";
+    const auto timeserie_param = "timeserie_param";
+    std::vector<Parameter> params = {
+      Parameter{valid_number, TimeDependent::NO, ScenarioDependent::NO},
+      Parameter{invalid_number, TimeDependent::NO, ScenarioDependent::NO},
+      Parameter{out_of_range, TimeDependent::NO, ScenarioDependent::NO},
+      Parameter{timeserie_param, TimeDependent::YES, ScenarioDependent::YES}};
+
     std::map<std::string, ParameterTypeAndValue> system_parameters = {
-      {"valid_number", {"valid_number", ParameterType::CONSTANT, "42.5"}},
-      {"invalid_number", {"invalid_number", ParameterType::CONSTANT, "abc"}},
-      {"out_of_range", {"out_of_range", ParameterType::CONSTANT, "1e500"}},
-      {"timeserie_param", {"timeserie_param", ParameterType::TIMESERIE, "timeserie_file"}}};
+      {valid_number, {valid_number, ParameterType::CONSTANT, "42.5"}},
+      {invalid_number, {invalid_number, ParameterType::CONSTANT, "abc"}},
+      {out_of_range, {out_of_range, ParameterType::CONSTANT, "1e500"}},
+      {timeserie_param, {timeserie_param, ParameterType::TIMESERIE, "timeserie_file"}}};
 
     std::map<std::string, double> variables; // Not needed for this test
 
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    EvaluationContext context(system_parameters, variables, mockData, emptyScenario);
+    const auto model = createModelWithParameters(params);
+    const auto compo = createComponent(model, "compo", std::move(system_parameters));
+    EvaluationContext context(&compo, &mockData, &emptyScenario);
 
     // 1. Valid number (CONSTANT)
-    BOOST_CHECK_EQUAL(context.getSystemParameterValueAsDouble("valid_number"), 42.5);
+    BOOST_CHECK_EQUAL(context.getSystemParameterValueAsDouble(valid_number), 42.5);
 
     // 2. Parameter not found
     BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("nonexistent"),
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
 
     // 3. Invalid number format
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("invalid_number"),
+    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(invalid_number),
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
 
     // 4. Out of range value
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("out_of_range"),
+    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(out_of_range),
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
 
     // 5. Timeserie parameter should NOT be converted to double, expect an exception
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("timeserie_param"),
+    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(timeserie_param),
                       EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
 
     // 6. Timeserie parameter should be handled by getParameterValue instead
-    BOOST_CHECK_EQUAL(context.getParameterValue("timeserie_param", 0, 1), 123.45);
+    BOOST_CHECK_EQUAL(context.getParameterValue(timeserie_param, 0, 1), 123.45);
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
@@ -400,17 +423,6 @@ BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue_OutOfRange)
     BOOST_CHECK_THROW(eval.alltimeSum(4), EvaluationResult::EvalResultTimeIndexOutOfRange);
 }
 
-struct MyDummyFixture: Registry<Node>
-{
-    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    EvaluationContext evaluationContext{{}, {}, data, emptyScenario};
-    MockEvaluationContextProvider evalContextProvider{evaluationContext};
-    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0, 0, 0, 0};
-    Component component = createComponent();
-    EvalVisitor evalVisitor{evalContextProvider, fillContext, component};
-};
-
 BOOST_AUTO_TEST_CASE(print_single_literal)
 {
     LiteralNode literal(21);
@@ -425,7 +437,7 @@ BOOST_FIXTURE_TEST_CASE(eval_single_literal, MyDummyFixture)
 {
     LiteralNode literal(21);
 
-    const double eval = evalVisitor.dispatch(&literal).valueAsDouble();
+    const double eval = defaultComponentEvalVisitor->dispatch(&literal).valueAsDouble();
 
     BOOST_CHECK_EQUAL(eval, 21.); // TODO Number of decimals implementation dependent ?
 }
@@ -495,7 +507,7 @@ BOOST_FIXTURE_TEST_CASE(print_add_six_literals, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(eval_add_two_literals, MyDummyFixture)
 {
     Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2));
-    double eval = evalVisitor.dispatch(root).valueAsDouble();
+    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(eval, 23.);
 }
@@ -504,7 +516,7 @@ BOOST_FIXTURE_TEST_CASE(eval_add_one_literal, MyDummyFixture)
 {
     Node* root = create<SumNode>(create<LiteralNode>(215));
 
-    double eval = evalVisitor.dispatch(root).valueAsDouble();
+    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(eval, 215.);
 }
@@ -513,7 +525,7 @@ BOOST_FIXTURE_TEST_CASE(eval_add_zero_literal, MyDummyFixture)
 {
     Node* root = create<SumNode>();
 
-    double eval = evalVisitor.dispatch(root).valueAsDouble();
+    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(eval, 0.);
 }
@@ -527,7 +539,7 @@ BOOST_FIXTURE_TEST_CASE(eval_add_six_literals, MyDummyFixture)
                                  create<LiteralNode>(12),
                                  create<LiteralNode>(86));
 
-    double eval = evalVisitor.dispatch(root).valueAsDouble();
+    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(eval, 211.);
 }
@@ -536,7 +548,7 @@ BOOST_FIXTURE_TEST_CASE(eval_negation_literal, MyDummyFixture)
 {
     const double num = 1428.0;
     Node* root = create<NegationNode>(create<LiteralNode>(num));
-    double eval = evalVisitor.dispatch(root).valueAsDouble();
+    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(eval, -num);
 }
@@ -547,7 +559,7 @@ BOOST_FIXTURE_TEST_CASE(eval_Add_And_Negation_Nodes, MyDummyFixture)
     const double num2 = 8241;
     Node* negative_num2 = create<NegationNode>(create<LiteralNode>(num2));
     Node* root = create<SumNode>(create<LiteralNode>(num1), negative_num2);
-    double eval = evalVisitor.dispatch(root).valueAsDouble();
+    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(eval, num1 - num2);
 }
@@ -558,7 +570,7 @@ BOOST_FIXTURE_TEST_CASE(Negative_of_SumNode, MyDummyFixture)
     const double num2 = 8241;
     Node* add_node = create<SumNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
     Node* neg = create<NegationNode>(add_node);
-    double eval = evalVisitor.dispatch(neg).valueAsDouble();
+    double eval = defaultComponentEvalVisitor->dispatch(neg).valueAsDouble();
 
     BOOST_CHECK_EQUAL(eval, -(num1 + num2));
 }
@@ -572,24 +584,26 @@ BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_basic, MyDummyFixture)
     Node* equalDifferentValue = create<EqualNode>(create<LiteralNode>(num1),
                                                   create<LiteralNode>(num2));
 
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(equalSameValue).valueAsDouble(), 1.0);
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(equalDifferentValue).valueAsDouble(), 0.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(equalSameValue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(equalDifferentValue).valueAsDouble(),
+                      0.0);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
 {
     ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     const std::string value = "221.3";
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
     auto param = build_context_parameter_with("my-param", value);
-    EvaluationContext context({param}, {}, data, emptyScenario);
-
-    MockEvaluationContextProvider evalContextProvider{context};
-    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
+    const auto compoName = components.back().Id() + "1245";
+    const auto* compo = addComponent(compoName, model, {param});
+    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
 
     const double num = 221.3;
     Node* equalLiteralParam = create<EqualNode>(create<LiteralNode>(num), &root);
 
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(equalLiteralParam).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(visitor.dispatch(equalLiteralParam).valueAsDouble(), 1.0);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparisonLessThanOrEqualNode, MyDummyFixture)
@@ -604,9 +618,9 @@ BOOST_FIXTURE_TEST_CASE(comparisonLessThanOrEqualNode, MyDummyFixture)
     Node* nodeEqualTrue = create<LessThanOrEqualNode>(create<LiteralNode>(num1),
                                                       create<LiteralNode>(num1));
 
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessTrue).valueAsDouble(), 1.0);
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessFalse).valueAsDouble(), 0.0);
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeEqualTrue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(nodeLessTrue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(nodeLessFalse).valueAsDouble(), 0.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(nodeEqualTrue).valueAsDouble(), 1.0);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparisonGraterThanOrEqualNode, MyDummyFixture)
@@ -621,9 +635,9 @@ BOOST_FIXTURE_TEST_CASE(comparisonGraterThanOrEqualNode, MyDummyFixture)
     Node* nodeEqualTrue = create<GreaterThanOrEqualNode>(create<LiteralNode>(num1),
                                                          create<LiteralNode>(num1));
 
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessTrue).valueAsDouble(), 1.0);
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeLessFalse).valueAsDouble(), 0.0);
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(nodeEqualTrue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(nodeLessTrue).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(nodeLessFalse).valueAsDouble(), 0.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(nodeEqualTrue).valueAsDouble(), 1.0);
 }
 
 BOOST_FIXTURE_TEST_CASE(print_port_field_node, MyDummyFixture)
@@ -648,12 +662,15 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
 {
     ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     const std::string value = "221.3";
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
     auto param = build_context_parameter_with("my-param", value);
-    EvaluationContext context({param}, {}, data, emptyScenario);
+    const auto compoName = components.back().Id() + "1245";
+    const auto* compo = addComponent(compoName, model, {param});
 
-    MockEvaluationContextProvider evalContextProvider{context};
-    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
-    const double eval = evalVisitor.dispatch(&root).valueAsDouble();
+    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
+
+    const double eval = visitor.dispatch(&root).valueAsDouble();
 
     BOOST_CHECK_EQUAL(std::stod(value), eval);
 }
@@ -665,15 +682,15 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
     const std::string value = "45.7";
     const ParameterType param_type = ParameterType::TIMESERIE;
     ParameterNode root(id, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-    EvaluationContext context({build_context_parameter_with(id, value, param_type)},
-                              {},
-                              data,
-                              emptyScenario);
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = components.back().Id() + "1245";
+    const auto* compo = addComponent(compoName, model, {param});
 
-    MockEvaluationContextProvider evalContextProvider{context};
+    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
 
-    EvalVisitor evalVisitor(evalContextProvider, fillContext, component);
-    BOOST_CHECK_THROW(evalVisitor.dispatch(&root), std::invalid_argument);
+    BOOST_CHECK_THROW(visitor.dispatch(&root), std::invalid_argument);
 }
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
@@ -684,6 +701,21 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     {
         return hour; // for test
     }
+
+    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
+                                                  unsigned timeSeriesNumber,
+                                                  unsigned firstHour,
+                                                  unsigned lastHour) const override
+    {
+        std::vector<double> data(lastHour - firstHour + 1);
+        auto v = firstHour;
+        for (int i = 0; i < data.size(); ++i)
+        {
+            data[i] = v;
+            ++v;
+        }
+        return data;
+    }
 };
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
@@ -691,21 +723,24 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
     ParameterNode root("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    EvaluationContext context(
-      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
-      {},
-      dummy_data,
-      emptyScenario);
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
 
-    MockEvaluationContextProvider evalContextProvider{context};
+    const auto param_type = ParameterType::TIMESERIE;
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = "1245";
+    const auto compo = createComponent(model, compoName, {param});
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      compo);
+    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(compo);
 
-    EvalVisitor evalVisitor(evalContextProvider,
-                            {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
-                            component);
-    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+    EvalVisitor visitor(optimContainer, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0}, compo);
+
+    const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0);
     BOOST_CHECK_EQUAL(eval[1], hour_1);
@@ -715,32 +750,40 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
 {
     LiteralNode literal_node(13.0);
     TimeShiftNode time_shift_node(&literal_node, &literal_node);
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&time_shift_node).valueAsDouble(), 13.0);
-    BOOST_CHECK_THROW((void)evalVisitor.dispatch(&time_shift_node).valuesAsVector(),
-                      EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&time_shift_node).valueAsDouble(),
+                      13.0);
+    BOOST_CHECK_THROW(
+      (void)defaultComponentEvalVisitor->dispatch(&time_shift_node).valuesAsVector(),
+      EvaluationResult::EvalResultTypeError);
 }
 
 template<typename left, typename right>
 EvaluationResult CreateAndEvaluateTimeNode(const right& p)
 {
-    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
-    left root(&param, p);
+    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    left root(&paramNode, p);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    EvaluationContext context(
-      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
-      {},
-      dummy_data,
-      emptyScenario);
 
-    MockEvaluationContextProvider evalContextProvider{context};
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(evalContextProvider,
-                            {first, last /*three hours*/, first, last, 0},
-                            createComponent());
-    return evalVisitor.dispatch(&root);
+
+    const auto param_type = ParameterType::TIMESERIE;
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = "1245";
+    const auto compo = createComponent(model, compoName, {param});
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      compo);
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(compo);
+
+    EvalVisitor visitor(optimContainer, {first, last /*two hours*/, first, last, 0}, compo);
+
+    return visitor.dispatch(&root);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
@@ -767,24 +810,30 @@ BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
 
 EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
 {
-    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
-    TimeSumNode root(from, to, &param);
+    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeSumNode root(from, to, &paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    EvaluationContext context(
-      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
-      {},
-      dummy_data,
-      emptyScenario);
 
-    MockEvaluationContextProvider evalContextProvider{context};
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(evalContextProvider,
-                            {first, last /*three hours*/, first, last, 0},
-                            createComponent());
-    return evalVisitor.dispatch(&root);
+
+    const auto param_type = ParameterType::TIMESERIE;
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = "1245";
+    const auto compo = createComponent(model, compoName, {param});
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      compo);
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(compo);
+
+    EvalVisitor visitor(optimContainer, {first, last /*three hours*/, first, last, 0}, compo);
+
+    return visitor.dispatch(&root);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param, MyDummyFixture)
@@ -801,24 +850,29 @@ BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param, MyDummyFixture)
 
 EvaluationResult CreateAndEvaluateAllTimeSumNode()
 {
-    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
-    AllTimeSumNode root(&param);
+    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    AllTimeSumNode root(&paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    EvaluationContext context(
-      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
-      {},
-      dummy_data,
-      emptyScenario);
 
-    MockEvaluationContextProvider evalContextProvider{context};
     unsigned first = 0;
     unsigned last = 2;
-    EvalVisitor evalVisitor(evalContextProvider,
-                            {first, last /*three hours*/, first, last, 0},
-                            createComponent());
-    return evalVisitor.dispatch(&root);
+
+    const auto param_type = ParameterType::TIMESERIE;
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = "1245";
+    const auto compo = createComponent(model, compoName, {param});
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      compo);
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(compo);
+
+    EvalVisitor visitor(optimContainer, {first, last /*three hours*/, first, last, 0}, compo);
+    return visitor.dispatch(&root);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_alltimeSum_param, MyDummyFixture)
@@ -833,24 +887,27 @@ BOOST_FIXTURE_TEST_CASE(evaluate_alltimeSum_param, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
 {
-    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
-    MultiplicationNode root(&literal, &param);
+    MultiplicationNode root(&literal, &paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    EvaluationContext context(
-      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
-      {},
-      dummy_data,
-      emptyScenario);
-
-    MockEvaluationContextProvider evalContextProvider{context};
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(evalContextProvider,
-                            {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
-                            createComponent());
-    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+
+    const auto param_type = ParameterType::TIMESERIE;
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = "1245";
+    const auto compo = createComponent(model, compoName, {param});
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      compo);
+    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(compo);
+
+    EvalVisitor visitor(optimContainer, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0}, compo);
+    const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
     BOOST_CHECK_EQUAL(eval[1], hour_1 * literal.value());
@@ -887,61 +944,69 @@ double evalExpected<DivisionNode>(double a, double b)
 template<typename BinaryNode>
 void evaluate_time_dependent_operation()
 {
-    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
-    BinaryNode root(&literal, &param); // Correctly use the type as a template argument
+    BinaryNode root(&literal, &paramNode); // Correctly use the type as a template argument
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    EvaluationContext context(
-      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
-      {},
-      dummy_data,
-      emptyScenario);
-    MockEvaluationContextProvider evalContextProvider{context};
-    unsigned hour_0 = 0;
-    unsigned hour_1 = 1;
-    EvalVisitor evalVisitor(evalContextProvider,
-                            {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
-                            createComponent());
-    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+    unsigned hour_0 = 1;
+    unsigned hour_1 = 2;
 
-    BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(hour_0, literal.value()));
-    BOOST_CHECK_EQUAL(eval[1], evalExpected<BinaryNode>(hour_1, literal.value()));
+    const auto param_type = ParameterType::TIMESERIE;
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = "1245";
+    const auto compo = createComponent(model, compoName, {param});
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      compo);
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(compo);
+    EvalVisitor visitor(optimContainer, {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0}, compo);
+    const auto eval = visitor.dispatch(&root).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(literal.value(), hour_0));
+    BOOST_CHECK_EQUAL(eval[1], evalExpected<BinaryNode>(literal.value(), hour_1));
 }
 
 template<typename BinaryNode>
 void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
 {
-    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
-    BinaryNode binary_node(&literal, &param); // Correctly use the type as a template argument
+    BinaryNode binary_node(&literal, &paramNode); // Correctly use the type as a template argument
 
     TimeShiftNode root(&binary_node, timeShift);
     const std::string value = "dummy";
 
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    EvaluationContext context(
-      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
-      {},
-      dummy_data,
-      emptyScenario);
+    std::vector<unsigned int> hours = {1, 2};
 
-    MockEvaluationContextProvider evalContextProvider{context};
-    std::vector<unsigned int> hours = {0, 1};
-    EvalVisitor evalVisitor(evalContextProvider,
-                            {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
-                            createComponent());
-    const auto eval = evalVisitor.dispatch(&root).valuesAsVector();
+    const auto param_type = ParameterType::TIMESERIE;
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = "1245";
+    const auto compo = createComponent(model, compoName, {param});
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      compo);
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(compo);
+    EvalVisitor visitor(optimContainer,
+                        {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
+                        compo);
+    const auto eval = visitor.dispatch(&root).valuesAsVector();
 
-    std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(hours.at(0),
-                                                                            literal.value()),
-                                                   evalExpected<BinaryNode>(hours.at(1),
-                                                                            literal.value())};
+    std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(literal.value(),
+                                                                            hours.at(0)),
+                                                   evalExpected<BinaryNode>(literal.value(),
+                                                                            hours.at(1))};
 
-    const auto evaluatedtimeShift = static_cast<int>(
-      evalVisitor.dispatch(timeShift).valueAsDouble());
+    const auto evaluatedtimeShift = static_cast<int>(visitor.dispatch(timeShift).valueAsDouble());
     const auto after_timeShift = shiftVector(result_before_timeShift, evaluatedtimeShift);
     BOOST_CHECK_EQUAL(eval[0], after_timeShift.at(0));
     BOOST_CHECK_EQUAL(eval[1], after_timeShift.at(1));
@@ -950,34 +1015,38 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
 template<typename BinaryNode>
 void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
 {
-    ParameterNode param("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
-    BinaryNode binary_node(&literal, &param); // Correctly use the type as a template argument
+    BinaryNode binary_node(&literal, &paramNode); // Correctly use the type as a template argument
 
     TimeIndexNode root(&binary_node, timeIndex);
     const std::string value = "dummy";
 
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    EvaluationContext context(
-      {build_context_parameter_with("my-param", value, ParameterType::TIMESERIE)},
-      {},
-      dummy_data,
-      emptyScenario);
+    std::vector<unsigned int> hours = {1, 2};
+    const auto param_type = ParameterType::TIMESERIE;
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value, param_type);
+    const auto compoName = "1245";
+    const auto compo = createComponent(model, compoName, {param});
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      compo);
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(compo);
+    EvalVisitor visitor(optimContainer,
+                        {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
+                        compo);
 
-    MockEvaluationContextProvider evalContextProvider{context};
-    std::vector<unsigned int> hours = {0, 1};
-    EvalVisitor evalVisitor(evalContextProvider,
-                            {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
-                            createComponent());
+    const auto eval = visitor.dispatch(&root).valueAsDouble();
 
-    const auto eval = evalVisitor.dispatch(&root).valueAsDouble();
-
-    std::vector<double> result_before_timeIndex = {evalExpected<BinaryNode>(hours.at(0),
-                                                                            literal.value()),
-                                                   evalExpected<BinaryNode>(hours.at(1),
-                                                                            literal.value())};
-    const auto timeIndexInt = static_cast<int>(evalVisitor.dispatch(timeIndex).valueAsDouble());
+    std::vector<double> result_before_timeIndex = {evalExpected<BinaryNode>(literal.value(),
+                                                                            hours.at(0)),
+                                                   evalExpected<BinaryNode>(literal.value(),
+                                                                            hours.at(1))};
+    const auto timeIndexInt = static_cast<int>(visitor.dispatch(timeIndex).valueAsDouble());
     BOOST_CHECK_EQUAL(eval, result_before_timeIndex.at(timeIndexInt));
 }
 
@@ -1016,7 +1085,7 @@ BOOST_FIXTURE_TEST_CASE(multiplication_node, MyDummyFixture)
     const auto printed = printVisitor.dispatch(mult);
 
     BOOST_CHECK_EQUAL(printed, "(22.000000*8.000000)");
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(mult).valueAsDouble(), num1 * num2);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(mult).valueAsDouble(), num1 * num2);
 }
 
 BOOST_FIXTURE_TEST_CASE(division_node, MyDummyFixture)
@@ -1028,7 +1097,7 @@ BOOST_FIXTURE_TEST_CASE(division_node, MyDummyFixture)
     const auto printed = printVisitor.dispatch(div);
 
     BOOST_CHECK_EQUAL(printed, "(22.000000/8.000000)");
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(div).valueAsDouble(), num1 / num2);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(div).valueAsDouble(), num1 / num2);
 }
 
 BOOST_FIXTURE_TEST_CASE(division_by_zero, MyDummyFixture)
@@ -1041,7 +1110,8 @@ BOOST_FIXTURE_TEST_CASE(division_by_zero, MyDummyFixture)
 
     BOOST_CHECK_EQUAL(printed, "(22.000000/0.000000)");
 
-    BOOST_CHECK_THROW(evalVisitor.dispatch(div).valueAsDouble(), EvalVisitorDivisionException);
+    BOOST_CHECK_THROW(defaultComponentEvalVisitor->dispatch(div).valueAsDouble(),
+                      EvalVisitorDivisionException);
 }
 
 BOOST_FIXTURE_TEST_CASE(DivisionNodeFull, MyDummyFixture)
@@ -1050,23 +1120,24 @@ BOOST_FIXTURE_TEST_CASE(DivisionNodeFull, MyDummyFixture)
     LiteralNode literalNode2(-23.);
 
     DivisionNode divisionNode1(&literalNode1, &literalNode1);
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&divisionNode1).valueAsDouble(), 1.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&divisionNode1).valueAsDouble(), 1.0);
 
     DivisionNode divisionNode2(&literalNode1, &literalNode2);
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&divisionNode2).valueAsDouble(), -1.0);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&divisionNode2).valueAsDouble(), -1.0);
 
     LiteralNode* literalNull = nullptr;
 
     DivisionNode divisionNode3(&literalNode1, literalNull);
 
-    BOOST_CHECK_THROW(evalVisitor.dispatch(&divisionNode3).valueAsDouble(), InvalidNode);
+    BOOST_CHECK_THROW(defaultComponentEvalVisitor->dispatch(&divisionNode3).valueAsDouble(),
+                      InvalidNode);
 
     // truncated to zero
     LiteralNode literalVerySmall(1.e-323);
 
     DivisionNode divisionNode4(&literalNode1, &literalVerySmall);
 
-    BOOST_CHECK_THROW(evalVisitor.dispatch(&divisionNode4).valueAsDouble(),
+    BOOST_CHECK_THROW(defaultComponentEvalVisitor->dispatch(&divisionNode4).valueAsDouble(),
                       EvalVisitorDivisionException);
 }
 
@@ -1079,7 +1150,7 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, MyDummyFixture)
     const auto printed = printVisitor.dispatch(sub);
 
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)");
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(sub).valueAsDouble(), num1 - num2);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(sub).valueAsDouble(), num1 - num2);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_node, MyDummyFixture)
@@ -1108,7 +1179,8 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(invalidNode, MyDummyFixture)
 {
     SumNode* null_node = nullptr;
-    BOOST_CHECK_THROW(evalVisitor.dispatch(null_node).valueAsDouble(), InvalidNode);
+    BOOST_CHECK_THROW(defaultComponentEvalVisitor->dispatch(null_node).valueAsDouble(),
+                      InvalidNode);
 }
 
 BOOST_AUTO_TEST_CASE(PrintVisitor_name)
@@ -1119,7 +1191,7 @@ BOOST_AUTO_TEST_CASE(PrintVisitor_name)
 
 BOOST_FIXTURE_TEST_CASE(EvalVisitor_name, MyDummyFixture)
 {
-    BOOST_CHECK_EQUAL(evalVisitor.name(), "EvalVisitor");
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->name(), "EvalVisitor");
 }
 
 BOOST_FIXTURE_TEST_CASE(PrintTimeIndexNodeLiteralAndParameter, MyDummyFixture)
@@ -1319,37 +1391,69 @@ BOOST_AUTO_TEST_CASE(HandleEmptyString)
 BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 {
     Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 2, 10, 12, 0};
-    Model model;
+    ModelBuilder modelBuilder;
+
+    unsigned varIndex = 0;
+    auto variableBuilder = [](const std::string& id, TimeDependent timeDependent)
+    {
+        auto dummyExpression = []() { return Expression("", {}); };
+        return Variable(id,
+                        dummyExpression(),
+                        dummyExpression(),
+                        ValueType::FLOAT,
+                        timeDependent,
+                        ScenarioDependent::NO);
+    };
+    std::vector<Variable> variables;
+    variables.reserve(2);
+    variables.push_back(variableBuilder("my_const_variable", TimeDependent::NO));
+    variables.push_back(variableBuilder("my_non_const_variable", TimeDependent::YES));
+
+    const auto model = modelBuilder.withVariables(std::move(variables)).build();
+
     ComponentBuilder component_builder;
     auto component = component_builder.withModel(&model).withId("my_component").build();
-    EvaluationContext evaluationContext{{},
-                                        {{"my_component.my_const_variable_s0", 12.5},
-                                         {"my_component.my_non_const_variable_s0_t0", 45.3},
-                                         {"my_component.my_non_const_variable_s0_t1", 78.9},
-                                         {"my_component.my_non_const_variable_s0_t2", 714.5}},
-                                        data,
-                                        emptyScenario};
-    MockEvaluationContextProvider evalContextProvider{evaluationContext};
-    EvalVisitor evalVisitor{evalContextProvider, fillContext, component};
+    LinearProblemDataImpl::LinearProblemData testData;
+
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
+      component);
+    auto linearProblem = PredfinedSolutionLinearProblemMock(true);
+    OptimEntityContainer optimContainer(linearProblem, &testData, &scenarioGroupRepo);
+    optimContainer.addFromSystemComponent(component);
+
+    optimContainer.addStartColumn();
+    linearProblem.addVariableValue(12.5); // my_const_variable
+    std::vector<double> timeDepentVariableValues = {45.3, 78.9, 714.5};
+
+    optimContainer.addStartColumn();
+    for (const auto& value: timeDepentVariableValues)
+    {
+        linearProblem.addVariableValue(value);
+    }
 
     Node* root = create<VariableNode>("my_const_variable",
+                                      0,
                                       TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-    double eval = evalVisitor.dispatch(root).valueAsDouble();
+
+    EvalVisitor visitor(optimContainer, fillContext, component);
+    double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 
-    root = create<VariableNode>("my_const_variable", TimeIndex::VARYING_IN_SCENARIO_ONLY);
-    eval = evalVisitor.dispatch(root).valueAsDouble();
+    root = create<VariableNode>("my_const_variable", 0, TimeIndex::VARYING_IN_SCENARIO_ONLY);
+    eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 
-    root = create<VariableNode>("my_non_const_variable", TimeIndex::VARYING_IN_TIME_ONLY);
-    auto evalVector = evalVisitor.dispatch(root).valuesAsVector();
+    root = create<VariableNode>("my_non_const_variable", 1, TimeIndex::VARYING_IN_TIME_ONLY);
+    auto evalVector = visitor.dispatch(root).valuesAsVector();
     BOOST_CHECK_EQUAL(evalVector.size(), 3);
     BOOST_CHECK_EQUAL(evalVector[0], 45.3);
     BOOST_CHECK_EQUAL(evalVector[1], 78.9);
     BOOST_CHECK_EQUAL(evalVector[2], 714.5);
 
-    root = create<VariableNode>("my_non_const_variable", TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
-    evalVector = evalVisitor.dispatch(root).valuesAsVector();
+    root = create<VariableNode>("my_non_const_variable",
+                                1,
+                                TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+    evalVector = visitor.dispatch(root).valuesAsVector();
     BOOST_CHECK_EQUAL(evalVector.size(), 3);
     BOOST_CHECK_EQUAL(evalVector[0], 45.3);
     BOOST_CHECK_EQUAL(evalVector[1], 78.9);

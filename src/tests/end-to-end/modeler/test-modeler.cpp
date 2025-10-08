@@ -24,14 +24,20 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/modeler-optimisation-container/TimeIndex.h>
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
+#include "antares/optimisation/linear-problem-api/mipSolution.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/solver/modeler/IWriter.h"
 
 #include "inmemory-modeler.h"
+
+using PT = Antares::ModelerStudy::SystemModel::ParameterType;
+using PTV = Antares::ModelerStudy::SystemModel::ParameterTypeAndValue;
+using TI = Antares::Optimisation::TimeIndex;
 
 class ConstantDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
@@ -48,20 +54,21 @@ public:
         return value_;
     }
 
+    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
+                                                  unsigned timeSeriesNumber,
+                                                  unsigned firstHour,
+                                                  unsigned lastHour) const override
+
+    {
+        return vector_;
+    }
+
 private:
     double value_{0.};
+    std::vector<double> vector_{value_};
 };
 
-class EmptyDataSeries final: public ConstantDataSeries
-{
-public:
-    EmptyDataSeries():
-        ConstantDataSeries(0.0)
-    {
-    }
-};
-
-EmptyDataSeries emptyDataSeries;
+ConstantDataSeries emptyDataSeries(0.);
 
 Antares::ModelerStudy::SystemModel::Component copyComponent(
   const Antares::ModelerStudy::SystemModel::Component& c)
@@ -103,8 +110,8 @@ public:
 
     Antares::Modeler::Data loadAll() override
     {
-        auto objective = fixture.variable("x");
-        auto var_node = fixture.variable("x");
+        auto objective = fixture.variable("x", 0);
+        auto var_node = fixture.variable("x", 0);
         auto zero = fixture.literal(0);
         auto ct_node = fixture.nodes.template create<
           Antares::Expressions::Nodes::GreaterThanOrEqualNode>(var_node, zero);
@@ -144,8 +151,7 @@ public:
                 .scenarioGroupRepository = std::move(scenarioGroupRepository)};
     }
 
-    void setComponents(
-      const std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component>& compos)
+    void setComponents(const std::vector<Antares::ModelerStudy::SystemModel::Component>& compos)
     {
         components = compos;
     }
@@ -157,14 +163,10 @@ public:
 
     void setLowerBoundToParameter(const std::string& parameterId)
     {
-        lower_bound = fixture.parameter(
-          parameterId,
-          Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+        lower_bound = fixture.parameter(parameterId, TI::VARYING_IN_TIME_ONLY);
     }
 
-    void addParameter(const std::string& str,
-                      const Antares::Expressions::Visitors::ParameterType& type = Antares::
-                        Expressions::Visitors::ParameterType::TIMESERIE)
+    void addParameter(const std::string& str, const PT& type = PT::TIMESERIE)
     {
         parameters.emplace(Test::Modeler::build_context_parameter_with(str, "GROUPA", type));
         parameterIds.push_back(str);
@@ -179,13 +181,13 @@ public:
     }
 
     Models models;
-    std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Component> components;
+    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
     Fixture fixture;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblemData>
-      data = std::make_unique<EmptyDataSeries>();
+      data = std::make_unique<ConstantDataSeries>(0.);
     Antares::Expressions::Nodes::Node* lower_bound = fixture.literal(0.0);
     bool timeDependent{false};
-    std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameters{};
+    std::map<std::string, PTV> parameters{};
     std::vector<std::string> parameterIds{};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository{};
     std::unordered_map<std::string, std::string> groupes;
@@ -217,6 +219,7 @@ public:
       const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
       const Antares::Modeler::Data& modelerData,
+      const Antares::Optimisation::OptimEntityContainer& variableContainer,
       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override
     {
         solution_.objectiveValue = solution.getObjectiveValue();
