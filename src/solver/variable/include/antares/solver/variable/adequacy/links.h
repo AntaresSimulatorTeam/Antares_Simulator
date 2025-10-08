@@ -51,6 +51,7 @@ using VariablePerLink = Economy::FlowLinear // Flow linear
         <Economy::HurdleCosts               // Hurdle costs
          <>>>>>>>>;
 
+template<class>
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 
 } // namespace Antares::Solver::Variable::Adequacy
