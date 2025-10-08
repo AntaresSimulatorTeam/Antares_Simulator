@@ -100,7 +100,7 @@ library:
         - id: squared_generation_cost #test to manage a quadratic expression
           expression: marginal_generation_cost * generation * marginal_generation_cost * generation
         - id: total_generation_cost
-          epxression: sum(marginal_generation_cost * generation)
+          expression: sum(marginal_generation_cost * generation)
 
 
     - id: short-term-storage
@@ -147,7 +147,7 @@ library:
           field: flow
           definition: p_withdrawal - p_injection
       constraints:
-        - id: initial_level
+        - id: initial_level_constraint
           expression: level[0] = initial_level * reservoir_capacity
         - id: Level equation
           expression: level[t+1] = level + efficiency_injection * p_injection - efficiency_withdrawal * p_withdrawal + inflows
