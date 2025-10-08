@@ -88,7 +88,7 @@ namespace Antares::Solver::Variable::Economy
 /*!
 ** \brief All variables for a single area (economy)
 */
-using VariablesPerArea = Common::ComposeAll<Adequacy::OverallCost,
+using VariablesPerArea = Common::ComposeAll<OverallCost,
                                             OverallCostCsr,
                                             OperatingCost,
                                             Price,
@@ -139,7 +139,7 @@ using VariablesPerArea = Common::ComposeAll<Adequacy::OverallCost,
                                             NbOfDispatchedUnits,
                                             NbOfDispatchedUnitsByPlant,
                                             ProfitByPlant,
-                                            ::Antares::Solver::Variable::Links>::type;
+                                            Variable::Economy::Links>::type;
 
 /*!\n** \brief All variables for a single set of areas (economy)
  */
