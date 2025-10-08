@@ -20,7 +20,6 @@
 */
 #pragma once
 
-#include <antares/solver/variable/adequacy/overallCost.h>
 #include <antares/solver/variable/commons/spatial-aggregate.h>
 #include "antares/solver/variable/economy/STStorageInjectionByCluster.h"
 #include "antares/solver/variable/variable.h"
