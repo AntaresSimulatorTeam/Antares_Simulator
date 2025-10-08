@@ -41,7 +41,6 @@ system:
           time-dependent: true
           scenario-dependent: true
           value : load_ts
-
     
     - id: gas_base_zone
       model: library-eo.simple_gen
@@ -59,7 +58,6 @@ system:
           time-dependent: false
           value: 2
 
-
   connections:
     - component1: base_zone
       port1: balance_port
@@ -70,9 +68,3 @@ system:
       port1: balance_port
       component2: gas_base_zone
       port2: balance_port
-
-
-
-
- 
- 

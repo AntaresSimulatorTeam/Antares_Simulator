@@ -158,4 +158,3 @@ library:
           expression : sum(p_withdrawal)
         - id: constant_expression
           expression : efficiency_injection/efficiency_withdrawal
-    
