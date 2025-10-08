@@ -1,4 +1,4 @@
-Test 10_3 : expected extra-outputs
+Test 10_4 : expected extra-outputs
 - spill_cost_contribution = [0 0 0 0 0]
 - ens_cost_contribution = [0 0 0 0 200000]
 - loss_of_load = [0 0 0 0 1]
