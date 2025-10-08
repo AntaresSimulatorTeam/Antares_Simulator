@@ -49,7 +49,7 @@ using VariablePerLink = ChainLinks<FlowLinear,            // Flow linear
                                    CongestionFeeAbs,      // Congestion Fee (Abs)
                                    MarginalCost,          // Marginal Cost
                                    CongestionProbability, // Congestion Probability (+/-)
-                                   HurdleCosts>::type;    // Hurdle costs
+                                   HurdleCosts>;          // Hurdle costs
 
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 
