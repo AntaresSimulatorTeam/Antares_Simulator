@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
     BOOST_CHECK(model.ports.empty());
     BOOST_CHECK(model.port_field_definitions.empty());
     BOOST_CHECK(model.constraints.empty());
-    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "objective");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression, "objective");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].id, "objective2");
