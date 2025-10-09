@@ -1,5 +1,9 @@
 var NAVTREEINDEX28 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a6fd0189284c681d8b066b45056a0b2aa":[8,0,0,18,4,4,34,7],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a7d9c8fd40fb19c0f4fffbc90fc24f2d3":[8,0,0,18,4,4,34,11],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a83aa8ebfbb065259ca1ff86aadc67da8":[8,0,0,18,4,4,34,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a8a6b73466bda8d4c485320506a132ff4":[8,0,0,18,4,4,34,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a9eda455b76c43cbc94e3ae3a2c2e3c5a":[8,0,0,18,4,4,34,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#aad547d8cd564c8225290f75ea23be302":[8,0,0,18,4,4,34,13],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#aaee0e232ed0581db19b5eb03f32b4eed":[8,0,0,18,4,4,34,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a83572bee0c507e11b6aebd0e911095e1":[8,0,0,18,4,4,56,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a8714100589f7df5c94faeae73c9dd21d":[8,0,0,18,4,4,56,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#a9fb046d5f5c945897191475368089a42":[8,0,0,18,4,4,56,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#aae96c160ba2c1b59ee95f57a44306c38":[8,0,0,18,4,4,56,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#ac111acd0aa94fb62e86460c5e6f52cde":[8,0,0,18,4,4,56,22],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#ac3546731dff92d3bba6a6e1f0a0d1ec7":[8,0,0,18,4,4,56,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#acf3a8a8c08e789e5ba22cd9b77b29448":[8,0,0,18,4,4,56,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#ad6610381817c83cf14da8a674b84c40c":[8,0,0,18,4,4,56,4]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html#aae96c160ba2c1b59ee95f57a44306c38":[8,0,0,18,4,4,56,5]
 };

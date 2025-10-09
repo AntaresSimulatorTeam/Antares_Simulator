@@ -1,5 +1,9 @@
 var NAVTREEINDEX35 =
 {
+"classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#af82fcded78550d4ea7d4db60710ef09b":[8,0,0,20,3,7,24],
+"classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#afac8b18af8a207773a7cf68463c340a0":[8,0,0,20,3,7,10],
+"classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html":[8,0,0,20,3,2],
+"classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html#a1891971648d11245a0aa90992d71fee1":[8,0,0,20,3,2,2],
 "classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html#a3c66f41c900d7fe2befb6d35528bf881":[8,0,0,20,3,2,0],
 "classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html#a9e57e53ecd14a0d7d5b6da3bcbef7b4e":[8,0,0,20,3,2,3],
 "classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html#aa5a70002c04e02749304e0935dd56b79":[8,0,0,20,3,2,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX35 =
 "classAntares_1_1Window_1_1Hydro_1_1Dailypower.html":[8,0,0,24,0,1],
 "classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#a4555df4ee23bf95d8fc43ba0814ecd4c":[8,0,0,24,0,1,0],
 "classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#aff56fca69695ca0abe880fc8b821e178":[8,0,0,24,0,1,1],
-"classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html":[8,0,0,24,0,2],
-"classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html#a652a6e95cdb5ee19f53b54210a2cf56b":[8,0,0,24,0,2,0],
-"classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html#af9b26a0747c85908a7f0dcd88b785cf4":[8,0,0,24,0,2,1],
-"classAntares_1_1Window_1_1Hydro_1_1Localdatahydro.html":[8,0,0,24,0,3],
-"classAntares_1_1Window_1_1Hydro_1_1Localdatahydro.html#a17f8be9ce3fd5afbfe3291b8e0f40f59":[8,0,0,24,0,3,0]
+"classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html":[8,0,0,24,0,2]
 };

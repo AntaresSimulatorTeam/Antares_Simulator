@@ -1,5 +1,9 @@
 var NAVTREEINDEX30 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html":[8,0,0,18,4,4,94],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html#a088e5837ee87f22b4023edda3c34cb0e":[8,0,0,18,4,4,94,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html#a2fa3eefe4627b4f2a2fe3cece7da1a16":[8,0,0,18,4,4,94,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html#a317d64191ad98a96f43a9958159de3ea":[8,0,0,18,4,4,94,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html#a51014cb4bc053156e455d1d69af67653":[8,0,0,18,4,4,94,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html#a590aea5b5b91d74b7907e6881745fda5":[8,0,0,18,4,4,94,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html#a5bc01aa9eba1231515cba52c1ae54a85":[8,0,0,18,4,4,94,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX30 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#a8fe5590453271bbc9377e45b6f5f5cfb":[8,0,0,18,4,4,116,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#a9d29a5a5f40be58d80daac1ff9241fbc":[8,0,0,18,4,4,116,13],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#aa02134c811abe5b807ca2dba0ecffa94":[8,0,0,18,4,4,116,18],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#aa286c534205119100a63f3a1f7df9447":[8,0,0,18,4,4,116,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#ad6299b8829435bfcfd40e84423a9eefa":[8,0,0,18,4,4,116,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html":[8,0,0,18,4,4,118],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#a0577f154c502c8de8ec7f1bcee31d747":[8,0,0,18,4,4,118,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#a08f4125e9c1dd8f97c6e8869073985e3":[8,0,0,18,4,4,118,7]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup.html#aa286c534205119100a63f3a1f7df9447":[8,0,0,18,4,4,116,2]
 };

@@ -1,5 +1,9 @@
 var NAVTREEINDEX59 =
 {
+"structBB.html#acf00e8c38b47f3a1451228a022ed98a9":[8,0,47,36],
+"structBB.html#ad1329743a6530e3dbfabea5020c54b82":[8,0,47,6],
+"structBB.html#ad47f11bbd61f3b483f1c126ccfc228ed":[8,0,47,25],
+"structBB.html#ae48b258cd7e869b999978682281d0c3e":[8,0,47,5],
 "structBB.html#af72187197c329155e7a55102647b400f":[8,0,47,1],
 "structBOUND__FLEX__DOWN__NODE.html":[8,0,58],
 "structBOUND__FLEX__DOWN__NODE.html#a890184842464aadcca63cb2970421d3a":[8,0,58,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX59 =
 "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html":[8,0,10,3],
 "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html#a0c421653ebfdf4880e9d6ef696b8e066":[8,0,10,3,1],
 "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html#aa0845131db1bf0a23bcbb899e4583de2":[8,0,10,3,0],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html":[8,0,10,4],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html#a56ad5d2928df624dad7df4afd9151e2e":[8,0,10,4,0],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html#aa79222d532250b8ea3b2fae0e5fe0c25":[8,0,10,4,2],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html#aaaee79897c833c4bf7a64b421121c5c8":[8,0,10,4,1],
-"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html":[8,0,10,0]
+"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html":[8,0,10,4]
 };

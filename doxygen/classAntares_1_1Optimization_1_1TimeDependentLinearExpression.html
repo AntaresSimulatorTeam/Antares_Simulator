@@ -124,6 +124,7 @@ $(document).ready(function(){initNavTree('classAntares_1_1Optimization_1_1TimeDe
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -131,6 +132,15 @@ $(document).ready(function(){initNavTree('classAntares_1_1Optimization_1_1TimeDe
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ab8ae89f9c629f144797c14f06c611223"><td class="memItemLeft" align="right" valign="top"><a id="ab8ae89f9c629f144797c14f06c611223"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b> = std::vector&lt; <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt;::iterator</td></tr>
+<tr class="separator:ab8ae89f9c629f144797c14f06c611223"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c2a6c304e5d655ad6ea4e083c0fd4da"><td class="memItemLeft" align="right" valign="top"><a id="a6c2a6c304e5d655ad6ea4e083c0fd4da"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = std::vector&lt; <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &gt;::const_iterator</td></tr>
+<tr class="separator:a6c2a6c304e5d655ad6ea4e083c0fd4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5d51da6ecdbfcfe34416d0a5204bef43"><td class="memItemLeft" align="right" valign="top"><a id="a5d51da6ecdbfcfe34416d0a5204bef43"></a>
@@ -142,30 +152,33 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac53564d04519c9282631d318e52de5cd"><td class="memItemLeft" align="right" valign="top"><a id="ac53564d04519c9282631d318e52de5cd"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TimeDependentLinearExpression</b> (<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&amp;expr)</td></tr>
 <tr class="separator:ac53564d04519c9282631d318e52de5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeeb426eff1be25cd11ee34df17244883"><td class="memItemLeft" align="right" valign="top"><a id="aeeb426eff1be25cd11ee34df17244883"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>expandTo</b> (std::size_t nbTimesteps)</td></tr>
-<tr class="separator:aeeb426eff1be25cd11ee34df17244883"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae94e2b223e13ff78887fa6f86f7682d2"><td class="memItemLeft" align="right" valign="top"><a id="ae94e2b223e13ff78887fa6f86f7682d2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TimeDependentLinearExpression</b> (const std::vector&lt; std::pair&lt; int, double &gt;&gt; &amp;coefs, double constant)</td></tr>
+<tr class="separator:ae94e2b223e13ff78887fa6f86f7682d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada80aaab54f2110af60b10d2f2c7fbdd"><td class="memItemLeft" align="right" valign="top"><a id="ada80aaab54f2110af60b10d2f2c7fbdd"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>constant</b> () const</td></tr>
 <tr class="separator:ada80aaab54f2110af60b10d2f2c7fbdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8a1014f9731bd3d911e7d714b0c5615"><td class="memItemLeft" align="right" valign="top"><a id="af8a1014f9731bd3d911e7d714b0c5615"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>removeDuplicateCoefficients</b> ()</td></tr>
-<tr class="separator:af8a1014f9731bd3d911e7d714b0c5615"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27b7e2ebf6eb8060f6fe28e01e057db9"><td class="memItemLeft" align="right" valign="top"><a id="a27b7e2ebf6eb8060f6fe28e01e057db9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mergeDuplicateCoefficients</b> ()</td></tr>
+<tr class="separator:a27b7e2ebf6eb8060f6fe28e01e057db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89ac1a5bccd869883dd5853dd7ca96a8"><td class="memItemLeft" align="right" valign="top"><a id="a89ac1a5bccd869883dd5853dd7ca96a8"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
 <tr class="separator:a89ac1a5bccd869883dd5853dd7ca96a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0422de9f843f50b3cf7ed0e982a96c5"><td class="memItemLeft" align="right" valign="top"><a id="aa0422de9f843f50b3cf7ed0e982a96c5"></a>
-<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> ()</td></tr>
-<tr class="separator:aa0422de9f843f50b3cf7ed0e982a96c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe151a601bc4ab1fb1cf8bb81bbd899c"><td class="memItemLeft" align="right" valign="top"><a id="afe151a601bc4ab1fb1cf8bb81bbd899c"></a>
-<a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
-<tr class="separator:afe151a601bc4ab1fb1cf8bb81bbd899c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35d8368e84ce694849419c4e867e7ff9"><td class="memItemLeft" align="right" valign="top"><a id="a35d8368e84ce694849419c4e867e7ff9"></a>
-const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
-<tr class="separator:a35d8368e84ce694849419c4e867e7ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a685ac0725b23095a5d35b050259cb1ce"><td class="memItemLeft" align="right" valign="top"><a id="a685ac0725b23095a5d35b050259cb1ce"></a>
-const <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
-<tr class="separator:a685ac0725b23095a5d35b050259cb1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d000a1d28b60af959610113ffa573a2"><td class="memItemLeft" align="right" valign="top"><a id="a3d000a1d28b60af959610113ffa573a2"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isConstant</b> () const</td></tr>
+<tr class="separator:a3d000a1d28b60af959610113ffa573a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d80f94aceebceb7baa232e4771357ad"><td class="memItemLeft" align="right" valign="top"><a id="a8d80f94aceebceb7baa232e4771357ad"></a>
+iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> ()</td></tr>
+<tr class="separator:a8d80f94aceebceb7baa232e4771357ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fdce7f4035551b80f272f4a3b714899"><td class="memItemLeft" align="right" valign="top"><a id="a7fdce7f4035551b80f272f4a3b714899"></a>
+iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
+<tr class="separator:a7fdce7f4035551b80f272f4a3b714899"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaa6f0dc2ad4be9d503713493d2c215a"><td class="memItemLeft" align="right" valign="top"><a id="aeaa6f0dc2ad4be9d503713493d2c215a"></a>
+const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
+<tr class="separator:aeaa6f0dc2ad4be9d503713493d2c215a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5f642a201d02c250fe8712f159ca0b8"><td class="memItemLeft" align="right" valign="top"><a id="ae5f642a201d02c250fe8712f159ca0b8"></a>
+const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
+<tr class="separator:ae5f642a201d02c250fe8712f159ca0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30be9b5e9a0c50931a812fe93c3fdf94"><td class="memItemLeft" align="right" valign="top"><a id="a30be9b5e9a0c50931a812fe93c3fdf94"></a>
 <a class="el" href="classAntares_1_1Optimization_1_1LinearExpression.html">LinearExpression</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (std::size_t idx)</td></tr>
 <tr class="separator:a30be9b5e9a0c50931a812fe93c3fdf94"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,8 +205,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>rotate</b> (int shift
 <tr class="separator:afaa6bbd69ca5d8c9549c4f30c838e5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/solver/optim-model-filler/include/antares/solver/optim-model-filler/<a class="el" href="LinearExpression_8h_source.html">LinearExpression.h</a></li>
-<li>src/solver/optim-model-filler/LinearExpression.cpp</li>
+<li>src/solver/optim-model-filler/include/antares/solver/optim-model-filler/<a class="el" href="TimeDependentLinearExpression_8h_source.html">TimeDependentLinearExpression.h</a></li>
+<li>src/solver/optim-model-filler/TimeDependentLinearExpression.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

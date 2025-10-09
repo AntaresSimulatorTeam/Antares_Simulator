@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"classAntares_1_1MinGenerationScaling.html#af6a8fe6c028cb62c06a762b7c9c3205f":[8,0,0,52,0],
 "classAntares_1_1MinGenerationScaling.html#af8f615e7f2bef05cf55bfbc4a59c0f9b":[8,0,0,52,1],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html":[8,0,0,14,0,3],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a0ca3fa1600733161bb0c3b02a06c6fff":[8,0,0,14,0,3,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX22 =
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html#a4a087a5304f09b711166e46e716b5e25":[8,0,0,15,0,12,0],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html#aabe086715727feb473bf714967895115":[8,0,0,15,0,12,1],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html":[8,0,0,15,0,5],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html#a30f5fd18dbc4aac7b2c30e9025a94238":[8,0,0,15,0,5,0],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html#a6d2febce6a6c20a3d8d8ea0773e4b97b":[8,0,0,15,0,5,3]
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html#a30f5fd18dbc4aac7b2c30e9025a94238":[8,0,0,15,0,5,0]
 };

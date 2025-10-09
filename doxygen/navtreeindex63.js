@@ -1,5 +1,9 @@
 var NAVTREEINDEX63 =
 {
+"structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput_01_4.html":[8,0,32,6],
+"structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_01_4.html":[8,0,32,10],
+"structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_01_4.html":[8,0,32,8],
+"structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective_01_4.html":[8,0,32,7],
 "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter_01_4.html":[8,0,32,0],
 "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition_01_4.html":[8,0,32,4],
 "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_01_4.html":[8,0,32,9],
@@ -245,9 +249,5 @@ var NAVTREEINDEX63 =
 "ui_2simulator_2application_2study_8cpp.html#a655c96d3201d221db558ac5cd9c9a04c":[7,0,0,95],
 "ui_2simulator_2application_2study_8cpp.html#a65fcda8f48026532309d7d08ac7c83af":[7,0,0,161],
 "ui_2simulator_2application_2study_8cpp.html#a6af99e9877afd2b787c0c523dc71298a":[7,0,0,98],
-"ui_2simulator_2application_2study_8cpp.html#a71c6f845658777b76298a064bd96e91f":[7,0,0,136],
-"ui_2simulator_2application_2study_8cpp.html#a7539671641adb44184deeebf29ce2887":[7,0,0,160],
-"ui_2simulator_2application_2study_8cpp.html#a76d5c4fd454350b94dddea78a73b9793":[7,0,0,78],
-"ui_2simulator_2application_2study_8cpp.html#a79122a84fa48bda89db06887585ddb99":[7,0,0,125],
-"ui_2simulator_2application_2study_8cpp.html#a7e3d59fbf7a8c12eb2fb322456cb7cb3":[7,0,0,142]
+"ui_2simulator_2application_2study_8cpp.html#a71c6f845658777b76298a064bd96e91f":[7,0,0,136]
 };

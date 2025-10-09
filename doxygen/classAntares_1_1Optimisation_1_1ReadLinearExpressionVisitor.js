@@ -19,5 +19,5 @@ var classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor =
     [ "visit", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#afa9572e20286e7d0d585483297e5cadc", null ],
     [ "visit", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#ae7f158cc3b110e35d6ef5513a56ed0c0", null ],
     [ "visit", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#adceb7f1c40e291d161405ed1e541544e", null ],
-    [ "visitRemoveDuplicates", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#a8093396e03390721b59ebb6e58176358", null ]
+    [ "visitMergeDuplicates", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#a31d30e5f26b2ec976ea5e86598e7093a", null ]
 ];

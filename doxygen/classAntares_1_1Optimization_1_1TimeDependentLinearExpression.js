@@ -1,14 +1,18 @@
 var classAntares_1_1Optimization_1_1TimeDependentLinearExpression =
 [
+    [ "const_iterator", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a6c2a6c304e5d655ad6ea4e083c0fd4da", null ],
+    [ "iterator", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#ab8ae89f9c629f144797c14f06c611223", null ],
     [ "TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a5d51da6ecdbfcfe34416d0a5204bef43", null ],
     [ "TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a34a9a3c7d7c1c11e294c3f673c83fce3", null ],
     [ "TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#ac53564d04519c9282631d318e52de5cd", null ],
-    [ "begin", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#aa0422de9f843f50b3cf7ed0e982a96c5", null ],
-    [ "begin", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a35d8368e84ce694849419c4e867e7ff9", null ],
+    [ "TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#ae94e2b223e13ff78887fa6f86f7682d2", null ],
+    [ "begin", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a8d80f94aceebceb7baa232e4771357ad", null ],
+    [ "begin", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#aeaa6f0dc2ad4be9d503713493d2c215a", null ],
     [ "constant", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#ada80aaab54f2110af60b10d2f2c7fbdd", null ],
-    [ "end", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#afe151a601bc4ab1fb1cf8bb81bbd899c", null ],
-    [ "end", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a685ac0725b23095a5d35b050259cb1ce", null ],
-    [ "expandTo", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#aeeb426eff1be25cd11ee34df17244883", null ],
+    [ "end", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a7fdce7f4035551b80f272f4a3b714899", null ],
+    [ "end", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#ae5f642a201d02c250fe8712f159ca0b8", null ],
+    [ "isConstant", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a3d000a1d28b60af959610113ffa573a2", null ],
+    [ "mergeDuplicateCoefficients", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a27b7e2ebf6eb8060f6fe28e01e057db9", null ],
     [ "operator*=", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a7a2bdab4d99595475401dad5e4c1f2bd", null ],
     [ "operator*=", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a591b204a99fb61112ac2a07efe31dcce", null ],
     [ "operator+=", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a578860bc2bf47945b4796fd556f5e4d0", null ],
@@ -16,7 +20,6 @@ var classAntares_1_1Optimization_1_1TimeDependentLinearExpression =
     [ "operator-=", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a79fea80b9d3033b22d30e2e2e2a3f0c4", null ],
     [ "operator[]", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a30be9b5e9a0c50931a812fe93c3fdf94", null ],
     [ "operator[]", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#aafa20dd82f7a92912908ad146ecf2a41", null ],
-    [ "removeDuplicateCoefficients", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#af8a1014f9731bd3d911e7d714b0c5615", null ],
     [ "rotate", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a59476fb9f5a2491823a05cc92d7a96cc", null ],
     [ "size", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a89ac1a5bccd869883dd5853dd7ca96a8", null ]
 ];

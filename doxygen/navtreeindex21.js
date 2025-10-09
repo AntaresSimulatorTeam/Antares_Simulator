@@ -1,5 +1,6 @@
 var NAVTREEINDEX21 =
 {
+"classAntares_1_1Map_1_1Item.html#afc57104305947915f99598af7f5a54ee":[8,0,0,12,10,8],
 "classAntares_1_1Map_1_1Manager.html":[8,0,0,12,7],
 "classAntares_1_1Map_1_1Manager.html#a091393e0a2c55a65721e9ef67349b5de":[8,0,0,12,7,18],
 "classAntares_1_1Map_1_1Manager.html#a0bcccd358e9b5450d3956e792d9a4b2c":[8,0,0,12,7,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX21 =
 "classAntares_1_1MersenneTwister.html#ab443bcffc4910a37a32c757cc5985606":[8,0,0,39,6],
 "classAntares_1_1MersenneTwister.html#ad68dffff38113b2e5f5af0b91943aa35":[8,0,0,39,2],
 "classAntares_1_1MersenneTwister.html#ae96581af74dd662b35c61c65ba87fcd4":[8,0,0,39,1],
-"classAntares_1_1MinGenerationScaling.html":[8,0,0,52],
-"classAntares_1_1MinGenerationScaling.html#af6a8fe6c028cb62c06a762b7c9c3205f":[8,0,0,52,0]
+"classAntares_1_1MinGenerationScaling.html":[8,0,0,52]
 };

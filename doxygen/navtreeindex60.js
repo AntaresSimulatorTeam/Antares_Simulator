@@ -1,5 +1,9 @@
 var NAVTREEINDEX60 =
 {
+"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html#a56ad5d2928df624dad7df4afd9151e2e":[8,0,10,4,0],
+"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html#aa79222d532250b8ea3b2fae0e5fe0c25":[8,0,10,4,2],
+"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html#aaaee79897c833c4bf7a64b421121c5c8":[8,0,10,4,1],
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html":[8,0,10,0],
 "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a0da2be2c0770adb91f5dc40836b3318a":[8,0,10,0,3],
 "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a1b2cc213f6879c70a914e15fc553b8c0":[8,0,10,0,5],
 "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a51e0a263de19946e50dd840e71e2a1b9":[8,0,10,0,7],
@@ -228,8 +232,8 @@ var NAVTREEINDEX60 =
 "structInputFixture.html#ae7e762eeef60cce51097c8ba5cf9f245":[8,0,159,14],
 "structInputFixture.html#aeb3d7f53766e66fa2589dd8cf5a9f611":[8,0,159,3],
 "structInputFixture.html#aeecd80dd8d9919b74e8cd7ae21658886":[8,0,159,21],
-"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,159,0],
 "structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,159,1],
+"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,159,0],
 "structLEVEL__FLEX__DOWN__NODE.html":[8,0,169],
 "structLEVEL__FLEX__DOWN__NODE.html#adb586b5229c47e72dc6503a2b621e37d":[8,0,169,0],
 "structLEVEL__FLEX__UP__NODE.html":[8,0,170],
@@ -245,9 +249,5 @@ var NAVTREEINDEX60 =
 "structLibraryObjects.html#adae772ab3f2e166d8ef4926bbd6fede2":[8,0,172,5],
 "structLinkVariable.html":[8,0,175],
 "structLinkVariable.html#a3abcd16d64c34eb14c4b00a4a98d27ab":[8,0,175,0],
-"structLinkVariable.html#a5d7f6e53048a351c148e66793ce1b740":[8,0,175,3],
-"structLinkVariable.html#a945661bfedc896693b452659cf77bf5f":[8,0,175,1],
-"structLinkVariable.html#aacafd5f774750e8957c2735fa251f8e9":[8,0,175,2],
-"structLinkVariable.html#ae91154f3a2da66102c38da390c69d06e":[8,0,175,4],
-"structMaxHydroPowerData.html":[8,0,180]
+"structLinkVariable.html#a5d7f6e53048a351c148e66793ce1b740":[8,0,175,3]
 };

@@ -1,5 +1,9 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html":[8,0,0,11,0,3,7],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a1eea023dcba20540618d61892d406a43":[8,0,0,11,0,3,7,6],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a2beb57de52db26a9478412cac633ed12":[8,0,0,11,0,3,7,9],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a2fc2fec418bbc6d140af4376c0089254":[8,0,0,11,0,3,7,8],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a47eea7a8ca9da089ad35e1a4219fb844":[8,0,0,11,0,3,7,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a7d4b503011eacf135860c56e7c6915ef":[8,0,0,11,0,3,7,5],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a7d9ba1b40423e497bedb21d06f00db77":[8,0,0,11,0,3,7,7],
@@ -108,10 +112,10 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Optimisation_1_1OptimComponent.html#a5e0b271eac8cd8b224f3a871116a644f":[8,0,0,15,4,2],
 "structAntares_1_1Optimisation_1_1OptimComponent.html#a93be0fc7799c7700bd812529e26d6fc2":[8,0,0,15,4,4],
 "structAntares_1_1Optimisation_1_1OptimComponent.html#ac5fa966a86ed6b67b6c6c3cc66a38444":[8,0,0,15,4,3],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html":[8,0,0,16,18],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#aa4fbd59a9b4d362139518c774ad64a78":[8,0,0,16,18,1],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#ae2dbeb09dbdf7b87750797ae394ca7e6":[8,0,0,16,18,2],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#af523489c66678cdf6721b3c0775c1952":[8,0,0,16,18,0],
+"structAntares_1_1Optimization_1_1MCYearAndTime.html":[8,0,0,16,17],
+"structAntares_1_1Optimization_1_1MCYearAndTime.html#aa4fbd59a9b4d362139518c774ad64a78":[8,0,0,16,17,1],
+"structAntares_1_1Optimization_1_1MCYearAndTime.html#ae2dbeb09dbdf7b87750797ae394ca7e6":[8,0,0,16,17,2],
+"structAntares_1_1Optimization_1_1MCYearAndTime.html#af523489c66678cdf6721b3c0775c1952":[8,0,0,16,17,0],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[8,0,0,16,4],
 "structAntares_1_1Optimization_1_1VariableBounds.html#a03e3cbbfabe7cc02a18535fd955b7b6e":[8,0,0,16,4,0],
 "structAntares_1_1Optimization_1_1VariableBounds.html#a2212021f92d0c5922a0e698178a2b22a":[8,0,0,16,4,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics.html":[8,0,0,18,4,4,58,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html":[8,0,0,18,4,4,71],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a308c339f6688b207e9f2b7690e31c07e":[8,0,0,18,4,4,71,7],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a360313c3f187df389a34559151ed9c61":[8,0,0,18,4,4,71,8],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a42f54f01275968f5b0f5b4496c1d2f8c":[8,0,0,18,4,4,71,5],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a4c6cb14ff1f07d0b06d987210fdc75d3":[8,0,0,18,4,4,71,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a551d92112c850f3183b2fabbc9ddb38e":[8,0,0,18,4,4,71,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a7cc891e880cdf8c45ffcb9717d96fe6d":[8,0,0,18,4,4,71,3]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a360313c3f187df389a34559151ed9c61":[8,0,0,18,4,4,71,8]
 };
