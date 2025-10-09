@@ -218,27 +218,27 @@ def check_pmin_pmax(context, area, prod_name, min_p, max_p):
 
 
 def check_margin_price_value(context, area, year, value):
-    actual = context.soh.get_margin_price(area, year)
+    actual = context.soh.get_annual_margin_price(area, year)
     assert_double_close(value, actual, 0.001, "Margin price")
 
 
 def check_load_value(context, area, year, value):
-    actual = context.soh.get_load(area, year)
+    actual = context.soh.get_annual_load(area, year)
     assert_double_close(value, actual, 0.001, "Load")
 
 
 def check_gas_value(context, area, year, value):
-    actual = context.soh.get_production_by_fuel(area, year, "Gas")
+    actual = context.soh.get_annual_gas(area, year, "Gas")
     assert_double_close(value, actual, 0.001, "Gas production")
 
 
 def check_hard_coal_value(context, area, year, value):
-    actual = context.soh.get_production_by_fuel(area, year, "HARD COAL")
+    actual = context.soh.get_annual_hard_coal(area, year, "HARD COAL")
     assert_double_close(value, actual, 0.001, "Hard coal production")
 
 
 def check_number_of_dispatched_units_value(context, area, year, value):
-    actual = context.soh.get_number_of_dispatched_units(area, year)
+    actual = context.soh.get_annual_n_dispatched_units(area, year)
     assert_double_close(value, actual, 0.001, "Number of dispatched units")
 
 
