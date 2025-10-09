@@ -79,6 +79,16 @@ class solver_output_handler:
                 lambda row: ' '.join(row.values.astype(str)), axis=1)
         return self.hourly_results[rs][area][year]
 
+    def __if_none_then_parse_annual(self, area: str, year: int, file_name: str) -> pd.DataFrame:
+        # parse and cache annual result tables
+        key_area = area.lower()
+        if key_area not in self.annual_results:
+            self.annual_results[key_area] = {}
+        if year not in self.annual_results[key_area]:
+            path = f"{self.mode}/mc-ind/{year:05d}/areas/{key_area}/{file_name}"
+            self.annual_results[key_area][year] = self.__read_csv(path)
+        return self.annual_results[key_area][year]
+
     def __get_values_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
 
@@ -166,11 +176,4 @@ class solver_output_handler:
 
     def get_values_annual(self, area: str, year: int) -> pd.DataFrame:
         """Retourne le DataFrame des résultats annuels provenant de values-annual.txt"""
-        key_area = area.lower()
-        if key_area not in self.annual_results:
-            self.annual_results[key_area] = {}
-        if year not in self.annual_results[key_area]:
-            file_name = f"{self.mode}/mc-ind/{year:05d}/areas/{key_area}/values-annual.txt"
-            df = self.__read_csv(file_name)
-            self.annual_results[key_area][year] = df
-        return self.annual_results[key_area][year]
+        return self.__if_none_then_parse_annual(area, year, "values-annual.txt")
