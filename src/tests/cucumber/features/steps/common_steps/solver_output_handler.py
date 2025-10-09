@@ -186,35 +186,42 @@ class solver_output_handler:
     def get_annual_margin_price(self, area: str, year: int) -> float:
         """Return margin price for annual results"""
         df = self.__get_values_annual(area, year)
-        return float(df['MRG. PRICE'].iloc[0])
+        # select by first-level column name and extract first scalar
+        sub = df.xs('MRG. PRICE', axis=1, level=0)
+        return float(sub.iloc[0, 0])
 
     def get_annual_load(self, area: str, year: int) -> float:
         """Return load for annual results"""
         df = self.__get_values_annual(area, year)
-        return float(df['LOAD'].iloc[0])
+        sub = df.xs('LOAD', axis=1, level=0)
+        return float(sub.iloc[0, 0])
 
     def get_annual_gas(self, area: str, year: int) -> float:
         """Return gas energy for annual results"""
         df = self.__get_values_annual(area, year)
-        return float(df['GAS'].iloc[0])
+        sub = df.xs('GAS', axis=1, level=0)
+        return float(sub.iloc[0, 0])
 
     def get_annual_hard_coal(self, area: str, year: int) -> float:
         """Return hard coal energy (other fuel) for annual results"""
         df = self.__get_values_annual(area, year)
-        return float(df['HARD COAL'].iloc[0])
+        sub = df.xs('HARD COAL', axis=1, level=0)
+        return float(sub.iloc[0, 0])
 
     def get_annual_unsupplied_energy(self, area: str, year: int) -> float:
         """Return unsupplied energy for annual results"""
         df = self.__get_values_annual(area, year)
-        return float(df['UNSP. ENRG'].iloc[0])
+        sub = df.xs('UNSP. ENRG', axis=1, level=0)
+        return float(sub.iloc[0, 0])
 
     def get_annual_spilled_energy(self, area: str, year: int) -> float:
         """Return spilled energy for annual results"""
         df = self.__get_values_annual(area, year)
-        return float(df['SPIL. ENRG'].iloc[0])
+        sub = df.xs('SPIL. ENRG', axis=1, level=0)
+        return float(sub.iloc[0, 0])
 
     def get_annual_n_dispatched_units(self, area: str, year: int) -> int:
         """Return number of dispatched units for annual results"""
         df = self.__get_values_annual(area, year)
-        # column name NODU represents number of dispatched units
-        return int(df['NODU'].iloc[0])
+        sub = df.xs('NODU', axis=1, level=0)
+        return int(sub.iloc[0, 0])

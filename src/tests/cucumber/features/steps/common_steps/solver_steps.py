@@ -228,12 +228,12 @@ def check_load_value(context, area, year, value):
 
 
 def check_gas_value(context, area, year, value):
-    actual = context.soh.get_annual_gas(area, year, "Gas")
+    actual = context.soh.get_annual_gas(area, year)
     assert_double_close(value, actual, 0.001, "Gas production")
 
 
 def check_hard_coal_value(context, area, year, value):
-    actual = context.soh.get_annual_hard_coal(area, year, "HARD COAL")
+    actual = context.soh.get_annual_hard_coal(area, year)
     assert_double_close(value, actual, 0.001, "Hard coal production")
 
 
