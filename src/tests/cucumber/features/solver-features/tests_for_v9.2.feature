@@ -32,3 +32,10 @@ Feature: tests for v9.2
 # initial lvl - withdrawal + injection + inflows
 # 50000 - 4 + 1 + 1
     And in area "AREA", year 2 and hour 0, level for short-term storage "cluster-11" is 49991
+
+  @fast @short
+  Scenario: Annual aggregation
+    Given the solver study path is "Antares_Simulator_Tests_NR/valid-v920/test-annual-aggregation"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 5 seconds
