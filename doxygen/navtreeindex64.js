@@ -1,5 +1,9 @@
 var NAVTREEINDEX64 =
 {
+"ui_2simulator_2application_2study_8cpp.html#a7e7e5aabc1f853046070350b222a6248":[7,0,0,129],
+"ui_2simulator_2application_2study_8cpp.html#a8680e3d3aa36e8f9c5e0648ed9dfc45d":[7,0,0,169],
+"ui_2simulator_2application_2study_8cpp.html#a8823a1d178beadb60ee090ca8ca27343":[7,0,0,157],
+"ui_2simulator_2application_2study_8cpp.html#a8b206f33f5661da0d3747faf1bd2a6df":[7,0,0,158],
 "ui_2simulator_2application_2study_8cpp.html#a8cdce857222e7eec629f627d30188efe":[7,0,0,150],
 "ui_2simulator_2application_2study_8cpp.html#a8d0d8745f1aca1292debee1500a983c3":[7,0,0,127],
 "ui_2simulator_2application_2study_8cpp.html#a8dfa4100ac0cd8bcd977f61dd96e6deb":[7,0,0,74],

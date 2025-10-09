@@ -1,5 +1,9 @@
 var NAVTREEINDEX61 =
 {
+"structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[8,0,180,2],
+"structMaxHydroPowerData.html#a57a9210a5c1484c39d03612d025296a6":[8,0,180,1],
+"structMaxHydroPowerData.html#a9937e11e27e4f9d41b1052320f8008cc":[8,0,180,0],
+"structMaxPumpingData.html":[8,0,182],
 "structMaxPumpingData.html#aa377de6e25e2ccfee9400d0f233df7a1":[8,0,182,0],
 "structMaxPumpingData.html#aecf11efd0d07851c4e7b7422855b36b0":[8,0,182,1],
 "structMinDownTimeData.html":[8,0,185],
@@ -245,9 +249,5 @@ var NAVTREEINDEX61 =
 "structRESULTATS__HORAIRES.html#a20eb136ae4de8aad52e81d5e1a6b8ab2":[8,0,254,11],
 "structRESULTATS__HORAIRES.html#a33a058fe5a3b2156e1d013f668ac1bca":[8,0,254,7],
 "structRESULTATS__HORAIRES.html#a38452fa95ebfe55c6871b82bbca34d5b":[8,0,254,14],
-"structRESULTATS__HORAIRES.html#a38fde6a8cdcdaff06d3da8404e155cc2":[8,0,254,12],
-"structRESULTATS__HORAIRES.html#a602ae9ed9349991cfc016fd12a28abcd":[8,0,254,9],
-"structRESULTATS__HORAIRES.html#a77adaab0de7e898f18c4e6fd0c0eff69":[8,0,254,4],
-"structRESULTATS__HORAIRES.html#a77b91a97bd3d30b7a7f53c24287243f9":[8,0,254,8],
-"structRESULTATS__HORAIRES.html#a7e1a4aa664fb707325ef10f62e3d8b7b":[8,0,254,10]
+"structRESULTATS__HORAIRES.html#a38fde6a8cdcdaff06d3da8404e155cc2":[8,0,254,12]
 };

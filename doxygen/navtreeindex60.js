@@ -1,5 +1,9 @@
 var NAVTREEINDEX60 =
 {
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a0da2be2c0770adb91f5dc40836b3318a":[8,0,10,0,3],
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a1b2cc213f6879c70a914e15fc553b8c0":[8,0,10,0,5],
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a51e0a263de19946e50dd840e71e2a1b9":[8,0,10,0,7],
+"structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a6e69fd62b58fa0611d691cbac9104875":[8,0,10,0,4],
 "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#a807df113e5154e0ae6409835468004cc":[8,0,10,0,0],
 "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#ace0d639bdeda3bf52323cde0d8a5abe9":[8,0,10,0,2],
 "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html#ad1c222d7c223d579cfc5329c268d1bbf":[8,0,10,0,1],
@@ -224,8 +228,8 @@ var NAVTREEINDEX60 =
 "structInputFixture.html#ae7e762eeef60cce51097c8ba5cf9f245":[8,0,159,14],
 "structInputFixture.html#aeb3d7f53766e66fa2589dd8cf5a9f611":[8,0,159,3],
 "structInputFixture.html#aeecd80dd8d9919b74e8cd7ae21658886":[8,0,159,21],
-"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,159,1],
 "structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,159,0],
+"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,159,1],
 "structLEVEL__FLEX__DOWN__NODE.html":[8,0,169],
 "structLEVEL__FLEX__DOWN__NODE.html#adb586b5229c47e72dc6503a2b621e37d":[8,0,169,0],
 "structLEVEL__FLEX__UP__NODE.html":[8,0,170],
@@ -245,9 +249,5 @@ var NAVTREEINDEX60 =
 "structLinkVariable.html#a945661bfedc896693b452659cf77bf5f":[8,0,175,1],
 "structLinkVariable.html#aacafd5f774750e8957c2735fa251f8e9":[8,0,175,2],
 "structLinkVariable.html#ae91154f3a2da66102c38da390c69d06e":[8,0,175,4],
-"structMaxHydroPowerData.html":[8,0,180],
-"structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[8,0,180,2],
-"structMaxHydroPowerData.html#a57a9210a5c1484c39d03612d025296a6":[8,0,180,1],
-"structMaxHydroPowerData.html#a9937e11e27e4f9d41b1052320f8008cc":[8,0,180,0],
-"structMaxPumpingData.html":[8,0,182]
+"structMaxHydroPowerData.html":[8,0,180]
 };

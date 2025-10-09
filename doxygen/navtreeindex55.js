@@ -198,6 +198,10 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html":[8,0,0,18,4,2,1],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html":[8,0,0,18,4,2,2],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_01Category_1_1dynamicColumns_00_01VCardT_01_4.html":[8,0,0,18,4,2,3],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll.html":[8,0,0,18,4,2,6],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll.html#afa823e0cf229a5ba30d0e1b353ba63fc":[8,0,0,18,4,2,6,0],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll_3_01Last_01_4.html":[8,0,0,18,4,2,7],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll_3_01Last_01_4.html#a3ae77981b69646b12f33f39d9b37a7a5":[8,0,0,18,4,2,7,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html":[8,0,0,18,4,2,5,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html":[8,0,0,18,4,2,4],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a557de5cb7722aebe1712eef0d95e44e9":[8,0,0,18,4,2,4,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a42f54f01275968f5b0f5b4496c1d2f8c":[8,0,0,18,4,4,71,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a4c6cb14ff1f07d0b06d987210fdc75d3":[8,0,0,18,4,4,71,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a551d92112c850f3183b2fabbc9ddb38e":[8,0,0,18,4,4,71,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a7cc891e880cdf8c45ffcb9717d96fe6d":[8,0,0,18,4,4,71,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a8f7b1f94685c6940dad0dda2fd215502":[8,0,0,18,4,4,71,6],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#ab8853553b1b5bdb4cb97f6ccced04623":[8,0,0,18,4,4,71,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#ae313f8f83d7716ec7c195b28c41972f9":[8,0,0,18,4,4,71,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr_1_1Statistics.html":[8,0,0,18,4,4,70,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a7cc891e880cdf8c45ffcb9717d96fe6d":[8,0,0,18,4,4,71,3]
 };

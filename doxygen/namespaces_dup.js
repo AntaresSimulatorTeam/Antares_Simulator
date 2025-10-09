@@ -1607,7 +1607,9 @@ var namespaces_dup =
             [ "MultipleCaptionProxy< 1, VCardT >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html", null ],
             [ "MultipleCaptionProxy< Category::dynamicColumns, VCardT >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_01Category_1_1dynamicColumns_00_01VCardT_01_4.html", null ],
             [ "VCardProxy", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy" ],
-            [ "SpatialAggregate", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate" ]
+            [ "SpatialAggregate", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate" ],
+            [ "SpatialAggregateAll", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll.html", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll" ],
+            [ "SpatialAggregateAll< Last >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll_3_01Last_01_4.html", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll_3_01Last_01_4" ]
           ] ],
           [ "Container", null, [
             [ "List", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List" ],
@@ -1759,7 +1761,7 @@ var namespaces_dup =
             [ "VariablePerLink", "solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h.html#a44aafe2a340f8ea798f90fa7c9aa6f30", null ],
             [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a33d9e91e2b55c44855f707b198b9378b", null ],
             [ "VariablesPerBindingConstraints", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a005042f761a476e46844d1dd486d074d", null ],
-            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a5979547c7f2aadc59505525dfab798c3", null ],
+            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a2aaa7fd9e0789b2c39f1179dd8f5f479", null ],
             [ "VCardTimeSeriesValuesGeneration", "generation_8h.html#a282c86615c4960094d02ae954f621a8d", null ],
             [ "VCardTimeSeriesValuesHydro", "hydro_8h.html#ad325b73ee3c003cf5d3bf81860e47e0f", null ],
             [ "VCardTimeSeriesValuesLoad", "load_8h.html#a697ad116bbb5309aad4f301c03380366", null ],

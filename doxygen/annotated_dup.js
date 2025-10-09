@@ -746,7 +746,9 @@ var annotated_dup =
             [ "MultipleCaptionProxy< 1, VCardT >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html", null ],
             [ "MultipleCaptionProxy< Category::dynamicColumns, VCardT >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_01Category_1_1dynamicColumns_00_01VCardT_01_4.html", null ],
             [ "VCardProxy", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy" ],
-            [ "SpatialAggregate", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate" ]
+            [ "SpatialAggregate", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate" ],
+            [ "SpatialAggregateAll", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll.html", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll" ],
+            [ "SpatialAggregateAll< Last >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll_3_01Last_01_4.html", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll_3_01Last_01_4" ]
           ] ],
           [ "Container", null, [
             [ "List", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List" ],
@@ -1478,8 +1480,8 @@ var annotated_dup =
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", "classColumnBasedStorage" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
+    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
