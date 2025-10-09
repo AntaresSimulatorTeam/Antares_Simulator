@@ -32,13 +32,18 @@ public:
 
     explicit TimeDependentLinearExpression(const std::span<const double>& values);
 
+    // Constant expression
     explicit TimeDependentLinearExpression(LinearExpression&& expr);
+    explicit TimeDependentLinearExpression(const std::vector<std::pair<int, double>>& coefs,
+                                           double constant);
 
     std::vector<double> constant() const;
 
     void mergeDuplicateCoefficients();
 
     std::size_t size() const;
+
+    bool isConstant() const;
 
     using iterator = std::vector<LinearExpression>::iterator;
     iterator begin();
@@ -66,7 +71,6 @@ public:
 
 private:
     void expandTo(std::size_t nbTimesteps);
-    bool isConstant() const;
 
     std::vector<LinearExpression> v_;
 };

@@ -46,6 +46,13 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(LinearExpression&& 
 {
 }
 
+TimeDependentLinearExpression::TimeDependentLinearExpression(
+  const std::vector<std::pair<int, double>>& coefs,
+  double constant):
+    v_(1, LinearExpression(coefs, constant))
+{
+}
+
 void TimeDependentLinearExpression::expandTo(std::size_t nbTimesteps)
 {
     v_.resize(nbTimesteps, v_[0]);
@@ -90,7 +97,7 @@ TimeDependentLinearExpression::const_iterator TimeDependentLinearExpression::end
     return v_.end();
 }
 
-bool isConstant() const
+bool TimeDependentLinearExpression::isConstant() const
 {
     return v_.size() == 1;
 }

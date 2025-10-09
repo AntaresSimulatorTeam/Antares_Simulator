@@ -140,9 +140,7 @@ public:
                                                                                 node->Index());
         if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
         {
-            Antares::Optimization::LinearExpression out;
-            out.addVariable(variableStart, 1);
-            return Antares::Optimization::TimeDependentLinearExpression(std::move(out));
+            return Antares::Optimization::TimeDependentLinearExpression({{variableStart, 1.}}, 0.);
         }
         if (node->timeIndex() == Antares::Optimisation::TimeIndex::VARYING_IN_TIME_ONLY
             || node->timeIndex()
@@ -177,8 +175,7 @@ public:
         if (systemParameter.type == Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
         {
             double value = evalContext_.getSystemParameterValueAsDouble(node->value());
-            return Antares::Optimization::TimeDependentLinearExpression(
-              Antares::Optimization::LinearExpression({}, value));
+            return Antares::Optimization::TimeDependentLinearExpression({}, value);
         }
         // only dependent
 
@@ -195,8 +192,7 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::LiteralNode* node) override
     {
-        Antares::Optimization::LinearExpression ret({}, node->value()); // Constant expr
-        return Antares::Optimization::TimeDependentLinearExpression(std::move(ret));
+        return Antares::Optimization::TimeDependentLinearExpression({}, node->value());
     }
 
     Antares::Optimization::TimeDependentLinearExpression visit(
@@ -231,7 +227,7 @@ public:
       const Nodes::TimeShiftNode* node) override
     {
         auto expression = dispatch(node->left());
-        if (expression.size() == 1)
+        if (expression.isConstant())
         {
             return expression;
         }
@@ -247,7 +243,7 @@ public:
     {
         auto expression = dispatch(node->left());
 
-        if (expression.size() == 1)
+        if (expression.isConstant())
         {
             return expression;
         }
@@ -266,7 +262,7 @@ public:
         const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
         const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
 
-        if (expression.size() == 1)
+        if (expression.isConstant())
         {
             // example from=0, to=2 => length({0, 1, 2}) = 3
             expression *= static_cast<double>(to - from + 1);
