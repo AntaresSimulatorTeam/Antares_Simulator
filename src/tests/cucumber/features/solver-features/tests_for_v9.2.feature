@@ -40,5 +40,5 @@ Feature: tests for v9.2
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     And the annual results are
-      | area | year | margin price | load | Gas | HARD COAL | unsupplied energy | spilled energy | number of dispactched units
-      | area | 1    | 28.5709 | 11520     | 10080 | 1440    | 0                 | 0              | 240
+      | area | year | margin price | load | Gas | HARD COAL | unsupplied energy | spilled energy | number of dispatched units |
+      | area | 1    | 28.5709 | 11520     | 10080 | 1440    | 0                 | 0              | 240                         |

@@ -217,6 +217,31 @@ def check_pmin_pmax(context, area, prod_name, min_p, max_p):
             lambda n: n * min_p)).all(), f"min_p constraint not respected during year {year}"
 
 
+def check_margin_price_value(context, area, year, value):
+    actual = context.soh.get_margin_price(area, year)
+    assert_double_close(value, actual, 0.001, "Margin price")
+
+
+def check_load_value(context, area, year, value):
+    actual = context.soh.get_load(area, year)
+    assert_double_close(value, actual, 0.001, "Load")
+
+
+def check_gas_value(context, area, year, value):
+    actual = context.soh.get_production_by_fuel(area, year, "Gas")
+    assert_double_close(value, actual, 0.001, "Gas production")
+
+
+def check_hard_coal_value(context, area, year, value):
+    actual = context.soh.get_production_by_fuel(area, year, "HARD COAL")
+    assert_double_close(value, actual, 0.001, "Hard coal production")
+
+
+def check_number_of_dispatched_units_value(context, area, year, value):
+    actual = context.soh.get_number_of_dispatched_units(area, year)
+    assert_double_close(value, actual, 0.001, "Number of dispatched units")
+
+
 @then("the annual results are")
 def check_annual_results(context):
     # Liste des clés pour lesquelles une vérification existe
@@ -226,6 +251,11 @@ def check_annual_results(context):
         "balance": check_balance_value,
         "spilled energy": check_spilled_energy_value,
         "unsupplied energy": check_unsupplied_energy_value,
+        "margin price": check_margin_price_value,
+        "load": check_load_value,
+        "Gas": check_gas_value,
+        "HARD COAL": check_hard_coal_value,
+        "number of dispatched units": check_number_of_dispatched_units_value,
     }
     for row in context.table:
         area = row["area"]
