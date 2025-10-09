@@ -16,7 +16,7 @@ public:
 
     void addVariables(const FillContext& ctx) override;
     void addConstraints(const FillContext& ctx) override;
-    void addObjective(const FillContext& ctx) override;
+    void addObjectives(const FillContext& ctx) override;
     OptimEntityContainer& optimEntityContainer_;
 };
 
@@ -32,7 +32,7 @@ void TwoVarsTwoConstraintsFiller::addConstraints([[maybe_unused]] const FillCont
     optimEntityContainer_.Problem().addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
 }
 
-void TwoVarsTwoConstraintsFiller::addObjective([[maybe_unused]] const FillContext& ctx)
+void TwoVarsTwoConstraintsFiller::addObjectives([[maybe_unused]] const FillContext& ctx)
 {
 }
 

@@ -37,7 +37,7 @@ void LinearProblemBuilder::build(const FillContext& ctx)
 {
     std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addVariables(ctx); });
     std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addConstraints(ctx); });
-    std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addObjective(ctx); });
+    std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addObjectives(ctx); });
 }
 
 } // namespace Antares::Optimisation::LinearProblemApi

@@ -191,7 +191,9 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
       .withConstraints(std::move(constraints));
     if (objective)
     {
-        model_builder.withObjective(createExpression(objective));
+        std::vector<Objective> objectives;
+        objectives.emplace_back("objective", createExpression(objective));
+        model_builder.withObjectives(std::move(objectives));
     }
     auto model = model_builder.build();
     models[modelId] = std::move(model);
