@@ -24,3 +24,5 @@ Feature: tests for v9.3
     When I run antares simulator
     Then the simulation takes less than 2 seconds
     And the simulation succeeds
+    And in area "area", year 1 and hour 0, "NPCAP HOURS" is 0 hours
+    And in area "area", year 1 and hour 48, "NPCAP HOURS" is 1 hours
