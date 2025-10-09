@@ -17,3 +17,10 @@ Feature: tests for v9.3
 # initial lvl - withdrawal + injection + inflows
 # 50000 - 4 + 1 + 1
   And in area "AREA", year 2 and hour 0, level for short-term storage "cluster-11" is 49998
+
+  @fast @short
+  Scenario: near price cap
+    Given the solver study path is "Antares_Simulator_Tests_NR/valid-v930/tests-near-price-cap"
+    When I run antares simulator
+    Then the simulation takes less than 2 seconds
+    And the simulation succeeds
