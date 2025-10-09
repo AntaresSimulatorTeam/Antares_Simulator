@@ -35,4 +35,6 @@ library:
           expression: gen1_p + gen2_p - load = 0
         - id: constant_power_gen1
           expression: gen1_p = (1.0*gen1_p + load - 1.0*load )[t-1]
-      objective: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost
+      objective-contributions:
+        - id: objective
+          expression: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost

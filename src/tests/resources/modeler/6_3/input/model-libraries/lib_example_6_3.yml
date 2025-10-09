@@ -49,7 +49,9 @@ library:
         - port: injection_port
           field: flow
           definition: gen
-      objective: sum(gen_fixed_cost * on_off_gen+ gen * gen_prop_cost)
+      objective-contributions:
+        - id: objective
+          expression: sum(gen_fixed_cost * on_off_gen+ gen * gen_prop_cost)
 
     - id: node_load
       description: A simple node with one load 
