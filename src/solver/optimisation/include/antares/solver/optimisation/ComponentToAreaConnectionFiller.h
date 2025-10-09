@@ -57,7 +57,7 @@ public:
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_HEBDO* problemeHebdo_;

@@ -34,7 +34,7 @@ public:
     // / addObjective, and into the ctor because it is unique across the simulation
     virtual void addVariables(const FillContext& ctx) = 0;
     virtual void addConstraints(const FillContext& ctx) = 0;
-    virtual void addObjective(const FillContext& ctx) = 0;
+    virtual void addObjectives(const FillContext& ctx) = 0;
     virtual ~LinearProblemFiller() = default;
 };
 

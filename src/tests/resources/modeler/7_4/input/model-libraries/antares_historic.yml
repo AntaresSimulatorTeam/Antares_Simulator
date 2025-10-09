@@ -38,7 +38,9 @@ library:
       binding-constraints:
         - id: balance
           expression: sum_connections(balance_port.flow) = spillage - unsupplied_energy
-      objective: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)
+      objective-contributions:
+        - id: objective
+          expression: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)
 
     - id: load
       parameters:
@@ -175,7 +177,9 @@ library:
           expression: sum(t-d_min_up + 1 .. t, nb_starting - nb_failing) <= nb_units_on
         - id: min_down_duration
           expression: sum(t-d_min_down + 1 .. t, nb_stopping) <= nb_units_max[t-d_min_down] - nb_units_on + sum(t-d_min_down + 1 .. t, nb_units_max_variation_backward)
-      objective: sum(generation_cost * generation + startup_cost * nb_starting + fixed_cost * nb_units_on)
+      objective-contributions:
+        - id: objective
+          expression: sum(generation_cost * generation + startup_cost * nb_starting + fixed_cost * nb_units_on)
 
     - id: short-term-storage
       parameters:

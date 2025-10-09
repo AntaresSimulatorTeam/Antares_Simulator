@@ -56,7 +56,9 @@ library:
         - port: injection_port
           field: flow
           definition: total_gen
-      objective: sum(gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)
+      objective-contributions:
+        - id: objective
+          expression: sum(gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)
 
     - id: node_load
       description: A simple node with one load 
