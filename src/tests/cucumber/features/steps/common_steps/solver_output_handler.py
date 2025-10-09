@@ -89,6 +89,10 @@ class solver_output_handler:
             self.annual_results[key_area][year] = self.__read_csv(path)
         return self.annual_results[key_area][year]
 
+    def __get_values_annual(self, area: str, year: int) -> pd.DataFrame:
+        """Internal parser for annual values, using caching"""
+        return self.__if_none_then_parse_annual(area, year, "values-annual.txt")
+
     def __get_values_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
 
@@ -176,4 +180,4 @@ class solver_output_handler:
 
     def get_values_annual(self, area: str, year: int) -> pd.DataFrame:
         """Retourne le DataFrame des résultats annuels provenant de values-annual.txt"""
-        return self.__if_none_then_parse_annual(area, year, "values-annual.txt")
+        return self.__get_values_annual(area, year)
