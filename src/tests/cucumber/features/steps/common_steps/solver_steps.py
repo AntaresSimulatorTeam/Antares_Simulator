@@ -383,7 +383,7 @@ def check_hourly_variable_value(context, area, year, var_name, hour, expected_va
         f"Hourly value mismatch for {var_name}: expected {expected_value}, got {actual_value} (area={area}, year={year}, hour={hour})"
 
 
-@then('in area "{area}", year {year:d} and hour {hour:d}, "near price cap" is {value:d} hours')
+@then('in area "{area}", year {year:d} and hour {hour:d}, near price cap is {value:d} hours')
 def check_near_price_cap(context, area, year, hour, value):
     actual = context.soh.get_npcap_hours_for_hour(area, year, hour)
     assert actual == value, f"Near price cap hours mismatch: expected {value}, got {actual}"
