@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include <iostream>
+
 #include <string>
 #include <vector>
 
@@ -93,6 +93,12 @@ struct ExtraOutput
     std::string expression;
 };
 
+struct Objective
+{
+    std::string id;
+    std::string expression;
+};
+
 struct Model
 {
     std::string id;
@@ -103,7 +109,7 @@ struct Model
     std::vector<PortFieldDefinition> port_field_definitions;
     std::vector<Constraint> constraints;
     std::vector<Constraint> binding_constraints;
-    std::string objective;
+    std::vector<Objective> objectives;
     std::vector<ExtraOutput> extra_outputs;
 };
 

@@ -73,3 +73,14 @@ Feature: 10 - Modeler extra outputs
       | 1     | storage_base_zone | cumulative_withdrawal   |          | 0        | 80    |
       | 1     | storage_base_zone | constant_expression     |          | 0        | 1     |
 
+  @fast
+  Scenario: 10.4: Extra-outputs, with comparison operator
+    Given the modeler study path is "modeler/10_4"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the modeler outputs contain the following entries
+      | block | component         | output                  | timestep | scenario | value |
+      | 1     | base_zone         | unsupplied_energy       | 1-4      | 0        | 0     |
+      | 1     | base_zone         | unsupplied_energy       | 5        | 0        | 10    |
+      | 1     | base_zone         | loss_of_load            | 1-4      | 0        | 0     |
+      | 1     | base_zone         | loss_of_load            | 5        | 0        | 1     |

@@ -13,6 +13,7 @@ library:
   id: library-eo
   description: Library for test cases on extra-outputs
 
+
   port-types:
     - id: flow
       description: A port which transfers power flow
@@ -24,6 +25,10 @@ library:
       parameters:
         - id: spillage_cost
         - id: ens_cost
+        - id: lol_threshold
+          time-dependent: false
+          scenario-dependent: false
+
       variables:
         - id: spillage
           lower-bound: 0
@@ -47,6 +52,8 @@ library:
           expression: spillage_cost * spillage
         - id: ens_cost_contribution
           expression: ens_cost * unsupplied_energy
+        - id: loss_of_load
+          expression: unsupplied_energy >= lol_threshold
 
     - id: load
       parameters:
@@ -87,6 +94,7 @@ library:
         - port: balance_port
           field: flow
           definition: generation
+
       objective-contributions:
         - id: objective
           expression: sum(marginal_generation_cost * generation)
@@ -97,6 +105,7 @@ library:
           expression: marginal_generation_cost * generation * marginal_generation_cost * generation
         - id: total_generation_cost
           expression: sum(marginal_generation_cost * generation)
+
 
     - id: short-term-storage
       parameters:
@@ -153,4 +162,3 @@ library:
           expression : sum(p_withdrawal)
         - id: constant_expression
           expression : efficiency_injection/efficiency_withdrawal
-    

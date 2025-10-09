@@ -40,4 +40,6 @@ library:
           expression: gen1_p + gen2_p - load = 0
         - id: switch_gen_1
           expression : gen1_p <= gen1_max_p * on_off_gen1_p
-      objective: gen_1_fixed_cost * on_off_gen1_p+ gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost
+      objective-contributions:
+        - id: objective
+          expression: gen_1_fixed_cost * on_off_gen1_p+ gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost

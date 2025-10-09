@@ -40,4 +40,6 @@ library:
           expression: gen_total_p <= gen_n_on * gen_max_p
         - id: balance
           expression: gen_total_p = load
-      objective: gen_total_p * gen_prop_cost + gen_n_on * gen_fixed_cost
+      objective-contributions:
+        - id: objective
+          expression: gen_total_p * gen_prop_cost + gen_n_on * gen_fixed_cost
