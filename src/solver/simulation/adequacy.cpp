@@ -65,7 +65,7 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
 
 OptimisationsSimulationTable& Adequacy::getSimulationTable(uint numSpace)
 {
-    if (simulationTables_.size() >= numSpace)
+    if (numSpace >= simulationTables_.size())
     {
         throw std::out_of_range("Error: there is no simulation table for numSpace: "
                                 + std::to_string(numSpace));
