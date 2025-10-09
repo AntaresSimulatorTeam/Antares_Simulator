@@ -33,7 +33,7 @@ def check_log_values(output_path: Path, yearsError, logLevel):
         for week in weeks:
             expected_week_value += " " + str(week)
         expected_logs.append(
-            "[solver]["+ logLevel +"] Year " + str(year) + " failed at " + week_label + expected_week_value + ".")
+            "["+ logLevel +"] Year " + str(year) + " failed at " + week_label + expected_week_value + ".")
         found_list.append(False)
 
     # search in all log content and store found result for each year

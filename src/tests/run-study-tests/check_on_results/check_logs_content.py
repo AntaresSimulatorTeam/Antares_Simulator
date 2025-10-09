@@ -25,7 +25,7 @@ class check_logs_content(check_interface):
             concatenated_weeks = ""
             for week_number in weeks_of_year.weeks:
                 concatenated_weeks += " " + str(week_number)
-            lines_to_find.append("[solver][" + self.log_level + "] Year " + str(year) + " failed at "
+            lines_to_find.append("[" + self.log_level + "] Year " + str(year) + " failed at "
                                  + week_label + concatenated_weeks + ".")
 
             match_lines.append(False)
