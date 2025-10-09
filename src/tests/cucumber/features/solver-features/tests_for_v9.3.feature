@@ -32,3 +32,8 @@ Feature: tests for v9.3
     And in area "area 2", year 1 and hour 144, near price cap is 1 hours
     And in area "area 3", year 1 and hour 0, near price cap is 0 hours
     And in area "area 3", year 1 and hour 120, near price cap is 1 hours
+    And in area "area 4", year 1 and hour 0, near price cap is 0 hours
+    And in area "area 4", year 1 and hour 11, near price cap is 1 hours
+    And in area "area 4", year 1 and hour 12, near price cap is 1 hours
+    And in area "area 4", year 1 and hour 13, near price cap is 0 hours
+    And in area "area 4", year 1 and hour 17, near price cap is 1 hours
