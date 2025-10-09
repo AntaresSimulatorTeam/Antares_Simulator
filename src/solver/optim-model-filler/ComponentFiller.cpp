@@ -336,26 +336,25 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
-void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    auto model = component_.getModel();
-    if (model->Objective().Empty())
-    {
-        return;
-    }
-
+    const auto* model = component_.getModel();
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, component_, ctx);
 
-    const auto linearExpression = visitor.visitRemoveDuplicates(model->Objective().RootNode());
-
-    auto& pb = optimEntityContainer_.Problem();
-    for (const auto& expr: linearExpression)
+    for (const auto& objective: model->Objectives())
     {
-        for (const auto& [index, value]: expr)
+        const auto linearExpression = visitor.visitRemoveDuplicates(
+          objective.expression().RootNode());
+
+        auto& pb = optimEntityContainer_.Problem();
+        for (const auto& expr: linearExpression)
         {
-            pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
-                                       value);
+            for (const auto& [index, value]: expr)
+            {
+                pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
+                                           value);
+            }
         }
     }
 }
