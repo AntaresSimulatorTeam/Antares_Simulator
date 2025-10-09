@@ -219,19 +219,28 @@ def check_pmin_pmax(context, area, prod_name, min_p, max_p):
 
 @then("the annual results are")
 def check_annual_results(context):
+    # Liste des clés pour lesquelles une vérification existe
+    check_keys = {
+        "hydro production": check_hydro_production_value,
+        "hydro pumping": check_hydro_pumping_value,
+        "balance": check_balance_value,
+        "spilled energy": check_spilled_energy_value,
+        "unsupplied energy": check_unsupplied_energy_value,
+    }
     for row in context.table:
         area = row["area"]
         year = int(row["year"])
-        if should_check(row, "hydro production"):
-            check_hydro_production_value(context, area, year, float(row["hydro production"]))
-        if should_check(row, "hydro pumping"):
-            check_hydro_pumping_value(context, area, year, float(row["hydro pumping"]))
-        if should_check(row, "balance"):
-            check_balance_value(context, area, year, float(row["balance"]))
-        if should_check(row, "spilled energy"):
-            check_spilled_energy_value(context, area, year, float(row["spilled energy"]))
-        if should_check(row, "unsupplied energy"):
-            check_unsupplied_energy_value(context, area, year, float(row["unsupplied energy"]))
+        # Vérifier que toutes les clés (hors area, year) ont une vérification
+        for key in row.headings:
+            if key in ("area", "year"):
+                continue
+            if key not in check_keys:
+                raise AssertionError(
+                    f"Key '{key}' has no check implemented. Implement the corresponding check or remove the key from expectations.")
+        # Effectuer les vérifications existantes
+        for key, check_func in check_keys.items():
+            if should_check(row, key):
+                check_func(context, area, year, float(row[key]))
 
 
 @then("simulation tables match the references")
