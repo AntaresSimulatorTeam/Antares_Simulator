@@ -159,6 +159,14 @@ class SpatialAggregate
     : public Variable::IVariable<SpatialAggregate<VarT, NextT>, NextT, VCardProxy<VarT>>
 {
 public:
+    ~SpatialAggregate()
+    {
+        if (pValuesForTheCurrentYear)
+        {
+            delete[] pValuesForTheCurrentYear;
+        }
+    }
+
     //! Type of the next static variable
     typedef NextT NextType;
 
@@ -486,7 +494,7 @@ private:
 
 private:
     //! Intermediate values for each year
-    typename VCardType::IntermediateValuesTypeForSpatialAg pValuesForTheCurrentYear;
+    typename VCardType::IntermediateValuesTypeForSpatialAg pValuesForTheCurrentYear = nullptr;
 
     unsigned int pNbYearsParallel;
 
