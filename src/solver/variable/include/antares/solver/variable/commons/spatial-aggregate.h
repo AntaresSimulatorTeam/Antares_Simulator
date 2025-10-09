@@ -492,6 +492,19 @@ private:
 
 }; // class SpatialAggregate
 
+// Variadic meta-template to build nested spatial aggregates
+template<template<class> class Head, template<class> class... Tail>
+struct SpatialAggregateAll
+{
+    using type = SpatialAggregate<Head, typename SpatialAggregateAll<Tail...>::type>;
+};
+
+template<template<class> class Last>
+struct SpatialAggregateAll<Last>
+{
+    using type = SpatialAggregate<Last>;
+};
+
 } // namespace Antares::Solver::Variable::Common
 
 #endif // __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
