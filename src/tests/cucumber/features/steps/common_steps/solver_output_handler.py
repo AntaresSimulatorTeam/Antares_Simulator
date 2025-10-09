@@ -151,6 +151,47 @@ class solver_output_handler:
     def get_balance_mwh(self, area: str, year: int) -> int:
         return self.__get_values_hourly(area, year)["BALANCE"]["MWh"].sum()
 
+    # Add hourly series getters corresponding to annual metrics
+    def get_hourly_margin_price(self, area: str, year: int) -> pd.Series:
+        """Return hourly margin prices"""
+        df = self.__get_values_hourly(area, year)
+        sub = df.xs('MRG. PRICE', axis=1, level=0)
+        # sub is DataFrame with one column; return it as Series
+        return sub.iloc[:, 0]
+
+    def get_hourly_load(self, area: str, year: int) -> pd.Series:
+        """Return hourly load in MWh"""
+        df = self.__get_values_hourly(area, year)
+        return df['LOAD']['MWh']
+
+    def get_hourly_gas(self, area: str, year: int) -> pd.Series:
+        """Return hourly gas production in MWh"""
+        df = self.__get_values_hourly(area, year)
+        # 'GAS' first-level header
+        return df.xs('GAS', axis=1, level=0).iloc[:, 0]
+
+    def get_hourly_hard_coal(self, area: str, year: int) -> pd.Series:
+        """Return hourly hard coal production in MWh"""
+        df = self.__get_values_hourly(area, year)
+        # 'OTHER FUEL' corresponds to hard coal in annual results
+        return df.xs('OTHER FUEL', axis=1, level=0).iloc[:, 0]
+
+    def get_hourly_unsupplied_energy(self, area: str, year: int) -> pd.Series:
+        """Return hourly unsupplied energy in MWh"""
+        df = self.__get_values_hourly(area, year)
+        return df['UNSP. ENRG']['MWh']
+
+    def get_hourly_spilled_energy(self, area: str, year: int) -> pd.Series:
+        """Return hourly spilled energy in MWh"""
+        df = self.__get_values_hourly(area, year)
+        return df['SPIL. ENRG']['MWh']
+
+    def get_hourly_n_dispatched_units_total(self, area: str, year: int) -> pd.Series:
+        """Return hourly total number of dispatched units"""
+        df = self.__get_values_hourly(area, year)
+        sub = df.xs('NODU', axis=1, level=0)
+        return sub.iloc[:, 0]
+
     def get_unsupplied_energy_mwh(self, area: str, year: int, date: str = None) -> float:
         if date is None:
             return self.__get_values_hourly(area, year)["UNSP. ENRG"]["MWh"].sum()
