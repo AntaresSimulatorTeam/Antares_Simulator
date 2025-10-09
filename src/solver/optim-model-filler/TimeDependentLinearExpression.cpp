@@ -90,9 +90,14 @@ TimeDependentLinearExpression::const_iterator TimeDependentLinearExpression::end
     return v_.end();
 }
 
+bool isConstant() const
+{
+    return v_.size() == 1;
+}
+
 LinearExpression& TimeDependentLinearExpression::operator[](std::size_t idx)
 {
-    if (size() == 1)
+    if (isConstant())
     {
         return v_[0];
     }
@@ -104,7 +109,7 @@ LinearExpression& TimeDependentLinearExpression::operator[](std::size_t idx)
 
 const LinearExpression& TimeDependentLinearExpression::operator[](std::size_t idx) const
 {
-    if (size() == 1)
+    if (isConstant())
     {
         return v_[0];
     }

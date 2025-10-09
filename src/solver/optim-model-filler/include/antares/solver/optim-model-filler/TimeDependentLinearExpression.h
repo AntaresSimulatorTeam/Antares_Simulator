@@ -66,6 +66,7 @@ public:
 
 private:
     void expandTo(std::size_t nbTimesteps);
+    bool isConstant() const;
 
     std::vector<LinearExpression> v_;
 };
