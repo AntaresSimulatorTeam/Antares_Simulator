@@ -742,8 +742,9 @@ BOOST_AUTO_TEST_CASE(offset_in_objective__throws_exception)
     createComponent("model", "componentA", {});
     BOOST_CHECK_EXCEPTION(buildLinearProblem(),
                           invalid_argument,
-                          checkMessage("Antares does not support objective offsets (found in model "
-                                       "'model' of component 'componentA')."));
+                          checkMessage(
+                            "Antares does not support objective offsets (objective 'objective' "
+                            "found in model 'model' of component 'componentA')."));
 }
 
 // Mock classes

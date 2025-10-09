@@ -126,7 +126,9 @@ library:
       binding-constraints:
         - id: balance
           expression: injection_port.flow = 0
-      objective: cost * generation
+      objective-contributions:
+        - id: objective
+          expression: cost * generation 
       extra-outputs:
         - id: total_cost_in_millions
           expression: sum(cost * generation) / 1000000
@@ -266,7 +268,9 @@ library:
           expression: t-d_min_up + 1 <= nb_on
         - id: Min down time
           expression: t-d_min_down + 1 <= nb_units_max - nb_on
-      objective: cost * generation
+      objective-contributions:
+        - id: objective
+          expression: cost * generation 
     )"s;
 
     try
@@ -297,7 +301,7 @@ library:
         BOOST_REQUIRE_EQUAL(lib.Models().size(), 7);
         auto& model0 = lib.Models().at("generator");
         BOOST_CHECK_EQUAL(model0.Id(), "generator");
-        BOOST_CHECK_EQUAL(model0.Objective().Value(), "cost * generation");
+        BOOST_CHECK_EQUAL(model0.Objectives()[0].expression().Value(), "cost * generation");
         BOOST_CHECK_EQUAL(model0.ExtraOutputs().at("total_cost_in_millions").expression().Value(),
                           "sum(cost * generation) / 1000000");
         const auto& model0Variables = model0.Variables();
@@ -505,7 +509,7 @@ library:
         checkConstraint(*getConstraint(model6.Constraints(), "Min down time"),
                         "Min down time",
                         "t-d_min_down + 1 <= nb_units_max - nb_on");
-        BOOST_CHECK_EQUAL(model6.Objective().Value(), "cost * generation");
+        BOOST_CHECK_EQUAL(model6.Objectives()[0].expression().Value(), "cost * generation");
     }
     catch (const YAML::Exception& e)
     {

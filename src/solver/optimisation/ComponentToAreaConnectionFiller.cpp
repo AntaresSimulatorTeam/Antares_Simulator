@@ -158,7 +158,7 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(const FillContext&)
+void ComponentToAreaConnectionFiller::addObjectives(const FillContext&)
 {
     // nothing to do
 }

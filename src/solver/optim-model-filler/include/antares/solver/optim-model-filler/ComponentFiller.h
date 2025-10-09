@@ -63,7 +63,7 @@ public:
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     void addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
