@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
                                 .scenario_index = 0,
                                 .value = 10.0,
                                 .status = MipBasisStatus::BASIC};
-    tables.firstOptimSimulationTable().addEntry(entry1);
+    tables.firstOptimSimulationTable()->addEntry(entry1);
     tables.write();
 
     // Second write - should accumulate
@@ -375,7 +375,7 @@ BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
                                 .scenario_index = 1,
                                 .value = 20.0,
                                 .status = MipBasisStatus::FREE};
-    tables.firstOptimSimulationTable().addEntry(entry2);
+    tables.firstOptimSimulationTable()->addEntry(entry2);
     tables.write();
 
     auto buffers = tables.moveBuffers();
@@ -413,8 +413,8 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
                                 .value = 20.0,
                                 .status = MipBasisStatus::FREE};
 
-    tables.firstOptimSimulationTable().addEntry(entry1);
-    tables.secondOptimSimulationTable().addEntry(entry2);
+    tables.firstOptimSimulationTable()->addEntry(entry1);
+    tables.secondOptimSimulationTable()->addEntry(entry2);
     tables.write();
 
     tables.writeTo("test_prefix", writer);
@@ -1389,8 +1389,8 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
                                 .value = 20.0,
                                 .status = MipBasisStatus::FREE};
 
-    tables.firstOptimSimulationTable().addEntry(entry1);
-    tables.secondOptimSimulationTable().addEntry(entry2);
+    tables.firstOptimSimulationTable()->addEntry(entry1);
+    tables.secondOptimSimulationTable()->addEntry(entry2);
 
     tables.write();
 
@@ -1412,8 +1412,8 @@ BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
                                .value = 10.0,
                                .status = MipBasisStatus::BASIC};
 
-    tables.firstOptimSimulationTable().addEntry(entry);
-    tables.secondOptimSimulationTable().addEntry(entry);
+    tables.firstOptimSimulationTable()->addEntry(entry);
+    tables.secondOptimSimulationTable()->addEntry(entry);
     tables.write();
 
     tables.clear();
