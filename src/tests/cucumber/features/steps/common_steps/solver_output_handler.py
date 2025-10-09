@@ -110,6 +110,26 @@ class solver_output_handler:
     def _get_annual_scalar(self, area: str, year: int, header: str) -> float:
         return float(self._get_annual_series(area, year, header).iloc[0])
 
+    def get_metric(self, area: str, year: int, header: str, period: str = 'hourly'):
+        """
+        Return a metric by header name: hourly Series if period='hourly', annual scalar if period='annual'.
+        """
+        if period == 'hourly':
+            return self._get_hourly_series(area, year, header)
+        if period == 'annual':
+            return self._get_annual_scalar(area, year, header)
+        raise ValueError(f"Unknown period '{period}', expected 'hourly' or 'annual'")
+
+    def get_load(self, area: str, year: int, period: str = 'hourly'):
+        """
+        Return load for a given period ('hourly' returns a Series of hourly load,
+        'annual' returns the annual scalar load).
+        """
+        header = 'LOAD'
+        if period == 'hourly':
+            return self._get_hourly_series(area, year, header)
+        return self._get_annual_scalar(area, year, header)
+
     def __get_sts_details_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.DETAILS_STS, area.lower(), year, "details-STstorage-hourly.txt")
 
@@ -158,25 +178,25 @@ class solver_output_handler:
 
     # Add hourly series getters corresponding to annual metrics
     def get_hourly_margin_price(self, area: str, year: int) -> pd.Series:
-        return self._get_hourly_series(area, year, 'MRG. PRICE')
+        return self.get_metric(area, year, 'MRG. PRICE', period='hourly')
 
     def get_hourly_load(self, area: str, year: int) -> pd.Series:
-        return self._get_hourly_series(area, year, 'LOAD')
+        return self.get_metric(area, year, 'LOAD', period='hourly')
 
     def get_hourly_gas(self, area: str, year: int) -> pd.Series:
-        return self._get_hourly_series(area, year, 'GAS')
+        return self.get_metric(area, year, 'GAS', period='hourly')
 
     def get_hourly_hard_coal(self, area: str, year: int) -> pd.Series:
-        return self._get_hourly_series(area, year, 'OTHER FUEL')
+        return self.get_metric(area, year, 'OTHER FUEL', period='hourly')
 
     def get_hourly_unsupplied_energy(self, area: str, year: int) -> pd.Series:
-        return self._get_hourly_series(area, year, 'UNSP. ENRG')
+        return self.get_metric(area, year, 'UNSP. ENRG', period='hourly')
 
     def get_hourly_spilled_energy(self, area: str, year: int) -> pd.Series:
-        return self._get_hourly_series(area, year, 'SPIL. ENRG')
+        return self.get_metric(area, year, 'SPIL. ENRG', period='hourly')
 
     def get_hourly_n_dispatched_units_total(self, area: str, year: int) -> pd.Series:
-        return self._get_hourly_series(area, year, 'NODU')
+        return self.get_metric(area, year, 'NODU', period='hourly')
 
     def get_unsupplied_energy_mwh(self, area: str, year: int, date: str = None) -> float:
         if date is None:
@@ -211,22 +231,22 @@ class solver_output_handler:
 
     # Specific getters for annual variables
     def get_annual_margin_price(self, area: str, year: int) -> float:
-        return self._get_annual_scalar(area, year, 'MRG. PRICE')
+        return self.get_metric(area, year, 'MRG. PRICE', period='annual')
 
     def get_annual_load(self, area: str, year: int) -> float:
-        return self._get_annual_scalar(area, year, 'LOAD')
+        return self.get_metric(area, year, 'LOAD', period='annual')
 
     def get_annual_gas(self, area: str, year: int) -> float:
-        return self._get_annual_scalar(area, year, 'GAS')
+        return self.get_metric(area, year, 'GAS', period='annual')
 
     def get_annual_hard_coal(self, area: str, year: int) -> float:
-        return self._get_annual_scalar(area, year, 'HARD COAL')
+        return self.get_metric(area, year, 'HARD COAL', period='annual')
 
     def get_annual_unsupplied_energy(self, area: str, year: int) -> float:
-        return self._get_annual_scalar(area, year, 'UNSP. ENRG')
+        return self.get_metric(area, year, 'UNSP. ENRG', period='annual')
 
     def get_annual_spilled_energy(self, area: str, year: int) -> float:
-        return self._get_annual_scalar(area, year, 'SPIL. ENRG')
+        return self.get_metric(area, year, 'SPIL. ENRG', period='annual')
 
     def get_annual_n_dispatched_units(self, area: str, year: int) -> int:
-        return int(self._get_annual_scalar(area, year, 'NODU'))
+        return int(self.get_metric(area, year, 'NODU', period='annual'))
