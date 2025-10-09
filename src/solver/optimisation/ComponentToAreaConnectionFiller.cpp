@@ -111,9 +111,9 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
             areaBalanceConstraint->setCoefficient(solverVariables.at(index).get(), -coef);
         }
 
-        double offset = linearExpression[localIndex].constant();
-        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + offset,
-                                         areaBalanceConstraint->getUb() + offset);
+        double constant = linearExpression[localIndex].constant();
+        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + constant,
+                                         areaBalanceConstraint->getUb() + constant);
     }
 }
 

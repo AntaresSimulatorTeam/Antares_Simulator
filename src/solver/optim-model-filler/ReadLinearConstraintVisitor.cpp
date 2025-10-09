@@ -61,8 +61,8 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right());
     left.mergeDuplicateCoefficients();
-    const std::vector<double> offset = -left.constant();
-    return {.coef_per_var = left, .lb = offset, .ub = offset};
+    const std::vector<double> constant = -left.constant();
+    return {.coef_per_var = left, .lb = constant, .ub = constant};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
@@ -70,11 +70,11 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* n
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right()); // TODO
     left.mergeDuplicateCoefficients();
-    const std::vector<double> offset = left.constant();
+    const std::vector<double> constant = left.constant();
 
     return {.coef_per_var = left,
             .lb = std::vector<double>(left.size(), -std::numeric_limits<double>::infinity()),
-            .ub = -left.constant()};
+            .ub = -constant};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
