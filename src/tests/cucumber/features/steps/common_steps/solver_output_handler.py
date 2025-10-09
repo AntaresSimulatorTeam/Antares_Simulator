@@ -19,9 +19,12 @@ class solver_output_handler:
         self.study_output_path = study_output_path
         self.mode = mode
         self.annual_system_cost = None
+        # cache for hourly result tables
         self.hourly_results = {result_type.VALUES: None,
                                result_type.DETAILS: None,
                                result_type.DETAILS_STS: None}
+        # cache for annual result tables
+        self.annual_results = {}
 
     def get_annual_system_cost(self):
         if self.annual_system_cost is None:
@@ -160,3 +163,14 @@ class solver_output_handler:
         # Return NPCAP HOURS indicator at a specific hour (0-based index)
         df = self.__get_values_hourly(area, year)
         return int(df["NPCAP HOURS"]["Hours"].iloc[hour])
+
+    def get_values_annual(self, area: str, year: int) -> pd.DataFrame:
+        """Retourne le DataFrame des résultats annuels provenant de values-annual.txt"""
+        key_area = area.lower()
+        if key_area not in self.annual_results:
+            self.annual_results[key_area] = {}
+        if year not in self.annual_results[key_area]:
+            file_name = f"{self.mode}/mc-ind/{year:05d}/areas/{key_area}/values-annual.txt"
+            df = self.__read_csv(file_name)
+            self.annual_results[key_area][year] = df
+        return self.annual_results[key_area][year]
