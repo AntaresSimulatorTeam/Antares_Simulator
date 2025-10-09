@@ -93,17 +93,22 @@ class solver_output_handler:
         """Internal parser for annual values, using caching"""
         return self.__if_none_then_parse_annual(area, year, "values-annual.txt")
 
-    def __get_values_hourly(self, area: str, year: int):
+    def __get_values_hourly(self, area: str, year: int) -> pd.DataFrame:
         return self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
 
-    def __get_values_hourly_for_specific_week(self, area: str, year: int, week: int):
-        df = self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
-        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (
-                df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
-
-    def __get_values_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
+    # common helper to get hourly series by header
+    def _get_hourly_series(self, area: str, year: int, header: str) -> pd.Series:
         df = self.__get_values_hourly(area, year)
-        return df.loc[df['datetime'] == datetime]
+        return df.xs(header, axis=1, level=0).iloc[:, 0]
+
+    # common helper to get annual series by header
+    def _get_annual_series(self, area: str, year: int, header: str) -> pd.Series:
+        df = self.__get_values_annual(area, year)
+        return df.xs(header, axis=1, level=0).iloc[:, 0]
+
+    # common helper to get annual scalar by header
+    def _get_annual_scalar(self, area: str, year: int, header: str) -> float:
+        return float(self._get_annual_series(area, year, header).iloc[0])
 
     def __get_sts_details_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.DETAILS_STS, area.lower(), year, "details-STstorage-hourly.txt")
@@ -140,7 +145,7 @@ class solver_output_handler:
         return self.__get_values_hourly(area, year)["LOLD"]["Hours"].sum()
 
     def get_spilled_energy_mwh(self, area: str, year: int) -> int:
-        return self.__get_values_hourly(area, year)["SPIL. ENRG"]["MWh"].sum()
+        return int(self._get_hourly_series(area, year, 'SPIL. ENRG').sum())
 
     def get_hydro_production_mwh(self, area: str, year: int) -> int:
         return self.__get_values_hourly(area, year)["H. STOR"]["MWh"].sum()
@@ -149,48 +154,29 @@ class solver_output_handler:
         return self.__get_values_hourly(area, year)["H. PUMP"]["MWh"].sum()
 
     def get_balance_mwh(self, area: str, year: int) -> int:
-        return self.__get_values_hourly(area, year)["BALANCE"]["MWh"].sum()
+        return int(self._get_hourly_series(area, year, 'BALANCE').sum())
 
     # Add hourly series getters corresponding to annual metrics
     def get_hourly_margin_price(self, area: str, year: int) -> pd.Series:
-        """Return hourly margin prices"""
-        df = self.__get_values_hourly(area, year)
-        sub = df.xs('MRG. PRICE', axis=1, level=0)
-        # sub is DataFrame with one column; return it as Series
-        return sub.iloc[:, 0]
+        return self._get_hourly_series(area, year, 'MRG. PRICE')
 
     def get_hourly_load(self, area: str, year: int) -> pd.Series:
-        """Return hourly load in MWh"""
-        df = self.__get_values_hourly(area, year)
-        return df['LOAD']['MWh']
+        return self._get_hourly_series(area, year, 'LOAD')
 
     def get_hourly_gas(self, area: str, year: int) -> pd.Series:
-        """Return hourly gas production in MWh"""
-        df = self.__get_values_hourly(area, year)
-        # 'GAS' first-level header
-        return df.xs('GAS', axis=1, level=0).iloc[:, 0]
+        return self._get_hourly_series(area, year, 'GAS')
 
     def get_hourly_hard_coal(self, area: str, year: int) -> pd.Series:
-        """Return hourly hard coal production in MWh"""
-        df = self.__get_values_hourly(area, year)
-        # 'OTHER FUEL' corresponds to hard coal in annual results
-        return df.xs('OTHER FUEL', axis=1, level=0).iloc[:, 0]
+        return self._get_hourly_series(area, year, 'OTHER FUEL')
 
     def get_hourly_unsupplied_energy(self, area: str, year: int) -> pd.Series:
-        """Return hourly unsupplied energy in MWh"""
-        df = self.__get_values_hourly(area, year)
-        return df['UNSP. ENRG']['MWh']
+        return self._get_hourly_series(area, year, 'UNSP. ENRG')
 
     def get_hourly_spilled_energy(self, area: str, year: int) -> pd.Series:
-        """Return hourly spilled energy in MWh"""
-        df = self.__get_values_hourly(area, year)
-        return df['SPIL. ENRG']['MWh']
+        return self._get_hourly_series(area, year, 'SPIL. ENRG')
 
     def get_hourly_n_dispatched_units_total(self, area: str, year: int) -> pd.Series:
-        """Return hourly total number of dispatched units"""
-        df = self.__get_values_hourly(area, year)
-        sub = df.xs('NODU', axis=1, level=0)
-        return sub.iloc[:, 0]
+        return self._get_hourly_series(area, year, 'NODU')
 
     def get_unsupplied_energy_mwh(self, area: str, year: int, date: str = None) -> float:
         if date is None:
@@ -225,44 +211,22 @@ class solver_output_handler:
 
     # Specific getters for annual variables
     def get_annual_margin_price(self, area: str, year: int) -> float:
-        """Return margin price for annual results"""
-        df = self.__get_values_annual(area, year)
-        # select by first-level column name and extract first scalar
-        sub = df.xs('MRG. PRICE', axis=1, level=0)
-        return float(sub.iloc[0, 0])
+        return self._get_annual_scalar(area, year, 'MRG. PRICE')
 
     def get_annual_load(self, area: str, year: int) -> float:
-        """Return load for annual results"""
-        df = self.__get_values_annual(area, year)
-        sub = df.xs('LOAD', axis=1, level=0)
-        return float(sub.iloc[0, 0])
+        return self._get_annual_scalar(area, year, 'LOAD')
 
     def get_annual_gas(self, area: str, year: int) -> float:
-        """Return gas energy for annual results"""
-        df = self.__get_values_annual(area, year)
-        sub = df.xs('GAS', axis=1, level=0)
-        return float(sub.iloc[0, 0])
+        return self._get_annual_scalar(area, year, 'GAS')
 
     def get_annual_hard_coal(self, area: str, year: int) -> float:
-        """Return hard coal energy (other fuel) for annual results"""
-        df = self.__get_values_annual(area, year)
-        sub = df.xs('HARD COAL', axis=1, level=0)
-        return float(sub.iloc[0, 0])
+        return self._get_annual_scalar(area, year, 'HARD COAL')
 
     def get_annual_unsupplied_energy(self, area: str, year: int) -> float:
-        """Return unsupplied energy for annual results"""
-        df = self.__get_values_annual(area, year)
-        sub = df.xs('UNSP. ENRG', axis=1, level=0)
-        return float(sub.iloc[0, 0])
+        return self._get_annual_scalar(area, year, 'UNSP. ENRG')
 
     def get_annual_spilled_energy(self, area: str, year: int) -> float:
-        """Return spilled energy for annual results"""
-        df = self.__get_values_annual(area, year)
-        sub = df.xs('SPIL. ENRG', axis=1, level=0)
-        return float(sub.iloc[0, 0])
+        return self._get_annual_scalar(area, year, 'SPIL. ENRG')
 
     def get_annual_n_dispatched_units(self, area: str, year: int) -> int:
-        """Return number of dispatched units for annual results"""
-        df = self.__get_values_annual(area, year)
-        sub = df.xs('NODU', axis=1, level=0)
-        return int(sub.iloc[0, 0])
+        return int(self._get_annual_scalar(area, year, 'NODU'))
