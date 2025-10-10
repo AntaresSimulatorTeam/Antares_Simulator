@@ -96,6 +96,16 @@ class solver_output_handler:
     def __get_values_hourly(self, area: str, year: int) -> pd.DataFrame:
         return self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
 
+    def __get_values_hourly_for_specific_hour(self, area: str, year: int, date: str) -> pd.DataFrame:
+        df = self.__get_values_hourly(area, year)
+        return df[df['datetime'] == date]
+
+    def __get_values_hourly_for_specific_week(self, area: str, year: int, week: int) -> pd.DataFrame:
+        df = self.__get_values_hourly(area, year)
+        day_col = df['Unnamed: 2_level_0']
+        week_calc = (day_col - 1) // 7 + 1
+        return df[week_calc == week]
+
     # common helper to get hourly series by header
     def _get_hourly_series(self, area: str, year: int, header: str) -> pd.Series:
         df = self.__get_values_hourly(area, year)
