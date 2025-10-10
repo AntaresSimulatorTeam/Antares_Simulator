@@ -425,12 +425,11 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
                                     "bounds",
                                     Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)});
 
-    const vector<unsigned int> timeSteps{1, 2};
+    const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 0};
-
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
-    bounds_time_series->add({1. * timeSteps.at(0), 1. * timeSteps.at(0), 1. * timeSteps.at(1)});
+    bounds_time_series->add({0., 1., 2.});
     LinearProblemData data;
     data.addDataSeries(std::move(bounds_time_series));
 
@@ -483,7 +482,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
                                     Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)},
       "GROUPENAME");
 
-    const vector<unsigned int> timeSteps{1, 2};
+    const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 3};
 
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
@@ -710,7 +709,7 @@ BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)
 {
     VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.), false, false};
     VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.), false, false};
-    auto objective = multiply(variable("v2", 0), literal(37));
+    auto objective = multiply(variable("v2", 1), literal(37));
 
     createModel("model", {}, {var1Data, var2Data}, {}, objective);
     createComponent("model", "componentA", {});
