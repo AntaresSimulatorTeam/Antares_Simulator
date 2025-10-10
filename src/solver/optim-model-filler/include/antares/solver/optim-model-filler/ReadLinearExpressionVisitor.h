@@ -24,7 +24,6 @@
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
-#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
