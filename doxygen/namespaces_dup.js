@@ -1602,6 +1602,8 @@ var namespaces_dup =
             [ "PrecisionLevelToStream", "categories_8h.html#ae231901c1e944ee4888a0f4333cffab4", null ]
           ] ],
           [ "Common", null, [
+            [ "ComposeAll", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll" ],
+            [ "ComposeAll< Last >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll_3_01Last_01_4.html", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll_3_01Last_01_4" ],
             [ "MultipleCaptionProxy", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy.html", null ],
             [ "MultipleCaptionProxy< 0, VCardT >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html", null ],
             [ "MultipleCaptionProxy< 1, VCardT >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html", null ],
@@ -1754,12 +1756,12 @@ var namespaces_dup =
             [ "WaterValue", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue" ],
             [ "AllVariables", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#ae47c6db4844be19e259a3885f0613d52", null ],
             [ "ItemList", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#aa4aad598d0e0f49745c15bbadccb78df", null ],
-            [ "Links", "solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h.html#ad946441842cca3fb5eda101be73c6a90", null ],
+            [ "Links", "solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h.html#a54d7da066813efbc9c902e17a33c0cbd", null ],
             [ "TimeSeriesValuesGeneration", "generation_8h.html#abee688d4b58a65940f8a284534e8842a", null ],
             [ "TimeSeriesValuesSolar", "generation_8h.html#add2d7087d91e303778c16bcb6f8330dc", null ],
             [ "TimeSeriesValuesWind", "generation_8h.html#a23f8f3edda80f0c6c10615325c0986d5", null ],
             [ "VariablePerLink", "solver_2variable_2include_2antares_2solver_2variable_2economy_2links_8h.html#a44aafe2a340f8ea798f90fa7c9aa6f30", null ],
-            [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a33d9e91e2b55c44855f707b198b9378b", null ],
+            [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a03a7290b98742796ae5ee241e0368064", null ],
             [ "VariablesPerBindingConstraints", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a005042f761a476e46844d1dd486d074d", null ],
             [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2economy_2all_8h.html#a2aaa7fd9e0789b2c39f1179dd8f5f479", null ],
             [ "VCardTimeSeriesValuesGeneration", "generation_8h.html#a282c86615c4960094d02ae954f621a8d", null ],
