@@ -198,7 +198,7 @@ $(document).ready(function(){initNavTree('thermalAirPollutantEmissions_8h_source
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> IntermediateValuesBaseType[<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#a6d0e62f87596849da1401af6b63a0cff">columnCount</a>];</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">typedef</span> IntermediateValuesBaseType* IntermediateValuesType;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">typedef</span> IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">using</span> IntermediateValuesTypeForSpatialAg = std::unique_ptr&lt;IntermediateValuesBaseType[]&gt;;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html">   88</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html">Multiple</a></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    {</div>

@@ -194,7 +194,7 @@ $(document).ready(function(){initNavTree('lolp_8h_source.html',''); initResizabl
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValuesBaseType</a>;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">typedef</span> std::vector&lt;IntermediateValues&gt; IntermediateValuesType;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValuesBaseType</a>* <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValuesTypeForSpatialAg</a>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">using</span> IntermediateValuesTypeForSpatialAg = std::unique_ptr&lt;IntermediateValuesBaseType[]&gt;;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}; <span class="comment">// class VCard</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
