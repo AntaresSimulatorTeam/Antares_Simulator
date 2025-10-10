@@ -262,10 +262,8 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
                                                             &data,
                                                             &scenarioGroupRepository);
-    for (const auto& component: modelerData->system->Components())
-    {
-        optimEntityContainer.addFromSystemComponent(component);
-    }
+
+    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
     setUpLegacyLp(constraints, true, 10);
@@ -308,10 +306,8 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
                                                             &data,
                                                             &scenarioGroupRepository);
-    for (const auto& component: modelerData->system->Components())
-    {
-        optimEntityContainer.addFromSystemComponent(component);
-    }
+
+    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(10, 11, optimEntityContainer);
     // Legacy indexing of TS always starts at 1
     std::vector<std::string> constraints(
@@ -378,10 +374,8 @@ BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
     Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
                                                             &data,
                                                             &scenarioGroupRepository);
-    for (const auto& component: modelerData->system->Components())
-    {
-        optimEntityContainer.addFromSystemComponent(component);
-    }
+
+    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever"});
     setUpLegacyLp(constraints, true, 0);

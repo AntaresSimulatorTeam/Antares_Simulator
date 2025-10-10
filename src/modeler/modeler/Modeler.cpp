@@ -71,7 +71,7 @@ public:
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         const auto& components = system_->Components();
-        optimEntityContainer_.reserveOptimComponents(components.size());
+        optimEntityContainer_.addFromSystemComponents(components);
 
         // All LP variables coordinates (component id, variable id, scenario, time step)
         for (const auto& component: components)
@@ -80,7 +80,6 @@ public:
                                                                       optimEntityContainer_,
                                                                       scenarioGroupRepository_);
             fillers.push_back(std::move(cf));
-            optimEntityContainer_.addFromSystemComponent(component);
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);
