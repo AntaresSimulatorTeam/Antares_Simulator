@@ -165,7 +165,7 @@ $(document).ready(function(){initNavTree('weekly__optimization_8h_source.html','
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                       <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo,</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                       <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; writer,</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                       <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html">Simulation::ISimulationObserver</a>&amp; simulationObserver,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                       <a class="code" href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a>&amp; simulationTables);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                       <a class="code" href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a>* simulationTables);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    ~<a class="code" href="classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html">WeeklyOptimization</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> solve();</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
@@ -174,7 +174,7 @@ $(document).ready(function(){initNavTree('weekly__optimization_8h_source.html','
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* <span class="keyword">const</span> problemeHebdo_ = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; writer_;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::reference_wrapper&lt;Simulation::ISimulationObserver&gt; simulationObserver_;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a>&amp; simulationTables_;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a>* simulationTables_ = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;} <span class="comment">// namespace Antares::Solver::Optimization</span></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:34</div></div>
