@@ -138,18 +138,14 @@ public:
         return optimComponents_.at(index);
     }
 
-    void addFromSystemComponent(const Antares::ModelerStudy::SystemModel::Component& component);
+    void addFromSystemComponents(
+      const std::vector<Antares::ModelerStudy::SystemModel::Component>& component);
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
                             const TimeIndex& timeIndex);
 
     unsigned int ConstraintGLobalIndex() const
     {
         return static_cast<unsigned int>(constraintStartLine_.size());
-    }
-
-    void reserveOptimComponents(size_t size)
-    {
-        optimComponents_.reserve(size);
     }
 
 private:

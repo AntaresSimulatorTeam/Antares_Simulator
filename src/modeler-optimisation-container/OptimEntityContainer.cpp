@@ -35,28 +35,33 @@ OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& lin
 {
 }
 
-void OptimEntityContainer::addFromSystemComponent(
-  const Antares::ModelerStudy::SystemModel::Component& component)
+void OptimEntityContainer::addFromSystemComponents(
+  const std::vector<Antares::ModelerStudy::SystemModel::Component>& components)
 {
-    const auto* model = component.getModel();
-    const auto& variables = model->Variables();
-    std::vector<unsigned int> modelVariableGlobalIndices;
-    modelVariableGlobalIndices.resize(variables.size());
-
-    for (std::size_t variableLocalIndex = 0; variableLocalIndex < variables.size();
-         ++variableLocalIndex)
+    optimComponents_.clear();
+    optimComponents_.reserve(components.size());
+    for (const auto& component: components)
     {
-        modelVariableGlobalIndices[variableLocalIndex] = variableGlobalIndex_; // used in
-        // ReadlinearExpressionVisitor
-        ++variableGlobalIndex_;
+        const auto* model = component.getModel();
+        const auto& variables = model->Variables();
+        std::vector<unsigned int> modelVariableGlobalIndices;
+        modelVariableGlobalIndices.resize(variables.size());
+
+        for (auto variableLocalIndex = 0; variableLocalIndex < variables.size();
+             ++variableLocalIndex)
+        {
+            modelVariableGlobalIndices[variableLocalIndex] = variableGlobalIndex_; // used in
+            // ReadlinearExpressionVisitor
+            ++variableGlobalIndex_;
+        }
+        optimComponents_.push_back(
+          {.index = component.Index(),
+           .modelVariableGlobalIndices = modelVariableGlobalIndices,
+           .evaluationContext = Optimisation::EvaluationContext(
+             &component,
+             data_,
+             &scenarioGroupRepository_->scenario(component.getScenarioGroupId()))});
     }
-    optimComponents_.push_back(
-      {.index = component.Index(),
-       .modelVariableGlobalIndices = modelVariableGlobalIndices,
-       .evaluationContext = Optimisation::EvaluationContext(&component,
-                                                            data_,
-                                                            &scenarioGroupRepository_->scenario(
-                                                              component.getScenarioGroupId()))});
 }
 
 void OptimEntityContainer::registerConstraint(const ModelerStudy::SystemModel::Component& component,
