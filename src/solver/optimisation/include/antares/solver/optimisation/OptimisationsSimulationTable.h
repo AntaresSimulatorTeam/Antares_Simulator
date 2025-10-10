@@ -37,8 +37,8 @@ public:
     void write();
 
     void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
-    ISimulationTable& firstOptimSimulationTable();
-    ISimulationTable& secondOptimSimulationTable();
+    ISimulationTable* firstOptimSimulationTable();
+    ISimulationTable* secondOptimSimulationTable();
     std::string getHeader() const;
 
 private:

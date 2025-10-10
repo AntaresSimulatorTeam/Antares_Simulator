@@ -22,7 +22,7 @@
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
-#include "antares/solver/optim-model-filler/LinearExpression.h"
+#include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
 
@@ -57,7 +57,7 @@ public:
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_HEBDO* problemeHebdo_;

@@ -35,4 +35,6 @@ library:
           expression: gen1_p + gen2_p - load = 0
         - id: fictive_ramp_constraint
           expression: gen1_p <= 1.5 * gen1_max_p[t-1]
-      objective: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost
+      objective-contributions:
+        - id: objective
+          expression: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost

@@ -141,8 +141,8 @@ public:
 
         // 2 - Getting the numpspace and scratchMap associated to the current year
         unsigned numSpace = numspaceManager.getAvailableNumSpace();
+        Yuni::Logs::threadNumber() = numSpace;
         logs.info() << "Year " << y + 1 << " started";
-        logs.debug() << "year " << y + 1 << " received numSpace " << numSpace;
 
         Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
 
@@ -172,11 +172,14 @@ public:
                                              hydroManagement.ventilationResults(),
                                              optWriter,
                                              scratchmap);
-        auto& simTable = simulation_->getSimulationTable(numSpace);
+        if (!study.parameters.noOutput)
+        {
+            auto& simTable = simulation_->getSimulationTable(numSpace);
 
-        auto buffers = simTable.moveBuffers();
+            auto buffers = simTable.moveBuffers();
 
-        simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
+            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
+        }
 
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
@@ -871,7 +874,10 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     pQueueService->wait(Yuni::qseIdle);
     pQueueService->stop();
-    aggregateAndWriteSimulationTables();
+    if (!study.parameters.noOutput)
+    {
+        aggregateAndWriteSimulationTables();
+    }
     results.join();
     pResultWriter.flush();
     // On regarde si au moins une année du lot n'a pas trouvé de solution

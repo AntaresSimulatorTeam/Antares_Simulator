@@ -62,7 +62,7 @@ jobs:
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.ccache
-        key: ${{ matrix.os }}-${{ github.ref_name }}
+        key: ${{ matrix.os }}-${{ github.event.pull_request.head.ref }}
         restore-keys: |
           ${{ matrix.os }}- 
 
@@ -253,5 +253,5 @@ jobs:
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.ccache
-        key: ${{ matrix.os }}-${{ github.ref_name }}
+        key: ${{ matrix.os }}-${{ github.event.pull_request.head.ref }}
 

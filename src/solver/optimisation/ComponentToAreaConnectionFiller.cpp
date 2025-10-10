@@ -111,9 +111,9 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
             areaBalanceConstraint->setCoefficient(solverVariables.at(index).get(), -coef);
         }
 
-        double offset = linearExpression[localIndex].constant();
-        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + offset,
-                                         areaBalanceConstraint->getUb() + offset);
+        double constant = linearExpression[localIndex].constant();
+        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + constant,
+                                         areaBalanceConstraint->getUb() + constant);
     }
 }
 
@@ -138,7 +138,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
-    auto linearExpression = visitor.visitRemoveDuplicates(
+    auto linearExpression = visitor.visitMergeDuplicates(
       component.nodeAtPortField(portId, injectionFieldId));
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }
@@ -158,7 +158,7 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
     }
 }
 
-void ComponentToAreaConnectionFiller::addObjective(const FillContext&)
+void ComponentToAreaConnectionFiller::addObjectives(const FillContext&)
 {
     // nothing to do
 }

@@ -41,7 +41,7 @@ void OPT_OptimisationHebdomadaireLineaire(
   PROBLEME_HEBDO* pProblemeHebdo,
   Solver::IResultWriter& writer,
   Solver::Simulation::ISimulationObserver& simulationObserver,
-  OptimisationsSimulationTable& simulationTables);
+  OptimisationsSimulationTable* simulationTables);
 void OPT_OptimisationHebdomadaireQuadratique(const OptimizationOptions& options,
                                              PROBLEME_HEBDO* pProblemeHebdo);
 
@@ -62,7 +62,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver,
-                                      OptimisationsSimulationTable& simulationTables);
+                                      OptimisationsSimulationTable* simulationTables);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 
 /*!
@@ -76,14 +76,14 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int,
                          const OptPeriodStringGenerator&,
                          Antares::Solver::IResultWriter& writer,
-                         ISimulationTable& simulationTable);
+                         ISimulationTable* simulationTable);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
                               Solver::Simulation::ISimulationObserver& simulationObserver,
-                              OptimisationsSimulationTable& simulationTables);
+                              OptimisationsSimulationTable* simulationTables);
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 /*------------------------------*/
 

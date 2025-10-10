@@ -26,6 +26,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/optim-model-filler/LinearExpression.h>
+#include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 
 using namespace Antares::Optimization;
 
@@ -56,7 +57,7 @@ BOOST_AUTO_TEST_CASE(sum_two_linear_expressions)
 
     auto sum = linearExpression1;
     sum += linearExpression2;
-    sum.removeDuplicateCoefficients();
+    sum.mergeDuplicateCoefficients();
     BOOST_CHECK_EQUAL(sum.constant(), 3.);
     BOOST_REQUIRE_EQUAL(sum.size(), 3);
     BOOST_CHECK_EQUAL(sum[0].second, -5.);
@@ -71,7 +72,7 @@ BOOST_AUTO_TEST_CASE(subtract_two_linear_expressions)
 
     auto sub = linearExpression1;
     sub -= linearExpression2;
-    sub.removeDuplicateCoefficients();
+    sub.mergeDuplicateCoefficients();
     BOOST_CHECK_EQUAL(sub.constant(), 5.);
     BOOST_REQUIRE_EQUAL(sub.size(), 3);
     BOOST_CHECK_EQUAL(sub[0].second, -5.);

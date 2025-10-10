@@ -44,7 +44,7 @@ struct LibraryObjects
                            .port_field_definitions = {},
                            .constraints = {{"constraint1", "cost"}},
                            .binding_constraints = {},
-                           .objective = "",
+                           .objectives = {},
                            .extra_outputs = {}};
 
     YmlSystem::Parser parser;
@@ -207,7 +207,9 @@ static const auto libraryYaml_1 = R"(
                 - port: injection_port
                   field: port_name
                   definition: generation
-              objective: cost * generation
+              objective:
+                - id: objective
+                - expression: cost * generation
 
             - id: node
               description: A basic balancing node model

@@ -247,10 +247,9 @@ struct ComponentToAreaConnectionFillerFixture
                                                optimEntityContainer,
                                                data,
                                                scenarioGroupRepository);
-
         filler.addVariables(fillCtx);
         filler.addConstraints(fillCtx);
-        filler.addObjective(fillCtx);
+        filler.addObjectives(fillCtx);
     }
 };
 
