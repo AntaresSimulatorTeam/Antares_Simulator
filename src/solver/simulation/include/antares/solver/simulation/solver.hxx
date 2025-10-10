@@ -141,8 +141,8 @@ public:
 
         // 2 - Getting the numpspace and scratchMap associated to the current year
         unsigned numSpace = numspaceManager.getAvailableNumSpace();
+        Yuni::Logs::threadNumber() = numSpace;
         logs.info() << "Year " << y + 1 << " started";
-        logs.debug() << "year " << y + 1 << " received numSpace " << numSpace;
 
         Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
 

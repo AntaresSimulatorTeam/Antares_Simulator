@@ -10,10 +10,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <optional>
+#include <string>
+
 #include "../null.h"
 
 namespace Yuni::Logs
 {
+std::optional<int>& threadNumber();
+
 template<class LeftType = NullDecorator>
 class YUNI_DECL ApplicationName: public LeftType
 {
@@ -49,6 +54,12 @@ public:
         // Write the verbosity to the output
         out.put('[');
         out.write(pAppName.c_str(), pAppName.size());
+        if (const std::optional<int>& tnum = threadNumber(); tnum.has_value())
+        {
+            out.put('-');
+            const std::string tnumString = std::to_string(*tnum);
+            out.write(tnumString.c_str(), tnumString.size());
+        }
         out.put(']');
         // Transmit the message to the next handler
         LeftType::template internalDecoratorAddPrefix<Handler, VerbosityType, O>(out, s);
