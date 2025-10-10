@@ -52,6 +52,8 @@ typedef FlowLinear             // Flow linear
           <>>>>>>>>>
     VariablePerLink;
 
+// Make Links a template alias to be used in Common::ComposeAll
+template<class>
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 
 } // namespace Antares::Solver::Variable::Economy
