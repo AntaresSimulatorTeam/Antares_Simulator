@@ -161,94 +161,40 @@ typedef            // Prices
                                              >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
-/*!
-** \brief All variables for a single set of areas (economy)
-*/
-typedef // Prices
-  Common::SpatialAggregate<
-    OverallCost,
-    Common::SpatialAggregate<
-      OperatingCost,
-      Common::SpatialAggregate<
-        Price,
-        // Thermal pollutants
-        Common::SpatialAggregate<
-          ThermalAirPollutantEmissions,
-          // Production by thermal cluster
-          Common::SpatialAggregate<
-            Balance,
-            // Misc Gen.
-            Common::SpatialAggregate<
-              RowBalance,
-              Common::SpatialAggregate<
-                PSP,
-                Common::SpatialAggregate<
-                  MiscGenMinusRowPSP,
-                  // Time series
-                  Common::SpatialAggregate<
-                    TimeSeriesValuesLoad,
-                    Common::SpatialAggregate<
-                      TimeSeriesValuesHydro,
-                      Common::SpatialAggregate<
-                        TimeSeriesValuesWind,
-                        Common::SpatialAggregate<
-                          TimeSeriesValuesSolar,
-                          // Other
-                          Common::SpatialAggregate<
-                            HydroStorage,
-                            Common::SpatialAggregate<
-                              Pumping,
-                              Common::SpatialAggregate<
-                                ReservoirLevel,
-                                Common::SpatialAggregate<
-                                  Inflows,
-                                  Common::SpatialAggregate<
-                                    Overflows,
-                                    Common::SpatialAggregate<
-                                      WaterValue,
-                                      Common::SpatialAggregate<
-                                        HydroCost,
-                                        Common::SpatialAggregate<
-                                          UnsupliedEnergy,
-                                          Common::SpatialAggregate<
-                                            DomesticUnsuppliedEnergy,
-                                            Common::SpatialAggregate<
-                                              LMRViolations,
-                                              Common::SpatialAggregate<
-                                                SpilledEnergy,
-                                                // LOLD
-                                                Common::SpatialAggregate<
-                                                  LOLD,
-                                                  Common::SpatialAggregate<
-                                                    LOLP,
-                                                    Common::SpatialAggregate<
-                                                      NearPriceCap,
-                                                      Common::SpatialAggregate<
-                                                        AvailableDispatchGen,
-                                                        Common::SpatialAggregate<
-                                                          DispatchableGenMargin,
-                                                          Common::SpatialAggregate<
-                                                            DtgMarginCsr,
-                                                            Common::SpatialAggregate<
-                                                              Marge,
-
-                                                              // Detail Prices
-                                                              Common::SpatialAggregate<
-                                                                NonProportionalCost, // MBO
-                                                                                     // 13/05/2014
-                                                                                     // -
-                                                                                     // refs:
-                                                                                     // #21
-
-                                                                // Number Of Dispatched Units
-                                                                Common::SpatialAggregate<
-                                                                  NbOfDispatchedUnits // MBO
-                                                                                      // 25/02/2016
-                                                                                      // -
-                                                                                      // refs:
-                                                                                      // #55
-                                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    VariablesPerSetOfAreas;
+/*!\n** \brief All variables for a single set of areas (economy)
+ */
+using VariablesPerSetOfAreas = Common::SpatialAggregateAll<OverallCost,
+                                                           OperatingCost,
+                                                           Price,
+                                                           ThermalAirPollutantEmissions,
+                                                           Balance,
+                                                           RowBalance,
+                                                           PSP,
+                                                           MiscGenMinusRowPSP,
+                                                           TimeSeriesValuesLoad,
+                                                           TimeSeriesValuesHydro,
+                                                           TimeSeriesValuesWind,
+                                                           TimeSeriesValuesSolar,
+                                                           HydroStorage,
+                                                           Pumping,
+                                                           ReservoirLevel,
+                                                           Inflows,
+                                                           Overflows,
+                                                           WaterValue,
+                                                           HydroCost,
+                                                           UnsupliedEnergy,
+                                                           DomesticUnsuppliedEnergy,
+                                                           LMRViolations,
+                                                           SpilledEnergy,
+                                                           LOLD,
+                                                           LOLP,
+                                                           NearPriceCap,
+                                                           AvailableDispatchGen,
+                                                           DispatchableGenMargin,
+                                                           DtgMarginCsr,
+                                                           Marge,
+                                                           NonProportionalCost,
+                                                           NbOfDispatchedUnits>::type;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
   Container::EndOfList          // End of variable list

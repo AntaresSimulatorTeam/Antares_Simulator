@@ -19,14 +19,14 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/optim-model-filler/LinearExpression.h"
-
 #include <algorithm>
 #include <stdexcept>
 
+#include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
+
 namespace
 {
-void removeDuplicates(std::vector<std::pair<int, double>>& v)
+void mergeDuplicates(std::vector<std::pair<int, double>>& v)
 {
     // Most constraints have 1 or 2 terms, so we handle them here without sort & loops
     switch (v.size())
@@ -90,9 +90,9 @@ std::size_t LinearExpression::size() const
     return coefs_.size();
 }
 
-void LinearExpression::removeDuplicateCoefficients()
+void LinearExpression::mergeDuplicateCoefficients()
 {
-    removeDuplicates(coefs_);
+    mergeDuplicates(coefs_);
 }
 
 LinearExpression& LinearExpression::operator*=(double factor)
@@ -165,11 +165,7 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
         // which this representation cannot hold.
         throw std::runtime_error("Quadratic term detected");
     }
-    else if (!hasCoefs() && !other.hasCoefs())
-    {
-        // constant * constant
-        constant_ *= other.constant_;
-    }
+
     else if (hasCoefs() && !other.hasCoefs())
     {
         // linear * constant
@@ -177,9 +173,8 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
         {
             coef *= other.constant_;
         }
-        constant_ *= other.constant_;
     }
-    else // (!hasCoefs() && other.hasCoefs())
+    else if (!hasCoefs() && other.hasCoefs())
     {
         // constant * linear
         coefs_ = other.coefs_;
@@ -187,252 +182,15 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
         {
             coef *= constant_; // use this->constant as multiplier
         }
-        constant_ *= other.constant_;
     }
+    // Also if (!hasCoefs() && !other.hasCoefs())
+    constant_ *= other.constant_;
     return *this;
 }
 
 bool LinearExpression::hasCoefs() const
 {
     return !coefs_.empty();
-}
-
-TimeDependentLinearExpression::TimeDependentLinearExpression(std::size_t nbTimesteps)
-{
-    if (nbTimesteps == 1)
-    {
-        v_.emplace<LinearExpression>();
-    }
-    else
-    {
-        v_.emplace<std::vector<LinearExpression>>(nbTimesteps);
-    }
-}
-
-TimeDependentLinearExpression::TimeDependentLinearExpression(const std::span<const double>& values)
-{
-    if (values.size() == 1)
-    {
-        v_.emplace<LinearExpression>(values[0]);
-    }
-    else
-    {
-        auto& out = v_.emplace<std::vector<LinearExpression>>();
-        out.reserve(values.size());
-        for (const double& v: values)
-        {
-            out.emplace_back(v);
-        }
-    }
-}
-
-TimeDependentLinearExpression::TimeDependentLinearExpression(LinearExpression&& expr):
-    v_(std::move(expr))
-{
-}
-
-void TimeDependentLinearExpression::expandTo(std::size_t nbTimesteps)
-{
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        v_.emplace<std::vector<LinearExpression>>(nbTimesteps, *expr);
-    }
-}
-
-std::vector<double> TimeDependentLinearExpression::constant() const
-{
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return {expr->constant()};
-    }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        std::vector<double> ret;
-        ret.reserve(expr->size());
-        for (const auto& x: *expr)
-        {
-            ret.push_back(x.constant());
-        }
-        return ret;
-    }
-    throw std::runtime_error("Invalid variant");
-}
-
-void TimeDependentLinearExpression::removeDuplicateCoefficients()
-{
-    for (auto& expr: *this)
-    {
-        expr.removeDuplicateCoefficients();
-    }
-}
-
-LinearExpression* TimeDependentLinearExpression::begin()
-{
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return expr;
-    }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->data();
-    }
-    throw std::runtime_error("Invalid variant");
-}
-
-const LinearExpression* TimeDependentLinearExpression::begin() const
-{
-    if (const auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return expr;
-    }
-    if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->data();
-    }
-    throw std::runtime_error("Invalid variant");
-}
-
-LinearExpression* TimeDependentLinearExpression::end()
-{
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return expr + 1;
-    }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->data() + expr->size();
-    }
-    throw std::runtime_error("Invalid variant");
-}
-
-const LinearExpression* TimeDependentLinearExpression::end() const
-{
-    if (const auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return expr + 1;
-    }
-    if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->data() + expr->size();
-    }
-    throw std::runtime_error("Invalid variant");
-}
-
-LinearExpression& TimeDependentLinearExpression::operator[](std::size_t idx)
-{
-    if (auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return *expr;
-    }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->operator[](idx);
-    }
-    throw std::runtime_error("Invalid variant");
-}
-
-const LinearExpression& TimeDependentLinearExpression::operator[](std::size_t idx) const
-{
-    if (const auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return *expr;
-    }
-    if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->operator[](idx);
-    }
-    throw std::runtime_error("Invalid variant");
-}
-
-std::size_t TimeDependentLinearExpression::size() const
-{
-    if (const auto* expr = std::get_if<LinearExpression>(&v_))
-    {
-        return 1;
-    }
-    if (const auto* expr = std::get_if<std::vector<LinearExpression>>(&v_))
-    {
-        return expr->size();
-    }
-    throw std::runtime_error("Invalid variant");
-}
-
-TimeDependentLinearExpression& TimeDependentLinearExpression::operator+=(
-  const TimeDependentLinearExpression& other)
-{
-    if (other.size() > size())
-    {
-        expandTo(other.size());
-    }
-    for (std::size_t t = 0; t < size(); ++t)
-    {
-        this->operator[](t) += other[t];
-    }
-    return *this;
-}
-
-TimeDependentLinearExpression& TimeDependentLinearExpression::operator-=(
-  const TimeDependentLinearExpression& other)
-{
-    if (other.size() > size())
-    {
-        expandTo(other.size());
-    }
-    for (std::size_t t = 0; t < size(); ++t)
-    {
-        this->operator[](t) -= other[t];
-    }
-    return *this;
-}
-
-void TimeDependentLinearExpression::rotate(int shift)
-{
-    if (shift == 0)
-    {
-        // Nothing to do
-        return;
-    }
-    if (auto* expr = std::get_if<std::vector<LinearExpression>>(&v_); expr && !expr->empty())
-    {
-        const int n = static_cast<int>(expr->size());
-        const int k = ((shift % n) + n) % n;
-        std::rotate(expr->begin(), expr->begin() + k, expr->end());
-    }
-}
-
-TimeDependentLinearExpression& TimeDependentLinearExpression::operator*=(double factor)
-{
-    for (auto& expr: *this)
-    {
-        expr *= factor;
-    }
-    return *this;
-}
-
-TimeDependentLinearExpression& TimeDependentLinearExpression::operator*=(
-  const TimeDependentLinearExpression& other)
-{
-    if (other.size() > size())
-    {
-        expandTo(other.size());
-    }
-    int t = 0;
-    for (auto& expr: *this)
-    {
-        expr *= other[t];
-        t++;
-    }
-    return *this;
-}
-
-TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
-{
-    TimeDependentLinearExpression result = *this;
-    for (auto& expr: result)
-    {
-        expr = -expr;
-    }
-    return result;
 }
 
 } // namespace Antares::Optimization

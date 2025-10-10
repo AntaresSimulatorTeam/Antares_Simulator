@@ -50,7 +50,7 @@ void LegacyFiller::addConstraints(const FillContext&)
     CopyMatrix();
 }
 
-void LegacyFiller::addObjective(const FillContext&)
+void LegacyFiller::addObjectives(const FillContext&)
 {
     // nothing to do: objective coefficients are set along with variables definition
 }
