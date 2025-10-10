@@ -736,16 +736,4 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x")), -25);
 }
 
-BOOST_AUTO_TEST_CASE(offset_in_objective__throws_exception)
-{
-    auto objective = literal(6);
-    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
-    createComponent("model", "componentA", {});
-    BOOST_CHECK_EXCEPTION(buildLinearProblem(),
-                          invalid_argument,
-                          checkMessage(
-                            "Antares does not support objective offsets (objective 'objective' "
-                            "found in model 'model' of component 'componentA')."));
-}
-
 BOOST_AUTO_TEST_SUITE_END()

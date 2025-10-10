@@ -177,11 +177,10 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     // only dependent
 
     // assume global nb timeStep == nbtimeSteps
-    const auto& parameters = evalContext_.getParameterValue(
-      node->value(),
-      fillContext_.getYear(),
-      fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
-      fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
+    const auto& parameters = evalContext_.getParameterValue(node->value(),
+                                                            fillContext_.getYear(),
+                                                            fillContext_.getGlobalFirstTimeStep(),
+                                                            fillContext_.getGlobalLastTimeStep());
 
     return Antares::Optimization::TimeDependentLinearExpression(parameters);
 }

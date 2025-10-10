@@ -42,10 +42,10 @@ struct MockLinearProblemData: LinearProblemApi::ILinearProblemData
                                                   unsigned firstHour,
                                                   unsigned lastHour) const override
     {
-        return v_;
+        return {v_.begin(), lastHour - firstHour + 1};
     }
 
-    const std::vector<double> v_{0., 1., 2.};
+    const std::vector<double> v_{0., 1., 2., 3., 4., 5.}; // should be enough
 };
 
 template<class Visitor>
