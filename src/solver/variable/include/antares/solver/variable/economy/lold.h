@@ -18,8 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#ifndef SOLVER_VARIABLE_ECONOMY_LOLD_H__
-#define SOLVER_VARIABLE_ECONOMY_LOLD_H__
+#pragma once
 
 #include "lold_base.h"
 
@@ -57,5 +56,3 @@ template<class NextT = Container::EndOfList>
 using LOLD = LOLD_Base<LOLDTraits, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy
-
-#endif // SOLVER_VARIABLE_ECONOMY_LOLD_H__
