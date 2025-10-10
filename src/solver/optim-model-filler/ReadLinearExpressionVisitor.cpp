@@ -46,10 +46,10 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const Antares::ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
-    nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps()),
-    fillContext_(fillContext),
     evalContext_(optimEntityContainer.getEvaluationContext(component)),
-    evalVisitor_(optimEntityContainer, fillContext, component)
+    fillContext_(fillContext),
+    evalVisitor_(optimEntityContainer, fillContext, component),
+    nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps())
 {
 }
 
