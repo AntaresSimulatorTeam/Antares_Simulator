@@ -1744,5 +1744,6 @@ var annotated_dup =
     [ "Variable", "classVariable.html", "classVariable" ],
     [ "VariableNamer", "classVariableNamer.html", "classVariableNamer" ],
     [ "VARIABLES_DUALES_INTERCONNEXIONS", "structVARIABLES__DUALES__INTERCONNEXIONS.html", "structVARIABLES__DUALES__INTERCONNEXIONS" ],
-    [ "Vec3", "structVec3.html", "structVec3" ]
+    [ "Vec3", "structVec3.html", "structVec3" ],
+    [ "VisitorFixture", "structVisitorFixture.html", "structVisitorFixture" ]
 ];

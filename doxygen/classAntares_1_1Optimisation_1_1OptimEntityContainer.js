@@ -1,7 +1,7 @@
 var classAntares_1_1Optimisation_1_1OptimEntityContainer =
 [
     [ "OptimEntityContainer", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#a86f20f0b74f53f9bf68262e3519d1ac6", null ],
-    [ "addFromSystemComponent", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#a5d69008f5c5db1fb561b80cf11df94d4", null ],
+    [ "addFromSystemComponents", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#afac1d46299d65d6cbc017e757ac13cb1", null ],
     [ "addStartColumn", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#a860a4298592d38b5301c62da338f0183", null ],
     [ "ConstraintGLobalIndex", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#a4f6bc3ef8012f13fc29ca52996e024df", null ],
     [ "getComponentConstraint", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#a2044fbfb59a224b7ad7012cdb447b4c7", null ],
@@ -16,6 +16,5 @@ var classAntares_1_1Optimisation_1_1OptimEntityContainer =
     [ "getVariableStartColumn", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#af3ffe643ef8e2635dfabf0ff32420809", null ],
     [ "getVariableStartColumn", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#abeb025da5afa418de0e4e2309e9b0f39", null ],
     [ "Problem", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#ad120f3107de9af36624bf39c0012a010", null ],
-    [ "registerConstraint", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#a08948ebedaa13e6411288b1f33dacbdd", null ],
-    [ "reserveOptimComponents", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#ac66d72078d8275b14ef7a92421c4b25f", null ]
+    [ "registerConstraint", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html#a08948ebedaa13e6411288b1f33dacbdd", null ]
 ];

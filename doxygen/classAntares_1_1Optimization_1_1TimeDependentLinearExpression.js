@@ -18,6 +18,7 @@ var classAntares_1_1Optimization_1_1TimeDependentLinearExpression =
     [ "operator+=", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a578860bc2bf47945b4796fd556f5e4d0", null ],
     [ "operator-", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#afaa6bbd69ca5d8c9549c4f30c838e5ed", null ],
     [ "operator-=", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a79fea80b9d3033b22d30e2e2e2a3f0c4", null ],
+    [ "operator/", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a81698325ca2b3aae34b016980292b27d", null ],
     [ "operator[]", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a30be9b5e9a0c50931a812fe93c3fdf94", null ],
     [ "operator[]", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#aafa20dd82f7a92912908ad146ecf2a41", null ],
     [ "rotate", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a59476fb9f5a2491823a05cc92d7a96cc", null ],

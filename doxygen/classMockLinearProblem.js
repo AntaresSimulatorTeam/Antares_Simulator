@@ -46,7 +46,9 @@ var classMockLinearProblem =
     [ "variableCount", "classMockLinearProblem.html#af78b0d69d93e854f1a5542806176d54a", null ],
     [ "WriteLP", "classMockLinearProblem.html#a18bdd1810ea90971f3a4ae3283aa1892", null ],
     [ "WriteLP", "classMockLinearProblem.html#a18bdd1810ea90971f3a4ae3283aa1892", null ],
+    [ "constraintCount_", "classMockLinearProblem.html#a1e5e030f206d269b7b082157c9a8a81e", null ],
     [ "constraints_", "classMockLinearProblem.html#a46f3d6cab52e01d560dbbd3cf6b35252", null ],
     [ "isLP_", "classMockLinearProblem.html#aee16a287b2f87dede7894bb57cab544a", null ],
+    [ "variableCount_", "classMockLinearProblem.html#aa35fc0b084cfe26b6dcf00283e332d1c", null ],
     [ "variables_", "classMockLinearProblem.html#acf46755ff9d111faf013424c8b5ac773", null ]
 ];

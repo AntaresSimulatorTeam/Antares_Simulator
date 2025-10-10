@@ -1,25 +1,14 @@
 var structMyDummyFixture =
 [
     [ "MyDummyFixture", "structMyDummyFixture.html#a388448fc60eda8a6628e36e33e052437", null ],
-    [ "MyDummyFixture", "structMyDummyFixture.html#a388448fc60eda8a6628e36e33e052437", null ],
     [ "addComponent", "structMyDummyFixture.html#abbea9888ef9998d157a4dbd77541a052", null ],
-    [ "setComponentParameterValues", "structMyDummyFixture.html#ab2c55689ef04ec3210a80ce1af7afae6", null ],
-    [ "visitor", "structMyDummyFixture.html#a860aa368505fa917a761931b15eea4dd", null ],
-    [ "component", "structMyDummyFixture.html#a3bcbb74c2c23d45d1692864f867c7ca3", null ],
-    [ "componentBuilder", "structMyDummyFixture.html#a4d1f8675b8f7193f6272e4d38c9347b0", null ],
     [ "components", "structMyDummyFixture.html#a729b86a6cc6b2fb4fcc9b920a47005ec", null ],
     [ "ctx", "structMyDummyFixture.html#adf8353bba45cd4aeb4f6fc527dcee020", null ],
     [ "data", "structMyDummyFixture.html#a68cb5dd51e0ca2b207e7f98d45ebbfed", null ],
-    [ "data", "structMyDummyFixture.html#a7ffa9043f77d21e7a771b49509609f1b", null ],
     [ "defaultComponentEvalVisitor", "structMyDummyFixture.html#a11c71d9b944fcd774bb4725983ea7a50", null ],
-    [ "empty_scenario", "structMyDummyFixture.html#a404e232967ef668589cb3a12a33eb2bd", null ],
     [ "emptyScenario", "structMyDummyFixture.html#a91f17e9c252614496d41220189d4ec62", null ],
     [ "linearProblem", "structMyDummyFixture.html#a20f65daebcd1bbff9a215b8319f09126", null ],
-    [ "linearProblem", "structMyDummyFixture.html#a31bf0d2c7807a2966c7015af3f9e0a2f", null ],
-    [ "m", "structMyDummyFixture.html#aff338a606b9c977a778dfdc9417d5452", null ],
     [ "model", "structMyDummyFixture.html#ac6fb895949afcc7459ac9fd6394f86f2", null ],
-    [ "optimContainer", "structMyDummyFixture.html#acec5fa39fe0920cb78576034c328cad4", null ],
     [ "optimEntityContainer", "structMyDummyFixture.html#a929865efc1fc09c430059009cef917b8", null ],
-    [ "scenarioGroupRepository", "structMyDummyFixture.html#a062d6f6fd98cacab66820acbdd978abd", null ],
-    [ "scenarioGroupRepository", "structMyDummyFixture.html#ab192a18d16797f396996dfb3007ee121", null ]
+    [ "scenarioGroupRepository", "structMyDummyFixture.html#a062d6f6fd98cacab66820acbdd978abd", null ]
 ];

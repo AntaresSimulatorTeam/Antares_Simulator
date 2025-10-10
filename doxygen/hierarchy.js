@@ -905,6 +905,7 @@ var hierarchy =
     [ "Antares::Optimisation::LinearProblemApi::ILinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html", [
       [ "Antares::Optimisation::LinearProblemDataImpl::LinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html", null ],
       [ "ConstantDataSeries", "classConstantDataSeries.html", null ],
+      [ "MockLinearProblemData", "structMockLinearProblemData.html", null ],
       [ "MockLinearProblemData", "structMockLinearProblemData.html", null ]
     ] ],
     [ "Antares::Solver::ILoader", "classAntares_1_1Solver_1_1ILoader.html", [
@@ -1500,7 +1501,7 @@ var hierarchy =
       [ "MyDummyFixture", "structMyDummyFixture.html", null ]
     ] ],
     [ "Antares::Expressions::Registry< Node >", "classAntares_1_1Expressions_1_1Registry.html", [
-      [ "MyDummyFixture", "structMyDummyFixture.html", null ]
+      [ "VisitorFixture< Visitor >", "structVisitorFixture.html", null ]
     ] ],
     [ "Antares::Map::RemovalToolPredicate", "classAntares_1_1Map_1_1RemovalToolPredicate.html", null ],
     [ "Antares::Data::Parameters::RenewableGeneration", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html", null ],
