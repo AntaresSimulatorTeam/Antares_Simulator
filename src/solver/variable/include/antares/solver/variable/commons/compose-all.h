@@ -26,7 +26,7 @@
 namespace Antares::Solver::Variable::Common
 {
 
-// Variadic composition of class templates: ComposeAll<Head, Tail...>::type =
+// Variadic recursive composition of class templates: ComposeAll<Head, Tail...>::type =
 // Head<Tail<...<Container::EndOfList>>>
 template<template<class> class Head, template<class> class... Tail>
 struct ComposeAll
