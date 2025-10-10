@@ -80,7 +80,7 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
                                           const std::string& modelId)
 {
     auto lib = std::ranges::find_if(libraries,
-                                    [&libraryId](auto& l) { return l.Id() == libraryId; });
+                                    [&libraryId](const auto& l) { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
         throw LibraryNotFound(libraryId);

@@ -36,7 +36,6 @@ ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
 
   const Optimisation::LinearProblemApi::FillContext& fillContext,
   const Component& component,
-
   const Optimisation::OptimEntityContainer& optimEntityContainer):
     linear_expression_visitor_(optimEntityContainer, component, fillContext)
 {
@@ -61,21 +60,21 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right());
-    left.removeDuplicateCoefficients();
-    const std::vector<double> offset = -left.constant();
-    return {.coef_per_var = left, .lb = offset, .ub = offset};
+    left.mergeDuplicateCoefficients();
+    const std::vector<double> constant = -left.constant();
+    return {.coef_per_var = left, .lb = constant, .ub = constant};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
 {
     auto left = linear_expression_visitor_.dispatch(node->left());
     left -= linear_expression_visitor_.dispatch(node->right()); // TODO
-    left.removeDuplicateCoefficients();
-    const std::vector<double> offset = left.constant();
+    left.mergeDuplicateCoefficients();
+    const std::vector<double> constant = left.constant();
 
     return {.coef_per_var = left,
             .lb = std::vector<double>(left.size(), -std::numeric_limits<double>::infinity()),
-            .ub = -left.constant()};
+            .ub = -constant};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
@@ -83,7 +82,7 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode
     auto left = linear_expression_visitor_.dispatch(node->left());
 
     left -= linear_expression_visitor_.dispatch(node->right());
-    left.removeDuplicateCoefficients();
+    left.mergeDuplicateCoefficients();
     return {.coef_per_var = left,
             .lb = -left.constant(),
             .ub = std::vector<double>(left.size(), std::numeric_limits<double>::infinity())};

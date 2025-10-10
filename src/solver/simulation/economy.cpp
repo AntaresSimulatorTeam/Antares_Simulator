@@ -40,7 +40,7 @@ Economy::Economy(Data::Study& study,
     preproOnly(false),
     resultWriter(resultWriter),
     simulationObserver_(simulationObserver),
-    simulationTables_(study.maxNbYearsInParallel)
+    simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
 {
 }
 
@@ -68,6 +68,11 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
 
 OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
 {
+    if (numSpace >= simulationTables_.size())
+    {
+        throw std::out_of_range("Error: there is no simulation table for numSpace: "
+                                + std::to_string(numSpace));
+    }
     return simulationTables_[numSpace];
 }
 
@@ -94,12 +99,13 @@ bool Economy::simulationBegin()
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
-
+            auto* simulationsTables = simulationTables_.empty() ? nullptr
+                                                                : &simulationTables_[numSpace];
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
                                             simulationObserver_.get(),
-                                            simulationTables_[numSpace]);
+                                            simulationsTables);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -159,11 +165,14 @@ bool Economy::year(Progression::Task& progression,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-        auto& currentSimTable = simulationTables_[numSpace];
+        auto* currentSimTable = simulationTables_.empty() ? nullptr : &simulationTables_[numSpace];
         try
         {
             weeklyOptProblems_[numSpace].solve();
-            currentSimTable.write();
+            if (currentSimTable)
+            {
+                currentSimTable->write();
+            }
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);

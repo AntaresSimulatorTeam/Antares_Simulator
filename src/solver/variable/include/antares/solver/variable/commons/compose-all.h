@@ -23,16 +23,10 @@
 
 #include "antares/solver/variable/variable.h" // for Container::EndOfList
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Common
+namespace Antares::Solver::Variable::Common
 {
 
-// Variadic composition of class templates: ComposeAll<Head, Tail...>::type =
+// Variadic recursive composition of class templates: ComposeAll<Head, Tail...>::type =
 // Head<Tail<...<Container::EndOfList>>>
 template<template<class> class Head, template<class> class... Tail>
 struct ComposeAll
@@ -47,7 +41,4 @@ struct ComposeAll<Last>
     using type = Last<Container::EndOfList>;
 };
 
-} // namespace Common
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Common
