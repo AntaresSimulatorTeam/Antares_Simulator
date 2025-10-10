@@ -391,8 +391,6 @@ void FillSimulationTable(ISimulationTable& simulationTable,
 
     for (const auto& component: modelerData.system->Components())
     {
-        EmptyScenario emptyScenario;
-
         addVariableEntries(simulationTable,
                            linearProblem,
                            fillContext,
