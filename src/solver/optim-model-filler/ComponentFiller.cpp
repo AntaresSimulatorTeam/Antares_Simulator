@@ -344,7 +344,7 @@ void ComponentFiller::addObjectives(const Optimisation::LinearProblemApi::FillCo
 
     for (const auto& objective: model->Objectives())
     {
-        const auto linearExpression = visitor.visitRemoveDuplicates(
+        const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());
 
         auto& pb = optimEntityContainer_.Problem();

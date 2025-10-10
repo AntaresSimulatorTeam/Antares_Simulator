@@ -304,7 +304,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     std::optional<unsigned> scenario,
                     bool forceExportForScenarioIndex)
 {
-    const auto& cid = component.Id();
+    const auto& componentId = component.Id();
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
@@ -335,7 +335,7 @@ void addPortEntries(ISimulationTable& simulationTable,
             auto value = ts.has_value() ? portValue.valuesAsVector()[ts.value()]
                                         : portValue.valueAsDouble();
             simulationTable.addEntry({.block = tb.block,
-                                      .component = cid,
+                                      .component = componentId,
                                       .output = portFieldKey.portId + "." + portFieldKey.fieldId,
                                       .absolute_time_index = tb.absoluteTimeIndex,
                                       .block_time_index = tb.blockTimeIndex,
