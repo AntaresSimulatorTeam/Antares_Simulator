@@ -29,7 +29,7 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
                                        IResultWriter& writer,
                                        Simulation::ISimulationObserver& simulationObserver,
-                                       OptimisationsSimulationTable& simulationTables):
+                                       OptimisationsSimulationTable* simulationTables):
     options_(options),
     problemeHebdo_(problemeHebdo),
     writer_(writer),

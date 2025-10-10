@@ -475,7 +475,7 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
                                             1, // optimizationNumber
                                             generator,
                                             writer,
-                                            simulationTableCsv);
+                                            &simulationTableCsv);
 
     const auto expectedMps = R"(* Number of variables:   1
 * Number of constraints: 2
@@ -537,7 +537,7 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             1, // optimizationNumber
                                             generator,
                                             writer,
-                                            simulationTableCsv);
+                                            &simulationTableCsv);
     const auto expectedMps = R"(* Number of variables:   1
 * Number of constraints: 2
 NAME          Pb Solve
