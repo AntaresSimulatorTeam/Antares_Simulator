@@ -1536,11 +1536,11 @@ var namespaces_dup =
             [ "SpilledEnergy", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy" ],
             [ "AllVariables", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#aadba254376948c85488168521da2151d", null ],
             [ "ItemList", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#adc6eaa76997f99cf3790ca2dc8be2d0e", null ],
-            [ "Links", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h.html#ae3b0a2b2f36640f873adddb9386f9f75", null ],
-            [ "VariablePerLink", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h.html#ac7862558b93b2c0fa2c6765424d20a7e", null ],
-            [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#a3ab2b9be58958671624de85a5061fa52", null ],
+            [ "Links", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h.html#a590c05ac7db5d03171657827228ff8bd", null ],
+            [ "VariablePerLink", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2links_8h.html#abccb9c5161c189a0379631bf0d3eed2e", null ],
+            [ "VariablesPerArea", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#a11f45af3c747c01fa6dffe92ece3f594", null ],
             [ "VariablesPerBindingConstraints", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#a339039e669de07d5b94e857fef852f08", null ],
-            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#a3935b9d195d02b329dabef71505ee199", null ]
+            [ "VariablesPerSetOfAreas", "solver_2variable_2include_2antares_2solver_2variable_2adequacy_2all_8h.html#a91a0de08eec6b9feb86d100974b4c51e", null ]
           ] ],
           [ "Category", null, [
             [ "DataLevel", null, [

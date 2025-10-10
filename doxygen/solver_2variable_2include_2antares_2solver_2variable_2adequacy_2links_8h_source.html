@@ -154,32 +154,33 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// TODO SL: should be moved to common</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable//commons/links/links.h&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionFee.h&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionFeeAbs.h&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionProbability.h&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowLinear.h&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowLinearAbs.h&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowQuad.h&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/hurdleCosts.h&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/marginalCost.h&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Adequacy</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">using</span> VariablePerLink = Economy::FlowLinear <span class="comment">// Flow linear</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  &lt;Economy::FlowLinearAbs                   <span class="comment">// Flow linear Abs</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   &lt;Economy::FlowQuad                       <span class="comment">// Flow Quad</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    &lt;Economy::CongestionFee                 <span class="comment">// Congestion Fee</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;     &lt;Economy::CongestionFeeAbs             <span class="comment">// Congestion Fee (Abs)</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      &lt;Economy::MarginalCost                <span class="comment">// Marginal Cost</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;       &lt;Economy::CongestionProbability      <span class="comment">// Congestion Probability (+/-)</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        &lt;Economy::HurdleCosts               <span class="comment">// Hurdle costs</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;         &lt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/commons/compose-all.h&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionFee.h&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionFeeAbs.h&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionProbability.h&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowLinear.h&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowLinearAbs.h&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowQuad.h&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/hurdleCosts.h&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/economy/links/marginalCost.h&quot;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Adequacy</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">using</span> VariablePerLink = Common::ComposeAll&lt;Economy::FlowLinear,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                                           Economy::FlowLinearAbs,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                           Economy::FlowQuad,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                           Economy::CongestionFee,</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                                           Economy::CongestionFeeAbs,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                                           Economy::MarginalCost,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                                           Economy::CongestionProbability,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                                           Economy::HurdleCosts&gt;::type;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">using</span> Links = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html">Antares::Solver::Variable::Links&lt;VariablePerLink&gt;</a>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Adequacy</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ADEQUACY_LINK_H__</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">using</span> Links = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Links.html">Antares::Solver::Variable::Links&lt;VariablePerLink&gt;</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Adequacy</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ADEQUACY_LINK_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html">Antares::Solver::Variable::Links</a></div><div class="ttdef"><b>Definition:</b> links.h:75</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
