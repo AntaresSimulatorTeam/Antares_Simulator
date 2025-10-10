@@ -95,25 +95,25 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::DivisionNode* node)
+  const Nodes::DivisionNode*)
 {
     throw std::runtime_error("Not implemented");
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::EqualNode* node)
+  const Nodes::EqualNode*)
 {
     throw std::runtime_error("Not implemented");
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::LessThanOrEqualNode* node)
+  const Nodes::LessThanOrEqualNode*)
 {
     throw std::runtime_error("Not implemented");
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::GreaterThanOrEqualNode* node)
+  const Nodes::GreaterThanOrEqualNode*)
 {
     throw std::runtime_error("Not implemented");
 }
@@ -188,7 +188,7 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::PortFieldNode* node)
+  const Nodes::PortFieldNode*)
 {
     throw std::runtime_error("Not implemented");
 }
