@@ -37,7 +37,7 @@ namespace Antares::Solver::Variable::Economy
 {
 
 template<class Traits>
-struct VCardLOLD_Base
+struct VCard_Base
 {
     //! Caption
     static std::string Caption()
@@ -58,14 +58,9 @@ struct VCardLOLD_Base
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    typedef typename Traits::ResultsType ResultsType;
 
-    typedef VCardLOLD_Base VCardForSpatialAggregate;
+    typedef VCard_Base VCardForSpatialAggregate;
 
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
     //! File level (provided by the type of the results)
@@ -77,7 +72,7 @@ struct VCardLOLD_Base
     //! Indentation (GUI)
     static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
-    static constexpr uint8_t decimal = 4;
+    static constexpr uint8_t decimal = Traits::decimal;
     //! Number of columns used by the variable (One ResultsType per column)
     static constexpr int columnCount = 1;
     //! The Spatial aggregation
@@ -97,18 +92,18 @@ struct VCardLOLD_Base
 }; // class VCard
 
 /*!
-** \brief Base class for LOLD and LOLD_CSR variables
+** \brief Base class for economy variables like LOLP and LOLD
 */
 template<class Traits, class NextT = Container::EndOfList>
-class LOLD_Base: public Variable::IVariable<LOLD_Base<Traits, NextT>, NextT, VCardLOLD_Base<Traits>>
+class Economy_Base: public Variable::IVariable<Economy_Base<Traits, NextT>, NextT, VCard_Base<Traits>>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardLOLD_Base<Traits> VCardType;
+    typedef VCard_Base<Traits> VCardType;
     //! Ancestor
-    typedef Variable::IVariable<LOLD_Base<Traits, NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<Economy_Base<Traits, NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -202,7 +197,7 @@ public:
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
+        Traits::computeStats(pValuesForTheCurrentYear[numSpace]);
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -227,7 +222,7 @@ public:
     {
         if (Traits::checkCondition(state))
         {
-            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = Traits::value();
         }
 
         // Next variable
@@ -264,6 +259,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class LOLD_Base
+}; // class Economy_Base
 
 } // namespace Antares::Solver::Variable::Economy

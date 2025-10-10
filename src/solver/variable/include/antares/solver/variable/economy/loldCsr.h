@@ -26,7 +26,7 @@
 */
 #pragma once
 
-#include "lold_base.h"
+#include "economy_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -48,7 +48,26 @@ struct LOLD_CSRTraits
         return "LOLD for CSR";
     }
 
+    typedef Results<R::AllYears::Average< // The average values throughout all years
+      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
+        R::AllYears::Min<                 // The minimum values throughout all years
+          R::AllYears::Max<               // The maximum values throughout all years
+            >>>>>
+      ResultsType;
+
+    static constexpr uint8_t decimal = 4;
+
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+
+    static double value()
+    {
+        return 1.;
+    }
+
+    static void computeStats(IntermediateValues& iv)
+    {
+        iv.computeStatisticsForTheCurrentYear();
+    }
 
     static bool checkCondition(const State& state)
     {
@@ -57,9 +76,9 @@ struct LOLD_CSRTraits
     }
 };
 
-using VCardLOLD_CSR = VCardLOLD_Base<LOLD_CSRTraits>;
+using VCardLOLD_CSR = VCard_Base<LOLD_CSRTraits>;
 
 template<class NextT = Container::EndOfList>
-using LOLD_CSR = LOLD_Base<LOLD_CSRTraits, NextT>;
+using LOLD_CSR = Economy_Base<LOLD_CSRTraits, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy

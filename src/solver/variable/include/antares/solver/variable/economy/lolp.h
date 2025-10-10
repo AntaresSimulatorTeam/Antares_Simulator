@@ -21,7 +21,7 @@
 #ifndef SOLVER_VARIABLE_ECONOMY_LOLP_H__
 #define SOLVER_VARIABLE_ECONOMY_LOLP_H__
 
-#include "lolp_base.h"
+#include "economy_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -43,7 +43,21 @@ struct LOLPTraits
         return "LOLP";
     }
 
+    typedef Results<R::AllYears::Average<>> ResultsType;
+
+    static constexpr uint8_t decimal = 2;
+
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateOr;
+
+    static double value()
+    {
+        return 100.;
+    }
+
+    static void computeStats(IntermediateValues& iv)
+    {
+        iv.computeStatisticsOrForTheCurrentYear();
+    }
 
     static bool checkCondition(const State& state)
     {
@@ -51,10 +65,10 @@ struct LOLPTraits
     }
 };
 
-using VCardLOLP = VCardLOLP_Base<LOLPTraits>;
+using VCardLOLP = VCard_Base<LOLPTraits>;
 
 template<class NextT = Container::EndOfList>
-using LOLP = LOLP_Base<LOLPTraits, NextT>;
+using LOLP = Economy_Base<LOLPTraits, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy
 

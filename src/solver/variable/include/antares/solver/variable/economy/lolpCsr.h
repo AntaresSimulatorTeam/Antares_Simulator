@@ -26,7 +26,7 @@
 */
 #pragma once
 
-#include "lolp_base.h"
+#include "economy_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -48,7 +48,21 @@ struct LOLP_CSRTraits
         return "LOLP for CSR";
     }
 
+    typedef Results<R::AllYears::Average<>> ResultsType;
+
+    static constexpr uint8_t decimal = 2;
+
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+
+    static double value()
+    {
+        return 100.;
+    }
+
+    static void computeStats(IntermediateValues& iv)
+    {
+        iv.computeStatisticsOrForTheCurrentYear();
+    }
 
     static bool checkCondition(const State& state)
     {
@@ -57,9 +71,9 @@ struct LOLP_CSRTraits
     }
 };
 
-using VCardLOLP_CSR = VCardLOLP_Base<LOLP_CSRTraits>;
+using VCardLOLP_CSR = VCard_Base<LOLP_CSRTraits>;
 
 template<class NextT = Container::EndOfList>
-using LOLP_CSR = LOLP_Base<LOLP_CSRTraits, NextT>;
+using LOLP_CSR = Economy_Base<LOLP_CSRTraits, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy
