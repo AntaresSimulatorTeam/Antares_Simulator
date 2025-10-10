@@ -54,7 +54,7 @@ struct LOLP_CSRTraits
 
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
-    static double value()
+    static double value(const State&)
     {
         return 100.;
     }

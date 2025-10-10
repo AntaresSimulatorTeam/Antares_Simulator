@@ -49,7 +49,7 @@ struct LOLPTraits
 
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateOr;
 
-    static double value()
+    static double value(const State&)
     {
         return 100.;
     }

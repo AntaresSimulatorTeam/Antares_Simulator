@@ -53,7 +53,7 @@ struct LOLDTraits
 
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSumThen1IfPositive;
 
-    static double value()
+    static double value(const State&)
     {
         return 1.;
     }
