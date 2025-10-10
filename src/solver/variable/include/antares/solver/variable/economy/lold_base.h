@@ -24,11 +24,14 @@
 #include <antares/memory/memory.h>
 #include <antares/solver/variable/categories.h>
 #include <antares/solver/variable/container.h>
+#include <antares/solver/variable/intermediateValues.h>
+#include <antares/solver/variable/results.h>
 #include <antares/solver/variable/state.h>
 #include <antares/solver/variable/storage/intermediate.h>
 #include <antares/solver/variable/storage/results.h>
 #include <antares/solver/variable/surveyresults.h>
 #include <antares/solver/variable/variable.h>
+#include <antares/solver/variable/variableAccessor.h>
 #include <antares/study/area/area.h>
 #include <antares/study/area/links.h>
 #include <antares/study/study.h>
