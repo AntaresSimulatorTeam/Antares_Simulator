@@ -68,7 +68,6 @@
 
 // By thermal plant
 #include "antares/solver/variable/commons/compose-all.h"
-#include "antares/solver/variable/commons/spatial-aggregate-all.h"
 
 #include "../economy/profitByPlant.h"
 
