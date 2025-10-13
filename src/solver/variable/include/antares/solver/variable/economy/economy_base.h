@@ -95,7 +95,8 @@ struct VCard_Base
 ** \brief Base class for economy variables like LOLP and LOLD
 */
 template<class Traits, class NextT = Container::EndOfList>
-class Economy_Base: public Variable::IVariable<Economy_Base<Traits, NextT>, NextT, VCard_Base<Traits>>
+class Economy_Base
+    : public Variable::IVariable<Economy_Base<Traits, NextT>, NextT, VCard_Base<Traits>>
 {
 public:
     //! Type of the next static variable
