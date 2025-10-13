@@ -29,6 +29,7 @@
 #include "yuni/yuni.h"
 
 #include "../variable.h"
+#include "price_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -61,7 +62,7 @@ struct VCardPriceCSR
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardPrice VCardForSpatialAggregate;
+    typedef VCardPriceCSR VCardForSpatialAggregate;
 
     //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
@@ -95,167 +96,19 @@ struct VCardPriceCSR
 }; // class VCard
 
 /*!
-** \brief Marginal Price
+** \brief Marginal Price CSR
 */
 template<class NextT = Container::EndOfList>
-class PriceCSR: public Variable::IVariable<PriceCSR<NextT>, NextT, VCardPriceCSR>
+class PriceCSR: public PriceBase<VCardPriceCSR, NextT>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardPriceCSR VCardType;
-    //! Ancestor
-    typedef Variable::IVariable<PriceCSR<NextT>, NextT, VCardType> AncestorType;
-
-    //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
-
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
-
-    enum
+    void hourForEachArea(State& state, unsigned int numSpace) override
     {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
-
-    template<int CDataLevel, int CFile>
-    struct Statistics
-    {
-        enum
-        {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
-        };
-    };
-
-public:
-    void initializeFromStudy(Data::Study& study)
-    {
-        pNbYearsParallel = study.maxNbYearsInParallel;
-
-        // Average thoughout all years
-        InitializeResultsFromStudy(AncestorType::pResults, study);
-
-        // Intermediate values
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
-        }
-
-        // Next
-        NextType::initializeFromStudy(study);
-    }
-
-    template<class R>
-    static void InitializeResultsFromStudy(R& results, Data::Study& study)
-    {
-        VariableAccessorType::InitializeAndReset(results, study);
-    }
-
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
-    void simulationBegin()
-    {
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
-    }
-
-    void yearBegin(uint year, unsigned int numSpace)
-    {
-        // Reset the values for the current year
-        pValuesForTheCurrentYear[numSpace].reset();
+        this->pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          = -state.hourlyResults->CoutsMarginauxHorairesCSR[state.hourInTheWeek];
         // Next variable
-        NextType::yearBegin(year, numSpace);
+        this->NextType::hourForEachArea(state, numSpace);
     }
-
-    void yearEndBuild(State& state, unsigned int year)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year);
-    }
-
-    void yearEnd(uint year, unsigned int numSpace)
-    {
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
-
-        // Next variable
-        NextType::yearEnd(year, numSpace);
-    }
-
-    void computeSummary(unsigned int year, unsigned int numSpace)
-    {
-        // Merge all those values with the global results
-        AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
-        NextType::computeSummary(year, numSpace);
-    }
-
-    void hourBegin(uint hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = -state.hourlyResults
-                                                                     ->CoutsMarginauxHorairesCSR
-                                                                       [state.hourInTheWeek];
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      uint,
-      unsigned int numSpace) const
-    {
-        return pValuesForTheCurrentYear[numSpace].hour;
-    }
-
-    void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
-                                      unsigned int numSpace) const
-    {
-        // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-        if (AncestorType::isPrinted[0])
-        {
-            // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-        }
-    }
-
-private:
-    //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbYearsParallel;
 
 }; // class PriceCSR
 
