@@ -77,6 +77,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
         include/antares/solver/variable/economy/links.h
 
+        include/antares/solver/variable/economy/economy_base.h
         # Variables for Economy
         include/antares/solver/variable/economy/max-mrg-utils.h
         max-mrg-utils.cpp
@@ -119,7 +120,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/nearPriceCap.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
-        include/antares/solver/variable/economy/unsuppliedEnergy.h
+        include/antares/solver/variable/economy/unsupliedEnergy.h
 
         # Links
         include/antares/solver/variable/economy/links/flowLinear.h
@@ -132,6 +133,9 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/links/marginalCost.h
         include/antares/solver/variable/economy/links/congestionProbability.h
         include/antares/solver/variable/economy/overallCostCsr.h
+        include/antares/solver/variable/economy/lold_base.h
+        include/antares/solver/variable/economy/lolp_base.h
+        include/antares/solver/variable/economy/price_base.h
 
         # Binding constraints
         include/antares/solver/variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h
