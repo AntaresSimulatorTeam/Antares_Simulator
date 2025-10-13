@@ -18,14 +18,14 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#if 0
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
 
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/expressions/visitors/TimeIndex.h"
+#include "antares/modeler-optimisation-container/TimeIndex.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -41,6 +41,7 @@
 
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::Optimisation;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Expressions;
@@ -318,7 +319,7 @@ BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addConstraints_, LinearProblemBuilding
 BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
 {
     // var1 <= 3
-    auto var_node = variable("var1");
+    auto var_node = variable("var1", 0);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
 
@@ -344,8 +345,7 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
 BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
 {
     // var1 <= 3
-    auto var_node = variable("var1",
-                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
 
@@ -401,8 +401,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
 BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
 {
     // 5 - var1 <= 3
-    auto var_node = variable("var1",
-                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
                                                                                    var_node),
@@ -413,8 +412,8 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
       {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
       {{"var1",
         ValueType::BOOL,
-        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
-        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", TimeIndex::VARYING_IN_TIME_ONLY),
         true,
         false}},
       {{"ct1", ct_node}});
@@ -422,14 +421,15 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
     createComponent(
       "model",
       "componentToto",
-      {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)});
+      {build_context_parameter_with("bounds",
+                                    "bounds",
+                                    Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)});
 
-    const vector<unsigned int> timeSteps{1, 2};
+    const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 0};
-
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
-    bounds_time_series->add({1. * timeSteps.at(0), 1. * timeSteps.at(0), 1. * timeSteps.at(1)});
+    bounds_time_series->add({0., 1., 2.});
     LinearProblemData data;
     data.addDataSeries(std::move(bounds_time_series));
 
@@ -457,8 +457,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
 
 BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
 {
-    auto var_node = variable("var1",
-                             Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
                                                                                    var_node),
@@ -469,8 +468,8 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
       {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
       {{"var1",
         ValueType::BOOL,
-        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
-        parameter("bounds", Visitors::TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", TimeIndex::VARYING_IN_TIME_ONLY),
         true,
         false}},
       {{"ct1", ct_node}});
@@ -478,10 +477,12 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
     createComponent(
       "model",
       "componentToto",
-      {build_context_parameter_with("bounds", "bounds", Visitors::ParameterType::TIMESERIE)},
+      {build_context_parameter_with("bounds",
+                                    "bounds",
+                                    Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)},
       "GROUPENAME");
 
-    const vector<unsigned int> timeSteps{1, 2};
+    const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 3};
 
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
@@ -526,7 +527,7 @@ BOOST_AUTO_TEST_CASE(ct_one_var_with_coef_pb_contains_the_ct)
 {
     // 3 * var1 >= 5 * var1 + 5
     // simplified to : -2 * var1 >= 5
-    auto var_node = variable("var__1");
+    auto var_node = variable("var__1", 0);
     auto five = literal(5);
     auto three = literal(3);
     auto coef_node_left = multiply(three, var_node);
@@ -568,9 +569,9 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
     auto seventy5 = literal(75.);
     VariableData var2Data = {"v2", ValueType::FLOAT, sixty, seventy5, false, false};
 
-    auto v1 = variable("v1");
+    auto v1 = variable("v1", 0);
     auto param1 = parameter("param1");
-    auto v2 = variable("v2");
+    auto v2 = variable("v2", 1);
     auto param2 = parameter("param2");
     auto sum_node_left = nodes.create<SumNode>(multiply(v1, param1),
                                                multiply(literal(8), v2),
@@ -619,10 +620,10 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
     auto seventy5 = literal(75.);
     VariableData var2Data = {"v2", ValueType::FLOAT, sixty, seventy5, false, false};
 
-    auto v1 = variable("v1");
+    auto v1 = variable("v1", 0);
     auto three = literal(3);
     auto two_1 = literal(2);
-    auto v2 = variable("v2");
+    auto v2 = variable("v2", 1);
     auto ct1_node = nodes.create<LessThanOrEqualNode>(
       nodes.create<SubtractionNode>(multiply(three, v1), two_1),
       v2);
@@ -672,7 +673,7 @@ BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addObjective_, LinearProblemBuildingFi
 
 BOOST_AUTO_TEST_CASE(one_var_with_objective)
 {
-    auto objective = variable("x");
+    auto objective = variable("x", 0);
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {});
@@ -685,7 +686,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_objective)
 
 BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
 {
-    auto objective = variable("x", Antares::Expressions::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto objective = variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY);
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
     createComponent("model", "componentA", {});
@@ -708,7 +709,7 @@ BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)
 {
     VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.), false, false};
     VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.), false, false};
-    auto objective = multiply(variable("v2"), literal(37));
+    auto objective = multiply(variable("v2", 1), literal(37));
 
     createModel("model", {}, {var1Data, var2Data}, {}, objective);
     createComponent("model", "componentA", {});
@@ -725,7 +726,7 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
 {
     // -param(5)*param(5) * x
     auto objective = multiply(negate(multiply(parameter("param"), parameter("param"))),
-                              variable("x"));
+                              variable("x", 0));
     createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
     buildLinearProblem();
@@ -735,312 +736,4 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x")), -25);
 }
 
-BOOST_AUTO_TEST_CASE(offset_in_objective__throws_exception)
-{
-    auto objective = literal(6);
-    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
-    createComponent("model", "componentA", {});
-    BOOST_CHECK_EXCEPTION(buildLinearProblem(),
-                          invalid_argument,
-                          checkMessage(
-                            "Antares does not support objective offsets (objective 'objective' "
-                            "found in model 'model' of component 'componentA')."));
-}
-
-// Mock classes
-class MockMipVariable final: public IMipVariable
-{
-public:
-    MockMipVariable(double lb, double ub, bool integer, const std::string& name):
-        lb_(lb),
-        ub_(ub),
-        integer_(integer),
-        name_(name)
-    {
-    }
-
-    bool isInteger() const override
-    {
-        return integer_;
-    }
-
-    void setLb(double lb) override
-    {
-        lb_ = lb;
-    }
-
-    void setUb(double ub) override
-    {
-        ub_ = ub;
-    }
-
-    void setBounds(double lb, double ub) override
-    {
-        lb_ = lb;
-        ub_ = ub;
-    }
-
-    double getLb() const override
-    {
-        return lb_;
-    }
-
-    double getUb() const override
-    {
-        return ub_;
-    }
-
-    const std::string& getName() const override
-    {
-        return name_;
-    }
-
-    MipBasisStatus getMipBasisStatus() const override
-    {
-        return MipBasisStatus::FREE;
-    }
-
-    double solutionValue() const override
-    {
-        return 0.;
-    }
-
-private:
-    double lb_;
-    double ub_;
-    bool integer_;
-    std::string name_;
-};
-
-class MockLinearProblem final: public ILinearProblem
-{
-public:
-    std::vector<std::unique_ptr<MockMipVariable>> variables_;
-
-    MockMipVariable* addNumVariable(double lb, double ub, const std::string& name) override
-    {
-        variables_.emplace_back(std::make_unique<MockMipVariable>(lb, ub, false, name));
-        return variables_.back().get();
-    }
-
-    MockMipVariable* addIntVariable(double lb, double ub, const std::string& name) override
-    {
-        variables_.emplace_back(std::make_unique<MockMipVariable>(lb, ub, true, name));
-        isLP_ = false;
-        return variables_.back().get();
-    }
-
-    MockMipVariable* addVariable(double lb,
-                                 double ub,
-                                 bool integer,
-                                 const std::string& name) override
-    {
-        return integer ? addIntVariable(lb, ub, name) : addNumVariable(lb, ub, name);
-    }
-
-    MockMipVariable* getVariable(std::size_t idx) const override
-    {
-        return variables_[idx].get();
-    }
-
-    MockMipVariable* lookupVariable(const std::string& name) const override
-    {
-        for (const auto& var: variables_)
-        {
-            if (var->getName() == name)
-            {
-                return var.get();
-            }
-        }
-        return nullptr;
-    }
-
-    int variableCount() const override
-    {
-        return static_cast<int>(variables_.size());
-    }
-
-    IMipConstraint* addConstraint(double, double, const std::string&) override
-    {
-        return nullptr;
-    }
-
-    IMipConstraint* lookupConstraint(const std::string&) const override
-    {
-        return nullptr;
-    }
-
-    IMipConstraint* getConstraint(std::size_t) const override
-    {
-        return nullptr;
-    }
-
-    int constraintCount() const override
-    {
-        return 0;
-    }
-
-    void setObjectiveCoefficient(IMipVariable*, double) override
-    {
-    }
-
-    double getObjectiveCoefficient(const IMipVariable*) const override
-    {
-        return 0.0;
-    }
-
-    void setMinimization() override
-    {
-    }
-
-    void setMaximization() override
-    {
-    }
-
-    bool isMinimization() const override
-    {
-        return true;
-    }
-
-    bool isMaximization() const override
-    {
-        return false;
-    }
-
-    IMipSolution* solve(bool) override
-    {
-        return nullptr;
-    }
-
-    void WriteLP(const std::string&) const override
-    {
-    }
-
-    double infinity() const override
-    {
-        return 1e20;
-    }
-
-    bool isLP() const override
-    {
-        return isLP_;
-    }
-
-    bool isLP_ = true;
-};
-
-BOOST_AUTO_TEST_CASE(Constructor_ValidIndices)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    BOOST_CHECK_NO_THROW(Antares::Optimisation::VariablesBulkAddition(lp, vdict));
-}
-
-BOOST_AUTO_TEST_CASE(AddVariable_SingleBounds)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, IntegerInterval(0, 2));
-    vba.addVariable(0.0, 1.0, true, dim, key);
-    for (int ts = 0; ts < 3; ++ts)
-    {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
-    }
-}
-
-BOOST_AUTO_TEST_CASE(AddVariable_VectorLowerBound)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    std::vector<double> lb = {0.1, 0.2, 0.3};
-    const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, IntegerInterval(0, 2));
-    vba.addVariable(lb, 1.0, true, dim, key);
-    for (int ts = 0; ts < 3; ++ts)
-    {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
-    }
-}
-
-BOOST_AUTO_TEST_CASE(AddVariable_VectorUpperBound)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    std::vector<double> ub = {1.1, 1.2, 1.3};
-    const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, IntegerInterval(0, 2));
-    vba.addVariable(0.0, ub, true, dim, key);
-    for (int ts = 0; ts < 3; ++ts)
-    {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
-    }
-}
-
-BOOST_AUTO_TEST_CASE(AddVariable_VectorBounds)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    std::vector<double> lb = {0.1, 0.2, 0.3};
-    std::vector<double> ub = {1.1, 1.2, 1.3};
-    const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, IntegerInterval(0, 2));
-    vba.addVariable(lb, ub, true, dim, key);
-    for (int ts = 0; ts < 3; ++ts)
-    {
-        BOOST_CHECK(vdict("my-component", "my-variable", MCYearAndTime::MCYear{0}, ts) != nullptr);
-    }
-}
-
-BOOST_AUTO_TEST_CASE(AddVariable_InvalidBounds)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    std::vector<double> lb = {0.1, 0.2};
-    std::vector<double> ub = {1.1, 1.2, 1.3};
-    const Dimensions dim({}, IntegerInterval(0, 2));
-    const PartialKey key("my-component", "my-variable");
-    BOOST_CHECK_THROW(vba.addVariable(lb, ub, true, dim, key), std::invalid_argument);
-}
-
-BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorLowerBound)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, IntegerInterval(0, 2));
-    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, 1.0, true, dim, key), std::invalid_argument);
-}
-
-BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorUpperBound)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-    const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, IntegerInterval(0, 2));
-    BOOST_CHECK_THROW(vba.addVariable(0.0, {1.1, 1.2}, true, dim, key), std::invalid_argument);
-}
-
-BOOST_AUTO_TEST_CASE(AddVariable_InvalidVectorBounds)
-{
-    MockLinearProblem lp;
-    VariableDictionary vdict;
-    Antares::Optimisation::VariablesBulkAddition vba(lp, vdict);
-
-    const PartialKey key("my-component", "my-variable");
-    const Dimensions dim({}, IntegerInterval(0, 2));
-    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2}, {1.1, 1.2, 1.3}, true, dim, key),
-                      std::invalid_argument);
-    BOOST_CHECK_THROW(vba.addVariable({0.1, 0.2, 0.3}, {1.1, 1.2}, true, dim, key),
-                      std::invalid_argument);
-}
-
 BOOST_AUTO_TEST_SUITE_END()
-#endif

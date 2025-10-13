@@ -24,6 +24,7 @@
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
@@ -42,14 +43,14 @@ namespace Antares::Optimisation
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const OptimEntityContainer& optimEntityContainer,
-  const Antares::ModelerStudy::SystemModel::Component& component,
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext):
+  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  const Antares::ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
-    nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps()),
-    fillContext_(fillContext),
     evalContext_(optimEntityContainer.getEvaluationContext(component)),
-    evalVisitor_(optimEntityContainer, fillContext, component)
+    fillContext_(fillContext),
+    evalVisitor_(optimEntityContainer, fillContext, component),
+    nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps())
 {
 }
 
@@ -97,25 +98,28 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::DivisionNode* node)
 {
-    throw std::runtime_error("Not implemented");
+    return dispatch(node->left()) / dispatch(node->right());
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::EqualNode* node)
+  const Nodes::EqualNode*)
 {
-    throw std::runtime_error("Not implemented");
+    throw Antares::Error::InvalidArgumentError(
+      "A linear expression can't contain comparison operators.");
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::LessThanOrEqualNode* node)
+  const Nodes::LessThanOrEqualNode*)
 {
-    throw std::runtime_error("Not implemented");
+    throw Antares::Error::InvalidArgumentError(
+      "A linear expression can't contain comparison operators.");
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::GreaterThanOrEqualNode* node)
+  const Nodes::GreaterThanOrEqualNode*)
 {
-    throw std::runtime_error("Not implemented");
+    throw Antares::Error::InvalidArgumentError(
+      "A linear expression can't contain comparison operators.");
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
@@ -149,7 +153,8 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
         }
         return out;
     }
-    throw "the support of scenario dependent variables is not available for now";
+    throw Antares::Error::InvalidArgumentError(
+      "the support of scenario dependent variables is not available for now");
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
@@ -159,7 +164,7 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     if (node->timeIndex() == Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != Antares::ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
-        throw std::runtime_error(
+        throw Antares::Error::InvalidArgumentError(
           "Parameter " + node->value()
           + " is declared constant in time and scenario in library but not in system");
     }
@@ -172,11 +177,10 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     // only dependent
 
     // assume global nb timeStep == nbtimeSteps
-    const auto& parameters = evalContext_.getParameterValue(
-      node->value(),
-      fillContext_.getYear(),
-      fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalFirstTimeStep(),
-      fillContext_.getGlobalFirstTimeStep() + fillContext_.getLocalLastTimeStep());
+    const auto& parameters = evalContext_.getParameterValue(node->value(),
+                                                            fillContext_.getYear(),
+                                                            fillContext_.getGlobalFirstTimeStep(),
+                                                            fillContext_.getGlobalLastTimeStep());
 
     return Antares::Optimization::TimeDependentLinearExpression(parameters);
 }
@@ -188,9 +192,10 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::PortFieldNode* node)
+  const Nodes::PortFieldNode*)
 {
-    throw std::runtime_error("Not implemented");
+    throw Antares::Error::InvalidArgumentError(
+      "ReadLinearExpressionVisitor cannot visit PortFieldNodes");
 }
 
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
@@ -206,7 +211,7 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        ReadLinearExpressionVisitor visitor(optimEntityContainer_, *component, fillContext_);
+        ReadLinearExpressionVisitor visitor(optimEntityContainer_, fillContext_, *component);
 
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);
