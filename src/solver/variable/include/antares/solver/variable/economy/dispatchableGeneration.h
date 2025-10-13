@@ -129,44 +129,9 @@ public:
         pNbYearsParallel = study->maxNbYearsInParallel;
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
-        // Building the vector of group names the clusters belong to.
-        std::set<std::string> names;
-        for (const auto& cluster: area->thermal.list.each_enabled())
-        {
-            names.insert(cluster->getGroup());
-        }
-        groupNames_ = {names.begin(), names.end()};
-        groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
+        setupGroups(area);
+        setupValues(study);
 
-        nbColumns_ = groupNames_.size();
-
-        if (nbColumns_)
-        {
-            AncestorType::pResults.resize(nbColumns_);
-
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace].resize(nbColumns_);
-            }
-
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                for (unsigned int i = 0; i != nbColumns_; ++i)
-                {
-                    pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
-                }
-            }
-
-            for (unsigned int i = 0; i != nbColumns_; ++i)
-            {
-                AncestorType::pResults[i].initializeFromStudy(*study);
-                AncestorType::pResults[i].reset();
-            }
-        }
-        else
-        {
-            AncestorType::pResults.clear();
-        }
         // Next
         NextType::initializeFromArea(study, area);
     }
@@ -302,6 +267,49 @@ public:
     }
 
 private:
+    void setupGroups(Data::Area* area)
+    {
+        std::set<std::string> names;
+        for (const auto& cluster: area->thermal.list.each_enabled())
+        {
+            names.insert(cluster->getGroup());
+        }
+        groupNames_ = {names.begin(), names.end()};
+        groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
+        nbColumns_ = groupNames_.size();
+    }
+
+    void setupValues(Data::Study* study)
+    {
+        if (nbColumns_)
+        {
+            AncestorType::pResults.resize(nbColumns_);
+
+            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
+                pValuesForTheCurrentYear[numSpace].resize(nbColumns_);
+            }
+
+            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
+                for (unsigned int i = 0; i != nbColumns_; ++i)
+                {
+                    pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
+                }
+            }
+
+            for (unsigned int i = 0; i != nbColumns_; ++i)
+            {
+                AncestorType::pResults[i].initializeFromStudy(*study);
+                AncestorType::pResults[i].reset();
+            }
+        }
+        else
+        {
+            AncestorType::pResults.clear();
+        }
+    }
+
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
