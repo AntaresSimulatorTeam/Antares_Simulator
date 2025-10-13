@@ -310,7 +310,7 @@ public:
         }
     }
 
-private:
+protected:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;

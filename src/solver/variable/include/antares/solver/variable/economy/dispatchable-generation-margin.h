@@ -50,6 +50,21 @@ struct DispatchableGenMarginTraits: public UnitMWH
     static constexpr uint8_t decimal = 0;
 
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+
+    static bool checkCondition(const State& /*state*/)
+    {
+        return true;
+    }
+
+    static double value(const State& state)
+    {
+        return state.scratchpad->dispatchableGenerationMargin[state.hourInTheWeek];
+    }
+
+    static void computeStats(IntermediateValues& values)
+    {
+        values.computeStatisticsForTheCurrentYear();
+    }
 };
 
 typedef VCard_Base<DispatchableGenMarginTraits> VCardDispatchableGenMargin;
@@ -58,8 +73,7 @@ typedef VCard_Base<DispatchableGenMarginTraits> VCardDispatchableGenMargin;
 ** \brief Marginal DispatchableGenMargin
 */
 template<class NextT = Container::EndOfList>
-class DispatchableGenMargin
-    : public Variable::IVariable<DispatchableGenMargin<NextT>, NextT, VCardDispatchableGenMargin>
+class DispatchableGenMargin: public Economy_Base<DispatchableGenMarginTraits, NextT>
 {
 public:
     //! Type of the next static variable
@@ -94,30 +108,6 @@ public:
     };
 
 public:
-    void initializeFromStudy(Data::Study& study)
-    {
-        pNbYearsParallel = study.maxNbYearsInParallel;
-
-        // Average thoughout all years
-        InitializeResultsFromStudy(AncestorType::pResults, study);
-
-        // Intermediate values
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
-        }
-
-        // Next
-        NextType::initializeFromStudy(study);
-    }
-
-    template<class R>
-    static void InitializeResultsFromStudy(R& results, Data::Study& study)
-    {
-        VariableAccessorType::InitializeAndReset(results, study);
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         pArea = area;
@@ -125,71 +115,10 @@ public:
         NextType::initializeFromArea(study, area);
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
-    void simulationBegin()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pValuesForTheCurrentYear[numSpace].reset();
-        }
-
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
-    }
-
-    void yearBegin(unsigned int year, unsigned int numSpace)
-    {
-        pValuesForTheCurrentYear[numSpace].reset();
-
-        // Next variable
-        NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
-    }
-
-    void yearEnd(unsigned int year, unsigned int numSpace)
-    {
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-
-        // Next variable
-        NextType::yearEnd(year, numSpace);
-    }
-
-    void computeSummary(unsigned int year, unsigned int numSpace)
-    {
-        // Merge all those values with the global results
-        AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
-        NextType::computeSummary(year, numSpace);
-    }
-
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += state.scratchpad
-                                                                     ->dispatchableGenerationMargin
-                                                                       [state.hourInTheWeek];
+        this->pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          += state.scratchpad->dispatchableGenerationMargin[state.hourInTheWeek];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -201,43 +130,13 @@ public:
           Yuni::Static::Type::StrictlyEqual<VCardType, VCardToFindT>::Yes>
           AssignT;
         return (AssignT::Yes)
-                 ? Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour)
+                 ? Memory::RawPointer(this->pValuesForTheCurrentYear[numSpace].hour)
                  : NextType::template retrieveHourlyResultsForCurrentYear<VCardToFindT>(numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
-    {
-        return pValuesForTheCurrentYear[numSpace].hour;
-    }
-
-    void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
-                                      unsigned int numSpace) const
-    {
-        // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-        if (AncestorType::isPrinted[0])
-        {
-            // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-        }
-    }
-
 private:
-    //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     Data::Area* pArea;
-    unsigned int pNbYearsParallel;
-
-}; // class DispatchableGenMargin
-
+};
 } // namespace Antares::Solver::Variable::Economy
 
 #endif // __SOLVER_VARIABLE_ECONOMY_DispatchableGenMargin_H__
