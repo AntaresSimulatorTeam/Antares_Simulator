@@ -29,16 +29,11 @@
 namespace Antares::Solver::Variable::Economy
 {
 
-struct SpilledEnergyTrait
+struct SpilledEnergyTraits: public UnitMWH
 {
     static std::string Caption()
     {
         return "SPIL. ENRG";
-    }
-
-    static std::string Unit()
-    {
-        return "MWh";
     }
 
     static std::string Description()
@@ -52,7 +47,9 @@ struct SpilledEnergyTrait
           R::AllYears::Max<               // The maximum values throughout all years
             >>>>>
       ResultsType;
+
     static constexpr uint8_t decimal = 0;
+
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
     static double value(const State& state)
@@ -71,7 +68,9 @@ struct SpilledEnergyTrait
     }
 };
 
+typedef VCard_Base<SpilledEnergyTraits> VCardSpilledEnergy;
+
 template<class NextT = Container::EndOfList>
-using SpilledEnergy = Economy_Base<SpilledEnergyTrait, NextT>;
+using SpilledEnergy = Economy_Base<SpilledEnergyTraits, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy

@@ -36,6 +36,54 @@
 namespace Antares::Solver::Variable::Economy
 {
 
+// Unit constants
+const std::string EURO = "Euro";
+const std::string HOURS = "Hours";
+const std::string UNITS = "Units";
+const std::string MWH = "MWh";
+const std::string PERCENT = "%";
+
+// Unit traits
+struct UnitEuro
+{
+    static std::string Unit()
+    {
+        return EURO;
+    }
+};
+
+struct UnitHours
+{
+    static std::string Unit()
+    {
+        return HOURS;
+    }
+};
+
+struct UnitUnits
+{
+    static std::string Unit()
+    {
+        return UNITS;
+    }
+};
+
+struct UnitMWH
+{
+    static std::string Unit()
+    {
+        return MWH;
+    }
+};
+
+struct UnitPercent
+{
+    static std::string Unit()
+    {
+        return PERCENT;
+    }
+};
+
 template<class Traits>
 struct VCard_Base
 {
@@ -95,7 +143,8 @@ struct VCard_Base
 ** \brief Base class for economy variables like LOLP and LOLD
 */
 template<class Traits, class NextT = Container::EndOfList>
-class Economy_Base: public Variable::IVariable<Economy_Base<Traits, NextT>, NextT, VCard_Base<Traits>>
+class Economy_Base
+    : public Variable::IVariable<Economy_Base<Traits, NextT>, NextT, VCard_Base<Traits>>
 {
 public:
     //! Type of the next static variable

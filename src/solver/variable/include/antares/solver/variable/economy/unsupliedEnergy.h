@@ -28,16 +28,11 @@
 namespace Antares::Solver::Variable::Economy
 {
 
-struct UnsuppliedEnergyTrait
+struct UnsuppliedEnergyTraits: public UnitMWH
 {
     static std::string Caption()
     {
         return "UNSP. ENRG";
-    }
-
-    static std::string Unit()
-    {
-        return "MWh";
     }
 
     static std::string Description()
@@ -51,7 +46,9 @@ struct UnsuppliedEnergyTrait
           R::AllYears::Max<               // The maximum values throughout all years
             >>>>>
       ResultsType;
+
     static constexpr uint8_t decimal = 0;
+
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
     static void yearBeginLogic(unsigned, IntermediateValues& iv, Data::Area*, unsigned)
@@ -81,7 +78,9 @@ struct UnsuppliedEnergyTrait
     }
 };
 
-struct UnsuppliedEnergyCSRTrait: UnsuppliedEnergyTrait
+typedef VCard_Base<UnsuppliedEnergyTraits> VCardUnsuppliedEnergy;
+
+struct UnsuppliedEnergyCSRTrait: UnsuppliedEnergyTraits
 {
     static std::string Caption()
     {
@@ -106,10 +105,9 @@ struct UnsuppliedEnergyCSRTrait: UnsuppliedEnergyTrait
 };
 
 template<class NextT = Container::EndOfList>
-using UnsupliedEnergy = Economy_Base<UnsuppliedEnergyTrait, NextT>;
+using UnsupliedEnergy = Economy_Base<UnsuppliedEnergyTraits, NextT>;
 
 template<class NextT = Container::EndOfList>
 using UnsupliedEnergyCSR = Economy_Base<UnsuppliedEnergyCSRTrait, NextT>;
-
 
 } // namespace Antares::Solver::Variable::Economy

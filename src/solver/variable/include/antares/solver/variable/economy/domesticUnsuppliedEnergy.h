@@ -29,16 +29,11 @@
 namespace Antares::Solver::Variable::Economy
 {
 
-struct DomesticUnsuppliedEnergyTrait
+struct DomesticUnsuppliedEnergyTraits: public UnitMWH
 {
     static std::string Caption()
     {
         return "DENS";
-    }
-
-    static std::string Unit()
-    {
-        return "MWh";
     }
 
     static std::string Description()
@@ -53,7 +48,9 @@ struct DomesticUnsuppliedEnergyTrait
           R::AllYears::Max<               // The maximum values throughout all years
             >>>>>
       ResultsType;
+
     static constexpr uint8_t decimal = 0;
+
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
     static double value(const State& state)
@@ -72,7 +69,9 @@ struct DomesticUnsuppliedEnergyTrait
     }
 };
 
+typedef VCard_Base<DomesticUnsuppliedEnergyTraits> VCardDomesticUnsuppliedEnergy;
+
 template<class NextT = Container::EndOfList>
-using DomesticUnsuppliedEnergy = Economy_Base<DomesticUnsuppliedEnergyTrait, NextT>;
+using DomesticUnsuppliedEnergy = Economy_Base<DomesticUnsuppliedEnergyTraits, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy

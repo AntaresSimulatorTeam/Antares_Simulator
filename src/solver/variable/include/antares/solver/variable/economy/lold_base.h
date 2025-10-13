@@ -26,16 +26,11 @@ namespace Antares::Solver::Variable::Economy
 {
 
 template<bool isCSR>
-struct LOLD_BaseTraits
+struct LOLD_BaseTraits: public UnitHours
 {
     static std::string Caption()
     {
         return isCSR ? "LOLD CSR" : "LOLD";
-    }
-
-    static std::string Unit()
-    {
-        return "Hours";
     }
 
     static std::string Description()

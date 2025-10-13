@@ -26,16 +26,11 @@ namespace Antares::Solver::Variable::Economy
 {
 
 template<bool isCSR>
-struct LOLPBaseTraits
+struct LOLPBaseTraits: public UnitPercent
 {
     static std::string Caption()
     {
         return isCSR ? "LOLP CSR" : "LOLP";
-    }
-
-    static std::string Unit()
-    {
-        return "%";
     }
 
     static std::string Description()
@@ -47,7 +42,8 @@ struct LOLPBaseTraits
 
     static constexpr uint8_t decimal = 2;
 
-    static constexpr uint8_t spatialAggregate = isCSR ? Category::spatialAggregateSum : Category::spatialAggregateOr;
+    static constexpr uint8_t spatialAggregate = isCSR ? Category::spatialAggregateSum
+                                                      : Category::spatialAggregateOr;
 
     static double value(const State&)
     {
@@ -63,11 +59,13 @@ struct LOLPBaseTraits
     {
         if constexpr (isCSR)
         {
-            return state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.5;
+            return state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]
+                   > 0.5;
         }
         else
         {
-            return state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] > 0.;
+            return state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
+                   > 0.;
         }
     }
 };
