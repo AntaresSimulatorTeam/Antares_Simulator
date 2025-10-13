@@ -1,4 +1,5 @@
 #pragma once
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
@@ -159,6 +160,7 @@ public:
     {
         // variables_.push_back(std::move(RandomVariable()));
         // return variables_.back().get();
+        variableCount_++;
         return nullptr;
     }
 
@@ -167,6 +169,7 @@ public:
     {
         // constraints_.push_back(std::move(RandomConstraint()));
         // return constraints_.back().get();
+        constraintCount_++;
         return nullptr;
     }
 
@@ -192,6 +195,7 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipVariable*
     addNumVariable(double lb, double ub, const std::string& name) override
     {
+        variableCount_++;
         // variables_.push_back(std::move(RandomVariable()));
         // return variables_.back().get();
         return nullptr;
@@ -200,6 +204,7 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipVariable*
     addIntVariable(double lb, double ub, const std::string& name) override
     {
+        variableCount_++;
         // variables_.push_back(std::move(RandomVariable()));
         // return variables_.back().get();
         return nullptr;
@@ -262,12 +267,12 @@ public:
 
     [[nodiscard]] int variableCount() const override
     {
-        return variables_.size();
+        return variableCount_;
     }
 
     [[nodiscard]] int constraintCount() const override
     {
-        return constraints_.size();
+        return constraintCount_;
     }
 
     double getObjectiveCoefficient(
@@ -299,6 +304,8 @@ protected:
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable>> variables_;
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>>
       constraints_;
+    int variableCount_ = 0;
+    int constraintCount_ = 0;
 };
 
 struct PredfinedSolutionLinearProblemMock: MockLinearProblem
@@ -314,6 +321,7 @@ struct PredfinedSolutionLinearProblemMock: MockLinearProblem
           value,
           Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND,
           false));
+        variableCount_++;
     }
 };
 
@@ -347,9 +355,9 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
 
     MyDummyFixture()
     {
+        optimEntityContainer.addFromSystemComponents(components);
         for (const auto& compo: components)
         {
-            optimEntityContainer.addFromSystemComponent(compo);
             defaultComponentEvalVisitor = std::make_unique<
               Antares::Expressions::Visitors::EvalVisitor>(optimEntityContainer, ctx, compo);
         }
@@ -362,7 +370,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
         paramsAndValues)
     {
         components.emplace_back(createComponent(model, id, paramsAndValues, components.size()));
-        optimEntityContainer.addFromSystemComponent(components.back());
+        optimEntityContainer.addFromSystemComponents(components);
         return &components.back();
     }
 };

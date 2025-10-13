@@ -83,7 +83,7 @@ struct VCardThermalAirPollutantEmissions
     typedef IntermediateValues IntermediateValuesBaseType[columnCount];
     typedef IntermediateValuesBaseType* IntermediateValuesType;
 
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
+    using IntermediateValuesTypeForSpatialAg = std::unique_ptr<IntermediateValuesBaseType[]>;
 
     struct Multiple
     {

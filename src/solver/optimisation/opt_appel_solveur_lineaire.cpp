@@ -80,15 +80,13 @@ static void fillModelerComponents(
   OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
-    optimEntityContainer.reserveOptimComponents(components.size());
+    optimEntityContainer.addFromSystemComponents(components);
     for (const auto& component: components)
     {
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository));
-
-        optimEntityContainer.addFromSystemComponent(component);
     }
 }
 
@@ -168,7 +166,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
                                           IResultWriter& writer,
-                                          ISimulationTable& simulationTable)
+                                          ISimulationTable* simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto* solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
@@ -253,7 +251,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    if (modelerData)
+    if (simulationTable && modelerData)
     {
         unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                                   ? problemeHebdo->weekInTheYear
@@ -261,7 +259,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
-        FillSimulationTable(simulationTable,
+        FillSimulationTable(*simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
                             *modelerData,
@@ -284,7 +282,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer,
-                         ISimulationTable& simulationTable)
+                         ISimulationTable* simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 

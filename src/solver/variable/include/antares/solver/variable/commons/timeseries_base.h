@@ -133,7 +133,7 @@ struct TimeSeriesTraits
     /// Container for intermediate values (one per parallel space)
     using IntermediateValuesType = std::vector<IntermediateValues>;
     /// Pointer type for spatial aggregation
-    using IntermediateValuesTypeForSpatialAg = IntermediateValuesBaseType*;
+    using IntermediateValuesTypeForSpatialAg = std::unique_ptr<IntermediateValuesBaseType[]>;
 };
 
 /**

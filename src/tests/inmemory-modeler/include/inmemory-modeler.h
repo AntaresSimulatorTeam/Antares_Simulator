@@ -134,5 +134,8 @@ struct LinearProblemBuildingFixture
           Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
         return modelerData;
     }
+
+private:
+    int componentIndex_ = 0;
 };
 } // namespace Test::Modeler

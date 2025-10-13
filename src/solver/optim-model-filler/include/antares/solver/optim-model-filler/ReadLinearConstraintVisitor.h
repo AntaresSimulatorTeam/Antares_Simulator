@@ -21,12 +21,10 @@
 
 #pragma once
 
-#include <limits>
-
 #include <antares/expressions/visitors/NodeVisitor.h>
 
-#include "LinearExpression.h"
 #include "ReadLinearExpressionVisitor.h"
+#include "TimeDependentLinearExpression.h"
 
 namespace Antares::Optimisation
 {
@@ -60,9 +58,9 @@ class ReadLinearConstraintVisitor final: public Expressions::Visitors::NodeVisit
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
+      const Optimisation::OptimEntityContainer& optimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const ModelerStudy::SystemModel::Component& component,
-      const Optimisation::OptimEntityContainer& variableContainer);
+      const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 

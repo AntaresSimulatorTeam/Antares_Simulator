@@ -25,6 +25,7 @@
 
 // TODO SL: should be moved to common
 #include "antares/solver/variable//commons/links/links.h"
+#include "antares/solver/variable/commons/compose-all.h"
 #include "antares/solver/variable/economy/links/congestionFee.h"
 #include "antares/solver/variable/economy/links/congestionFeeAbs.h"
 #include "antares/solver/variable/economy/links/congestionProbability.h"
@@ -41,16 +42,16 @@ namespace Antares::Solver::Variable::Adequacy
 *
 * #
 */
-using VariablePerLink = Economy::FlowLinear // Flow linear
-  <Economy::FlowLinearAbs                   // Flow linear Abs
-   <Economy::FlowQuad                       // Flow Quad
-    <Economy::CongestionFee                 // Congestion Fee
-     <Economy::CongestionFeeAbs             // Congestion Fee (Abs)
-      <Economy::MarginalCost                // Marginal Cost
-       <Economy::CongestionProbability      // Congestion Probability (+/-)
-        <Economy::HurdleCosts               // Hurdle costs
-         <>>>>>>>>;
+using VariablePerLink = Common::ComposeAll<Economy::FlowLinear,
+                                           Economy::FlowLinearAbs,
+                                           Economy::FlowQuad,
+                                           Economy::CongestionFee,
+                                           Economy::CongestionFeeAbs,
+                                           Economy::MarginalCost,
+                                           Economy::CongestionProbability,
+                                           Economy::HurdleCosts>::type;
 
+template<class>
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 
 } // namespace Antares::Solver::Variable::Adequacy

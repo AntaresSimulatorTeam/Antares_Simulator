@@ -79,7 +79,7 @@ struct VCardPSP
 
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef std::vector<IntermediateValues> IntermediateValuesType;
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
+    using IntermediateValuesTypeForSpatialAg = std::unique_ptr<IntermediateValuesBaseType[]>;
 
 }; // class VCard
 
