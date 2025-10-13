@@ -76,6 +76,7 @@ source_group("variable\\adequacy" FILES ${SRC_VARIABLE_ADEQUACY})
 set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
         include/antares/solver/variable/economy/links.h
+        include/antares/solver/variable/economy/economy_base.h
 
         # Variables for Economy
         include/antares/solver/variable/economy/max-mrg-utils.h
@@ -119,7 +120,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/nearPriceCap.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
-        include/antares/solver/variable/economy/unsuppliedEnergy.h
+        include/antares/solver/variable/economy/unsupliedEnergy.h
 
         # Links
         include/antares/solver/variable/economy/links/flowLinear.h
