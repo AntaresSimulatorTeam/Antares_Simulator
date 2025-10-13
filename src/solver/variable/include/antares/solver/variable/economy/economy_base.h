@@ -87,6 +87,13 @@ struct UnitPercent
 template<class Traits>
 struct VCard_Base
 {
+    /*! \brief Base structure for variable cards in economy simulations.
+
+    This template provides common metadata for variables, such as caption, unit, description, etc.
+
+    \tparam Traits The traits class providing specific details for the variable.
+    */
+
     //! Caption
     static std::string Caption()
     {
