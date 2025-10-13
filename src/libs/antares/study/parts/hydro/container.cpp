@@ -811,7 +811,8 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
                      const Matrix<double>& waterValues,
                      const uint day)
 {
-    assert((level >= 0. - 1e-6 && level <= 100. + 1e-6) && "getWaterValue function : invalid level");
+    assert((level >= 0. - 1e-6 && level <= 100. + 1e-6)
+           && "getWaterValue function : invalid level");
     double levelUp = ceil(level);
     double levelDown = floor(level);
 
@@ -830,7 +831,8 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
                            Matrix<double, double>& creditMod,
                            int modType)
 {
-    assert((level >= 0. - 1e-6 && level <= 100. + 1e-6) && "getWeeklyModulation function : invalid level");
+    assert((level >= 0. - 1e-6 && level <= 100. + 1e-6)
+           && "getWeeklyModulation function : invalid level");
     double valueToReturn = 1.;
     double levelUp = ceil(level);
     double levelDown = floor(level);
