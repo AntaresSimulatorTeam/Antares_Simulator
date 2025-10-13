@@ -115,7 +115,6 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/nbOfDispatchedUnits.h
         include/antares/solver/variable/economy/profitByPlant.h
         include/antares/solver/variable/economy/lold.h
-        include/antares/solver/variable/economy/loldCsr.h
         include/antares/solver/variable/economy/lolp.h
         include/antares/solver/variable/economy/nearPriceCap.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
@@ -133,7 +132,6 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/links/marginalCost.h
         include/antares/solver/variable/economy/links/congestionProbability.h
         include/antares/solver/variable/economy/overallCostCsr.h
-        include/antares/solver/variable/economy/lold_base.h
         include/antares/solver/variable/economy/lolp_base.h
         include/antares/solver/variable/economy/price_base.h
 
