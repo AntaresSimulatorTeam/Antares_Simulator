@@ -103,6 +103,8 @@ class solver_output_handler:
     def __get_values_hourly_for_specific_week(self, area: str, year: int, week: int) -> pd.DataFrame:
         df = self.__get_values_hourly(area, year)
         day_col = df['Unnamed: 2_level_0']
+        if isinstance(day_col, pd.DataFrame):
+            day_col = day_col.iloc[:, 0]
         week_calc = (day_col - 1) // 7 + 1
         return df.loc[week_calc == week]
 
