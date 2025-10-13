@@ -18,19 +18,69 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#ifndef SOLVER_VARIABLE_ECONOMY_LOLP_H__
-#define SOLVER_VARIABLE_ECONOMY_LOLP_H__
+#pragma once
 
-#include "lolp_base.h"
+#include "economy_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
+
+template<bool isCSR>
+struct LOLPBaseTraits: public UnitPercent
+{
+    static std::string Caption()
+    {
+        return isCSR ? "LOLP CSR" : "LOLP";
+    }
+
+    static std::string Description()
+    {
+        return isCSR ? "LOLP for CSR" : "LOLP";
+    }
+
+    typedef Results<R::AllYears::Average<>> ResultsType;
+
+    static constexpr uint8_t decimal = 2;
+
+    static constexpr uint8_t spatialAggregate = isCSR ? Category::spatialAggregateSum
+                                                      : Category::spatialAggregateOr;
+
+    static double value(const State&)
+    {
+        return 100.;
+    }
+
+    static void computeStats(IntermediateValues& iv)
+    {
+        iv.computeStatisticsOrForTheCurrentYear();
+    }
+
+    static bool checkCondition(const State& state)
+    {
+        if constexpr (isCSR)
+        {
+            return state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]
+                   > 0.5;
+        }
+        else
+        {
+            return state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
+                   > 0.;
+        }
+    }
+};
+
+using LOLPTraits = LOLPBaseTraits<false>;
+using LOLP_CSRTraits = LOLPBaseTraits<true>;
 
 using VCardLOLP = VCard_Base<LOLPTraits>;
 
 template<class NextT = Container::EndOfList>
 using LOLP = Economy_Base<LOLPTraits, NextT>;
 
-} // namespace Antares::Solver::Variable::Economy
+using VCardLOLP_CSR = VCard_Base<LOLP_CSRTraits>;
 
-#endif // SOLVER_VARIABLE_ECONOMY_LOLP_H__
+template<class NextT = Container::EndOfList>
+using LOLP_CSR = Economy_Base<LOLP_CSRTraits, NextT>;
+
+} // namespace Antares::Solver::Variable::Economy

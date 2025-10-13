@@ -132,7 +132,6 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/links/marginalCost.h
         include/antares/solver/variable/economy/links/congestionProbability.h
         include/antares/solver/variable/economy/overallCostCsr.h
-        include/antares/solver/variable/economy/lolp_base.h
         include/antares/solver/variable/economy/price_base.h
 
         # Binding constraints
