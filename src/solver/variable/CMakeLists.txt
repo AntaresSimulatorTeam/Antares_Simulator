@@ -82,6 +82,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/max-mrg-utils.h
         max-mrg-utils.cpp
         include/antares/solver/variable/economy/max-mrg.h
+        include/antares/solver/variable/economy/max-mrg-csr.h
         include/antares/solver/variable/economy/price.h
         include/antares/solver/variable/economy/balance.h
         include/antares/solver/variable/economy/operatingCost.h
