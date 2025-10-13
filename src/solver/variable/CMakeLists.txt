@@ -99,7 +99,6 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/STStorageWithdrawalByCluster.h
         include/antares/solver/variable/economy/STStorageLevelsByCluster.h
         include/antares/solver/variable/economy/STStorageCashFlowByCluster.h
-        include/antares/solver/variable/economy/priceCSR.h
         include/antares/solver/variable/economy/domesticUnsuppliedEnergy.h
         include/antares/solver/variable/economy/localMatchingRuleViolations.h
         include/antares/solver/variable/economy/dtgMarginAfterCsr.h
@@ -132,7 +131,6 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/links/marginalCost.h
         include/antares/solver/variable/economy/links/congestionProbability.h
         include/antares/solver/variable/economy/overallCostCsr.h
-        include/antares/solver/variable/economy/price_base.h
 
         # Binding constraints
         include/antares/solver/variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h

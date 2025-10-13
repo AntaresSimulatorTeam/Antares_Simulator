@@ -66,7 +66,6 @@
 #include "overallCostCsr.h"
 #include "overflow.h"
 #include "price.h"
-#include "priceCSR.h"
 #include "productionByDispatchablePlant.h"
 #include "productionByRenewablePlant.h"
 #include "profitByPlant.h"
