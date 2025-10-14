@@ -399,7 +399,7 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
       &probleme->CoutsMarginauxDesContraintes[0],
       &probleme->CoutsMarginauxDesContraintes[1]};
 
-    probleme->ProblemesSpx.resize(1, nullptr);
+    probleme->ProblemesSpx.resize(1);
 
     // Solver export options
     problemeHebdo.ExportMPS = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS;

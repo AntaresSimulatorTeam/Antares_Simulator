@@ -258,9 +258,9 @@ static bool doWeStoreSolverBasis(const SingleOptimOptions& options, const MPSolv
     return solverSupportsWarmStart(solver->ProblemType()) && options.solverExportsBasis;
 }
 
-MPSolver* ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
-                           MPSolver* solver,
-                           const SingleOptimOptions& options)
+void ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
+                      MPSolver* solver,
+                      const SingleOptimOptions& options)
 {
     MPSolverParameters params;
     // Keep generic params for default settings working for all solvers
@@ -284,68 +284,6 @@ MPSolver* ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
             problemeAResoudre->basisStatus.extractBasis(solver);
         }
     }
-
-    return solver;
-}
-
-void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, const double* costs, int nbVar)
-{
-    auto& variables = solver->variables();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        auto& var = variables[idxVar];
-        solver->MutableObjective()->SetCoefficient(var, costs[idxVar]);
-    }
-}
-
-void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver,
-                                           const double* rhs,
-                                           const char* sens,
-                                           int nbRow)
-{
-    auto& constraints = solver->constraints();
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    {
-        if (sens[idxRow] == '=')
-        {
-            constraints[idxRow]->SetBounds(rhs[idxRow], rhs[idxRow]);
-        }
-        else if (sens[idxRow] == '<')
-        {
-            constraints[idxRow]->SetBounds(-MPSolver::infinity(), rhs[idxRow]);
-        }
-        else if (sens[idxRow] == '>')
-        {
-            constraints[idxRow]->SetBounds(rhs[idxRow], MPSolver::infinity());
-        }
-    }
-}
-
-void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
-                               const double* bMin,
-                               const double* bMax,
-                               const int* typeVar,
-                               int nbVar)
-{
-    auto& variables = solver->variables();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        double min_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
-                            || (typeVar[idxVar] == VARIABLE_BORNEE_SUPERIEUREMENT)
-                          ? -MPSolver::infinity()
-                          : bMin[idxVar]);
-        double max_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
-                            || (typeVar[idxVar] == VARIABLE_BORNEE_INFERIEUREMENT)
-                          ? MPSolver::infinity()
-                          : bMax[idxVar]);
-        auto& var = variables[idxVar];
-        var->SetBounds(min_l, max_l);
-    }
-}
-
-void ORTOOLS_LibererProbleme(MPSolver* solver)
-{
-    delete solver;
 }
 
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSolverMap = {
