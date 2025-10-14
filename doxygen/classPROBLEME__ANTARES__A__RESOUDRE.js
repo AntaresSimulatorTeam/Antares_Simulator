@@ -25,7 +25,7 @@ var classPROBLEME__ANTARES__A__RESOUDRE =
     [ "NomDesVariables", "classPROBLEME__ANTARES__A__RESOUDRE.html#a383d1a4df22fce737277d158fe33b567", null ],
     [ "Pi", "classPROBLEME__ANTARES__A__RESOUDRE.html#acdf3cc8e06f23098aae6646b4f3699f1", null ],
     [ "PositionDeLaVariable", "classPROBLEME__ANTARES__A__RESOUDRE.html#ab8263104f238a20acd5f590952a86c28", null ],
-    [ "ProblemesSpx", "classPROBLEME__ANTARES__A__RESOUDRE.html#af5120d6ab8f5ce726e962c328859c45f", null ],
+    [ "ProblemesSpx", "classPROBLEME__ANTARES__A__RESOUDRE.html#a5296d2f86434c6711d9d7accc4733d63", null ],
     [ "SecondMembre", "classPROBLEME__ANTARES__A__RESOUDRE.html#aafa67b209f191cb4a00e98f8a8f20047", null ],
     [ "Sens", "classPROBLEME__ANTARES__A__RESOUDRE.html#ad00ba23506b2229ce965e97f0e014cc1", null ],
     [ "TypeDeVariable", "classPROBLEME__ANTARES__A__RESOUDRE.html#a794eeffc6caccaed6b43a9fd190dbb53", null ],
