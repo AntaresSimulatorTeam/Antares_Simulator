@@ -56,7 +56,7 @@ void SetInitialHydroLevel(Data::Study& study,
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
-                                     std::vector<std::vector<double>>& thermalNoises,
+                                     const std::vector<std::vector<double>>& thermalNoises,
                                      unsigned int year);
 
 /*!

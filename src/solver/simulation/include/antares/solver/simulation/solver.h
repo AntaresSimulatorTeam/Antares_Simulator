@@ -90,14 +90,6 @@ private:
     ** \brief Regenerate time-series if required for a given year
     */
     void regenerateTimeSeries();
-    /*!
-    ** \brief Builds sets of parallel years
-    **
-    ** \return The max number of years in a set of parallel years (to be executed or not)
-    */
-    uint buildSetsOfParallelYears(uint firstYear,
-                                  uint endYear,
-                                  std::vector<setOfParallelYears>& setsOfParallelYears);
 
     /*!
     ** \brief Allocate storage for random numbers of parallel years

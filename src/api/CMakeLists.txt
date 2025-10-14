@@ -41,6 +41,9 @@ target_link_libraries(solver_api
         Antares::optimization-options
         Antares::lps
 )
+
+add_executable(main main.cpp)
+target_link_libraries(main solver_api)
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
