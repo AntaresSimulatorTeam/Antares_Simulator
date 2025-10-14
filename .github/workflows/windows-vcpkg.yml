@@ -49,7 +49,7 @@ jobs:
 
       - name: Config OR-Tools URL
         run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius.zip" >> $GITHUB_ENV
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius_Release.zip" >> $GITHUB_ENV
         shell: bash
 
       - name: Pre-requisites
@@ -139,6 +139,12 @@ jobs:
         shell: bash
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
+
+      - name: Add OR-Tools to PATH
+        run: echo "D:\a\Antares_Simulator\Antares_Simulator/or-tools/install/bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+
+      - name: Add sirius to PATH
+        run: echo "D:\a\Antares_Simulator\Antares_Simulator/_build/solver/Release" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
 
       - name: Init submodule Antares_Simulator_Tests
         run: |
@@ -278,6 +284,8 @@ jobs:
         shell: bash
         run: |
           cd _build
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
           zip -r antares-solver_windows.zip solver/Release/antares-8.8-solver.exe solver/Release/*.dll
 
       - name: NSIS Installer creation
@@ -297,9 +305,11 @@ jobs:
           path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
       - name: .zip creation
+        shell: bash
         run: |
           cd _build
-          cpack -G ZIP
+          FIXED_PATH=${ORTOOLS_DIR//\\//}
+          cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
 
       - name: Installer upload
         uses: actions/upload-artifact@v4

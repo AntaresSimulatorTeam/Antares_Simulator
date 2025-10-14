@@ -46,6 +46,11 @@ void TransformNameIntoID(const AnyString& name, StringT& out);
 void BeautifyName(YString& out, AnyString oldname);
 void BeautifyName(std::string& out, const std::string& oldname);
 
+namespace Utils
+{
+double ceil(double d);
+double floor(double d);
+}
 } // namespace Antares
 
 #include "utils.hxx"

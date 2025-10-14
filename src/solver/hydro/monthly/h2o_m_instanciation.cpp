@@ -32,19 +32,17 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 {
     DONNEES_ANNUELLES DonneesAnnuelles{};
 
-    DonneesAnnuelles.NombreDePasDeTemps = 12;
-    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
+    DonneesAnnuelles.TurbineMax.assign(nbMonths, 0.);
+    DonneesAnnuelles.TurbineMin.assign(nbMonths, 0.);
+    DonneesAnnuelles.TurbineCible.assign(nbMonths, 0.);
+    DonneesAnnuelles.Turbine.assign(nbMonths, 0.);
+    DonneesAnnuelles.overflow.assign(nbMonths, 0.);
 
-    DonneesAnnuelles.TurbineMax.assign(NbPdt, 0.);
-    DonneesAnnuelles.TurbineMin.assign(NbPdt, 0.);
-    DonneesAnnuelles.TurbineCible.assign(NbPdt, 0.);
-    DonneesAnnuelles.Turbine.assign(NbPdt, 0.);
+    DonneesAnnuelles.Apport.assign(nbMonths, 0.);
 
-    DonneesAnnuelles.Apport.assign(NbPdt, 0.);
-
-    DonneesAnnuelles.Volume.assign(NbPdt, 0.);
-    DonneesAnnuelles.VolumeMin.assign(NbPdt, 0.);
-    DonneesAnnuelles.VolumeMax.assign(NbPdt, 0.);
+    DonneesAnnuelles.Volume.assign(nbMonths, 0.);
+    DonneesAnnuelles.VolumeMin.assign(nbMonths, 0.);
+    DonneesAnnuelles.VolumeMax.assign(nbMonths, 0.);
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
 
@@ -53,27 +51,29 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeHydraulique.ProblemeSpx.assign(NombreDeReservoirs, nullptr);
 
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
+      = ProblemeHydraulique.CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+      = ProblemeHydraulique.ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable;
+      = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
-    CorrespondanceDesVariables.NumeroDeVariableVolume.assign(NbPdt, 0);
-    CorrespondanceDesVariables.NumeroDeVariableTurbine.assign(NbPdt, 0);
-    CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin.assign(NbPdt, 0);
-    CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax.assign(NbPdt, 0);
-    CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible.assign(NbPdt, 0);
-    CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible.assign(NbPdt, 0);
+    CorrespondanceDesVariables.NumeroDeVariableVolume.assign(nbMonths, 0);
+    CorrespondanceDesVariables.NumeroDeVariableTurbine.assign(nbMonths, 0);
+    CorrespondanceDesVariables.NumeroDeVariableOverflow.assign(nbMonths, 0);
+    CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin.assign(nbMonths, 0);
+    CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax.assign(nbMonths, 0);
+    CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible.assign(nbMonths, 0);
+    CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible.assign(nbMonths, 0);
 
     int NombreDeVariables = 0;
-    NombreDeVariables += NbPdt;
-    NombreDeVariables += NbPdt;
-    NombreDeVariables += NbPdt;
-    NombreDeVariables += NbPdt;
+    NombreDeVariables += nbMonths;
+    NombreDeVariables += nbMonths;
+    NombreDeVariables += nbMonths;
+    NombreDeVariables += nbMonths;
+    NombreDeVariables += nbMonths; // For overflows
     NombreDeVariables += 1;
-    NombreDeVariables += NbPdt;
-    NombreDeVariables += NbPdt;
+    NombreDeVariables += nbMonths;
+    NombreDeVariables += nbMonths;
     NombreDeVariables += 1;
 
     ProblemeLineairePartieFixe.NombreDeVariables = NombreDeVariables;
@@ -84,13 +84,13 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieFixe.TypeDeVariable.assign(NombreDeVariables, 0);
 
     int NombreDeContraintes = 0;
-    NombreDeContraintes += NbPdt;
+    NombreDeContraintes += nbMonths;
     NombreDeContraintes += 1;
-    NombreDeContraintes += NbPdt;
-    NombreDeContraintes += NbPdt;
-    NombreDeContraintes += NbPdt;
-    NombreDeContraintes += NbPdt;
-    NombreDeContraintes += NbPdt;
+    NombreDeContraintes += nbMonths;
+    NombreDeContraintes += nbMonths;
+    NombreDeContraintes += nbMonths;
+    NombreDeContraintes += nbMonths;
+    NombreDeContraintes += nbMonths;
 
     ProblemeLineairePartieFixe.NombreDeContraintes = NombreDeContraintes;
     ProblemeLineairePartieFixe.Sens.assign(NombreDeContraintes, 0);
@@ -99,18 +99,19 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
 
     int NombreDeTermesAlloues = 0;
-    NombreDeTermesAlloues += 3 * NbPdt;
+    NombreDeTermesAlloues += 3 * nbMonths;
+    NombreDeTermesAlloues += nbMonths; // For overflows
     NombreDeTermesAlloues += 2;
-    NombreDeTermesAlloues += 2 * NbPdt;
-    NombreDeTermesAlloues += 2 * NbPdt;
-    NombreDeTermesAlloues += 2 * NbPdt;
-    NombreDeTermesAlloues += 3 * NbPdt;
-    NombreDeTermesAlloues += 3 * NbPdt;
+    NombreDeTermesAlloues += 2 * nbMonths;
+    NombreDeTermesAlloues += 2 * nbMonths;
+    NombreDeTermesAlloues += 2 * nbMonths;
+    NombreDeTermesAlloues += 3 * nbMonths;
+    NombreDeTermesAlloues += 3 * nbMonths;
 
     ProblemeLineairePartieFixe.NombreDeTermesAlloues = NombreDeTermesAlloues;
 
-    ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes
-        .assign(NombreDeTermesAlloues, 0.);
+    ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues,
+                                                                            0.);
 
     ProblemeLineairePartieFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
@@ -118,11 +119,10 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieVariable.Xmax.assign(NombreDeVariables, 0.);
     ProblemeLineairePartieVariable.SecondMembre.assign(NombreDeContraintes, 0.);
 
-    ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees
-        .assign(NombreDeVariables, nullptr);
+    ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(
+      NombreDeVariables, nullptr);
 
     ProblemeLineairePartieVariable.X.assign(NombreDeVariables, 0.);
-
 
     ProblemeLineairePartieVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
     ProblemeLineairePartieVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);

@@ -85,4 +85,19 @@ void BeautifyName(std::string& out, const std::string& oldname)
     out = yuniOut.c_str();
 }
 
+namespace Utils
+{
+static constexpr double largeValue = 1000000;
+
+double ceil(double d)
+{
+    return std::ceil(std::round(d * largeValue) / largeValue);
+}
+
+double floor(double d)
+{
+    return std::floor(std::round(d * largeValue) / largeValue);
+}
+}
+
 } // namespace Antares

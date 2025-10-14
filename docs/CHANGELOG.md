@@ -1,12 +1,18 @@
 Antares Changelog
 =================
 
-8.8.16 (10/2025)
+8.8.17 (10/2025)
 --------------------
-
 ## Bugfix
 
 - Fix infeasability in hydro heuristic with mingen [ANT-3755] (#3152)
+
+8.8.16 (05/2025)
+--------------------
+## Bugfix
+- Ceiling error with xpress and accurate [ANT-3167] #2785
+- Output variable : near price cap [ANT-3038] (#2793)
+- Fix monthly generating capacity [ANT-3095] (#2806)
 
 8.8.15 (04/2025)
 --------------------
