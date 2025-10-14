@@ -26,10 +26,7 @@
 
 #include <antares/solver/utils/basis_status.h>
 
-namespace operations_research
-{
-class MPSolver;
-}
+#include "ortools/linear_solver/linear_solver.h"
 
 /*--------------------------------------------------------------------------------------*/
 
@@ -92,7 +89,7 @@ public:
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    std::vector<operations_research::MPSolver*> ProblemesSpx;
+    std::vector<std::unique_ptr<operations_research::MPSolver>> ProblemesSpx;
 
     std::vector<int>
       PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
