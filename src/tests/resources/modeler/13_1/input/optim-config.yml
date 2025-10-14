@@ -15,10 +15,8 @@ models:
       variables:
         - id: nb_units
           location: master
-          duplication-by-timeblock: false # Investment variables are not duplicated by timeblock, only one variable for the whole horizon
         - id: pmax
           location: master-and-subproblems
-          duplication-by-timeblock: false
         # Variable generation has default settings, no need to make it appear here
       constraints:
         - id: p_max_nb_units_relation
@@ -35,7 +33,6 @@ models:
       variables:
         - id: pmax
           location: master-and-subproblems
-          duplication-by-timeblock: false
         # Variable generation has default settings, no need to make it appear here
       objective-contributions:
         - id: invest_objective
