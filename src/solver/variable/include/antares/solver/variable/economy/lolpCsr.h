@@ -53,7 +53,7 @@ struct LOLP_CSRTraits
     static bool checkCondition(const State& state)
     {
         return state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]
-               > 0.5;
+               > 0.0;
     }
 };
 
