@@ -48,8 +48,6 @@ struct LOLP_CSRTraits
         return "LOLP for CSR";
     }
 
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateOr;
-
     static bool checkCondition(const State& state)
     {
         return state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]
