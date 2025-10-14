@@ -18,7 +18,13 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        gh cache list --json id,key,ref \
-        | jq -r '.[] | select(.ref == "refs/heads/${{ github.event.pull_request.head.ref }}") | "\(.key)\t\(.id)"' \
-        | xargs -I {} sh -c 'key=$(echo {} | cut -f1); id=$(echo {} | cut -f2); echo "Deleting cache: $key"; gh cache delete $id'
+    - name: List cache keys
+      run: |
+        gh cache list --json id,key,ref | jq -r '.[] | select(.ref == "refs/heads/${{ github.event.pull_request.head.ref }}") | .key' > cache_keys.txt
+    - name: Display cache keys
+      run: cat cache_keys.txt
+    - name: Delete caches
+      run: |
+        if [ -f cache_keys.txt ]; then
+          cat cache_keys.txt | xargs -I {} sh -c 'echo "Deleting cache: {}"; gh cache delete "{}"'
+        fi
