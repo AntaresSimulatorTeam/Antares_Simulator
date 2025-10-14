@@ -4,6 +4,7 @@ add_library(Antares::solver_api ALIAS solver_api)
 set(PUBLIC_HEADERS
         include/antares/api/SimulationResults.h
         include/antares/api/solver.h
+	include/antares/api/getProblem.h
 )
 
 set(PRIVATE_HEADERS
@@ -17,6 +18,7 @@ target_sources(solver_api
         API.cpp
         SimulationObserver.cpp
         SimulationResults.cpp
+	getProblem.cpp
         ${PUBLIC_HEADERS}
         ${PRIVATE_HEADERS}
 )
