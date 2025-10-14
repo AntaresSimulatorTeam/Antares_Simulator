@@ -48,7 +48,7 @@ struct VCardLOLP_Base
     //! Unit
     static std::string Unit()
     {
-        return Traits::Unit();
+        return "%";
     }
 
     //! The short description of the variable
