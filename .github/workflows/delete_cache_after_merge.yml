@@ -22,4 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        gh cache list --json id,key,ref | jq -r '.[] | select(.ref == "refs/heads/${{ github.event.pull_request.head.ref }}") | .id' | xargs -I {} gh cache delete {}
+        gh cache list --json id,key,ref \
+        | jq -r '.[] | select(.ref == "refs/heads/${{ github.event.pull_request.head.ref }}") | "\(.key)\t\(.id)"' \
+        | xargs -I {} sh -c 'key=$(echo {} | cut -f1); id=$(echo {} | cut -f2); echo "Deleting cache: $key"; gh cache delete $id'
