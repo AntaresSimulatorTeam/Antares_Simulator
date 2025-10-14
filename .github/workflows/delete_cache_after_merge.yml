@@ -1,0 +1,24 @@
+name: Delete cache after PR is merged
+on:
+  pull_request:
+    types:
+    - closed
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  GH_REPO: ${{ github.repository }}
+
+jobs:
+  delete_cache:
+    permissions:
+      # `actions:write` permission is required to delete caches
+      #   See also: https://docs.github.com/en/rest/actions/cache?apiVersion=2022-11-28#delete-a-github-actions-cache-for-a-repository-using-a-cache-id
+      actions: write
+      contents: read
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        gh cache list --json id,key,ref \
+        | jq -r '.[] | select(.ref == "refs/heads/${{ github.event.pull_request.head.ref }}") | "\(.key)\t\(.id)"' \
+        | xargs -I {} sh -c 'key=$(echo {} | cut -f1); id=$(echo {} | cut -f2); echo "Deleting cache: $key"; gh cache delete $id'
