@@ -1,4 +1,4 @@
-#include "antares/api/getproblem.h"
+#include "antares/api/getProblem.h"
 
 namespace Antares::Solver
 {
