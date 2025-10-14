@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-namespace Antares::Modeler::Investment
+namespace Antares::Modeler::Config
 {
 
 enum class Location
@@ -148,4 +148,4 @@ private:
     std::vector<Model> models_;
 };
 
-} // namespace Antares::Modeler::Investment
+} // namespace Antares::Modeler::Config
