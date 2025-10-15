@@ -350,7 +350,7 @@ void randomNumbers::compute(Antares::Data::Study& study, // Mersenne-Twister has
                     }
 
                     uint rank = 0;
-                    for (const auto& [index, value]: setHydroCostsNoises)
+                    for (const auto& [value, index]: setHydroCostsNoises)
                     {
                         if (value < 0.)
                         {
