@@ -811,6 +811,7 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
         levelDown = 0;
     }
 
+    // special case, we don't want to use the last layer
     if (levelDown >= 100)
     {
         levelDown = 99;
