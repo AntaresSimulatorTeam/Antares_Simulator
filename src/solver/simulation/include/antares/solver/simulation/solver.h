@@ -39,7 +39,6 @@ class OptimisationsSimulationTable;
 
 namespace Antares::Solver::Simulation
 {
-
 template<class Impl>
 class yearJob;
 
@@ -98,24 +97,6 @@ private:
     uint buildSetsOfParallelYears(uint firstYear,
                                   uint endYear,
                                   std::vector<setOfParallelYears>& setsOfParallelYears);
-
-    /*!
-    ** \brief Allocate storage for random numbers of parallel years
-    **
-    ** \param	randomParallelYears	... to be finished ...
-    */
-    void allocateMemoryForRandomNumbers(randomNumbers& randomForParallelYears);
-
-    /*!
-    ** \brief Computes random numbers for each years of a list
-    **
-    ** \param	randomForYears	Storage for random numbers for years in the list
-    ** \param	years			List of years
-    */
-    void computeRandomNumbers(randomNumbers& randomForYears,
-                              unsigned years,
-                              std::map<unsigned int, bool>& isYearPerformed,
-                              MersenneTwister& randomHydro);
 
     /*!
     ** \brief Computes statistics on annual (system and solution) costs, to be printed in output
