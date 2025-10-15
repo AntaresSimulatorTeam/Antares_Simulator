@@ -811,6 +811,10 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
         levelDown = 0;
     }
 
+    if (levelDown >= 100)
+    {
+        levelDown = 99;
+    }
     return waterValues[levelDown][day];
 }
 
