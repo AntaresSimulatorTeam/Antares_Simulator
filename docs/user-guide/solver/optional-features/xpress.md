@@ -6,7 +6,7 @@ _**This section is under construction**_
 ## Introduction
 The FICO Xpress optimizer is a commercial optimization solver for linear programming (LP), mixed integer linear programming (MILP), convex quadratic programming (QP), convex quadratically constrained quadratic programming (QCQP), second-order cone programming (SOCP) and their mixed integer counterparts.
 
-Antares Solver only uses LP, with plans to use MILP at some point in the future. Various benchmarks have revealed that Xpress allows faster simulations than Sirius on large studies.
+Antares Solver can XPRESS for both LP and MILP problems. Various benchmarks have revealed that Xpress allows faster simulations than Sirius on some large studies.
 
 ## Using Xpress in the command-line
 ```
