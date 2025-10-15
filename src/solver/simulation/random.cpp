@@ -25,6 +25,97 @@
 
 namespace Antares::Solver::Simulation
 {
+// Class representing a hydro cost noise.
+// This class allows sorting hydro costs noises into increasing absolute values order
+// when instances are contained in a :
+//		std::set<hydroCostNoise, compareHydroCostsNoises>
+class hydroCostNoise
+{
+public:
+    hydroCostNoise(double v, uint i):
+        value(v),
+        index(i)
+    {
+    }
+
+    inline double getValue() const
+    {
+        return value;
+    }
+
+    inline uint getIndex() const
+    {
+        return index;
+    }
+
+    double value;
+    uint index;
+};
+
+// Used to sort the hydro costs noises into increasing absolute values order in a std::set
+struct compareHydroCostsNoises
+{
+    inline bool operator()(const hydroCostNoise& hcnr1, const hydroCostNoise& hcnr2) const
+    {
+        return std::abs(hcnr1.getValue()) < std::abs(hcnr2.getValue());
+    }
+};
+
+yearRandomNumbers::yearRandomNumbers():
+    pNbAreas(0)
+{
+}
+
+void yearRandomNumbers::setNbAreas(uint nbAreas)
+{
+    pNbAreas = nbAreas;
+}
+
+void yearRandomNumbers::setPowerFluctuations(Data::PowerFluctuations powerFluctuations)
+{
+    pPowerFluctuations = powerFluctuations;
+}
+
+void yearRandomNumbers::reset()
+{
+    // Thermal noises
+    for (uint a = 0; a != pNbAreas; a++)
+    {
+        pThermalNoisesByArea[a].assign(pThermalNoisesByArea[a].size(), 0);
+    }
+
+    // General
+    pNbClustersByArea.assign(pNbAreas, 0);
+
+    // Reservoir levels, spilled and unsupplied energy costs
+    pReservoirLevels.assign(pNbAreas, 0);
+    pUnsuppliedEnergy.assign(pNbAreas, 0);
+    pSpilledEnergy.assign(pNbAreas, 0);
+
+    // Hydro costs noises
+    switch (pPowerFluctuations)
+    {
+    case Data::lssFreeModulations:
+    {
+        for (uint a = 0; a != pNbAreas; a++)
+        {
+            pHydroCostsByArea_freeMod[a].assign(8784, 0);
+        }
+        break;
+    }
+
+    case Data::lssMinimizeRamping:
+    case Data::lssMinimizeExcursions:
+    {
+        pHydroCosts_rampingOrExcursion.assign(pNbAreas, 0);
+        break;
+    }
+
+    case Data::lssUnknown:
+        break;
+    }
+}
+
 randomNumbers::randomNumbers(uint maxNbPerformedYearsInAset,
                              Data::PowerFluctuations powerFluctuations):
     pMaxNbPerformedYears(maxNbPerformedYearsInAset)
@@ -259,12 +350,8 @@ void randomNumbers::compute(Antares::Data::Study& study, // Mersenne-Twister has
                     }
 
                     uint rank = 0;
-                    std::set<hydroCostNoise, compareHydroCostsNoises>::iterator it;
-                    for (it = setHydroCostsNoises.begin(); it != setHydroCostsNoises.end(); it++)
+                    for (const auto& [value, index]: setHydroCostsNoises)
                     {
-                        uint index = it->getIndex();
-                        double value = it->getValue();
-
                         if (value < 0.)
                         {
                             noise[index] = -5 * 1.e-4 * (1 + rank / 8784.);
@@ -273,7 +360,6 @@ void randomNumbers::compute(Antares::Data::Study& study, // Mersenne-Twister has
                         {
                             noise[index] = 5 * 1.e-4 * (1 + rank / 8784.);
                         }
-
                         rank++;
                     }
 
