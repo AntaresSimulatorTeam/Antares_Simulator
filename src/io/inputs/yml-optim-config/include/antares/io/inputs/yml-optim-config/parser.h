@@ -23,7 +23,7 @@
 #pragma once
 #include "OptimConfig.h"
 
-namespace Antares::IO::Inputs::YmlModel
+namespace Antares::IO::Inputs::YmlOptimConfig
 {
 class Parser final
 {
@@ -33,4 +33,4 @@ public:
 
     OptimConfig parse(const std::string& content);
 };
-} // namespace Antares::IO::Inputs::YmlModel
+} // namespace Antares::IO::Inputs::YmlOptimConfig

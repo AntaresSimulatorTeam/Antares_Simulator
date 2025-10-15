@@ -108,7 +108,7 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::OptimConfig& rhs)
     {
-        rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
+        rhs = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
         return true;
     }
 };
