@@ -110,4 +110,9 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 
+namespace Antares::Solver::Optimization
+{
+void reset();
+}
+
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

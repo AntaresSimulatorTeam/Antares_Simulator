@@ -35,7 +35,7 @@
 using namespace Antares::Solver;
 using Antares::Solver::Optimization::OptimizationOptions;
 
-std::once_flag export_once;
+auto export_once = std::make_unique<std::once_flag>();
 
 namespace
 {
@@ -269,7 +269,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
     if (problemeHebdo->ExportStructure)
     {
-        std::call_once(export_once,
+        std::call_once(*export_once,
                        [&problemeHebdo, &writer]()
                        { OPT_ExportStructures(problemeHebdo, writer); });
     }
@@ -302,3 +302,17 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     }
     return ret;
 }
+
+namespace Antares::Solver::Optimization
+{
+/**
+ * Reset state
+ *
+ * Useful for API clients
+ * Where there is a state there should be a class
+ */
+void reset()
+{
+    export_once = std::make_unique<std::once_flag>();
+}
+} // namespace Antares::Solver::Optimization

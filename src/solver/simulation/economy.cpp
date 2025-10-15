@@ -42,6 +42,7 @@ Economy::Economy(Data::Study& study,
     simulationObserver_(simulationObserver),
     simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
 {
+    Optimization::reset();
 }
 
 Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
