@@ -42,4 +42,4 @@ The currently supported versions (8.8.x and 9.3.x) have been shown to work well 
 XPRESS 9.3.0 has a missing `XPRSgetduals` symbol on Windows, causing a crash. To the author's knowledge, this is undocumented.
 
 ### Community license is very restrictive
-FICO offers a Community License for testing purposes. It should be noted however that it is extremely restrictive. You may experience issues when trying to run Antares Solver with this license, even on small test-cases.
+FICO offers a Community License for testing purposes. It should be noted however that this license is restrictive, so you may experience issues when trying to run Antares Solver with this license, even on small test-cases.
