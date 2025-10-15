@@ -30,30 +30,15 @@ namespace Antares::Solver::Simulation
 class randomNumbers
 {
 public:
-    randomNumbers(uint maxNbPerformedYearsInAset, Data::PowerFluctuations powerFluctuations):
-        pMaxNbPerformedYears(maxNbPerformedYearsInAset)
-    {
-        // Allocate a table of parallel years structures
-        pYears.resize(maxNbPerformedYearsInAset);
-
-        // Tells these structures their power fluctuations mode
-        for (uint y = 0; y < maxNbPerformedYearsInAset; ++y)
-        {
-            pYears[y].setPowerFluctuations(powerFluctuations);
-        }
-    }
-
+    randomNumbers(uint maxNbPerformedYearsInAset, Data::PowerFluctuations powerFluctuations);
     ~randomNumbers() = default;
 
-    void reset()
-    {
-        for (uint i = 0; i < pMaxNbPerformedYears; i++)
-        {
-            pYears[i].reset();
-        }
-
-        yearNumberToIndex.clear();
-    }
+    void allocate(const Antares::Data::Study& study);
+    void compute(Antares::Data::Study& study,
+                 unsigned years,
+                 std::map<unsigned int, bool>& isYearPerformed,
+                 MersenneTwister& randomHydro);
+    void reset();
 
     uint pMaxNbPerformedYears;
     std::vector<yearRandomNumbers> pYears;
@@ -64,13 +49,4 @@ public:
     //..., max nb of parallel years - 1)
     std::map<uint, uint> yearNumberToIndex;
 };
-
-void allocateMemoryForRandomNumbers(const Antares::Data::Study& study,
-                                    randomNumbers& randomForParallelYears);
-
-void computeRandomNumbers(Antares::Data::Study& study,
-                          randomNumbers& randomForYears,
-                          unsigned years,
-                          std::map<unsigned int, bool>& isYearPerformed,
-                          MersenneTwister& randomHydro);
 } // namespace Antares::Solver::Simulation

@@ -537,12 +537,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     randomNumbers randomForParallelYears(pNbYearsReallyPerformed,
                                          study.parameters.power.fluctuations);
 
-    allocateMemoryForRandomNumbers(study, randomForParallelYears);
-    computeRandomNumbers(study,
-                         randomForParallelYears,
-                         endYear,
-                         isYearPerformed,
-                         randomHydroGenerator);
+    randomForParallelYears.allocate(study);
+    randomForParallelYears.compute(study, endYear, isYearPerformed, randomHydroGenerator);
 
     // hydro checks
     for (uint year = firstYear; year < endYear; ++year)

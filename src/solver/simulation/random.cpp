@@ -25,53 +25,75 @@
 
 namespace Antares::Solver::Simulation
 {
-void allocateMemoryForRandomNumbers(const Antares::Data::Study& study,
-                                    randomNumbers& randomForParallelYears)
+randomNumbers::randomNumbers(uint maxNbPerformedYearsInAset,
+                             Data::PowerFluctuations powerFluctuations):
+    pMaxNbPerformedYears(maxNbPerformedYearsInAset)
 {
-    uint maxNbPerformedYears = randomForParallelYears.pMaxNbPerformedYears;
+    // Allocate a table of parallel years structures
+    pYears.resize(maxNbPerformedYearsInAset);
+
+    // Tells these structures their power fluctuations mode
+    for (uint y = 0; y < maxNbPerformedYearsInAset; ++y)
+    {
+        pYears[y].setPowerFluctuations(powerFluctuations);
+    }
+}
+
+void randomNumbers::reset()
+{
+    for (uint i = 0; i < pMaxNbPerformedYears; i++)
+    {
+        pYears[i].reset();
+    }
+
+    yearNumberToIndex.clear();
+}
+
+void randomNumbers::allocate(const Antares::Data::Study& study)
+{
     uint nbAreas = study.areas.size();
 
-    for (uint y = 0; y < maxNbPerformedYears; y++)
+    for (uint y = 0; y < pMaxNbPerformedYears; y++)
     {
         // General :
-        randomForParallelYears.pYears[y].setNbAreas(nbAreas);
-        randomForParallelYears.pYears[y].pNbClustersByArea.resize(nbAreas);
+        pYears[y].setNbAreas(nbAreas);
+        pYears[y].pNbClustersByArea.resize(nbAreas);
 
         // Thermal noises :
-        randomForParallelYears.pYears[y].pThermalNoisesByArea.resize(nbAreas);
+        pYears[y].pThermalNoisesByArea.resize(nbAreas);
 
         for (uint a = 0; a != nbAreas; ++a)
         {
             // logs.info() << "   area : " << a << " :";
             auto& area = *(study.areas.byIndex[a]);
             size_t nbClusters = area.thermal.list.allClustersCount();
-            randomForParallelYears.pYears[y].pThermalNoisesByArea[a].resize(nbClusters);
-            randomForParallelYears.pYears[y].pNbClustersByArea[a] = nbClusters;
+            pYears[y].pThermalNoisesByArea[a].resize(nbClusters);
+            pYears[y].pNbClustersByArea[a] = nbClusters;
         }
 
         // Reservoir levels
-        randomForParallelYears.pYears[y].pReservoirLevels.resize(nbAreas);
+        pYears[y].pReservoirLevels.resize(nbAreas);
 
         // Noises on unsupplied and spilled energy
-        randomForParallelYears.pYears[y].pUnsuppliedEnergy.resize(nbAreas);
-        randomForParallelYears.pYears[y].pSpilledEnergy.resize(nbAreas);
+        pYears[y].pUnsuppliedEnergy.resize(nbAreas);
+        pYears[y].pSpilledEnergy.resize(nbAreas);
 
         // Hydro costs noises
         switch (study.parameters.power.fluctuations)
         {
         case Data::lssFreeModulations:
         {
-            randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod.resize(nbAreas);
+            pYears[y].pHydroCostsByArea_freeMod.resize(nbAreas);
             for (uint a = 0; a != nbAreas; ++a)
             {
-                randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod[a].resize(8784);
+                pYears[y].pHydroCostsByArea_freeMod[a].resize(8784);
             }
             break;
         }
         case Data::lssMinimizeRamping:
         case Data::lssMinimizeExcursions:
         {
-            randomForParallelYears.pYears[y].pHydroCosts_rampingOrExcursion.resize(nbAreas);
+            pYears[y].pHydroCosts_rampingOrExcursion.resize(nbAreas);
             break;
         }
         case Data::lssUnknown:
@@ -83,11 +105,10 @@ void allocateMemoryForRandomNumbers(const Antares::Data::Study& study,
     } // End loop over years
 }
 
-void computeRandomNumbers(Antares::Data::Study& study, // Mersenne-Twister has non-const methods
-                          randomNumbers& randomForYears,
-                          unsigned nbYears,
-                          std::map<unsigned int, bool>& isYearPerformed,
-                          MersenneTwister& randomHydroGenerator)
+void randomNumbers::compute(Antares::Data::Study& study, // Mersenne-Twister has non-const methods
+                            unsigned nbYears,
+                            std::map<unsigned int, bool>& isYearPerformed,
+                            MersenneTwister& randomHydroGenerator)
 {
     uint indexYear = 0;
 
@@ -96,7 +117,7 @@ void computeRandomNumbers(Antares::Data::Study& study, // Mersenne-Twister has n
         bool isPerformed = isYearPerformed[y];
         if (isPerformed)
         {
-            randomForYears.yearNumberToIndex[y] = indexYear;
+            yearNumberToIndex[y] = indexYear;
         }
 
         // General
@@ -113,8 +134,7 @@ void computeRandomNumbers(Antares::Data::Study& study, // Mersenne-Twister has n
                 double thermalNoise = study.runtime.random[Data::seedThermalCosts].next();
                 if (isPerformed)
                 {
-                    randomForYears.pYears[indexYear].pThermalNoisesByArea[a][clusterIndex]
-                      = thermalNoise;
+                    pYears[indexYear].pThermalNoisesByArea[a][clusterIndex] = thermalNoise;
                 }
             }
         }
@@ -122,13 +142,8 @@ void computeRandomNumbers(Antares::Data::Study& study, // Mersenne-Twister has n
         // ... Reservoir levels ...
         uint areaIndex = 0;
         study.areas.each(
-          [&areaIndex,
-           &indexYear,
-           &randomForYears,
-           &randomHydroGenerator,
-           &y,
-           &isPerformed,
-           &study](Data::Area& area)
+          [&areaIndex, &indexYear, &randomHydroGenerator, &y, &isPerformed, &study, this](
+            Data::Area& area)
           {
               // looking for the initial reservoir level (begining of the year)
               auto& min = area.hydro.reservoirLevel[Data::PartHydro::minimum];
@@ -166,7 +181,7 @@ void computeRandomNumbers(Antares::Data::Study& study, // Mersenne-Twister has n
               // reservoir level to ensure the same results)
               if (isPerformed)
               {
-                  randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
+                  pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
               }
 
               areaIndex++;
@@ -187,19 +202,19 @@ void computeRandomNumbers(Antares::Data::Study& study, // Mersenne-Twister has n
            &areaIndex,
            &randomUnsupplied,
            &randomSpilled,
-           &randomForYears,
            &indexYear,
-           &SpilledEnergySeedIsDefault](Data::Area& area)
+           &SpilledEnergySeedIsDefault,
+           this](Data::Area& area)
           {
               (void)area; // Avoiding warnings at compilation (unused variable) on linux
               if (isPerformed)
               {
                   double randomNumber = randomUnsupplied();
-                  randomForYears.pYears[indexYear].pUnsuppliedEnergy[areaIndex] = randomNumber;
-                  randomForYears.pYears[indexYear].pSpilledEnergy[areaIndex] = randomNumber;
+                  pYears[indexYear].pUnsuppliedEnergy[areaIndex] = randomNumber;
+                  pYears[indexYear].pSpilledEnergy[areaIndex] = randomNumber;
                   if (!SpilledEnergySeedIsDefault)
                   {
-                      randomForYears.pYears[indexYear].pSpilledEnergy[areaIndex] = randomSpilled();
+                      pYears[indexYear].pSpilledEnergy[areaIndex] = randomSpilled();
                   }
               }
               else
@@ -231,8 +246,7 @@ void computeRandomNumbers(Antares::Data::Study& study, // Mersenne-Twister has n
             {
                 for (auto i = study.areas.begin(); i != end; ++i)
                 {
-                    auto& noise = randomForYears.pYears[indexYear]
-                                    .pHydroCostsByArea_freeMod[areaIndex];
+                    auto& noise = pYears[indexYear].pHydroCostsByArea_freeMod[areaIndex];
                     std::set<hydroCostNoise, compareHydroCostsNoises> setHydroCostsNoises;
                     for (uint j = 0; j != 8784; ++j)
                     {
@@ -289,8 +303,7 @@ void computeRandomNumbers(Antares::Data::Study& study, // Mersenne-Twister has n
             {
                 if (isPerformed)
                 {
-                    randomForYears.pYears[indexYear].pHydroCosts_rampingOrExcursion[areaIndex]
-                      = randomHydro();
+                    pYears[indexYear].pHydroCosts_rampingOrExcursion[areaIndex] = randomHydro();
                 }
                 else
                 {
