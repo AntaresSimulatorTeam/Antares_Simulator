@@ -49,7 +49,6 @@ node["parameters"]) is equivalent to
 //     return n.as<T>(T());
 // }
 
-
 template<>
 struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
 {
@@ -60,7 +59,8 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.location = Antares::IO::Inputs::YmlOptimConfig::GetLocation()(node["location"].as<std::string>());
+        rhs.location = Antares::IO::Inputs::YmlOptimConfig::GetLocation()(
+          node["location"].as<std::string>());
         return true;
     }
 };
@@ -75,7 +75,8 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Objective>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.location = Antares::IO::Inputs::YmlOptimConfig::GetLocation(node["location"].as<std::string>());
+        rhs.location = Antares::IO::Inputs::YmlOptimConfig::GetLocation(
+          node["location"].as<std::string>());
 
         return true;
     }
@@ -92,23 +93,21 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
         }
         rhs.id = node["id"].as<std::string>();
         const auto& modelDecompositionNode = node["model-decomposition"];
-        rhs.variables =
-          modelDecompositionNode["variables"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>();
+        rhs.variables = modelDecompositionNode["variables"]
+                          .as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>();
 
-        rhs.objectives =
-          modelDecompositionNode["objectives"].std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>();
+        rhs.objectives = modelDecompositionNode["objectives"]
+                           .std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>();
 
         return true;
     }
 };
-
 
 template<>
 struct convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::OptimConfig& rhs)
     {
-
         rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
         return true;
     }

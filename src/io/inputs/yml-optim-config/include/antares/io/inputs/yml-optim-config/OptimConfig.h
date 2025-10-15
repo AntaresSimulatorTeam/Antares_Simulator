@@ -34,6 +34,7 @@ enum class LOCATION
     SUBPROBLEMS,
     MASTER_AND_SUBPROBLEMS
 };
+
 inline LOCATION GetLocation(const std::string& location)
 {
     if (location == "master")
@@ -50,9 +51,10 @@ inline LOCATION GetLocation(const std::string& location)
     }
     else
     {
-        throw std::invalid_argument("Invalid Location type: "+location);
+        throw std::invalid_argument("Invalid Location type: " + location);
     }
 }
+
 struct Variable
 {
     std::string id;
@@ -75,6 +77,5 @@ struct Model
 };
 
 using OptimConfig = std::vector<Model>;
-
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig
