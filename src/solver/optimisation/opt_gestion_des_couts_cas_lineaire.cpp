@@ -353,9 +353,9 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 var = variableManager.LayerStorage(pays, layerindex);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
-                                                             ->CaracteristiquesHydrauliques[pays]
-                                                             .WaterLayerValues[layerindex];
+                    ProblemeAResoudre->CoutLineaire[var] = -problemeHebdo
+                                                              ->CaracteristiquesHydrauliques[pays]
+                                                              .WaterLayerValues[layerindex];
                 }
             }
         }
