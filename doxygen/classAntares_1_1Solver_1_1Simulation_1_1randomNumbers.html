@@ -137,15 +137,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aebfeb5a7811db2531f5caaf883a4248d"><td class="memItemLeft" align="right" valign="top"><a id="aebfeb5a7811db2531f5caaf883a4248d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>randomNumbers</b> (uint maxNbPerformedYearsInAset, Data::PowerFluctuations powerFluctuations)</td></tr>
 <tr class="separator:aebfeb5a7811db2531f5caaf883a4248d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64d9ba8682ebc615c22e464f05c15804"><td class="memItemLeft" align="right" valign="top"><a id="a64d9ba8682ebc615c22e464f05c15804"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>allocate</b> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &amp;study)</td></tr>
+<tr class="separator:a64d9ba8682ebc615c22e464f05c15804"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a6629091aae36a93a1fea19dd87fa2b"><td class="memItemLeft" align="right" valign="top"><a id="a5a6629091aae36a93a1fea19dd87fa2b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>compute</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &amp;study, unsigned years, std::map&lt; unsigned int, bool &gt; &amp;isYearPerformed, <a class="el" href="classAntares_1_1MersenneTwister.html">MersenneTwister</a> &amp;randomHydro)</td></tr>
+<tr class="separator:a5a6629091aae36a93a1fea19dd87fa2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4a699676f9a734fca8d152cadfa9b04"><td class="memItemLeft" align="right" valign="top"><a id="ac4a699676f9a734fca8d152cadfa9b04"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
 <tr class="separator:ac4a699676f9a734fca8d152cadfa9b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a2b926c11a860137a98062ac71aca639d"><td class="memItemLeft" align="right" valign="top"><a id="a2b926c11a860137a98062ac71aca639d"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><b>pMaxNbPerformedYears</b></td></tr>
-<tr class="separator:a2b926c11a860137a98062ac71aca639d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04d4a4b7ff7eb97ad2c68236470b4fac"><td class="memItemLeft" align="right" valign="top"><a id="a04d4a4b7ff7eb97ad2c68236470b4fac"></a>
 std::vector&lt; <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html">yearRandomNumbers</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pYears</b></td></tr>
 <tr class="separator:a04d4a4b7ff7eb97ad2c68236470b4fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,8 +156,9 @@ std::vector&lt; <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1year
 std::map&lt; uint, uint &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>yearNumberToIndex</b></td></tr>
 <tr class="separator:a8d0becd6a3b7961858b83c98b82e05c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/solver/simulation/include/antares/solver/simulation/<a class="el" href="solver__utils_8h_source.html">solver_utils.h</a></li>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/solver/simulation/include/antares/solver/simulation/<a class="el" href="random_8h_source.html">random.h</a></li>
+<li>src/solver/simulation/random.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
