@@ -23,8 +23,8 @@
 #include <string>
 
 #include <antares/expressions/expression.h>
-
 #include "antares/modeler/optimConfig/optimConfig.h"
+
 #include "timeAndScenarioType.h"
 #include "valueType.h"
 
@@ -91,6 +91,7 @@ public:
         return location_ == Modeler::Config::Location::MASTER
                || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
     }
+
 private:
     std::string id_;
     ValueType type_;
