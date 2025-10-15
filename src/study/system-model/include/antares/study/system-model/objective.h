@@ -19,25 +19,37 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+
 #include <string>
 
-namespace Antares::Expressions
+#include <antares/expressions/expression.h>
+
+namespace Antares::ModelerStudy::SystemModel
 {
-class Hashable
+
+/// An objective expression
+class Objective final
 {
 public:
-    Hashable(const std::string& s1, const std::string& s2);
-    ~Hashable() = default;
+    Objective(std::string id, Expression&& expression):
+        id_(std::move(id)),
+        expression_(std::move(expression))
+    {
+    }
 
-    bool operator==(const Hashable& other) const;
+    const std::string& Id() const
+    {
+        return id_;
+    }
 
-    const std::string& s1;
-    const std::string& s2;
+    const Expression& expression() const
+    {
+        return expression_;
+    }
+
+private:
+    std::string id_;
+    Expression expression_;
 };
 
-struct PortFieldHash
-{
-    std::size_t operator()(const Hashable& n) const;
-};
-
-} // namespace Antares::Expressions
+} // namespace Antares::ModelerStudy::SystemModel

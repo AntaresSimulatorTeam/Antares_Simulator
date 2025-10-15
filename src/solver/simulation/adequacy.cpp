@@ -36,7 +36,7 @@ Adequacy::Adequacy(Data::Study& study,
     study(study),
     resultWriter(resultWriter),
     simulationObserver_(simulationObserver),
-    simulationTables_(study.maxNbYearsInParallel)
+    simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
 {
 }
 
@@ -65,6 +65,11 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
 
 OptimisationsSimulationTable& Adequacy::getSimulationTable(uint numSpace)
 {
+    if (numSpace >= simulationTables_.size())
+    {
+        throw std::out_of_range("Error: there is no simulation table for numSpace: "
+                                + std::to_string(numSpace));
+    }
     return simulationTables_[numSpace];
 }
 
@@ -213,13 +218,17 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                auto& currentSimTable = simulationTables_[numSpace];
+                auto* currentSimTable = simulationTables_.empty() ? nullptr
+                                                                  : &simulationTables_[numSpace];
                 OPT_OptimisationHebdomadaireLineaire(study.parameters.optOptions,
                                                      &currentProblem,
                                                      resultWriter,
                                                      simulationObserver_.get(),
                                                      currentSimTable);
-                currentSimTable.write();
+                if (currentSimTable)
+                {
+                    currentSimTable->write();
+                }
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,

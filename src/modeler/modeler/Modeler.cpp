@@ -38,6 +38,7 @@
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Optimization;
+using namespace Antares::Optimisation;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
 
@@ -52,43 +53,50 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
 class SystemLinearProblemBuilder final
 {
 public:
-    explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system):
-        system_(system)
+    explicit SystemLinearProblemBuilder(
+      const ModelerStudy::SystemModel::System* system,
+      ILinearProblem& pb,
+      const LinearProblemApi::ILinearProblemData& dataSeries,
+      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
+        system_(system),
+        dataSeries_(dataSeries),
+        scenarioGroupRepository_(scenarioGroupRepository),
+        optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository)
     {
     }
 
     ~SystemLinearProblemBuilder() = default;
 
-    void Provide(ILinearProblem& pb,
-                 ILinearProblemData* dataSeries,
-                 const Optimisation::ScenarioGroupRepository& scenario_group_repository,
-                 const FillContext& timeScenarioCtx)
+    void Provide(const FillContext& timeScenarioCtx)
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
-        // All LP variables coordinates (component id, variable id, scenario, time step)
+        const auto& components = system_->Components();
+        optimEntityContainer_.addFromSystemComponents(components);
 
-        for (const auto& [_, component]: system_->Components())
+        // All LP variables coordinates (component id, variable id, scenario, time step)
+        for (const auto& component: components)
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      variableDictionary_,
-                                                                      *dataSeries,
-                                                                      scenario_group_repository);
+                                                                      optimEntityContainer_,
+                                                                      scenarioGroupRepository_);
             fillers.push_back(std::move(cf));
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);
 
-        linear_problem_builder.build(pb, timeScenarioCtx);
+        linear_problem_builder.build(timeScenarioCtx);
     }
 
-    [[nodiscard]] const VariableDictionary& getVariableDictionary() const
+    [[nodiscard]] const Optimisation::OptimEntityContainer& getOptimEntityContainer() const
     {
-        return variableDictionary_;
+        return optimEntityContainer_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    VariableDictionary variableDictionary_;
+    const LinearProblemApi::ILinearProblemData& dataSeries_;
+    const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
+    Optimisation::OptimEntityContainer optimEntityContainer_;
 };
 
 void Modeler::solve() const
@@ -102,21 +110,20 @@ void Modeler::solve() const
 
         Utils::TimeMeasurement measure;
 
-        SystemLinearProblemBuilder system_linear_problem(data.system.get());
-
         writer_.init(!parameters.noOutput, simulationTableSuffix);
 
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous
         bool isMip = std::ranges::any_of(
-          data.system->Components() | std::views::values,
+          data.system->Components(),
           [](const auto& component)
           {
-              return std::ranges::any_of(component.getModel()->Variables() | std::views::values,
-                                         [](const auto& variable) {
-                                             return variable.Type()
-                                                    != ModelerStudy::SystemModel::ValueType::FLOAT;
-                                         });
+              return std::any_of(component.getModel()->Variables().cbegin(),
+                                 component.getModel()->Variables().cend(),
+                                 [](const auto& variable) {
+                                     return variable.Type()
+                                            != ModelerStudy::SystemModel::ValueType::FLOAT;
+                                 });
           });
         OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
         // Todo: scenario
@@ -126,10 +133,12 @@ void Modeler::solve() const
           parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
           parameters.lastTimeStep,  // global = local
           0};
-        system_linear_problem.Provide(ortools_linear_problem,
-                                      data.dataSeries.get(),
-                                      data.scenarioGroupRepository,
-                                      timeScenarioCtx);
+        SystemLinearProblemBuilder system_linear_problem(data.system.get(),
+                                                         ortools_linear_problem,
+                                                         *data.dataSeries,
+                                                         data.scenarioGroupRepository);
+
+        system_linear_problem.Provide(timeScenarioCtx);
 
         logs.info() << "Linear problem provided";
 
@@ -143,14 +152,23 @@ void Modeler::solve() const
         writer_.writeProblem(ortools_linear_problem);
 
         logs.info() << "Launching resolution...";
+        measure.reset();
         auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
+        measure.tick();
+        logs.info() << "Solved in " << measure.toStringInSeconds();
 
         switch (solution->getStatus())
         {
         case MipStatus::OPTIMAL:
         case MipStatus::FEASIBLE:
-            writer_.writeSimulationTable(ortools_linear_problem, *solution, data, timeScenarioCtx);
-            break;
+        {
+            writer_.writeSimulationTable(ortools_linear_problem,
+                                         *solution,
+                                         data,
+                                         system_linear_problem.getOptimEntityContainer(),
+                                         timeScenarioCtx);
+        }
+        break;
         default:
             logs.error() << "Problem during linear optimization";
         }

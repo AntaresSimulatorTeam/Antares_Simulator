@@ -24,10 +24,6 @@
 #include <functional>
 #include <optional>
 #include <string>
-#include <unordered_map>
-#include <vector>
-
-#include <antares/solver/optim-model-filler/FullKey.h>
 
 #include "MCYearAndTime.h"
 
@@ -36,7 +32,7 @@ namespace Antares::Optimisation::LinearProblemApi
 class IMipVariable;
 }
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 
 struct IntegerInterval
@@ -89,56 +85,10 @@ private:
     std::optional<IntegerInterval> timeInterval;
 };
 
-class VariableDictionary final
-{
-    using Value = Optimisation::LinearProblemApi::IMipVariable*;
+// TODO Move me
+std::string buildVariableName(const std::string& compoId,
+                              const std::string& variableId,
+                              std::optional<Optimization::MCYearAndTime::MCYear> mcyear,
+                              std::optional<unsigned int> timestep);
 
-    class VectorWithOffset final
-    {
-    public:
-        VectorWithOffset() = default;
-        void resize(size_t initial_size, unsigned offset);
-        Value& operator[](unsigned int index);
-        [[nodiscard]] const Value& operator[](unsigned int index) const;
-        [[nodiscard]] const Value& at(unsigned int index) const;
-        Value& at(unsigned int index);
-
-    private:
-        std::vector<Value> values_ = {};
-        unsigned int offset_ = 0;
-    };
-
-    using TwoIndexVectorByYear = std::unordered_map<MCYearAndTime::MCYear, VectorWithOffset>;
-    using HashMapVector = std::unordered_map<PartialKey, TwoIndexVectorByYear, PartialKeyHash>;
-
-    HashMapVector storageOfAddedMipVariables_;
-    const TwoIndexVectorByYear& operator[](const PartialKey& k) const;
-
-public:
-    void addVariable(const Dimensions& dimensions,
-                     const PartialKey& key,
-                     std::function<Value(const MCYearAndTime&, const std::string&)>&& func);
-
-    Value operator[](const FullKey& k) const;
-    Value& operator[](const FullKey& k);
-
-    Value operator()(const std::string& component, const std::string& variable) const;
-    Value& operator()(const std::string& component, const std::string& variable);
-
-    Value operator()(const std::string& component,
-                     const std::string& variable,
-                     const MCYearAndTime::MCYear& scenario,
-                     unsigned int timestep) const;
-
-    Value& operator()(const std::string& component,
-                      const std::string& variable,
-                      const MCYearAndTime::MCYear& scenario,
-                      unsigned int timestep);
-    Value operator()(const FullKey& fullKey) const;
-
-    Value& operator()(const FullKey& fullKey);
-    static std::string buildVariableName(const PartialKey& key,
-                                         std::optional<MCYearAndTime::MCYear> mcyear,
-                                         std::optional<unsigned int> timestep);
-};
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

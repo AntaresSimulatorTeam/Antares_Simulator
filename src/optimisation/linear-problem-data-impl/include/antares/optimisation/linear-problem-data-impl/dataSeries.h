@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <span>
 #include <string>
 
 #include <antares/optimisation/linear-problem-api/IScenario.h>
@@ -42,6 +43,12 @@ public:
     [[nodiscard]] virtual double getData(
       LinearProblemApi::IScenario::TimeSeriesNumber time_series_number,
       unsigned int hour) const
+      = 0;
+
+    [[nodiscard]] virtual std::span<const double> getData(
+      LinearProblemApi::IScenario::TimeSeriesNumber time_series_number,
+      unsigned firstHour,
+      unsigned lastHour) const
       = 0;
 
     [[nodiscard]] std::string name() const

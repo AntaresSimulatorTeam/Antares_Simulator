@@ -130,11 +130,11 @@ system:
 struct ComponentToAreaConnectionFillerFixture
 {
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
-    VariableDictionary modelerVariableDictionary;
     std::unique_ptr<Modeler::Data> modelerData;
     std::vector<Library> libraries;
     Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    std::remove_reference_t<LinearProblemData&> data;
 
     ComponentToAreaConnectionFillerFixture():
         linearProblem(true, "scip")
@@ -146,6 +146,16 @@ struct ComponentToAreaConnectionFillerFixture
         auto scenarioPtr = std::make_unique<Scenario>("SG");
         scenarioPtr->setTimeSerieNumber(0, 1);
         scenarioGroupRepository.addScenario("SG", std::move(scenarioPtr));
+    }
+
+    void setData(const std::vector<double>& some_param_value)
+    {
+        auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
+        tss->add(some_param_value);
+        DataSeriesRepository ds;
+        ds.addDataSeries(std::move(tss));
+        LinearProblemData d(std::move(ds));
+        data = std::move(d);
     }
 
     void setUpModelerSystem()
@@ -160,19 +170,35 @@ struct ComponentToAreaConnectionFillerFixture
         problemeHebdo->modelerData = modelerData.get();
     }
 
-    void setUpModelerVariables(unsigned int ts_start, unsigned int ts_end)
+    void setUpModelerVariables(unsigned int ts_start,
+                               unsigned int ts_end,
+                               Optimisation::OptimEntityContainer& optimEntityContainer)
     {
-        const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
-        for (const auto& component: modelerData->system->Components() | std::views::values)
+        const Optimisation::Dimensions dim({}, Optimisation::IntegerInterval(ts_start, ts_end));
+        for (const auto& component: modelerData->system->Components())
         {
-            for (const auto& variable: component.getModel()->Variables() | std::views::values)
+            for (const auto& variable: component.getModel()->Variables())
             {
-                PartialKey key(component.Id(), variable.Id());
-                modelerVariableDictionary.addVariable(
-                  dim,
-                  key,
-                  [this](const MCYearAndTime&, const std::string& name)
-                  { return linearProblem.addVariable(-999, 999, false, name); });
+                optimEntityContainer.addStartColumn();
+                if (variable.isTimeDependent())
+                {
+                    for (auto t = ts_start; t <= ts_end; ++t)
+                    {
+                        auto name = Optimisation::buildVariableName(component.Id(),
+                                                                    variable.Id(),
+                                                                    {},
+                                                                    t);
+                        linearProblem.addVariable(-999, 999, false, name);
+                    }
+                }
+                else
+                {
+                    auto name = Optimisation::buildVariableName(component.Id(),
+                                                                variable.Id(),
+                                                                std::nullopt,
+                                                                std::nullopt);
+                    linearProblem.addVariable(-999, 999, false, name);
+                }
             }
         }
     }
@@ -212,24 +238,18 @@ struct ComponentToAreaConnectionFillerFixture
         addEmptyConstraints(constraintNames, useNamedProblems, rhs);
     }
 
-    void fillProblem(unsigned int ts_start,
-                     unsigned int ts_end,
-                     std::vector<double> some_param_value)
+    void fillProblem(const FillContext& fillCtx,
+                     Optimisation::OptimEntityContainer& optimEntityContainer)
     {
-        problemeHebdo->NombreDePasDeTempsPourUneOptimisation = ts_end - ts_start + 1;
-        FillContext fillCtx(ts_start, ts_end, ts_start, ts_end, 0);
-        auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
-        tss->add(some_param_value);
-        DataSeriesRepository ds;
-        ds.addDataSeries(std::move(tss));
-        LinearProblemData data(std::move(ds));
+        problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
+
         ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
-                                               modelerVariableDictionary,
+                                               optimEntityContainer,
                                                data,
                                                scenarioGroupRepository);
-        filler.addVariables(linearProblem, fillCtx);
-        filler.addConstraints(linearProblem, fillCtx);
-        filler.addObjective(linearProblem, fillCtx);
+        filler.addVariables(fillCtx);
+        filler.addConstraints(fillCtx);
+        filler.addObjectives(fillCtx);
     }
 };
 
@@ -237,13 +257,20 @@ BOOST_FIXTURE_TEST_SUITE(_ComponentToAreaConnectionFiller_, ComponentToAreaConne
 
 BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 {
-    setUpModelerVariables(0, 0);
+    setData({4.0});
+
+    Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
+                                                            &data,
+                                                            &scenarioGroupRepository);
+
+    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
+    setUpModelerVariables(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
     setUpLegacyLp(constraints, true, 10);
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
-    fillProblem(0, 0, {4.0});
+    fillProblem({0, 0, 0, 0, 0}, optimEntityContainer);
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(linearProblem.lookupVariable(
@@ -274,7 +301,14 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 
 BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 {
-    setUpModelerVariables(10, 11);
+    setData({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
+
+    Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
+                                                            &data,
+                                                            &scenarioGroupRepository);
+
+    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
+    setUpModelerVariables(10, 11, optimEntityContainer);
     // Legacy indexing of TS always starts at 1
     std::vector<std::string> constraints(
       {"whatever", "AreaBalance::area<area1>::hour<0>", "AreaBalance::area<area1>::hour<1>"});
@@ -284,7 +318,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[1].NumeroDeContrainteDesBilansPays.push_back(2);
-    fillProblem(10, 11, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
+    fillProblem({0, 1, 10, 11, 0}, optimEntityContainer);
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
     auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
@@ -335,10 +369,17 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 
 BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
 {
-    setUpModelerVariables(0, 0);
+    setData({4.0});
+
+    Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
+                                                            &data,
+                                                            &scenarioGroupRepository);
+
+    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
+    setUpModelerVariables(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever"});
     setUpLegacyLp(constraints, true, 0);
-    BOOST_CHECK_EXCEPTION(fillProblem(0, 0, {4.0}),
+    BOOST_CHECK_EXCEPTION(fillProblem({0, 0, 0, 0, 0}, optimEntityContainer),
                           std::runtime_error,
                           checkMessage("A component is connected to area \"area1\", that does not "
                                        "have a balance constraint defined for timestep 0"));

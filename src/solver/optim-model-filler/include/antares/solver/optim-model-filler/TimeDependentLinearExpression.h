@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -18,69 +18,63 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
 #pragma once
+#include <span>
 
-#include <map>
-
-#include <antares/solver/optim-model-filler/LinearExpression.h>
-#include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
+#include "LinearExpression.h"
 
 namespace Antares::Optimization
 {
-using LinearExpressionMap = std::map<unsigned int, LinearExpression>;
-
-// time dependent parameter
 class TimeDependentLinearExpression final
 {
 public:
-    explicit TimeDependentLinearExpression(
-      const Optimisation::LinearProblemApi::FillContext& fillContext);
+    explicit TimeDependentLinearExpression(std::size_t nbTimesteps);
 
-    // Construction from one LinearExpression, to be duplicated for all timestep
-    explicit TimeDependentLinearExpression(
-      const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const LinearExpression& linearExpression);
+    explicit TimeDependentLinearExpression(const std::span<const double>& values);
 
-    explicit TimeDependentLinearExpression(
-      const Optimisation::LinearProblemApi::FillContext& fillContext,
-      LinearExpressionMap linearExpressions);
+    // Constant expression
+    explicit TimeDependentLinearExpression(LinearExpression&& expr);
+    explicit TimeDependentLinearExpression(const std::vector<std::pair<int, double>>& coefs,
+                                           double constant);
 
-    explicit TimeDependentLinearExpression(
-      const TimeDependentLinearExpression& timeDependentLinearExpression)
-      = default;
+    std::vector<double> constant() const;
 
-    TimeDependentLinearExpression(TimeDependentLinearExpression&& other) noexcept = default;
-    TimeDependentLinearExpression& operator=(TimeDependentLinearExpression&& other) = delete;
+    void mergeDuplicateCoefficients();
 
-    /// Sum two linear expressions
-    [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use "
-                 "operator+= if possible.")]]
-    TimeDependentLinearExpression operator+(const TimeDependentLinearExpression& other) const;
-    /// Subtract two linear expressions
-    [[deprecated("Will make a potentially expensive copy of a TimeDependentLinearExpression. Use "
-                 "operator-= if possible.")]]
-    TimeDependentLinearExpression operator-(const TimeDependentLinearExpression& other) const;
-    /// Multiply two linear expressions
-    /// Only one can have non-zero coefficients, otherwise the result cannot be linear
-    TimeDependentLinearExpression operator*(const TimeDependentLinearExpression& other) const;
-    /// Divide two linear expressions
-    /// Only first expression can have non-zero coefficients, otherwise the result cannot be linear
-    TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
-    /// Multiply linear expression by -1
-    TimeDependentLinearExpression operator-() const;
-    TimeDependentLinearExpression shiftLinearExpressions(int shiftValue) const;
-    TimeDependentLinearExpression operator[](int timeStep) const;
-    TimeDependentLinearExpression timeSumLinearExpressions(int from, int to) const;
-    TimeDependentLinearExpression allTimeSumLinearExpressions() const;
+    std::size_t size() const;
 
-    const LinearExpressionMap& GetLinearExpressions() const;
-    size_t getSize() const;
+    bool isConstant() const;
+
+    using iterator = std::vector<LinearExpression>::iterator;
+    iterator begin();
+    iterator end();
+
+    using const_iterator = std::vector<LinearExpression>::const_iterator;
+    const_iterator begin() const;
+    const_iterator end() const;
+
+    LinearExpression& operator[](std::size_t idx);
+
+    const LinearExpression& operator[](std::size_t idx) const;
+
     TimeDependentLinearExpression& operator+=(const TimeDependentLinearExpression& other);
+
     TimeDependentLinearExpression& operator-=(const TimeDependentLinearExpression& other);
 
+    void rotate(int shift);
+
+    TimeDependentLinearExpression& operator*=(double factor);
+
+    TimeDependentLinearExpression& operator*=(const TimeDependentLinearExpression& other);
+
+    TimeDependentLinearExpression operator-() const;
+
+    TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
+
 private:
-    LinearExpressionMap linearExpressions_;
-    const Optimisation::LinearProblemApi::FillContext& fillContext_;
+    void expandTo(std::size_t nbTimesteps);
+
+    std::vector<LinearExpression> v_;
 };
+
 } // namespace Antares::Optimization

@@ -21,13 +21,13 @@
 #pragma once
 
 #include <map>
-#include <unordered_set>
 #include <vector>
 
 #include <antares/expressions/expression.h>
 
 #include "constraint.h"
 #include "extraOutput.h"
+#include "objective.h"
 #include "parameter.h"
 #include "port.h"
 #include "portFieldDefinition.h"
@@ -71,12 +71,12 @@ public:
         return id_;
     }
 
-    const Expression& Objective() const
+    const std::vector<Objective>& Objectives() const
     {
-        return objective_;
+        return objectives_;
     }
 
-    const std::map<std::string, Constraint>& Constraints() const
+    const std::vector<Constraint>& Constraints() const
     {
         return constraints_;
     }
@@ -86,7 +86,7 @@ public:
         return parameters_;
     }
 
-    const std::map<std::string, Variable>& Variables() const
+    const std::vector<Variable>& Variables() const
     {
         // TODO : convert to vector?
         return variables_;
@@ -110,13 +110,13 @@ public:
 private:
     friend class ModelBuilder;
     std::string id_;
-    Expression objective_;
 
     std::map<std::string, Parameter> parameters_;
-    std::map<std::string, Variable> variables_;
-    std::map<std::string, Constraint> constraints_;
+    std::vector<Variable> variables_;
+    std::vector<Constraint> constraints_;
     std::map<std::string, Port> ports_;
     std::map<std::string, ExtraOutput> extraOutputs_;
+    std::vector<Objective> objectives_;
 
     PortFieldMap portFieldDefinitions_;
 };
@@ -137,7 +137,7 @@ class ModelBuilder final
 {
 public:
     ModelBuilder& withId(std::string_view id);
-    ModelBuilder& withObjective(Expression&& objective);
+    ModelBuilder& withObjectives(std::vector<Objective>&& objectives);
     ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
     ModelBuilder& withVariables(std::vector<Variable>&& variables);
     ModelBuilder& withPorts(std::vector<Port>&& ports);

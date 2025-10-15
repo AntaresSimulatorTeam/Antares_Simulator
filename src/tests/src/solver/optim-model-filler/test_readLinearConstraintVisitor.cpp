@@ -18,178 +18,107 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
 #define WIN32_LEAN_AND_MEAN
 
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/expressions/Registry.hxx>
-#include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
-#include "antares/exception/InvalidArgumentError.hpp"
-#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
-#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
-
+#include "visitorFixture.hpp"
+using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
 using namespace Antares::ModelerStudy;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 
-using namespace Antares::Optimization;
-
 BOOST_AUTO_TEST_SUITE(_read_linear_constraint_visitor_)
 
-struct MyDummyFixture: Registry<Node>
-{
-    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario empty_scenario;
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
-    SystemModel::Model m;
-    SystemModel::ComponentBuilder componentBuilder;
-    SystemModel::Component component = componentBuilder.withId("compo")
-                                         .withModel(&m)
-                                         .withScenarioGroupId("group")
-                                         .build();
-
-    MyDummyFixture()
-    {
-        auto scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
-          "SCENARIO_GROUP");
-        scenarioPtr->setTimeSerieNumber(0, 1);
-        scenarioGroupRepository.addScenario("SCENARIO_GROUP", std::move(scenarioPtr));
-        scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
-          "GROUP");
-        scenarioPtr->setTimeSerieNumber(0, 1);
-        scenarioGroupRepository.addScenario("GROUP", std::move(scenarioPtr));
-    }
-
-    Antares::Optimisation::EvaluationContextProvider evaluationContextProvider()
-    {
-        return Antares::Optimisation::EvaluationContextProvider(data, scenarioGroupRepository);
-    }
-
-    ReadLinearConstraintVisitor visitor()
-    {
-        Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
-        return ReadLinearConstraintVisitor(evaluationContextProvider(), ctx, component);
-    }
-
-    void setComponentParameterValues(
-      const std::vector<std::tuple<std::string, ParameterType, std::string>>& values)
-    {
-        std::map<std::string, ParameterTypeAndValue> map;
-        std::vector<SystemModel::Parameter> parameters;
-        for (auto value: values)
-        {
-            map[std::get<0>(value)] = ParameterTypeAndValue{.id = std::get<0>(value),
-                                                            .type = std::get<1>(value),
-                                                            .value = std::get<2>(value)};
-            SystemModel::Parameter parameter{std::get<0>(value),
-                                             SystemModel::TimeDependent::YES,
-                                             SystemModel::ScenarioDependent::YES};
-            parameters.push_back(parameter);
-        }
-        SystemModel::ModelBuilder modelBuilder;
-        m = modelBuilder.withId("model").withParameters(std::move(parameters)).build();
-        component = componentBuilder.withId("compo")
-                      .withModel(&m)
-                      .withScenarioGroupId("group")
-                      .withParameterValues(map)
-                      .build();
-    }
-};
-
-BOOST_FIXTURE_TEST_CASE(test_name, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(test_name, VisitorFixture<ReadLinearConstraintVisitor>)
 {
     BOOST_CHECK_EQUAL(visitor().name(), "ReadLinearConstraintVisitor");
 }
 
-std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
-  const std::string& id,
-  const std::string& value,
-  const ParameterType& type = ParameterType::CONSTANT)
+BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, VisitorFixture<ReadLinearConstraintVisitor>)
 {
-    return {id, {.id = id, .type = type, .value = value}};
-}
-
-BOOST_FIXTURE_TEST_CASE(test_visit_equal_node, MyDummyFixture)
-{
-    // 5 + var1 = var2 + 3 * var1 - param1(9)  ==> -2 * var1 - var2 = -14
-    Node* lhs = create<SumNode>(create<LiteralNode>(5.), create<VariableNode>("var1"));
-    Node* rhs = create<SumNode>(create<VariableNode>("var2"),
+    // 5 + var1 = var2 + 3 * var1 - param1(-2)  ==> -2 * var1 - var2 = -3
+    Node* lhs = create<SumNode>(create<LiteralNode>(5.), create<VariableNode>("var1", 0));
+    Node* rhs = create<SumNode>(create<VariableNode>("var2", 1),
                                 create<MultiplicationNode>(create<LiteralNode>(3.),
-                                                           create<VariableNode>("var1")),
+                                                           create<VariableNode>("var1", 0)),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<EqualNode>(lhs, rhs);
-    setComponentParameterValues({{"param1", ParameterType::CONSTANT, "9."}});
-    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
-    ReadLinearConstraintVisitor visitor(evaluationContextProvider(), ctx, component);
-    auto constraint = visitor.dispatch(node)[0];
-    BOOST_CHECK_EQUAL(constraint.lb, -14.);
-    BOOST_CHECK_EQUAL(constraint.ub, -14.);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-                      -2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-                      -1);
+
+    auto v = visitor();
+    auto constraint = v.dispatch(node);
+    BOOST_CHECK_EQUAL(constraint.lb[0], -3.);
+    BOOST_CHECK_EQUAL(constraint.ub[0], -3.);
+    BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
+    auto& linExpr = constraint.coef_per_var[0];
+    BOOST_REQUIRE_EQUAL(linExpr.size(), 2); // two coeffs
+    // var1
+    BOOST_CHECK_EQUAL(linExpr[0].first, 0);
+    BOOST_CHECK_EQUAL(linExpr[0].second, -2.);
+    // var2
+    BOOST_CHECK_EQUAL(linExpr[1].first, 1);
+    BOOST_CHECK_EQUAL(linExpr[1].second, -1.);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(test_visit_less_than_or_equal_node,
+                        VisitorFixture<ReadLinearConstraintVisitor>)
 {
-    // -9 + var3 <= var1 + 5 * var2 - param1(10)  ==> - var1 - 5 * var2 + var3 <= -1
-    Node* lhs = create<SumNode>(create<LiteralNode>(-9.), create<VariableNode>("var3"));
-    Node* rhs = create<SumNode>(create<VariableNode>("var1"),
+    // -9 + var3 <= var1 + 5 * var2 - param1(-2)  ==> - var1 - 5 * var2 + var3 <= 11
+    Node* lhs = create<SumNode>(create<LiteralNode>(-9.), create<VariableNode>("var3", 2));
+    Node* rhs = create<SumNode>(create<VariableNode>("var1", 0),
                                 create<MultiplicationNode>(create<LiteralNode>(5.),
-                                                           create<VariableNode>("var2")),
+                                                           create<VariableNode>("var2", 1)),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<LessThanOrEqualNode>(lhs, rhs);
-    setComponentParameterValues({{"param1", ParameterType::CONSTANT, "10."}});
-    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
-    ReadLinearConstraintVisitor visitor(evaluationContextProvider(), ctx, component);
-    auto constraint = visitor.dispatch(node)[0];
-    BOOST_CHECK_EQUAL(constraint.lb, -std::numeric_limits<double>::infinity());
-    BOOST_CHECK_EQUAL(constraint.ub, -1.);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 3);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-                      -1);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-                      -5);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var3", MCYearAndTime::MCYear{0}, 0)),
-                      1);
+
+    auto v = visitor();
+    auto constraint = v.dispatch(node);
+    BOOST_CHECK_EQUAL(constraint.lb[0], -std::numeric_limits<double>::infinity());
+    BOOST_CHECK_EQUAL(constraint.ub[0], 11.);
+    BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
+    auto& linExpr = constraint.coef_per_var[0];
+    BOOST_REQUIRE_EQUAL(linExpr.size(), 3); // 3 coeffs
+    // var1
+    BOOST_CHECK_EQUAL(linExpr[0].first, 0);
+    BOOST_CHECK_EQUAL(linExpr[0].second, -1.);
+    // var2
+    BOOST_CHECK_EQUAL(linExpr[1].first, 1);
+    BOOST_CHECK_EQUAL(linExpr[1].second, -5.);
+    // var3
+    BOOST_CHECK_EQUAL(linExpr[2].first, 2);
+    BOOST_CHECK_EQUAL(linExpr[2].second, 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node,
+                        VisitorFixture<ReadLinearConstraintVisitor>)
 {
-    // 5 + var1 >= var2 + 3 * var1 - param1(9)  ==> -2 * var1 - var2 >= -14
-    Node* lhs = create<SumNode>(create<LiteralNode>(5.), create<VariableNode>("var1"));
-    Node* rhs = create<SumNode>(create<VariableNode>("var2"),
+    // 5 + var1 >= var2 + 3 * var1 - param1(-2)  ==> -2 * var1 - var2 >= -3
+    Node* lhs = create<SumNode>(create<LiteralNode>(5.), create<VariableNode>("var1", 0));
+    Node* rhs = create<SumNode>(create<VariableNode>("var2", 1),
                                 create<MultiplicationNode>(create<LiteralNode>(3.),
-                                                           create<VariableNode>("var1")),
+                                                           create<VariableNode>("var1", 0)),
                                 create<NegationNode>(create<ParameterNode>("param1")));
     Node* node = create<GreaterThanOrEqualNode>(lhs, rhs);
-    setComponentParameterValues({{"param1", ParameterType::CONSTANT, "9."}});
-    const Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
-    ReadLinearConstraintVisitor visitor(evaluationContextProvider(), ctx, component);
-    auto constraint = visitor.dispatch(node)[0];
-    BOOST_CHECK_EQUAL(constraint.lb, -14);
-    BOOST_CHECK_EQUAL(constraint.ub, std::numeric_limits<double>::infinity());
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.size(), 2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var1", MCYearAndTime::MCYear{0}, 0)),
-                      -2);
-    BOOST_CHECK_EQUAL(constraint.coef_per_var.at(
-                        FullKey(component.Id(), "var2", MCYearAndTime::MCYear{0}, 0)),
-                      -1);
+    auto v = visitor();
+    auto constraint = v.dispatch(node);
+    BOOST_CHECK_EQUAL(constraint.lb[0], -3.);
+    BOOST_CHECK_EQUAL(constraint.ub[0], std::numeric_limits<double>::infinity());
+
+    BOOST_REQUIRE_EQUAL(constraint.coef_per_var.size(), 1); // single timestep
+    auto& linExpr = constraint.coef_per_var[0];
+    BOOST_REQUIRE_EQUAL(linExpr.size(), 2); // 2 coeffs
+    // var1
+    BOOST_CHECK_EQUAL(linExpr[0].first, 0);
+    BOOST_CHECK_EQUAL(linExpr[0].second, -2.);
+    // var2
+    BOOST_CHECK_EQUAL(linExpr[1].first, 1);
+    BOOST_CHECK_EQUAL(linExpr[1].second, -1.);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, VisitorFixture<ReadLinearConstraintVisitor>)
 {
     auto lit = create<LiteralNode>(5.);
     std::vector<Node*> illegal_nodes = {create<SumNode>(),
@@ -197,7 +126,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, MyDummyFixture)
                                         create<MultiplicationNode>(lit, lit),
                                         create<DivisionNode>(lit, lit),
                                         create<NegationNode>(lit),
-                                        create<VariableNode>("var"),
+                                        create<VariableNode>("var", 99),
                                         create<ParameterNode>("param"),
                                         create<LiteralNode>(5.),
                                         create<PortFieldNode>("port", "field"),

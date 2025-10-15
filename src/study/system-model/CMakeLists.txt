@@ -21,6 +21,7 @@ set(SRC_model
         include/antares/study/system-model/system.h
         include/antares/study/system-model/timeAndScenarioType.h
         include/antares/study/system-model/connection.h
+        include/antares/study/system-model/objective.h
 )
 
 source_group("SystemModel" FILES ${SRC_model})

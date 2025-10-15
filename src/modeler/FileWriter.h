@@ -19,7 +19,6 @@
 
 #pragma once
 #include <filesystem>
-#include <unordered_map>
 
 #include "modeler/include/antares/solver/modeler/IWriter.h"
 
@@ -51,6 +50,7 @@ public:
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const Data& modelerData,
+      const Optimisation::OptimEntityContainer& variableContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);
 

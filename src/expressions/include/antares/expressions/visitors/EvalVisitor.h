@@ -26,9 +26,10 @@
 #include <variant>
 
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include "antares/expressions/IEvaluationContextProvider.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/modeler-optimisation-container/EvaluationContext.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
@@ -207,7 +208,12 @@ std::vector<double> computeBinaryOperation(const std::vector<double>& lhs, doubl
 template<typename BinaryOp>
 std::vector<double> computeBinaryOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
 {
-    return computeBinaryOperation(rhs, lhs, op);
+    std::vector<double> result(rhs.size());
+    for (size_t i = 0; i < rhs.size(); ++i)
+    {
+        result[i] = op(lhs, rhs[i]);
+    }
+    return result;
 }
 
 class VectorsMismatchSize final: public std::runtime_error
@@ -286,17 +292,18 @@ public:
      * @param context The evaluation context.
      * @param fillContext
      */
-    explicit EvalVisitor(const IEvaluationContextProvider& contextProvider,
+
+    explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
                          const Optimisation::LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
 private:
-    const EvaluationContext context_;
-    const IEvaluationContextProvider& contextProvider_;
+    const Optimisation::EvaluationContext& context_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
+    const Optimisation::OptimEntityContainer& optimContainer_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

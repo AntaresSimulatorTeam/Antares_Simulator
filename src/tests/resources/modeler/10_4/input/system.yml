@@ -1,0 +1,70 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+   # Study case 10_4 : to test extra-output features
+   # Small test case with one node (1 thermal cluster, 1 one load)
+
+system:
+
+  id: case_10_4
+  description: To be added
+  components:
+    - id: base_zone
+      model: library-eo.area
+      parameters:
+      - id: spillage_cost
+        time-dependent: false
+        scenario-dependent: false
+        value: 0
+      - id: ens_cost
+        time-dependent: false
+        scenario-dependent: false
+        value: 20000
+      - id: lol_threshold
+        time-dependent: false
+        scenario-dependent: false
+        value: 0.00001
+    
+    - id: load_base_zone
+      model: library-eo.load
+      parameters:
+        - id: load
+          time-dependent: true
+          scenario-dependent: true
+          value : load_ts
+    
+    - id: gas_base_zone
+      model: library-eo.simple_gen
+      parameters:
+        - id: p_min_cluster
+          scenario-dependent: false
+          time-dependent: false
+          value: 0
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false 
+          time-dependent: false
+          value: 100
+        - id: marginal_generation_cost
+          scenario-dependent: false 
+          time-dependent: false
+          value: 2
+
+  connections:
+    - component1: base_zone
+      port1: balance_port
+      component2: load_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: gas_base_zone
+      port2: balance_port

@@ -25,21 +25,21 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/solver/optim-model-filler/EvaluationContextProvider.h>
-#include <antares/solver/optim-model-filler/VariableDictionary.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
 namespace Antares::Expressions::Visitors
 {
 
-EvalVisitor::EvalVisitor(const IEvaluationContextProvider& contextProvider,
+EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
                          const Optimisation::LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
-    context_(contextProvider.provide(component)),
-    contextProvider_(contextProvider),
+    optimContainer_(optimContainer),
+    context_(optimContainer.getEvaluationContext(component)),
     fillContext_(fillContext),
     component_(component)
 {
@@ -87,42 +87,40 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->timeIndex() == TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
-        std::string varName = Optimization::VariableDictionary::buildVariableName(
-          {component_.Id(), node->value()},
-          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
-          std::nullopt);
-        return EvaluationResult(context_.getVariableValue(varName));
+        const std::span componentVariables = optimContainer_.getComponentVariable(
+          component_,
+          node->Index(),
+          1 /* single timestep*/);
+        return EvaluationResult(componentVariables[0]->solutionValue());
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
-    std::vector<double> varValues;
-    varValues.reserve(fillContext_.getLocalNumberOfTimeSteps());
-    for (auto timeStep = fillContext_.getLocalFirstTimeStep();
-         timeStep <= fillContext_.getLocalLastTimeStep();
-         ++timeStep)
+    const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
+    std::vector<double> varValues(nbTimeStep, 0.0);
+    const std::span componentVariables = optimContainer_.getComponentVariable(component_,
+                                                                              node->Index(),
+                                                                              nbTimeStep);
+    for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
     {
-        std::string varName = Optimization::VariableDictionary::buildVariableName(
-          {component_.Id(), node->value()},
-          Optimization::MCYearAndTime::MCYear{fillContext_.getYear()},
-          timeStep);
-        varValues.emplace_back(context_.getVariableValue(varName));
+        varValues[varInd] = componentVariables[varInd]->solutionValue();
     }
+
     return EvaluationResult{varValues};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = context_.getParameter(node->value());
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != ParameterType::CONSTANT)
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         std::string msg = "Parameter " + node->value() + " is declared constant in time and"
                           + " scenario in library but not in system";
         throw std::invalid_argument(msg);
     }
-    if (systemParameter.type == ParameterType::CONSTANT)
+    if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
     }
@@ -150,7 +148,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    throw EvalVisitorNotImplemented(name(), node->name());
+    std::string portId = node->getPortName();
+    std::string fieldId = node->getFieldName();
+
+    const auto* nodeToVisit = component_.nodeAtPortField(portId, fieldId);
+    return dispatch(nodeToVisit);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
@@ -163,7 +165,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     {
         auto* component = connectionEnd.component();
         auto* port = connectionEnd.port();
-        EvalVisitor visitor(contextProvider_, fillContext_, *component);
+        EvalVisitor visitor(optimContainer_, fillContext_, *component);
         const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
         auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;

@@ -21,7 +21,6 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_LOLD_H__
 #define __SOLVER_VARIABLE_ECONOMY_LOLD_H__
 
-#include "antares/solver/variable/economy/unsupliedEnergy.h"
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Economy
@@ -55,7 +54,7 @@ struct VCardLOLD
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardUnsupliedEnergy VCardForSpatialAggregate;
+    typedef VCardLOLD VCardForSpatialAggregate;
 
     //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
@@ -83,7 +82,7 @@ struct VCardLOLD
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef std::vector<IntermediateValues> IntermediateValuesType;
 
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
+    using IntermediateValuesTypeForSpatialAg = std::unique_ptr<IntermediateValuesBaseType[]>;
 
 }; // class VCard
 

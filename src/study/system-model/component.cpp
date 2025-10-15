@@ -157,6 +157,12 @@ ComponentBuilder& ComponentBuilder::withModel(const Model* model)
     return *this;
 }
 
+ComponentBuilder& ComponentBuilder::withIndex(unsigned int index)
+{
+    data_.index = index;
+    return *this;
+}
+
 /**
  * \brief Sets the parameter values of the component. The parameters included should be all of the
  * model's parameters.
@@ -165,7 +171,7 @@ ComponentBuilder& ComponentBuilder::withModel(const Model* model)
  * \return Reference to the ComponentBuilder object.
  */
 ComponentBuilder& ComponentBuilder::withParameterValues(
-  std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameter_values)
+  std::map<std::string, ParameterTypeAndValue> parameter_values)
 {
     data_.parameter_values = std::move(parameter_values);
     return *this;
