@@ -102,6 +102,7 @@ bool Application::handleOptions(const Data::StudyLoadOptions& options)
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
+    logs.callback.connect(this, &Application::onLogMessage);
     auto& study = *pStudy;
 
     // Name of the simulation
@@ -254,8 +255,6 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
     WriteCommandLineIntoLogs(pArgc, pArgv);
 
     logs.info() << "  :: log filename: " << logs.logfile();
-
-    logs.callback.connect(this, &Application::onLogMessage);
 
     pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
 
