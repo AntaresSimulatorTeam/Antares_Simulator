@@ -218,7 +218,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         else
         {
             LogDisplayErrorInfos(
-              0,
+              pErrorCount,
               pWarningCount,
               "As requested, the warnings can be ignored and the simulation will continue",
               false /* not an error */);
