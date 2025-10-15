@@ -40,7 +40,6 @@ public:
                  MersenneTwister& randomHydro);
     void reset();
 
-    uint pMaxNbPerformedYears;
     std::vector<yearRandomNumbers> pYears;
 
     // Associates :
@@ -48,5 +47,8 @@ public:
     //(0,
     //..., max nb of parallel years - 1)
     std::map<uint, uint> yearNumberToIndex;
+
+private:
+    uint pMaxNbPerformedYears;
 };
 } // namespace Antares::Solver::Simulation
