@@ -508,6 +508,12 @@ void Application::writeExectutionInfo()
     }
 
     logTotalTime(pDurationCollector.getTime(totalTimeKey));
+    if (pErrorCount == 0 && pWarningCount > 0)
+    {
+        logs.info()
+          << "Simulation completed but there were some warnings during loading. Here is the list:";
+        LogMessageStack(messagesStack);
+    }
 
     // If no writer is available, we can't write
     if (!resultWriter)
