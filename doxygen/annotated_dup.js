@@ -714,6 +714,7 @@ var annotated_dup =
           [ "NullSimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver" ],
           [ "ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter" ],
           [ "NumSpaceManager", "classAntares_1_1Solver_1_1Simulation_1_1NumSpaceManager.html", "classAntares_1_1Solver_1_1Simulation_1_1NumSpaceManager" ],
+          [ "yearRandomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers" ],
           [ "randomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html", "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers" ],
           [ "CyclicIterator", "classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html", "classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator" ],
           [ "Exchange", "structAntares_1_1Solver_1_1Simulation_1_1Exchange.html", "structAntares_1_1Solver_1_1Simulation_1_1Exchange" ],
@@ -726,7 +727,6 @@ var annotated_dup =
           [ "setOfParallelYears", "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html", "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears" ],
           [ "costStatistics", "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html", "classAntares_1_1Solver_1_1Simulation_1_1costStatistics" ],
           [ "annualCostsStatistics", "classAntares_1_1Solver_1_1Simulation_1_1annualCostsStatistics.html", "classAntares_1_1Solver_1_1Simulation_1_1annualCostsStatistics" ],
-          [ "yearRandomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers" ],
           [ "hydroCostNoise", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise" ],
           [ "compareHydroCostsNoises", "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html", "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises" ]
         ] ],
