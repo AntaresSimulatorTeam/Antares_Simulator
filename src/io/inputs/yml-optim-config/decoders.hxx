@@ -24,28 +24,11 @@
 
 #include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 
-#include "include/antares/io/inputs/yml-optim-config/OptimConfig.h"
 #include "yaml-cpp/yaml.h"
 
 // Implement convert specializations
 namespace YAML
 {
-
-/**
- * @brief shortend to default construct a value when node is null
- * @tparam T Type to convert the node to
- * @param n node
- * @return Object of type T
- * It's just to simplify repertitve and verbose lines
- * as_fallback_default<std::vector<Antares::IO::Inputs::YmlOptimConfig::Parameter>>(
-node["parameters"]) is equivalent to
- node["parameters"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Parameter>>(std::vector<Antares::IO::Inputs::YmlOptimConfig::Parameter>())
- */
-// template<typename T>
-// inline T as_fallback_default(const Node& n)
-// {
-//     return n.as<T>(T());
-// }
 
 template<>
 struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
@@ -85,10 +68,6 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Model& rhs)
     {
-        if (!node.IsMap())
-        {
-            return false;
-        }
         rhs.id = node["id"].as<std::string>();
         const auto& modelDecompositionNode = node["model-decomposition"];
         rhs.variables = modelDecompositionNode["variables"]
@@ -101,13 +80,4 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
     }
 };
 
-template<>
-struct convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
-{
-    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::OptimConfig& rhs)
-    {
-        rhs = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
-        return true;
-    }
-};
 } // namespace YAML

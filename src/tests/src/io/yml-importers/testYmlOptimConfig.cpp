@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <yaml-cpp/exceptions.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include "antares/io/inputs/yml-optim-config/parser.h"

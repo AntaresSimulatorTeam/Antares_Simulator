@@ -29,7 +29,7 @@ OptimConfig Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
 
-    OptimConfig optimConfig = root["models"].as<OptimConfig>();
+    OptimConfig optimConfig = root["models"].as<std::vector<Model>>();
 
     return optimConfig;
 }
