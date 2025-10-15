@@ -23,9 +23,7 @@
 #pragma once
 
 #include "antares/io/inputs/yml-optim-config/OptimConfig.h"
-#include "antares/logs/logs.h"
 
-#include "../model-converter/include/antares/io/inputs/model-converter/modelConverter.h"
 #include "include/antares/io/inputs/yml-optim-config/OptimConfig.h"
 #include "yaml-cpp/yaml.h"
 
@@ -59,7 +57,7 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.location = Antares::IO::Inputs::YmlOptimConfig::GetLocation()(
+        rhs.location = Antares::IO::Inputs::YmlOptimConfig::GetLocation(
           node["location"].as<std::string>());
         return true;
     }
