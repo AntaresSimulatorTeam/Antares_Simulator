@@ -117,7 +117,10 @@ int LogCompatibility(const char format[], ...);
 /*!
 ** \brief Display informations about encountered errors
 */
-void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool printAsError = true);
+void LogDisplayErrorInfos(uint errors,
+                          uint warnings,
+                          const char* message,
+                          bool printAsError = true);
 
 #ifdef __cplusplus
 }

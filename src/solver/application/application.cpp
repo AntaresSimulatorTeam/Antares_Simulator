@@ -114,7 +114,6 @@ void Application::LogMessageStack(std::vector<std::pair<LogType, std::string>>& 
             break;
         }
     }
-    stack.clear();
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
@@ -510,8 +509,14 @@ void Application::writeExectutionInfo()
     logTotalTime(pDurationCollector.getTime(totalTimeKey));
     if (pErrorCount == 0 && pWarningCount > 0)
     {
-        logs.info()
+        logs.warning()
           << "Simulation completed but there were some warnings during loading. Here is the list:";
+        LogMessageStack(messagesStack);
+    }
+    if (pErrorCount > 0)
+    {
+        logs.error()
+          << "Simulation completed but there were some errors during loading. Here is the list:";
         LogMessageStack(messagesStack);
     }
 
