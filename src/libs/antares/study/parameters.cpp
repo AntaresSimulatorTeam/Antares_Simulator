@@ -675,7 +675,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
         {
             logs.error() << "Reading parameters : invalid MPS export status : " << value
-                           << ". Reset to no MPS export.";
+                         << ". Reset to no MPS export.";
             return false;
         }
         return true;
@@ -709,7 +709,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
             result = false;
             d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
             logs.error() << "parameters: invalid unfeasible problem behavior. Got '" << value
-                           << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
+                         << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
         }
         return result;
     }
@@ -759,7 +759,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.error() << "parameters: invalid hydro heuristic policy. Got '" << value
-                       << "'. Reset to default accommodate rule curves.";
+                     << "'. Reset to default accommodate rule curves.";
         d.hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
         return false;
     }
@@ -772,7 +772,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.error() << "parameters: invalid hydro pricing mode. Got '" << value
-                       << "'. reset to fast mode";
+                     << "'. reset to fast mode";
         d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
@@ -786,7 +786,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.error() << "parameters: invalid number of cores mode. Got '" << value
-                       << "'. reset to fast mode";
+                     << "'. reset to fast mode";
         d.nbCores.ncMode = ncMin;
         return false;
     }
@@ -825,7 +825,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             return true;
         }
         logs.error() << "parameters: invalid unit commitment mode. Got '" << value
-                       << "'. reset to fast mode";
+                     << "'. reset to fast mode";
         d.unitCommitment.ucMode = ucHeuristicFast;
         return false;
     }
@@ -934,7 +934,7 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
             {
                 valid = false;
                 logs.error() << "parameters: invalid MC year weight.Got '" << weight
-                               << "'. Value not used";
+                             << "'. Value not used";
             }
 
             if (valid)
@@ -947,8 +947,8 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
         else
         {
             logs.error() << "parameters: invalid MC year index and weight definition. Must be "
-                              "defined by [year],[weight] Got '"
-                           << value << "'. Value not used";
+                            "defined by [year],[weight] Got '"
+                         << value << "'. Value not used";
             return false;
         }
     }
@@ -988,14 +988,14 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     {
         if (deprecatedVariable(value.to<std::string>()))
         {
-            logs.error() << "Output variable `" << original
+            logs.warning() << "Output variable `" << original
                            << "` no longer exists and has been ignored";
             return true;
         }
         // Check if the read output variable exists
         if (not d.variablesPrintInfo.exists(value.to<std::string>()))
         {
-            logs.error() << "Output variable `" << original << "` does not exist";
+            logs.warning() << "Output variable `" << original << "` does not exist";
             return false;
         }
 
@@ -1076,7 +1076,7 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
 
 static void logNotSupported(const String& key, const StudyVersion& version)
 {
-    logs.error() << "In generaldata.ini, parameter `" << key
+    logs.warning() << "In generaldata.ini, parameter `" << key
                    << "` is no longer supported since version " << version.toString()
                    << ", consider removing it " << "from the study";
 }
