@@ -21,8 +21,6 @@
 
 #include "antares/logs/logs.h"
 
-#include <variant>
-
 namespace Antares
 {
 //! Our log facility

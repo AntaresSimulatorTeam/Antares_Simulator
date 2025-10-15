@@ -130,6 +130,7 @@ private:
     void readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& options);
     // Return false if the user requested the version ,available solvers, etc, true otherwise
     bool handleOptions(const Data::StudyLoadOptions& options);
+    void LogMessageStack(std::vector<std::pair<LogType, std::string>>& stack);
     // Return false if the user requested help, true otherwise
     bool parseCommandLine(Data::StudyLoadOptions& options);
     void postParametersChecks() const;

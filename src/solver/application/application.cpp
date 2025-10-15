@@ -100,6 +100,23 @@ bool Application::handleOptions(const Data::StudyLoadOptions& options)
     return true;
 }
 
+void Application::LogMessageStack(std::vector<std::pair<LogType, std::string>>& stack)
+{
+    for (const auto& msg: stack)
+    {
+        switch (msg.first)
+        {
+        case Application::LogType::Error:
+            logs.error() << msg.second;
+            break;
+        case Application::LogType::Warning:
+            logs.warning() << msg.second;
+            break;
+        }
+    }
+    stack.clear();
+}
+
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
     logs.callback.connect(this, &Application::onLogMessage);
@@ -195,6 +212,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue
             LogDisplayErrorInfos(pErrorCount, pWarningCount, "The simulation must stop.");
+            LogMessageStack(messagesStack);
             throw FatalError("The simulation must stop.");
         }
         else
@@ -204,6 +222,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
               pWarningCount,
               "As requested, the warnings can be ignored and the simulation will continue",
               false /* not an error */);
+            logs.info() << "However here is the list of errors:";
+            LogMessageStack(messagesStack);
             // Actually importing the log file is useless here.
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
