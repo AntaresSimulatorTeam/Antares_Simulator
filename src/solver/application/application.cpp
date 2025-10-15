@@ -369,16 +369,18 @@ void Application::prepare(int argc, const char* argv[])
     pStudy->parameters.optOptions.initializeWith(options.solverOptions);
 }
 
-void Application::onLogMessage(int level, const std::string& /*message*/)
+void Application::onLogMessage(int level, const std::string& message)
 {
     switch (level)
     {
     case Yuni::Logs::Verbosity::Warning::level:
         ++pWarningCount;
+        messagesStack.emplace_back(LogType::Warning, message);
         break;
     case Yuni::Logs::Verbosity::Error::level:
     case Yuni::Logs::Verbosity::Fatal::level:
         ++pErrorCount;
+        messagesStack.emplace_back(LogType::Error, message);
         break;
     default:
         break;
