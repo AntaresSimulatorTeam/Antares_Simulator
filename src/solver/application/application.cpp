@@ -188,9 +188,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Errors
-    if (pErrorCount || pWarningCount)
+    if (pErrorCount > 0)
     {
-        if (pErrorCount || !pSettings.ignoreWarningsErrors)
+        if (!pSettings.ignoreLoadingErrors)
         {
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue
