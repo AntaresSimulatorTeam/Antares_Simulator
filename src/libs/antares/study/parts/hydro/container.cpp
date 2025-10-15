@@ -795,36 +795,21 @@ bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
     return ret;
 }
 
-static void checkLevelForDoublePrecisionIssues(double& levelDown, double& levelUp)
-{
-    if (levelDown < 0)
-    {
-        levelDown = 0;
-    }
-    if (levelUp > 100)
-    {
-        levelUp = 100;
-    }
-}
-
 double getWaterValue(const double& level /* format : in % of reservoir capacity */,
                      const Matrix<double>& waterValues,
                      const uint day)
 {
     assert((level >= 0. - 1e-6 && level <= 100. + 1e-6)
            && "getWaterValue function : invalid level");
-    double levelUp = ceil(level);
-    double levelDown = floor(level);
+    int levelDown = floor(level);
 
-    // if level has value like 100.0000001 because of numerical precision problems and we ceil it
-    checkLevelForDoublePrecisionIssues(levelDown, levelUp);
-
-    if ((int)(levelUp) == (int)(levelDown))
+    // if level has value like 0.0000001 because of numerical precision problems and we ceil it
+    if (levelDown < 0)
     {
-        return waterValues[(int)(levelUp)][day];
+        levelDown = 0;
     }
-    return waterValues[(int)(levelUp)][day] * (level - levelDown)
-           + waterValues[(int)(levelDown)][day] * (levelUp - level);
+
+    return waterValues[levelDown][day];
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
@@ -838,7 +823,14 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
     double levelDown = floor(level);
 
     // if level has value like 100.0000001 because of numerical precision problems and we ceil it
-    checkLevelForDoublePrecisionIssues(levelDown, levelUp);
+    if (levelDown < 0)
+    {
+        levelDown = 0;
+    }
+    if (levelUp > 100)
+    {
+        levelUp = 100;
+    }
 
     if ((int)(levelUp) == (int)(levelDown))
     {

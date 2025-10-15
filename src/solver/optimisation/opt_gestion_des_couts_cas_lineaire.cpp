@@ -362,16 +362,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 }
             }
         }
-        else
-        {
-            int var = variableManager.FinalStorage(pays);
-            if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
-            {
-                ProblemeAResoudre->CoutLineaire[var] = -problemeHebdo
-                                                          ->CaracteristiquesHydrauliques[pays]
-                                                          .WaterLayerValues[0];
-            }
-        }
     }
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)

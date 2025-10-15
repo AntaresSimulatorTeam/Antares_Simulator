@@ -511,20 +511,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                       = area.hydro.waterValues[layerindex][weekFirstDay + 6]; // last day of week
                 }
             }
-            else
-            {
-                double levelInitDown = floor(nivInit);
-                if (levelInitDown < 0) // precision errors
-                {
-                    levelInitDown = 0;
-                }
-                if (levelInitDown >= 100)
-                {
-                    levelInitDown = 99;
-                }
-                problem.CaracteristiquesHydrauliques[k].WaterLayerValues[0]
-                  = area.hydro.waterValues[levelInitDown][weekFirstDay + 6]; // last day of week
-            }
         }
     }
 
