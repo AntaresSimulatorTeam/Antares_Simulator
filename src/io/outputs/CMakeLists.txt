@@ -28,6 +28,8 @@ target_link_libraries(modeler-simulation-table
         Antares::optim-model-filler
         Antares::antares-study-system-model
         Antares::utils
+        PRIVATE
+        Antares::modeler-lib
 )
 
 install(DIRECTORY include/antares

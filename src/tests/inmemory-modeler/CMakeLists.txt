@@ -2,8 +2,8 @@ add_library(inmemory-modeler)
 add_library(Antares::tests::inmemory-modeler ALIAS inmemory-modeler)
 target_sources(inmemory-modeler
         PRIVATE
-    inmemory-modeler.cpp
-    include/inmemory-modeler.h
+        inmemory-modeler.cpp
+        include/inmemory-modeler.h
 )
 
 target_include_directories(inmemory-modeler
@@ -12,9 +12,10 @@ target_include_directories(inmemory-modeler
 )
 
 target_link_libraries(inmemory-modeler
+        PUBLIC
+        Antares::linear-problem-mpsolver-impl
         PRIVATE
         antares-study-system-model
-        Antares::linear-problem-mpsolver-impl
         Antares::optim-model-filler
         Antares::linear-problem-data-impl
         Antares::expressions
