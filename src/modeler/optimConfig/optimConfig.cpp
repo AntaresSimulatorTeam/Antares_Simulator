@@ -23,7 +23,7 @@
 
 #include <unordered_map>
 
-#include <antares/exception/RuntimeError.hpp>
+#include <antares/exception/LoadingError.hpp>
 
 namespace Antares::Modeler::Config
 {
@@ -40,7 +40,7 @@ void OptimConfig::checkDuplicateModelIds() const
     {
         if (count > 1)
         {
-            throw Error::RuntimeError("OptimConfig contains multiple models with ID \"" + id
+            throw Error::Duplicates("OptimConfig contains multiple models with ID \"" + id
                                       + "\".");
         }
     }

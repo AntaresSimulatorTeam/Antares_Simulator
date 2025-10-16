@@ -44,6 +44,11 @@ Duplicates::Duplicates():
 {
 }
 
+Duplicates::Duplicates(const std::string& message):
+    LoadingError(message)
+{
+}
+
 InvalidFileName::InvalidFileName():
     LoadingError("Invalid file names detected.")
 {

@@ -54,6 +54,7 @@ class Duplicates final: public LoadingError
 {
 public:
     Duplicates();
+    Duplicates(const std::string& message);
 };
 
 class InvalidFileName final: public LoadingError

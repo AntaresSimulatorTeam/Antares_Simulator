@@ -137,14 +137,14 @@ public:
         checkDuplicateModelIds();
     }
 
-    void checkDuplicateModelIds() const;
-
     const std::vector<Model>& models() const
     {
         return models_;
     }
 
 private:
+    void checkDuplicateModelIds() const;
+
     std::vector<Model> models_;
 };
 

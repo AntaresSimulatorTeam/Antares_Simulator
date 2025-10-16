@@ -27,7 +27,7 @@
 
 #include "antares/modeler/optimConfig/optimConfig.h"
 
-BOOST_AUTO_TEST_SUITE(test_optim_config_builder)
+BOOST_AUTO_TEST_SUITE(test_optim_config_creation)
 
 using namespace Antares::Modeler::Config;
 
