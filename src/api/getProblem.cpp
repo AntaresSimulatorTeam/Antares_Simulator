@@ -156,7 +156,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     Antares::Solver::Simulation::BuildThermalPartOfWeeklyProblem(
       *study_,
       pb_,
-      PremierPdtDeLIntervalle /* TODO check */,
+      hourInTheYear,
       randomForCurrentYear.pThermalNoisesByArea,
       year);
 
