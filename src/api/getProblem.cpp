@@ -12,7 +12,9 @@ namespace
 constexpr int optimizationNumber = 1;  // the 1st optim is available for now
 constexpr int numeroDeLIntervalle = 0; // simplex-range = week
 constexpr int numSpace = 0;            // full sequential
-const std::string kName = "my-name";
+constexpr int PremierPdtDeLIntervalle = 0;
+constexpr int DernierPdtDeLIntervalle = 167; // 1 week = 7*24 hours
+const std::string kName = "my-name";         // Arbitrary
 } // namespace
 
 namespace Antares::Solver
@@ -72,17 +74,38 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
 }
 
+// TODO (economy)
+void prepareClustersInMustRunMode(const Antares::Data::Study& study,
+                                  Data::Area::ScratchMap& scratchmap,
+                                  uint year)
+{
+    for (uint i = 0; i < study.areas.size(); ++i)
+    {
+        auto& area = *study.areas[i];
+        auto& scratchpad = scratchmap.at(&area);
+
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+
+        auto& mrs = scratchpad.mustrunSum;
+        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            {
+                mrs[h] += availableProduction[h];
+            }
+        }
+    }
+}
+
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
-    const int week = id.week;
-    const int year = id.year;
-    const int PremierPdtDeLIntervalle = 168 * week;
-    const int DernierPdtDeLIntervalle = 168 * (week + 1) - 1;
+    const auto [year, week] = id;
 
     pb_.year = id.year;
     pb_.weekInTheYear = week;
 
-    const auto scratchmap = study_->areas.buildScratchMap(numSpace);
+    auto scratchmap = study_->areas.buildScratchMap(numSpace);
 
     // For each year
     Antares::Solver::NullResultWriter resultWriter;
@@ -104,14 +127,28 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
       nbYears,
       study_->parameters.power.fluctuations);
 
-    allocateMemoryForRandomNumbers(randomForParallelYears);
-    computeRandomNumbers(randomForParallelYears, endYear, isYearPerformed, randomHydroGenerator);
+    randomForParallelYears.allocate(*study_);
+    std::map<unsigned int, bool> isYearPerformed{{0, true}};
 
-    hydroManagement.makeVentilation(randomReservoirLevel, year, scratchmap);
+    MersenneTwister randomHydroGenerator;
+    randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
+
+    randomForParallelYears.compute(*study_, 1, isYearPerformed, randomHydroGenerator);
+
+    // Getting random tables for this year
+    // Index of the current year in the list of structures
+    uint indexYear = randomForParallelYears.yearNumberToIndex[year];
+    auto& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
+    const auto& hydroReservoirLevel = randomForCurrentYear.pReservoirLevels;
+
+    prepareClustersInMustRunMode(*study_, scratchmap, year);
+
+    hydroManagement.makeVentilation(hydroReservoirLevel, year, scratchmap);
+    const auto hourInTheYear = 168 * week;
     SIM_RenseignementProblemeHebdo(*study_,
                                    pb_,
                                    week,
-                                   PremierPdtDeLIntervalle /* TODO check */,
+                                   hourInTheYear,
                                    hydroManagement.ventilationResults(),
                                    scratchmap);
 
@@ -120,7 +157,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
       *study_,
       pb_,
       PremierPdtDeLIntervalle /* TODO check */,
-      {} /* const std::vector<std::vector<double>>& thermalNoises*/,
+      randomForCurrentYear.pThermalNoisesByArea,
       year);
 
     OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(&pb_,
