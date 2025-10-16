@@ -27,6 +27,7 @@
 #include <stdexcept>
 
 #include <antares/stdcxx/class_name.h>
+#include "antares/exception/AssertionError.hpp"
 
 namespace Antares::Data::Enum
 {
