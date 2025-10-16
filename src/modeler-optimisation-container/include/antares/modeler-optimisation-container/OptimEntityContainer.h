@@ -80,10 +80,10 @@ public:
                 optimComponent.modelConstraintsTimeIndex.at(index)};
     }
 
-    [[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
-    {
-        return constraintStartLine_;
-    }
+    //[[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
+    //{
+    //    return constraintStartLine_;
+    //}
 
     LinearProblemApi::ILinearProblem& Problem()
     {

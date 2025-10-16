@@ -214,11 +214,11 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         }
         return evaluator.dispatch(node.RootNode());
     };
+
     const auto& variables = component_.getModel()->Variables();
     auto& pb = optimEntityContainer_.Problem();
-    for (std::size_t i = 0; i < variables.size(); ++i)
+    for (const auto & variable : variables)
     {
-        const auto& variable = variables[i];
         namespace SM = ModelerStudy::SystemModel;
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == SM::ValueType::BOOL ? 0
