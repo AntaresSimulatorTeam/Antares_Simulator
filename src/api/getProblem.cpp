@@ -28,6 +28,7 @@ void SingleProblemGetter::load(const std::filesystem::path& study_path)
                                     /* NombreDePasDeTemps = */ 168,
                                     numSpace);
 
+    // TODO duplication
     if (!pb_.LeProblemeADejaEteInstancie)
     {
         pb_.NombreDeJours = (int)(pb_.NombreDePasDeTemps / pb_.NombreDePasDeTempsDUneJournee);
@@ -74,7 +75,7 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
 }
 
-// TODO (economy)
+// TODO duplication (economy)
 void prepareClustersInMustRunMode(const Antares::Data::Study& study,
                                   Data::Area::ScratchMap& scratchmap,
                                   uint year)
