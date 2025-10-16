@@ -156,7 +156,7 @@ public:
 class CommandLineArguments final: public LoadingError
 {
 public:
-    explicit CommandLineArguments(uint errors);
+    explicit CommandLineArguments(unsigned int errors);
 };
 
 class IncompatibleOutputOptions final: public LoadingError
