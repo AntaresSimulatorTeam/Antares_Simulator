@@ -40,8 +40,7 @@ void OptimConfig::checkDuplicateModelIds() const
     {
         if (count > 1)
         {
-            throw Error::Duplicates("OptimConfig contains multiple models with ID \"" + id
-                                      + "\".");
+            throw Error::Duplicates("OptimConfig contains multiple models with ID \"" + id + "\".");
         }
     }
 }
