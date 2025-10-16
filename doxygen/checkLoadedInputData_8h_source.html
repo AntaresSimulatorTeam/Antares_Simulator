@@ -148,28 +148,46 @@ $(document).ready(function(){initNavTree('checkLoadedInputData_8h_source.html','
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;antares/study/version.h&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;antares/study/fwd.h&quot;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>Antares::Check</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> checkStudyVersion(<span class="keyword">const</span> Data::StudyVersion&amp; version, <span class="keyword">const</span> AnyString&amp; StudyFolder);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keywordtype">void</span> checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                                   Antares::Data::HydroPricingMode hpMode);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                         Antares::Data::UnitCommitmentMode ucMode);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">void</span> checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                                     <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a>&amp; areas);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">void</span> checkMinStablePower(<span class="keywordtype">bool</span> tsGenThermal, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a>&amp; areas);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">void</span> checkFuelCostColumnNumber(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a>&amp; areas);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> checkCO2CostColumnNumber(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a>&amp; areas);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <span class="comment">// namespace Antares::Check</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;antares/exception/LoadingError.hpp&quot;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &quot;antares/study/fwd.h&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>Antares::Check</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">void</span> checkStudyVersion(<span class="keyword">const</span> Data::StudyVersion&amp; version, <span class="keyword">const</span> AnyString&amp; StudyFolder);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keywordtype">void</span> checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                                   Antares::Data::HydroPricingMode hpMode);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">void</span> checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                                         Antares::Data::UnitCommitmentMode ucMode);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                     <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a>&amp; areas);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> checkMinStablePower(<span class="keywordtype">bool</span> tsGenThermal, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a>&amp; areas);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> checkFuelCostColumnNumber(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a>&amp; areas);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">void</span> checkCO2CostColumnNumber(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a>&amp; areas);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea.html">   43</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea.html">IncompatibleDailyOptHeuristicForArea</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Error_1_1LoadingError.html">Error::LoadingError</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea.html">IncompatibleDailyOptHeuristicForArea</a>(<span class="keyword">const</span> Antares::Data::AreaName&amp; name);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classAntares_1_1Check_1_1InvalidParametersForThermalClusters.html">   49</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Check_1_1InvalidParametersForThermalClusters.html">InvalidParametersForThermalClusters</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Error_1_1LoadingError.html">Error::LoadingError</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Check_1_1InvalidParametersForThermalClusters.html">InvalidParametersForThermalClusters</a>(<span class="keyword">const</span> std::map&lt;int, Yuni::String&gt;&amp; clusterNames);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::string buildMessage(<span class="keyword">const</span> std::map&lt;int, Yuni::String&gt;&amp; clusterNames) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;} <span class="comment">// namespace Antares::Check</span></div>
+<div class="ttc" id="aclassAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea_html"><div class="ttname"><a href="classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea.html">Antares::Check::IncompatibleDailyOptHeuristicForArea</a></div><div class="ttdef"><b>Definition:</b> checkLoadedInputData.h:44</div></div>
+<div class="ttc" id="aclassAntares_1_1Check_1_1InvalidParametersForThermalClusters_html"><div class="ttname"><a href="classAntares_1_1Check_1_1InvalidParametersForThermalClusters.html">Antares::Check::InvalidParametersForThermalClusters</a></div><div class="ttdef"><b>Definition:</b> checkLoadedInputData.h:50</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition:</b> area.h:364</div></div>
+<div class="ttc" id="aclassAntares_1_1Error_1_1LoadingError_html"><div class="ttname"><a href="classAntares_1_1Error_1_1LoadingError.html">Antares::Error::LoadingError</a></div><div class="ttdef"><b>Definition:</b> LoadingError.hpp:30</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -84,6 +84,8 @@ var namespaces_dup =
         [ "PerformSimulation", "api_2include_2antares_2api_2solver_8h.html#af14ca616c8b9672112af352062ea8bae", null ]
       ] ],
       [ "Check", null, [
+        [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea.html", "classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea" ],
+        [ "InvalidParametersForThermalClusters", "classAntares_1_1Check_1_1InvalidParametersForThermalClusters.html", "classAntares_1_1Check_1_1InvalidParametersForThermalClusters" ],
         [ "areasThermalClustersMinStablePowerValidity", "checkLoadedInputData_8cpp.html#a46000a3fbf7e26402f8037408317d645", null ],
         [ "checkCO2CostColumnNumber", "checkLoadedInputData_8cpp.html#a1d5c56b73279371c45c529ca04ba25aa", null ],
         [ "checkForDuplicates", "duplicates_8cpp.html#ab6937710a3bff3b3b2d555d27459d50b", null ],
@@ -883,8 +885,6 @@ var namespaces_dup =
         [ "InvalidStudy", "classAntares_1_1Error_1_1InvalidStudy.html", "classAntares_1_1Error_1_1InvalidStudy" ],
         [ "NoStudyProvided", "classAntares_1_1Error_1_1NoStudyProvided.html", "classAntares_1_1Error_1_1NoStudyProvided" ],
         [ "InvalidVersion", "classAntares_1_1Error_1_1InvalidVersion.html", "classAntares_1_1Error_1_1InvalidVersion" ],
-        [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea" ],
-        [ "InvalidParametersForThermalClusters", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters.html", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters" ],
         [ "CommandLineArguments", "classAntares_1_1Error_1_1CommandLineArguments.html", "classAntares_1_1Error_1_1CommandLineArguments" ],
         [ "IncompatibleOutputOptions", "classAntares_1_1Error_1_1IncompatibleOutputOptions.html", "classAntares_1_1Error_1_1IncompatibleOutputOptions" ],
         [ "IncompatibleCO2CostColumns", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns" ],

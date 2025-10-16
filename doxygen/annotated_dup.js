@@ -60,6 +60,10 @@ var annotated_dup =
         [ "APIInternal", "classAntares_1_1API_1_1APIInternal.html", "classAntares_1_1API_1_1APIInternal" ],
         [ "SimulationObserver", "classAntares_1_1API_1_1SimulationObserver.html", "classAntares_1_1API_1_1SimulationObserver" ]
       ] ],
+      [ "Check", null, [
+        [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea.html", "classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea" ],
+        [ "InvalidParametersForThermalClusters", "classAntares_1_1Check_1_1InvalidParametersForThermalClusters.html", "classAntares_1_1Check_1_1InvalidParametersForThermalClusters" ]
+      ] ],
       [ "Component", null, [
         [ "Datagrid", null, [
           [ "Renderer", null, [
@@ -388,8 +392,6 @@ var annotated_dup =
         [ "InvalidStudy", "classAntares_1_1Error_1_1InvalidStudy.html", "classAntares_1_1Error_1_1InvalidStudy" ],
         [ "NoStudyProvided", "classAntares_1_1Error_1_1NoStudyProvided.html", "classAntares_1_1Error_1_1NoStudyProvided" ],
         [ "InvalidVersion", "classAntares_1_1Error_1_1InvalidVersion.html", "classAntares_1_1Error_1_1InvalidVersion" ],
-        [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea" ],
-        [ "InvalidParametersForThermalClusters", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters.html", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters" ],
         [ "CommandLineArguments", "classAntares_1_1Error_1_1CommandLineArguments.html", "classAntares_1_1Error_1_1CommandLineArguments" ],
         [ "IncompatibleOutputOptions", "classAntares_1_1Error_1_1IncompatibleOutputOptions.html", "classAntares_1_1Error_1_1IncompatibleOutputOptions" ],
         [ "IncompatibleCO2CostColumns", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns" ],
