@@ -90,7 +90,7 @@ target_link_libraries(expressions
         Antares::exception
 )
 
-if (msvc)
+if (MSVC)
     target_compile_options(expressions PRIVATE /utf-8)
 endif ()
 
@@ -106,4 +106,3 @@ target_link_libraries(expressions-iterators PRIVATE expressions)
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
-
