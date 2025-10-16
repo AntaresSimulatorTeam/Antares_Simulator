@@ -1,5 +1,4 @@
-#include "antares/api/getProblem.h"
-
+#include "antares/api/singleProblemGetter.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
