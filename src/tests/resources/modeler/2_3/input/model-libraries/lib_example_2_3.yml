@@ -33,4 +33,6 @@ library:
       constraints:
         - id: balance
           expression: gen1_p + gen2_p - load = 0
-      objective: gen1_p[0] * gen1_prop_cost[0] + gen2_p[0] * gen2_prop_cost[0] +gen1_p[1] * gen1_prop_cost[1] + gen2_p[1] * gen2_prop_cost[1]
+      objective-contributions:
+        - id: objective
+          expression: gen1_p[0] * gen1_prop_cost[0] + gen2_p[0] * gen2_prop_cost[0] +gen1_p[1] * gen1_prop_cost[1] + gen2_p[1] * gen2_prop_cost[1]

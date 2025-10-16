@@ -20,7 +20,7 @@
 */
 #pragma once
 
-namespace Antares::Expressions::Visitors
+namespace Antares::Optimisation
 {
 /**
  * @brief Represents the time and scenario variation of a value.
@@ -54,4 +54,4 @@ constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
                                   | static_cast<unsigned int>(right));
 }
 
-} // namespace Antares::Expressions::Visitors
+} // namespace Antares::Optimisation

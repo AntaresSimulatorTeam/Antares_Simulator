@@ -21,11 +21,11 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <ranges>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/solver/optim-model-filler/LinearExpression.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 
 using namespace Antares::Optimization;
@@ -36,133 +36,93 @@ BOOST_AUTO_TEST_CASE(default_linear_expression)
 {
     LinearExpression linearExpression;
 
-    BOOST_CHECK_EQUAL(linearExpression.offset(), 0.);
-    BOOST_CHECK(linearExpression.coefPerVar().empty());
+    BOOST_CHECK_EQUAL(linearExpression.constant(), 0.);
+    BOOST_CHECK_EQUAL(linearExpression.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(linear_expression_explicit_construction)
 {
-    LinearExpression linearExpression(4., {{FullKey("compo", "var"), -5.}});
+    LinearExpression linearExpression({{0, -5.}}, 4.);
 
-    BOOST_CHECK_EQUAL(linearExpression.offset(), 4.);
-    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().size(), 1);
-    BOOST_CHECK_EQUAL(linearExpression.coefPerVar().at(FullKey("compo", "var")), -5.);
+    BOOST_CHECK_EQUAL(linearExpression.constant(), 4.);
+    BOOST_CHECK_EQUAL(linearExpression.size(), 1);
+    BOOST_CHECK_EQUAL(linearExpression[0].first, 0);
+    BOOST_CHECK_EQUAL(linearExpression[0].second, -5.);
 }
 
 BOOST_AUTO_TEST_CASE(sum_two_linear_expressions)
 {
-    auto component = "compo";
-    LinearExpression linearExpression1(4.,
-                                       {{FullKey(component, "var1"), -5.},
-                                        {FullKey(component, "var2"), 6.}});
-    LinearExpression linearExpression2(-1.,
-                                       {{FullKey(component, "var3"), 20.},
-                                        {FullKey(component, "var2"), -4.}});
+    LinearExpression linearExpression1({{0, -5.}, {1, 6.}}, 4.);
+    LinearExpression linearExpression2({{1, -4.}, {2, 20.}}, -1.);
 
-    auto sum = linearExpression1 + linearExpression2;
-
-    BOOST_CHECK_EQUAL(sum.offset(), 3.);
-    BOOST_CHECK_EQUAL(sum.coefPerVar().size(), 3);
-    BOOST_CHECK_EQUAL(sum.coefPerVar().at(FullKey(component, "var1")), -5.);
-    BOOST_CHECK_EQUAL(sum.coefPerVar().at(FullKey(component, "var2")), 2.);
-    BOOST_CHECK_EQUAL(sum.coefPerVar().at(FullKey(component, "var3")), 20.);
+    auto sum = linearExpression1;
+    sum += linearExpression2;
+    sum.mergeDuplicateCoefficients();
+    BOOST_CHECK_EQUAL(sum.constant(), 3.);
+    BOOST_REQUIRE_EQUAL(sum.size(), 3);
+    BOOST_CHECK_EQUAL(sum[0].second, -5.);
+    BOOST_CHECK_EQUAL(sum[1].second, 2.);
+    BOOST_CHECK_EQUAL(sum[2].second, 20.);
 }
 
 BOOST_AUTO_TEST_CASE(subtract_two_linear_expressions)
 {
-    auto component = "compo";
+    LinearExpression linearExpression1({{0, -5.}, {1, 6.}}, 4.);
+    LinearExpression linearExpression2({{1, -4.}, {2, 20.}}, -1.);
 
-    LinearExpression linearExpression1(4.,
-                                       {{FullKey(component, "var1"), -5.},
-                                        {FullKey(component, "var2"), 6.}});
-    LinearExpression linearExpression2(-1.,
-                                       {{FullKey(component, "var2"), -4.},
-                                        {FullKey(component, "var3"), 20.}});
-
-    auto subtract = linearExpression1 - linearExpression2;
-
-    BOOST_CHECK_EQUAL(subtract.offset(), 5.);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar().size(), 3);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(FullKey(component, "var1")), -5.);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(FullKey(component, "var2")), 10.);
-    BOOST_CHECK_EQUAL(subtract.coefPerVar().at(FullKey(component, "var3")), -20.);
+    auto sub = linearExpression1;
+    sub -= linearExpression2;
+    sub.mergeDuplicateCoefficients();
+    BOOST_CHECK_EQUAL(sub.constant(), 5.);
+    BOOST_REQUIRE_EQUAL(sub.size(), 3);
+    BOOST_CHECK_EQUAL(sub[0].second, -5.);
+    BOOST_CHECK_EQUAL(sub[1].second, 10.);
+    BOOST_CHECK_EQUAL(sub[2].second, -20.);
 }
 
 BOOST_AUTO_TEST_CASE(multiply_linear_expression_by_scalar)
 {
-    auto component = "compo";
+    LinearExpression linearExpression({{0, -5.}, {1, 6.}}, 4.);
+    LinearExpression someScalar({}, -2.);
 
-    LinearExpression linearExpression(4.,
-                                      {{FullKey(component, "var1"), -5.},
-                                       {FullKey(component, "var2"), 6.}});
-    LinearExpression someScalar(-2., {});
+    auto product = linearExpression;
+    product *= someScalar;
 
-    auto product = linearExpression * someScalar;
-
-    BOOST_CHECK_EQUAL(product.offset(), -8.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var1")), 10.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var2")), -12.);
-}
-
-BOOST_AUTO_TEST_CASE(multiply_scalar_by_linear_expression)
-{
-    auto component = "compo";
-
-    LinearExpression linearExpression(4.,
-                                      {{FullKey(component, "var1"), -5.},
-                                       {FullKey(component, "var2"), 6.}});
-    LinearExpression someScalar(-2., {});
-
-    auto product = someScalar * linearExpression;
-
-    BOOST_CHECK_EQUAL(product.offset(), -8.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var1")), 10.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var2")), -12.);
+    BOOST_CHECK_EQUAL(product.constant(), -8.);
+    BOOST_REQUIRE_EQUAL(product.size(), 2);
+    BOOST_CHECK_EQUAL(product[0].second, 10.);
+    BOOST_CHECK_EQUAL(product[1].second, -12.);
 }
 
 BOOST_AUTO_TEST_CASE(multiply_two_linear_expressions_containing_variables__exception_raised)
 {
-    auto component = "compo";
+    LinearExpression linearExpression1({{0, -5.}, {1, 6.}}, 4.);
+    LinearExpression linearExpression2({{1, -4.}, {2, 20.}}, -1.);
 
-    LinearExpression linearExpression1(4.,
-                                       {{FullKey(component, "var1"), -5.},
-                                        {FullKey(component, "var2"), 6.}});
-    LinearExpression linearExpression2(-1.,
-                                       {{FullKey(component, "var2"), -4.},
-                                        {FullKey(component, "var3"), 20.}});
-
-    BOOST_CHECK_EXCEPTION(linearExpression1 * linearExpression2,
+    BOOST_CHECK_EXCEPTION(linearExpression1 *= linearExpression2,
                           std::invalid_argument,
                           checkMessage("A linear expression can't have quadratic terms."));
 }
 
 BOOST_AUTO_TEST_CASE(divide_linear_expression_by_scalar)
 {
-    auto component = "compo";
-
-    LinearExpression linearExpression(4.,
-                                      {{FullKey(component, "var1"), -5.},
-                                       {FullKey(component, "var2"), 6.}});
-    LinearExpression someScalar(-2., {});
+    LinearExpression linearExpression({{0, -5.}, {1, 6.}}, 4.);
+    LinearExpression someScalar({}, -2.);
 
     auto product = linearExpression / someScalar;
 
-    BOOST_CHECK_EQUAL(product.offset(), -2.);
-    BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var1")), 2.5);
-    BOOST_CHECK_EQUAL(product.coefPerVar().at(FullKey(component, "var2")), -3.);
+    BOOST_CHECK_EQUAL(product.constant(), -2.);
+    BOOST_CHECK_EQUAL(product.size(), 2);
+    BOOST_CHECK_EQUAL(product[0].first, 0);
+    BOOST_CHECK_EQUAL(product[0].second, 2.5);
+    BOOST_CHECK_EQUAL(product[1].first, 1);
+    BOOST_CHECK_EQUAL(product[1].second, -3.);
 }
 
 BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
 {
-    auto component = "compo";
-
-    LinearExpression linearExpression(4.,
-                                      {{FullKey(component, "var1"), -5.},
-                                       {FullKey(component, "var2"), 6.}});
-    LinearExpression someScalar(-2., {});
+    LinearExpression linearExpression({{0, -5.}, {1, 6.}}, 4.);
+    LinearExpression someScalar({}, -2.);
 
     BOOST_CHECK_EXCEPTION(someScalar / linearExpression,
                           std::invalid_argument,
@@ -171,401 +131,130 @@ BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
 
 BOOST_AUTO_TEST_CASE(negate_linear_expression)
 {
-    auto component = "compo";
-
-    LinearExpression linearExpression(4.,
-                                      {{FullKey(component, "var1"), -5.},
-                                       {FullKey(component, "var2"), 6.}});
+    LinearExpression linearExpression({{0, -5.}, {1, 6.}}, 4.);
 
     auto negative = -linearExpression;
 
-    BOOST_CHECK_EQUAL(negative.offset(), -4.);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().size(), 2);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().at(FullKey(component, "var1")), 5.);
-    BOOST_CHECK_EQUAL(negative.coefPerVar().at(FullKey(component, "var2")), -6.);
+    BOOST_CHECK_EQUAL(negative.constant(), -4.);
+    BOOST_CHECK_EQUAL(negative.size(), 2);
+    BOOST_CHECK_EQUAL(negative[0].first, 0);
+    BOOST_CHECK_EQUAL(negative[0].second, 5.);
+    BOOST_CHECK_EQUAL(negative[1].first, 1);
+    BOOST_CHECK_EQUAL(negative[1].second, -6.);
 }
 
 // Test default constructor
 BOOST_AUTO_TEST_CASE(DefaultConstructor)
 {
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    TimeDependentLinearExpression expr(context);
-    BOOST_TEST(expr.getSize() == 3); // Should create expressions for 3 timesteps
+    TimeDependentLinearExpression expr(3);
+    BOOST_CHECK_EQUAL(expr.size(), 3); // Should create expressions for 3 timesteps
 }
 
-// Test constructor with a single LinearExpression
-BOOST_AUTO_TEST_CASE(ConstructorWithLinearExpression)
+BOOST_AUTO_TEST_CASE(sum_2_constant_expr)
 {
-    auto component = "compo";
+    LinearExpression a(2.);
+    LinearExpression b(4.);
+    LinearExpression ret;
+    ret += a;
+    ret += b;
+    BOOST_CHECK_EQUAL(ret.constant(), 2. + 4.);
+}
 
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    LinearExpression le(5.0, {{FullKey(component, "x"), 2.0}});
-    TimeDependentLinearExpression expr(context, le);
+BOOST_AUTO_TEST_CASE(sub_2_constant_expr)
+{
+    LinearExpression a(2.);
+    LinearExpression b(4.);
+    LinearExpression ret;
+    ret += a;
+    ret -= b;
+    BOOST_CHECK_EQUAL(ret.constant(), 2. - 4.);
+}
 
-    auto expressions = expr.GetLinearExpressions();
-    BOOST_TEST(expressions.size() == 3);
-    for (const auto& [timestep, lexpr]: expressions)
+BOOST_AUTO_TEST_CASE(div_by_constant_expr)
+{
+    LinearExpression a(2.);
+    LinearExpression b(4.);
+    LinearExpression ret;
+    ret += a;
+    ret = ret / b;
+    BOOST_CHECK_EQUAL(ret.constant(), 2. / 4.);
+}
+
+BOOST_AUTO_TEST_CASE(linear_expr_merge_dupl_coefficients_results_to_single_coeff)
+{
+    LinearExpression a({{0, 1.}, {0, 1.}}, 0.);
+    a.mergeDuplicateCoefficients();
+    BOOST_REQUIRE_EQUAL(a.size(), 1);
+    const std::pair<int, double> expected{0, 2.};
+    BOOST_CHECK(a[0] == expected);
+}
+
+BOOST_AUTO_TEST_CASE(linear_expr_merge_dupl_coefficients_results_to_two_coeffs)
+{
+    LinearExpression a({{0, 1.}, {1, 2.}}, 0.);
+    a.mergeDuplicateCoefficients();
+    BOOST_REQUIRE_EQUAL(a.size(), 2);
+    const std::pair<int, double> expected1{0, 1.};
+    BOOST_CHECK(a[0] == expected1);
+    const std::pair<int, double> expected2{1, 2.};
+    BOOST_CHECK(a[1] == expected2);
+}
+
+BOOST_AUTO_TEST_CASE(time_dep_duplicate_merge)
+{
+    std::vector<double> ct{1., 2., 3.};
+    TimeDependentLinearExpression a(ct);
+    a.mergeDuplicateCoefficients();
+    BOOST_REQUIRE_EQUAL(a.size(), 3);
+    BOOST_REQUIRE_EQUAL(a[0].size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(time_dep_add_size_known)
+{
+    std::vector<double> ct{1., 2., 3.};
+    TimeDependentLinearExpression a(ct);
+    TimeDependentLinearExpression b(ct);
+    TimeDependentLinearExpression ret(3);
+    ret += a;
+    ret += b;
+    BOOST_REQUIRE_EQUAL(ret.size(), 3);
+    BOOST_REQUIRE_EQUAL(ret[0].constant(), 1. + 1.);
+}
+
+BOOST_AUTO_TEST_CASE(time_dep_iterate_operators)
+{
+    std::vector<double> ct{1., 2., 3.};
+    const TimeDependentLinearExpression a(ct);
+    for (std::size_t idx = 0; idx < ct.size(); idx++)
     {
-        BOOST_TEST(lexpr.offset() == 5.0);
-        BOOST_TEST(lexpr.coefPerVar().at(FullKey(component, "x")) == 2.0);
+        BOOST_CHECK_EQUAL(a[idx].size(), 0);
+        BOOST_CHECK_EQUAL(a[idx].constant(), ct[idx]);
+    }
+
+    std::size_t idx = 0;
+    for (const auto& expr: a)
+    {
+        BOOST_CHECK_EQUAL(expr.size(), 0);
+        BOOST_CHECK_EQUAL(expr.constant(), ct[idx]);
+        idx++;
     }
 }
 
-// Test constructor with a map of LinearExpression objects
-BOOST_AUTO_TEST_CASE(ConstructorWithMap)
+BOOST_AUTO_TEST_CASE(time_dep_rotate_twice)
 {
-    auto component = "compo";
-
-    LinearExpressionMap expressions = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.5}})},
-                                       {1,
-                                        LinearExpression(2.0, {{FullKey(component, "b"), 3.0}})}};
-
-    TimeDependentLinearExpression expr({0, 2, 0, 2, 0}, expressions);
-    BOOST_TEST(expr.getSize() == 2);
-    BOOST_TEST(expr.GetLinearExpressions().at(0).offset() == 1.0);
-    BOOST_TEST(expr.GetLinearExpressions().at(1).offset() == 2.0);
-}
-
-// Test addition operator
-BOOST_AUTO_TEST_CASE(AdditionOperator)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp1 = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 1.0}})},
-                                {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})}};
-    LinearExpressionMap exp2 = {{0, LinearExpression(2.0, {{FullKey(component, "x"), 2.0}})},
-                                {1, LinearExpression(1.0, {{FullKey(component, "y"), 1.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    TimeDependentLinearExpression expr1(context, exp1), expr2(context, exp2);
-    expr1 += expr2;
-
-    BOOST_TEST(expr1.GetLinearExpressions().at(0).offset() == 5.0);
-    BOOST_TEST(expr1.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 3.0);
-    BOOST_TEST(expr1.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y")) == 3.0);
-}
-
-// Test subtraction operator
-BOOST_AUTO_TEST_CASE(SubtractionOperator)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp1 = {{0, LinearExpression(5.0, {{FullKey(component, "x"), 4.0}})},
-                                {1, LinearExpression(7.0, {{FullKey(component, "y"), 3.0}})}};
-    LinearExpressionMap exp2 = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
-                                {1, LinearExpression(2.0, {{FullKey(component, "y"), 1.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    TimeDependentLinearExpression expr1(context, exp1), expr2(context, exp2);
-    expr1 -= expr2;
-
-    BOOST_TEST(expr1.GetLinearExpressions().at(0).offset() == 2.0);
-    BOOST_TEST(expr1.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 2.0);
-    BOOST_TEST(expr1.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y")) == 2.0);
-}
-
-// Test multiplication operator
-BOOST_AUTO_TEST_CASE(MultiplicationOperator)
-{
-    auto component = "compo";
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-
-    LinearExpressionMap exp1 = {{0, LinearExpression(2.0, {{FullKey(component, "x"), 3.0}})}};
-    LinearExpressionMap exp2 = {
-      {0, LinearExpression(4.0, {})} // Only scalar allowed
-    };
-
-    TimeDependentLinearExpression expr1(context, exp1), expr2(context, exp2);
-    TimeDependentLinearExpression result = expr1 * expr2;
-
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 8.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x"))
-               == 12.0);
-}
-
-// Test division operator
-BOOST_AUTO_TEST_CASE(DivisionOperator)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp1 = {{0, LinearExpression(6.0, {{FullKey(component, "x"), 3.0}})}};
-    LinearExpressionMap exp2 = {
-      {0, LinearExpression(2.0, {})} // Only scalar allowed
-    };
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    TimeDependentLinearExpression expr1(context, exp1), expr2(context, exp2);
-    TimeDependentLinearExpression result = expr1 / expr2;
-
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x")) == 1.5);
-}
-
-// Test negation
-BOOST_AUTO_TEST_CASE(NegationOperator)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(3.0, {{FullKey(component, "x"), 2.0}})},
-                               {1, LinearExpression(4.0, {{FullKey(component, "y"), 1.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    TimeDependentLinearExpression expr(context, exp);
-    TimeDependentLinearExpression result = -expr;
-
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == -3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(0).coefPerVar().at(FullKey(component, "x"))
-               == -2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).coefPerVar().at(FullKey(component, "y"))
-               == -1.0);
-}
-
-// Test GetLinearExpressions
-BOOST_AUTO_TEST_CASE(GetLinearExpressionsMethod)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(5.0, {{FullKey(component, "x"), 2.0}})},
-                               {1, LinearExpression(3.0, {{FullKey(component, "y"), 4.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    TimeDependentLinearExpression expr(context, exp);
-    auto expressions = expr.GetLinearExpressions();
-
-    BOOST_TEST(expressions.size() == 2);
-    BOOST_TEST(expressions.at(0).offset() == 5.0);
-    BOOST_TEST(expressions.at(1).coefPerVar().at(FullKey(component, "y")) == 4.0);
-}
-
-// Test getSize()
-BOOST_AUTO_TEST_CASE(GetSizeMethod)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "x"), 1.0}})},
-                               {1, LinearExpression(2.0, {{FullKey(component, "y"), 2.0}})},
-                               {2, LinearExpression(3.0, {{FullKey(component, "z"), 3.0}})}};
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    TimeDependentLinearExpression expr(context, exp);
-    BOOST_TEST(expr.getSize() == 3);
-}
-
-// Test shiftLinearExpressions with positive shift
-BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsPositive)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(1);
-
-    BOOST_TEST(result.getSize() == 3);
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 1.0);
-}
-
-// Test shiftLinearExpressions with negative shift
-BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsNegative)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(-1);
-
-    BOOST_TEST(result.getSize() == 3);
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 1.0);
-    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 2.0);
-}
-
-// Test shiftLinearExpressions with zero shift
-BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsZero)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(0);
-
-    BOOST_TEST(result.getSize() == 3);
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 1.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 3.0);
-}
-
-// Test shiftLinearExpressions with shift greater than size
-BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsGreaterThanSize)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(4);
-
-    BOOST_TEST(result.getSize() == 3);
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 2.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 1.0);
-}
-
-// Test operator[] with valid index
-BOOST_AUTO_TEST_CASE(OperatorIndexValid)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    Antares::Optimization::TimeDependentLinearExpression indexed = expr[1];
-
-    const auto result = indexed.GetLinearExpressions().cbegin()->second;
-    BOOST_TEST(result.offset() == 2.0);
-    BOOST_TEST(result.coefPerVar().at(FullKey(component, "b")) == 2.0);
-}
-
-// Test operator[] with invalid index
-BOOST_AUTO_TEST_CASE(OperatorIndexInvalid)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    BOOST_CHECK_THROW(expr[3], std::out_of_range);
-}
-
-// Test shiftLinearExpressions with negative shift greater than size
-BOOST_AUTO_TEST_CASE(ShiftLinearExpressionsNegativeGreaterThanSize)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {2, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 2, 0, 2, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    Antares::Optimization::TimeDependentLinearExpression result = expr.shiftLinearExpressions(-4);
-
-    BOOST_TEST(result.getSize() == 3);
-    BOOST_TEST(result.GetLinearExpressions().at(0).offset() == 3.0);
-    BOOST_TEST(result.GetLinearExpressions().at(1).offset() == 1.0);
-    BOOST_TEST(result.GetLinearExpressions().at(2).offset() == 2.0);
-}
-
-// Test timeSumLinearExpressions
-BOOST_AUTO_TEST_CASE(TimeSumLinearExpressions)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(1.0, {{FullKey(component, "a"), -18.0}})},
-                               {2, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {3, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 3, 0, 3, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    Antares::Optimization::TimeDependentLinearExpression result = expr.timeSumLinearExpressions(0,
-                                                                                                3);
-
-    BOOST_CHECK_EQUAL(result.getSize(), 4);
-    for (const auto& expression: result.GetLinearExpressions() | std::views::values)
+    std::vector<double> ct{1., 2., 3.};
+    TimeDependentLinearExpression a(ct);
+    a.rotate(1);
+    for (std::size_t idx = 0; idx < ct.size(); idx++)
     {
-        BOOST_TEST(expression.offset() == (1.0 + 1.0 + 2.0 + 3.0));
-        BOOST_TEST(expression.coefPerVar().at(FullKey(component, "a")) == (1.0 - 18.0));
-        BOOST_TEST(expression.coefPerVar().at(FullKey(component, "b")) == 2.0);
-        BOOST_TEST(expression.coefPerVar().at(FullKey(component, "c")) == 3.0);
+        BOOST_CHECK_EQUAL(a[idx].size(), 0);
+        BOOST_CHECK_EQUAL(a[idx].constant(), ct[(idx + 1) % 3]);
     }
-}
-
-// Test allTimeSumLinearExpressions
-BOOST_AUTO_TEST_CASE(AllTimeSumLinearExpressions)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(1.0, {{FullKey(component, "a"), -18.0}})},
-                               {2, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {3, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 3, 0, 3, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-    Antares::Optimization::TimeDependentLinearExpression result = expr
-                                                                    .allTimeSumLinearExpressions();
-
-    BOOST_TEST(result.getSize() == 4);
-    for (const auto& expression: result.GetLinearExpressions() | std::views::values)
+    a.rotate(1);
+    for (std::size_t idx = 0; idx < ct.size(); idx++)
     {
-        BOOST_TEST(expression.offset() == (1.0 + 1.0 + 2.0 + 3.0));
-        BOOST_TEST(expression.coefPerVar().at(FullKey(component, "a")) == (1.0 - 18.0));
-        BOOST_TEST(expression.coefPerVar().at(FullKey(component, "b")) == 2.0);
-        BOOST_TEST(expression.coefPerVar().at(FullKey(component, "c")) == 3.0);
-    }
-}
-
-// Test timeSumLinearExpressions with differents shift values
-BOOST_AUTO_TEST_CASE(TimeSumLinearExpressionsOutOfBounds)
-{
-    auto component = "compo";
-
-    LinearExpressionMap exp = {{0, LinearExpression(1.0, {{FullKey(component, "a"), 1.0}})},
-                               {1, LinearExpression(1.0, {{FullKey(component, "a"), -18.0}})},
-                               {2, LinearExpression(2.0, {{FullKey(component, "b"), 2.0}})},
-                               {3, LinearExpression(3.0, {{FullKey(component, "c"), 3.0}})}};
-
-    Antares::Optimisation::LinearProblemApi::FillContext context(0, 3, 0, 3, 0);
-    Antares::Optimization::TimeDependentLinearExpression expr(context, exp);
-
-    // Case where 'from' is negative
-    Antares::Optimization::TimeDependentLinearExpression result1 = expr.timeSumLinearExpressions(-1,
-                                                                                                 2);
-    BOOST_CHECK_EQUAL(result1.getSize(), 4);
-    for (const auto& expression: result1.GetLinearExpressions() | std::views::values)
-    {
-        BOOST_TEST(expression.offset() == (1.0 + 1.0 + 2.0 + 3.0));
-    }
-
-    // Case where 'to' is greater than the last time step
-    Antares::Optimization::TimeDependentLinearExpression result2 = expr.timeSumLinearExpressions(0,
-                                                                                                 5);
-    BOOST_TEST(result2.getSize() == 4);
-    const auto result2_linearExpressions = result2.GetLinearExpressions();
-    BOOST_TEST(result2_linearExpressions.at(0).offset() == (1.0 + 1.0 + 2.0 + 3.0 + 1.0 + 1.0));
-    BOOST_TEST(result2_linearExpressions.at(1).offset() == (1.0 + 2.0 + 3.0 + 1.0 + 1.0 + 2.0));
-    BOOST_TEST(result2_linearExpressions.at(2).offset() == (2.0 + 3.0 + 1.0 + 1.0 + 2.0 + 3.0));
-    BOOST_TEST(result2_linearExpressions.at(3).offset() == (3.0 + 1.0 + 1.0 + 2.0 + 3.0 + 1.0));
-
-    // Case where 'from' > 'to'
-    Antares::Optimization::TimeDependentLinearExpression result3 = expr.timeSumLinearExpressions(2,
-                                                                                                 0);
-    BOOST_TEST(result3.getSize() == 4);
-    for (const auto& expression: result3.GetLinearExpressions() | std::views::values)
-    {
-        BOOST_TEST(expression.offset() == 0.);
-        BOOST_TEST(expression.coefPerVar().empty());
+        BOOST_CHECK_EQUAL(a[idx].size(), 0);
+        BOOST_CHECK_EQUAL(a[idx].constant(), ct[(idx + 2) % 3]);
     }
 }
 

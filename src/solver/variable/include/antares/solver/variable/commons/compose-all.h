@@ -20,19 +20,25 @@
  */
 
 #pragma once
-#include "antares/study/system-model/component.h"
 
-#include "visitors/EvaluationContext.h"
+#include "antares/solver/variable/variable.h" // for Container::EndOfList
 
-namespace Antares::Expressions
+namespace Antares::Solver::Variable::Common
 {
-class IEvaluationContextProvider
+
+// Variadic recursive composition of class templates: ComposeAll<Head, Tail...>::type =
+// Head<Tail<...<Container::EndOfList>>>
+template<template<class> class Head, template<class> class... Tail>
+struct ComposeAll
 {
-public:
-    virtual ~IEvaluationContextProvider() = default;
-    virtual Visitors::EvaluationContext provide(
-      const ModelerStudy::SystemModel::Component& component) const
-      = 0;
+    using type = Head<typename ComposeAll<Tail...>::type>;
 };
 
-} // namespace Antares::Expressions
+// Base case: single template
+template<template<class> class Last>
+struct ComposeAll<Last>
+{
+    using type = Last<Container::EndOfList>;
+};
+
+} // namespace Antares::Solver::Variable::Common

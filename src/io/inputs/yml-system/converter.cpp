@@ -96,7 +96,8 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
 }
 
 static SystemModel::Component createComponent(const YmlSystem::Component& c,
-                                              const std::vector<SystemModel::Library>& libraries)
+                                              const std::vector<SystemModel::Library>& libraries,
+                                              unsigned int componentIndex)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -104,19 +105,19 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
 
     SystemModel::ComponentBuilder component_builder;
 
-    std::map<std::string, Expressions::Visitors::ParameterTypeAndValue> parameters;
+    std::map<std::string, ParameterTypeAndValue> parameters;
     for (const auto& [id, time_dependent, scenario_dependent, value]: c.parameters)
     {
         parameters.try_emplace(id,
-                               Expressions::Visitors::ParameterTypeAndValue{
-                                 .id = id,
-                                 .type = time_dependent
-                                           ? Expressions::Visitors::ParameterType::TIMESERIE
-                                           : Expressions::Visitors::ParameterType::CONSTANT,
-                                 .value = value});
+                               ParameterTypeAndValue{.id = id,
+                                                     .type = time_dependent
+                                                               ? ParameterType::TIMESERIE
+                                                               : ParameterType::CONSTANT,
+                                                     .value = value});
     }
 
     auto component = component_builder.withId(c.id)
+                       .withIndex(componentIndex)
                        .withModel(&model)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
@@ -124,17 +125,18 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
-static SystemModel::Component& findComponent(
-  const std::string& id,
-  std::unordered_map<std::string, SystemModel::Component>& components)
+static Component& findComponent(const std::string& id,
+                                std::vector<SystemModel::Component>& components)
 
 {
-    auto it = components.find(id);
+    const auto it = std::ranges::find_if(components,
+                                         [&id](const SystemModel::Component& c)
+                                         { return c.Id() == id; });
     if (it == components.end())
     {
         throw std::invalid_argument("Component with id '" + id + "' not found in system.");
     }
-    return it->second;
+    return *it;
 }
 
 static const SystemModel::Port& findPort(const SystemModel::Component& component,
@@ -241,7 +243,7 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
 static void connectComponents(const YmlSystem::Connection& connection,
-                              std::unordered_map<std::string, SystemModel::Component>& components)
+                              std::vector<SystemModel::Component>& components)
 {
     const auto& firstComponentId = connection.firstEntry.componentId;
     const auto& firstPortId = connection.firstEntry.portId;
@@ -280,7 +282,7 @@ static void connectComponents(const YmlSystem::Connection& connection,
  * established
  */
 static void connectAreas(const YmlSystem::AreaConnection& connection,
-                         std::unordered_map<std::string, SystemModel::Component>& components)
+                         std::vector<SystemModel::Component>& components)
 {
     // TODO : check that area exists in legacy study? seems complicated here
     auto& component = findComponent(connection.componentId, components);
@@ -291,15 +293,19 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
                             const std::vector<SystemModel::Library>& libraries)
 {
     // Create components from system
-    std::unordered_map<std::string, SystemModel::Component> components;
+    std::vector<Component> components;
+    unsigned int componentIndex = 0;
     for (const auto& c: ymlSystem.components)
     {
-        if (components.contains(c.id))
+        auto it = std::ranges::find_if(std::as_const(components),
+                                       [&c](const Component& compo) { return compo.Id() == c.id; });
+        if (it != components.end())
         {
             throw std::invalid_argument("System has at least two components with the same id ('"
                                         + c.id + "'), this is not supported");
         }
-        components.emplace(c.id, createComponent(c, libraries));
+        components.push_back(createComponent(c, libraries, componentIndex));
+        ++componentIndex;
         logs.debug() << "Loaded component `" << c.id << "`";
     }
 

@@ -24,7 +24,6 @@
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
-#include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
 
 namespace operations_research
 {
@@ -42,24 +41,32 @@ public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
     ~OrtoolsLinearProblem() override = default;
 
-    OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
+    LinearProblemApi::IMipVariable* addNumVariable(double lb,
+                                                   double ub,
+                                                   const std::string& name) override;
 
-    OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
+    LinearProblemApi::IMipVariable* addIntVariable(double lb,
+                                                   double ub,
+                                                   const std::string& name) override;
 
-    OrtoolsMipVariable* addVariable(double lb,
-                                    double ub,
-                                    bool integer,
-                                    const std::string& name) override;
-
-    OrtoolsMipVariable* getVariable(std::size_t index) const override;
-    OrtoolsMipVariable* lookupVariable(const std::string& name) const override;
+    LinearProblemApi::IMipVariable* addVariable(double lb,
+                                                double ub,
+                                                bool integer,
+                                                const std::string& name) override;
+    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>>& getVariables()
+      const override;
+    LinearProblemApi::IMipVariable* getVariable(std::size_t index) const override;
+    LinearProblemApi::IMipVariable* lookupVariable(const std::string& name) const override;
 
     int variableCount() const override;
 
-    OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
-
-    OrtoolsMipConstraint* getConstraint(std::size_t index) const override;
-    OrtoolsMipConstraint* lookupConstraint(const std::string& name) const override;
+    LinearProblemApi::IMipConstraint* addConstraint(double lb,
+                                                    double ub,
+                                                    const std::string& name) override;
+    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipConstraint>>&
+    getConstraints() const override;
+    LinearProblemApi::IMipConstraint* getConstraint(std::size_t index) const override;
+    LinearProblemApi::IMipConstraint* lookupConstraint(const std::string& name) const override;
     int constraintCount() const override;
 
     void setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
@@ -85,8 +92,8 @@ private:
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 
-    std::vector<std::unique_ptr<OrtoolsMipVariable>> variables_;
-    std::vector<std::unique_ptr<OrtoolsMipConstraint>> constraints_;
+    std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>> variables_;
+    std::vector<std::unique_ptr<LinearProblemApi::IMipConstraint>> constraints_;
 
     std::unique_ptr<OrtoolsMipSolution> solution_;
     bool isLP_ = true;

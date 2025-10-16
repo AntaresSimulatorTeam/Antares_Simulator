@@ -21,7 +21,6 @@
 #pragma once
 #include <string>
 
-#include <antares/expressions/hashable.h>
 #include <antares/expressions/nodes/Leaf.h>
 
 namespace Antares::Expressions::Nodes
@@ -29,7 +28,7 @@ namespace Antares::Expressions::Nodes
 /**
  * @brief Represents a port field node where the expression is a sum.
  */
-class PortFieldSumNode final: public Node, public Hashable
+class PortFieldSumNode final: public Node
 {
 public:
     /**

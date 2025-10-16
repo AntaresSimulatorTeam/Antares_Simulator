@@ -2,27 +2,18 @@ set(PROJ optim-model-filler)
 
 set(SRC_optim_model_filler
         ComponentFiller.cpp
-        EvaluationContextProvider.cpp
-        FullKey.cpp
-        LinearExpression.cpp
-        PartialKey.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
+        LinearExpression.cpp
         TimeDependentLinearExpression.cpp
-        VariableDictionary.cpp
+        Dimensions.cpp
         include/antares/solver/optim-model-filler/ComponentFiller.h
-        include/antares/solver/optim-model-filler/EvaluationContextProvider.h
-        include/antares/solver/optim-model-filler/FullKey.h
-        include/antares/solver/optim-model-filler/LinearExpression.h
-        include/antares/solver/optim-model-filler/PartialKey.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
         include/antares/solver/optim-model-filler/MCYearAndTime.h
+        include/antares/solver/optim-model-filler/Dimensions.h
+        include/antares/solver/optim-model-filler/LinearExpression.h
         include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
-        include/antares/solver/optim-model-filler/VariableDictionary.h
-        include/antares/solver/optim-model-filler/scenarioGroupRepo.h
-        scenarioGroupRepo.cpp
-        scenarioGroupRepoExceptions.cpp
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})
@@ -32,6 +23,7 @@ set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(${PROJ}
         PRIVATE
+        Antares::modeler-optimisation-container
         Antares::expressions
         Antares::exception
         Antares::antares-study-system-model

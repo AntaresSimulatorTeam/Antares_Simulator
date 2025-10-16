@@ -22,36 +22,25 @@
 #pragma once
 #include <utility>
 
-#include "antares/expressions/IEvaluationContextProvider.h"
 #include "antares/study/system-model/component.h"
 
-class MockEvaluationContextProvider: public Antares::Expressions::IEvaluationContextProvider
-{
-private:
-    Antares::Expressions::Visitors::EvaluationContext context_;
-
-public:
-    MockEvaluationContextProvider(Antares::Expressions::Visitors::EvaluationContext context):
-        context_(std::move(context))
-    {
-    }
-
-    Antares::Expressions::Visitors::EvaluationContext provide(
-      [[maybe_unused]] const Antares::ModelerStudy::SystemModel::Component& component) const
-    {
-        return context_;
-    }
-};
-
+Antares::ModelerStudy::SystemModel::Model createModelWithParameters(
+  std::vector<Antares::ModelerStudy::SystemModel::Parameter> params);
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
 Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
-Antares::ModelerStudy::SystemModel::Component createComponent(const std::string& id = "component");
 Antares::ModelerStudy::SystemModel::Component createComponent(
+  const Antares::ModelerStudy::SystemModel::Model& model,
+  const std::string& id = "component",
+  unsigned index = 0);
+Antares::ModelerStudy::SystemModel::Component createComponent(
+  const Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id,
-  std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameter_values);
+  std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> parameter_values,
+  unsigned index = 0);
 
-std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
-build_context_parameter_with(const std::string& id,
-                             const std::string& value,
-                             const Antares::Expressions::Visitors::ParameterType& type = Antares::
-                               Expressions::Visitors::ParameterType::CONSTANT);
+std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
+build_context_parameter_with(
+  const std::string& id,
+  const std::string& value,
+  const Antares::ModelerStudy::SystemModel::ParameterType& type = Antares::ModelerStudy::
+    SystemModel::ParameterType::CONSTANT);

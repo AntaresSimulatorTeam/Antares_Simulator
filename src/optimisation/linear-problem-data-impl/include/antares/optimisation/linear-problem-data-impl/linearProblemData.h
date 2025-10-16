@@ -44,6 +44,10 @@ public:
     [[nodiscard]] double getData(const std::string& dataSetId,
                                  LinearProblemApi::IScenario::TimeSeriesNumber timeSeriesNumber,
                                  unsigned hour) const override;
+    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
+                                                  unsigned timeSeriesNumber,
+                                                  unsigned firstHour,
+                                                  unsigned lastHour) const override;
 
     void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);
 

@@ -135,9 +135,9 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_variable_is_linear, Registry<N
     PrintVisitor printVisitor;
     LinearityVisitor linearVisitor;
 
-    VariableNode var1("x");
+    VariableNode var1("x", 0);
     // variable
-    VariableNode var2("y");
+    VariableNode var2("y", 1);
     // x==y
     Node* eq = create<EqualNode>(&var1, &var2);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(eq), "x==y");
@@ -157,7 +157,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_constant_is_linear, Registry<N
     PrintVisitor printVisitor;
     LinearityVisitor linearVisitor;
 
-    VariableNode var1("x");
+    VariableNode var1("x", 0);
     // variable
     LiteralNode literal(21.);
     // x==21
@@ -194,9 +194,9 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_non_lin_constant_is_constant, Registry<
     PrintVisitor printVisitor;
     LinearityVisitor linearVisitor;
 
-    VariableNode var1("x");
+    VariableNode var1("x", 0);
     // variable
-    VariableNode var2("y");
+    VariableNode var2("y", 1);
     MultiplicationNode mult(&var1, &var2);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(&mult), LinearStatus::NON_LINEAR);
 
@@ -208,12 +208,12 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_non_lin_constant_is_constant, Registry<
 BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 {
     LiteralNode literalNode1(10.);
-    VariableNode var1("x");
+    VariableNode var1("x", 0);
     // 10.*x
     Node* u = create<MultiplicationNode>(&literalNode1, &var1);
 
     LiteralNode literalNode2(20.);
-    VariableNode var2("id");
+    VariableNode var2("id", 3);
     // 20.*id
     Node* v = create<MultiplicationNode>(&literalNode2, &var2);
     // 10.*x+20.*id
@@ -227,8 +227,8 @@ BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(simple_not_linear, Registry<Node>)
 {
-    VariableNode var1("x");
-    VariableNode var2("id");
+    VariableNode var1("x", 89);
+    VariableNode var2("id", 782);
     // x*id.y
     Node* expr = create<MultiplicationNode>(&var1, &var2);
 
@@ -240,7 +240,7 @@ BOOST_FIXTURE_TEST_CASE(simple_not_linear, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(simple_linear_division, Registry<Node>)
 {
-    VariableNode var1("x");
+    VariableNode var1("x", 0);
     // constant
     ParameterNode param("y");
     // x/y
@@ -254,9 +254,9 @@ BOOST_FIXTURE_TEST_CASE(simple_linear_division, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, Registry<Node>)
 {
-    VariableNode var1("x");
+    VariableNode var1("x", 6);
     // variable
-    VariableNode var2("y");
+    VariableNode var2("y", 44);
     // x/y
     Node* expr = create<DivisionNode>(&var1, &var2);
 
@@ -317,7 +317,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnLiteralLinearity, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnVariableLinearity, Registry<Node>)
 {
     LinearityVisitor linearityVisitor;
-    Node* var1 = create<VariableNode>("variable1");
+    Node* var1 = create<VariableNode>("variable1", 0);
     Node* lit1 = create<LiteralNode>(0);
     Node* expr1 = create<TimeShiftNode>(var1, lit1);
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
@@ -338,7 +338,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnLiteralLinearity, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnVariableLinearity, Registry<Node>)
 {
     LinearityVisitor linearityVisitor;
-    Node* var1 = create<VariableNode>("variable1");
+    Node* var1 = create<VariableNode>("variable1", 0);
     Node* from = create<LiteralNode>(0.);
     Node* to = create<LiteralNode>(1.);
     Node* expr1 = create<TimeSumNode>(from, to, var1);
@@ -357,7 +357,7 @@ BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnLiteralLinearity, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, Registry<Node>)
 {
     LinearityVisitor linearityVisitor;
-    Node* var1 = create<VariableNode>("variable1");
+    Node* var1 = create<VariableNode>("variable1", 0);
     Node* expr1 = create<AllTimeSumNode>(var1);
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
                 == LinearStatus::CONSTANT); // because var1 is linear
@@ -374,23 +374,23 @@ BOOST_FIXTURE_TEST_CASE(sum_node_cases, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);
 
     expr = create<SumNode>(
-      create<MultiplicationNode>(create<LiteralNode>(5), create<VariableNode>("a")));
+      create<MultiplicationNode>(create<LiteralNode>(5), create<VariableNode>("a", 0)));
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
 
     expr = create<SumNode>(create<LiteralNode>(41),
                            create<MultiplicationNode>(create<LiteralNode>(5),
-                                                      create<VariableNode>("b")));
+                                                      create<VariableNode>("b", 0)));
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
 
     expr = create<SumNode>(
-      create<MultiplicationNode>(create<VariableNode>("c"), create<VariableNode>("d")));
+      create<MultiplicationNode>(create<VariableNode>("c", 658), create<VariableNode>("d", 0)));
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
 
     expr = create<SumNode>(create<LiteralNode>(41),
                            create<MultiplicationNode>(create<LiteralNode>(5),
-                                                      create<VariableNode>("e")),
-                           create<MultiplicationNode>(create<VariableNode>("f"),
-                                                      create<VariableNode>("g")));
+                                                      create<VariableNode>("e", 0)),
+                           create<MultiplicationNode>(create<VariableNode>("f", 0),
+                                                      create<VariableNode>("g", 0)));
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
 }
 BOOST_AUTO_TEST_SUITE_END()

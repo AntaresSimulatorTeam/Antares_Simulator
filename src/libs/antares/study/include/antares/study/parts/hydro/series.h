@@ -46,7 +46,6 @@ public:
     //@}
 
     void copyGenerationTS(const DataSeriesHydro& source);
-    void copyMaxPowerTS(const DataSeriesHydro& source);
 
     //! \name Data
     //@{
@@ -79,6 +78,10 @@ public:
 
     void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                         const Matrix<double>::ColumnType& DailyMaxPumpPower);
+
+    // used when compatibility hydro-pmax = daily
+    Matrix<> getDailyMaxGenPowerFromHourlyTS();
+    Matrix<> getDailyMaxPumpPowerFromHourlyTS();
 
     /*!
     ** \brief Save data series for hydro into a folder (`input/hydro/series`)

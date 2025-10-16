@@ -126,14 +126,18 @@ ModelBuilder& ModelBuilder::withId(std::string_view id)
 }
 
 /**
- * \brief Sets the objective of the model.
+ * \brief Sets the objectives of the model.
  *
- * \param objective The Expression object representing the objective.
+ * \param parameters A vector of Objective objects to set.
  * \return Reference to the ModelBuilder object.
  */
-ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
+ModelBuilder& ModelBuilder::withObjectives(std::vector<Objective>&& objectives)
 {
-    model_.objective_ = std::move(objective);
+    model_.objectives_ = std::move(objectives);
+    for (const auto& obj: model_.objectives_)
+    {
+        uniqueIdChecker_.add(obj.Id());
+    }
     return *this;
 }
 
@@ -161,7 +165,12 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
  */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
-    fillMapFrom(model_.variables_, variables, uniqueIdChecker_);
+    for (const auto& variable: variables)
+    {
+        uniqueIdChecker_.add(variable.Id());
+    }
+    model_.variables_ = std::move(variables);
+
     return *this;
 }
 
@@ -189,7 +198,11 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
  */
 ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraints)
 {
-    fillMapFrom(model_.constraints_, constraints, uniqueIdChecker_);
+    for (const auto& constraint: constraints)
+    {
+        uniqueIdChecker_.add(constraint.Id());
+    }
+    model_.constraints_ = std::move(constraints);
     return *this;
 }
 

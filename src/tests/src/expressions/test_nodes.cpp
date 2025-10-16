@@ -87,7 +87,7 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
       {create<GreaterThanOrEqualNode>(literalNode, literalNode), "GreaterThanOrEqualNode"},
       {create<NegationNode>(literalNode), "NegationNode"},
       {create<ParameterNode>(literalNode->name()), "ParameterNode"},
-      {create<VariableNode>(literalNode->name()), "VariableNode"},
+      {create<VariableNode>(literalNode->name(), 568), "VariableNode"},
       {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"},
       {create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"},
       {create<TimeShiftNode>(literalNode, literalNode), "TimeShiftNode"},

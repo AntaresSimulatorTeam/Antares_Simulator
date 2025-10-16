@@ -26,6 +26,7 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
+
 /**
  * Defines the simulated system.
  */
@@ -42,7 +43,7 @@ public:
         return id_;
     }
 
-    const std::unordered_map<std::string, Component>& Components() const
+    const std::vector<Component>& Components() const
     {
         return components_;
     }
@@ -50,21 +51,22 @@ public:
 private:
     // Only SystemBuilder is allowed to build System instances
     friend class SystemBuilder;
-    System(std::string_view id, std::unordered_map<std::string, Component>&& components);
+    System(std::string_view id, std::vector<Component>&& components);
     std::string id_;
-    std::unordered_map<std::string, Component> components_;
+    std::vector<Component> components_;
 };
 
 class SystemBuilder final
 {
 public:
     SystemBuilder& withId(std::string_view id);
-    SystemBuilder& withComponents(std::unordered_map<std::string, Component>&& components);
+    SystemBuilder& withComponents(std::vector<Component>&& components);
     System build();
 
 private:
     std::string id_;
-    std::unordered_map<std::string, Component> components_;
+
+    std::vector<Component> components_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel
