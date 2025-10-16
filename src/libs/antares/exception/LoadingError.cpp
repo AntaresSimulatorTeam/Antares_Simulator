@@ -145,7 +145,7 @@ IncompatibleOptRangeUCMode::IncompatibleOptRangeUCMode():
 {
 }
 
-CommandLineArguments::CommandLineArguments(uint errors):
+CommandLineArguments::CommandLineArguments(unsigned int errors):
     LoadingError("Invalid command-line arguments provided : " + std::to_string(errors)
                  + " error(s) found")
 {
