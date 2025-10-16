@@ -17,6 +17,8 @@ target_include_directories(checks
 )
 
 target_link_libraries(checks
+        PUBLIC
+        Antares::exception
         PRIVATE
         logs
         yuni-static-core

@@ -84,6 +84,7 @@ target_link_libraries(expressions
         #TODO i need LinearProblemData
         linear-problem-api
         Antares::modeler-optimisation-container
+        Antares::optim-model-filler
         PRIVATE
         Antares::antares-study-system-model
         Antares::exception

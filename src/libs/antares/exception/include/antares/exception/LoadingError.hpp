@@ -21,14 +21,8 @@
 
 #pragma once
 
-#include <list>
 #include <map>
 #include <stdexcept>
-
-#include <yuni/yuni.h>
-#include <yuni/string.h>
-
-#include "antares/study/fwd.h"
 
 namespace Antares::Error
 {
@@ -157,21 +151,6 @@ class InvalidVersion final: public LoadingError
 {
 public:
     InvalidVersion(const std::string& version, const std::string& latest);
-};
-
-class IncompatibleDailyOptHeuristicForArea final: public LoadingError
-{
-public:
-    explicit IncompatibleDailyOptHeuristicForArea(const Antares::Data::AreaName& name);
-};
-
-class InvalidParametersForThermalClusters final: public LoadingError
-{
-public:
-    explicit InvalidParametersForThermalClusters(const std::map<int, Yuni::String>& clusterNames);
-
-private:
-    std::string buildMessage(const std::map<int, Yuni::String>& clusterNames) const;
 };
 
 class CommandLineArguments final: public LoadingError

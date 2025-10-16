@@ -11,4 +11,5 @@ add_boost_test(unit-tests-for-modeler-data-series
         linear-problem-data-impl
         test_utils_unit
         Antares::optim-model-filler
+        Antares::modeler-optimisation-container
 )
