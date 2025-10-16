@@ -90,6 +90,10 @@ target_link_libraries(expressions
         Antares::exception
 )
 
+if (MSVC)
+    target_compile_options(expressions PRIVATE /utf-8)
+endif ()
+
 
 add_library(expressions-iterators
         iterators/pre-order.cpp
@@ -102,4 +106,3 @@ target_link_libraries(expressions-iterators PRIVATE expressions)
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
-
