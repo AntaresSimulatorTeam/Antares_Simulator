@@ -13,7 +13,7 @@ constexpr int optimizationNumber = 1;  // the 1st optim is available for now
 constexpr int numeroDeLIntervalle = 0; // simplex-range = week
 constexpr int numSpace = 0;            // full sequential
 constexpr int PremierPdtDeLIntervalle = 0;
-constexpr int DernierPdtDeLIntervalle = 167; // 1 week = 7*24 hours
+constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
 const std::string kName = "my-name";         // Arbitrary
 } // namespace
 
