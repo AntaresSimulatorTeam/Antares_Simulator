@@ -40,13 +40,15 @@ public:
              Expression upper_bound,
              ValueType type,
              TimeDependent timeDependent,
-             ScenarioDependent scenarioDependent):
+             ScenarioDependent scenarioDependent,
+             Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
         id_(std::move(id)),
         type_(type),
         lowerBound_(std::move(lower_bound)),
         upperBound_(std::move(upper_bound)),
         timeDependent_(timeDependent),
-        scenarioDependent_(scenarioDependent)
+        scenarioDependent_(scenarioDependent),
+        location_(location)
     {
     }
 

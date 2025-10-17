@@ -3,6 +3,7 @@ add_boost_test(unit-tests-for-component-filler
         SRC
         test_main.cpp
         test_componentFiller.cpp
+        test-component-filler-to-master-pb.cpp
         test_linearExpression.cpp
         test_readLinearExpressionVisitor.cpp
         test_readLinExprVisitor_sum_connections.cpp
