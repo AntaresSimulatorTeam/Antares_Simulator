@@ -129,7 +129,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
       study_->parameters.power.fluctuations);
 
     randomForParallelYears.allocate(*study_);
-    std::map<unsigned int, bool> isYearPerformed{{0, true}};
+    std::map<unsigned int, bool> isYearPerformed{{0, true}}; // TODO check year number
 
     MersenneTwister randomHydroGenerator;
     randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
