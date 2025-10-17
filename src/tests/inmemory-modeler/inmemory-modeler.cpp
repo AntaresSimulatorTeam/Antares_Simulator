@@ -58,8 +58,8 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     }
     pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
     OptimEntityContainer optimEntityContainer(*pb, &dummy_data, &scenario_group_repo);
-    optimEntityContainer.addFromSystemComponents(components_);
-    for (auto& component: components_)
+    optimEntityContainer.addFromSystemComponents(components);
+    for (auto& component: components)
     {
         auto cf = std::make_unique<ComponentFiller>(component,
                                                     optimEntityContainer,
@@ -97,36 +97,36 @@ void LinearProblemBuildingFixture::createComponent(
                        .withParameterValues(std::move(parameterValues))
                        .withIndex(componentIndex_)
                        .build();
-    components_.emplace_back(component);
+    components.emplace_back(component);
     componentIndex_++;
 }
 
 Nodes::Node* LinearProblemBuildingFixture::literal(double value)
 {
-    return nodes.create<Nodes::LiteralNode>(value);
+    return nodeRegistry.create<Nodes::LiteralNode>(value);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::parameter(const std::string& paramId,
                                                      const TimeIndex& timeIndex)
 {
-    return nodes.create<Nodes::ParameterNode>(paramId, timeIndex);
+    return nodeRegistry.create<Nodes::ParameterNode>(paramId, timeIndex);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::variable(const std::string& varId,
                                                     unsigned index,
                                                     const TimeIndex& timeIndex)
 {
-    return nodes.create<Nodes::VariableNode>(varId, index, timeIndex);
+    return nodeRegistry.create<Nodes::VariableNode>(varId, index, timeIndex);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::multiply(Nodes::Node* node1, Nodes::Node* node2)
 {
-    return nodes.create<Nodes::MultiplicationNode>(node1, node2);
+    return nodeRegistry.create<Nodes::MultiplicationNode>(node1, node2);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::negate(Nodes::Node* node)
 {
-    return nodes.create<Nodes::NegationNode>(node);
+    return nodeRegistry.create<Nodes::NegationNode>(node);
 }
 
 void LinearProblemBuildingFixture::createModel(const std::string& modelId,
@@ -147,12 +147,12 @@ void LinearProblemBuildingFixture::createModel(const std::string& modelId,
                                         objective);
 }
 
-//Expression createExpression(Nodes::Node* node)
-//{
-//    NodeRegistry node_registry(node, std::move(nodes));
-//    Expression expression("expression", std::move(node_registry));
-//    return expression;
-//};
+Expression createExpression(Nodes::Node* node, Registry<Nodes::Node>& nodeRegistry)
+{
+    NodeRegistry node_registry(node, std::move(nodeRegistry));
+    Expression expression("expression", std::move(node_registry));
+    return expression;
+}
 
 void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
   const std::string& modelId,
@@ -161,19 +161,12 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
   const std::vector<ConstraintData>& constraintsData,
   Nodes::Node* objective)
 {
-    auto createExpression = [this](Nodes::Node* node)
-    {
-        NodeRegistry node_registry(node, std::move(nodes));
-        Expression expression("expression", std::move(node_registry));
-        return expression;
-    };
-
     std::vector<Variable> variables;
     for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
     {
         variables.emplace_back(id,
-                               createExpression(lb),
-                               createExpression(ub),
+                               createExpression(lb, nodeRegistry),
+                               createExpression(ub, nodeRegistry),
                                type,
                                fromBool<TimeDependent>(timeDependent),
                                fromBool<ScenarioDependent>(scenarioDependent));
@@ -181,7 +174,7 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
     std::vector<Constraint> constraints;
     for (const auto& [id, expression]: constraintsData)
     {
-        constraints.emplace_back(id, createExpression(expression));
+        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)
@@ -191,7 +184,7 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
     if (objective)
     {
         std::vector<Objective> objectives;
-        objectives.emplace_back("objective", createExpression(objective));
+        objectives.emplace_back("objective", createExpression(objective, nodeRegistry));
         model_builder.withObjectives(std::move(objectives));
     }
     auto model = model_builder.build();

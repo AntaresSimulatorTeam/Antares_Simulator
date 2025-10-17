@@ -60,8 +60,9 @@ struct ConstraintData
 struct LinearProblemBuildingFixture
 {
     std::unordered_map<std::string, Model> models;
-    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodes;
+    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodeRegistry;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
+    std::vector<Component> components;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
     Antares::Modeler::Data modelerData;
 
@@ -123,15 +124,12 @@ struct LinearProblemBuildingFixture
     Antares::Modeler::Data& getModelerData()
     {
         SystemBuilder systemBuilder;
-        auto system = systemBuilder.withId("system").withComponents(std::move(components_)).build();
+        auto system = systemBuilder.withId("system").withComponents(std::move(components)).build();
         modelerData.system = std::make_unique<System>(std::move(system));
         modelerData.dataSeries = std::make_unique<
           Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
         return modelerData;
     }
-
-protected:
-    std::vector<Component> components_;
 
 private:
     int componentIndex_ = 0;
