@@ -31,9 +31,10 @@ std::function<bool(const std::exception&)> containsMessage(std::string expected_
 
 namespace Antares::UnitTests
 {
-struct CaptureAntaresLogs
+class CaptureAntaresLogs
     : public Yuni::IEventObserver<CaptureAntaresLogs, Yuni::Policy::SingleThreaded>
 {
+public:
     CaptureAntaresLogs();
     ~CaptureAntaresLogs();
 
