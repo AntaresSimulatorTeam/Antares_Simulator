@@ -102,15 +102,15 @@ bool Application::handleOptions(const Data::StudyLoadOptions& options)
 
 void Application::LogMessageStack(std::vector<std::pair<LogType, std::string>>& stack)
 {
-    for (const auto& msg: stack)
+    for (const auto& [level, message]: stack)
     {
-        switch (msg.first)
+        switch (level)
         {
         case Application::LogType::Error:
-            logs.error() << msg.second;
+            logs.error() << message;
             break;
         case Application::LogType::Warning:
-            logs.warning() << msg.second;
+            logs.warning() << message;
             break;
         }
     }
