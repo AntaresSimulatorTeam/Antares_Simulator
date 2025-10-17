@@ -48,19 +48,6 @@ void SingleProblemGetter::load(const std::filesystem::path& study_path)
 
         pb_.LeProblemeADejaEteInstancie = true;
     }
-
-    OPT_VerifierPresenceReserveJmoins1(&pb_);
-
-    OPT_InitialiserLesPminHebdo(&pb_);
-
-    OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(&pb_);
-
-    OPT_MaxDesPmaxHydrauliques(&pb_);
-
-    if (pb_.OptimisationAvecCoutsDeDemarrage)
-    {
-        OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(&pb_);
-    }
 }
 
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
@@ -160,6 +147,19 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
       hourInTheYear,
       randomForCurrentYear.pThermalNoisesByArea,
       year);
+
+    OPT_VerifierPresenceReserveJmoins1(&pb_);
+
+    OPT_InitialiserLesPminHebdo(&pb_);
+
+    OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(&pb_);
+
+    OPT_MaxDesPmaxHydrauliques(&pb_);
+
+    if (pb_.OptimisationAvecCoutsDeDemarrage)
+    {
+        OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(&pb_);
+    }
 
     OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(&pb_,
                                                            PremierPdtDeLIntervalle,
