@@ -47,6 +47,7 @@ std::optional<T> buildOptional(bool condition, T value)
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
+using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Antares::Optimisation
 {
@@ -225,12 +226,16 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
     }
 }
 
+auto subproblemVariables = [](const Variable& v) { return v.isInSubProblem(); };
+auto masterproblemVariables = [](const Variable& v) { return v.isInMasterProblem(); };
+
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
-    scenarioGroupRepository_(scenarioGroupRepository)
+    scenarioGroupRepository_(scenarioGroupRepository),
+    variablesFilter_(subproblemVariables)
 {
 }
 
@@ -260,14 +265,12 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 
     const auto& variables = component_.getModel()->Variables();
     auto& pb = optimEntityContainer_.Problem();
-    for (const auto& variable: variables)
+    for (const auto& variable: variables | std::views::filter(variablesFilter_))
     {
-        namespace SM = ModelerStudy::SystemModel;
         const auto& lb = valueOrDefault(variable.LowerBound(),
-                                        variable.Type() == SM::ValueType::BOOL ? 0
-                                                                               : -pb.infinity());
+                                        variable.Type() == ValueType::BOOL ? 0 : -pb.infinity());
         const auto& ub = valueOrDefault(variable.UpperBound(),
-                                        variable.Type() == SM::ValueType::BOOL ? 1 : pb.infinity());
+                                        variable.Type() == ValueType::BOOL ? 1 : pb.infinity());
         if (variable.isTimeDependent())
         {
             const Optimisation::Dimensions dim(
@@ -285,7 +288,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                                  variable.Id(),
                                  lb_,
                                  ub_,
-                                 variable.Type() != SM::ValueType::FLOAT,
+                                 variable.Type() != ValueType::FLOAT,
                                  dim);
               },
               lb.value(),
@@ -301,7 +304,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            variable.Id(),
                            lb.valueAsDouble(),
                            ub.valueAsDouble(),
-                           variable.Type() != SM::ValueType::FLOAT,
+                           variable.Type() != ValueType::FLOAT,
                            dim);
         }
     }
