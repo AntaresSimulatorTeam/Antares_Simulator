@@ -23,25 +23,15 @@
 
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
+#include <antares/study/system-model/variable.h>
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
-namespace Antares::ModelerStudy::SystemModel
-{
-class Component;
-class Variable;
-} // namespace Antares::ModelerStudy::SystemModel
-
-namespace Antares::Expressions::Visitors
-{
-class EvalVisitor;
-}
-
 namespace Antares::Optimisation
 {
-class ScenarioGroupRepository;
 
 /**
  * Component filler
@@ -55,7 +45,6 @@ public:
 
     ComponentFiller(ComponentFiller& other) = delete;
 
-    /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository);
@@ -79,5 +68,6 @@ private:
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
+    std::function<bool(const ModelerStudy::SystemModel::Variable&)> variablesFilter_;
 };
 } // namespace Antares::Optimisation

@@ -27,9 +27,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-#include <antares/study/system-model/variable.h>
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
-#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 
 namespace
 {
@@ -262,7 +260,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 
     const auto& variables = component_.getModel()->Variables();
     auto& pb = optimEntityContainer_.Problem();
-    for (const auto & variable : variables)
+    for (const auto& variable: variables)
     {
         namespace SM = ModelerStudy::SystemModel;
         const auto& lb = valueOrDefault(variable.LowerBound(),
