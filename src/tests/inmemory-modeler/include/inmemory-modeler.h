@@ -130,8 +130,10 @@ struct LinearProblemBuildingFixture
         return modelerData;
     }
 
-private:
+protected:
     std::vector<Component> components_;
+
+private:
     int componentIndex_ = 0;
 };
 } // namespace Test::Modeler

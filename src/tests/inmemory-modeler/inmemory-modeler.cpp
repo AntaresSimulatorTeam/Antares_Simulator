@@ -147,6 +147,13 @@ void LinearProblemBuildingFixture::createModel(const std::string& modelId,
                                         objective);
 }
 
+//Expression createExpression(Nodes::Node* node)
+//{
+//    NodeRegistry node_registry(node, std::move(nodes));
+//    Expression expression("expression", std::move(node_registry));
+//    return expression;
+//};
+
 void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
   const std::string& modelId,
   std::vector<Parameter> parameters,
