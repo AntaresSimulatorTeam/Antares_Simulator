@@ -81,8 +81,10 @@ target_link_libraries(expressions
         PUBLIC
         Boost::headers
         Antares::logs
+        fmt::fmt
         #TODO i need LinearProblemData
         linear-problem-api
+        Antares::optim-model-filler
         Antares::modeler-optimisation-container
         Antares::optim-model-filler
         PRIVATE

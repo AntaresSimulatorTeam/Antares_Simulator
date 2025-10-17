@@ -84,7 +84,7 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
 }
 
 bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames)
+                                                std::map<int, std::string>& areaClusterNames)
 {
     YString areaname = "";
     bool resultat = true;
@@ -114,7 +114,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 {
     if (tsGenThermal)
     {
-        std::map<int, YString> areaClusterNames;
+        std::map<int, std::string> areaClusterNames;
         if (!(areasThermalClustersMinStablePowerValidity(areas, areaClusterNames)))
         {
             throw InvalidParametersForThermalClusters(areaClusterNames);
@@ -183,7 +183,7 @@ IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
 }
 
 std::string InvalidParametersForThermalClusters::buildMessage(
-  const std::map<int, Yuni::String>& clusterNames) const
+  const std::map<int, std::string>& clusterNames) const
 {
     const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
                                    "modulation for the following clusters : ");
@@ -201,7 +201,7 @@ std::string InvalidParametersForThermalClusters::buildMessage(
 }
 
 InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
-  const std::map<int, Yuni::String>& clusterNames):
+  const std::map<int, std::string>& clusterNames):
     LoadingError(buildMessage(clusterNames))
 {
 }
