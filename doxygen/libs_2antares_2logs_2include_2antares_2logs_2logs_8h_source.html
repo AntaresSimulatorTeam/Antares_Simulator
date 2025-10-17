@@ -172,57 +172,45 @@ $(document).ready(function(){initNavTree('libs_2antares_2logs_2include_2antares_
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define LOG_UI_HIDE_PROGRESSBAR &quot;[UI] Progression: Off&quot;</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#define LOG_UI_SOLVER_DONE &quot;[UI] Quitting the solver gracefully&quot;</span></div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// This section is only dedicated to includes from a c++ file</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#include &lt;yuni/core/logs.h&gt;</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#include &lt;yuni/core/logs/decorators/applicationname.h&gt;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#include &lt;yuni/core/logs/handler/callback.h&gt;</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">namespace </span>Antares</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">using</span> LoggingHandlers = Yuni::Logs::StdCout&lt; <span class="comment">// For writing to the standard output</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  Yuni::Logs::File&lt;                          <span class="comment">// For writing into a log file</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    Yuni::Logs::Callback&lt;&gt;                   <span class="comment">// Callback</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    &gt;&gt;;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">using</span> LoggingDecorators = Yuni::Logs::Time&lt; <span class="comment">// Date/Time when the entry log is added</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  Yuni::Logs::ApplicationName&lt;              <span class="comment">// Name of the current running application</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    Yuni::Logs::VerbosityLevel&lt;             <span class="comment">// Verbosity level (info, warning...)</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      Yuni::Logs::Message&lt;&gt;                 <span class="comment">// The real message</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      &gt;&gt;&gt;;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">extern</span> Yuni::Logs::Logger&lt;LoggingHandlers, LoggingDecorators&gt; logs;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;{</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword">enum</span> LogLevel</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;{</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    logUnknown = 0,</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    logProgress, <span class="comment">/* not really a real log level */</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    logFatal,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    logError,</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    logWarning,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    logNotice,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    logInfo,</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    logDebug</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;};</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__logs.html#gaeeecaed35d419d20ac8985edff942068">LogCompatibility</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> format[], ...);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="keywordtype">void</span> LogDisplayErrorInfos(uint errors, uint warnings, <span class="keyword">const</span> <span class="keywordtype">char</span>* message, <span class="keywordtype">bool</span> printError = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ANTARES_LIBS_LOGS_LOGS_H__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// This section is only dedicated to includes from a c++ file</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#include &lt;yuni/core/logs.h&gt;</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#include &lt;yuni/core/logs/decorators/applicationname.h&gt;</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#include &lt;yuni/core/logs/handler/callback.h&gt;</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">namespace </span>Antares</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">using</span> LoggingHandlers = Yuni::Logs::StdCout&lt; <span class="comment">// For writing to the standard output</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  Yuni::Logs::File&lt;                          <span class="comment">// For writing into a log file</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    Yuni::Logs::Callback&lt;&gt;                   <span class="comment">// Callback</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    &gt;&gt;;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">using</span> LoggingDecorators = Yuni::Logs::Time&lt; <span class="comment">// Date/Time when the entry log is added</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  Yuni::Logs::ApplicationName&lt;              <span class="comment">// Name of the current running application</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    Yuni::Logs::VerbosityLevel&lt;             <span class="comment">// Verbosity level (info, warning...)</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      Yuni::Logs::Message&lt;&gt;                 <span class="comment">// The real message</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      &gt;&gt;&gt;;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">extern</span> Yuni::Logs::Logger&lt;LoggingHandlers, LoggingDecorators&gt; logs;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">enum</span> LogLevel</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;{</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    logUnknown = 0,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    logProgress, <span class="comment">/* not really a real log level */</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    logFatal,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    logError,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    logWarning,</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    logNotice,</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    logInfo,</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    logDebug</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;};</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__logs.html#gaeeecaed35d419d20ac8985edff942068">LogCompatibility</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> format[], ...);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keywordtype">void</span> LogDisplayErrorInfos(uint errors, uint warnings, <span class="keyword">const</span> <span class="keywordtype">char</span>* message, <span class="keywordtype">bool</span> printError = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ANTARES_LIBS_LOGS_LOGS_H__ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agroup__logs_html_gaeeecaed35d419d20ac8985edff942068"><div class="ttname"><a href="group__logs.html#gaeeecaed35d419d20ac8985edff942068">LogCompatibility</a></div><div class="ttdeci">int LogCompatibility(const char format[],...)</div><div class="ttdoc">Generate a compatibility notice.</div><div class="ttdef"><b>Definition:</b> logs.cpp:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,5 +1,7 @@
 var NAVTREEINDEX52 =
 {
+"makeGroupsOfHoursFromString_8h.html#a7b2bda6a6499c17a8307745c24191347":[7,0,0,6,4,15],
+"makeGroupsOfHoursFromString_8h_source.html":[9,0,0,4,0,25,0,0,0,5,4,4],
 "manager_8h.html#a5bf36989b506d2daa9038df9082d3c52":[7,0,0,16,14],
 "manager_8h_source.html":[9,0,0,12,2,1,1,3,7],
 "manager_8hxx_source.html":[9,0,0,12,2,1,1,3,8],
@@ -12,7 +14,7 @@ var NAVTREEINDEX52 =
 "matrix-dp-make_8h_source.html":[9,0,0,8,5,0,0,0,0,2],
 "matrix-dp-make_8hxx.html#a0ba3dc459a637b4d4c17d0b7867fe889":[7,0,0,25,56],
 "matrix-dp-make_8hxx_source.html":[9,0,0,8,5,0,0,0,0,3],
-"matrix-to-buffer_8h.html#af3366095ac651f09f5dd4a4f3f80b67c":[7,0,0,82],
+"matrix-to-buffer_8h.html#af3366095ac651f09f5dd4a4f3f80b67c":[7,0,0,84],
 "matrix-to-buffer_8h_source.html":[9,0,0,4,0,2,0,0,0,0],
 "matrix-to-buffer_8hxx_source.html":[9,0,0,4,0,2,0,0,0,1],
 "max-mrg-csr_8h.html#a73110ea53bb5d333201e2eda76f48970":[7,0,0,25,5,4,150],
@@ -48,7 +50,7 @@ var NAVTREEINDEX52 =
 "md_src_tests_run_study_tests_readme.html#autotoc_md42":[4,6,1],
 "md_src_tests_run_study_tests_readme.html#autotoc_md43":[4,7],
 "md_src_tests_run_study_tests_readme.html#autotoc_md44":[4,8],
-"memory_8h.html#aa2c4f5581d1f296693a916a8972e6519":[7,0,0,134],
+"memory_8h.html#aa2c4f5581d1f296693a916a8972e6519":[7,0,0,136],
 "memory_8h_source.html":[9,0,0,4,0,17,0,0,0,0],
 "memory_8hxx_source.html":[9,0,0,4,0,17,0,0,0,1],
 "memorystatistics_2memorystatistics_8h_source.html":[9,0,0,12,2,2,7,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX52 =
 "print_8h_source.html":[9,0,0,8,12,0,0,0,0,14],
 "print__name_8py.html#a922a8b50fe1e958918e08da49809cc73":[7,0,30,0],
 "private_8h_source.html":[9,0,0,12,2,2,7,1],
-"probleme__spx__wrapper_8h_source.html":[9,0,0,8,2,0,0,0,0,4],
-"productionByDispatchablePlant_8h_source.html":[9,0,0,8,12,0,0,0,0,2,33],
-"productionByRenewablePlant_8h_source.html":[9,0,0,8,12,0,0,0,0,2,34]
+"probleme__spx__wrapper_8h_source.html":[9,0,0,8,2,0,0,0,0,4]
 };

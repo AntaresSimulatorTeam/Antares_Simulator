@@ -1,5 +1,7 @@
 var NAVTREEINDEX60 =
 {
+"structDEMAND__FLEX__DOWN__POOL.html":[8,0,98],
+"structDEMAND__FLEX__DOWN__POOL.html#a4b91aa5f6b0605c637f074c435c46bdd":[8,0,98,0],
 "structDEMAND__FLEX__UP__POOL.html":[8,0,99],
 "structDEMAND__FLEX__UP__POOL.html#af984221093cc2b5d97fe9b7ca6bc1562":[8,0,99,0],
 "structDEMAND__MARKET__POOL.html":[8,0,100],
@@ -247,7 +249,5 @@ var NAVTREEINDEX60 =
 "structHydroMaxPowerStudy.html#a6d0f6ea2d8894a9d3833d1e9eabfee48":[8,0,146,1],
 "structHydroMaxPowerStudy.html#ac9c8e3703daf5fae0ff155b7bacbe80c":[8,0,146,0],
 "structHydroMaxPowerStudy.html#ace31ef2f85ffd891974772a296de0d26":[8,0,146,3],
-"structHydroMaxPowerStudy.html#ad9a45dc198211f0f30c1c4eec5d13117":[8,0,146,2],
-"structHydroPowerData.html":[8,0,148],
-"structHydroPowerData.html#a69de186af47bb7f8bbba3198f692698c":[8,0,148,1]
+"structHydroMaxPowerStudy.html#ad9a45dc198211f0f30c1c4eec5d13117":[8,0,146,2]
 };

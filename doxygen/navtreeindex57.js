@@ -1,5 +1,7 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#adc09543eb6b63a969bd71865ce10a7f0":[8,0,0,19,4,4,81,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html":[8,0,0,19,4,4,83],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a302633664a5a202db83a41b76cdf786c":[8,0,0,19,4,4,83,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a40d521f0dcce55431c0985c8d205f466":[8,0,0,19,4,4,83,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a8bec9973b19163101b17800656db563e":[8,0,0,19,4,4,83,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatib45dc589c9aad1010829c4d00b555bd9.html":[8,0,0,19,4,29],
 "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html":[8,0,0,19,4,15],
 "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html#aa5c566f07fbaf9cf9ece100d0df22113":[8,0,0,19,4,15,0],
-"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html":[8,0,0,19,4,17],
-"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html#a5a681bdf044ea51a190d0a65b5a561f9":[8,0,0,19,4,17,0],
-"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html":[8,0,0,19,4,16]
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html":[8,0,0,19,4,17]
 };

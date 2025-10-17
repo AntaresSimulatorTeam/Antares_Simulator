@@ -1,5 +1,7 @@
 var NAVTREEINDEX53 =
 {
+"productionByDispatchablePlant_8h_source.html":[9,0,0,8,12,0,0,0,0,2,33],
+"productionByRenewablePlant_8h_source.html":[9,0,0,8,12,0,0,0,0,2,34],
 "profitByPlant_8h_source.html":[9,0,0,8,12,0,0,0,0,2,35],
 "progress_8h_source.html":[9,0,0,11,2,4],
 "progress_8hxx_source.html":[9,0,0,11,2,5],
@@ -193,7 +195,7 @@ var NAVTREEINDEX53 =
 "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a6a2aa5ae8c8abb3498ef81ebdfb17dd9":[7,0,0,25,53],
 "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a98e9ba37267ba8e7700de5e6d01cf618":[7,0,0,25,42],
 "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h_source.html":[9,0,0,8,2,0,0,0,0,2,3],
-"solver_2hydro_2management_2monthly_8cpp.html#aca5e481dc01d20ffb6fd9baf8eb61458":[7,0,0,77],
+"solver_2hydro_2management_2monthly_8cpp.html#aca5e481dc01d20ffb6fd9baf8eb61458":[7,0,0,79],
 "solver_2misc_2include_2antares_2solver_2misc_2options_8h_source.html":[9,0,0,8,5,0,0,0,0,4],
 "solver_2signal-handling_2common_8cpp.html#ae2fed9f7d2e4e0ab70cbc200785b5a36":[7,0,0,25,61],
 "solver_2signal-handling_2include_2antares_2signal-handling_2common_8h_source.html":[9,0,0,8,8,0,0,0,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX53 =
 "solver__steps_8py.html#a2d8a7702c62809e8037e987f6b3a00ca":[7,0,37,2],
 "solver__steps_8py.html#a39d9e7518bcf7f9b7b2c7502e491a599":[7,0,37,3],
 "solver__steps_8py.html#a3e4ae8358376dec656f4144e8e6e4c05":[7,0,37,39],
-"solver__steps_8py.html#a4ab3e50370fefa91f351c1f9b700dccf":[7,0,37,33],
-"solver__steps_8py.html#a55963c192c0362e36aaf2513aaee76e1":[7,0,37,8],
-"solver__steps_8py.html#a67663c9898d825af30daa11963437920":[7,0,37,32]
+"solver__steps_8py.html#a4ab3e50370fefa91f351c1f9b700dccf":[7,0,37,33]
 };

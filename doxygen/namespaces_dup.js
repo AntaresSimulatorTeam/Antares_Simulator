@@ -2397,6 +2397,8 @@ var namespaces_dup =
       [ "MemoryFlushLocker", "classAntares_1_1MemoryFlushLocker.html", "classAntares_1_1MemoryFlushLocker" ],
       [ "HYDRO_VENTILATION_RESULTS", "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a2329aa8a66fd92377df919c542d3ea59", null ],
       [ "HydroSpecificMap", "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a1dd1b36f0795c32bcb0ae5e2f8cc34da", null ],
+      [ "LoggingDecorators", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a91272164e81bb8fbfa2894ac98acc3c7", null ],
+      [ "LoggingHandlers", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a1240ad97ff299a56b89d87eeef792071", null ],
       [ "DayOfTheWeek", "date_8h.html#aa8104e849e0d5706a12b06eaa5fbf7a1", [
         [ "monday", "date_8h.html#aa8104e849e0d5706a12b06eaa5fbf7a1a3522fcf18c5281138453bfb773853efc", null ],
         [ "tuesday", "date_8h.html#aa8104e849e0d5706a12b06eaa5fbf7a1a796ad5a7745fe5affd8d8a3b08dc685c", null ],
@@ -2486,7 +2488,7 @@ var namespaces_dup =
       [ "GUIFlagInvalidateAreas", "ui_2simulator_2application_2study_8cpp.html#a7e7e5aabc1f853046070350b222a6248", null ],
       [ "LastPathForOpeningAFile", "ui_2simulator_2application_2study_8cpp.html#a14f1aa2f2ffe7b1f338c07504da4d23f", null ],
       [ "ListOfOutputsForTheCurrentStudy", "ui_2simulator_2application_2study_8cpp.html#a1fed533848155ad17e1abb4abdc791e5", null ],
-      [ "logs", "libs_2antares_2logs_2logs_8cpp.html#ac55416af340553a9edcf82172b52e149", null ],
+      [ "logs", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#ac55416af340553a9edcf82172b52e149", null ],
       [ "mainFrame", "ui_2simulator_2application_2application_8cpp.html#adbdf3b82ca00db8ef2437a20f719ea0a", null ],
       [ "memory", "memory_8h.html#aa2c4f5581d1f296693a916a8972e6519", null ],
       [ "OnInspectorRefresh", "ui_2simulator_2application_2study_8cpp.html#ae0b30f7ff8b83197d9863cf9183fdfc3", null ],

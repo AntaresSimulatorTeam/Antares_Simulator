@@ -1,5 +1,7 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll.html#afa823e0cf229a5ba30d0e1b353ba63fc":[8,0,0,19,4,2,8,0],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll_3_01Last_01_4.html":[8,0,0,19,4,2,9],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll_3_01Last_01_4.html#a3ae77981b69646b12f33f39d9b37a7a5":[8,0,0,19,4,2,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html":[8,0,0,19,4,2,7,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html":[8,0,0,19,4,2,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a44f62fefc94791bbf5fef297e66415c9":[8,0,0,19,4,4,81,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a780167a642bf5aa2c6300dfade007828":[8,0,0,19,4,4,81,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9892d1ed37ca29747b62dc897a061747":[8,0,0,19,4,4,81,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9a598b2dfa52b0e1ea9c2bdfd77a86f9":[8,0,0,19,4,4,81,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#adc09543eb6b63a969bd71865ce10a7f0":[8,0,0,19,4,4,81,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html":[8,0,0,19,4,4,83]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9a598b2dfa52b0e1ea9c2bdfd77a86f9":[8,0,0,19,4,4,81,3]
 };
