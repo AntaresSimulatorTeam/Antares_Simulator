@@ -52,8 +52,8 @@ public:
      */
     explicit ReadLinearExpressionVisitor(
       const OptimEntityContainer& optimEntityContainer,
-      const Antares::ModelerStudy::SystemModel::Component& component,
-      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext);
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+      const Antares::ModelerStudy::SystemModel::Component& component);
 
     Antares::Optimization::TimeDependentLinearExpression visitMergeDuplicates(
       const Nodes::Node* node);

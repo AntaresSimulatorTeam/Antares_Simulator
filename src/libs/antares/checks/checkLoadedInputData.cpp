@@ -77,7 +77,7 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
             const auto& area = *(areas.byIndex[i]);
             if (!area.hydro.useHeuristicTarget)
             {
-                throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
+                throw IncompatibleDailyOptHeuristicForArea(area.name);
             }
         }
     }
@@ -117,7 +117,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
         std::map<int, YString> areaClusterNames;
         if (!(areasThermalClustersMinStablePowerValidity(areas, areaClusterNames)))
         {
-            throw Error::InvalidParametersForThermalClusters(areaClusterNames);
+            throw InvalidParametersForThermalClusters(areaClusterNames);
         }
     }
     else
@@ -174,4 +174,35 @@ void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
       &Antares::Data::EconomicInputData::co2cost);
 }
 
+IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
+  const Antares::Data::AreaName& name):
+    LoadingError(
+      std::string("Area ") + name.c_str()
+      + " : simplex daily optimization and use heuristic target == no are not compatible")
+{
+}
+
+std::string InvalidParametersForThermalClusters::buildMessage(
+  const std::map<int, Yuni::String>& clusterNames) const
+{
+    const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
+                                   "modulation for the following clusters : ");
+    std::string clusters;
+    for (const auto& it: clusterNames)
+    {
+        clusters += it.second.c_str();
+        clusters += ";";
+    }
+    if (!clusters.empty())
+    {
+        clusters.pop_back(); // Remove final semicolon
+    }
+    return startMessage + clusters;
+}
+
+InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
+  const std::map<int, Yuni::String>& clusterNames):
+    LoadingError(buildMessage(clusterNames))
+{
+}
 } // namespace Antares::Check
