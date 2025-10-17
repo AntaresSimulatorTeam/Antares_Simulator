@@ -52,6 +52,51 @@ using namespace Antares::Expressions::Nodes;
 
 namespace Antares::Optimisation
 {
+
+class VariablesBulkAddition
+{
+public:
+    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+                          OptimEntityContainer& optimEntityContainer);
+
+    void addVariable(const std::string& compoId,
+                     const std::string& variableId,
+                     double lb,
+                     double ub,
+                     bool integer,
+                     const Optimisation::Dimensions& dim) const;
+
+    void addVariable(const std::string& compoId,
+                     const std::string& variableId,
+                     const std::vector<double>& lb,
+                     double ub,
+                     bool integer,
+                     const Optimisation::Dimensions& dim) const;
+
+    void addVariable(const std::string& compoId,
+                     const std::string& variableId,
+                     double lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Optimisation::Dimensions& dim) const;
+
+    void addVariable(const std::string& compoId,
+                     const std::string& variableId,
+                     const std::vector<double>& lb,
+                     const std::vector<double>& ub,
+                     bool integer,
+                     const Optimisation::Dimensions& dim) const;
+
+    class BoundsSizeMismatch: public std::invalid_argument
+    {
+        using std::invalid_argument::invalid_argument;
+    };
+
+private:
+    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
+    OptimEntityContainer& optimEntityContainer_;
+};
+
 VariablesBulkAddition::VariablesBulkAddition(
   Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
   OptimEntityContainer& optimEntityContainer):
