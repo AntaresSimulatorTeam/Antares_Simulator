@@ -73,7 +73,7 @@ struct VCardLOLD_CSR
     //! Number of columns used by the variable (One ResultsType per column)
     static constexpr int columnCount = 1;
     //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSumThen1IfPositive;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
     static constexpr uint8_t spatialAggregatePostProcessing = 0;
     //! Intermediate values
