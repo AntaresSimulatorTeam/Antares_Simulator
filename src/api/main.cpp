@@ -6,94 +6,42 @@ constexpr int kMaxDisplay = 10'000;
 
 // This is a temporary client for singleProblemGetter.h for testing & debugging purposes
 
-// Utility for printing vectors with optional truncation
+// Helper: convert any value to string
 template<typename T>
-std::ostream& printVector(std::ostream& os,
-                          const std::vector<T>& vec,
-                          std::size_t maxDisplay = kMaxDisplay)
+std::string to_string_any(const T& value)
 {
-    os << "(size = " << vec.size() << " ) [";
-    for (std::size_t i = 0; i < vec.size(); ++i)
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
+}
+
+// Base case: find max size among vectors
+template<typename T>
+size_t max_size(const std::vector<T>& v)
+{
+    return v.size();
+}
+
+template<typename T, typename... Rest>
+size_t max_size(const std::vector<T>& v, const Rest&... rest)
+{
+    return std::max(v.size(), max_size(rest...));
+}
+
+// Recursive printing row by row
+template<typename... Vecs>
+void print_side_by_side(const Vecs&... vecs)
+{
+    size_t n = max_size(vecs...);
+    for (size_t i = 0; i < n; ++i)
     {
-        if (i >= maxDisplay)
-        {
-            os << " ... (" << vec.size() << " elements)";
-            break;
-        }
-        os << vec[i];
-        if (i + 1 < vec.size() && i + 1 < maxDisplay)
-        {
-            os << ", ";
-        }
+        size_t col = 0;
+        // Fold expression to print each column
+        ((std::cout << (i < vecs.size() ? to_string_any(vecs[i]) : "")
+                    << (++col < sizeof...(vecs) ? "\t" : "")),
+         ...);
+        std::cout << '\n';
     }
-    os << "]";
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const Antares::Solver::ConstantDataFromAntares& data)
-{
-    os << "ConstantDataFromAntares {\n"
-       << "  VariablesCount       = " << data.VariablesCount << ",\n"
-       << "  ConstraintesCount    = " << data.ConstraintesCount << ",\n"
-       << "  CoeffCount           = " << data.CoeffCount << ",\n"
-       << "  VariablesType        = ";
-    printVector(os, data.VariablesType) << ",\n"
-                                        << "  Mdeb                 = ";
-    printVector(os, data.Mdeb) << ",\n"
-                               << "  NotNullTermCount     = ";
-    printVector(os, data.NotNullTermCount) << ",\n"
-                                           << "  ColumnIndexes        = ";
-    printVector(os, data.ColumnIndexes) << ",\n"
-                                        << "  ConstraintsMatrixCoeff = ";
-    printVector(os, data.ConstraintsMatrixCoeff) << ",\n"
-                                                 << "  VariablesMeaning     = ";
-    printVector(os, data.VariablesMeaning) << ",\n"
-                                           << "  ConstraintsMeaning   = ";
-    printVector(os, data.ConstraintsMeaning) << "\n"
-                                             << "}";
-    return os;
-}
-
-// Overload specifically for printing std::vector<char> more clearly
-std::ostream& printVector(std::ostream& os,
-                          const std::vector<char>& vec,
-                          std::size_t maxDisplay = kMaxDisplay)
-{
-    os << "[";
-    os << "(size = " << vec.size() << ") [";
-    for (std::size_t i = 0; i < vec.size(); ++i)
-    {
-        if (i >= maxDisplay)
-        {
-            os << " ... (" << vec.size() << " elements)";
-            break;
-        }
-        os << '\'' << vec[i] << '\'';
-        if (i + 1 < vec.size() && i + 1 < maxDisplay)
-        {
-            os << ", ";
-        }
-    }
-    os << "]";
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const Antares::Solver::WeeklyDataFromAntares& data)
-{
-    os << "WeeklyDataFromAntares {\n"
-       << "  name         = \"" << data.name << "\",\n"
-       << "  Direction    = ";
-    printVector(os, data.Direction) << ",\n"
-                                    << "  Xmax         = ";
-    printVector(os, data.Xmax) << ",\n"
-                               << "  Xmin         = ";
-    printVector(os, data.Xmin) << ",\n"
-                               << "  LinearCost   = ";
-    printVector(os, data.LinearCost) << ",\n"
-                                     << "  RHS          = ";
-    printVector(os, data.RHS) << "\n"
-                              << "}";
-    return os;
 }
 
 int main(int argc, char** argv)
@@ -111,7 +59,7 @@ int main(int argc, char** argv)
     auto constant = getter.getConstantData();
     auto weekly = getter.getWeeklyData({year, week});
 
-    std::cout << constant << std::endl;
-    std::cout << weekly << std::endl;
+    print_side_by_side(constant.VariablesMeaning, weekly.Xmin, weekly.Xmax, weekly.LinearCost);
+    print_side_by_side(constant.ConstraintsMeaning, weekly.Direction, weekly.RHS);
     return 0;
 }
