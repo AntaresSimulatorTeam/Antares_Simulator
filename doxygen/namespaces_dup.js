@@ -86,7 +86,7 @@ var namespaces_dup =
       [ "Check", null, [
         [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea.html", "classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea" ],
         [ "InvalidParametersForThermalClusters", "classAntares_1_1Check_1_1InvalidParametersForThermalClusters.html", "classAntares_1_1Check_1_1InvalidParametersForThermalClusters" ],
-        [ "areasThermalClustersMinStablePowerValidity", "checkLoadedInputData_8cpp.html#a46000a3fbf7e26402f8037408317d645", null ],
+        [ "areasThermalClustersMinStablePowerValidity", "checkLoadedInputData_8cpp.html#aff6885051ebd1f4afe613f0eb60b4a14", null ],
         [ "checkCO2CostColumnNumber", "checkLoadedInputData_8cpp.html#a1d5c56b73279371c45c529ca04ba25aa", null ],
         [ "checkForDuplicates", "duplicates_8cpp.html#ab6937710a3bff3b3b2d555d27459d50b", null ],
         [ "checkFuelCostColumnNumber", "checkLoadedInputData_8cpp.html#a051c2e1e23688c46aca86a8327de74a5", null ],
@@ -1246,6 +1246,18 @@ var namespaces_dup =
         [ "new_check_allocation", "new__check_8hxx.html#af621f5a9f76d218541543ce2a2156f9c", null ]
       ] ],
       [ "Modeler", null, [
+        [ "Config", null, [
+          [ "Variable", "classAntares_1_1Modeler_1_1Config_1_1Variable.html", "classAntares_1_1Modeler_1_1Config_1_1Variable" ],
+          [ "Objective", "classAntares_1_1Modeler_1_1Config_1_1Objective.html", "classAntares_1_1Modeler_1_1Config_1_1Objective" ],
+          [ "ModelDecomposition", "classAntares_1_1Modeler_1_1Config_1_1ModelDecomposition.html", "classAntares_1_1Modeler_1_1Config_1_1ModelDecomposition" ],
+          [ "Model", "classAntares_1_1Modeler_1_1Config_1_1Model.html", "classAntares_1_1Modeler_1_1Config_1_1Model" ],
+          [ "OptimConfig", "classAntares_1_1Modeler_1_1Config_1_1OptimConfig.html", "classAntares_1_1Modeler_1_1Config_1_1OptimConfig" ],
+          [ "Location", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7", [
+            [ "MASTER", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7a89a1533c37ec9254f22b5e0f29c9c0ff", null ],
+            [ "MASTER_AND_SUBPROBLEMS", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7ad7980d7942431594b42f9f74d6fe92c8", null ],
+            [ "SUBPROBLEMS", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7ae5f1fb19e86a7c3fdabd4fcabbbaa4bd", null ]
+          ] ]
+        ] ],
         [ "FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", "classAntares_1_1Modeler_1_1FileWriter" ],
         [ "Data", "structAntares_1_1Modeler_1_1Data.html", "structAntares_1_1Modeler_1_1Data" ]
       ] ],

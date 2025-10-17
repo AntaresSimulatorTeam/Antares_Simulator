@@ -142,8 +142,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", null ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -1205,8 +1205,10 @@ var hierarchy =
     [ "MockSolverTraits", "structMockSolverTraits.html", null ],
     [ "MockVariable", "classMockVariable.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Model", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html", null ],
+    [ "Antares::Modeler::Config::Model", "classAntares_1_1Modeler_1_1Config_1_1Model.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Model", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html", null ],
     [ "Antares::ModelerStudy::SystemModel::ModelBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html", null ],
+    [ "Antares::Modeler::Config::ModelDecomposition", "classAntares_1_1Modeler_1_1Config_1_1ModelDecomposition.html", null ],
     [ "Antares::Solver::Modeler", "classAntares_1_1Solver_1_1Modeler.html", null ],
     [ "modeler_output_handler.modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", null ],
     [ "Antares::Solver::ModelerParameters", "structAntares_1_1Solver_1_1ModelerParameters.html", null ],
@@ -1268,6 +1270,7 @@ var hierarchy =
       [ "benchmark.StudyList", "classbenchmark_1_1StudyList.html", null ]
     ] ],
     [ "Antares::IO::Inputs::YmlModel::Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html", null ],
+    [ "Antares::Modeler::Config::Objective", "classAntares_1_1Modeler_1_1Config_1_1Objective.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Objective", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html", null ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
@@ -1281,6 +1284,7 @@ var hierarchy =
     ] ],
     [ "Benchmarking::DurationCollector::OperationTimer", "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html", null ],
     [ "Antares::Optimisation::OptimComponent", "structAntares_1_1Optimisation_1_1OptimComponent.html", null ],
+    [ "Antares::Modeler::Config::OptimConfig", "classAntares_1_1Modeler_1_1Config_1_1OptimConfig.html", null ],
     [ "Antares::Optimisation::OptimEntityContainer", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html", null ],
     [ "OptimisationsSimulationTable", "classOptimisationsSimulationTable.html", null ],
     [ "Benchmarking::OptimizationInfo", "structBenchmarking_1_1OptimizationInfo.html", null ],
@@ -1957,6 +1961,7 @@ var hierarchy =
     [ "Antares::Data::ShortTermStorage::ValidateResult", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult.html", null ],
     [ "Antares::Toolbox::Filter::Operator::Parameter::Value", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html", null ],
+    [ "Antares::Modeler::Config::Variable", "classAntares_1_1Modeler_1_1Config_1_1Variable.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Variable", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable.html", null ],
     [ "TestingSimulationObserver::Variable", "structTestingSimulationObserver_1_1Variable.html", null ],
     [ "Variable", "classVariable.html", null ],

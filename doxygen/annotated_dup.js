@@ -547,6 +547,13 @@ var annotated_dup =
         [ "Settings", "classAntares_1_1Map_1_1Settings.html", null ]
       ] ],
       [ "Modeler", null, [
+        [ "Config", null, [
+          [ "Variable", "classAntares_1_1Modeler_1_1Config_1_1Variable.html", "classAntares_1_1Modeler_1_1Config_1_1Variable" ],
+          [ "Objective", "classAntares_1_1Modeler_1_1Config_1_1Objective.html", "classAntares_1_1Modeler_1_1Config_1_1Objective" ],
+          [ "ModelDecomposition", "classAntares_1_1Modeler_1_1Config_1_1ModelDecomposition.html", "classAntares_1_1Modeler_1_1Config_1_1ModelDecomposition" ],
+          [ "Model", "classAntares_1_1Modeler_1_1Config_1_1Model.html", "classAntares_1_1Modeler_1_1Config_1_1Model" ],
+          [ "OptimConfig", "classAntares_1_1Modeler_1_1Config_1_1OptimConfig.html", "classAntares_1_1Modeler_1_1Config_1_1OptimConfig" ]
+        ] ],
         [ "FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", "classAntares_1_1Modeler_1_1FileWriter" ],
         [ "Data", "structAntares_1_1Modeler_1_1Data.html", "structAntares_1_1Modeler_1_1Data" ]
       ] ],
@@ -1484,8 +1491,8 @@ var annotated_dup =
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", "classColumnBasedStorage" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
+    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
