@@ -19,19 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
-
-#include "spx_constantes_externes.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
-
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
+
+#include "spx_constantes_externes.h"
 
 namespace DoneesOptimisationJournaliere
 {
