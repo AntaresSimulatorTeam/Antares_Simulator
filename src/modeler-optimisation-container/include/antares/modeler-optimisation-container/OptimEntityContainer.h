@@ -37,8 +37,8 @@ namespace Antares::Optimisation
 struct OptimComponent
 {
     unsigned int index = 0;
-    std::vector<unsigned int> modelVariableGlobalIndices;
-    std::vector<unsigned int> modelConstraintsGlobalIndices;
+    std::vector<unsigned> modelVariableGlobalIndices;
+    std::vector<unsigned> modelConstraintsGlobalIndices;
     std::vector<TimeIndex> modelConstraintsTimeIndex;
     EvaluationContext evaluationContext;
 };
@@ -49,12 +49,6 @@ public:
     OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
                          const LinearProblemApi::ILinearProblemData* data,
                          const ScenarioGroupRepository* scenarioGroupRepository);
-
-    // TODO REMOVE
-    [[nodiscard]] const std::vector<unsigned int>& getVariableStartColumn() const
-    {
-        return variableStartColumn_;
-    }
 
     [[nodiscard]] unsigned int getVariableStartColumn(
       const Antares::ModelerStudy::SystemModel::Component& component,
@@ -79,11 +73,6 @@ public:
         return {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),
                 optimComponent.modelConstraintsTimeIndex.at(index)};
     }
-
-    //[[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
-    //{
-    //    return constraintStartLine_;
-    //}
 
     LinearProblemApi::ILinearProblem& Problem()
     {
@@ -128,11 +117,6 @@ public:
         return linearProblem_.getConstraints();
     }
 
-    [[nodiscard]] const OptimComponent& getOptimComponent(size_t index) const
-    {
-        return optimComponents_.at(index);
-    }
-
     [[nodiscard]] OptimComponent& getOptimComponent(size_t index)
     {
         return optimComponents_.at(index);
@@ -143,7 +127,7 @@ public:
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
                             const TimeIndex& timeIndex);
 
-    unsigned int ConstraintGLobalIndex() const
+    unsigned constraintGLobalIndex() const
     {
         return static_cast<unsigned int>(constraintStartLine_.size());
     }
