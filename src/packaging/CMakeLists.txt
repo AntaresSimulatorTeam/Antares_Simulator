@@ -110,6 +110,7 @@ set(TARGET_LIBS #No alias
         modeler-simulation-table
         scenario-builder-antlr
         scenario-group-parser
+        modeler-optim-config
 )
 
 install(TARGETS ${TARGET_LIBS}
