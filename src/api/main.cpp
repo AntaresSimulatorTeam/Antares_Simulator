@@ -2,15 +2,17 @@
 
 #include "antares/api/singleProblemGetter.h"
 
+constexpr int kMaxDisplay = 10'000;
+
 // This is a temporary client for singleProblemGetter.h for testing & debugging purposes
 
 // Utility for printing vectors with optional truncation
 template<typename T>
 std::ostream& printVector(std::ostream& os,
                           const std::vector<T>& vec,
-                          std::size_t maxDisplay = 1000)
+                          std::size_t maxDisplay = kMaxDisplay)
 {
-    os << "[";
+    os << "(size = " << vec.size() << " ) [";
     for (std::size_t i = 0; i < vec.size(); ++i)
     {
         if (i >= maxDisplay)
@@ -55,9 +57,10 @@ std::ostream& operator<<(std::ostream& os, const Antares::Solver::ConstantDataFr
 // Overload specifically for printing std::vector<char> more clearly
 std::ostream& printVector(std::ostream& os,
                           const std::vector<char>& vec,
-                          std::size_t maxDisplay = 1000)
+                          std::size_t maxDisplay = kMaxDisplay)
 {
     os << "[";
+    os << "(size = " << vec.size() << ") [";
     for (std::size_t i = 0; i < vec.size(); ++i)
     {
         if (i >= maxDisplay)
@@ -95,15 +98,18 @@ std::ostream& operator<<(std::ostream& os, const Antares::Solver::WeeklyDataFrom
 
 int main(int argc, char** argv)
 {
-    if (argc != 2)
+    if (argc != 4)
     {
-        std::cerr << "Usage \n" << argv[0] << " path/to/study\n";
+        std::cerr << "Usage \n" << argv[0] << " path/to/study year week\n";
         return 1;
     }
+    const unsigned int year = std::atoi(argv[2]);
+    const unsigned int week = std::atoi(argv[3]);
+
     Antares::Solver::SingleProblemGetter getter;
     getter.load(argv[1]);
     auto constant = getter.getConstantData();
-    auto weekly = getter.getWeeklyData({0, 1});
+    auto weekly = getter.getWeeklyData({year, week});
 
     std::cout << constant << std::endl;
     std::cout << weekly << std::endl;
