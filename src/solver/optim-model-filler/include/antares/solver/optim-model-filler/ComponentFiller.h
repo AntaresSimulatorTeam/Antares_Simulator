@@ -50,6 +50,7 @@ public:
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addVariablesToMaster(const Optimisation::LinearProblemApi::FillContext& ctx);
 
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;

@@ -310,6 +310,13 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
     }
 }
 
+void ComponentFiller::addVariablesToMaster(const LinearProblemApi::FillContext& ctx)
+{
+    variablesFilter_ = masterproblemVariables;
+    this->addVariables(ctx);
+    variablesFilter_ = subproblemVariables; // Reset to initial state
+}
+
 void ComponentFiller::addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
                                           const std::string& constraint_id)
 {
