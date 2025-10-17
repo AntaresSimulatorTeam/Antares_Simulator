@@ -154,25 +154,10 @@ public:
     InvalidVersion(const std::string& version, const std::string& latest);
 };
 
-class IncompatibleDailyOptHeuristicForArea final: public LoadingError
-{
-public:
-    explicit IncompatibleDailyOptHeuristicForArea(const std::string& name);
-};
-
-class InvalidParametersForThermalClusters final: public LoadingError
-{
-public:
-    explicit InvalidParametersForThermalClusters(const std::map<int, std::string>& clusterNames);
-
-private:
-    std::string buildMessage(const std::map<int, std::string>& clusterNames) const;
-};
-
 class CommandLineArguments final: public LoadingError
 {
 public:
-    explicit CommandLineArguments(unsigned errors);
+    explicit CommandLineArguments(unsigned int errors);
 };
 
 class IncompatibleOutputOptions final: public LoadingError

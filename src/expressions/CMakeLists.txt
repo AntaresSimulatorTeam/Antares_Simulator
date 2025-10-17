@@ -86,10 +86,15 @@ target_link_libraries(expressions
         linear-problem-api
         Antares::optim-model-filler
         Antares::modeler-optimisation-container
+        Antares::optim-model-filler
         PRIVATE
         Antares::antares-study-system-model
         Antares::exception
 )
+
+if (MSVC)
+    target_compile_options(expressions PRIVATE /utf-8)
+endif ()
 
 
 add_library(expressions-iterators
@@ -103,4 +108,3 @@ target_link_libraries(expressions-iterators PRIVATE expressions)
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
-
