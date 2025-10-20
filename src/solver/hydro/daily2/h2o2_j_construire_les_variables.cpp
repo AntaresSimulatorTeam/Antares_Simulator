@@ -19,18 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 
 #include "spx_constantes_externes.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
-
-#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 
 void H2O2_j_ConstruireLesVariables(
   int NbPdt,

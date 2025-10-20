@@ -1,4 +1,5 @@
 add_subdirectory(loadFiles)
+add_subdirectory(optimConfig)
 
 add_library(mock-modeler-objects
         mockModelerObjects.cpp

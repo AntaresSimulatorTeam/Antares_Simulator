@@ -21,6 +21,8 @@
 
 #define BOOST_TEST_MODULE study
 #define WIN32_LEAN_AND_MEAN
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/exception/LoadingError.hpp>
@@ -37,28 +39,8 @@ using namespace Antares::Data::ShortTermStorage;
 
 BOOST_AUTO_TEST_SUITE(study_duplicates)
 
-struct DuplicateFixture: public Yuni::IEventObserver<DuplicateFixture, Yuni::Policy::SingleThreaded>
+struct DuplicateFixture: public Antares::UnitTests::CaptureAntaresLogs
 {
-    DuplicateFixture()
-    {
-        logs.callback.connect(this, &DuplicateFixture::onLogMessage);
-    }
-
-    void onLogMessage(int level, const std::string& message)
-    {
-        if (level == Yuni::Logs::Verbosity::Error::level)
-        {
-            errors.insert(message);
-        }
-    }
-
-    ~DuplicateFixture()
-    {
-        logs.callback.clear();
-        destroyBoundEvents();
-    }
-
-    std::set<std::string> errors;
     std::unique_ptr<Study> study = std::make_unique<Study>();
     Data::Area* areaA = study->areaAdd("A");
     Data::Area* areaB = study->areaAdd("B");
@@ -93,7 +75,7 @@ void addShortTermStorage(Data::Area* area, const std::string& name)
 BOOST_FIXTURE_TEST_CASE(empty_study, DuplicateFixture)
 {
     BOOST_CHECK(checkForDuplicates(*study));
-    BOOST_REQUIRE(errors.empty());
+    BOOST_REQUIRE(getErrors().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_thermal_clusters, DuplicateFixture)
@@ -102,8 +84,8 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_thermal_clusters, DuplicateFix
     addThermalCluster(areaA, "cluster");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 1);
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster` found in area `a`"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `cluster` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_thermal_clusters, DuplicateFixture)
@@ -115,9 +97,9 @@ BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_thermal_clusters, DuplicateFi
     addThermalCluster(areaA, "cluster_2");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 2); // Stops after first error
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster` found in area `a`"));
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_2` found in area `a`"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 2); // Stops after first error
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `cluster` found in area `a`"));
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `cluster_2` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_thermal_clusters, DuplicateFixture)
@@ -126,7 +108,7 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_thermal_clusters, DuplicateFixture)
     addThermalCluster(areaA, "cluster_2");
 
     BOOST_CHECK(checkForDuplicates(*study));
-    BOOST_REQUIRE(errors.empty());
+    BOOST_REQUIRE(getErrors().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(two_areas_two_duplicate_thermal_clusters, DuplicateFixture)
@@ -135,8 +117,8 @@ BOOST_FIXTURE_TEST_CASE(two_areas_two_duplicate_thermal_clusters, DuplicateFixtu
     addThermalCluster(areaB, "cluster");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 1);
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster` found in area `b`"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `cluster` found in area `b`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(two_areas_two_thermal_clusters, DuplicateFixture)
@@ -145,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(two_areas_two_thermal_clusters, DuplicateFixture)
     addThermalCluster(areaA, "cluster_2");
 
     BOOST_CHECK(checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 0);
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(two_areas_four_thermal_clusters, DuplicateFixture)
@@ -156,7 +138,7 @@ BOOST_FIXTURE_TEST_CASE(two_areas_four_thermal_clusters, DuplicateFixture)
     addThermalCluster(areaB, "cluster_2");
 
     BOOST_CHECK(checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 0);
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(two_areas_eight_duplicates_thermal_clusters, DuplicateFixture)
@@ -170,11 +152,11 @@ BOOST_FIXTURE_TEST_CASE(two_areas_eight_duplicates_thermal_clusters, DuplicateFi
     }
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 4);
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_1` found in area `a`"));
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_2` found in area `a`"));
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_1` found in area `b`"));
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `cluster_2` found in area `b`"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 4);
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `cluster_1` found in area `a`"));
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `cluster_2` found in area `a`"));
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `cluster_1` found in area `b`"));
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `cluster_2` found in area `b`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_renewable_clusters, DuplicateFixture)
@@ -183,8 +165,8 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_renewable_clusters, DuplicateF
     addRenewableCluster(areaA, "cluster");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 1);
-    BOOST_CHECK(errors.contains("Duplicate renewable cluster `cluster` found in area `a`"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK(getErrors().contains("Duplicate renewable cluster `cluster` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_renewable_clusters, DuplicateFixture)
@@ -196,9 +178,9 @@ BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_renewable_clusters, Duplicate
     addRenewableCluster(areaA, "cluster_2");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 2);
-    BOOST_CHECK(errors.contains("Duplicate renewable cluster `cluster` found in area `a`"));
-    BOOST_CHECK(errors.contains("Duplicate renewable cluster `cluster_2` found in area `a`"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 2);
+    BOOST_CHECK(getErrors().contains("Duplicate renewable cluster `cluster` found in area `a`"));
+    BOOST_CHECK(getErrors().contains("Duplicate renewable cluster `cluster_2` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_renewable_clusters, DuplicateFixture)
@@ -207,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_renewable_clusters, DuplicateFixture)
     addRenewableCluster(areaA, "cluster_2");
 
     BOOST_CHECK(checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 0);
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_STS_clusters, DuplicateFixture)
@@ -216,8 +198,8 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_duplicate_STS_clusters, DuplicateFixture
     addShortTermStorage(areaA, "cluster");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 1);
-    BOOST_CHECK(errors.contains("Duplicate short term storage `cluster` found in area `a`"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK(getErrors().contains("Duplicate short term storage `cluster` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_STS_clusters, DuplicateFixture)
@@ -229,9 +211,9 @@ BOOST_FIXTURE_TEST_CASE(single_area_four_duplicate_STS_clusters, DuplicateFixtur
     addShortTermStorage(areaA, "cluster_2");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 2);
-    BOOST_CHECK(errors.contains("Duplicate short term storage `cluster` found in area `a`"));
-    BOOST_CHECK(errors.contains("Duplicate short term storage `cluster_2` found in area `a`"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 2);
+    BOOST_CHECK(getErrors().contains("Duplicate short term storage `cluster` found in area `a`"));
+    BOOST_CHECK(getErrors().contains("Duplicate short term storage `cluster_2` found in area `a`"));
 }
 
 BOOST_FIXTURE_TEST_CASE(single_area_two_STS_clusters, DuplicateFixture)
@@ -240,7 +222,7 @@ BOOST_FIXTURE_TEST_CASE(single_area_two_STS_clusters, DuplicateFixture)
     addShortTermStorage(areaA, "cluster_2");
 
     BOOST_CHECK(checkForDuplicates(*study));
-    BOOST_REQUIRE(errors.empty());
+    BOOST_REQUIRE(getErrors().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(detection_of_duplicate_constraints, DuplicateFixture)
@@ -249,8 +231,8 @@ BOOST_FIXTURE_TEST_CASE(detection_of_duplicate_constraints, DuplicateFixture)
     addBindingConstraint("dummy");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 1);
-    BOOST_CHECK(errors.contains("Duplicate binding constraint `dummy` found in study"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK(getErrors().contains("Duplicate binding constraint `dummy` found in study"));
 }
 
 BOOST_FIXTURE_TEST_CASE(detection_of_more_duplicate_constraints, DuplicateFixture)
@@ -262,9 +244,9 @@ BOOST_FIXTURE_TEST_CASE(detection_of_more_duplicate_constraints, DuplicateFixtur
     addBindingConstraint("dummy_2");
 
     BOOST_CHECK(!checkForDuplicates(*study));
-    BOOST_REQUIRE_EQUAL(errors.size(), 2);
-    BOOST_CHECK(errors.contains("Duplicate binding constraint `dummy` found in study"));
-    BOOST_CHECK(errors.contains("Duplicate binding constraint `dummy_2` found in study"));
+    BOOST_REQUIRE_EQUAL(getErrors().size(), 2);
+    BOOST_CHECK(getErrors().contains("Duplicate binding constraint `dummy` found in study"));
+    BOOST_CHECK(getErrors().contains("Duplicate binding constraint `dummy_2` found in study"));
 }
 
 BOOST_FIXTURE_TEST_CASE(detection_of_non_duplicate_constraints, DuplicateFixture)
@@ -273,7 +255,7 @@ BOOST_FIXTURE_TEST_CASE(detection_of_non_duplicate_constraints, DuplicateFixture
     addBindingConstraint("dummy_2");
 
     BOOST_CHECK(checkForDuplicates(*study));
-    BOOST_REQUIRE(errors.empty());
+    BOOST_REQUIRE(getErrors().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(many_duplicates, DuplicateFixture)
@@ -287,12 +269,12 @@ BOOST_FIXTURE_TEST_CASE(many_duplicates, DuplicateFixture)
     }
     BOOST_CHECK(!checkForDuplicates(*study));
     // Check logs
-    BOOST_CHECK_EQUAL(errors.size(), 4);
-    BOOST_CHECK(errors.contains("Duplicate renewable cluster `renewable` found in area `a`"));
-    BOOST_CHECK(errors.contains("Duplicate thermal cluster `thermal` found in area `b`"));
-    BOOST_CHECK(errors.contains("Duplicate short term storage `storage` found in area `a`"));
+    BOOST_CHECK_EQUAL(getErrors().size(), 4);
+    BOOST_CHECK(getErrors().contains("Duplicate renewable cluster `renewable` found in area `a`"));
+    BOOST_CHECK(getErrors().contains("Duplicate thermal cluster `thermal` found in area `b`"));
+    BOOST_CHECK(getErrors().contains("Duplicate short term storage `storage` found in area `a`"));
     BOOST_CHECK(
-      errors.contains("Duplicate binding constraint `binding_constraint` found in study"));
+      getErrors().contains("Duplicate binding constraint `binding_constraint` found in study"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

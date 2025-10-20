@@ -49,9 +49,9 @@ public:
 class InvalidParametersForThermalClusters final: public Error::LoadingError
 {
 public:
-    explicit InvalidParametersForThermalClusters(const std::map<int, Yuni::String>& clusterNames);
+    explicit InvalidParametersForThermalClusters(const std::map<int, std::string>& clusterNames);
 
 private:
-    std::string buildMessage(const std::map<int, Yuni::String>& clusterNames) const;
+    std::string buildMessage(const std::map<int, std::string>& clusterNames) const;
 };
 } // namespace Antares::Check

@@ -57,7 +57,6 @@
 /*! Inform the GUI that the solver has properly ended */
 #define LOG_UI_SOLVER_DONE "[UI] Quitting the solver gracefully"
 
-#ifdef __cplusplus
 // This section is only dedicated to includes from a c++ file
 #include <yuni/core/logs.h>
 #include <yuni/core/logs/decorators/applicationname.h>
@@ -82,13 +81,6 @@ using LoggingDecorators = Yuni::Logs::Time< // Date/Time when the entry log is a
 extern Yuni::Logs::Logger<LoggingHandlers, LoggingDecorators> logs;
 
 } // namespace Antares
-
-#endif
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
 /*!
 ** \brief Levels for logging
@@ -121,9 +113,5 @@ void LogDisplayErrorInfos(uint errors,
                           uint warnings,
                           const char* message,
                           bool printAsError = true);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* __ANTARES_LIBS_LOGS_LOGS_H__ */
