@@ -26,24 +26,9 @@
 
 #include <antares/solver/hydro/probleme_spx_wrapper.h>
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
-
 #include "spx_definition_arguments.h"
 
-#ifdef __CPLUSPLUS
-}
-#endif
-
 #define LINFINI 1.e+80
-
-#define JOURS_28 28
-#define JOURS_29 29
-#define JOURS_30 30
-#define JOURS_31 31
-#define NOMBRE_DE_TYPE_DE_MOIS 4
 
 namespace DoneesOptimisationJournaliere
 {
