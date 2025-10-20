@@ -354,6 +354,9 @@ var hierarchy =
       [ "Antares::Solver::Variable::IVariable< NbOfDispatchedUnits< Container::EndOfList >, Container::EndOfList, VCardNbOfDispatchedUnits >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnits< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html", null ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< LOLD_Base< Traits, Container::EndOfList >, Container::EndOfList, VCardLOLD_Base< Traits > >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::LOLD_Base< Traits, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html", null ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< FlowLinear< Container::EndOfList >, Container::EndOfList, VCardFlowLinear >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::FlowLinear< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html", null ]
       ] ],
@@ -493,9 +496,6 @@ var hierarchy =
       [ "Antares::Solver::Variable::IVariable< LOLP< Container::EndOfList >, Container::EndOfList, VCardLOLP >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::LOLP< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP.html", null ]
       ] ],
-      [ "Antares::Solver::Variable::IVariable< LOLD_CSR< Container::EndOfList >, Container::EndOfList, VCardLOLD_CSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::LOLD_CSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR.html", null ]
-      ] ],
       [ "Antares::Solver::Variable::IVariable< HydroStorage< Container::EndOfList >, Container::EndOfList, VCardHydroStorage >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::HydroStorage< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html", null ]
       ] ],
@@ -524,9 +524,6 @@ var hierarchy =
         [ "Antares::Solver::Variable::Economy::TimeSeriesValuesBase< TimeSeriesValuesGenerationImpl< TraitsType, Container::EndOfList >, Container::EndOfList, VCardTimeSeriesBase< TraitsType > >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html", [
           [ "Antares::Solver::Variable::Economy::TimeSeriesValuesGenerationImpl< TraitsType, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html", null ]
         ] ]
-      ] ],
-      [ "Antares::Solver::Variable::IVariable< LOLD< Container::EndOfList >, Container::EndOfList, VCardLOLD >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::LOLD< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< Balance< Container::EndOfList >, Container::EndOfList, VCardBalance >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::Balance< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html", null ]
@@ -1153,6 +1150,8 @@ var hierarchy =
     [ "Antares::Component::Datagrid::Renderer::LogEntryContainer", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntryContainer.html", null ],
     [ "Antares::Window::StudyLogs::LogFilenameInfo", "classAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo.html", null ],
     [ "Antares::Statistics::LogsDumper", "classAntares_1_1Statistics_1_1LogsDumper.html", null ],
+    [ "Antares::Solver::Variable::Economy::LOLD_CSRTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSRTraits.html", null ],
+    [ "Antares::Solver::Variable::Economy::LOLDTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLDTraits.html", null ],
     [ "Antares::Solver::LpsFromAntares", "classAntares_1_1Solver_1_1LpsFromAntares.html", null ],
     [ "Antares::Window::StudyLogs::LogFilenameInfo::ltstr", "structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html", null ],
     [ "Antares::Forms::MainFormData", "classAntares_1_1Forms_1_1MainFormData.html", null ],
@@ -1671,8 +1670,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::HydroStorage< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::Inflows< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::LMRViolations< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::LOLD< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::LOLD_CSR< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSR_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::LOLD_Base< Traits, NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::LOLP< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::LOLP_CSR< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSR_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::LoopFlow< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html", null ],
@@ -1737,8 +1735,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardInflows >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardJoin >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardLMRViolations >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardLOLD >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardLOLD_CSR >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardLOLD_Base< Traits > >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardLOLP >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardLOLP_CSR >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardLoopFlow >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -1998,8 +1995,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardInflows", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html", null ],
     [ "Antares::Solver::Variable::VCardJoin", "structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardLMRViolations", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLMRViolations.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardLOLD", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardLOLD_CSR", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD__CSR.html", null ],
+    [ "Antares::Solver::Variable::Economy::VCardLOLD_Base< Traits >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLD__Base.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardLOLP", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLP.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardLOLP_CSR", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLOLP__CSR.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardLoopFlow", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardLoopFlow.html", null ],
