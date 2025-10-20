@@ -357,6 +357,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     const size_t pasDeTempsSizeDouble = problem.NombreDePasDeTemps * sizeof(double);
 
     const uint weekFirstDay = study.calendar.hours[PasDeTempsDebut].dayYear;
+    const unsigned weekLastDay = weekFirstDay + 6;
 
     for (int opt = 0; opt < 7; opt++)
     {
@@ -458,7 +459,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular
                   = getWaterValue(nivInit * 100 / area.hydro.reservoirCapacity,
                                   area.hydro.waterValues,
-                                  weekFirstDay + 6);
+                                  weekLastDay);
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable)
@@ -508,7 +509,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 for (uint layerindex = 0; layerindex < 100; layerindex++)
                 {
                     problem.CaracteristiquesHydrauliques[k].WaterLayerValues[layerindex]
-                      = area.hydro.waterValues[layerindex][weekFirstDay + 6]; // last day of week
+                      = area.hydro.waterValues[layerindex][weekLastDay];
                 }
             }
         }
