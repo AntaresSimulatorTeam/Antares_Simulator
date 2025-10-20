@@ -27,7 +27,7 @@
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/system.h"
 
-// If we don't turn clang-format off here, some antlr4 header does not compile : 
+// If we don't turn clang-format off here, some antlr4 header does not compile :
 // it collides with a #include <windows.h> somewhere in Yuni
 // clang-format off
 #include <unit_test_utils.h>
