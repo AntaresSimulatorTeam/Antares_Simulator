@@ -26,47 +26,21 @@
 */
 #pragma once
 
-#include "economy_base.h"
+#include "lold_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
 
-struct LOLD_CSRTraits
+struct LOLD_CSRTraits: public LOLD_Base_Traits
 {
     static std::string Caption()
     {
         return "LOLD CSR";
     }
 
-    static std::string Unit()
-    {
-        return "Hours";
-    }
-
     static std::string Description()
     {
         return "LOLD for CSR";
-    }
-
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
-
-    static constexpr uint8_t decimal = 4;
-
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSumThen1IfPositive;
-
-    static double value()
-    {
-        return 1.;
-    }
-
-    static void computeStats(IntermediateValues& iv)
-    {
-        iv.computeStatisticsForTheCurrentYear();
     }
 
     static bool checkCondition(const State& state)
