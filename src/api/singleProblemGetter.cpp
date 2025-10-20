@@ -1,8 +1,9 @@
 #include "antares/api/singleProblemGetter.h"
 
+#include <ranges>
+
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
-#include "antares/solver/hydro/management/management.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -87,12 +88,13 @@ void prepareClustersInMustRunMode(const Antares::Data::Study& study,
     }
 }
 
-WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
+Details::YearlyData SingleProblemGetter::getYearlyData(unsigned year)
 {
-    const auto [year, week] = id;
-
-    pb_.year = id.year;
-    pb_.weekInTheYear = week;
+    // TODO Use std::find for a single search
+    if (allData_.contains(year)) // We already have data for this year
+    {
+        return allData_.at(year);
+    }
 
     auto scratchmap = study_->areas.buildScratchMap(numSpace);
 
@@ -112,23 +114,29 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
         }
     }
 
-    Antares::Solver::Simulation::randomNumbers randomForParallelYears(
-      nbYears,
-      study_->parameters.power.fluctuations);
+    auto& dataForYear = allData_[year];
+    auto& randomForParallelYears = dataForYear.randomForParallelYears;
 
-    randomForParallelYears.allocate(*study_);
+    randomForParallelYears.emplace(nbYears, study_->parameters.power.fluctuations);
+    randomForParallelYears->allocate(*study_);
     std::map<unsigned int, bool> isYearPerformed{{0, true}}; // TODO check year number
 
     MersenneTwister randomHydroGenerator;
     randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
-    randomForParallelYears.compute(*study_, 1, isYearPerformed, randomHydroGenerator);
+    randomForParallelYears->compute(*study_, 1, isYearPerformed, randomHydroGenerator);
 
     // Getting random tables for this year
     // Index of the current year in the list of structures
-    uint indexYear = randomForParallelYears.yearNumberToIndex[year];
-    auto& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
+    uint indexYear = randomForParallelYears->yearNumberToIndex[year];
+    auto& randomForCurrentYear = randomForParallelYears->pYears[indexYear];
     const auto& hydroReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
+    /*
+      Side effects for HydroInputsChecker are limited to the year scope
+      inside the study.
+      more specifically, area.hydro.managementData[year]
+      So "out-of-order" such as calls "y=0, y=4, y=0" should be fine
+    */
     Antares::HydroInputsChecker hydroInputsChecker(*study_);
     hydroInputsChecker.Execute(year);
     hydroInputsChecker.CheckForErrors();
@@ -136,13 +144,72 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     prepareClustersInMustRunMode(*study_, scratchmap, year);
 
     hydroManagement.makeVentilation(hydroReservoirLevel, year, scratchmap);
-    const auto hourInTheYear = 168 * week;
+    dataForYear.ventilationResults = hydroManagement.ventilationResults();
+
+    // Compute hydro levels from ventilation results
+    // WeeklyGeneratingModulation is IGNORED (for independence)
+    int areaIndex = 0;
+    const uint weekFirstDay = study_->calendar.hours[hourInTheYear].dayYear;
+    for (const auto& [_, area]: study_->areas)
+    {
+        auto inflows = area->hydro.series->storage.getColumn(year);
+        const auto& calendar = study_->calendar;
+
+        auto getWeekInflows = [&](int week)
+        {
+            double ret = 0;
+            for (uint day = calendar.weeks[week].daysYear.first;
+                 day < calendar.weeks[week].daysYear.end;
+                 ++day)
+            {
+                ret += inflows[day];
+            }
+            return ret;
+        };
+
+        auto& level = dataForYear.hydroLevels[area];
+        level[0] = dataForYear.ventilationResults[areaIndex]
+                     .NiveauxReservoirsDebutJours[weekFirstDay]
+                   * area->hydro.reservoirCapacity;
+        for (unsigned week = 1; week < calendar.maxWeeksInYear - 1; week++)
+        {
+            level[week] = level[week - 1];
+            for (int day = 0; day < 7; ++day)
+            {
+                level[week] -= dataForYear.ventilationResults[areaIndex]
+                                 .HydrauliqueModulableQuotidien[day]; // Subtract turbined
+                level[week] += getWeekInflows(week);                  // Add inflows
+            }
+        }
+        areaIndex++;
+    }
+
+    return dataForYear;
+}
+
+WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
+{
+    const auto [year, week] = id;
+
+    pb_.year = id.year;
+    pb_.weekInTheYear = week;
+
+    auto [hydroLevels, randomForParallelYears, ventilationResults] = getYearlyData(year);
+
+    auto scratchmap = study_->areas.buildScratchMap(numSpace);
+
+    const auto hourInTheYear = 168 * week; // TODO
     SIM_RenseignementProblemeHebdo(*study_,
                                    pb_,
                                    week,
                                    hourInTheYear,
-                                   hydroManagement.ventilationResults(),
+                                   ventilationResults,
                                    scratchmap);
+
+    study_->computePThetaInfForThermalClusters(); // PthetaInf
+
+    uint indexYear = randomForParallelYears->yearNumberToIndex[year];
+    auto& randomForCurrentYear = randomForParallelYears->pYears[indexYear];
 
     // required at least for OPT_SommeDesPminThermiques (RHS)
     Antares::Solver::Simulation::BuildThermalPartOfWeeklyProblem(

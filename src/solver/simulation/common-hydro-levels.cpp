@@ -89,6 +89,8 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
         const std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
         problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1];
+        logs.notice() << "area " << _ << " updatingWeeklyFinalHydroLevel = "
+                      << problem.previousSimulationFinalLevel[index];
     }
 }
 

@@ -350,10 +350,13 @@ void SetInitialHydroLevel(Data::Study& study,
           if (updatePreviousLevel)
           {
               double capacity = area.hydro.reservoirCapacity;
+
               problem.previousSimulationFinalLevel[area.index] = hydroVentilationResults[area.index]
                                                                    .NiveauxReservoirsDebutJours
                                                                      [firstDaySimu]
                                                                  * capacity;
+              logs.notice() << "area " << area.name << " SetInitialHydroLevel = "
+                            << problem.previousSimulationFinalLevel[area.index];
           }
       });
 }
