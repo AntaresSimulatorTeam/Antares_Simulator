@@ -785,6 +785,9 @@ var hierarchy =
         [ "Antares::Forms::JobLoadScenarioBuilder", "classAntares_1_1Forms_1_1JobLoadScenarioBuilder.html", null ],
         [ "Antares::Toolbox::Process::JobExecute", "classAntares_1_1Toolbox_1_1Process_1_1JobExecute.html", null ]
       ] ],
+      [ "Antares::UnitTests::CaptureAntaresLogs", "classAntares_1_1UnitTests_1_1CaptureAntaresLogs.html", [
+        [ "DuplicateFixture", "structDuplicateFixture.html", null ]
+      ] ],
       [ "Antares::Window::BindingConstraint", "classAntares_1_1Window_1_1BindingConstraint.html", null ],
       [ "Antares::Window::BindingConstraintOffsetsPanel", "classAntares_1_1Window_1_1BindingConstraintOffsetsPanel.html", null ],
       [ "Antares::Window::BindingConstraintWeightsPanel", "classAntares_1_1Window_1_1BindingConstraintWeightsPanel.html", null ],
@@ -813,7 +816,6 @@ var hierarchy =
         [ "Antares::Window::hurdleCostsUsageButton", "classAntares_1_1Window_1_1hurdleCostsUsageButton.html", null ],
         [ "Antares::Window::ntcUsageButton", "classAntares_1_1Window_1_1ntcUsageButton.html", null ]
       ] ],
-      [ "DuplicateFixture", "structDuplicateFixture.html", null ],
       [ "IProvider", "classIProvider.html", [
         [ "NullProvider", "classNullProvider.html", null ]
       ] ]

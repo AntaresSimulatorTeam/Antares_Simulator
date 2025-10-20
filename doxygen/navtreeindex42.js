@@ -1,5 +1,12 @@
 var NAVTREEINDEX42 =
 {
+"classOptimisationsSimulationTable.html#a6cd881a3d1d2c0559c1e038ce1d7efa1":[8,0,217,3],
+"classOptimisationsSimulationTable.html#a89042a5f5d043cff36c8b674ce6ea2f2":[8,0,217,5],
+"classOptimisationsSimulationTable.html#a980f515bbe62c9d4eb58e9b6edc5428a":[8,0,217,1],
+"classOptimisationsSimulationTable.html#ad4cb9e655c9aaf768cc757e1a35c395b":[8,0,217,0],
+"classOptimisationsSimulationTable.html#ae18d1a711e4cd8df56a7964e6eeb175b":[8,0,217,2],
+"classOptimisationsSimulationTable.html#af122893453094dc5c4cffaa439abcbda":[8,0,217,6],
+"classOptimizationStatistics.html":[8,0,218],
 "classOptimizationStatistics.html#a0e2e28f5d358eb7dea3a4271546df5fb":[8,0,218,7],
 "classOptimizationStatistics.html#a101c80f271916829754170e19c21ef37":[8,0,218,10],
 "classOptimizationStatistics.html#a10ddf366f6e655b41faa0c96f4d66d58":[8,0,218,2],
@@ -142,8 +149,8 @@ var NAVTREEINDEX42 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[8,0,244,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[8,0,244,7],
 "classPublicStudy.html":[8,0,245],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,245,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,245,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,245,1],
 "classQuadraticProblemMatrix.html":[8,0,247],
 "classQuadraticProblemMatrix.html#a125f854b3137ecb3e79b501a8530ced2":[8,0,247,1],
 "classQuadraticProblemMatrix.html#a7722642ba2cc688ff94a834baa6c1ffc":[8,0,247,0],
@@ -242,12 +249,5 @@ var NAVTREEINDEX42 =
 "classSeparator.html#a9da17ed0b195e8531388c314f1169fa6":[8,0,264,1],
 "classSeparator.html#a9dce64b3d94fac3291e1bb0433c62293":[8,0,264,2],
 "classSeparator.html#adcefa2bf6bc3e874a8e1fa9ab8903b1f":[8,0,264,0],
-"classSeparator.html#ae005f6b8c4259df51b70bce31a534fb9":[8,0,264,4],
-"classSeparator.html#af0cc57d6f0a94a7cb1a78b6079d75f3c":[8,0,264,5],
-"classSettings.html":[8,0,265],
-"classSettings.html#a225db655bee0ce3ac8033907c89d91c4":[8,0,265,10],
-"classSettings.html#a228b5676a10dbeb98600e5e6f1b4ac76":[8,0,265,1],
-"classSettings.html#a2f6a7ad328def111ce976e4102f7cc85":[8,0,265,9],
-"classSettings.html#a533bd3e503ce147fdf74467a7251c511":[8,0,265,8],
-"classSettings.html#a7a85732f59739f454763d67bf3b89789":[8,0,265,12]
+"classSeparator.html#ae005f6b8c4259df51b70bce31a534fb9":[8,0,264,4]
 };

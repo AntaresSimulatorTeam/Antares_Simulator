@@ -1,5 +1,8 @@
 var NAVTREEINDEX60 =
 {
+"structFinalStockExpressionData.html":[8,0,121],
+"structFinalStockExpressionData.html#aa64837d0854c41bb2f9cb4724635f6c8":[8,0,121,0],
+"structFinalStockExpressionData.html#afa69b0d30c5697fc02d8e63279e19509":[8,0,121,1],
 "structFindExchangeFixture.html":[8,0,123],
 "structFindExchangeFixture.html#a4fc1e9811258fc2871891e209af582d0":[8,0,123,1],
 "structFindExchangeFixture.html#a5afe7bcd85b750cf42b0176369383db0":[8,0,123,0],
@@ -132,8 +135,8 @@ var NAVTREEINDEX60 =
 "structMockLinearProblemData.html":[8,0,193],
 "structMockLinearProblemData.html#a63350ea43c8987d172b7cc2550169cb5":[8,0,193,4],
 "structMockLinearProblemData.html#a7856971bf8e1c5693dd3e1b61522471b":[8,0,193,1],
-"structMockLinearProblemData.html#a7bcbf2377c723b3d73218a500404d17c":[8,0,193,2],
 "structMockLinearProblemData.html#a7bcbf2377c723b3d73218a500404d17c":[8,0,193,3],
+"structMockLinearProblemData.html#a7bcbf2377c723b3d73218a500404d17c":[8,0,193,2],
 "structMockLinearProblemData.html#a808c41967b7bac1df08fb3c6f9de711f":[8,0,193,0],
 "structMockMipSolution.html":[8,0,195],
 "structMockMipSolution.html#a8d027cb0a8cbaa458600c24557d4a74e":[8,0,195,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX60 =
 "structPROBLEME__HEBDO.html#a84092aa3795e495aecb914c80939b272":[8,0,237,10],
 "structPROBLEME__HEBDO.html#a84447d9ff229108331faf8ba0099fc9f":[8,0,237,39],
 "structPROBLEME__HEBDO.html#a85edb54aeb2aa706a159ea2296d239b9":[8,0,237,69],
-"structPROBLEME__HEBDO.html#a8fad2d600c90fb07edaaeff6763252b5":[8,0,237,35],
-"structPROBLEME__HEBDO.html#a942670b312b62c76caf1ae7b20932ded":[8,0,237,67],
-"structPROBLEME__HEBDO.html#a98738ce7409d10cbf182d4bcee3a4bc2":[8,0,237,27],
-"structPROBLEME__HEBDO.html#a9a44be9365082743e3346f7b64bad27e":[8,0,237,50]
+"structPROBLEME__HEBDO.html#a8fad2d600c90fb07edaaeff6763252b5":[8,0,237,35]
 };

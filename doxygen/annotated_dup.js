@@ -1081,7 +1081,8 @@ var annotated_dup =
       [ "UnitTests", null, [
         [ "PredicateIdentity", "structAntares_1_1UnitTests_1_1PredicateIdentity.html", "structAntares_1_1UnitTests_1_1PredicateIdentity" ],
         [ "Buffer", "classAntares_1_1UnitTests_1_1Buffer.html", "classAntares_1_1UnitTests_1_1Buffer" ],
-        [ "fakeLogger", "classAntares_1_1UnitTests_1_1fakeLogger.html", "classAntares_1_1UnitTests_1_1fakeLogger" ]
+        [ "fakeLogger", "classAntares_1_1UnitTests_1_1fakeLogger.html", "classAntares_1_1UnitTests_1_1fakeLogger" ],
+        [ "CaptureAntaresLogs", "classAntares_1_1UnitTests_1_1CaptureAntaresLogs.html", "classAntares_1_1UnitTests_1_1CaptureAntaresLogs" ]
       ] ],
       [ "Utils", null, [
         [ "TimeMeasurement", "classAntares_1_1Utils_1_1TimeMeasurement.html", "classAntares_1_1Utils_1_1TimeMeasurement" ]

@@ -1,5 +1,12 @@
 var NAVTREEINDEX36 =
 {
+"classAntares_1_1Window_1_1Message.html#afda9ab9d40e3986ea47e4a15103556e7afafca3e25204291af00c6009a4b47708":[8,0,0,25,43,1,0],
+"classAntares_1_1Window_1_1MessageFlusherTimer.html":[8,0,0,25,11],
+"classAntares_1_1Window_1_1MessageFlusherTimer.html#a4c2ceb21a34ce490ceabcddd55c6e62f":[8,0,0,25,11,0],
+"classAntares_1_1Window_1_1MessageFlusherTimer.html#aae13e54a2ab76077a058bb43e619a2dd":[8,0,0,25,11,2],
+"classAntares_1_1Window_1_1MessageFlusherTimer.html#ae84e2d9ddffe28474146b7698e146958":[8,0,0,25,11,1],
+"classAntares_1_1Window_1_1Notes.html":[8,0,0,25,44],
+"classAntares_1_1Window_1_1Notes.html#a1257c147669c1cbe48c5d44089ebe2d9":[8,0,0,25,44,0],
 "classAntares_1_1Window_1_1Notes.html#a1257c147669c1cbe48c5d44089ebe2d9ab4586f901916e366a36491aad6a9268f":[8,0,0,25,44,0,0],
 "classAntares_1_1Window_1_1Notes.html#a4ab5d20136b5782503544b3c1ab4efeb":[8,0,0,25,44,6],
 "classAntares_1_1Window_1_1Notes.html#a572a1a534399c9a464481f863fa809b3":[8,0,0,25,44,1],
@@ -242,12 +249,5 @@ var NAVTREEINDEX36 =
 "classAntares_1_1Window_1_1Thermal_1_1Panel.html#ae384fa333fe8cc5503867719e1957d6d":[8,0,0,25,7,1,1],
 "classAntares_1_1Window_1_1ThreadUpdater.html":[8,0,0,25,12],
 "classAntares_1_1Window_1_1ThreadUpdater.html#a05bdcf8f45c91bda8e8631427d2d2edf":[8,0,0,25,12,2],
-"classAntares_1_1Window_1_1ThreadUpdater.html#a381bee3e4b60e8c3db87d3efb97ca35e":[8,0,0,25,12,4],
-"classAntares_1_1Window_1_1ThreadUpdater.html#a89b1e3bc58d82506898efabb70269c19":[8,0,0,25,12,0],
-"classAntares_1_1Window_1_1ThreadUpdater.html#a8e8e3a8dc65d13e4972bb12bda792b51":[8,0,0,25,12,6],
-"classAntares_1_1Window_1_1ThreadUpdater.html#a97210a0f905981b6bbaf008f93089d96":[8,0,0,25,12,1],
-"classAntares_1_1Window_1_1ThreadUpdater.html#aaec580a15558b276aac6ff4284b6c067":[8,0,0,25,12,3],
-"classAntares_1_1Window_1_1ThreadUpdater.html#af6fcd12c67d4c4a7c11e19213755fcdc":[8,0,0,25,12,5],
-"classAntares_1_1Window_1_1XCast.html":[8,0,0,25,53],
-"classAntares_1_1Window_1_1XCast.html#a20a1d5eb722b3f65d9878e1f9de048c8":[8,0,0,25,53,2]
+"classAntares_1_1Window_1_1ThreadUpdater.html#a381bee3e4b60e8c3db87d3efb97ca35e":[8,0,0,25,12,4]
 };

@@ -1,5 +1,8 @@
 var NAVTREEINDEX62 =
 {
+"structStudyForBCTest.html#a68dbaede56593916ffcc8ed365255a7e":[8,0,296,4],
+"structStudyForBCTest.html#a6d0f6ea2d8894a9d3833d1e9eabfee48":[8,0,296,1],
+"structStudyForBCTest.html#ad22632738fd737c333fb15b590ad88f5":[8,0,296,0],
 "structStudyWithBConLink.html":[8,0,297],
 "structStudyWithBConLink.html#a062563fe3c55f1910c712ab0eaf081b6":[8,0,297,0],
 "structStudyWithBConLink.html#ad22632738fd737c333fb15b590ad88f5":[8,0,297,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX62 =
 "thermal_2defines_8h_source.html":[9,0,0,4,0,25,0,0,0,5,6,5],
 "thermal_8areasummary_8h_source.html":[9,0,0,12,2,1,1,1,1,0,11],
 "thermalmodulation_8h_source.html":[9,0,0,12,2,1,1,1,1,0,12],
-"thermalprepro_8h_source.html":[9,0,0,12,2,1,1,1,1,0,13],
-"timeAndScenarioType_8h.html#a1ec198537ff13af974a5dac7cd20ee8d":[7,0,0,19,0,32],
-"timeAndScenarioType_8h.html#a24dd3a9f1c3c0e4660ae7e655c7d9303":[7,0,0,19,0,29],
-"timeAndScenarioType_8h.html#a24dd3a9f1c3c0e4660ae7e655c7d9303a7469a286259799e5b37e5db9296f00b3":[7,0,0,19,0,29,1]
+"thermalprepro_8h_source.html":[9,0,0,12,2,1,1,1,1,0,13]
 };
