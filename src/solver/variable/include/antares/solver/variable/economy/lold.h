@@ -42,8 +42,6 @@ struct LOLDTraits
         return "LOLD";
     }
 
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSumThen1IfPositive;
-
     static bool checkCondition(const State& state)
     {
         return state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] > 0.5;
