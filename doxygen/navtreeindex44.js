@@ -1,9 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1CostGeneration_01_4.html#ac24eb767fa9f8945f2d90833151bd256":[8,0,33,0,0,4,1],
-"classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1CostGeneration_01_4.html#ac24eb767fa9f8945f2d90833151bd256a9f7d0ee82b6a6ca7ddeae841f3253059":[8,0,33,0,0,4,1,0],
-"classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html":[8,0,33,0,0,5],
-"classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html#a54d9bb2f05897f8b7c5edbc03c9a2321":[8,0,33,0,0,5,0],
 "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html":[8,0,33,0,0,3],
 "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html#a4fa35353f970ad641567cef7e8d4bae9":[8,0,33,0,0,3,0],
 "class__name_8cpp.html#a4bed426510253cc72f6bc083e1264e6a":[7,0,39,2],
@@ -249,5 +245,9 @@ var NAVTREEINDEX44 =
 "classstudy__input__handler_1_1study__input__handler.html#a5f3d6a7bff6c8cea21bc26dfc5980884":[8,0,25,0,0],
 "classstudy__input__handler_1_1study__input__handler.html#a76acb21929cff719eeb8d42d65fb015d":[8,0,25,0,5],
 "classstudy__input__handler_1_1study__input__handler.html#ab22fa0e23cc96387441ebade57d30ff7":[8,0,25,0,1],
-"classstudy__input__handler_1_1study__input__handler.html#ad04f05f01c82d3dd2bfa952d82cb70e0":[8,0,25,0,4]
+"classstudy__input__handler_1_1study__input__handler.html#ad04f05f01c82d3dd2bfa952d82cb70e0":[8,0,25,0,4],
+"classstudy__modifier_1_1study__modifier.html":[8,0,26,0],
+"classstudy__modifier_1_1study__modifier.html#a0f4945623c81c7d1101a72e1d6e312b7":[8,0,26,0,8],
+"classstudy__modifier_1_1study__modifier.html#a246e9b2476ce5f2a9b0d4f968d2da134":[8,0,26,0,4],
+"classstudy__modifier_1_1study__modifier.html#a3bb7dde545c18c0a8b92d50bbefeb6a4":[8,0,26,0,7]
 };
