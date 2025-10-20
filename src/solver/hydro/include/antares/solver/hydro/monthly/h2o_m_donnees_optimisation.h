@@ -24,16 +24,7 @@
 
 #include <antares/solver/hydro/probleme_spx_wrapper.h>
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
-
 #include "spx_definition_arguments.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
 
 #define LINFINI 1.e+80
 

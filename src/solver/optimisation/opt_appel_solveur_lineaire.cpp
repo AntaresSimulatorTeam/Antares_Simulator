@@ -169,16 +169,11 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           ISimulationTable* simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto* solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
-
-    ORTOOLS_LibererProbleme(solver);
-
-    ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
@@ -197,11 +192,13 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    solver = fillAndGetMpSolver(ortoolsProblem,
-                                fillCtx,
-                                problemeHebdo,
-                                optimEntityContainer,
-                                problemeHebdo->NamedProblems);
+    auto* solver = fillAndGetMpSolver(ortoolsProblem,
+                                      fillCtx,
+                                      problemeHebdo,
+                                      optimEntityContainer,
+                                      problemeHebdo->NamedProblems);
+
+    ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
 
     std::call_once(logProblemSizeFlag, logProblemSize, solver);
 
@@ -216,11 +213,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mps_writer->runIfNeeded(writer, filename);
 
     Utils::TimeMeasurement measure;
-    solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
-    if (solver != nullptr)
-    {
-        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
-    }
+    ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
 
     measure.tick();
     logs.info() << "Solved in " << measure.toStringInSeconds();
@@ -233,11 +226,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         {
             if (solver)
             {
-                ORTOOLS_LibererProbleme(solver);
-
-                ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
-
-                solver = nullptr;
+                ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset();
             }
 
             logs.info() << " Solver: resolution failed";

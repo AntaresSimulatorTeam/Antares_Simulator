@@ -18,13 +18,31 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
 
-#include <antares/optimization-options/options.h>
-#include <antares/solver/optimisation/opt_structure_probleme_a_resoudre.h>
+#include "antares/modeler/optimConfig/optimConfig.h"
 
-using namespace operations_research;
+#include <unordered_map>
 
-void ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeHebdo,
-                      MPSolver* ProbSpx,
-                      const Antares::Solver::Optimization::SingleOptimOptions& options);
+#include <antares/exception/LoadingError.hpp>
+
+namespace Antares::Modeler::Config
+{
+
+void OptimConfig::checkDuplicateModelIds() const
+{
+    std::unordered_map<std::string, int> modelIds;
+    for (const auto& model: models_)
+    {
+        modelIds[model.id()]++;
+    }
+
+    for (const auto& [id, count]: modelIds)
+    {
+        if (count > 1)
+        {
+            throw Error::Duplicates("OptimConfig contains multiple models with ID \"" + id + "\".");
+        }
+    }
+}
+
+} // namespace Antares::Modeler::Config
