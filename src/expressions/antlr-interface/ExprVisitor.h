@@ -39,8 +39,6 @@ public:
 
     virtual std::any visitAddsub(ExprParser::AddsubContext *context) = 0;
 
-    virtual std::any visitReduced_cost(ExprParser::Reduced_costContext *context) = 0;
-
     virtual std::any visitTimeShiftExpr(ExprParser::TimeShiftExprContext *context) = 0;
 
     virtual std::any visitPortField(ExprParser::PortFieldContext *context) = 0;
@@ -48,6 +46,8 @@ public:
     virtual std::any visitMuldiv(ExprParser::MuldivContext *context) = 0;
 
     virtual std::any visitTimeSum(ExprParser::TimeSumContext *context) = 0;
+
+    virtual std::any visitReducedCost(ExprParser::ReducedCostContext *context) = 0;
 
     virtual std::any visitDual(ExprParser::DualContext *context) = 0;
 

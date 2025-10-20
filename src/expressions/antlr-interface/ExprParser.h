@@ -166,15 +166,6 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  Reduced_costContext : public ExprContext {
-  public:
-    Reduced_costContext(ExprContext *ctx);
-
-    antlr4::tree::TerminalNode *IDENTIFIER();
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
   class  TimeShiftExprContext : public ExprContext {
   public:
     TimeShiftExprContext(ExprContext *ctx);
@@ -214,6 +205,15 @@ public:
     ExprContext *expr();
     std::vector<ShiftContext *> shift();
     ShiftContext* shift(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  ReducedCostContext : public ExprContext {
+  public:
+    ReducedCostContext(ExprContext *ctx);
+
+    antlr4::tree::TerminalNode *IDENTIFIER();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

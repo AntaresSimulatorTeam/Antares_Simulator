@@ -29,7 +29,7 @@ expr
     | 'sum_connections' '(' portFieldExpr ')'           # portFieldSum
     | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
     | 'dual' '(' IDENTIFIER ')'                # dual
-    | 'reduced_cost' '(' IDENTIFIER ')'        # reduced_cost
+    | 'reduced_cost' '(' IDENTIFIER ')'        # reducedCost
     | IDENTIFIER '(' expr ')'                  # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex

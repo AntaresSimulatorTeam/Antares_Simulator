@@ -422,21 +422,6 @@ std::any ExprParser::AddsubContext::accept(tree::ParseTreeVisitor *visitor) {
   else
     return visitor->visitChildren(this);
 }
-//----------------- Reduced_costContext ------------------------------------------------------------------
-
-tree::TerminalNode* ExprParser::Reduced_costContext::IDENTIFIER() {
-  return getToken(ExprParser::IDENTIFIER, 0);
-}
-
-ExprParser::Reduced_costContext::Reduced_costContext(ExprContext *ctx) { copyFrom(ctx); }
-
-
-std::any ExprParser::Reduced_costContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
-    return parserVisitor->visitReduced_cost(this);
-  else
-    return visitor->visitChildren(this);
-}
 //----------------- TimeShiftExprContext ------------------------------------------------------------------
 
 ExprParser::ExprContext* ExprParser::TimeShiftExprContext::expr() {
@@ -510,6 +495,21 @@ ExprParser::TimeSumContext::TimeSumContext(ExprContext *ctx) { copyFrom(ctx); }
 std::any ExprParser::TimeSumContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
     return parserVisitor->visitTimeSum(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- ReducedCostContext ------------------------------------------------------------------
+
+tree::TerminalNode* ExprParser::ReducedCostContext::IDENTIFIER() {
+  return getToken(ExprParser::IDENTIFIER, 0);
+}
+
+ExprParser::ReducedCostContext::ReducedCostContext(ExprContext *ctx) { copyFrom(ctx); }
+
+
+std::any ExprParser::ReducedCostContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
+    return parserVisitor->visitReducedCost(this);
   else
     return visitor->visitChildren(this);
 }
@@ -726,7 +726,7 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
     }
 
     case 9: {
-      _localctx = _tracker.createInstance<Reduced_costContext>(_localctx);
+      _localctx = _tracker.createInstance<ReducedCostContext>(_localctx);
       _ctx = _localctx;
       previousContext = _localctx;
       setState(53);
