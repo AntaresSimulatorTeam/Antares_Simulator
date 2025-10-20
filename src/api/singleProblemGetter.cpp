@@ -1,6 +1,7 @@
 #include "antares/api/singleProblemGetter.h"
 
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
+#include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -120,7 +121,6 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 
     MersenneTwister randomHydroGenerator;
     randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
-
     randomForParallelYears.compute(*study_, 1, isYearPerformed, randomHydroGenerator);
 
     // Getting random tables for this year
@@ -128,6 +128,10 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     uint indexYear = randomForParallelYears.yearNumberToIndex[year];
     auto& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
     const auto& hydroReservoirLevel = randomForCurrentYear.pReservoirLevels;
+
+    Antares::HydroInputsChecker hydroInputsChecker(*study_);
+    hydroInputsChecker.Execute(year);
+    hydroInputsChecker.CheckForErrors();
 
     prepareClustersInMustRunMode(*study_, scratchmap, year);
 
