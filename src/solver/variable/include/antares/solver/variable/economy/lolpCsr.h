@@ -26,42 +26,21 @@
 */
 #pragma once
 
-#include "economy_base.h"
+#include "lolp_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
 
-struct LOLP_CSRTraits
+struct LOLP_CSRTraits: public LOLP_Base_Traits
 {
     static std::string Caption()
     {
         return "LOLP CSR";
     }
 
-    static std::string Unit()
-    {
-        return "%";
-    }
-
     static std::string Description()
     {
         return "LOLP for CSR";
-    }
-
-    typedef Results<R::AllYears::Average<>> ResultsType;
-
-    static constexpr uint8_t decimal = 2;
-
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateOr;
-
-    static double value()
-    {
-        return 100.;
-    }
-
-    static void computeStats(IntermediateValues& iv)
-    {
-        iv.computeStatisticsOrForTheCurrentYear();
     }
 
     static bool checkCondition(const State& state)

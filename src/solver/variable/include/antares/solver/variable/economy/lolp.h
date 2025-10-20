@@ -21,42 +21,21 @@
 #ifndef SOLVER_VARIABLE_ECONOMY_LOLP_H__
 #define SOLVER_VARIABLE_ECONOMY_LOLP_H__
 
-#include "economy_base.h"
+#include "lolp_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
 
-struct LOLPTraits
+struct LOLPTraits: public LOLP_Base_Traits
 {
     static std::string Caption()
     {
         return "LOLP";
     }
 
-    static std::string Unit()
-    {
-        return "%";
-    }
-
     static std::string Description()
     {
         return "LOLP";
-    }
-
-    typedef Results<R::AllYears::Average<>> ResultsType;
-
-    static constexpr uint8_t decimal = 2;
-
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateOr;
-
-    static double value()
-    {
-        return 100.;
-    }
-
-    static void computeStats(IntermediateValues& iv)
-    {
-        iv.computeStatisticsOrForTheCurrentYear();
     }
 
     static bool checkCondition(const State& state)
