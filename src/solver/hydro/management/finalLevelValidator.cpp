@@ -66,15 +66,7 @@ bool FinalLevelValidator::check()
 
 bool FinalLevelValidator::skippingFinalLevelUse()
 {
-    if (!wasSetInScenarioBuilder())
-    {
-        return true;
-    }
-    if (!compatibleWithReservoirProperties())
-    {
-        return true;
-    }
-    return false;
+    return !wasSetInScenarioBuilder() || !compatibleWithReservoirProperties();
 }
 
 bool FinalLevelValidator::wasSetInScenarioBuilder()
