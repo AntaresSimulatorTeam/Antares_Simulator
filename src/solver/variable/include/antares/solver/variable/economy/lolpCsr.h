@@ -52,7 +52,7 @@ struct LOLP_CSRTraits
 
     static constexpr uint8_t decimal = 2;
 
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateOr;
 
     static double value()
     {
