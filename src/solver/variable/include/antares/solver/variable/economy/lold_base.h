@@ -56,4 +56,3 @@ struct LOLD_Base_Traits
 };
 
 } // namespace Antares::Solver::Variable::Economy
-
