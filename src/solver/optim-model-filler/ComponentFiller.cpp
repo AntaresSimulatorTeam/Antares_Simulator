@@ -228,6 +228,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
 
 auto subproblemVariables = [](const Variable& v) { return v.isInSubProblem(); };
 auto masterproblemVariables = [](const Variable& v) { return v.isInMasterProblem(); };
+auto subproblemObjectives = [](const Objective& o) { return o.isInSubProblem(); };
+auto masterproblemObjectives = [](const Objective& o) { return o.isInMasterProblem(); };
 
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  OptimEntityContainer& optimEntityContainer,
@@ -235,7 +237,8 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
     component_(component),
     optimEntityContainer_(optimEntityContainer),
     scenarioGroupRepository_(scenarioGroupRepository),
-    variablesFilter_(subproblemVariables)
+    variablesFilter_(subproblemVariables),
+    objectivesFilter_(masterproblemObjectives)
 {
 }
 
@@ -387,13 +390,20 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
+void ComponentFiller::addObjectivesToMaster(const LinearProblemApi::FillContext& ctx)
+{
+    objectivesFilter_ = masterproblemObjectives;
+    this->addObjectivesToMaster(ctx);
+    objectivesFilter_ = subproblemObjectives; // Reset to initial state
+}
+
 void ComponentFiller::addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     const auto* model = component_.getModel();
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
-    for (const auto& objective: model->Objectives())
+    for (const auto& objective: model->Objectives() | std::views::filter(objectivesFilter_))
     {
         const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());

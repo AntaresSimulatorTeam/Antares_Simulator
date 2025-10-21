@@ -64,7 +64,7 @@ void FactoryFixture::createTwoVariables()
     Variable var_1("var-1",
                    createLiteral("low-bound", 0., nodeRegistry),
                    createLiteral("up-bound", 1., nodeRegistry),
-                   ValueType::BOOL,
+                   ValueType::FLOAT,
                    TimeDependent::NO,
                    ScenarioDependent::NO,
                    Config::Location::SUBPROBLEMS);
@@ -72,7 +72,7 @@ void FactoryFixture::createTwoVariables()
     Variable var_2("var-2",
                    createLiteral("low-bound", 0., nodeRegistry),
                    createLiteral("up-bound", 1., nodeRegistry),
-                   ValueType::BOOL,
+                   ValueType::FLOAT,
                    TimeDependent::NO,
                    ScenarioDependent::NO,
                    Config::Location::MASTER);
