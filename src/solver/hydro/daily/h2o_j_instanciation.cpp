@@ -75,6 +75,9 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
 
         CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);
+        CorrespondanceDesContraintes[i].NumeroDeContrainteSurXiSym.assign(NbPdt, 0);
+        CorrespondanceDesContraintes[i].NumeroDeContrainteSurXiPlus.assign(NbPdt, 0);
+        CorrespondanceDesContraintes[i].NumeroDeContrainteSurXiMoins.assign(NbPdt, 0);
 
         PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];
 

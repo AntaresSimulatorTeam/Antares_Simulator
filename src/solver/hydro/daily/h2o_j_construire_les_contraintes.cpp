@@ -47,7 +47,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
         IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
         il++;
-//        NombreDeTermes++;
+        //        NombreDeTermes++;
     }
 
     Sens[NombreDeContraintes] = '=';
@@ -77,7 +77,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
         NombreDeContraintes++;
     }
 
-    // --- cible[t] + xi[t] >= turbine[t]  => -turbine[t] + xi[t] >= -cible[t] ---
+    // --- cible[t] + Xi >= turbine[t]  => -turbine[t] + Xi >= -cible[t] ---
     for (int Pdt = 0; Pdt < NbPdt; ++Pdt)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
