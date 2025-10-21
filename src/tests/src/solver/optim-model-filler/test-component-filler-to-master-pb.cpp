@@ -55,6 +55,8 @@ struct FactoryFixture
     LinearProblemData dummy_data;
     ScenarioGroupRepository scenario_group_repo;
     OptimEntityContainer optimEntityContainer;
+
+    FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
 };
 
 void FactoryFixture::createTwoVariables()
@@ -101,28 +103,31 @@ void FactoryFixture::setOptimEntityContainer()
 
 BOOST_FIXTURE_TEST_SUITE(add_variables_to_master_linear_problem, FactoryFixture)
 
-BOOST_AUTO_TEST_CASE(add_variables_to_master_pb_actually_adds_master_located_variables)
+BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_variables)
 {
-    // ======================
-    // Step : arrange
-    // ======================
-    // Creating a component filler
+    // Arrange
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
-    // Creating a fill context
-    FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
-
-    // ======================
-    // Step : act
-    // ======================
+    // Act
     componentFiller.addVariablesToMaster(time_scenario_ctx);
 
-    // ======================
-    // Step : assert
-    // ======================
+    // Assert
     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
-
     auto* var = linear_pb.lookupVariable("my-component.var-2");
+    BOOST_REQUIRE(var);
+}
+
+BOOST_AUTO_TEST_CASE(adding_variables_to_classic_pb_actually_adds_only_subproblem_variables)
+{
+    // Arrange
+    ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
+
+    // Act
+    componentFiller.addVariables(time_scenario_ctx);
+
+    // Assert
+    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
+    auto* var = linear_pb.lookupVariable("my-component.var-1");
     BOOST_REQUIRE(var);
 }
 
