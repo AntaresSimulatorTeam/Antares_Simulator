@@ -432,7 +432,7 @@ jobs:
     - name: Delete old cache
       env:
         GH_TOKEN: ${{ github.token }}
-      if: steps.cache.outputs.cache-hit
+      if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
       # Using `--repo` makes it so that this step doesn't require checking out the
       # repo first.
       run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
