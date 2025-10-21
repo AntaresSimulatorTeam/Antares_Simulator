@@ -18,7 +18,10 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
+
+#include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
@@ -428,6 +431,12 @@ BOOST_AUTO_TEST_CASE(dualExpression)
     BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
     auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
     BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
+
+    std::string badExpression = "dual(abc)";
+    BOOST_CHECK_EXCEPTION(converter.run(badExpression),
+                          std::runtime_error,
+                          checkMessage(
+                            "Model doesn't contains this constraint in dual function: abc"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
@@ -450,4 +459,10 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
     BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
     auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
     BOOST_CHECK_EQUAL(reducedCostNode->value(), "varP");
+
+    std::string badExpression = "reduced_cost(abc)";
+    BOOST_CHECK_EXCEPTION(converter.run(badExpression),
+                          std::runtime_error,
+                          checkMessage(
+                            "Model doesn't contains this variable in reduced_cost function: abc"));
 }

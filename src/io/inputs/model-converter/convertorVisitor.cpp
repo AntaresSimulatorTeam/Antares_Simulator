@@ -131,7 +131,7 @@ class NoVariableWithThisName final: public std::runtime_error
 {
 public:
     explicit NoVariableWithThisName(const std::string& name):
-        runtime_error("No variable in reduced_cost function: " + name)
+        runtime_error("Model doesn't contains this variable in reduced_cost function: " + name)
     {
     }
 };
@@ -140,7 +140,7 @@ class NoConstraintWithThisName final: public std::runtime_error
 {
 public:
     explicit NoConstraintWithThisName(const std::string& name):
-        runtime_error("No constraint in dual function: " + name)
+        runtime_error("Model doesn't contains this constraint in dual function: " + name)
     {
     }
 };
