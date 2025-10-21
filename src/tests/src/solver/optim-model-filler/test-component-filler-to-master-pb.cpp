@@ -27,19 +27,63 @@ Expression createLiteral(std::string name, double value, Registry<Nodes::Node>& 
     return Expression(name, std::move(node_registry));
 }
 
+class VariablesCreator
+{
+public:
+    explicit VariablesCreator(Registry<Nodes::Node>& nodeRegistry):
+        nodeRegistry_(nodeRegistry)
+    {
+    }
+
+    virtual std::vector<Variable> create() = 0;
+protected:
+    Registry<Nodes::Node>& nodeRegistry_;
+};
+
+class TwoClassicVariablesCreator: public VariablesCreator
+{
+    using VariablesCreator::VariablesCreator;
+public:
+    std::vector<Variable> create() override
+    {
+        Variable var_1("var-1",
+                       createLiteral("low-bound", 0., nodeRegistry_),
+                       createLiteral("up-bound", 1., nodeRegistry_),
+                       ValueType::FLOAT,
+                       TimeDependent::NO,
+                       ScenarioDependent::NO,
+                       Config::Location::SUBPROBLEMS);
+        Variable var_2("var-2",
+                       createLiteral("low-bound", 0., nodeRegistry_),
+                       createLiteral("up-bound", 1., nodeRegistry_),
+                       ValueType::FLOAT,
+                       TimeDependent::NO,
+                       ScenarioDependent::NO,
+                       Config::Location::MASTER);
+
+        std::vector<Variable> variables;
+        variables.emplace_back(std::move(var_1));
+        variables.emplace_back(std::move(var_2));
+        return variables;
+    }
+};
+
 struct FactoryFixture
 {
     FactoryFixture():
         linear_pb(false, "sirius"),
         optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo)
     {
-        createTwoVariables();
+    }
+
+    void initialize(std::unique_ptr<VariablesCreator> varCreator)
+    {
+        variables = varCreator->create();
         createModel();
         createComponent();
         setOptimEntityContainer();
     }
 
-    void createTwoVariables();
     void createModel();
     void createComponent();
     void setOptimEntityContainer();
@@ -48,7 +92,7 @@ struct FactoryFixture
     std::vector<Variable> variables;
     Model model;
     // We define a component under the form of a smart ptr because class Component default
-    // constructor is forbidden
+    // constructor is forbidden, so we can't have : Component component;
     std::unique_ptr<Component> component;
     OrtoolsLinearProblem linear_pb;
 
@@ -58,28 +102,6 @@ struct FactoryFixture
 
     FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
 };
-
-void FactoryFixture::createTwoVariables()
-{
-    Variable var_1("var-1",
-                   createLiteral("low-bound", 0., nodeRegistry),
-                   createLiteral("up-bound", 1., nodeRegistry),
-                   ValueType::FLOAT,
-                   TimeDependent::NO,
-                   ScenarioDependent::NO,
-                   Config::Location::SUBPROBLEMS);
-
-    Variable var_2("var-2",
-                   createLiteral("low-bound", 0., nodeRegistry),
-                   createLiteral("up-bound", 1., nodeRegistry),
-                   ValueType::FLOAT,
-                   TimeDependent::NO,
-                   ScenarioDependent::NO,
-                   Config::Location::MASTER);
-
-    variables.emplace_back(std::move(var_1));
-    variables.emplace_back(std::move(var_2));
-}
 
 void FactoryFixture::createModel()
 {
@@ -106,6 +128,7 @@ BOOST_FIXTURE_TEST_SUITE(add_variables_to_master_linear_problem, FactoryFixture)
 BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_variables)
 {
     // Arrange
+    initialize(std::make_unique<TwoClassicVariablesCreator>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
@@ -120,6 +143,7 @@ BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_var
 BOOST_AUTO_TEST_CASE(adding_variables_to_classic_pb_actually_adds_only_subproblem_variables)
 {
     // Arrange
+    initialize(std::make_unique<TwoClassicVariablesCreator>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
