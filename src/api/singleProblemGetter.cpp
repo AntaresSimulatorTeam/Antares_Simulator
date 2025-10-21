@@ -146,41 +146,51 @@ Details::YearlyData SingleProblemGetter::getYearlyData(unsigned year)
     hydroManagement.makeVentilation(hydroReservoirLevel, year, scratchmap);
     dataForYear.ventilationResults = hydroManagement.ventilationResults();
 
-    // Compute hydro levels from ventilation results
-    // WeeklyGeneratingModulation is IGNORED (for independence)
+    const auto& calendar = study_->calendar;
+
     int areaIndex = 0;
-    const uint weekFirstDay = study_->calendar.hours[hourInTheYear].dayYear;
     for (const auto& [_, area]: study_->areas)
     {
         auto inflows = area->hydro.series->storage.getColumn(year);
-        const auto& calendar = study_->calendar;
+        auto& level = dataForYear.hydroLevels[area];
 
-        auto getWeekInflows = [&](int week)
+        // Initialize first week level
+        uint firstDay = calendar.weeks[0].daysYear.first;
+        level[0] = dataForYear.ventilationResults[areaIndex].NiveauxReservoirsDebutJours[firstDay]
+                   * area->hydro.reservoirCapacity;
+
+        // Compute sums for first week to use in week 1
+        double inflowsPrevWeek = 0.0, turbinedPrevWeek = 0.0;
+        for (uint day = calendar.weeks[0].daysYear.first; day < calendar.weeks[0].daysYear.end;
+             ++day)
         {
-            double ret = 0;
+            inflowsPrevWeek += inflows[day];
+            turbinedPrevWeek += dataForYear.ventilationResults[areaIndex]
+                                  .HydrauliqueModulableQuotidien[day];
+        }
+
+        // Loop over remaining weeks
+        for (unsigned week = 1; week < calendar.maxWeeksInYear; ++week)
+        {
+            // Update level using previous week values
+            level[week] = level[week - 1] + inflowsPrevWeek - turbinedPrevWeek;
+
+            // Compute sums for this week to use next iteration
+            inflowsPrevWeek = 0.0;
+            turbinedPrevWeek = 0.0;
             for (uint day = calendar.weeks[week].daysYear.first;
                  day < calendar.weeks[week].daysYear.end;
                  ++day)
             {
-                ret += inflows[day];
+                inflowsPrevWeek += inflows[day];
+                turbinedPrevWeek += dataForYear.ventilationResults[areaIndex]
+                                      .HydrauliqueModulableQuotidien[day];
             }
-            return ret;
-        };
 
-        auto& level = dataForYear.hydroLevels[area];
-        level[0] = dataForYear.ventilationResults[areaIndex]
-                     .NiveauxReservoirsDebutJours[weekFirstDay]
-                   * area->hydro.reservoirCapacity;
-        for (unsigned week = 1; week < calendar.maxWeeksInYear - 1; week++)
-        {
-            level[week] = level[week - 1];
-            for (int day = 0; day < 7; ++day)
-            {
-                level[week] -= dataForYear.ventilationResults[areaIndex]
-                                 .HydrauliqueModulableQuotidien[day]; // Subtract turbined
-                level[week] += getWeekInflows(week);                  // Add inflows
-            }
+            logs.notice() << "week=" << week << " prevInflows=" << inflowsPrevWeek
+                          << " prevTurbined=" << turbinedPrevWeek << " level=" << level[week];
         }
+
         areaIndex++;
     }
 
@@ -195,6 +205,15 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     pb_.weekInTheYear = week;
 
     auto [hydroLevels, randomForParallelYears, ventilationResults] = getYearlyData(year);
+
+    for (const auto& [area, levels]: hydroLevels)
+    {
+        logs.notice() << "Levels for " << area->name;
+        for (double x: levels)
+        {
+            logs.notice() << x;
+        }
+    }
 
     auto scratchmap = study_->areas.buildScratchMap(numSpace);
 

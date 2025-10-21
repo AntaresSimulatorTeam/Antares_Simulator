@@ -16,7 +16,7 @@ namespace Details
 {
 struct YearlyData
 {
-    std::map<const Antares::Data::Area*, std::array<double, 52 /* TODO */>> hydroLevels;
+    std::map<const Antares::Data::Area*, std::array<double, 53 /* TODO */>> hydroLevels;
     std::optional<Antares::Solver::Simulation::randomNumbers>
       randomForParallelYears; // Allow the use of std::optional<T>::emplace for delayed building
     Antares::HYDRO_VENTILATION_RESULTS ventilationResults;
