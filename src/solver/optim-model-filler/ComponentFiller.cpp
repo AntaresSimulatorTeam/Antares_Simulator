@@ -366,11 +366,9 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
     Optimisation::ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
-    const auto& modelConstraints = component_.getModel()->Constraints();
-    for (auto constraintLocalIndex = 0; constraintLocalIndex < modelConstraints.size();
-         ++constraintLocalIndex)
+    const auto& contraints = component_.getModel()->Constraints();
+    for (const auto& constraint: contraints)
     {
-        const auto& constraint = modelConstraints[constraintLocalIndex];
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
         const auto timeIndex = getConstraintTimeIndex(root_node, component_);
