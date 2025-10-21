@@ -3,14 +3,14 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 #include "antares/study/system-model/variable.h"
-#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
-#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
-#include "antares/solver/optim-model-filler/ComponentFiller.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Expressions;
@@ -27,7 +27,7 @@ Expression createLiteral(std::string name, double value, Registry<Nodes::Node>& 
     return Expression(name, std::move(node_registry));
 }
 
-BOOST_AUTO_TEST_CASE(dummy)
+BOOST_AUTO_TEST_CASE(add_variables_to_master_pb_actually_adds_master_located_variables)
 {
     // ======================
     // Step : arrange
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(dummy)
 
     // Creating an empty linear problem
     OrtoolsLinearProblem linear_pb(false, "sirius");
-    
+
     // Creating an OptimEntityContainer
     LinearProblemData dummy_data;
     ScenarioGroupRepository scenario_group_repo;
