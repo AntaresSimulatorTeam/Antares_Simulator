@@ -127,6 +127,24 @@ public:
     }
 };
 
+class NoVariableWithThisName final: public std::runtime_error
+{
+public:
+    explicit NoVariableWithThisName(const std::string& name):
+        runtime_error("No variable in reduced_cost function: " + name)
+    {
+    }
+};
+
+class NoConstraintWithThisName final: public std::runtime_error
+{
+public:
+    explicit NoConstraintWithThisName(const std::string& name):
+        runtime_error("No constraint in dual function: " + name)
+    {
+    }
+};
+
 // to silent warning, convert bool to unsigned int
 static constexpr unsigned int convertBool(bool in)
 {
@@ -341,12 +359,26 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
 
 std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
 {
-    throw NotImplemented("Node function not implemented yet");
+    for (const auto& c : model_.constraints)
+    {
+        if (c.id == context->IDENTIFIER()->getText())
+        {
+            return static_cast<Node*>(registry_.create<DualNode>(c.id));
+        }
+    }
+    throw NoConstraintWithThisName(context->IDENTIFIER()->getText());
 }
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* context)
 {
-    throw NotImplemented("Node function not implemented yet");
+    for (const auto& v: model_.variables)
+    {
+        if (v.id == context->IDENTIFIER()->getText())
+        {
+            return static_cast<Node*>(registry_.create<ReducedCostNode>(v.id));
+        }
+    }
+    throw NoVariableWithThisName(context->IDENTIFIER()->getText());
 }
 
 // TODO implement this
