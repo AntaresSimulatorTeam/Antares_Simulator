@@ -36,7 +36,7 @@ public:
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
 
 private:
-    Details::YearlyData getYearlyData(unsigned year);
+    const Details::YearlyData& getYearlyData(unsigned year);
 
     HebdoProblemToLpsTranslator translator_;
     std::unique_ptr<Antares::Data::Study> study_;

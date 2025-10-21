@@ -88,7 +88,7 @@ void prepareClustersInMustRunMode(const Antares::Data::Study& study,
     }
 }
 
-Details::YearlyData SingleProblemGetter::getYearlyData(unsigned year)
+const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
 {
     // TODO Use std::find for a single search
     if (allData_.contains(year)) // We already have data for this year
@@ -106,8 +106,10 @@ Details::YearlyData SingleProblemGetter::getYearlyData(unsigned year)
                                              resultWriter);
 
     int nbYears = 0;
+    std::map<unsigned int, bool> isYearPerformed; // TODO check year number
     for (uint year = 0; year < study_->parameters.nbYears; ++year)
     {
+        isYearPerformed[year] = study_->parameters.yearsFilter[year];
         if (study_->parameters.yearsFilter[year])
         {
             ++nbYears;
@@ -119,7 +121,6 @@ Details::YearlyData SingleProblemGetter::getYearlyData(unsigned year)
 
     randomForParallelYears.emplace(nbYears, study_->parameters.power.fluctuations);
     randomForParallelYears->allocate(*study_);
-    std::map<unsigned int, bool> isYearPerformed{{0, true}}; // TODO check year number
 
     MersenneTwister randomHydroGenerator;
     randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
@@ -206,15 +207,13 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 
     auto [hydroLevels, randomForParallelYears, ventilationResults] = getYearlyData(year);
 
-    for (const auto& [area, levels]: hydroLevels)
+    // Apply hydro levels
+    for (uint areaIndex = 0; areaIndex < study_->areas.size(); ++areaIndex)
     {
-        logs.notice() << "Levels for " << area->name;
-        for (double x: levels)
-        {
-            logs.notice() << x;
-        }
+        const auto* area = study_->areas.byIndex[areaIndex];
+        double initialLevel = hydroLevels[area][week];
+        pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
     }
-
     auto scratchmap = study_->areas.buildScratchMap(numSpace);
 
     const auto hourInTheYear = 168 * week; // TODO
