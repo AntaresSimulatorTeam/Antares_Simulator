@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "timer.h"
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 inline uint Timer::interval() const
 {
@@ -32,5 +31,4 @@ inline void Timer::reload()
     pShouldReload = 1;
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

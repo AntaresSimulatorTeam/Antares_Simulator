@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -516,7 +516,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
 
     // Add all alpha values for each area
     areas.each(
-      [&allSections, &buffer, &folder, &hydroPmax, &ret](const Data::Area& area)
+      [&allSections, &buffer, &folder, &hydroPmax, &ret](Data::Area& area)
       {
           allSections.s->add(area.id, area.hydro.interDailyBreakdown);
           allSections.smod->add(area.id, area.hydro.intraDailyModulation);
@@ -574,9 +574,24 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
           }
           else
           {
+              // we convert hourly TS into daily by averaging
+              Matrix<> genMaxP = area.hydro.series->getDailyMaxGenPowerFromHourlyTS();
+              Matrix<> pumpMaxP = area.hydro.series->getDailyMaxPumpPowerFromHourlyTS();
+
+              area.hydro.dailyMaxPumpAndGen.reset(4, DAYS_PER_YEAR);
+              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::genMaxP,
+                                                          genMaxP[0]);
+              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::genMaxE,
+                                                          area.hydro.dailyNbHoursAtGenPmax[0]);
+              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::pumpMaxP,
+                                                          pumpMaxP[0]);
+              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::pumpMaxE,
+                                                          area.hydro.dailyNbHoursAtPumpPmax[0]);
               buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
                              << area.id << ".txt";
               ret = area.hydro.dailyMaxPumpAndGen.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+
+              area.hydro.series->buildHourlyMaxPowerFromDailyTS(genMaxP[0], pumpMaxP[0]);
           }
 
           // credit modulations

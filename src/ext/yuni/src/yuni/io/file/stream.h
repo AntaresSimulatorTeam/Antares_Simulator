@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,19 +10,16 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
-#include "../../core/static/assert.h"
-#include "../../core/string.h"
-#include "../../core/static/remove.h"
-#include "../../core/noncopyable.h"
-#include "openmode.h"
 #include <stdio.h>
 
-namespace Yuni
-{
-namespace IO
-{
-namespace File
+#include "../../core/noncopyable.h"
+#include "../../core/static/assert.h"
+#include "../../core/static/remove.h"
+#include "../../core/string.h"
+#include "../../yuni.h"
+#include "openmode.h"
+
+namespace Yuni::IO::File
 {
 /*!
 ** \brief Seek origin
@@ -77,7 +75,7 @@ enum SeekOrigin
 **   routines 'fopen', 'fclose'... The implementation is a bit different on Windows
 **   because 'fopen' only handles ansi filenames.
 */
-class Stream final : private NonCopyable<Stream>
+class Stream final: private NonCopyable<Stream>
 {
 public:
     //! The native handle type
@@ -429,8 +427,6 @@ private:
 
 }; // class Stream
 
-} // namespace File
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::File
 
 #include "stream.hxx"

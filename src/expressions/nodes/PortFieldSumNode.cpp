@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -23,7 +23,6 @@
 namespace Antares::Expressions::Nodes
 {
 PortFieldSumNode::PortFieldSumNode(const std::string& port_name, const std::string& field_name):
-    Hashable(port_name_, field_name_),
     port_name_(port_name),
     field_name_(field_name)
 {

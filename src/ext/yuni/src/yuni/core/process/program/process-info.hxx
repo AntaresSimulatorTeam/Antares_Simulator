@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,20 +12,18 @@
 #pragma once
 #include "process-info.h"
 
-namespace Yuni
+namespace Yuni::Process
 {
-namespace Process
-{
-inline Program::ProcessSharedInfo::ProcessSharedInfo() :
- running(false),
- processID(-1),
- processInput(-1),
- duration(0),
- durationPrecision(dpSeconds),
- timeout(),
- exitstatus(-1),
- redirectToConsole(false),
- timeoutThread(nullptr)
+inline Program::ProcessSharedInfo::ProcessSharedInfo():
+    running(false),
+    processID(-1),
+    processInput(-1),
+    duration(0),
+    durationPrecision(dpSeconds),
+    timeout(),
+    exitstatus(-1),
+    redirectToConsole(false),
+    timeoutThread(nullptr)
 {
 }
 
@@ -52,8 +51,10 @@ void QuitProcess(DWORD processID)
         DWORD windowProcessID;
         DWORD threadID = ::GetWindowThreadProcessId(hwnd, &windowProcessID);
         if (windowProcessID == processID)
+        {
             // Send WM_QUIT to the process thread
             ::PostThreadMessage(threadID, WM_QUIT, 0, 0);
+        }
     }
 }
 
@@ -65,11 +66,15 @@ template<bool WithLock>
 inline bool Program::ProcessSharedInfo::sendSignal(int sigvalue)
 {
     if (WithLock)
+    {
         mutex.lock();
+    }
     if (0 == running)
     {
         if (WithLock)
+        {
             mutex.unlock();
+        }
         return false;
     }
 
@@ -77,9 +82,13 @@ inline bool Program::ProcessSharedInfo::sendSignal(int sigvalue)
     {
         const pid_t pid = static_cast<pid_t>(processID);
         if (WithLock)
+        {
             mutex.unlock();
+        }
         if (pid > 0)
+        {
             return (0 == ::kill(pid, sigvalue));
+        }
     }
 #else
     {
@@ -92,7 +101,9 @@ inline bool Program::ProcessSharedInfo::sendSignal(int sigvalue)
         }
 
         if (WithLock)
+        {
             mutex.unlock();
+        }
     }
 #endif
 
@@ -101,10 +112,12 @@ inline bool Program::ProcessSharedInfo::sendSignal(int sigvalue)
 
 namespace // anonymous
 {
-class TimeoutThread final : public Thread::IThread
+class TimeoutThread final: public Thread::IThread
 {
 public:
-    TimeoutThread(int pid, uint timeout) : timeout(timeout), pid(pid)
+    TimeoutThread(int pid, uint timeout):
+        timeout(timeout),
+        pid(pid)
     {
         assert(pid > 0);
     }
@@ -155,5 +168,4 @@ inline void Program::ProcessSharedInfo::createThreadForTimeoutWL()
     }
 }
 
-} // namespace Process
-} // namespace Yuni
+} // namespace Yuni::Process

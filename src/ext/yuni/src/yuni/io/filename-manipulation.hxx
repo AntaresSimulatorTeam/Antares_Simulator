@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,23 +12,15 @@
 #pragma once
 #include "directory.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 // Forward declaration
 template<typename C>
 struct Constant;
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 inline bool IsRelative(const AnyString& filename)
 {
@@ -138,5 +131,4 @@ bool ReplaceExtension(StringT1& filename, const StringT2& newExtension)
     return false;
 }
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

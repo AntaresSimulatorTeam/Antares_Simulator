@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "complex.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace IStringImpl
+namespace Yuni::Private::IStringImpl
 {
 // std::complex
 template<class MemBufT, class U>
@@ -27,6 +24,4 @@ struct YUNI_DECL Append<MemBufT, std::complex<U>> final
     }
 };
 
-} // namespace IStringImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::IStringImpl

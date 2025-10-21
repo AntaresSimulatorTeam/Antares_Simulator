@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/antares/antares.h"
 #include "constraintsbuilder.h"
@@ -61,9 +61,7 @@ using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 namespace // anonymous
 {
@@ -73,23 +71,25 @@ BEGIN_EVENT_TABLE(ConstraintsBuilderWizard, wxDialog)
 
 END_EVENT_TABLE()
 
-ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Constraints Builder"),
-          wxDefaultPosition,
-          wxSize(800, 420),
-          wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
- pProceedTimer(nullptr)
+ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Constraints Builder"),
+             wxDefaultPosition,
+             wxSize(800, 420),
+             wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN),
+    pProceedTimer(nullptr)
 {
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
     // Header
-    mainSizer->Add(
-      Toolbox::Components::WizardHeader::Create(
-        this, wxT("Kirchhoff's constraints generator"), "images/32x32/network.png", wxT("")),
-      0,
-      wxALL | wxEXPAND | wxFIXED_MINSIZE);
+    mainSizer->Add(Toolbox::Components::WizardHeader::Create(this,
+                                                             wxT(
+                                                               "Kirchhoff's constraints generator"),
+                                                             "images/32x32/network.png",
+                                                             wxT("")),
+                   0,
+                   wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
     wxBoxSizer* s = new wxBoxSizer(wxHORIZONTAL);
 
@@ -113,10 +113,10 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         flexSz->AddSpacer(8);
         flexSz->AddSpacer(8);
 
-        auto* tmpF
-          = Component::CreateLabel(panelGenerationSettings,
-                                   wxString(wxT("   ")) << wxT("CHECK LOOP FLOW") << wxT("       "),
-                                   true);
+        auto* tmpF = Component::CreateLabel(panelGenerationSettings,
+                                            wxString(wxT("   "))
+                                              << wxT("CHECK LOOP FLOW") << wxT("       "),
+                                            true);
         tmpF->Enable(false);
         flexSz->Add(tmpF, 0, wxRIGHT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -128,11 +128,13 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
 
         pCheckNodalLoopFlow = new wxCheckBox(panelGenerationSettings, wxID_ANY, wxT(""));
         pCheckNodalLoopFlow->SetValue(true);
-        pCheckNodalLoopFlow->Bind(
-          wxEVT_CHECKBOX, &ConstraintsBuilderWizard::onCheckNodalLoopFlow, this);
+        pCheckNodalLoopFlow->Bind(wxEVT_CHECKBOX,
+                                  &ConstraintsBuilderWizard::onCheckNodalLoopFlow,
+                                  this);
         flexSz->Add(pCheckNodalLoopFlow, 0, wxALIGN_BOTTOM | wxALIGN_RIGHT);
-        flexSz->Add(Antares::Component::CreateLabel(
-                      panelGenerationSettings, wxT(" Check loop flow sum at node "), true),
+        flexSz->Add(Antares::Component::CreateLabel(panelGenerationSettings,
+                                                    wxT(" Check loop flow sum at node "),
+                                                    true),
                     0,
                     wxALIGN_BOTTOM | wxALIGN_LEFT);
         flexSz->AddSpacer(5);
@@ -155,14 +157,18 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         flexSz->AddSpacer(5);
 
         // flexSz->Add(pCheckNodalLoopFlow, 0, wxALIGN_BOTTOM | wxALIGN_RIGHT);
-        flexSz->Add(
-          Antares::Component::CreateLabel(panelGenerationSettings, wxT(" Infinite Value: "), true),
-          0,
-          wxALIGN_BOTTOM | wxALIGN_RIGHT,
-          3);
+        flexSz->Add(Antares::Component::CreateLabel(panelGenerationSettings,
+                                                    wxT(" Infinite Value: "),
+                                                    true),
+                    0,
+                    wxALIGN_BOTTOM | wxALIGN_RIGHT,
+                    3);
 
-        pInfiniteValue = new wxTextCtrl(
-          panelGenerationSettings, wxID_ANY, wxT("1000000"), wxDefaultPosition, wxSize(80, 20));
+        pInfiniteValue = new wxTextCtrl(panelGenerationSettings,
+                                        wxID_ANY,
+                                        wxT("1000000"),
+                                        wxDefaultPosition,
+                                        wxSize(80, 20));
         pInfiniteValue->Bind(wxEVT_TEXT, &ConstraintsBuilderWizard::onUpdateInfiniteValue, this);
         flexSz->Add(pInfiniteValue, 0, wxALIGN_BOTTOM | wxALIGN_LEFT, 2);
         flexSz->AddSpacer(5);
@@ -185,8 +191,10 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
     flexSz->AddSpacer(8);
     // Informations about the INPUT
     {
-        auto* label = Antares::Component::CreateLabel(
-          panelGrid, wxString(wxT("   ")) << wxT("WORKING MAP") << wxT("       "), true);
+        auto* label = Antares::Component::CreateLabel(panelGrid,
+                                                      wxString(wxT("   "))
+                                                        << wxT("WORKING MAP") << wxT("       "),
+                                                      true);
         label->Enable(false);
         flexSz->Add(label, 0, wxRIGHT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -196,8 +204,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         flexSz->AddSpacer(3);
         flexSz->AddSpacer(3);
 
-        std::string layerName
-          = GetCurrentStudy()->layers.at(GetCurrentStudy()->activeLayerID);
+        std::string layerName = GetCurrentStudy()->layers.at(GetCurrentStudy()->activeLayerID);
         mapName = Antares::Component::CreateLabel(panelGrid, wxString(layerName));
 
         flexSz->Add(Antares::Component::CreateLabel(panelGrid, wxT("Map name : "), true),
@@ -211,18 +218,21 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         flexSz->AddSpacer(30);
         flexSz->AddSpacer(30);
 
-        label = Antares::Component::CreateLabel(
-          panelGrid, wxString(wxT("   ")) << wxT("TIME FRAME") << wxT("       "), true);
+        label = Antares::Component::CreateLabel(panelGrid,
+                                                wxString(wxT("   "))
+                                                  << wxT("TIME FRAME") << wxT("       "),
+                                                true);
         label->Enable(false);
         flexSz->Add(label, 0, wxRIGHT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         flexSz->AddSpacer(5);
         flexSz->AddSpacer(5);
 
-        flexSz->Add(
-          Antares::Component::CreateLabel(
-            panelGrid, wxString(wxT("   ")) << wxString(wxT("   ")) << wxT("From hour : "), true),
-          0,
-          wxALIGN_BOTTOM | wxALIGN_RIGHT);
+        flexSz->Add(Antares::Component::CreateLabel(panelGrid,
+                                                    wxString(wxT("   ")) << wxString(wxT("   "))
+                                                                         << wxT("From hour : "),
+                                                    true),
+                    0,
+                    wxALIGN_BOTTOM | wxALIGN_RIGHT);
         wxBoxSizer* hS = new wxBoxSizer(wxHORIZONTAL);
         wxBoxSizer* vS = new wxBoxSizer(wxVERTICAL);
         hS->AddSpacer(5);
@@ -240,10 +250,14 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         /*auto btn = new Component::Button(this,"", "images/16x16/hour_pref.png");
         btn->enabled(false);
         hS->Add(btn);*/
-        startingHourCtrl
-          = new wxTextCtrl(panelGrid, wxID_ANY, wxT("1"), wxDefaultPosition, wxSize(40, 20));
-        startingHourCtrl->Bind(
-          wxEVT_TEXT, &ConstraintsBuilderWizard::updateBeginningHourLabel, this);
+        startingHourCtrl = new wxTextCtrl(panelGrid,
+                                          wxID_ANY,
+                                          wxT("1"),
+                                          wxDefaultPosition,
+                                          wxSize(40, 20));
+        startingHourCtrl->Bind(wxEVT_TEXT,
+                               &ConstraintsBuilderWizard::updateBeginningHourLabel,
+                               this);
         vS->Add(startingHourCtrl, 0, wxALIGN_CENTER);
         hS->Add(vS, 0, wxALIGN_LEFT);
         hS->AddSpacer(5);
@@ -267,8 +281,11 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         /*btn = new Component::Button(this, "", "images/16x16/hour_pref.png");
         btn->enabled(false);
         hS->Add(btn);*/
-        endHourCtrl
-          = new wxTextCtrl(panelGrid, wxID_ANY, wxT("8760"), wxDefaultPosition, wxSize(40, 20));
+        endHourCtrl = new wxTextCtrl(panelGrid,
+                                     wxID_ANY,
+                                     wxT("8760"),
+                                     wxDefaultPosition,
+                                     wxSize(40, 20));
         endHourCtrl->Bind(wxEVT_TEXT, &ConstraintsBuilderWizard::updateEndHourLabel, this);
         vS->Add(endHourCtrl, 0, wxALIGN_CENTER);
         hS->Add(vS);
@@ -284,8 +301,10 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         flexSz->AddSpacer(30);
         flexSz->AddSpacer(30);
 
-        label = Antares::Component::CreateLabel(
-          panelGrid, wxString(wxT("   ")) << wxT("LOOP FLOW") << wxT("       "), true);
+        label = Antares::Component::CreateLabel(panelGrid,
+                                                wxString(wxT("   "))
+                                                  << wxT("LOOP FLOW") << wxT("       "),
+                                                true);
         label->Enable(false);
         flexSz->Add(label, 0, wxRIGHT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         flexSz->AddSpacer(5);
@@ -299,13 +318,15 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         {
             pIncludeLoopFlow = new wxCheckBox(panelGrid, wxID_ANY, wxT(""));
             pIncludeLoopFlow->SetValue(false);
-            pIncludeLoopFlow->Bind(
-              wxEVT_CHECKBOX, &ConstraintsBuilderWizard::onIncludeLoopFlow, this);
+            pIncludeLoopFlow->Bind(wxEVT_CHECKBOX,
+                                   &ConstraintsBuilderWizard::onIncludeLoopFlow,
+                                   this);
             flexSz->Add(pIncludeLoopFlow, 0, wxALIGN_BOTTOM | wxALIGN_RIGHT);
-            flexSz->Add(
-              Antares::Component::CreateLabel(panelGrid, wxT(" Include passive Loop Flows "), true),
-              0,
-              wxALIGN_BOTTOM | wxALIGN_LEFT);
+            flexSz->Add(Antares::Component::CreateLabel(panelGrid,
+                                                        wxT(" Include passive Loop Flows "),
+                                                        true),
+                        0,
+                        wxALIGN_BOTTOM | wxALIGN_LEFT);
             flexSz->AddSpacer(5);
         }
 
@@ -313,11 +334,13 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         {
             pIncludePhaseShifts = new wxCheckBox(panelGrid, wxID_ANY, wxT(""));
             pIncludePhaseShifts->SetValue(false);
-            pIncludePhaseShifts->Bind(
-              wxEVT_CHECKBOX, &ConstraintsBuilderWizard::onUsePhaseShift, this);
+            pIncludePhaseShifts->Bind(wxEVT_CHECKBOX,
+                                      &ConstraintsBuilderWizard::onUsePhaseShift,
+                                      this);
             flexSz->Add(pIncludePhaseShifts, 0, wxALIGN_BOTTOM | wxALIGN_RIGHT);
-            flexSz->Add(Antares::Component::CreateLabel(
-                          panelGrid, wxT(" Include active phase-shifts "), true),
+            flexSz->Add(Antares::Component::CreateLabel(panelGrid,
+                                                        wxT(" Include active phase-shifts "),
+                                                        true),
                         0,
                         wxALIGN_BOTTOM | wxALIGN_LEFT);
             flexSz->AddSpacer(5);
@@ -353,8 +376,12 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
     pRenderer->study = GetCurrentStudy();
     pRenderer->initializeFromStudy();
 
-    pGrid
-      = new Component::Datagrid::Component(panelGrid, pRenderer, wxEmptyString, false, true, true);
+    pGrid = new Component::Datagrid::Component(panelGrid,
+                                               pRenderer,
+                                               wxEmptyString,
+                                               false,
+                                               true,
+                                               true);
     pGrid->markTheStudyAsModified(false);
     pGrid->Enable(false);
 
@@ -386,14 +413,18 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
     // Buttons
     wxBoxSizer* bottomSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    wxWindow* pBtnDelete
-      = Component::CreateButton(this, wxT(" Reset "), this, &ConstraintsBuilderWizard::onDelete);
+    wxWindow* pBtnDelete = Component::CreateButton(this,
+                                                   wxT(" Reset "),
+                                                   this,
+                                                   &ConstraintsBuilderWizard::onDelete);
     bottomSizer->Add(pBtnDelete, 0, wxALL | wxEXPAND);
     pBtnDelete->Enable(pDelete);
 
     bottomSizer->AddSpacer(5);
-    wxWindow* pBtnStatus = Component::CreateButton(
-      this, wxT(" Show Status "), this, &ConstraintsBuilderWizard::onUpdateLinesStatus);
+    wxWindow* pBtnStatus = Component::CreateButton(this,
+                                                   wxT(" Show Status "),
+                                                   this,
+                                                   &ConstraintsBuilderWizard::onUpdateLinesStatus);
     bottomSizer->Add(pBtnStatus, 0, wxALL | wxEXPAND);
     pBtnStatus->Enable(true);
 
@@ -405,15 +436,19 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
     bottomSizer->AddSpacer(5);
 
     bottomSizer->AddSpacer(5);
-    wxWindow* pBtnBuild
-      = Component::CreateButton(this, wxT(" Run "), this, &ConstraintsBuilderWizard::onBuild);
+    wxWindow* pBtnBuild = Component::CreateButton(this,
+                                                  wxT(" Run "),
+                                                  this,
+                                                  &ConstraintsBuilderWizard::onBuild);
     bottomSizer->Add(pBtnBuild, 0, wxALL | wxEXPAND);
     pBtnBuild->Enable(true);
 
     bottomSizer->AddSpacer(5);
 
-    wxWindow* btnCancel
-      = Component::CreateButton(this, wxT(" Cancel "), this, &ConstraintsBuilderWizard::onCancel);
+    wxWindow* btnCancel = Component::CreateButton(this,
+                                                  wxT(" Cancel "),
+                                                  this,
+                                                  &ConstraintsBuilderWizard::onCancel);
     bottomSizer->Add(btnCancel, 0, wxALL | wxEXPAND);
 
     mainSizer->Add(bottomSizer, 0, wxALIGN_RIGHT | wxALL, 5);
@@ -524,7 +559,9 @@ void ConstraintsBuilderWizard::onBuild(void*)
 {
     // Check for restrictions
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
 
     if (StudyHasBeenModified())
     {
@@ -597,10 +634,14 @@ void ConstraintsBuilderWizard::onDelete(void*)
 {
     // Check for restrictions
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto studyptr = GetCurrentStudy();
     if (!studyptr)
+    {
         return;
+    }
     auto& study = *studyptr;
 
     if (StudyHasBeenModified())
@@ -691,8 +732,9 @@ void ConstraintsBuilderWizard::gridAppend(wxFlexGridSizer& sizer,
     }
     else
     {
-        auto* t = Antares::Component::CreateLabel(
-          this, wxString(wxT("   ")) << title << wxT("       "), true);
+        auto* t = Antares::Component::CreateLabel(this,
+                                                  wxString(wxT("   ")) << title << wxT("       "),
+                                                  true);
         t->Enable(false);
         sizer.Add(t, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
     }
@@ -750,5 +792,4 @@ void ConstraintsBuilderWizard::updateEndHourLabel(wxEvent& /* evt */)
     pFlexSizer->Layout();
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

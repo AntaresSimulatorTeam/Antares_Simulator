@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include <memory>
 
 #include "column.h"
@@ -41,19 +41,14 @@ inline T* factory(Args... args)
 }
 } // namespace
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 // -------------------
 // Base column class
 // -------------------
-Column::Column(Antares::Data::TimeSeriesType ts, const wxString& caption) :
- tsKind_(ts), caption_(caption)
+Column::Column(Antares::Data::TimeSeriesType ts, const wxString& caption):
+    tsKind_(ts),
+    caption_(caption)
 {
 }
 
@@ -74,13 +69,17 @@ int Column::getNumberOfLines() const
 
 Column::~Column()
 {
-    for (auto& cell : cells_)
+    for (auto& cell: cells_)
+    {
         delete cell;
+    }
 }
+
 // -------------------- -
 // Classic column
 // ---------------------
-classicColumn::classicColumn(TimeSeriesType ts, const wxString& caption) : Column(ts, caption)
+classicColumn::classicColumn(TimeSeriesType ts, const wxString& caption):
+    Column(ts, caption)
 {
     cells_ = {new_check_allocation<blankCell>(),
               new_check_allocation<readyMadeTSstatus>(tsKind_),
@@ -100,7 +99,8 @@ classicColumn::classicColumn(TimeSeriesType ts, const wxString& caption) : Colum
 // -------------------
 //  Thermal column
 // -------------------
-thermalColumn::thermalColumn() : Column(timeSeriesThermal, "   Thermal   ")
+thermalColumn::thermalColumn():
+    Column(timeSeriesThermal, "   Thermal   ")
 {
     cells_ = {new_check_allocation<blankCell>(),
               new_check_allocation<readyMadeTSstatus>(tsKind_),
@@ -120,7 +120,8 @@ thermalColumn::thermalColumn() : Column(timeSeriesThermal, "   Thermal   ")
 // -------------------------------
 // Column renewable clusters
 // -------------------------------
-ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable, "   Renewable   ")
+ColumnRenewableClusters::ColumnRenewableClusters():
+    Column(timeSeriesRenewable, "   Renewable   ")
 {
     cells_ = {new_check_allocation<blankCell>(),
               new_check_allocation<inactiveCell>(wxT("On")),
@@ -140,7 +141,8 @@ ColumnRenewableClusters::ColumnRenewableClusters() : Column(timeSeriesRenewable,
 // -------------------------------
 // Column for NTC
 // -------------------------------
-ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "  Links NTC  ")
+ColumnNTC::ColumnNTC():
+    Column(timeSeriesTransmissionCapacities, "  Links NTC  ")
 {
     cells_ = {new_check_allocation<blankCell>(),
               new_check_allocation<inactiveCell>(wxT("On")),
@@ -156,7 +158,4 @@ ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "  Links NTC  
               new_check_allocation<intraModalCell>(tsKind_),
               new_check_allocation<inactiveCell>(wxT("-"))};
 }
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

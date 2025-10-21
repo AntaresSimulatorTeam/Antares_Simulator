@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
@@ -5,40 +6,33 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class TwoVarsTwoConstraintsFiller: public LinearProblemFiller
+class TwoVarsTwoConstraintsFiller final: public LinearProblemFiller
 {
 public:
-    explicit TwoVarsTwoConstraintsFiller() = default;
-    void addVariables(ILinearProblem& pb,
-                      ILinearProblemData& data,
-                      const FillContext& ctx) override;
-    void addConstraints(ILinearProblem& pb,
-                        ILinearProblemData& data,
-                        const FillContext& ctx) override;
-    void addObjective(ILinearProblem& pb,
-                      ILinearProblemData& data,
-                      const FillContext& ctx) override;
+    explicit TwoVarsTwoConstraintsFiller(OptimEntityContainer& optimEntityContainer):
+        optimEntityContainer_(optimEntityContainer)
+    {
+    }
+
+    void addVariables(const FillContext& ctx) override;
+    void addConstraints(const FillContext& ctx) override;
+    void addObjective(const FillContext& ctx) override;
+    OptimEntityContainer& optimEntityContainer_;
 };
 
-void TwoVarsTwoConstraintsFiller::addVariables(ILinearProblem& pb,
-                                               [[maybe_unused]] ILinearProblemData& data,
-                                               [[maybe_unused]] const FillContext& ctx)
+void TwoVarsTwoConstraintsFiller::addVariables([[maybe_unused]] const FillContext& ctx)
 {
-    pb.addNumVariable(0, 1, "var-1-by-TwoVarsTwoConstraintsFiller");
-    pb.addNumVariable(0, 3, "var-2-by-TwoVarsTwoConstraintsFiller");
+    optimEntityContainer_.Problem().addNumVariable(0, 1, "var-1-by-TwoVarsTwoConstraintsFiller");
+    optimEntityContainer_.Problem().addNumVariable(0, 3, "var-2-by-TwoVarsTwoConstraintsFiller");
 }
 
-void TwoVarsTwoConstraintsFiller::addConstraints(ILinearProblem& pb,
-                                                 [[maybe_unused]] ILinearProblemData& data,
-                                                 [[maybe_unused]] const FillContext& ctx)
+void TwoVarsTwoConstraintsFiller::addConstraints([[maybe_unused]] const FillContext& ctx)
 {
-    pb.addConstraint(1, 2, "constr-1-by-TwoVarsTwoConstraintsFiller");
-    pb.addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
+    optimEntityContainer_.Problem().addConstraint(1, 2, "constr-1-by-TwoVarsTwoConstraintsFiller");
+    optimEntityContainer_.Problem().addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
 }
 
-void TwoVarsTwoConstraintsFiller::addObjective([[maybe_unused]] ILinearProblem& pb,
-                                               [[maybe_unused]] ILinearProblemData& data,
-                                               [[maybe_unused]] const FillContext& ctx)
+void TwoVarsTwoConstraintsFiller::addObjective([[maybe_unused]] const FillContext& ctx)
 {
 }
 

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include <cstdlib>
 #include <stdexcept>
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \brief Singleton lifetime policies
@@ -114,5 +113,4 @@ static void SetLongevity(T* /*pInstance*/, uint /*longevity*/)
 } // namespace Private
 
 } // namespace Lifetime
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

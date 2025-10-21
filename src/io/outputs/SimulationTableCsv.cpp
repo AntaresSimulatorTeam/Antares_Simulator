@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -71,12 +71,6 @@ void SimulationTableCsv::writeHeader()
 }
 
 const std::string NONE = "None";
-
-template<typename T>
-std::string extractFromOptional(const std::optional<T>& option)
-{
-    return option.has_value() ? std::to_string(option.value()) : NONE;
-}
 
 void SimulationTableCsv::write()
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -341,7 +341,7 @@ struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
     }
 };
 
-struct NullWriterExtension: Solver::NullResultWriter
+struct NullWriterExtension final: Solver::NullResultWriter
 {
     // hack to read variables and constraints names
     void addEntryFromFile(const std::filesystem::path& entryPath,

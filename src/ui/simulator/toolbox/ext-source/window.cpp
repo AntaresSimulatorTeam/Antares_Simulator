@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include "window.h"
@@ -37,17 +37,15 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 namespace // anonymous
 {
-class ActionsScrollWindow : public wxScrolledWindow
+class ActionsScrollWindow: public wxScrolledWindow
 {
 public:
-    explicit ActionsScrollWindow(wxWindow* parent) :
-     wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL)
+    explicit ActionsScrollWindow(wxWindow* parent):
+        wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL)
     {
         SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
     }
@@ -58,6 +56,7 @@ public:
 
 private:
     void onDraw(wxPaintEvent&);
+
     void onChildFocus(wxChildFocusEvent& evt)
     {
         evt.Skip();
@@ -75,12 +74,16 @@ void ActionsScrollWindow::onDraw(wxPaintEvent&)
     // The DC
     wxAutoBufferedPaintDC dc(this);
     if (!dc.IsOk())
+    {
         return;
+    }
     // Shifts the device origin so we don't have to worry
     // about the current scroll position ourselves
     PrepareDC(dc);
     if (!dc.IsOk())
+    {
         return;
+    }
 
     using ActionPanel = Antares::Private::Window::ActionPanel;
     ActionPanel::DrawBackgroundWithoutItems(*this, dc, GetClientSize());
@@ -90,10 +93,10 @@ void ActionsScrollWindow::onDraw(wxPaintEvent&)
 
 ApplyActionsDialog::ApplyActionsDialog(wxWindow* parent,
                                        const Antares::Action::Context::Ptr& context,
-                                       const Antares::Action::IAction::Ptr& root) :
- wxDialog(parent, wxID_ANY, wxT("Import"), wxDefaultPosition, wxDefaultSize),
- pContext(context),
- pActions(root)
+                                       const Antares::Action::IAction::Ptr& root):
+    wxDialog(parent, wxID_ANY, wxT("Import"), wxDefaultPosition, wxDefaultSize),
+    pContext(context),
+    pActions(root)
 {
     wxColour defaultBgColor = GetBackgroundColour();
     // SetBackgroundColour(wxColour(255, 255, 255));
@@ -140,12 +143,16 @@ ApplyActionsDialog::ApplyActionsDialog(wxWindow* parent,
 
     // Button Close
     {
-        wxButton* btnCancel
-          = Component::CreateButton(panel, wxT("Cancel"), this, &ApplyActionsDialog::onCancel);
+        wxButton* btnCancel = Component::CreateButton(panel,
+                                                      wxT("Cancel"),
+                                                      this,
+                                                      &ApplyActionsDialog::onCancel);
         sizerBar->Add(btnCancel, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL, 8);
 
-        wxButton* btnPerform = Component::CreateButton(
-          panel, wxT("Paste from the clipboard"), this, &ApplyActionsDialog::onPerform);
+        wxButton* btnPerform = Component::CreateButton(panel,
+                                                       wxT("Paste from the clipboard"),
+                                                       this,
+                                                       &ApplyActionsDialog::onPerform);
         sizerBar->Add(btnPerform, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL);
 
         sizerBar->Add(15, 5);
@@ -169,11 +176,15 @@ ApplyActionsDialog::ApplyActionsDialog(wxWindow* parent,
         {
             auto& name = i->first;
             if (!name)
+            {
                 continue;
+            }
 
             auto offset = name.find(':');
             if (offset >= name.size() - 1)
+            {
                 continue;
+            }
 
             const wxString wxname = wxStringFromUTF8((const char*)name.c_str() + offset + 1);
             pNotebook->add(new Component::Panel(pNotebook), wxname, wxname);
@@ -188,9 +199,13 @@ ApplyActionsDialog::ApplyActionsDialog(wxWindow* parent,
 
     wxSize p = GetSize();
     if (p.GetHeight() < 470)
+    {
         p.SetHeight(470);
+    }
     if (p.GetWidth() < 980)
+    {
         p.SetWidth(990);
+    }
     SetSize(p);
 
     Centre(wxBOTH);
@@ -211,5 +226,4 @@ void ApplyActionsDialog::onPerform(void*)
     Dispatcher::GUI::ShowModal(form);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

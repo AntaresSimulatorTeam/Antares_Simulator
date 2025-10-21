@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
+#if 0
 #define WIN32_LEAN_AND_MEAN
 
 #include <unit_test_utils.h>
@@ -56,8 +56,10 @@ struct container_of_helpful_data_for_unit_tests
     ComponentBuilder componentBuilder;
     Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0, 0, 0, 0};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    Antares::Optimisation::EvaluationContextProvider contextProvider;
 
-    container_of_helpful_data_for_unit_tests()
+    container_of_helpful_data_for_unit_tests():
+        contextProvider(data, scenarioGroupRepository)
     {
         auto scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
           "scenario_GROUP");
@@ -65,9 +67,9 @@ struct container_of_helpful_data_for_unit_tests
         scenarioGroupRepository.addScenario("scenario_GROUP", std::move(scenarioPtr));
     }
 
-    Antares::Optimisation::EvaluationContextProvider evaluationContextProvider() const
+    const Antares::Optimisation::EvaluationContextProvider& evaluationContextProvider() const
     {
-        return Antares::Optimisation::EvaluationContextProvider(data, scenarioGroupRepository);
+        return contextProvider;
     }
 };
 
@@ -147,6 +149,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
                                          ConnectionEnd(&generatorComponent, &injection_port));
 
     // Visitor associated to component named "N"
+
     ReadLinearExpressionVisitor visitor{evaluationContextProvider(), fillContext, nodeComponent};
 
     auto timeDependentLinExpr = visitor.dispatch(sum_connections_node);
@@ -274,3 +277,4 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+#endif

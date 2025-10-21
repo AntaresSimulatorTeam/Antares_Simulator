@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,17 +10,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "versions.h"
+
+#include <iostream>
+
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
-#include <iostream>
 
 #define SEP IO::Separator
 
-namespace Yuni
-{
-namespace LibConfig
-{
-namespace VersionInfo
+namespace Yuni::LibConfig::VersionInfo
 {
 template<class StringT>
 static const String& QuotePath(const StringT& value)
@@ -43,8 +42,10 @@ void List::checkRootFolder(const String& root)
     if (IO::File::Exists(yuniMarker))
     {
         if (pOptDebug)
+        {
             std::cout << "[yuni-config][debug] found special yuni marker `" << yuniMarker << "`"
                       << std::endl;
+        }
 
 #ifdef YUNI_OS_WINDOWS
         loadFromPath(root + "\\..\\..\\..");
@@ -57,7 +58,9 @@ void List::checkRootFolder(const String& root)
 #ifdef YUNI_OS_MSVC // Visual Studio
     // For dealing with the paths like '{Debug,Release}/yuni-config.exe'
     if (IO::File::Exists(String() << root << "\\..\\mark-for-yuni-sources"))
+    {
         loadFromPath(root + "\\..\\..\\..\\..");
+    }
 #endif
 }
 
@@ -67,7 +70,9 @@ void List::findFromPrefixes(const String::List& prefix)
     {
         const String::List::const_iterator end = prefix.end();
         for (String::List::const_iterator i = prefix.begin(); i != end; ++i)
+        {
             loadFromPath(*i);
+        }
     }
 }
 
@@ -76,7 +81,9 @@ void List::loadFromPath(const String& folder)
     String path;
     IO::Canonicalize(path, folder);
     if (pOptDebug)
+    {
         std::cout << "[yuni-config][debug] :: reading `" << path << "`" << std::endl;
+    }
 
     VersionInfo::Settings info;
     info.mapping = mappingStandard;
@@ -93,7 +100,9 @@ void List::loadFromPath(const String& folder)
             if (not IO::File::Exists(s))
             {
                 if (pOptDebug)
+                {
                     std::cout << "[yuni-config][debug] :: " << s << " not found" << std::endl;
+                }
                 return;
             }
         }
@@ -115,32 +124,54 @@ void List::loadFromPath(const String& folder)
             buffer.extractKeyValue(key, value);
 
             if (key.empty() || key == "[")
+            {
                 continue;
+            }
             if (key == "version.hi")
+            {
                 version.hi = value.to<unsigned int>();
+            }
             if (key == "version.lo")
+            {
                 version.lo = value.to<unsigned int>();
+            }
             if (key == "version.rev")
+            {
                 version.revision = value.to<unsigned int>();
+            }
             if (key == "version.target")
+            {
                 info.compilationMode = value;
+            }
             if (key == "modules.available")
+            {
                 value.split(info.modules, ";\"', \t", false);
+            }
             if (key == "support.opengl")
+            {
                 info.supportOpenGL = value.to<bool>();
+            }
             if (key == "support.directx")
+            {
                 info.supportDirectX = value.to<bool>();
+            }
             if (key == "redirect")
+            {
                 loadFromPath(value);
+            }
             if (key == "path.include")
             {
                 if (not value.empty())
+                {
                     info.includePath.push_back(value);
+                }
             }
             if (key == "path.lib")
             {
                 if (not value.empty())
+                {
                     info.libPath.push_back(value);
+                }
             }
         }
 
@@ -160,9 +191,13 @@ void List::loadFromPath(const String& folder)
         {
             std::cerr << "error: " << s << ": invalid file";
             if (version.null())
+            {
                 std::cerr << " (invalid version)" << std::endl;
+            }
             else if (info.modules.empty())
+            {
                 std::cerr << " (no module)" << std::endl;
+            }
         }
     }
 }
@@ -181,7 +216,9 @@ void List::print()
         {
             std::cout << i->first;
             if (i->second.mapping == mappingSVNSources)
+            {
                 std::cout << " (svn-sources)";
+            }
             std::cout << "\n";
         }
     }
@@ -196,7 +233,9 @@ void List::printWithInfos()
         {
             std::cout << i->first << " " << i->second.compilationMode;
             if (i->second.mapping == mappingSVNSources)
+            {
                 std::cout << " (svn-sources)";
+            }
             std::cout << "\n";
             String path(i->second.path);
 #ifdef YUNI_OS_WINDOWS
@@ -207,7 +246,9 @@ void List::printWithInfos()
             std::cout << "    modules : [core]";
             const String::List::const_iterator mend = i->second.modules.end();
             for (String::List::const_iterator j = i->second.modules.begin(); j != mend; ++j)
+            {
                 std::cout << " " << *j;
+            }
             std::cout << "\n";
             std::cout << "    OpenGL  : " << (i->second.supportOpenGL ? "Yes" : "No") << "\n";
 #ifdef YUNI_OS_WINDOWS
@@ -220,7 +261,9 @@ void List::printWithInfos()
 VersionInfo::Settings* List::selected()
 {
     if (pList.empty())
+    {
         return nullptr;
+    }
     InternalList::iterator i = pList.begin();
     return &i->second;
 }
@@ -230,7 +273,9 @@ bool Settings::configFile(String::List& options, bool displayError) const
     if (compiler.empty())
     {
         if (displayError)
+        {
             std::cout << "Error: unknown compiler\n";
+        }
         return false;
     }
     String out;
@@ -249,7 +294,9 @@ bool Settings::configFile(String::List& options, bool displayError) const
     if (not IO::File::Exists(out))
     {
         if (displayError)
+        {
             std::cout << "Error: impossible to open the config file '" << out << "'\n";
+        }
         return false;
     }
 
@@ -259,12 +306,16 @@ bool Settings::configFile(String::List& options, bool displayError) const
     {
         CString<8192> buffer;
         while (file.readline(buffer))
+        {
             options.push_back(buffer);
+        }
     }
     else
     {
         if (displayError)
+        {
             std::cout << "Error: Impossible to read '" << out << "'\n";
+        }
         return false;
     }
     return true;
@@ -291,17 +342,23 @@ bool Settings::parserModulesOptions(String::List& options, bool displayError)
     CompilerCompliant compliant = gcc;
     // Checking for Visual Studio
     if (not compiler.empty() && compiler.at(0) == 'v' && compiler.at(1) == 's')
+    {
         compliant = visualstudio;
+    }
 
     // For each entry in the ini file
     for (String::List::const_iterator i = options.begin(); i != end; ++i)
     {
         i->extractKeyValue(key, value);
         if (key.empty() || key.first() == '[')
+        {
             continue;
+        }
         value.trim();
         if (!value)
+        {
             continue;
+        }
 
         // Reset
         modName.clear();
@@ -310,11 +367,15 @@ bool Settings::parserModulesOptions(String::List& options, bool displayError)
         // Splitting
         const String::Size p = key.find(':');
         if (p == String::npos)
+        {
             continue;
+        }
         group.assign(key, p);
         modName.assign(key, key.size() - p - 1, p + 1);
         if (not group or not modName)
+        {
             continue;
+        }
 
         SettingsPerModule& s = moduleSettings[modName];
 
@@ -364,7 +425,9 @@ bool Settings::parserModulesOptions(String::List& options, bool displayError)
             IO::ExtractExtension(ext, norm);
             ext.toLower();
             if (ext != ".framework")
+            {
                 s.libs[String() << "-l" << QuotePath(norm)] = true;
+            }
             else
             {
                 // adding the parent directory
@@ -419,7 +482,9 @@ bool Settings::parserModulesOptions(String::List& options, bool displayError)
         }
 
         if (displayError)
+        {
             std::cout << "Error: unknown key in the config file: '" << key << "'\n";
+        }
         return false;
     }
     return true;
@@ -429,9 +494,9 @@ void Settings::SettingsPerModule::merge(OptionMap& out, const OptionMap& with) c
 {
     const OptionMap::const_iterator end = with.end();
     for (OptionMap::const_iterator i = with.begin(); i != end; ++i)
+    {
         out[i->first] = true;
+    }
 }
 
-} // namespace VersionInfo
-} // namespace LibConfig
-} // namespace Yuni
+} // namespace Yuni::LibConfig::VersionInfo

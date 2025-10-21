@@ -22,11 +22,19 @@
 #pragma once
 
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
-#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 #include "antares/solver/optim-model-filler/LinearExpression.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
+
+namespace Antares::Optimisation
+{
+namespace LinearProblemApi
+{
+class ILinearProblem;
+class IMipConstraint;
+} // namespace LinearProblemApi
+class OptimEntityContainer;
+} // namespace Antares::Optimisation
 
 namespace Antares::Optimization
 {
@@ -38,29 +46,23 @@ namespace Antares::Optimization
  * This class is responsible for adding variables, constraints, and objectives to the linear problem
  * based on the connections between components and areas in the Antares study.
  */
-class ComponentToAreaConnectionFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
+class ComponentToAreaConnectionFiller final
+    : public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
     explicit ComponentToAreaConnectionFiller(
       const PROBLEME_HEBDO* problemeHebdo,
-      const VariableDictionary& modelerVariableDictionary,
+      Optimisation::OptimEntityContainer& variableContainer,
       const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_);
-    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Optimisation::LinearProblemApi::ILinearProblemData& data,
-                        const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      const Optimisation::LinearProblemApi::FillContext& ctx) override;
+      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
+    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjective(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-    const VariableDictionary& modelerVariableDictionary_;
-    const Optimisation::EvaluationContextProvider evaluationContextProvider_;
+    Optimisation::OptimEntityContainer& optimEntityContainer_;
 
     std::map<std::string, unsigned> areaIndices_;
 
@@ -69,8 +71,10 @@ private:
       const std::string& areaId,
       unsigned ts) const;
     void addExpressionToConstraint(
-      const LinearExpression& expression,
-      Optimisation::LinearProblemApi::IMipConstraint* areaBalanceConstraint) const;
+      Optimisation::LinearProblemApi::ILinearProblem& pb,
+      const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
+      const Optimisation::LinearProblemApi::FillContext& ctx,
+      const std::string& areaId) const;
     void addComponentPortContributionToArea(Optimisation::LinearProblemApi::ILinearProblem& pb,
                                             const Optimisation::LinearProblemApi::FillContext& ctx,
                                             const ModelerStudy::SystemModel::Component& component,

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_TIMESERIES_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_TIMESERIES_H__
 
@@ -28,15 +28,9 @@
 #include <antares/date/date.h>
 #include "../../../../../application/study.h"
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-class ATimeSeries : public Renderer::Matrix<double>, public Renderer::ARendererArea
+class ATimeSeries: public Renderer::Matrix<double>, public Renderer::ARendererArea
 {
 public:
     using AncestorType = Renderer::Matrix<double>;
@@ -60,6 +54,7 @@ public:
     {
         return AncestorType::width();
     }
+
     virtual int internalHeight() const
     {
         return AncestorType::height();
@@ -108,16 +103,17 @@ protected:
 
 }; // class ATimeSeries
 
-class TimeSeriesLoad final : public ATimeSeries
+class TimeSeriesLoad final: public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double>;
 
 public:
-    TimeSeriesLoad(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-     ATimeSeries(control, notifier)
+    TimeSeriesLoad(wxWindow* control, Toolbox::InputSelector::Area* notifier):
+        ATimeSeries(control, notifier)
     {
     }
+
     virtual ~TimeSeriesLoad()
     {
         destroyBoundEvents();
@@ -146,16 +142,17 @@ protected:
     }
 };
 
-class TimeSeriesSolar final : public ATimeSeries
+class TimeSeriesSolar final: public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double>;
 
 public:
-    TimeSeriesSolar(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-     ATimeSeries(control, notifier)
+    TimeSeriesSolar(wxWindow* control, Toolbox::InputSelector::Area* notifier):
+        ATimeSeries(control, notifier)
     {
     }
+
     virtual ~TimeSeriesSolar()
     {
         destroyBoundEvents();
@@ -184,16 +181,17 @@ protected:
     }
 };
 
-class TimeSeriesWind final : public ATimeSeries
+class TimeSeriesWind final: public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double>;
 
 public:
-    TimeSeriesWind(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-     ATimeSeries(control, notifier)
+    TimeSeriesWind(wxWindow* control, Toolbox::InputSelector::Area* notifier):
+        ATimeSeries(control, notifier)
     {
     }
+
     virtual ~TimeSeriesWind()
     {
         destroyBoundEvents();
@@ -222,16 +220,17 @@ protected:
     }
 };
 
-class TimeSeriesHydroFatal final : public ATimeSeries
+class TimeSeriesHydroFatal final: public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double>;
 
 public:
-    TimeSeriesHydroFatal(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-     ATimeSeries(control, notifier)
+    TimeSeriesHydroFatal(wxWindow* control, Toolbox::InputSelector::Area* notifier):
+        ATimeSeries(control, notifier)
     {
     }
+
     virtual ~TimeSeriesHydroFatal()
     {
         destroyBoundEvents();
@@ -255,16 +254,17 @@ protected:
     }
 };
 
-class TimeSeriesHydroMod final : public ATimeSeries
+class TimeSeriesHydroMod final: public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double>;
 
 public:
-    TimeSeriesHydroMod(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-     ATimeSeries(control, notifier)
+    TimeSeriesHydroMod(wxWindow* control, Toolbox::InputSelector::Area* notifier):
+        ATimeSeries(control, notifier)
     {
     }
+
     virtual ~TimeSeriesHydroMod()
     {
         destroyBoundEvents();
@@ -293,16 +293,16 @@ protected:
     }
 };
 
-
-class TimeSeriesHydroMinGen final : public ATimeSeries
+class TimeSeriesHydroMinGen final: public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double>;
 
-    TimeSeriesHydroMinGen(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-     ATimeSeries(control, notifier)
+    TimeSeriesHydroMinGen(wxWindow* control, Toolbox::InputSelector::Area* notifier):
+        ATimeSeries(control, notifier)
     {
     }
+
     ~TimeSeriesHydroMinGen() override
     {
         destroyBoundEvents();
@@ -326,15 +326,16 @@ private:
     }
 };
 
-class TimeSeriesHydroMaxHourlyGenPower final : public ATimeSeries
+class TimeSeriesHydroMaxHourlyGenPower final: public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double, int32_t>;
 
-    TimeSeriesHydroMaxHourlyGenPower(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-     ATimeSeries(control, notifier)
+    TimeSeriesHydroMaxHourlyGenPower(wxWindow* control, Toolbox::InputSelector::Area* notifier):
+        ATimeSeries(control, notifier)
     {
     }
+
     ~TimeSeriesHydroMaxHourlyGenPower() override
     {
         destroyBoundEvents();
@@ -353,20 +354,22 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyGenPower.timeSeries) : NULL);
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyGenPower.timeSeries)
+                                               : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
 
-class TimeSeriesHydroMaxHourlyPumpPower final : public ATimeSeries
+class TimeSeriesHydroMaxHourlyPumpPower final: public ATimeSeries
 {
 public:
     using AncestorType = Renderer::Matrix<double, int32_t>;
 
-    TimeSeriesHydroMaxHourlyPumpPower(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
-     ATimeSeries(control, notifier)
+    TimeSeriesHydroMaxHourlyPumpPower(wxWindow* control, Toolbox::InputSelector::Area* notifier):
+        ATimeSeries(control, notifier)
     {
     }
+
     ~TimeSeriesHydroMaxHourlyPumpPower() override
     {
         destroyBoundEvents();
@@ -385,7 +388,9 @@ public:
 private:
     void internalAreaChanged(Antares::Data::Area* area) override
     {
-        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyPumpPower.timeSeries) : NULL);
+        matrix((area && CurrentStudyIsValid())
+                 ? &(area->hydro.series->maxHourlyPumpPower.timeSeries)
+                 : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -398,7 +403,7 @@ private:
 //   CLUSTER COMMON
 // ----------------------
 
-class TimeSeriesCluster : public Renderer::Matrix<double>
+class TimeSeriesCluster: public Renderer::Matrix<double>
 {
 public:
     using AncestorType = Renderer::Matrix<double>;
@@ -421,6 +426,7 @@ public:
     {
         return AncestorType::width();
     }
+
     int internalHeight() const override
     {
         return AncestorType::height();
@@ -467,7 +473,7 @@ public:
 //   THERMAL CLUSTERS
 // ----------------------
 
-class TimeSeriesThermalCluster final : public TimeSeriesCluster
+class TimeSeriesThermalCluster final: public TimeSeriesCluster
 {
 public:
     TimeSeriesThermalCluster(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
@@ -486,10 +492,11 @@ protected:
 // ----------------------
 //   Fuel Cost
 // ----------------------
-class TimeSeriesThermalClusterFuelCost final : public TimeSeriesCluster
+class TimeSeriesThermalClusterFuelCost final: public TimeSeriesCluster
 {
 public:
-    TimeSeriesThermalClusterFuelCost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+    TimeSeriesThermalClusterFuelCost(wxWindow* control,
+                                     Toolbox::InputSelector::ThermalCluster* notifier);
     ~TimeSeriesThermalClusterFuelCost() override;
 
 private:
@@ -500,10 +507,11 @@ private:
 // ----------------------
 //   CO2 Cost
 // ----------------------
-class TimeSeriesThermalClusterCO2Cost final : public TimeSeriesCluster
+class TimeSeriesThermalClusterCO2Cost final: public TimeSeriesCluster
 {
 public:
-    TimeSeriesThermalClusterCO2Cost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+    TimeSeriesThermalClusterCO2Cost(wxWindow* control,
+                                    Toolbox::InputSelector::ThermalCluster* notifier);
     ~TimeSeriesThermalClusterCO2Cost() override;
 
 private:
@@ -515,7 +523,7 @@ private:
 //   RENEWABLE CLUSTERS
 // ----------------------
 
-class TimeSeriesRenewableCluster final : public TimeSeriesCluster
+class TimeSeriesRenewableCluster final: public TimeSeriesCluster
 {
 public:
     TimeSeriesRenewableCluster(wxWindow* control,
@@ -532,9 +540,6 @@ private:
     void onStudyClosed() override;
 };
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_TIMESERIES_H__

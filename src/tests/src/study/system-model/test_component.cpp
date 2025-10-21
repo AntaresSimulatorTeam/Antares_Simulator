@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -52,11 +52,10 @@ static Model createModelWithoutParameters()
 
 BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentBuilderCreationFixture)
 
-std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>
-build_context_parameter_with(const std::string& id,
-                             const std::string& value,
-                             const Antares::Expressions::Visitors::ParameterType& type = Antares::
-                               Expressions::Visitors::ParameterType::CONSTANT)
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
+  const std::string& id,
+  const std::string& value,
+  const ParameterType& type = ParameterType::CONSTANT)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
@@ -340,6 +339,8 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").value(), "area1");
     BOOST_CHECK_EQUAL(component.portToAreaConnections().size(), 1);
     BOOST_CHECK_EQUAL(component.portToAreaConnections().at("portACDef"), "area1");
+
+    BOOST_CHECK_THROW(component.nodeAtPortField("wrong port", "field"), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

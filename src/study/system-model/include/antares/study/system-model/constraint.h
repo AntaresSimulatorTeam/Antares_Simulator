@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -27,16 +27,11 @@
 
 #include "parameter.h"
 
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-}
-
 namespace Antares::ModelerStudy::SystemModel
 {
 
 /// A constraint linking variables and parameters of a model together
-class Constraint
+class Constraint final
 {
 public:
     Constraint(std::string id, Expression expression):

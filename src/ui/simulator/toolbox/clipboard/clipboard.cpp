@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "clipboard.h"
 #include <yuni/core/math.h>
@@ -31,9 +31,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Toolbox
+namespace Antares::Toolbox
 {
 Clipboard::Clipboard()
 {
@@ -73,7 +71,9 @@ void Clipboard::copy()
             {
                 Item& item = *(*i);
                 if (!item.data)
+                {
                     continue;
+                }
 
                 switch (item.type)
                 {
@@ -90,14 +90,18 @@ void Clipboard::copy()
                             ptr[item.data->size()] = '\0';
                         }
                         else
+                        {
                             ptr[0] = '\0';
+                        }
                         GlobalUnlock(hText);
 
                         ::SetClipboardData(CF_TEXT, hText);
                     }
                     else
+                    {
                         // Free memory...
                         GlobalFree(hText);
+                    }
                     break;
                 }
                 case typeHTML:
@@ -105,10 +109,14 @@ void Clipboard::copy()
                     // CopyHTML(s.c_str());
                     static int cfid = 0;
                     if (!cfid)
+                    {
                         cfid = RegisterClipboardFormat(wxT("HTML Format"));
+                    }
 
                     if (!cfid)
+                    {
                         break;
+                    }
                     hText = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, item.data->size() + 2);
 
                     // Put your string in the global memory...
@@ -121,14 +129,18 @@ void Clipboard::copy()
                             ptr[item.data->size()] = '\0';
                         }
                         else
+                        {
                             ptr[0] = '\0';
+                        }
                         GlobalUnlock(hText);
 
                         ::SetClipboardData(cfid, hText);
                     }
                     else
+                    {
                         // Free memory...
                         GlobalFree(hText);
+                    }
                     break;
                 }
                 }
@@ -137,7 +149,9 @@ void Clipboard::copy()
         CloseClipboard();
     }
     else
+    {
         logs.error() << "[clipboard] impossible to open an access to the clipboard";
+    }
 
 #else
 
@@ -204,7 +218,9 @@ void Clipboard::add(Antares::Component::Datagrid::VGridHelper* m,
 
         String::Ptr d = new String();
         if (!d)
+        {
             return;
+        }
         String tmp;
         d->reserve(400 + 33 * (posX2 + 1 - offsetX) * (posY2 + 1 - offsetY));
 
@@ -256,7 +272,8 @@ void Clipboard::add(Antares::Component::Datagrid::VGridHelper* m,
                 {
                     *d << " class='";
                     Component::Datagrid::Renderer::IRenderer::CellStyleToCSSClass(
-                      m->renderer()->cellStyle(cellX, cellY), *d);
+                      m->renderer()->cellStyle(cellX, cellY),
+                      *d);
                     *d << '\'';
                 }
                 *d << '>';
@@ -264,9 +281,13 @@ void Clipboard::add(Antares::Component::Datagrid::VGridHelper* m,
                 m->renderer()->appendCellValue(cellX, cellY, tmp);
                 // `.` replacement to get valid number in Excel
                 if (Locale::DecimalPoint == ',')
+                {
                     tmp.replace('.', ',');
+                }
                 else
+                {
                     tmp.replace(',', '.');
+                }
 
                 *d << tmp << "</td>";
             }
@@ -292,7 +313,9 @@ void Clipboard::add(Antares::Component::Datagrid::VGridHelper* m,
                        && "Clipboard: Invalid indice pointer for columns (value)");
 
                 if (!firstColCell)
+                {
                     *d << '\t';
+                }
                 firstColCell = false;
                 m->renderer()->appendCellValue(indicesCols[x], cellY, *d);
             }
@@ -305,7 +328,9 @@ void Clipboard::add(Antares::Component::Datagrid::VGridHelper* m,
         pList.push_back(std::make_shared<Item>(typeText, d));
     }
     else
+    {
         pList.push_back(std::make_shared<Item>(typeText, nullptr));
+    }
 }
 
 void Clipboard::add(const Matrix<>& m)
@@ -320,7 +345,9 @@ void Clipboard::add(const Matrix<>& m)
             for (uint x = 0; x < m.width; ++x)
             {
                 if (y)
+                {
                     *d << '\t';
+                }
                 *d << m.entry[x][y];
             }
 #if defined(ANT_WINDOWS)
@@ -333,7 +360,9 @@ void Clipboard::add(const Matrix<>& m)
         // wxTheApp->Yield();
     }
     else
+    {
         pList.push_back(std::make_shared<Item>(typeText, nullptr));
+    }
 }
 
 void Clipboard::GetFromClipboard(String& out)
@@ -346,15 +375,20 @@ void Clipboard::GetFromClipboard(String& out)
             wxTheClipboard->GetData(data);
             wxString t = data.GetText();
             if (!t.empty())
+            {
                 wxStringToString(t, out);
+            }
             else
+            {
                 out.clear();
+            }
         }
         else
+        {
             out.clear();
+        }
         wxTheClipboard->Close();
     }
 }
 
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox

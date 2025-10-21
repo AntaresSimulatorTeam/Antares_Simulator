@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -8,19 +9,15 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../io.h"
 #include "../directory.h"
-#include "commons.h"
 #include "../file.h"
+#include "../io.h"
+#include "commons.h"
 #ifdef YUNI_OS_WINDOWS
 #include "../../core/string/wstring.h"
 #endif
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 #ifdef YUNI_OS_WINDOWS
 
@@ -31,7 +28,9 @@ static bool WindowsMake(const AnyString& path)
 
     WString wstr(norm, true);
     if (wstr.size() < 4)
+    {
         return false;
+    }
     wchar_t* t = wstr.data() + 4;
 
     while (*t != L'\0')
@@ -42,7 +41,9 @@ static bool WindowsMake(const AnyString& path)
             if (!CreateDirectoryW(wstr.c_str(), nullptr))
             {
                 if (GetLastError() != ERROR_ALREADY_EXISTS)
+                {
                     return false;
+                }
             }
             *t = L'\\';
         }
@@ -52,7 +53,9 @@ static bool WindowsMake(const AnyString& path)
     if (not CreateDirectoryW(wstr.c_str(), nullptr))
     {
         if (GetLastError() != ERROR_ALREADY_EXISTS)
+        {
             return false;
+        }
     }
     return true;
 }
@@ -86,7 +89,9 @@ static bool UnixMake(const AnyString& path, uint mode)
                 }
             }
             if ('\0' == tmp)
+            {
                 break;
+            }
             *pt = tmp;
         }
         ++pt;
@@ -113,6 +118,4 @@ bool Create(const AnyString& path, uint mode)
     return true;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

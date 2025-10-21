@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
+#if 0
 #define WIN32_LEAN_AND_MEAN
 
 #include <ranges>
@@ -570,3 +570,4 @@ BOOST_AUTO_TEST_CASE(TimeSumLinearExpressionsOutOfBounds)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+#endif

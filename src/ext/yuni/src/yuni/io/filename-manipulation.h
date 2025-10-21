@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "io.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 /*!
 ** \brief Extract the path part of a filename
@@ -203,7 +202,6 @@ void Canonicalize(String& out, const AnyString& in, const AnyString& rootpath = 
 */
 void Canonicalize(Clob& out, const AnyString& in, const AnyString& rootpath = nullptr);
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO
 
 #include "filename-manipulation.hxx"

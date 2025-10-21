@@ -1,35 +1,30 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "nodal-optimization.h"
 
-namespace Antares
+namespace Antares::Action::AntaresStudy::Area
 {
-namespace Action
-{
-namespace AntaresStudy
-{
-namespace Area
-{
-NodalOptimization::NodalOptimization(const AnyString& areaname) : pOriginalAreaName(areaname)
+NodalOptimization::NodalOptimization(const AnyString& areaname):
+    pOriginalAreaName(areaname)
 {
     pInfos.caption << "Nodal Optimization";
 }
@@ -68,10 +63,12 @@ bool NodalOptimization::performWL(Context& ctx)
                 ctx.area->thermal.unsuppliedEnergyCost = source->thermal.unsuppliedEnergyCost;
                 ctx.area->thermal.spilledEnergyCost = source->thermal.spilledEnergyCost;
 
-                ctx.area->spreadUnsuppliedEnergyCost
-                  = source->spreadUnsuppliedEnergyCost; // MBO 23/05/2014 - #23
-                ctx.area->spreadSpilledEnergyCost
-                  = source->spreadSpilledEnergyCost; // MBO 23/05/2014 - #23
+                ctx.area->spreadUnsuppliedEnergyCost = source->spreadUnsuppliedEnergyCost; // MBO
+                                                                                           // 23/05/2014
+                                                                                           // - #23
+                ctx.area->spreadSpilledEnergyCost = source
+                                                      ->spreadSpilledEnergyCost; // MBO 23/05/2014 -
+                                                                                 // #23
             }
             return true;
         }
@@ -79,7 +76,4 @@ bool NodalOptimization::performWL(Context& ctx)
     return false;
 }
 
-} // namespace Area
-} // namespace AntaresStudy
-} // namespace Action
-} // namespace Antares
+} // namespace Antares::Action::AntaresStudy::Area

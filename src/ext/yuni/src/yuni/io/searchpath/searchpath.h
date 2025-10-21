@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,17 +10,16 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
-#include "../../core/string.h"
-#include "../../core/bind.h"
 #include <map>
+
+#include "../../core/bind.h"
+#include "../../core/string.h"
+#include "../../yuni.h"
 #ifdef SearchPath
 #undef SearchPath // On Windows, SearchPath is a macro...
 #endif
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 /*!
 ** \brief Find files or folders from one or several search paths
@@ -133,7 +133,6 @@ private:
 
 }; // class SearchPath
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO
 
 #include "searchpath.hxx"

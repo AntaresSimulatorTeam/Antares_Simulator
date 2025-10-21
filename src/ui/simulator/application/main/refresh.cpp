@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "main.h"
 #include "antares/study/study.h"
@@ -32,9 +32,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Forms
+namespace Antares::Forms
 {
 struct CompareBySimulationMode final
 {
@@ -82,21 +80,31 @@ void ApplWnd::refreshMenuInput()
 
     String nowstr;
     if (not TimestampToString(nowstr, study.header.dateCreated))
+    {
         pMenuInputCreation->SetItemLabel(wxT("Created: unknown"));
+    }
     else
+    {
         pMenuInputCreation->SetItemLabel(wxString()
                                          << wxT("Created: ") << wxStringFromUTF8(nowstr));
+    }
 
     wxString s;
     s << wxT("Last saved: ");
     if (study.folder.empty())
+    {
         s << wxT("never");
+    }
     else
     {
         if (not TimestampToString(nowstr, study.header.dateLastSave))
+        {
             s << wxT("unknown");
+        }
         else
+        {
             s << wxStringFromUTF8(nowstr);
+        }
     }
     s << wxT("   "); // extra spaces for beauty
     pMenuInputLastSaved->SetItemLabel(s);
@@ -105,7 +113,9 @@ void ApplWnd::refreshMenuInput()
 void ApplWnd::refreshMenuOutput()
 {
     if (not pMenuOutput or not Forms::ApplWnd::Instance() or IsGUIAboutToQuit())
+    {
         return;
+    }
 
     // Cleanup
     Menu::Clear(*pMenuOutput);
@@ -157,6 +167,7 @@ void ApplWnd::refreshMenuOutput()
 
     // temporary buffer for converting a date
     String nowstr;
+
     enum
     {
         maxInMenu = 30,
@@ -166,10 +177,14 @@ void ApplWnd::refreshMenuOutput()
     uint more = 0;
 
     for (auto mapB = orderByTime.cbegin(); mapB != orderByTime.cend(); ++mapB)
+    {
         total += (uint)mapB->second.size();
+    }
 
     if (!total)
+    {
         return;
+    }
 
     wxString howManyResults;
     switch (total)
@@ -179,14 +194,21 @@ void ApplWnd::refreshMenuOutput()
         break;
     default:
         if (total > maxInMenu)
+        {
             howManyResults << maxInMenu << wxT(" results  (out of ") << total << wxT(")");
+        }
         else
+        {
             howManyResults << total << wxT(" results");
+        }
         break;
     }
 
-    item = Menu::CreateItem(
-      pMenuOutput, wxID_ANY, howManyResults, "images/16x16/empty.png", wxEmptyString);
+    item = Menu::CreateItem(pMenuOutput,
+                            wxID_ANY,
+                            howManyResults,
+                            "images/16x16/empty.png",
+                            wxEmptyString);
     item->Enable(false);
 
     for (auto mapB = orderByTime.cbegin(); mapB != orderByTime.cend(); ++mapB)
@@ -195,38 +217,45 @@ void ApplWnd::refreshMenuOutput()
         for (auto i = mapB->second.begin(); i != mapB->second.end(); ++i)
         {
             if (not OutputTimestampToString(nowstr, (*i)->timestamp))
+            {
                 continue;
+            }
 
             // The output
             wxString s;
             s << wxStringFromUTF8(nowstr);
 
             if (not(*i)->name.empty())
+            {
                 s << wxT(" : ") << wxStringFromUTF8((*i)->name);
+            }
 
             if (System::unix)
+            {
                 s << wxT("  ");
+            }
 
-            auto* it = Menu::CreateItem(
-              pMenuOutput,
-              wxID_ANY,
-              s,
+            auto* it = Menu::CreateItem(pMenuOutput,
+                                        wxID_ANY,
+                                        s,
 #ifndef YUNI_OS_WINDOWS
-              (!more ? "images/16x16/minibullet_sel.png" : "images/16x16/minibullet.png"),
+                                        (!more ? "images/16x16/minibullet_sel.png"
+                                               : "images/16x16/minibullet.png"),
 #else
-              (((*i)->mode == Data::SimulationMode::Economy) ? "images/misc/economy.png"
-                                                 : "images/misc/adequacy.png"),
+                                        (((*i)->mode == Data::SimulationMode::Economy)
+                                           ? "images/misc/economy.png"
+                                           : "images/misc/adequacy.png"),
 #endif
-              s,
-              wxITEM_NORMAL);
+                                        s,
+                                        wxITEM_NORMAL);
 
             (*i)->viewMenuID = it->GetId();
-            Forms::ApplWnd::Instance()->Connect(
-              it->GetId(),
-              wxEVT_COMMAND_MENU_SELECTED,
-              wxCommandEventHandler(Forms::ApplWnd::evtOnViewOutput),
-              nullptr,
-              Forms::ApplWnd::Instance());
+            Forms::ApplWnd::Instance()->Connect(it->GetId(),
+                                                wxEVT_COMMAND_MENU_SELECTED,
+                                                wxCommandEventHandler(
+                                                  Forms::ApplWnd::evtOnViewOutput),
+                                                nullptr,
+                                                Forms::ApplWnd::Instance());
 
             if (++more >= maxInMenu)
             {
@@ -238,15 +267,21 @@ void ApplWnd::refreshMenuOutput()
             }
         }
         if (shouldStop)
+        {
             break;
+        }
     }
 
     pMenuOutput->AppendSeparator();
 
     if (System::windows)
+    {
         item = pMenuOutput->AppendSubMenu(new wxMenu(), wxT("Open in Windows Explorer..."));
+    }
     else
+    {
         item = pMenuOutput->AppendSubMenu(new wxMenu(), wxT("Open in file explorer..."));
+    }
 
     // The current total number of item for the current category
     total = 0;
@@ -273,7 +308,9 @@ void ApplWnd::refreshMenuOutput()
 
                     lastMode = (*i)->mode;
                     if (lastMode == Data::SimulationMode::Unknown)
+                    {
                         lastMode = Data::SimulationMode::Economy;
+                    }
                     Menu::CreateGroupItem(menu,
                                           wxStringFromUTF8(SimulationModeToCString(lastMode)),
                                           "images/16x16/empty.png");
@@ -287,15 +324,21 @@ void ApplWnd::refreshMenuOutput()
                 else
                 {
                     if (not OutputTimestampToString(nowstr, (*i)->timestamp))
+                    {
                         continue;
+                    }
 
                     // The output
                     wxString s;
                     s << wxStringFromUTF8(nowstr);
                     if (not(*i)->name.empty())
+                    {
                         s << wxT(", ") << wxStringFromUTF8((*i)->name);
+                    }
                     if (System::unix)
+                    {
                         s << wxT("  ");
+                    }
 
                     auto* it = Menu::CreateItem(menu,
                                                 wxID_ANY,
@@ -311,12 +354,12 @@ void ApplWnd::refreshMenuOutput()
                                                   << wxStringFromUTF8((*i)->path));
 
                     (*i)->menuID = it->GetId();
-                    parentForm->Connect(
-                      it->GetId(),
-                      wxEVT_COMMAND_MENU_SELECTED,
-                      wxCommandEventHandler(Forms::ApplWnd::evtOnOpenOutputInExplorer),
-                      nullptr,
-                      parentForm);
+                    parentForm->Connect(it->GetId(),
+                                        wxEVT_COMMAND_MENU_SELECTED,
+                                        wxCommandEventHandler(
+                                          Forms::ApplWnd::evtOnOpenOutputInExplorer),
+                                        nullptr,
+                                        parentForm);
                 }
             }
         }
@@ -326,19 +369,25 @@ void ApplWnd::refreshMenuOutput()
 void ApplWnd::refreshMenuOptions(Data::Study::Ptr study)
 {
     if (not CurrentStudyIsValid() or IsGUIAboutToQuit())
+    {
         return;
+    }
 
     // Disabling the Configure menu's scenario builder item after loading a study
     // when building mode is not Custom.
 
     auto* menu = GetMenuBar();
-    auto* sc_builder_menu_item
-      = menu->FindItem(Antares::Forms::mnIDOptionConfigureMCScenarioBuilder);
+    auto* sc_builder_menu_item = menu->FindItem(
+      Antares::Forms::mnIDOptionConfigureMCScenarioBuilder);
     if (not sc_builder_menu_item)
+    {
         return;
+    }
 
     if (not study->parameters.useCustomScenario)
+    {
         sc_builder_menu_item->Enable(false);
+    }
 }
 
 void ApplWnd::forceRefresh()
@@ -374,5 +423,4 @@ void ApplWnd::delayForceFocus()
     Dispatcher::GUI::Post(this, &ApplWnd::forceFocus, 50 /*ms*/);
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms

@@ -1,6 +1,6 @@
 {
   "name": "antares-simulator",
-  "version-string": "9.2.0",
+  "version-string": "9.3.1",
   "dependencies": [
     {
       "name": "sirius-solver",
@@ -16,6 +16,10 @@
     },
     {
       "name": "boost-core",
+      "version>=": "1.86.0"
+    },
+    {
+      "name": "boost-iostreams",
       "version>=": "1.86.0"
     },
     {

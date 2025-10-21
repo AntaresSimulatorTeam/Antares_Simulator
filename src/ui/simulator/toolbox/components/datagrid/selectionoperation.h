@@ -1,29 +1,23 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_SELECTION_OPERATION_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_SELECTION_OPERATION_H__
 
@@ -31,13 +25,7 @@
 #include <math.h>
 #include <limits>
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Selection
+namespace Antares::Component::Datagrid::Selection
 {
 class IOperator
 {
@@ -45,6 +33,7 @@ public:
     IOperator()
     {
     }
+
     virtual ~IOperator()
     {
     }
@@ -71,10 +60,12 @@ public:
 
 }; // class IOperator
 
-class Average final : public IOperator
+class Average final: public IOperator
 {
 public:
-    Average() : pValue(0.), pCount(0)
+    Average():
+        pValue(0.),
+        pCount(0)
     {
     }
 
@@ -110,10 +101,11 @@ private:
 
 }; // class Average
 
-class Sum final : public IOperator
+class Sum final: public IOperator
 {
 public:
-    Sum() : pValue(0.)
+    Sum():
+        pValue(0.)
     {
     }
 
@@ -142,10 +134,11 @@ private:
 
 }; // class Sum
 
-class CellCount final : public IOperator
+class CellCount final: public IOperator
 {
 public:
-    CellCount() : pCount(0)
+    CellCount():
+        pCount(0)
     {
     }
 
@@ -174,10 +167,11 @@ private:
 
 }; // class Average
 
-class Minimum final : public IOperator
+class Minimum final: public IOperator
 {
 public:
-    Minimum() : pValue(std::numeric_limits<double>::infinity())
+    Minimum():
+        pValue(std::numeric_limits<double>::infinity())
     {
     }
 
@@ -194,7 +188,9 @@ public:
     virtual void appendValue(const double v)
     {
         if (v < pValue)
+        {
             pValue = v;
+        }
     }
 
     virtual double result() const
@@ -207,10 +203,11 @@ private:
 
 }; // class Sum
 
-class Maximum final : public IOperator
+class Maximum final: public IOperator
 {
 public:
-    Maximum() : pValue(-std::numeric_limits<double>::infinity())
+    Maximum():
+        pValue(-std::numeric_limits<double>::infinity())
     {
     }
 
@@ -218,6 +215,7 @@ public:
     {
         return wxT("Maximum");
     }
+
     virtual void reset()
     {
         pValue = -std::numeric_limits<double>::infinity();
@@ -226,7 +224,9 @@ public:
     virtual void appendValue(const double v)
     {
         if (v > pValue)
+        {
             pValue = v;
+        }
     }
 
     virtual double result() const
@@ -239,9 +239,6 @@ private:
 
 }; // class Sum
 
-} // namespace Selection
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Selection
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_SELECTION_OPERATION_H__

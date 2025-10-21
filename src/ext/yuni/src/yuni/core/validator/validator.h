@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #ifndef __YUNI_CORE_VALIDATOR_H__
 #define __YUNI_CORE_VALIDATOR_H__
 
-namespace Yuni
-{
-namespace Validator
+namespace Yuni::Validator
 {
 enum DefaultPolicy
 {
@@ -23,7 +22,6 @@ enum DefaultPolicy
     allowByDefault = 1,
 };
 
-} // namespace Validator
-} // namespace Yuni
+} // namespace Yuni::Validator
 
 #endif // __YUNI_CORE_VALIDATOR_H__

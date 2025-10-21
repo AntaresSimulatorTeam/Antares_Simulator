@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Static
+namespace Yuni::Static
 {
 /*!
 ** \brief Move Constructor (C++ idiom)
@@ -24,11 +23,13 @@ template<class T>
 class MoveConstructor
 {
 public:
-    MoveConstructor(T& r) : pReference(r)
+    MoveConstructor(T& r):
+        pReference(r)
     {
     }
 
-    MoveConstructor(const MoveConstructor& r) : pReference(r.pReference)
+    MoveConstructor(const MoveConstructor& r):
+        pReference(r.pReference)
     {
     }
 
@@ -42,5 +43,4 @@ private:
     T& pReference;
 };
 
-} // namespace Static
-} // namespace Yuni
+} // namespace Yuni::Static

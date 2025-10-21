@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "sets.h"
 #include <yuni/io/file.h>
@@ -41,9 +41,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 Yuni::Event<void(Sets*)> Sets::OnChanged;
 
@@ -58,12 +56,12 @@ EVT_RICHTEXT_CONTENT_DELETED(wxID_ANY, Sets::onUserNotesStyleChanged)
 EVT_RICHTEXT_BUFFER_RESET(wxID_ANY, Sets::onUserNotesStyleChanged)
 END_EVENT_TABLE()
 
-Sets::Sets(wxWindow* parent, uint margin) :
- Antares::Component::Panel(parent),
- pRichEdit(nullptr),
- pStyleSheet(nullptr),
- pLocalRevision(0),
- pUpdatesToSkip(0)
+Sets::Sets(wxWindow* parent, uint margin):
+    Antares::Component::Panel(parent),
+    pRichEdit(nullptr),
+    pStyleSheet(nullptr),
+    pLocalRevision(0),
+    pUpdatesToSkip(0)
 {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -95,8 +93,11 @@ Sets::Sets(wxWindow* parent, uint margin) :
 
     Antares::Component::AddVerticalSeparator(this, ssz);
 
-    btn
-      = new Component::Button(this, wxEmptyString, "images/16x16/check.png", this, &Sets::onCheck);
+    btn = new Component::Button(this,
+                                wxEmptyString,
+                                "images/16x16/check.png",
+                                this,
+                                &Sets::onCheck);
     ssz->Add(btn);
 
     sizer->Add(ssz, 0, wxALL | wxEXPAND, 2);
@@ -146,7 +147,9 @@ Sets::~Sets()
     if (not pTempFile.empty() and not IO::File::Delete(pTempFile))
     {
         if (IO::File::Exists(pTempFile))
+        {
             logs.warning() << "I/O error: impossible to delete " << pTempFile;
+        }
         pTempFile.clear();
     }
 
@@ -191,7 +194,9 @@ void Sets::onSetsModified(Sets* sender)
         if (pUpdatesToSkip)
         {
             if (0 != (--pUpdatesToSkip))
+            {
                 return;
+            }
         }
         // Reloading the user set
         loadFromStudy();
@@ -204,7 +209,9 @@ void Sets::onNewSet(void*)
 {
     assert(pRichEdit);
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
     int numberOfSets = study.setsOfAreas.size() + 1;
     long x;
@@ -384,11 +391,11 @@ void Sets::onCheck(void*)
 
     wxTextAttr blackTxt;
     blackTxt.SetTextColour(*wxBLACK);
-    pRichEdit->SetStyle(
-      pRichEdit->XYToPosition(0, 0),
-      pRichEdit->XYToPosition(pRichEdit->GetLineLength(pRichEdit->GetNumberOfLines() - 1),
-                              pRichEdit->GetNumberOfLines() - 1),
-      blackTxt);
+    pRichEdit->SetStyle(pRichEdit->XYToPosition(0, 0),
+                        pRichEdit->XYToPosition(pRichEdit->GetLineLength(
+                                                  pRichEdit->GetNumberOfLines() - 1),
+                                                pRichEdit->GetNumberOfLines() - 1),
+                        blackTxt);
     auto study = GetCurrentStudy();
     int max = pRichEdit->GetNumberOfLines();
     auto end = study->areas.end();
@@ -411,8 +418,9 @@ void Sets::onCheck(void*)
                 }
                 else
                 {
-                    wxString lineStripped
-                      = line.SubString(line.Find('[') + 1, line.Find(']') - 1).Trim().Trim(false);
+                    wxString lineStripped = line.SubString(line.Find('[') + 1, line.Find(']') - 1)
+                                              .Trim()
+                                              .Trim(false);
                     for (auto area = study->areas.begin(); area != end; ++area)
                     {
                         if (lineStripped.IsSameAs(
@@ -524,9 +532,13 @@ void Sets::disconnectFromNotification()
 void Sets::loadFromStudy()
 {
     if (!pRichEdit)
+    {
         return;
+    }
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (not pTempFile)
@@ -551,11 +563,11 @@ void Sets::loadFromStudy()
             pRichEdit->SetValue(wxStringFromUTF8(study.setsOfAreas.toString()));
             wxTextAttr blackTxt;
             blackTxt.SetTextColour(*wxBLACK);
-            pRichEdit->SetStyle(
-              pRichEdit->XYToPosition(0, 0),
-              pRichEdit->XYToPosition(pRichEdit->GetLineLength(pRichEdit->GetNumberOfLines() - 1),
-                                      pRichEdit->GetNumberOfLines() - 1),
-              blackTxt);
+            pRichEdit->SetStyle(pRichEdit->XYToPosition(0, 0),
+                                pRichEdit->XYToPosition(pRichEdit->GetLineLength(
+                                                          pRichEdit->GetNumberOfLines() - 1),
+                                                        pRichEdit->GetNumberOfLines() - 1),
+                                blackTxt);
         }
         pLocked = false;
     }
@@ -565,7 +577,9 @@ void Sets::saveToStudy()
 {
     auto study = GetCurrentStudy();
     if (!pRichEdit || !study)
+    {
         return;
+    }
     if (!pTempFile)
     {
         if (not initializeTemporaryFile())
@@ -601,5 +615,4 @@ bool Sets::initializeTemporaryFile()
     return true;
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

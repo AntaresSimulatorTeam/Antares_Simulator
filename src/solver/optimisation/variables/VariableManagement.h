@@ -8,7 +8,7 @@ namespace VariableManagement
 /*!
 Factory class that hold variables indices
 */
-class VariableManager
+class VariableManager final
 {
 public:
     VariableManager(std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,

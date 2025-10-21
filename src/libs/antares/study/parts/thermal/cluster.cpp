@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -111,9 +111,7 @@ bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, T
 
 } // namespace Yuni::Extension::CString
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent):
     Cluster(parent),
@@ -611,5 +609,4 @@ bool ThermalCluster::isActive() const
     return enabled && !mustrun;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

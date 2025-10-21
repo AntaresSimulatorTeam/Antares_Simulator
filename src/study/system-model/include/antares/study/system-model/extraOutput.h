@@ -21,7 +21,6 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 
 #include <antares/expressions/expression.h>
 
@@ -29,7 +28,7 @@ namespace Antares::ModelerStudy::SystemModel
 {
 
 /// An extra output expression
-class ExtraOutput
+class ExtraOutput final
 {
 public:
     ExtraOutput(std::string id, Expression expression):

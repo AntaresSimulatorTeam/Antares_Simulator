@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \brief Constness policies
@@ -41,5 +40,4 @@ struct PropagateConst
 };
 
 } // namespace Constness
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

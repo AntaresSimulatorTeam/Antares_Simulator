@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -248,7 +248,9 @@ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
 
     auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     auto system = Antares::Solver::LoadFiles::loadSystem(studyPath, libraries);
-    BOOST_CHECK_EQUAL(system.Components().at("K").getScenarioGroupId(), "");
+    const auto compoK = std::ranges::find_if(system.Components(),
+                                             [](const auto& comp) { return comp.Id() == "K"; });
+    BOOST_CHECK_EQUAL(compoK->getScenarioGroupId(), "");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

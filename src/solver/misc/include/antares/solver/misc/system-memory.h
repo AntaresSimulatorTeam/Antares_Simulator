@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -24,7 +24,7 @@
 #include <yuni/yuni.h>
 #include <yuni/thread/timer.h>
 
-class SystemMemoryLogger: public Yuni::Thread::Timer
+class SystemMemoryLogger final: public Yuni::Thread::Timer
 {
 public:
     SystemMemoryLogger();

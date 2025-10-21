@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -28,11 +28,11 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class LinearProblemBuilder
+class LinearProblemBuilder final
 {
 public:
     explicit LinearProblemBuilder(std::vector<std::unique_ptr<LinearProblemFiller>>& fillers);
-    void build(ILinearProblem& pb, ILinearProblemData& data, const FillContext& ctx);
+    void build(const FillContext& ctx);
 
 private:
     const std::vector<std::unique_ptr<LinearProblemFiller>> fillers_;

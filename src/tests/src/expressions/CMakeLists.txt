@@ -11,8 +11,10 @@ add_boost_test(test-expressions
         test_DeepWideTrees.cpp
         test_Iterators.cpp
         test_AstDOTStyleVisitor.cpp
+        UtilMocks.h
         LIBS
         expressions
         expressions-iterators
         linear-problem-data-impl
+        mock-modeler-objects
         Antares::antares-study-system-model)

@@ -1,36 +1,30 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "scenario-builder-renderer-base.h"
 #include "../../refresh.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 // ==================================
 // Scenario builder base class
@@ -49,7 +43,9 @@ void ScBuilderRendererBase::onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rul
         invalidate = true;
         onRefresh();
         if (gridPanel())
+        {
             RefreshAllControls(gridPanel());
+        }
     }
 }
 
@@ -74,30 +70,42 @@ static IRenderer::CellStyle alternateEnabledDisabled(int rowIndex, bool enabled)
     if (enabled)
     {
         if (rowIndex % 2 == 0)
+        {
             return IRenderer::cellStyleDefaultCenter;
+        }
         else
+        {
             return IRenderer::cellStyleDefaultCenterAlternate;
+        }
     }
     else
     {
         if (rowIndex % 2 == 0)
+        {
             return IRenderer::cellStyleDefaultCenterDisabled;
+        }
         else
+        {
             return IRenderer::cellStyleDefaultCenterAlternateDisabled;
+        }
     }
 }
 
 IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
 {
     if (Math::Zero(cellNumericValue(x, y)))
+    {
         return alternateEnabledDisabled(y, false);
+    }
 
     bool valid = (!(!study) && !(!pRules));
     if (valid)
     {
         auto& parameters = study->parameters;
         if (parameters.userPlaylist)
+        {
             valid = parameters.yearsFilter[x];
+        }
     }
     return alternateEnabledDisabled(y, valid);
 }
@@ -115,7 +123,9 @@ void ScBuilderRendererBase::onStudyClosed()
 int ScBuilderRendererAreasAsRows::height() const
 {
     if (!(!study) && !(!pRules))
+    {
         return (int)pRules->areaCount();
+    }
     return 0;
 }
 
@@ -124,8 +134,10 @@ wxString ScBuilderRendererAreasAsRows::rowCaption(int rowIndx) const
     if (!(!study) && !(!pRules))
     {
         if ((uint)rowIndx < study->areas.size())
+        {
             return wxString() << wxT(" ") << wxStringFromUTF8(study->areas.byIndex[rowIndx]->name)
                               << wxT("  ");
+        }
     }
     return wxEmptyString;
 }
@@ -144,8 +156,8 @@ ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector(
     if (notifier)
     {
         // Event: The current selected area
-        Toolbox::InputSelector::Area::onAreaChanged.connect(
-          this, &ScBuilderRendererForAreaSelector::onAreaChanged);
+        Toolbox::InputSelector::Area::onAreaChanged
+          .connect(this, &ScBuilderRendererForAreaSelector::onAreaChanged);
     }
 }
 
@@ -162,7 +174,9 @@ void ScBuilderRendererForAreaSelector::onAreaChanged(Data::Area* area)
         pArea = area;
         onRefresh();
         if (gridPanel())
+        {
             gridPanel()->Refresh();
+        }
     }
 }
 
@@ -171,7 +185,4 @@ bool ScBuilderRendererForAreaSelector::valid() const
     return !(!study) && pRules && !study->areas.empty() && !(!pRules) && pArea;
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,11 +13,7 @@
 #include "../../traits/length.h"
 #include "integer.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace CStringImpl
+namespace Yuni::Private::CStringImpl
 {
 /*!
 ** \brief Generic implementation of vsnprintf
@@ -61,6 +58,4 @@ inline int vnsprintf<char>(char* buffer, size_t bufferSize, const char* format, 
 #endif
 }
 
-} // namespace CStringImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::CStringImpl

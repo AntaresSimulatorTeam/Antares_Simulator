@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -67,7 +67,7 @@ std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::stri
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
 
-class TimeMeasurement
+class TimeMeasurement final
 {
     using clock = std::chrono::steady_clock;
 
@@ -77,6 +77,7 @@ public:
     long duration_ms() const;
     std::string toString() const;
     std::string toStringInSeconds() const;
+    void reset();
 
 private:
     clock::time_point start_;

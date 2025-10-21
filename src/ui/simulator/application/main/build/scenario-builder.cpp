@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <antares/memory/new_check.hxx>
 
@@ -45,9 +45,7 @@ using namespace Component::Datagrid;
 using namespace Toolbox;
 using namespace Antares::MemoryUtils;
 
-namespace Antares
-{
-namespace Forms
+namespace Antares::Forms
 {
 namespace // anonymous
 {
@@ -59,10 +57,12 @@ protected:
 
 public:
     basicScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel,
-                            Notebook* notebook) :
-     scBuilderPanel_(scenarioBuilderPanel), notebook_(notebook)
+                            Notebook* notebook):
+        scBuilderPanel_(scenarioBuilderPanel),
+        notebook_(notebook)
     {
     }
+
     virtual ~basicScBuilderPageMaker() = default;
 
     Notebook::Page* createPage()
@@ -79,10 +79,12 @@ protected:
     {
         return notebook_;
     }
+
     Renderer::ScBuilderRendererBase* renderer()
     {
         return renderer_;
     }
+
     DatagridType* grid()
     {
         return grid_;
@@ -94,20 +96,24 @@ private:
     virtual void addAreaSelectorPage() = 0;
 
     virtual Renderer::ScBuilderRendererBase* getRenderer() = 0;
+
     virtual void createRenderer()
     {
         renderer_ = getRenderer();
     }
+
     void rendererHandlesRulesEvent()
     {
         scBuilderPanel_->updateRules.connect(renderer_,
                                              &Renderer::ScBuilderRendererBase::onRulesChanged);
     }
+
     void createGrid()
     {
         grid_ = getGrid();
         renderer()->control(grid_);
     }
+
     virtual DatagridType* getGrid() = 0;
     virtual Notebook::Page* addPageToNotebook() = 0;
 
@@ -121,7 +127,7 @@ private:
 
 // Simple scenario builder page maker : makes page with no area selector
 
-class simpleScBuilderPageMaker : public basicScBuilderPageMaker
+class simpleScBuilderPageMaker: public basicScBuilderPageMaker
 {
     using basicScBuilderPageMaker::basicScBuilderPageMaker;
 
@@ -135,6 +141,7 @@ private:
         // For example : for thermal, you need to select an area to get a grid (rows : clusters,
         // columns : years) by default : does nothing. Should be overloaded to add a selector page
     }
+
     DatagridType* getGrid() override
     {
         return new_check_allocation<DatagridType>(notebook(), renderer());
@@ -142,7 +149,7 @@ private:
 };
 
 // Load ...
-class loadScBuilderPageMaker final : public simpleScBuilderPageMaker
+class loadScBuilderPageMaker final: public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
@@ -150,6 +157,7 @@ class loadScBuilderPageMaker final : public simpleScBuilderPageMaker
     {
         return new_check_allocation<Renderer::loadScBuilderRenderer>();
     }
+
     Notebook::Page* addPageToNotebook() override
     {
         return notebook()->add(grid(), wxT("load"), wxT("Load"));
@@ -157,7 +165,7 @@ class loadScBuilderPageMaker final : public simpleScBuilderPageMaker
 };
 
 // Hydro ...
-class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
+class hydroScBuilderPageMaker final: public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
@@ -165,6 +173,7 @@ class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
     {
         return new_check_allocation<Renderer::hydroScBuilderRenderer>();
     }
+
     Notebook::Page* addPageToNotebook() override
     {
         return notebook()->add(grid(), wxT("hydro"), wxT("Hydro"));
@@ -172,13 +181,15 @@ class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
 };
 
 // Wind ...
-class windScBuilderPageMaker final : public simpleScBuilderPageMaker
+class windScBuilderPageMaker final: public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
+
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
         return new_check_allocation<Renderer::windScBuilderRenderer>();
     }
+
     Notebook::Page* addPageToNotebook() override
     {
         return notebook()->add(grid(), wxT("wind"), wxT("Wind"));
@@ -186,7 +197,7 @@ class windScBuilderPageMaker final : public simpleScBuilderPageMaker
 };
 
 // Solar ...
-class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
+class solarScBuilderPageMaker final: public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
@@ -194,6 +205,7 @@ class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
     {
         return new_check_allocation<Renderer::solarScBuilderRenderer>();
     }
+
     Notebook::Page* addPageToNotebook() override
     {
         return notebook()->add(grid(), wxT("solar"), wxT("Solar"));
@@ -201,7 +213,7 @@ class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
 };
 
 // Hydro Initial levels ...
-class hydroInitialLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
+class hydroInitialLevelsScBuilderPageMaker final: public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
@@ -209,6 +221,7 @@ class hydroInitialLevelsScBuilderPageMaker final : public simpleScBuilderPageMak
     {
         return new_check_allocation<Renderer::hydroLevelsScBuilderRenderer>();
     }
+
     Notebook::Page* addPageToNotebook() override
     {
         return notebook()->add(grid(), wxT("hydro initial levels"), wxT("Hydro Initial Levels"));
@@ -216,7 +229,7 @@ class hydroInitialLevelsScBuilderPageMaker final : public simpleScBuilderPageMak
 };
 
 // Hydro Final levels ...
-class hydroFinalLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
+class hydroFinalLevelsScBuilderPageMaker final: public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
@@ -224,6 +237,7 @@ class hydroFinalLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
     {
         return new_check_allocation<Renderer::hydroFinalLevelsScBuilderRenderer>();
     }
+
     Notebook::Page* addPageToNotebook() override
     {
         return notebook()->add(grid(), wxT("hydro final levels"), wxT("Hydro Final Levels"));
@@ -231,7 +245,7 @@ class hydroFinalLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
 };
 
 // Links NTC ...
-class ntcScBuilderPageMaker final : public simpleScBuilderPageMaker
+class ntcScBuilderPageMaker final: public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
@@ -239,13 +253,14 @@ class ntcScBuilderPageMaker final : public simpleScBuilderPageMaker
     {
         return new_check_allocation<Renderer::ntcScBuilderRenderer>();
     }
+
     Notebook::Page* addPageToNotebook() override
     {
         return notebook()->add(grid(), wxT("ntc"), wxT("NTC"));
     }
 };
 
-class clusterScBuilderPageMaker : public basicScBuilderPageMaker
+class clusterScBuilderPageMaker: public basicScBuilderPageMaker
 {
     using basicScBuilderPageMaker::basicScBuilderPageMaker;
 
@@ -254,13 +269,16 @@ class clusterScBuilderPageMaker : public basicScBuilderPageMaker
 
     void addAreaSelectorPage() override
     {
-        area_selector_page_
-          = createStdNotebookPage<InputSelector::Area>(notebook(), name(), caption());
+        area_selector_page_ = createStdNotebookPage<InputSelector::Area>(notebook(),
+                                                                         name(),
+                                                                         caption());
     }
+
     DatagridType* getGrid() override
     {
         return new_check_allocation<DatagridType>(area_selector_page_.first, renderer());
     }
+
     Notebook::Page* addPageToNotebook() override
     {
         notebookPage_ = area_selector_page_.first->add(grid(), name(), caption());
@@ -280,7 +298,7 @@ private:
 };
 
 // Thermal clusters ...
-class thermalScBuilderPageMaker final : public clusterScBuilderPageMaker
+class thermalScBuilderPageMaker final: public clusterScBuilderPageMaker
 {
     using clusterScBuilderPageMaker::clusterScBuilderPageMaker;
 
@@ -302,7 +320,7 @@ public:
 };
 
 // Renewable clusters ...
-class renewableScBuilderPageMaker final : public clusterScBuilderPageMaker
+class renewableScBuilderPageMaker final: public clusterScBuilderPageMaker
 {
     using clusterScBuilderPageMaker::clusterScBuilderPageMaker;
 
@@ -328,27 +346,32 @@ public:
 void ApplWnd::onScenarioBuilderNotebookPageChanging(Notebook::Page& page)
 {
     if (page.name() == wxT("back"))
+    {
         backToInputData();
+    }
 }
 
 void ApplWnd::onOutputNotebookPageChanging(Notebook::Page& page)
 {
     if (page.name() == wxT("back"))
+    {
         backToInputData();
+    }
 }
 
 void ApplWnd::createNBScenarioBuilder()
 {
     // Scenario Builder
     pScenarioBuilderNotebook = new_check_allocation<Notebook>(pSectionNotebook);
-    pScenarioBuilderNotebook->onPageChanged.connect(
-      this, &ApplWnd::onScenarioBuilderNotebookPageChanging);
-    pScenarioBuilderMainPage = pSectionNotebook->add(
-      pScenarioBuilderNotebook, wxT("scenariobuilder"), wxT("scenariobuilder"));
+    pScenarioBuilderNotebook->onPageChanged
+      .connect(this, &ApplWnd::onScenarioBuilderNotebookPageChanging);
+    pScenarioBuilderMainPage = pSectionNotebook->add(pScenarioBuilderNotebook,
+                                                     wxT("scenariobuilder"),
+                                                     wxT("scenariobuilder"));
 
     // Title
-    auto* scenarioBuilderPanel
-      = new_check_allocation<Window::ScenarioBuilder::Panel>(pScenarioBuilderNotebook);
+    auto* scenarioBuilderPanel = new_check_allocation<Window::ScenarioBuilder::Panel>(
+      pScenarioBuilderNotebook);
     pScenarioBuilderNotebook->addCommonControlTop(scenarioBuilderPanel, 0, wxPoint(100, 60));
 
     // Back to standard edition
@@ -383,11 +406,11 @@ void ApplWnd::createNBScenarioBuilder()
     pScenarioBuilderNotebook->addSeparator();
 
     hydroInitialLevelsScBuilderPageMaker hydroInitialLevelsSBpageMaker(scenarioBuilderPanel,
-                                                         pScenarioBuilderNotebook);
+                                                                       pScenarioBuilderNotebook);
     pageScBuilderHydroInitialLevels = hydroInitialLevelsSBpageMaker.createPage();
-    
+
     hydroFinalLevelsScBuilderPageMaker hydroFinalLevelsSBpageMaker(scenarioBuilderPanel,
-                                                         pScenarioBuilderNotebook);
+                                                                   pScenarioBuilderNotebook);
     pageScBuilderHydroFinalLevels = hydroFinalLevelsSBpageMaker.createPage();
 }
 
@@ -408,5 +431,4 @@ void ApplWnd::createNBOutputViewer()
     pOutputViewerNotebook->addSeparator();
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms

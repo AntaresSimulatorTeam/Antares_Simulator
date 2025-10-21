@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -38,7 +38,7 @@ struct ShortTermStorageAdditionalConstraintsError final: std::invalid_argument
     using std::invalid_argument::invalid_argument;
 };
 
-class CustomErrorListener: public antlr4::BaseErrorListener
+class CustomErrorListener final: public antlr4::BaseErrorListener
 {
 public:
     void syntaxError(antlr4::Recognizer* recognizer,

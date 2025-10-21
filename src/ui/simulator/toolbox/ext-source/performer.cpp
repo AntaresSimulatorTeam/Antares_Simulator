@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include "performer.h"
@@ -41,14 +41,14 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Window
 {
-namespace Window
-{
-class MessageFlusherTimer final : public wxTimer
+class MessageFlusherTimer final: public wxTimer
 {
 public:
-    MessageFlusherTimer(PerformerDialog& form) : wxTimer(), pForm(form)
+    MessageFlusherTimer(PerformerDialog& form):
+        wxTimer(),
+        pForm(form)
     {
     }
 
@@ -67,15 +67,18 @@ private:
 
 }; // class MessageFlusherTimer
 
-class ThreadUpdater final : public Yuni::Thread::IThread
+class ThreadUpdater final: public Yuni::Thread::IThread
 {
 public:
     using IActionPtr = Antares::Action::IAction::Ptr;
     using ContextPtr = Antares::Action::Context::Ptr;
 
 public:
-    ThreadUpdater(PerformerDialog& form, ContextPtr& context, IActionPtr& action) :
-     pForm(form), pRootAction(action), pContext(context), pFormAlreadyClosed(false)
+    ThreadUpdater(PerformerDialog& form, ContextPtr& context, IActionPtr& action):
+        pForm(form),
+        pRootAction(action),
+        pContext(context),
+        pFormAlreadyClosed(false)
     {
     }
 
@@ -90,7 +93,9 @@ protected:
         performCopyPaste();
         // Close the window
         if (!pFormAlreadyClosed)
+        {
             Dispatcher::GUI::Post(&pForm, &PerformerDialog::askForClosingTheWindow);
+        }
         // The thread can be stopped
         return false;
     }
@@ -100,7 +105,9 @@ protected:
         if (prepare(pRootAction))
         {
             if (shouldAbort())
+            {
                 return;
+            }
 
             // Notify that we have brought modifications
             Dispatcher::GUI::Post(&pForm, &PerformerDialog::notifyHasBeenModified);
@@ -115,11 +122,15 @@ protected:
                 {
                     stopInterval = 4;
                     if (shouldAbort())
+                    {
                         return;
+                    }
                 }
 
                 if (!(i % 4))
+                {
                     pForm.notifyProgression((int)i, (int)pList.size());
+                }
 
             } // all action
         }
@@ -131,7 +142,9 @@ protected:
         {
             logs.debug() << "[study-action] Got " << pList.size() << " actions to execute";
             if (!pList.empty())
+            {
                 return true;
+            }
         }
         else
         {
@@ -159,16 +172,16 @@ private:
 
 PerformerDialog::PerformerDialog(wxWindow* parent,
                                  const Antares::Action::Context::Ptr& context,
-                                 const Antares::Action::IAction::Ptr& root) :
- wxDialog(parent, wxID_ANY, wxT("Import"), wxDefaultPosition, wxDefaultSize),
- pHasBeenModified(false),
- pContext(context),
- pActions(root),
- pGauge(nullptr),
- pBtnCancel(nullptr),
- pLblMessage(nullptr),
- pTimer(nullptr),
- pThread(nullptr)
+                                 const Antares::Action::IAction::Ptr& root):
+    wxDialog(parent, wxID_ANY, wxT("Import"), wxDefaultPosition, wxDefaultSize),
+    pHasBeenModified(false),
+    pContext(context),
+    pActions(root),
+    pGauge(nullptr),
+    pBtnCancel(nullptr),
+    pLblMessage(nullptr),
+    pTimer(nullptr),
+    pThread(nullptr)
 {
     // IO statistics
     Statistics::Reset();
@@ -187,8 +200,12 @@ PerformerDialog::PerformerDialog(wxWindow* parent,
 
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
-    wxWindow* header = Toolbox::Components::WizardHeader::Create(
-      this, wxT("Pasting..."), "images/32x32/paste.png", wxEmptyString, 500, false);
+    wxWindow* header = Toolbox::Components::WizardHeader::Create(this,
+                                                                 wxT("Pasting..."),
+                                                                 "images/32x32/paste.png",
+                                                                 wxEmptyString,
+                                                                 500,
+                                                                 false);
     header->SetBackgroundColour(GetBackgroundColour());
     sizer->Add(header, 0, wxALL | wxEXPAND);
 
@@ -224,8 +241,10 @@ PerformerDialog::PerformerDialog(wxWindow* parent,
 
     // Button Close
     {
-        pBtnCancel
-          = Component::CreateButton(panel, wxT(" Cancel "), this, &PerformerDialog::onCancel);
+        pBtnCancel = Component::CreateButton(panel,
+                                             wxT(" Cancel "),
+                                             this,
+                                             &PerformerDialog::onCancel);
         sizerBar->Add(pBtnCancel, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL, 8);
 
         sizerBar->Add(15, 5);
@@ -242,7 +261,9 @@ PerformerDialog::PerformerDialog(wxWindow* parent,
 
     wxSize p = GetSize();
     if (p.GetWidth() < 430)
+    {
         p.SetWidth(430);
+    }
     SetSize(p);
 
     Centre(wxBOTH);
@@ -292,11 +313,15 @@ void PerformerDialog::onCancel(void*)
     if (pThread)
     {
         if (pTimer)
+        {
             pTimer->Stop();
+        }
         pLblMessage->SetLabel(wxT("Aborting..."));
         // ASync close
         if (pBtnCancel)
+        {
             pBtnCancel->Enable(false);
+        }
         Enable(false);
         pThread->gracefulStop();
     }
@@ -375,13 +400,19 @@ void PerformerDialog::notifyProgression(int progress, int max)
 void PerformerDialog::askForClosingTheWindow()
 {
     if (pTimer)
+    {
         pTimer->Stop();
+    }
     Enable(false);
     if (pLblMessage)
+    {
         pLblMessage->SetLabel(wxT("Updating the study..."));
+    }
     pGauge->value(100.);
     if (pBtnCancel)
+    {
         pBtnCancel->Enable(false);
+    }
 
     Refresh();
 
@@ -409,7 +440,9 @@ void PerformerDialog::notifyHasBeenModified()
 void PerformerDialog::closeWindow()
 {
     if (pThread)
+    {
         pThread->wait();
+    }
 
     // Reference to the main fomr
     auto& mainFrm = *Forms::ApplWnd::Instance();
@@ -446,7 +479,9 @@ void PerformerDialog::closeWindow()
             // Reload runtime data
             auto currentStudy = GetCurrentStudy();
             if (currentStudy != study)
+            {
                 currentStudy->uiinfo->reloadAll();
+            }
         }
     }
 
@@ -460,5 +495,4 @@ void PerformerDialog::closeWindow()
     Dispatcher::GUI::Close(this);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -34,7 +34,7 @@ namespace Antares::IO::Inputs::ModelConverter
 using namespace Antares::Expressions::Nodes;
 
 /// Visitor to convert ANTLR expressions to Antares::Expressions::Nodes
-class ConvertorVisitor: public ExprVisitor
+class ConvertorVisitor final: public ExprVisitor
 {
 public:
     ConvertorVisitor(Expressions::Registry<Node>& registry, const YmlModel::Model& model);
@@ -116,7 +116,7 @@ std::any ConvertorVisitor::visit(antlr4::tree::ParseTree* tree)
     return tree->accept(this);
 }
 
-class NoParameterOrVariableWithThisName: public std::runtime_error
+class NoParameterOrVariableWithThisName final: public std::runtime_error
 {
 public:
     explicit NoParameterOrVariableWithThisName(const std::string& name):
@@ -131,11 +131,11 @@ static constexpr unsigned int convertBool(bool in)
     return in ? 1 : 0;
 }
 
-static constexpr Expressions::Visitors::TimeIndex convertToTimeIndex(bool timedependent,
-                                                                     bool scenariodependent)
+static constexpr Optimisation::TimeIndex convertToTimeIndex(bool timedependent,
+                                                            bool scenariodependent)
 {
-    return static_cast<Expressions::Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
-                                                         | convertBool(timedependent));
+    return static_cast<Optimisation::TimeIndex>((convertBool(scenariodependent) << 1)
+                                                | convertBool(timedependent));
 }
 
 Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
@@ -151,12 +151,15 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         }
     }
 
-    for (const auto& var: model_.variables)
+    const auto& variables = model_.variables;
+    for (std::size_t index = 0; index < variables.size(); ++index)
     {
+        const auto& var = variables[index];
         if (var.id == identifier)
         {
             return static_cast<Node*>(
               registry_.create<VariableNode>(var.id,
+                                             index,
                                              convertToTimeIndex(var.time_dependent,
                                                                 var.scenario_dependent)));
         }
@@ -215,17 +218,39 @@ std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* contex
     }
 }
 
+void extractSumOperands(Node* node, std::vector<Node*>& operands)
+{
+    if (auto* sumNode = dynamic_cast<SumNode*>(node))
+    {
+        for (auto* operand: sumNode->getOperands())
+        {
+            extractSumOperands(operand, operands);
+        }
+    }
+    else
+    {
+        operands.emplace_back(node);
+    }
+}
+
 std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
 {
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
 
     std::string op = context->op->getText();
-    return (op == "+") ? static_cast<Node*>(registry_.create<SumNode>(left, right))
-                       : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
+    if (op == "-")
+    {
+        return static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
+    }
+    // Sum node, flatten all operands in one vector if possible
+    std::vector<Node*> operands;
+    extractSumOperands(left, operands);
+    extractSumOperands(right, operands);
+    return static_cast<Node*>(registry_.create<SumNode>(operands));
 }
 
-class NotImplemented: public std::runtime_error
+class NotImplemented final: public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;

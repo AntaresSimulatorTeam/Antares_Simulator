@@ -1,40 +1,34 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "renewable.areasummary.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 RenewableClusterSummarySingleArea::RenewableClusterSummarySingleArea(
   wxWindow* control,
-  Toolbox::InputSelector::Area* notifier) :
- CommonClusterSummarySingleArea(control, notifier)
+  Toolbox::InputSelector::Area* notifier):
+    CommonClusterSummarySingleArea(control, notifier)
 {
 }
 
@@ -45,7 +39,9 @@ RenewableClusterSummarySingleArea::~RenewableClusterSummarySingleArea()
 wxString RenewableClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
     if (pArea)
+    {
         return wxStringFromUTF8(pArea->renewable.list[rowIndx]->name());
+    }
     return wxEmptyString;
 }
 
@@ -64,7 +60,8 @@ wxString RenewableClusterSummarySingleArea::columnCaption(int colIndx) const
 
 wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
 {
-    Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.allClustersCount())
+    Data::RenewableCluster* cluster = (pArea
+                                       and (uint) y < pArea->renewable.list.allClustersCount())
                                         ? pArea->renewable.list[y].get()
                                         : nullptr;
     switch (x)
@@ -83,7 +80,8 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
 
 double RenewableClusterSummarySingleArea::cellNumericValue(int x, int y) const
 {
-    Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.allClustersCount())
+    Data::RenewableCluster* cluster = (pArea
+                                       and (uint) y < pArea->renewable.list.allClustersCount())
                                         ? pArea->renewable.list[y].get()
                                         : nullptr;
     // gp : do we wish to have the line empty if cluster disabled
@@ -126,7 +124,8 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
             return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
         case 2:
             return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(
-              cluster->unitCount, v);
+              cluster->unitCount,
+              v);
         case 3:
             return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
         }
@@ -134,7 +133,4 @@ bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
     return false;
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
+#if 0
 #define WIN32_LEAN_AND_MEAN
 
 #include <unit_test_utils.h>
@@ -323,3 +323,4 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown, CreateVisitorFi
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+#endif

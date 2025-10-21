@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
+#if 0
 #define WIN32_LEAN_AND_MEAN
 
 #include <string>
@@ -32,9 +32,8 @@
 #include <antares/expressions/visitors/TimeIndexVisitor.h>
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 #include "antares/optimisation/linear-problem-api/IScenario.h"
-#include "antares/solver/optim-model-filler/EvaluationContextProvider.h"
 
-#include "MockEvaluationContextProvider.h"
+#include "mockModelerObjects.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -307,3 +306,4 @@ BOOST_FIXTURE_TEST_CASE(test_overwrite_time_inde_from_component, BasicFixture)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+#endif

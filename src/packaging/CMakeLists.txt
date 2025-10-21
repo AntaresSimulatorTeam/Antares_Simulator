@@ -51,6 +51,7 @@ set(TARGET_LIBS #No alias
         model_antares
         antares-solver-ts-generator
         shave-peaks-by-remix-storage-gen
+		storage-for-remix-list-sort
 
         # lps : nothing
 
@@ -96,6 +97,7 @@ set(TARGET_LIBS #No alias
         antlr-interface
         antares-study-system-model
         load-modeler-files
+        modeler-optimisation-container
         expressions
         optim-model-filler
         yml-system

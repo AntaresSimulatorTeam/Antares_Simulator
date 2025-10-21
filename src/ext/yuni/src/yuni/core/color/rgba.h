@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -16,9 +17,7 @@
 #undef RGB
 #endif // RGB
 
-namespace Yuni
-{
-namespace Color
+namespace Yuni::Color
 {
 /*!
 ** \brief 32Bits RGB Color Model (additive color model + transparency)
@@ -32,12 +31,14 @@ public:
     typedef T Type;
     //! The most appropriate type for printing
     typedef typename Yuni::Private::Color::Print<T>::Type PrintType;
+
     //! The most appropriate type for calculations
     template<class V>
     struct Calculation
     {
         typedef typename Yuni::Private::Color::Calculation<T, V>::Type Type;
     };
+
     enum
     {
         //! A non-zero value if the class has a transparency channel
@@ -159,7 +160,6 @@ public:
 
 }; // class RGBA
 
-} // namespace Color
-} // namespace Yuni
+} // namespace Yuni::Color
 
 #include "rgba.hxx"

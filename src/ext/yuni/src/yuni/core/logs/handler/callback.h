@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,19 +10,18 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../null.h"
-#include "../../event/event.h"
 #include "yuni/core/logs/verbosity.h"
 
-namespace Yuni
-{
-namespace Logs
+#include "../../event/event.h"
+#include "../null.h"
+
+namespace Yuni::Logs
 {
 /*!
 ** \brief Log Handler: The standard output (cout & cerr)
 */
 template<class NextHandler = NullHandler>
-class YUNI_DECL Callback : public NextHandler
+class YUNI_DECL Callback: public NextHandler
 {
 public:
     enum Settings
@@ -54,5 +54,4 @@ public:
 
 }; // class Callback
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs

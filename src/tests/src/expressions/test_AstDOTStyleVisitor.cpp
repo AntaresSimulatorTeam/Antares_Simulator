@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -47,7 +47,7 @@ public:
         Node* parameterNode = registry_.create<ParameterNode>("avogadro_constant");
         Node* multiplicationNode = registry_.create<MultiplicationNode>(negationNode,
                                                                         parameterNode);
-        Node* variableNode = registry_.create<VariableNode>("atoms_count");
+        Node* variableNode = registry_.create<VariableNode>("atoms_count", 56);
         Node* divisionNode = registry_.create<DivisionNode>(variableNode, multiplicationNode);
         Node* portFieldNode = registry_.create<PortFieldNode>("gasStation", "1149");
         Node* portFieldSumNode = registry_.create<PortFieldSumNode>("portfield", "sum");

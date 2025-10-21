@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,11 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT, class T, class Alloc>
 class Append<CStringT, Yuni::Nullable<T, Alloc>> final
@@ -22,7 +19,9 @@ class Append<CStringT, Yuni::Nullable<T, Alloc>> final
     static void Perform(CStringT& s, const Yuni::Nullable<T, Alloc>& rhs)
     {
         if (!rhs.null())
+        {
             s << rhs.value();
+        }
     }
 };
 
@@ -31,6 +30,7 @@ class Into<Yuni::Nullable<T, Alloc>> final
 {
 public:
     typedef Yuni::Nullable<T, Alloc> TargetType;
+
     enum
     {
         valid = 1
@@ -41,9 +41,13 @@ public:
     {
         T tmp;
         if (s.to(tmp))
+        {
             out = tmp;
+        }
         else
+        {
             out = nullptr;
+        }
         return true;
     }
 
@@ -54,9 +58,7 @@ public:
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
 
 template<typename T, class Alloc>
 inline std::ostream& operator<<(std::ostream& out, const Yuni::Nullable<T, Alloc>& rhs)

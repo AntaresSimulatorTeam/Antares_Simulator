@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -22,7 +22,7 @@
 
 #include <utility>
 
-class IntoUTF8ArgsTranslator
+class IntoUTF8ArgsTranslator final
 {
 public:
     IntoUTF8ArgsTranslator(int argc, const char** argv);

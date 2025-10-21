@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "nodal-optimization.h"
 #include "../../../../../application/study.h"
@@ -28,15 +28,10 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Component::Datagrid::Renderer
 {
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
-{
-NodalOptimization::NodalOptimization(wxWindow* parent) : pControl(parent)
+NodalOptimization::NodalOptimization(wxWindow* parent):
+    pControl(parent)
 {
     OnStudyAreaRename.connect(this, &NodalOptimization::onAreaRenamed);
     OnStudyNodalOptimizationChanged.connect(this,
@@ -205,7 +200,9 @@ double NodalOptimization::cellNumericValue(int x, int y) const
 bool NodalOptimization::cellValue(int x, int y, const String& value)
 {
     if (!study || (uint)y >= study->areas.size())
+    {
         return false;
+    }
 
     auto& area = *(study->areas.byIndex[y]);
 
@@ -222,17 +219,25 @@ bool NodalOptimization::cellValue(int x, int y, const String& value)
         {
             // New scheme
             if (Math::Abs(d) < 5.e-3)
+            {
                 d = 0.;
+            }
             else
             {
                 if (d > 5.e4)
+                {
                     d = 5.e4;
+                }
                 else
                 {
                     if (d < -5.e4)
+                    {
                         d = -5.e4;
+                    }
                     else
+                    {
                         d = Math::Round(d, 3);
+                    }
                 }
             }
             area.thermal.unsuppliedEnergyCost = d;
@@ -254,7 +259,9 @@ bool NodalOptimization::cellValue(int x, int y, const String& value)
             else
             {
                 if (d > 5.e4)
+                {
                     d = 5.e4;
+                }
             }
             area.spreadUnsuppliedEnergyCost = Math::Round(d, 3);
             Window::Inspector::Refresh();
@@ -270,17 +277,25 @@ bool NodalOptimization::cellValue(int x, int y, const String& value)
         {
             // New scheme
             if (Math::Abs(d) < 5.e-3)
+            {
                 d = 0.;
+            }
             else
             {
                 if (d > 5.e4)
+                {
                     d = 5.e4;
+                }
                 else
                 {
                     if (d < -5.e4)
+                    {
                         d = -5.e4;
+                    }
                     else
+                    {
                         d = Math::Round(d, 3);
+                    }
                 }
             }
 
@@ -303,7 +318,9 @@ bool NodalOptimization::cellValue(int x, int y, const String& value)
             else
             {
                 if (d > 5.e4)
+                {
                     d = 5.e4;
+                }
             }
             area.spreadSpilledEnergyCost = Math::Round(d, 3);
             Window::Inspector::Refresh();
@@ -318,9 +335,13 @@ bool NodalOptimization::cellValue(int x, int y, const String& value)
         if (b != (area.nodalOptimization & Data::anoNonDispatchPower))
         {
             if (b)
+            {
                 area.nodalOptimization |= Data::anoNonDispatchPower;
+            }
             else
+            {
                 area.nodalOptimization &= ~Data::anoNonDispatchPower;
+            }
             Window::Inspector::Refresh();
             OnInspectorRefresh(nullptr);
             return true;
@@ -333,9 +354,13 @@ bool NodalOptimization::cellValue(int x, int y, const String& value)
         if (b != (0 != (area.nodalOptimization & Data::anoDispatchHydroPower)))
         {
             if (b)
+            {
                 area.nodalOptimization |= Data::anoDispatchHydroPower;
+            }
             else
+            {
                 area.nodalOptimization &= ~Data::anoDispatchHydroPower;
+            }
             Window::Inspector::Refresh();
             OnInspectorRefresh(nullptr);
             return true;
@@ -348,9 +373,13 @@ bool NodalOptimization::cellValue(int x, int y, const String& value)
         if (b != (0 != (area.nodalOptimization & Data::anoOtherDispatchPower)))
         {
             if (b)
+            {
                 area.nodalOptimization |= Data::anoOtherDispatchPower;
+            }
             else
+            {
                 area.nodalOptimization &= ~Data::anoOtherDispatchPower;
+            }
             Window::Inspector::Refresh();
             OnInspectorRefresh(nullptr);
             return true;
@@ -365,16 +394,17 @@ bool NodalOptimization::cellValue(int x, int y, const String& value)
 void NodalOptimization::onAreaRenamed(Antares::Data::Area*)
 {
     if (pControl)
+    {
         pControl->Refresh();
+    }
 }
 
 void NodalOptimization::onNodalOptimizationExternalChanged()
 {
     if (pControl)
+    {
         pControl->Refresh();
+    }
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

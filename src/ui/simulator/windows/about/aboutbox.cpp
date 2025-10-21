@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include <yuni/core/system/memory.h>
@@ -274,9 +274,7 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
     This Source Code Form is "Incompatible With Secondary Licenses", as defined by the Mozilla Public License, v. 2.0.
 )";
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 namespace // anonymous
 {
@@ -287,8 +285,8 @@ enum
 
 } // anonymous namespace
 
-AboutBox::AboutBox(wxWindow* parent) :
- wxDialog(parent, wxID_ANY, wxT("About Antares_Simulator"), wxDefaultPosition, wxDefaultSize)
+AboutBox::AboutBox(wxWindow* parent):
+    wxDialog(parent, wxID_ANY, wxT("About Antares_Simulator"), wxDefaultPosition, wxDefaultSize)
 {
     // Informations about the study
     wxColour defaultBgColor = GetBackgroundColour();
@@ -310,10 +308,11 @@ AboutBox::AboutBox(wxWindow* parent) :
 
     auto* textSizer = new wxBoxSizer(wxHORIZONTAL);
     textSizer->AddSpacer(20);
-    textSizer->Add(
-      Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/128x128/antares.png"),
-      0,
-      wxALL | wxALIGN_TOP);
+    textSizer->Add(Resources::StaticBitmapLoadFromFile(this,
+                                                       wxID_ANY,
+                                                       "images/128x128/antares.png"),
+                   0,
+                   wxALL | wxALIGN_TOP);
     textSizer->AddSpacer(15);
 
     auto* sv = new wxBoxSizer(wxVERTICAL);
@@ -328,8 +327,10 @@ AboutBox::AboutBox(wxWindow* parent) :
     sv->AddSpacer(2);
 
     // subtitle
-    auto* what = Component::CreateLabel(
-      this, wxT("A New Tool for Adequacy Reports and Economic Studies"), false, false);
+    auto* what = Component::CreateLabel(this,
+                                        wxT("A New Tool for Adequacy Reports and Economic Studies"),
+                                        false,
+                                        false);
     what->SetBackgroundColour(wxColour(255, 255, 255));
     what->SetForegroundColour(wxColour(0, 0, 0));
     sv->Add(what, 0, wxALL | wxEXPAND);
@@ -337,8 +338,9 @@ AboutBox::AboutBox(wxWindow* parent) :
     sv->AddSpacer(15);
 
     // copyright date
-    auto* copyright = Component::CreateLabel(
-      this, wxString() << wxT("Copyright RTE 2007 - ") << ANTARES_VERSION_YEAR);
+    auto* copyright = Component::CreateLabel(this,
+                                             wxString() << wxT("Copyright RTE 2007 - ")
+                                                        << ANTARES_VERSION_YEAR);
     copyright->SetBackgroundColour(wxColour(255, 255, 255));
     copyright->SetForegroundColour(wxColour(0, 0, 0));
     sv->Add(copyright, 0, wxALL | wxEXPAND);
@@ -413,16 +415,17 @@ AboutBox::AboutBox(wxWindow* parent) :
                                  wxTextCtrlNameStr);
     myNotebook->AddPage(MainEditBox, L"Thanks");
 
-    MainEditBox = new wxTextCtrl(
-      myNotebook,
-      -1,
-      wxString::FromUTF8(AntaresLicense) + wxString::FromUTF8(AntaresLicense1)
-        + wxString::FromUTF8(AntaresLicense2) + wxString::FromUTF8(AntaresLicense3),
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL,
-      wxDefaultValidator,
-      wxTextCtrlNameStr);
+    MainEditBox = new wxTextCtrl(myNotebook,
+                                 -1,
+                                 wxString::FromUTF8(AntaresLicense)
+                                   + wxString::FromUTF8(AntaresLicense1)
+                                   + wxString::FromUTF8(AntaresLicense2)
+                                   + wxString::FromUTF8(AntaresLicense3),
+                                 wxDefaultPosition,
+                                 wxDefaultSize,
+                                 wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL,
+                                 wxDefaultValidator,
+                                 wxTextCtrlNameStr);
     myNotebook->AddPage(MainEditBox, L"License");
     // myNotebook->Layout();
     sv->Add(myNotebook, 0, wxALL | wxEXPAND);
@@ -477,7 +480,9 @@ AboutBox::AboutBox(wxWindow* parent) :
     else
     {
         if (p.GetWidth() > 600)
+        {
             p.SetWidth(600);
+        }
     }
     SetSize(p);
     Centre(wxBOTH);
@@ -488,5 +493,4 @@ void AboutBox::onClose(void*)
     Dispatcher::GUI::Close(this);
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

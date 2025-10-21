@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "spotlight-provider.h"
 #include <cassert>
@@ -30,15 +30,11 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace OutputViewer
+namespace Antares::Window::OutputViewer
 {
 namespace // anonymous
 {
-class ItemAreaLink final : public Antares::Component::Spotlight::IItem
+class ItemAreaLink final: public Antares::Component::Spotlight::IItem
 {
 public:
     //! Smart ptr
@@ -51,7 +47,9 @@ public:
     ** \brief Default constructor
     */
     template<class StringT>
-    ItemAreaLink(SelectionType sel, const StringT& itemname) : selectionType(sel), id(itemname)
+    ItemAreaLink(SelectionType sel, const StringT& itemname):
+        selectionType(sel),
+        id(itemname)
     {
         caption(id);
     }
@@ -60,6 +58,7 @@ public:
     virtual ~ItemAreaLink()
     {
     }
+
     //@}
 
 public:
@@ -70,8 +69,9 @@ public:
 
 } // anonymous namespace
 
-SpotlightProviderGlobalSelection::SpotlightProviderGlobalSelection(Component* com) :
- pComponent(com), pCurrentAreaOrLink(nullptr)
+SpotlightProviderGlobalSelection::SpotlightProviderGlobalSelection(Component* com):
+    pComponent(com),
+    pCurrentAreaOrLink(nullptr)
 {
     assert(pComponent);
 
@@ -90,7 +90,8 @@ SpotlightProviderGlobalSelection::~SpotlightProviderGlobalSelection()
     delete pBmpLink;
 }
 
-SpotlightProviderMCAll::SpotlightProviderMCAll(Component* com) : pComponent(com)
+SpotlightProviderMCAll::SpotlightProviderMCAll(Component* com):
+    pComponent(com)
 {
     assert(pComponent);
 
@@ -104,7 +105,9 @@ SpotlightProviderMCAll::~SpotlightProviderMCAll()
     delete pBmpVariable;
 }
 
-SpotlightProvider::SpotlightProvider(Component* com, Layer* layer) : pComponent(com), pLayer(layer)
+SpotlightProvider::SpotlightProvider(Component* com, Layer* layer):
+    pComponent(com),
+    pLayer(layer)
 {
     assert(pComponent);
     assert(pLayer);
@@ -129,21 +132,29 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
 {
     assert(pLayer);
     if (!pComponent || !pLayer)
+    {
         return;
+    }
 
     Data::Output::Ptr output = pLayer->selection;
     if (!output)
+    {
         return;
+    }
     const String& outputPath = output->path;
     if (!outputPath)
+    {
         return;
+    }
 
     // Looking for the list of areas and links
     std::lock_guard locker(pComponent->pMutex);
 
     auto it = pComponent->pAlreadyPreparedContents.find(outputPath);
     if (it == pComponent->pAlreadyPreparedContents.end())
+    {
         return;
+    }
 
     // Reattach
     {
@@ -152,7 +163,9 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
         item->countedAsResult(false);
 
         if (pBmpReattach)
+        {
             item->image(*pBmpReattach);
+        }
         out.push_back(item);
         out.push_back(std::make_shared<Spotlight::Separator>());
     }
@@ -169,12 +182,16 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
         for (auto i = list.areas.begin(); i != end; ++i)
         {
             if (i->first() == '@')
+            {
                 appendAreaName(out, *i);
+            }
         }
         for (auto i = list.areas.begin(); i != end; ++i)
         {
             if (i->first() != '@')
+            {
                 appendAreaName(out, *i);
+            }
         }
     }
     else
@@ -186,25 +203,33 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
         {
             auto& areaName = *i;
             if (areaName.first() != '@')
+            {
                 continue;
+            }
             for (auto ti = tokens.begin(); ti != tend; ++ti)
             {
                 auto& text = (*ti)->text;
                 if (areaName.icontains(text))
+                {
                     appendAreaName(out, *i);
+                }
             }
         }
         for (auto i = list.areas.begin(); i != end; ++i)
         {
             const String& areaName = *i;
             if (areaName.first() == '@')
+            {
                 continue;
+            }
             auto ti = tokens.begin();
             for (; ti != tend; ++ti)
             {
                 auto& text = (*ti)->text;
                 if (areaName.icontains(text))
+                {
                     appendAreaName(out, *i);
+                }
             }
         }
     }
@@ -213,7 +238,9 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
     {
         auto end = list.links.end();
         for (auto i = list.links.begin(); i != end; ++i)
+        {
             appendLinkName(out, *i);
+        }
     }
     else
     {
@@ -227,7 +254,9 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
             {
                 auto& text = (*ti)->text;
                 if (linkName.icontains(text))
+                {
                     appendLinkName(out, *i);
+                }
             }
         }
     }
@@ -242,16 +271,22 @@ void SpotlightProvider::appendAreaName(Spotlight::IItem::Vector& out, const Stri
         {
             item->group("DISTRICTS");
             if (pBmpGroup)
+            {
                 item->image(*pBmpGroup);
+            }
         }
         else
         {
             item->group("AREAS");
             if (pBmpArea)
+            {
                 item->image(*pBmpArea);
+            }
         }
         if (pLayer && pLayer->customSelectionType == stArea && pLayer->customAreaOrLink == name)
+        {
             item->select();
+        }
         out.push_back(item);
     }
 }
@@ -263,9 +298,13 @@ void SpotlightProvider::appendLinkName(Spotlight::IItem::Vector& out, const Stri
     {
         item->group("LINKS");
         if (pBmpLink)
+        {
             item->image(*pBmpLink);
+        }
         if (pLayer && pLayer->customSelectionType == stLink && pLayer->customAreaOrLink == name)
+        {
             item->select();
+        }
         out.push_back(item);
     }
 }
@@ -273,7 +312,9 @@ void SpotlightProvider::appendLinkName(Spotlight::IItem::Vector& out, const Stri
 bool SpotlightProvider::onSelect(Spotlight::IItem::Ptr& item)
 {
     if (!pLayer || GUIIsLock() || !pComponent)
+    {
         return false;
+    }
 
     auto arealink = std::dynamic_pointer_cast<ItemAreaLink>(item);
     if (not arealink)
@@ -304,7 +345,9 @@ void SpotlightProviderGlobalSelection::appendSetName(Spotlight::IItem::Vector& o
     auto item = std::make_shared<ItemAreaLink>(stArea, name);
     item->group(grp);
     if (pBmpGroup)
+    {
         item->image(*pBmpGroup);
+    }
     out.push_back(item);
 }
 
@@ -315,7 +358,9 @@ void SpotlightProviderGlobalSelection::appendAreaName(Spotlight::IItem::Vector& 
     auto item = std::make_shared<ItemAreaLink>(stArea, name);
     item->group(grp);
     if (pBmpArea)
+    {
         item->image(*pBmpArea);
+    }
     out.push_back(item);
 }
 
@@ -326,7 +371,9 @@ void SpotlightProviderGlobalSelection::appendLinkName(Spotlight::IItem::Vector& 
     auto item = std::make_shared<ItemAreaLink>(stLink, name);
     item->group(grp);
     if (pBmpLink)
+    {
         item->image(*pBmpLink);
+    }
     out.push_back(item);
 }
 
@@ -365,7 +412,9 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
         {
             auto& caption = (*i)->caption();
             if (caption.first() == '@')
+            {
                 layerFilteredItems.push_back(*i);
+            }
         }
         search(out, tokens, layerFilteredItems);
         return;
@@ -405,7 +454,9 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
             auto& caption = (*i)->caption();
 
             if (caption.first() == '@')
+            {
                 continue;
+            }
 
             auto arealink = std::dynamic_pointer_cast<ItemAreaLink>(*i);
 
@@ -415,15 +466,17 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
                 auto aEnd = study.areas.end();
                 for (auto itArea = study.areas.begin(); itArea != aEnd; ++itArea)
                 {
-                    if (arealink->id.equals(itArea->first)) // this area is in the study (it is visible
-                                                            // at least on layer 0)
+                    if (arealink->id.equals(itArea->first)) // this area is in the study (it is
+                                                            // visible at least on layer 0)
                     {
                         foundInALayer = true;
                         break;
                     }
                 }
                 if (!foundInALayer)
+                {
                     layerFilteredItems.push_back(*i);
+                }
             }
 
             if (arealink && arealink->selectionType == stLink)
@@ -432,10 +485,11 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
                 auto sEnd = linkSet.end();
                 for (auto itLink = linkSet.begin(); itLink != sEnd; ++itLink)
                 {
-                    wxString outputStyledName
-                      = (wxString() << wxStringFromUTF8((*itLink)->from->name) << wxT(" - ")
-                                    << wxStringFromUTF8((*itLink)->with->name))
-                          .MakeLower();
+                    wxString outputStyledName = (wxString()
+                                                 << wxStringFromUTF8((*itLink)->from->name)
+                                                 << wxT(" - ")
+                                                 << wxStringFromUTF8((*itLink)->with->name))
+                                                  .MakeLower();
                     if (arealink->id
                         == std::string(
                           outputStyledName.mb_str())) // this link is in the study (it
@@ -446,7 +500,9 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
                     }
                 }
                 if (!foundInALayer)
+                {
                     layerFilteredItems.push_back(*i);
+                }
             }
         }
         search(out, tokens, layerFilteredItems);
@@ -490,10 +546,10 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
             auto sEnd = linkSet.end();
             for (auto itLink = linkSet.begin(); itLink != sEnd; ++itLink)
             {
-                wxString outputStyledName
-                  = (wxString() << wxStringFromUTF8((*itLink)->from->name) << wxT(" - ")
-                                << wxStringFromUTF8((*itLink)->with->name))
-                      .MakeLower();
+                wxString outputStyledName = (wxString() << wxStringFromUTF8((*itLink)->from->name)
+                                                        << wxT(" - ")
+                                                        << wxStringFromUTF8((*itLink)->with->name))
+                                              .MakeLower();
                 if (arealink->id == std::string(outputStyledName.mb_str())
                     && (*itLink)->isVisibleOnLayer(
                       layerID)) // this link is in the study (it is visible at least on layer 0)
@@ -535,7 +591,9 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
             {
                 auto& text = (*ti)->text;
                 if (caption.icontains(text))
+                {
                     out.push_back(*i);
+                }
             }
         }
     }
@@ -555,7 +613,9 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
 bool SpotlightProviderGlobalSelection::onSelect(Spotlight::IItem::Ptr& item)
 {
     if (GUIIsLock() || !pComponent)
+    {
         return false;
+    }
 
     auto arealink = std::dynamic_pointer_cast<ItemAreaLink>(item);
     if (!(!arealink))
@@ -644,7 +704,9 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
         item->group("Views");
         item->image(*pBmpReattach);
         if (pComponent->pCurrentLOD == lodAllMCYears)
+        {
             item->select();
+        }
         out.push_back(item);
 
         if (pComponent->pHasYearByYear)
@@ -658,7 +720,9 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
             item->group("Views");
             item->image(*pBmpReattach);
             if (pComponent->pCurrentLOD == lodDetailledResults)
+            {
                 item->select();
+            }
             out.push_back(item);
         }
 
@@ -670,7 +734,9 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
             item->group("Views");
             item->image(*pBmpReattach);
             if (pComponent->pCurrentLOD == lodDetailedResultsWithConcatenation)
+            {
                 item->select();
+            }
             out.push_back(item);
         }
     }
@@ -679,7 +745,9 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
 bool SpotlightProviderMCAll::onSelect(Spotlight::IItem::Ptr& item)
 {
     if (!item || GUIIsLock() || !pComponent)
+    {
         return false;
+    }
 
     // TODO : add distincitve data instead of performing stupid
     // string comparisons
@@ -707,6 +775,4 @@ bool SpotlightProviderMCAll::onSelect(Spotlight::IItem::Ptr& item)
     return true;
 }
 
-} // namespace OutputViewer
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::OutputViewer

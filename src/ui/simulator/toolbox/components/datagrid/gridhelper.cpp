@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <yuni/yuni.h>
 #include "gridhelper.h"
@@ -27,16 +27,13 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Component::Datagrid
 {
-namespace Component
-{
-namespace Datagrid
-{
-class GridCellAttrProvider final : public wxGridCellAttrProvider
+class GridCellAttrProvider final: public wxGridCellAttrProvider
 {
 public:
-    GridCellAttrProvider(VGridHelper& parent) : pParent(parent)
+    GridCellAttrProvider(VGridHelper& parent):
+        pParent(parent)
     {
         assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
@@ -44,7 +41,9 @@ public:
         // They can not be destroyed like that
         // TODO Fixed the memory leak when exiting the program
         if (pStylesAreInitialized)
+        {
             return;
+        }
 
         pStylesAreInitialized = true;
 
@@ -246,8 +245,8 @@ public:
         else
         {
             // Retrieving the style of the given cell
-            const Renderer::IRenderer::CellStyle style
-              = renderer->cellStyle(pParent.realCol(col), pParent.realRow(row));
+            const Renderer::IRenderer::CellStyle style = renderer->cellStyle(pParent.realCol(col),
+                                                                             pParent.realRow(row));
 
             if (style == Renderer::IRenderer::cellStyleCustom)
             {
@@ -258,20 +257,28 @@ public:
                 attr->SetTextColour(renderer->cellTextColor(x, y));
                 int align = renderer->cellAlignment(x, y);
                 if (!align)
+                {
                     attr->SetAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
+                }
                 else
                 {
                     if (align < 0)
+                    {
                         attr->SetAlignment(wxALIGN_LEFT, wxALIGN_CENTRE);
+                    }
                     else
+                    {
                         attr->SetAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
+                    }
                 }
             }
             else
+            {
                 attr = pStyles[(uint)style];
+            }
         }
 
-        assert(attr  &&"Invalid cell attribute");
+        assert(attr && "Invalid cell attribute");
         attr->IncRef();
         return attr;
     }
@@ -349,7 +356,7 @@ public:
         internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOn);
         internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOff);
         internalAppendCSSCode(s, CellStyle::cellStyleFilterUndefined);
-         internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchVirtual);
+        internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchVirtual);
         internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchOutside);
         internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchInside);
     }
@@ -436,7 +443,9 @@ static inline bool IsNumeric(const AnyString& text, bool& hasDot)
         if (c == '.' or c == ',')
         {
             if (hasDot)
+            {
                 return false;
+            }
             hasDot = true;
             canHaveMinus = false;
             continue;
@@ -444,7 +453,9 @@ static inline bool IsNumeric(const AnyString& text, bool& hasDot)
         if (c == '-')
         {
             if (!canHaveMinus)
+            {
                 return false;
+            }
             canHaveMinus = false;
             continue;
         }
@@ -453,12 +464,12 @@ static inline bool IsNumeric(const AnyString& text, bool& hasDot)
     return true;
 }
 
-VGridHelper::VGridHelper(Renderer::IRenderer* renderer, bool markModified) :
- virtualSize(0, 0),
- valid(true),
- pRenderer(renderer),
- pDataGridPrecision(Date::stepNone),
- pMarkStudyModifiedWhenModifyingCell(markModified)
+VGridHelper::VGridHelper(Renderer::IRenderer* renderer, bool markModified):
+    virtualSize(0, 0),
+    valid(true),
+    pRenderer(renderer),
+    pDataGridPrecision(Date::stepNone),
+    pMarkStudyModifiedWhenModifyingCell(markModified)
 {
     // Indices
     resetIndicesToDefault();
@@ -482,9 +493,13 @@ void VGridHelper::resetIndicesToDefault()
             indicesCols.resize(virtualSize.x);
 
             for (int i = 0; i != virtualSize.x; ++i)
+            {
                 indicesCols[i] = i;
+            }
             for (int i = 0; i != virtualSize.y; ++i)
+            {
                 indicesRows[i] = i;
+            }
             return;
         }
     }
@@ -517,7 +532,9 @@ void VGridHelper::resetIndicesToDefaultWithoutInit()
 wxString VGridHelper::GetRowLabelValue(int row)
 {
     if (pRenderer and valid)
+    {
         return pRenderer->rowCaption(realRow(row));
+    }
     return wxEmptyString;
 }
 
@@ -529,7 +546,9 @@ wxString VGridHelper::GetColLabelValue(int col)
 wxString VGridHelper::GetValue(int row, int col)
 {
     if (pRenderer and valid)
+    {
         return (pRenderer->cellValue(realCol(col), realRow(row)) << wxT(' '));
+    }
     return wxEmptyString;
 }
 
@@ -558,7 +577,9 @@ void VGridHelper::SetValue(int row, int col, const wxString& v)
         if (pRenderer->cellValue(realCol(col), realRow(row), value))
         {
             if (pMarkStudyModifiedWhenModifyingCell)
+            {
                 MarkTheStudyAsModified();
+            }
         }
     }
 }
@@ -580,7 +601,9 @@ void VGridHelper::SetValue(int row, int col, const Yuni::String& v)
             }
         }
         if (pRenderer->cellValue(realCol(col), realRow(row), value))
+        {
             MarkTheStudyAsModified();
+        }
     }
 }
 
@@ -588,14 +611,18 @@ void VGridHelper::precision(const Date::Precision p)
 {
     pDataGridPrecision = p;
     if (pRenderer)
+    {
         pRenderer->dataGridPrecision = p;
+    }
 }
 
 wxColour VGridHelper::foregroundColorFromCellStyle(Renderer::IRenderer::CellStyle s) const
 {
     GridCellAttrProvider* attr = dynamic_cast<GridCellAttrProvider*>(GetAttrProvider());
     if (attr)
+    {
         return attr->pStyles[s]->GetTextColour();
+    }
     return wxColour();
 }
 
@@ -603,7 +630,9 @@ wxColour VGridHelper::backgroundColorFromCellStyle(Renderer::IRenderer::CellStyl
 {
     GridCellAttrProvider* attr = dynamic_cast<GridCellAttrProvider*>(GetAttrProvider());
     if (attr)
+    {
         return attr->pStyles[s]->GetBackgroundColour();
+    }
     return wxColour();
 }
 
@@ -622,6 +651,4 @@ bool VGridHelper::markTheStudyAsModified() const
     return pMarkStudyModifiedWhenModifyingCell;
 }
 
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid

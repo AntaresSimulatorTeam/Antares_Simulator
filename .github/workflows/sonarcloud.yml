@@ -79,7 +79,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
         sudo apt-get install libboost-test-dev
-        sudo apt-get install g++-10 gcc-10
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -120,9 +119,7 @@ jobs:
       run: |
         cmake -B _build -S src \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCODE_COVERAGE=ON \
@@ -134,7 +131,7 @@ jobs:
         -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
     - name: Install Build Wrapper
-      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v5.3.1
+      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v6.0.0
 
     - name: Build
       run: |
@@ -228,7 +225,7 @@ jobs:
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
-      uses: SonarSource/sonarqube-scan-action@v5.3.1
+      uses: SonarSource/sonarqube-scan-action@v6.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

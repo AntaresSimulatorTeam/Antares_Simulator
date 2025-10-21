@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -21,13 +21,15 @@
 #pragma once
 
 #include <cmath>
+#include <functional>
 #include <sstream>
 #include <variant>
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/modeler-optimisation-container/EvaluationContext.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
@@ -71,6 +73,21 @@ public:
     EvaluationResult operator*(const EvaluationResult& right) const
     {
         return evaluateBinaryOperation(right, std::multiplies<>());
+    }
+
+    EvaluationResult operator==(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::equal_to<>());
+    }
+
+    EvaluationResult operator<=(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::less_equal<>());
+    }
+
+    EvaluationResult operator>=(const EvaluationResult& right) const
+    {
+        return evaluateBinaryOperation(right, std::greater_equal<>());
     }
 
     struct SafeDivides
@@ -133,11 +150,20 @@ public:
 
     [[nodiscard]] std::vector<double> valuesAsVector() const
     {
-        if (!std::holds_alternative<std::vector<double>>(value_))
+        if (const auto* v = std::get_if<std::vector<double>>(&value_))
         {
-            throw EvalResultTypeError("Expected a vector but found a double.");
+            return *v;
         }
-        return std::get<std::vector<double>>(value_);
+        throw EvalResultTypeError("Expected a vector but found a double.");
+    }
+
+    [[nodiscard]] double getValueInVector(unsigned index) const
+    {
+        if (const auto* v = std::get_if<std::vector<double>>(&value_))
+        {
+            return (*v)[index];
+        }
+        throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
     EvaluationResult operator[](int timeIndex) const;
@@ -182,7 +208,12 @@ std::vector<double> computeBinaryOperation(const std::vector<double>& lhs, doubl
 template<typename BinaryOp>
 std::vector<double> computeBinaryOperation(double lhs, const std::vector<double>& rhs, BinaryOp op)
 {
-    return computeBinaryOperation(rhs, lhs, op);
+    std::vector<double> result(rhs.size());
+    for (size_t i = 0; i < rhs.size(); ++i)
+    {
+        result[i] = op(lhs, rhs[i]);
+    }
+    return result;
 }
 
 class VectorsMismatchSize final: public std::runtime_error
@@ -261,18 +292,18 @@ public:
      * @param context The evaluation context.
      * @param fillContext
      */
-    explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext);
-    explicit EvalVisitor(EvaluationContext context,
-                         Optimisation::LinearProblemApi::FillContext fillContext,
-                         const ModelerStudy::SystemModel::Component* component);
+
+    explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
+                         const Optimisation::LinearProblemApi::FillContext& fillContext,
+                         const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
 private:
-    const EvaluationContext context_;
-    Optimisation::LinearProblemApi::FillContext fillContext_;
-    const ModelerStudy::SystemModel::Component* component_ = nullptr;
+    const Optimisation::EvaluationContext& context_;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
+    const ModelerStudy::SystemModel::Component& component_;
+    const Optimisation::OptimEntityContainer& optimContainer_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

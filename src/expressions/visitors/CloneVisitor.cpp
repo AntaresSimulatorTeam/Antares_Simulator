@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -81,7 +81,9 @@ Nodes::Node* CloneVisitor::visit(const Nodes::NegationNode* negationNode)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::VariableNode* variableNode)
 {
-    return registry_.create<Nodes::VariableNode>(variableNode->value(), variableNode->timeIndex());
+    return registry_.create<Nodes::VariableNode>(variableNode->value(),
+                                                 variableNode->Index(),
+                                                 variableNode->timeIndex());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ParameterNode* parameterNode)

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,32 +12,30 @@
 #ifndef __YUNI_CORE_TREE_N_CHILD_ITERATOR_HXX__
 #define __YUNI_CORE_TREE_N_CHILD_ITERATOR_HXX__
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Core
-{
-namespace Tree
+namespace Yuni::Private::Core::Tree
 {
 template<class NodeT>
-inline ChildIterator<NodeT>::ChildIterator() : pNode(nullptr)
+inline ChildIterator<NodeT>::ChildIterator():
+    pNode(nullptr)
 {
 }
 
 template<class NodeT>
-inline ChildIterator<NodeT>::ChildIterator(const Type& it) : pNode(it.pNode)
+inline ChildIterator<NodeT>::ChildIterator(const Type& it):
+    pNode(it.pNode)
 {
 }
 
 template<class NodeT>
 template<class N>
-inline ChildIterator<NodeT>::ChildIterator(const ChildIterator<N>& p) : pNode(p.pNode)
+inline ChildIterator<NodeT>::ChildIterator(const ChildIterator<N>& p):
+    pNode(p.pNode)
 {
 }
 
 template<class NodeT>
-inline ChildIterator<NodeT>::ChildIterator(const NodePtr& p) : pNode(p)
+inline ChildIterator<NodeT>::ChildIterator(const NodePtr& p):
+    pNode(p)
 {
 }
 
@@ -108,9 +107,6 @@ void ChildIterator<NodeT>::backward(difference_type n)
     }
 }
 
-} // namespace Tree
-} // namespace Core
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Core::Tree
 
 #endif // __YUNI_CORE_TREE_N_CHILD_ITERATOR_HXX__

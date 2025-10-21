@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -24,7 +24,7 @@
 
 namespace Antares::Solver::Simulation
 {
-class DispatchableMarginPostProcessCmd: public basePostProcessCommand
+class DispatchableMarginPostProcessCmd final: public basePostProcessCommand
 {
 public:
     DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -37,24 +37,22 @@ private:
     const AreaList& area_list_;
 };
 
-class RemixHydroPostProcessCmd: public basePostProcessCommand
+class RemixHydroPostProcessCmd final: public basePostProcessCommand
 {
 public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                              AreaList& areas,
-                             SheddingPolicy sheddingPolicy,
-                             SimplexOptimization simplexOptimization,
+                             const Data::Parameters& params,
                              unsigned int numSpace);
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
     unsigned int numSpace_ = 0;
-    SheddingPolicy shedding_policy_;
-    SimplexOptimization splx_optimization_;
+    const Data::Parameters& params_;
 };
 
-class UpdateMrgPriceAfterCSRcmd: public basePostProcessCommand
+class UpdateMrgPriceAfterCSRcmd final: public basePostProcessCommand
 {
 public:
     UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
@@ -67,7 +65,7 @@ private:
     unsigned int numSpace_ = 0;
 };
 
-class DTGnettingAfterCSRcmd: public basePostProcessCommand
+class DTGnettingAfterCSRcmd final: public basePostProcessCommand
 {
 public:
     DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas, unsigned int numSpace);
@@ -78,7 +76,7 @@ private:
     unsigned int numSpace_ = 0;
 };
 
-class InterpolateWaterValuePostProcessCmd: public basePostProcessCommand
+class InterpolateWaterValuePostProcessCmd final: public basePostProcessCommand
 {
 public:
     InterpolateWaterValuePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -92,7 +90,7 @@ private:
     const Date::Calendar& calendar_;
 };
 
-class HydroLevelsFinalUpdatePostProcessCmd: public basePostProcessCommand
+class HydroLevelsFinalUpdatePostProcessCmd final: public basePostProcessCommand
 {
 public:
     HydroLevelsFinalUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
@@ -103,7 +101,7 @@ private:
     const AreaList& area_list_;
 };
 
-class CurtailmentSharingPostProcessCmd: public basePostProcessCommand
+class CurtailmentSharingPostProcessCmd final: public basePostProcessCommand
 {
 public:
     CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,

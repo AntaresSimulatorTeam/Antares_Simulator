@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,16 +12,13 @@
 #pragma once
 #include "../../yuni.h"
 
-namespace Yuni
-{
-namespace Functional
+namespace Yuni::Functional
 {
 //! A view is a virtual representation of a collection
 template<class T, bool UserTypeT = true>
 struct View;
 
-} // namespace Functional
-} // namespace Yuni
+} // namespace Yuni::Functional
 
 #include "view.hxx"
 
