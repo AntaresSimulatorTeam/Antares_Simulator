@@ -26,10 +26,9 @@ expr
     | expr op=('+' | '-') expr                 # addsub
     | expr COMPARISON expr                     # comparison
     | 'sum' '(' expr ')'                       # allTimeSum
-    | 'sum_connections' '(' portFieldExpr ')'           # portFieldSum
+    | 'sum_connections' '(' portFieldExpr ')'  # portFieldSum
     | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
-    | 'dual' '(' IDENTIFIER ')'                # dual
-    | 'reduced_cost' '(' IDENTIFIER ')'        # reducedCost
+    | EXTRA_OUTPUTS '(' IDENTIFIER ')'         # extraOutputs
     | IDENTIFIER '(' expr ')'                  # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex
@@ -79,5 +78,6 @@ NUMBER        : DIGIT+ ('.' DIGIT+)?;
 TIME          : 't';
 IDENTIFIER    : CHAR CHAR_OR_DIGIT*;
 COMPARISON    : ( '=' | '>=' | '<=' );
+EXTRA_OUTPUTS : ( 'dual' | 'reduced_cost' );
 
 WS: (' ' | '\t' | '\r'| '\n') -> skip;
