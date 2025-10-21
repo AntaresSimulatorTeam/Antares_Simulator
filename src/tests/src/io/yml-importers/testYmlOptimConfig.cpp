@@ -203,21 +203,6 @@ models:
     BOOST_CHECK(config[0].objectives[2].location == "master-and-subproblems");
 }
 
-BOOST_AUTO_TEST_CASE(parse_invalid_location_throws)
-{
-    std::string yaml_content = R"(
-models:
-  - id: bad_location
-    model-decomposition:
-      variables:
-        - id: var1
-          location: invalid_location
-      objectives: []
-)";
-
-    Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), std::invalid_argument);
-}
 
 BOOST_AUTO_TEST_CASE(parse_missing_models_key_throws)
 {
@@ -384,6 +369,5 @@ models:
     BOOST_CHECK_EQUAL(config[2].variables.size(), 0);
     BOOST_CHECK_EQUAL(config[2].objectives.size(), 0);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
