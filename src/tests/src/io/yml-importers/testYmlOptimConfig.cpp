@@ -68,25 +68,25 @@ models:
     BOOST_CHECK_EQUAL(config[0].id, "lib_thermal_invest.thermal_candidate");
     BOOST_REQUIRE_EQUAL(config[0].variables.size(), 2);
     BOOST_CHECK_EQUAL(config[0].variables[0].id, "nb_units");
-    BOOST_CHECK(config[0].variables[0].location == LOCATION::MASTER);
+    BOOST_CHECK(config[0].variables[0].location == "master");
     BOOST_CHECK_EQUAL(config[0].variables[1].id, "pmax_cluster");
-    BOOST_CHECK(config[0].variables[1].location == LOCATION::MASTER_AND_SUBPROBLEMS);
+    BOOST_CHECK(config[0].variables[1].location == "master-and-subproblems");
 
     BOOST_REQUIRE_EQUAL(config[0].objectives.size(), 2);
     BOOST_CHECK_EQUAL(config[0].objectives[0].id, "invest_objective");
-    BOOST_CHECK(config[0].objectives[0].location == LOCATION::MASTER);
+    BOOST_CHECK(config[0].objectives[0].location == "master");
     BOOST_CHECK_EQUAL(config[0].objectives[1].id, "operational_objective");
-    BOOST_CHECK(config[0].objectives[1].location == LOCATION::SUBPROBLEMS);
+    BOOST_CHECK(config[0].objectives[1].location == "subproblems");
 
     // Second model
     BOOST_CHECK_EQUAL(config[1].id, "lib_thermal_invest.my_other_model");
     BOOST_REQUIRE_EQUAL(config[1].variables.size(), 1);
     BOOST_CHECK_EQUAL(config[1].variables[0].id, "var1");
-    BOOST_CHECK(config[1].variables[0].location == LOCATION::SUBPROBLEMS);
+    BOOST_CHECK(config[1].variables[0].location == "subproblems");
 
     BOOST_REQUIRE_EQUAL(config[1].objectives.size(), 1);
     BOOST_CHECK_EQUAL(config[1].objectives[0].id, "obj1");
-    BOOST_CHECK(config[1].objectives[0].location == LOCATION::MASTER);
+    BOOST_CHECK(config[1].objectives[0].location == "master");
 }
 
 BOOST_AUTO_TEST_CASE(parse_single_model)
@@ -193,14 +193,14 @@ models:
 
     BOOST_REQUIRE_EQUAL(config.size(), 1);
     BOOST_REQUIRE_EQUAL(config[0].variables.size(), 3);
-    BOOST_CHECK(config[0].variables[0].location == LOCATION::MASTER);
-    BOOST_CHECK(config[0].variables[1].location == LOCATION::SUBPROBLEMS);
-    BOOST_CHECK(config[0].variables[2].location == LOCATION::MASTER_AND_SUBPROBLEMS);
+    BOOST_CHECK(config[0].variables[0].location == "master");
+    BOOST_CHECK(config[0].variables[1].location == "subproblems");
+    BOOST_CHECK(config[0].variables[2].location == "master-and-subproblems");
 
     BOOST_REQUIRE_EQUAL(config[0].objectives.size(), 3);
-    BOOST_CHECK(config[0].objectives[0].location == LOCATION::MASTER);
-    BOOST_CHECK(config[0].objectives[1].location == LOCATION::SUBPROBLEMS);
-    BOOST_CHECK(config[0].objectives[2].location == LOCATION::MASTER_AND_SUBPROBLEMS);
+    BOOST_CHECK(config[0].objectives[0].location == "master");
+    BOOST_CHECK(config[0].objectives[1].location == "subproblems");
+    BOOST_CHECK(config[0].objectives[2].location == "master-and-subproblems");
 }
 
 BOOST_AUTO_TEST_CASE(parse_invalid_location_throws)
@@ -385,19 +385,5 @@ models:
     BOOST_CHECK_EQUAL(config[2].objectives.size(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(GetLocation_valid_strings)
-{
-    BOOST_CHECK(GetLocation("master") == LOCATION::MASTER);
-    BOOST_CHECK(GetLocation("subproblems") == LOCATION::SUBPROBLEMS);
-    BOOST_CHECK(GetLocation("master-and-subproblems") == LOCATION::MASTER_AND_SUBPROBLEMS);
-}
-
-BOOST_AUTO_TEST_CASE(GetLocation_invalid_string_throws)
-{
-    BOOST_CHECK_THROW(GetLocation("invalid"), std::invalid_argument);
-    BOOST_CHECK_THROW(GetLocation("MASTER"), std::invalid_argument);
-    BOOST_CHECK_THROW(GetLocation(""), std::invalid_argument);
-    BOOST_CHECK_THROW(GetLocation("master-subproblems"), std::invalid_argument);
-}
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -28,43 +28,18 @@
 
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
-enum class LOCATION
-{
-    MASTER,
-    SUBPROBLEMS,
-    MASTER_AND_SUBPROBLEMS
-};
 
-inline LOCATION GetLocation(const std::string& location)
-{
-    if (location == "master")
-    {
-        return LOCATION::MASTER;
-    }
-    else if (location == "subproblems")
-    {
-        return LOCATION::SUBPROBLEMS;
-    }
-    else if (location == "master-and-subproblems")
-    {
-        return LOCATION::MASTER_AND_SUBPROBLEMS;
-    }
-    else
-    {
-        throw std::invalid_argument("Invalid Location type: " + location);
-    }
-}
 
 struct Variable
 {
     std::string id;
-    LOCATION location;
+    std::string location;
 };
 
 struct Objective
 {
     std::string id;
-    LOCATION location;
+    std::string location;
 };
 
 struct Model

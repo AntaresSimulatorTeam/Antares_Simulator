@@ -40,8 +40,7 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.location = Antares::IO::Inputs::YmlOptimConfig::GetLocation(
-          node["location"].as<std::string>());
+        rhs.location = node["location"].as<std::string>();
         return true;
     }
 };
@@ -56,8 +55,7 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Objective>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.location = Antares::IO::Inputs::YmlOptimConfig::GetLocation(
-          node["location"].as<std::string>());
+        rhs.location = node["location"].as<std::string>();
 
         return true;
     }
