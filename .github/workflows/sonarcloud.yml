@@ -248,10 +248,5 @@ jobs:
     - name: Display ccache statistics
       run: ccache -s
 
-    - name: Save ccache cache
-      if: ${{ !cancelled() }}
-      uses: actions/cache/save@v4
-      with:
-        path: ${{ github.workspace }}/.ccache
-        key: ${{ matrix.os }}-${{ github.event.pull_request.head.ref }}
+    #Don't save cache to avoid race condition with ubuntu workflow
 
