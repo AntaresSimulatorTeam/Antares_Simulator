@@ -70,6 +70,8 @@ public:
     std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context) override;
     std::any visitPortFieldExpr(ExprParser::PortFieldExprContext* context) override;
     std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
+    std::any visitDual(ExprParser::DualContext* context) override;
+    std::any visitReducedCost(ExprParser::ReducedCostContext* context) override;
 
 private:
     Expressions::Registry<Node>& registry_;
@@ -335,6 +337,16 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
     const auto fieldName = port->getFieldName();
 
     return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
+}
+
+std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
+{
+    throw NotImplemented("Node function not implemented yet");
+}
+
+std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* context)
+{
+    throw NotImplemented("Node function not implemented yet");
 }
 
 // TODO implement this
