@@ -29,17 +29,34 @@ namespace Antares::Expressions::Nodes
 /**
  * @brief Represents a dual node in a syntax tree, storing a constraint name.
  */
-class DualNode final: public Leaf<std::string>
+
+enum class ExtraOutputIdentifierOperation
+{
+    DUAL,
+    REDUCED_COST
+};
+
+class ExtraOutputIdentifierNode final: public Leaf<std::string>
 {
 public:
-    explicit DualNode(const std::string& value):
-        Leaf<std::string>(value)
+    explicit ExtraOutputIdentifierNode(const ExtraOutputIdentifierOperation operation,
+                                       const std::string& value):
+        Leaf<std::string>(value),
+        operation_(operation)
     {
     }
 
     std::string name() const override
     {
-        return "DualNode";
+        return "ExtraOutputIdentifierNode";
     }
+
+    ExtraOutputIdentifierOperation operation() const
+    {
+        return operation_;
+    }
+
+private:
+    ExtraOutputIdentifierOperation operation_;
 };
 } // namespace Antares::Expressions::Nodes

@@ -359,11 +359,13 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
 
 std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
 {
-    for (const auto& c : model_.constraints)
+    for (const auto& c: model_.constraints)
     {
         if (c.id == context->IDENTIFIER()->getText())
         {
-            return static_cast<Node*>(registry_.create<DualNode>(c.id));
+            return static_cast<Node*>(
+              registry_.create<ExtraOutputIdentifierNode>(ExtraOutputIdentifierOperation::DUAL,
+                                                          c.id));
         }
     }
     throw NoConstraintWithThisName(context->IDENTIFIER()->getText());
@@ -375,7 +377,9 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* cont
     {
         if (v.id == context->IDENTIFIER()->getText())
         {
-            return static_cast<Node*>(registry_.create<ReducedCostNode>(v.id));
+            return static_cast<Node*>(registry_.create<ExtraOutputIdentifierNode>(
+              ExtraOutputIdentifierOperation::REDUCED_COST,
+              v.id));
         }
     }
     throw NoVariableWithThisName(context->IDENTIFIER()->getText());

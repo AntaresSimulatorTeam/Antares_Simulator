@@ -428,9 +428,10 @@ BOOST_AUTO_TEST_CASE(dualExpression)
 
     std::string expression = "dual(constraintA)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
-    auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
+    BOOST_CHECK_EQUAL(expr.node->name(), "ExtraOutputIdentifierNode");
+    auto dualNode = dynamic_cast<Nodes::ExtraOutputIdentifierNode*>(expr.node);
     BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
+    BOOST_CHECK(dualNode->operation() == Nodes::ExtraOutputIdentifierOperation::DUAL);
 
     std::string badExpression = "dual(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
@@ -456,7 +457,7 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
 
     std::string expression = "reduced_cost(varP)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
+    BOOST_CHECK_EQUAL(expr.node->name(), "ExtraOutputIdentifierNode");
     auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
     BOOST_CHECK_EQUAL(reducedCostNode->value(), "varP");
 
