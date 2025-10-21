@@ -20,29 +20,26 @@
 */
 #pragma once
 
+#include <string>
+
+#include <antares/expressions/nodes/Leaf.h>
+
 namespace Antares::Expressions::Nodes
 {
-class Node;
-class BinaryNode;
-class UnaryNode;
-class SumNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanOrEqualNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
-class PortFieldSumNode;
-class TimeShiftNode;
-class TimeIndexNode;
-class TimeSumNode;
-class ParentNode;
-class AllTimeSumNode;
-class DualNode;
-class ReducedCostNode;
+/**
+ * @brief Represents a dual node in a syntax tree, storing a constraint name.
+ */
+class DualNode final: public Leaf<std::string>
+{
+public:
+    explicit DualNode(const std::string& value):
+        Leaf<std::string>(value)
+    {
+    }
+
+    std::string name() const override
+    {
+        return "DualNode";
+    }
+};
 } // namespace Antares::Expressions::Nodes

@@ -20,29 +20,27 @@
 */
 #pragma once
 
+#include <string>
+
+#include <antares/expressions/nodes/Leaf.h>
+
 namespace Antares::Expressions::Nodes
 {
-class Node;
-class BinaryNode;
-class UnaryNode;
-class SumNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanOrEqualNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
-class PortFieldSumNode;
-class TimeShiftNode;
-class TimeIndexNode;
-class TimeSumNode;
-class ParentNode;
-class AllTimeSumNode;
-class DualNode;
-class ReducedCostNode;
+/**
+ * @brief Represents a reduced cost node in a syntax tree, storing a variable name.
+ */
+
+class ReducedCostNode final: public Leaf<std::string>
+{
+public:
+    explicit ReducedCostNode(const std::string& value):
+        Leaf<std::string>(value)
+    {
+    }
+
+    std::string name() const override
+    {
+        return "ReducedCostNode";
+    }
+};
 } // namespace Antares::Expressions::Nodes
