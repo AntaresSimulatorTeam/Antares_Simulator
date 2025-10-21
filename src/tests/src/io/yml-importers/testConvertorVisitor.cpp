@@ -408,3 +408,46 @@ BOOST_AUTO_TEST_CASE(AlltimeSumExpression)
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
 }
+
+BOOST_AUTO_TEST_CASE(dualExpression)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {{"constraintA", ""}},
+                          .binding_constraints = {},
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "dual(constraintA)";
+    auto expr = converter.run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
+    auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
+}
+
+BOOST_AUTO_TEST_CASE(reducedCostExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varP", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "reduced_cost(varP)";
+    auto expr = converter.run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
+    auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
+    BOOST_CHECK_EQUAL(reducedCostNode->value(), "varP");
+}
