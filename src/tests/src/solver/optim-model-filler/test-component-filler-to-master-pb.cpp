@@ -27,15 +27,38 @@ Expression createLiteral(std::string name, double value, Registry<Nodes::Node>& 
     return Expression(name, std::move(node_registry));
 }
 
-BOOST_AUTO_TEST_CASE(add_variables_to_master_pb_actually_adds_master_located_variables)
+struct FactoryFixture
 {
-    // ======================
-    // Step : arrange
-    // ======================
-    // Register used to store all AST Nodes (in order to destroy them at end of test)
-    Registry<Node> nodeRegistry;
+    FactoryFixture():
+        linear_pb(false, "sirius"),
+        optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo)
+    {
+        createTwoVariables();
+        createModel();
+        createComponent();
+        setOptimEntityContainer();
+    }
 
-    // Creating variables
+    void createTwoVariables();
+    void createModel();
+    void createComponent();
+    void setOptimEntityContainer();
+
+    Registry<Node> nodeRegistry; // Storing AST Nodes (to destroy them at end of test)
+    std::vector<Variable> variables;
+    Model model;
+    // We define a component under the form of a smart ptr because class Component default
+    // constructor is forbidden
+    std::unique_ptr<Component> component;
+    OrtoolsLinearProblem linear_pb;
+
+    LinearProblemData dummy_data;
+    ScenarioGroupRepository scenario_group_repo;
+    OptimEntityContainer optimEntityContainer;
+};
+
+void FactoryFixture::createTwoVariables()
+{
     Variable var_1("var-1",
                    createLiteral("low-bound", 0., nodeRegistry),
                    createLiteral("up-bound", 1., nodeRegistry),
@@ -52,34 +75,39 @@ BOOST_AUTO_TEST_CASE(add_variables_to_master_pb_actually_adds_master_located_var
                    ScenarioDependent::NO,
                    Config::Location::MASTER);
 
-    // Creating a vector of variables
-    std::vector<Variable> variables;
     variables.emplace_back(std::move(var_1));
     variables.emplace_back(std::move(var_2));
+}
 
-    // Creating a model
+void FactoryFixture::createModel()
+{
     ModelBuilder model_builder;
-    model_builder.withVariables(std::move(variables));
-    auto model = model_builder.build();
+    model_builder.withId("my-model").withVariables(std::move(variables));
+    model = model_builder.build();
+}
 
-    // Creating a component
+void FactoryFixture::createComponent()
+{
     ComponentBuilder component_builder;
     component_builder.withModel(&model).withId("my-component");
-    auto component = component_builder.build();
+    component = std::make_unique<Component>(component_builder.build());
+}
 
-    // Creating an empty linear problem
-    OrtoolsLinearProblem linear_pb(false, "sirius");
-
-    // Creating an OptimEntityContainer
-    LinearProblemData dummy_data;
-    ScenarioGroupRepository scenario_group_repo;
-    OptimEntityContainer optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo);
-
-    std::vector<Component> components = {component};
+void FactoryFixture::setOptimEntityContainer()
+{
+    std::vector<Component> components = {*component};
     optimEntityContainer.addFromSystemComponents(components);
+}
 
+BOOST_FIXTURE_TEST_SUITE(add_variables_to_master_linear_problem, FactoryFixture)
+
+BOOST_AUTO_TEST_CASE(add_variables_to_master_pb_actually_adds_master_located_variables)
+{
+    // ======================
+    // Step : arrange
+    // ======================
     // Creating a component filler
-    ComponentFiller componentFiller(component, optimEntityContainer, scenario_group_repo);
+    ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Creating a fill context
     FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
@@ -97,3 +125,5 @@ BOOST_AUTO_TEST_CASE(add_variables_to_master_pb_actually_adds_master_located_var
     auto* var = linear_pb.lookupVariable("my-component.var-2");
     BOOST_REQUIRE(var);
 }
+
+BOOST_AUTO_TEST_SUITE_END()
