@@ -79,27 +79,29 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
         PROBLEME_LINEAIRE_PARTIE_FIXE& PlFixe = ProblemeLineairePartieFixe[i];
 
         int NombreDeVariables = 0;
-        NombreDeVariables += NbPdt;
-        NombreDeVariables += 1;
-        NombreDeVariables += 1;
+        NombreDeVariables += NbPdt; // turbines
+        NombreDeVariables += 1;     // xi
+        NombreDeVariables += 1;     // xi_plus
+        NombreDeVariables += 1;     // xi_moins
 
         PlFixe.NombreDeVariables = NombreDeVariables;
         PlFixe.CoutLineaire.assign(NombreDeVariables, 0.);
         PlFixe.TypeDeVariable.assign(NombreDeVariables, 0);
 
         int NombreDeContraintes = 0;
-        NombreDeContraintes += 1;
-        NombreDeContraintes += NbPdt;
+        NombreDeContraintes += 1;         // somme des turbines
+        NombreDeContraintes += 4 * NbPdt; // contrainte sur xi, symXi, x_plus, x_moins
 
         PlFixe.NombreDeContraintes = NombreDeContraintes;
         PlFixe.Sens.resize(NombreDeContraintes);
         PlFixe.IndicesDebutDeLigne.assign(NombreDeContraintes, 0);
         PlFixe.NombreDeTermesDesLignes.assign(NombreDeContraintes, 0);
 
-        int NombreDeTermesAlloues = 0;
-        NombreDeTermesAlloues += NbPdt;
-        NombreDeTermesAlloues += 1;
-        NombreDeTermesAlloues += (2 * NbPdt);
+        int NombreDeTermesAlloues = NbPdt        // somme des turbines
+                                    + 2 * NbPdt  // turbine + xi
+                                    + 2 * NbPdt  // -turbine + xi
+                                    + 2 * NbPdt  // turbine + xi_plus
+                                    + 2 * NbPdt; // -turbine + xi_moins
 
         PlFixe.NombreDeTermesAlloues = NombreDeTermesAlloues;
         PlFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues, 0.);
@@ -135,8 +137,9 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
         H2O_J_ConstruireLesContraintes(
           NbJoursDUnProbleme[i],
           CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
-          CorrespondanceDesVariables[i].NumeroDeLaVariableMu,
           CorrespondanceDesVariables[i].NumeroDeLaVariableXi,
+          CorrespondanceDesVariables[i].NumeroDeLaVariableXiPlus,
+          CorrespondanceDesVariables[i].NumeroDeLaVariableXiMoins,
           ProblemeLineairePartieFixe[i].IndicesDebutDeLigne,
           ProblemeLineairePartieFixe[i].Sens,
           ProblemeLineairePartieFixe[i].NombreDeTermesDesLignes,
@@ -150,10 +153,13 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
         }
 
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
           = 1.0;
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiPlus]
+          = 1.0;
+        ProblemeLineairePartieFixe[i]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiMoins]
           = 1.0;
     }
 

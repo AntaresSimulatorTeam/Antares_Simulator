@@ -48,7 +48,6 @@ void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
     H2O_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme);
     H2O_J_InitialiserLesBornesdesVariables(DonneesMensuelles, NumeroDeProbleme);
     H2O_J_ResoudreLeProblemeLineaire(DonneesMensuelles, NumeroDeProbleme);
-    H2O_J_LisserLesSurTurbines(DonneesMensuelles, NumeroDeProbleme);
 
     return;
 }

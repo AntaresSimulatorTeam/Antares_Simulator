@@ -46,6 +46,12 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
     {
         int Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXi[Pdt];
         SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXiSym[Pdt];
+        SecondMembre[Cnt] = -DonneesMensuelles->TurbineCible[Pdt];
+        Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXiPlus[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXiMoins[Pdt];
+        SecondMembre[Cnt] = -DonneesMensuelles->TurbineCible[Pdt];
     }
 
     return;

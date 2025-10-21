@@ -46,20 +46,24 @@ void H2O_j_ConstruireLesVariables(
         Var++;
     }
 
-    CorrespondanceDesVariables.NumeroDeLaVariableMu = Var;
-    Xmin[Var] = 0.0;
-    Xmax[Var] = LINFINI;
-    TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
-    Var++;
-
     CorrespondanceDesVariables.NumeroDeLaVariableXi = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
     AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
     Var++;
+    // --- Variables globales xi_plus et xi_moins ---
+    CorrespondanceDesVariables.NumeroDeLaVariableXiPlus = Var;
+    Xmin[Var] = 0.0;
+    Xmax[Var] = LINFINI;
+    TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
+    Var++;
 
-    return;
+    CorrespondanceDesVariables.NumeroDeLaVariableXiMoins = Var;
+    Xmin[Var] = 0.0;
+    Xmax[Var] = LINFINI;
+    TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
 }
 } // namespace DoneesOptimisationJournaliere

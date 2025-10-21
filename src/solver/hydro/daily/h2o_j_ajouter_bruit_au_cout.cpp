@@ -49,10 +49,13 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
         }
 
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
           += noiseGenerator() * Constants::noiseAmplitude;
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiPlus]
+          += noiseGenerator() * Constants::noiseAmplitude;
+        ProblemeLineairePartieFixe[i]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiMoins]
           += noiseGenerator() * Constants::noiseAmplitude;
     }
 }
