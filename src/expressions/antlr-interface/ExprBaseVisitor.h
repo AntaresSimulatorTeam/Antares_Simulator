@@ -47,10 +47,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExtraOutputs(ExprParser::ExtraOutputsContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -72,6 +68,14 @@ public:
   }
 
   virtual std::any visitTimeSum(ExprParser::TimeSumContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitReducedCost(ExprParser::ReducedCostContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDual(ExprParser::DualContext *ctx) override {
     return visitChildren(ctx);
   }
 
