@@ -140,6 +140,19 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
     return "sum(" + dispatch(node->child()) + ")";
 }
 
+std::string PrintVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node)
+{
+    if (node->operation() == Nodes::ExtraOutputIdentifierOperation::DUAL)
+    {
+        return "dual(" + node->value() + ")";
+    }
+    else if (node->operation() == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST)
+    {
+        return "reduced_cost(" + node->value() + ")";
+    }
+    return "";
+}
+
 std::string PrintVisitor::name() const
 {
     return "PrintVisitor";

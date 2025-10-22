@@ -288,4 +288,11 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     return Antares::Optimization::TimeDependentLinearExpression(std::move(ret));
 }
 
+Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+  const Nodes::ExtraOutputIdentifierNode*)
+{
+    throw Antares::Error::InvalidArgumentError(
+      "A linear expression can't contain extra output operators like dual and reduced_cost.");
+}
+
 } // Namespace Antares::Optimisation

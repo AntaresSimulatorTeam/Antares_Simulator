@@ -206,6 +206,12 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
     return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
+EvaluationResult EvalVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node)
+{
+    EvaluationResult res{0};
+    return res;
+}
+
 std::string EvalVisitor::name() const
 {
     return "EvalVisitor";

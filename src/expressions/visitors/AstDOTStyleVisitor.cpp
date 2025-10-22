@@ -181,6 +181,21 @@ void AstDOTStyleVisitor::visit(const Nodes::AllTimeSumNode* node, std::ostream& 
     processParentNode(node, "sum[]", NodeStyle::TimeIndexStyle, os);
 }
 
+void AstDOTStyleVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node, std::ostream& os)
+{
+    auto id = getNodeID(node);
+    std::string label = "";
+    if (node->operation() == Nodes::ExtraOutputIdentifierOperation::DUAL)
+    {
+        label = "Dual(" + node->value() + ")";
+    }
+    else if (node->operation() == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST)
+    {
+        label = "Reduced_cost(" + node->value() + ")";
+    }
+    emitNode(id, "Var(" + node->value() + ")", NodeStyle::VariableStyle, os);
+}
+
 std::string AstDOTStyleVisitor::name() const
 {
     return "AstDOTStyleVisitor";

@@ -22,6 +22,7 @@
 #include <antares/expressions/nodes/AllTimeSumNode.h>
 #include <antares/expressions/nodes/DivisionNode.h>
 #include <antares/expressions/nodes/EqualNode.h>
+#include <antares/expressions/nodes/ExtraOutputIdentifierNode.h>
 #include <antares/expressions/nodes/GreaterThanOrEqualNode.h>
 #include <antares/expressions/nodes/Leaf.h>
 #include <antares/expressions/nodes/LessThanOrEqualNode.h>
@@ -37,4 +38,3 @@
 #include <antares/expressions/nodes/TimeShiftNode.h>
 #include <antares/expressions/nodes/TimeSumNode.h>
 #include <antares/expressions/nodes/VariableNode.h>
-#include <antares/expressions/nodes/ExtraOutputIdentifierNode.h>

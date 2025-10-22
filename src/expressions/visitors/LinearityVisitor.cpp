@@ -119,6 +119,11 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNod
     return LinearStatus::CONSTANT;
 }
 
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ExtraOutputIdentifierNode*)
+{
+    return LinearStatus::CONSTANT;
+}
+
 std::string LinearityVisitor::name() const
 {
     return "LinearityVisitor";

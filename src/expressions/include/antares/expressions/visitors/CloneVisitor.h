@@ -56,6 +56,7 @@ public:
     Nodes::Node* visit(const Nodes::TimeIndexNode* node) override;
     Nodes::Node* visit(const Nodes::TimeSumNode* node) override;
     Nodes::Node* visit(const Nodes::AllTimeSumNode* node) override;
+    Nodes::Node* visit(const Nodes::ExtraOutputIdentifierNode* node) override;
 
 private:
     Registry<Nodes::Node>& registry_;

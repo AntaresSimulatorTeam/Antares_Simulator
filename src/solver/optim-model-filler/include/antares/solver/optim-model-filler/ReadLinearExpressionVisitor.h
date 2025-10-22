@@ -108,6 +108,8 @@ public:
       const Nodes::TimeSumNode* node) override;
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::AllTimeSumNode* node) override;
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::ExtraOutputIdentifierNode* node) override;
 
 private:
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;

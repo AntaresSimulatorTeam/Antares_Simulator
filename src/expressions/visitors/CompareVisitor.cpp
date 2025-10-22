@@ -155,6 +155,15 @@ bool CompareVisitor::visit(const Nodes::AllTimeSumNode* alltimeSumNode, const No
     return compareParentNode(*this, alltimeSumNode, other);
 }
 
+bool CompareVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node, const Nodes::Node* other)
+{
+    if (const auto* other_node = dynamic_cast<const Nodes::ExtraOutputIdentifierNode*>(other))
+    {
+        return node->value() == other_node->value() && node->operation() == other_node->operation();
+    }
+    return false;
+}
+
 std::string CompareVisitor::name() const
 {
     return "CompareVisitor";

@@ -322,5 +322,6 @@ private:
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
+    EvaluationResult visit(const Nodes::ExtraOutputIdentifierNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

@@ -115,7 +115,8 @@ public:
           Nodes::TimeShiftNode,
           Nodes::TimeIndexNode,
           Nodes::TimeSumNode,
-          Nodes::AllTimeSumNode>();
+          Nodes::AllTimeSumNode,
+          Nodes::ExtraOutputIdentifierNode>();
 
         try
         {
@@ -292,5 +293,14 @@ public:
      * @return The result of processing the AllTimeSumNode.
      */
     virtual R visit(const Nodes::AllTimeSumNode*, Args... args) = 0;
+    /**
+     * @brief Visits a ExtraOutputIdentifierNode.
+     *
+     * @param node A pointer to the ExtraOutputIdentifierNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the ExtraOutputIdentifierNode.
+     */
+    virtual R visit(const Nodes::ExtraOutputIdentifierNode*, Args... args) = 0;
 };
 } // namespace Antares::Expressions::Visitors

@@ -145,6 +145,12 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(
     return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
+Optimisation::TimeIndex TimeIndexVisitor::visit(
+  [[maybe_unused]] const Nodes::ExtraOutputIdentifierNode*)
+{
+    return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+}
+
 TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
                                    const ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),

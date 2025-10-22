@@ -161,4 +161,9 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
 {
     throw IllegalNodeException();
 }
+
+LinearConstraint ReadLinearConstraintVisitor::visit(const ExtraOutputIdentifierNode*)
+{
+    throw IllegalNodeException();
+}
 } // namespace Antares::Optimisation
