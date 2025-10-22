@@ -23,6 +23,7 @@
 #include <string>
 
 #include <antares/expressions/nodes/Leaf.h>
+#include "antares/modeler-optimisation-container/TimeIndex.h"
 
 namespace Antares::Expressions::Nodes
 {
@@ -41,10 +42,13 @@ class ExtraOutputIdentifierNode final: public Leaf<std::string>
 public:
     explicit ExtraOutputIdentifierNode(const ExtraOutputIdentifierOperation operation,
                                        const std::string& value,
-                                       const unsigned index):
+                                       const unsigned index,
+                                       const Optimisation::TimeIndex time_index = Optimisation::
+                                         TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
         operation_(operation),
-        index_(index)
+        index_(index),
+        time_index_(time_index)
     {
     }
 
@@ -63,8 +67,14 @@ public:
         return index_;
     }
 
+    Optimisation::TimeIndex timeIndex() const
+    {
+        return time_index_;
+    }
+
 private:
     ExtraOutputIdentifierOperation operation_;
     unsigned index_;
+    const Optimisation::TimeIndex time_index_;
 };
 } // namespace Antares::Expressions::Nodes

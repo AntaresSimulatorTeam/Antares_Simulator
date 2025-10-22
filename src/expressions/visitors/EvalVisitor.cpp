@@ -207,20 +207,39 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
     return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
+EvaluationResult EvalVisitor::handleReducedCost(const Nodes::ExtraOutputIdentifierNode* node)
+{
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    {
+        const std::span componentVariables = optimContainer_.getComponentVariable(
+          component_,
+          node->index(),
+          1 /* single timestep*/);
+        return EvaluationResult(componentVariables[0]->reducedCost());
+    }
+    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+    const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
+    std::vector<double> varValues(nbTimeStep, 0.0);
+    const std::span componentVariables = optimContainer_.getComponentVariable(component_,
+                                                                              node->index(),
+                                                                              nbTimeStep);
+    for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
+    {
+        varValues[varInd] = componentVariables[varInd]->reducedCost();
+    }
+
+    return EvaluationResult{varValues};
+}
+
 EvaluationResult EvalVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node)
 {
     if (node->operation() == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST)
     {
-        const auto& vars = optimContainer_.getVariables();
-        for (const auto& var: vars)
-        {
-            if (var->getName() == node->value())
-            {
-                return EvaluationResult{var->reducedCost()};
-            }
-        }
+        return handleReducedCost(node);
     }
-    throw std::runtime_error("");
+
+    return EvaluationResult{0};
 }
 
 std::string EvalVisitor::name() const

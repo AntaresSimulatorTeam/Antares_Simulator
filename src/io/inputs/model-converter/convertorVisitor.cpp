@@ -373,7 +373,7 @@ std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
 }
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* context)
-{    
+{
     const auto& variables = model_.variables;
     for (std::size_t index = 0; index < variables.size(); ++index)
     {
@@ -382,7 +382,9 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* cont
         {
             return static_cast<Node*>(registry_.create<ExtraOutputIdentifierNode>(
               ExtraOutputIdentifierOperation::REDUCED_COST,
-              var.id, index));
+              var.id,
+              index,
+              convertToTimeIndex(var.time_dependent, var.scenario_dependent)));
         }
     }
 
