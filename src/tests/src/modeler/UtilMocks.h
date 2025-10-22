@@ -2,8 +2,9 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
+#include <antares/expressions/visitors/EvalVisitor.h>
 
-#include "../modeler/mockModelerObjects.h"
+#include "mockModelerObjects.h"
 
 class MockMipVariable: public Antares::Optimisation::LinearProblemApi::IMipVariable
 {
@@ -20,6 +21,11 @@ public:
     double solutionValue() const override
     {
         return value_;
+    }
+
+    double reducedCost() const override
+    {
+        return 0;
     }
 
     Antares::Optimisation::LinearProblemApi::MipBasisStatus getMipBasisStatus() const override

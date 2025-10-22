@@ -8,7 +8,7 @@
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
-#include "../../expressions/UtilMocks.h"
+#include "UtilMocks.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
