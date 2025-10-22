@@ -36,13 +36,15 @@ public:
     }
 
     virtual std::vector<Variable> create() = 0;
+
 protected:
     Registry<Nodes::Node>& nodeRegistry_;
 };
 
-class TwoClassicVariablesCreator: public VariablesCreator
+class TwoVarsCreator_OneSubPb_OneMaster: public VariablesCreator
 {
     using VariablesCreator::VariablesCreator;
+
 public:
     std::vector<Variable> create() override
     {
@@ -84,10 +86,12 @@ struct FactoryFixture
         setOptimEntityContainer();
     }
 
+    // Function members
     void createModel();
     void createComponent();
     void setOptimEntityContainer();
 
+    // Data members
     Registry<Node> nodeRegistry; // Storing AST Nodes (to destroy them at end of test)
     std::vector<Variable> variables;
     Model model;
@@ -128,7 +132,7 @@ BOOST_FIXTURE_TEST_SUITE(add_variables_to_master_linear_problem, FactoryFixture)
 BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_variables)
 {
     // Arrange
-    initialize(std::make_unique<TwoClassicVariablesCreator>(nodeRegistry));
+    initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
@@ -140,10 +144,10 @@ BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_var
     BOOST_REQUIRE(var);
 }
 
-BOOST_AUTO_TEST_CASE(adding_variables_to_classic_pb_actually_adds_only_subproblem_variables)
+BOOST_AUTO_TEST_CASE(adding_variables_pb_actually_adds_only_subproblem_variables)
 {
     // Arrange
-    initialize(std::make_unique<TwoClassicVariablesCreator>(nodeRegistry));
+    initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
