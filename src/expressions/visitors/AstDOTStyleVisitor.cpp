@@ -193,7 +193,7 @@ void AstDOTStyleVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node, std
     {
         label = "Reduced_cost(" + node->value() + ")";
     }
-    emitNode(id, "Var(" + node->value() + ")", NodeStyle::VariableStyle, os);
+    emitNode(id, label, NodeStyle::VariableStyle, os);
 }
 
 std::string AstDOTStyleVisitor::name() const
