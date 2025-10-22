@@ -512,6 +512,12 @@ var annotated_dup =
             [ "Library", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library" ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser" ]
           ] ],
+          [ "YmlOptimConfig", null, [
+            [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable" ],
+            [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
+            [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],
+            [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser" ]
+          ] ],
           [ "YmlSystem", null, [
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser" ],
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter" ],
@@ -1441,6 +1447,9 @@ var annotated_dup =
       [ "convert< Antares::IO::Inputs::YmlModel::Model >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::PortType >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Library >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlOptimConfig::Variable >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlOptimConfig::Objective >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlOptimConfig::Model >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Parameter >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Component >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Connection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection_01_4.html", null ],
@@ -1492,8 +1501,8 @@ var annotated_dup =
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", "classColumnBasedStorage" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
+    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"FinalStockEquivalent_8h_source.html":[9,0,0,8,7,1,0,0,0,1,17],
 "FinalStockExpression_8h_source.html":[9,0,0,8,7,1,0,0,0,1,18],
 "FinalStockGroup_8h_source.html":[9,0,0,8,7,1,0,0,0,1,19],
 "FlowDissociation_8h_source.html":[9,0,0,8,7,1,0,0,0,1,20],
@@ -90,6 +91,8 @@ var NAVTREEINDEX1 =
 "NodesForwardDeclaration_8h_source.html":[9,0,0,2,1,0,0,1,13],
 "OneConstraintFiller_8h_source.html":[9,0,0,10,2,4,0,0,1],
 "OneVarFiller_8h_source.html":[9,0,0,10,2,4,0,0,2],
+"OptimConfig_8h.html#a132dca77c2465f4526050af121879ebb":[7,0,0,14,0,4,4],
+"OptimConfig_8h_source.html":[9,0,0,3,1,3,0,0,0,0,0,0],
 "OptimEntityContainer_8h_source.html":[9,0,0,6,0,0,0,1],
 "OptimisationsSimulationTable_8h_source.html":[9,0,0,8,7,1,0,0,0,15],
 "PMaxDispatchableGeneration_8h_source.html":[9,0,0,8,7,1,0,0,0,1,39],
@@ -246,8 +249,5 @@ var NAVTREEINDEX1 =
 "appdata_8cpp.html#af6c0fcf11671ce283527fbdd87173e7e":[7,0,28,3],
 "appdata_8h.html#a7ca8be668500dd8791d664b3bcb97b4e":[7,0,28,2],
 "appdata_8h.html#af4149dcd70b39c611b24064d32cfa6ac":[7,0,28,0],
-"appdata_8h_source.html":[9,0,0,4,0,27,0,0,0,0],
-"apply-scenario_8cpp.html#a9f5b822061e0b668bb406bc3db2c8d26":[7,0,0,25,41],
-"apply-scenario_8h_source.html":[9,0,0,8,9,0,0,0,0,3],
-"applyToMatrix_8hxx.html#a02bd1baac557b2b69110bba7b365ec87":[7,0,0,6,3,15]
+"appdata_8h_source.html":[9,0,0,4,0,27,0,0,0,0]
 };

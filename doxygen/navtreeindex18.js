@@ -1,5 +1,8 @@
 var NAVTREEINDEX18 =
 {
+"classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode.html#aa8a45d934fdebccafeab24029279ad4b":[8,0,0,7,28,0],
+"classAntares_1_1Error_1_1NoAreas.html":[8,0,0,7,4],
+"classAntares_1_1Error_1_1NoAreas.html#a9420777c4fd5932317031a6baefb819c":[8,0,0,7,4,0],
 "classAntares_1_1Error_1_1NoStudyProvided.html":[8,0,0,7,20],
 "classAntares_1_1Error_1_1NoStudyProvided.html#a0422c323d813703d1d20778c0e0eae4d":[8,0,0,7,20,0],
 "classAntares_1_1Error_1_1ReadingStudy.html":[8,0,0,7,27],
@@ -246,8 +249,5 @@ var NAVTREEINDEX18 =
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ab6b917117667c8a2ae0f6a4f536132ee":[8,0,0,9,0,0,7],
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#acbe829267e30094071d2f7ba2d3fdf09":[8,0,0,9,0,0,12],
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ad595d5490507f25caf0ee32e2121c3ac":[8,0,0,9,0,0,4],
-"classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ae636626919c90c5139c28d0a34b913d1":[8,0,0,9,0,0,0],
-"classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#aea8f8f1d39614cfaaa1339206bdafee9":[8,0,0,9,0,0,6],
-"classAntares_1_1FatalError.html":[8,0,0,37],
-"classAntares_1_1FileTreeStudyLoader.html":[8,0,0,36]
+"classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ae636626919c90c5139c28d0a34b913d1":[8,0,0,9,0,0,0]
 };
