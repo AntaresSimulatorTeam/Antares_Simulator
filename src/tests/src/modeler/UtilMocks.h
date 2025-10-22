@@ -1,8 +1,8 @@
 #pragma once
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/optimisation/linear-problem-api/linearProblem.h>
 
 #include "mockModelerObjects.h"
 

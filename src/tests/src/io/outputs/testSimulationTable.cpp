@@ -45,6 +45,7 @@
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
+
 #include "UtilMocks.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
