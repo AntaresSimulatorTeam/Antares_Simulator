@@ -132,7 +132,9 @@ Nodes::Node* CloneVisitor::visit(const Nodes::AllTimeSumNode* node)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node)
 {
-    return registry_.create<Nodes::ExtraOutputIdentifierNode>(node->operation(), node->value());
+    return registry_.create<Nodes::ExtraOutputIdentifierNode>(node->operation(),
+                                                              node->value(),
+                                                              node->index());
 }
 
 std::string CloneVisitor::name() const

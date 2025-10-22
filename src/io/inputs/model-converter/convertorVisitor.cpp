@@ -365,23 +365,27 @@ std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
         {
             return static_cast<Node*>(
               registry_.create<ExtraOutputIdentifierNode>(ExtraOutputIdentifierOperation::DUAL,
-                                                          c.id));
+                                                          c.id,
+                                                          0)); // TODO index constraint
         }
     }
     throw NoConstraintWithThisName(context->IDENTIFIER()->getText());
 }
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* context)
-{
-    for (const auto& v: model_.variables)
+{    
+    const auto& variables = model_.variables;
+    for (std::size_t index = 0; index < variables.size(); ++index)
     {
-        if (v.id == context->IDENTIFIER()->getText())
+        const auto& var = variables[index];
+        if (var.id == context->IDENTIFIER()->getText())
         {
             return static_cast<Node*>(registry_.create<ExtraOutputIdentifierNode>(
               ExtraOutputIdentifierOperation::REDUCED_COST,
-              v.id));
+              var.id, index));
         }
     }
+
     throw NoVariableWithThisName(context->IDENTIFIER()->getText());
 }
 

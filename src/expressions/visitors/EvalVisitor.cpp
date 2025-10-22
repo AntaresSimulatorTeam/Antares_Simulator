@@ -216,7 +216,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node
         {
             if (var->getName() == node->value())
             {
-                /*return EvaluationResult{var->reduced_cost()};*/
+                return EvaluationResult{var->reducedCost()};
             }
         }
     }

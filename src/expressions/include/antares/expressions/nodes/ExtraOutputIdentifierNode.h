@@ -40,9 +40,11 @@ class ExtraOutputIdentifierNode final: public Leaf<std::string>
 {
 public:
     explicit ExtraOutputIdentifierNode(const ExtraOutputIdentifierOperation operation,
-                                       const std::string& value):
+                                       const std::string& value,
+                                       const unsigned index):
         Leaf<std::string>(value),
-        operation_(operation)
+        operation_(operation),
+        index_(index)
     {
     }
 
@@ -56,7 +58,13 @@ public:
         return operation_;
     }
 
+    unsigned index() const
+    {
+        return index_;
+    }
+
 private:
     ExtraOutputIdentifierOperation operation_;
+    unsigned index_;
 };
 } // namespace Antares::Expressions::Nodes
