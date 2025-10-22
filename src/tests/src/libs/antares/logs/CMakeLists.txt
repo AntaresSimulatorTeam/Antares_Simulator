@@ -1,6 +1,6 @@
 include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
-add_boost_test(Logs
+add_boost_test(Logs-test
         SRC
         logs-test.cpp
         logs.cpp
@@ -9,7 +9,7 @@ add_boost_test(Logs
         yuni-static-core
 )
 
-target_include_directories(Logs
+target_include_directories(Logs-test
         PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}"
         "${CMAKE_SOURCE_DIR}/src/libs/antares/logs/include")
