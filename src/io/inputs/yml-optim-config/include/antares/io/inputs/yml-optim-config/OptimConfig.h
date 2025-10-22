@@ -29,7 +29,6 @@
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
-
 struct Variable
 {
     std::string id;

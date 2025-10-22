@@ -203,7 +203,6 @@ models:
     BOOST_CHECK(config[0].objectives[2].location == "master-and-subproblems");
 }
 
-
 BOOST_AUTO_TEST_CASE(parse_missing_models_key_throws)
 {
     std::string yaml_content = R"(
