@@ -22,6 +22,7 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 
 #include <numeric>
+#include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
@@ -208,8 +209,18 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node)
 {
-    EvaluationResult res{0};
-    return res;
+    if (node->operation() == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST)
+    {
+        const auto& vars = optimContainer_.getVariables();
+        for (const auto& var: vars)
+        {
+            if (var->getName() == node->value())
+            {
+                /*return EvaluationResult{var->reduced_cost()};*/
+            }
+        }
+    }
+    throw std::runtime_error("");
 }
 
 std::string EvalVisitor::name() const
