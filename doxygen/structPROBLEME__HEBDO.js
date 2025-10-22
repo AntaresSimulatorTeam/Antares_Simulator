@@ -74,7 +74,6 @@ var structPROBLEME__HEBDO =
     [ "TypeDeLissageHydraulique", "structPROBLEME__HEBDO.html#ae8023267ef14d9f85f29abc6a8ef65cc", null ],
     [ "ValeursDeNTC", "structPROBLEME__HEBDO.html#a19a7297940be34f7abc2e07e15754e97", null ],
     [ "VariablesDualesDesContraintesDeNTC", "structPROBLEME__HEBDO.html#a4582a58e2e7ca2763e20453cb784fd13", null ],
-    [ "WaterValueAccurate", "structPROBLEME__HEBDO.html#a52859336a85291b541b8563460b85aa8", null ],
     [ "weekInTheYear", "structPROBLEME__HEBDO.html#a79876a6aba8d6117ddf02a51c321de06", null ],
     [ "YaDeLaReserveJmoins1", "structPROBLEME__HEBDO.html#a48ad4f5e3167ff6bad51145b1dfd51bb", null ],
     [ "year", "structPROBLEME__HEBDO.html#a52b08970106a04281ee4abc89740456f", null ]
