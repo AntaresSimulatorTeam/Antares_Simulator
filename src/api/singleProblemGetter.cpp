@@ -30,6 +30,10 @@ void SingleProblemGetter::load(const std::filesystem::path& study_path)
                                     /* NombreDePasDeTemps = */ 168,
                                     numSpace);
 
+    study_->computePThetaInfForThermalClusters(); // PthetaInf
+
+    scratchmap_ = study_->areas.buildScratchMap(numSpace);
+
     // TODO duplication
     if (!pb_.LeProblemeADejaEteInstancie)
     {
@@ -96,8 +100,6 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
         return allData_.at(year);
     }
 
-    auto scratchmap = study_->areas.buildScratchMap(numSpace);
-
     // For each year
     Antares::Solver::NullResultWriter resultWriter;
     Antares::HydroManagement hydroManagement(study_->areas,
@@ -142,11 +144,11 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
     hydroInputsChecker.Execute(year);
     hydroInputsChecker.CheckForErrors();
 
-    prepareClustersInMustRunMode(*study_, scratchmap, year);
+    prepareClustersInMustRunMode(*study_, scratchmap_, year);
 
-    hydroManagement.makeVentilation(hydroReservoirLevel, year, scratchmap);
-    dataForYear.ventilationResults = hydroManagement.ventilationResults();
+    hydroManagement.makeVentilation(hydroReservoirLevel, year, scratchmap_);
 
+    const auto& ventilationResults = hydroManagement.ventilationResults();
     const auto& calendar = study_->calendar;
 
     int areaIndex = 0;
@@ -214,7 +216,6 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
         double initialLevel = hydroLevels[area][week];
         pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
     }
-    auto scratchmap = study_->areas.buildScratchMap(numSpace);
 
     const auto hourInTheYear = 168 * week; // TODO
     SIM_RenseignementProblemeHebdo(*study_,
@@ -222,9 +223,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                    week,
                                    hourInTheYear,
                                    ventilationResults,
-                                   scratchmap);
-
-    study_->computePThetaInfForThermalClusters(); // PthetaInf
+                                   scratchmap_);
 
     uint indexYear = randomForParallelYears->yearNumberToIndex[year];
     auto& randomForCurrentYear = randomForParallelYears->pYears[indexYear];

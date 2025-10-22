@@ -37,7 +37,7 @@ public:
 
 private:
     const Details::YearlyData& getYearlyData(unsigned year);
-
+    Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;
     std::unique_ptr<Antares::Data::Study> study_;
     PROBLEME_HEBDO pb_;
