@@ -458,8 +458,10 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
     std::string expression = "reduced_cost(varP)";
     auto expr = converter.run(expression);
     BOOST_CHECK_EQUAL(expr.node->name(), "ExtraOutputIdentifierNode");
-    auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
+    auto reducedCostNode = dynamic_cast<Nodes::ExtraOutputIdentifierNode*>(expr.node);
     BOOST_CHECK_EQUAL(reducedCostNode->value(), "varP");
+    BOOST_CHECK(reducedCostNode->operation()
+                == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST);
 
     std::string badExpression = "reduced_cost(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
