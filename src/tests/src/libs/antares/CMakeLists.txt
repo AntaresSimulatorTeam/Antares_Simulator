@@ -1,3 +1,4 @@
+add_subdirectory(antares)
 add_subdirectory(concurrency)
 add_subdirectory(writer)
 add_subdirectory(study)
