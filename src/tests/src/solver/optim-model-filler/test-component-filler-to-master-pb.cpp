@@ -99,6 +99,40 @@ public:
     }
 };
 
+class ObjectivesCreator
+{
+public:
+    explicit ObjectivesCreator(Registry<Nodes::Node>& nodeRegistry):
+        nodeRegistry_(nodeRegistry)
+    {
+    }
+
+    virtual std::vector<Objective> create() = 0;
+
+protected:
+    Registry<Nodes::Node>& nodeRegistry_;
+};
+
+class NoObjectiveCreator: public ObjectivesCreator
+{
+    using ObjectivesCreator::ObjectivesCreator;
+public:
+    std::vector<Objective> create() override
+    {
+        return {};
+    }
+};
+
+ class TwoObjSubPbCreator: public ObjectivesCreator
+{
+     using ObjectivesCreator::ObjectivesCreator;
+public:
+     std::vector<Objective> create() override
+     {
+        
+     }
+};
+
 struct FactoryFixture
 {
     FactoryFixture():
@@ -107,9 +141,12 @@ struct FactoryFixture
     {
     }
 
-    void initialize(std::unique_ptr<VariablesCreator> varCreator)
+    void initialize(
+      std::unique_ptr<VariablesCreator> varCreator,
+      std::unique_ptr<ObjectivesCreator> objCreator)
     {
         variables = varCreator->create();
+        objectives = objCreator->create();
         createModel();
         createComponent();
         setOptimEntityContainer();
@@ -123,6 +160,7 @@ struct FactoryFixture
     // Data members
     Registry<Node> nodeRegistry; // Storing AST Nodes (to destroy them at end of test)
     std::vector<Variable> variables;
+    std::vector<Objective> objectives;
     Model model;
     // We define a component under the form of a smart ptr because class Component default
     // constructor is forbidden, so we can't have : Component component;
@@ -139,7 +177,10 @@ struct FactoryFixture
 void FactoryFixture::createModel()
 {
     ModelBuilder model_builder;
-    model_builder.withId("my-model").withVariables(std::move(variables));
+    model_builder.withId("my-model")
+      .withVariables(std::move(variables))
+      .withObjectives(std::move(objectives));
+
     model = model_builder.build();
 }
 
@@ -161,7 +202,8 @@ BOOST_FIXTURE_TEST_SUITE(add_variables_to_master_linear_problem, FactoryFixture)
 BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_variables)
 {
     // Arrange
-    initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry));
+    initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry),
+               std::make_unique<NoObjectiveCreator>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
@@ -173,10 +215,11 @@ BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_var
     BOOST_REQUIRE(var);
 }
 
-BOOST_AUTO_TEST_CASE(adding_variables_pb_actually_adds_only_subproblem_variables)
+BOOST_AUTO_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_variables)
 {
     // Arrange
-    initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry));
+    initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry),
+               std::make_unique<NoObjectiveCreator>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
@@ -189,3 +232,22 @@ BOOST_AUTO_TEST_CASE(adding_variables_pb_actually_adds_only_subproblem_variables
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+// BOOST_FIXTURE_TEST_SUITE(add_constraints_to_master_linear_problem, FactoryFixture)
+//
+// BOOST_AUTO_TEST_CASE(adding_objectves_to_pb_actually_adds_only_subproblem_objectives)
+//{
+//     // Arrange
+//     initialize(std::make_unique<TwoSubPbVarsCreator>(nodeRegistry));
+//     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
+//
+//     // Act
+//     componentFiller.addVariables(time_scenario_ctx);
+//
+//     // Assert
+//     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
+//     auto* var = linear_pb.lookupVariable("my-component.var-1");
+//     BOOST_REQUIRE(var);
+// }
+//
+// BOOST_AUTO_TEST_SUITE_END()
