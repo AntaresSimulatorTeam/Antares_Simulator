@@ -238,7 +238,7 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
     optimEntityContainer_(optimEntityContainer),
     scenarioGroupRepository_(scenarioGroupRepository),
     variablesFilter_(subproblemVariables),
-    objectivesFilter_(masterproblemObjectives)
+    objectivesFilter_(subproblemObjectives)
 {
 }
 

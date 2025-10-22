@@ -70,6 +70,35 @@ public:
     }
 };
 
+class TwoSubPbVarsCreator: public VariablesCreator
+{
+    using VariablesCreator::VariablesCreator;
+
+public:
+    std::vector<Variable> create() override
+    {
+        Variable var_1("var-1",
+                       createLiteral("low-bound", 0., nodeRegistry_),
+                       createLiteral("up-bound", 1., nodeRegistry_),
+                       ValueType::FLOAT,
+                       TimeDependent::NO,
+                       ScenarioDependent::NO,
+                       Config::Location::SUBPROBLEMS);
+        Variable var_2("var-2",
+                       createLiteral("low-bound", 0., nodeRegistry_),
+                       createLiteral("up-bound", 1., nodeRegistry_),
+                       ValueType::FLOAT,
+                       TimeDependent::NO,
+                       ScenarioDependent::NO,
+                       Config::Location::SUBPROBLEMS);
+
+        std::vector<Variable> variables;
+        variables.emplace_back(std::move(var_1));
+        variables.emplace_back(std::move(var_2));
+        return variables;
+    }
+};
+
 struct FactoryFixture
 {
     FactoryFixture():
