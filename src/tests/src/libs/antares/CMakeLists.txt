@@ -6,6 +6,7 @@ add_subdirectory(benchmarking)
 add_subdirectory(checks)
 add_subdirectory(inifile)
 add_subdirectory(scenarioBuilderExpression)
+add_subdirectory(logs)
 
 add_subdirectory(yaml-parser)
 add_subdirectory(antlr4-interface)

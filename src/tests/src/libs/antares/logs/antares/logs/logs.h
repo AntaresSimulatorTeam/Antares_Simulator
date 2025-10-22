@@ -66,6 +66,13 @@ public:
         return buffer_.empty();
     }
 
+    void vappendFormat(const char* format, va_list parg)
+    {
+        // Simple implementation: use vsnprintf or something, but for test, perhaps just append a
+        // placeholder Since it's a test, maybe just do nothing or append a string.
+        buffer_.append("compatibility message");
+    }
+
 private:
     Yuni::CString<1024> buffer_;
 };
@@ -95,16 +102,27 @@ public:
         return warning_buffer_;
     }
 
+    Buffer& compatibility()
+    {
+        return compatibility_buffer_;
+    }
+
 private:
     Buffer error_buffer_;
     Buffer info_buffer_;
     Buffer debug_buffer_;
     Buffer warning_buffer_;
+    Buffer compatibility_buffer_;
 };
 
 } // namespace UnitTests
 
 extern UnitTests::fakeLogger logs;
+
+void LogDisplayErrorInfos(unsigned int errors,
+                          unsigned int warnings,
+                          const char* message,
+                          bool printAsError);
 
 } // namespace Antares
 
