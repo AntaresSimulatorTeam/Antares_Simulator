@@ -10,8 +10,8 @@
 #
 # This file is part of the Antares project.
 
-# Study case 13_1 : to test investment problems
-# Simple generation expansion problem on one node, one timestep and one scenario with one candidate.
+# Study case 13_2 : to test investment problems
+# Simple generation expansion problem on one node, one timestep and one scenario with two candidates: one continuous and one discrete.
 
 # Demand = 400
 # Generator : P_max : 200, Cost : 45
@@ -20,20 +20,22 @@
 # -> 200 of unsupplied energy
 # -> Total cost without investment = 45 * 200 + 501 * 200 = 109_200
 
-# Continuous candidate  : Invest cost : 400 / MW; Prod cost : 10
+# Continuous candidate  : Invest cost : 490 / MW; Prod cost : 10
+# Discrete candidate : Invest cost : 200 / MW; Prod cost : 10; Nb of units: 10; Prod per unit: 10
 
-# Optimal investment : 200 MW
+# Optimal investment : 100 MW (Discrete) + 100 MW (Continuous)
 
-# -> Optimal cost = 400 * 200 + 10 * 200 (Invest cost + prod cost of new generator)
+# -> Optimal cost = 490 * 100 + 10 * 100 (Continuous)
+#                 + 200 * 100 + 10 * 100 (Discrete)
 #                             + 45 * 200 (Generator)
-#                 =    80_000 +   11_000
-#                 = 91_000
+#                 =    69_000 +   11_000
+#                 = 80_000
 
 system:
-  id: case_13_1
+  id: case_13_2
   components:
     - id: my_node
-      model: lib_example_13_1.area
+      model: lib_example_13_2.area
       parameters:
         - id: spillage_cost
           time-dependent: false
@@ -45,7 +47,7 @@ system:
           value: 501
 
     - id: load
-      model: lib_example_13_1.load
+      model: lib_example_13_2.load
       parameters:
         - id: load
           time-dependent: false
@@ -53,7 +55,7 @@ system:
           value: 400
 
     - id: already_installed_generator
-      model: lib_example_13_1.generator
+      model: lib_example_13_2.generator
       parameters:
         - id: p_max
           scenario-dependent: false
@@ -65,7 +67,7 @@ system:
           value: 45
 
     - id: continuous_generator_candidate
-      model: lib_example_13_1.generator_with_continuous_invest
+      model: lib_example_13_2.generator_with_continuous_invest
       parameters:
         - id: op_cost
           scenario-dependent: false
@@ -74,7 +76,23 @@ system:
         - id: invest_cost
           scenario-dependent: false
           time-dependent: false
-          value: 400
+          value: 490
+
+    - id: discrete_generator_candidate
+      model: lib_example_13_2.generator_with_discrete_invest
+      parameters:
+        - id: op_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 10
+        - id: invest_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 200
+        - id: p_max_per_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 10
 
   connections:
     - component1: my_node
@@ -90,4 +108,9 @@ system:
     - component1: my_node
       port1: balance_port
       component2: continuous_generator_candidate
+      port2: injection_port
+
+    - component1: my_node
+      port1: balance_port
+      component2: discrete_generator_candidate
       port2: injection_port
