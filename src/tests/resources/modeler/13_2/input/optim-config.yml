@@ -10,7 +10,25 @@
 #
 # This file is part of the Antares project.
 models:
-  - id: lib_example_13_1.generator_with_continuous_invest
+  - id: lib_example_13_2.generator_with_discrete_invest
+    model-decomposition:
+      variables:
+        - id: nb_units
+          location: master
+        - id: pmax
+          location: master-and-subproblems
+        # Variable generation has default settings, no need to make it appear here
+      constraints:
+        - id: p_max_nb_units_relation
+          location: master
+        # Constraint max_generation has default settings, no need to make it appear here
+      objective-contributions:
+        - id: invest_objective
+          location: master
+        - id: operational_objective
+          location: subproblems
+  
+  - id: lib_example_13_2.generator_with_continuous_invest
     model-decomposition:
       variables:
         - id: pmax

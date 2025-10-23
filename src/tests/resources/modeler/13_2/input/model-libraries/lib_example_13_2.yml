@@ -10,7 +10,7 @@
 #
 # This file is part of the Antares project.
 library:
-  id: lib_example_13_1
+  id: lib_example_13_2
   description: Library for test cases with investment
 
   port-types:
@@ -113,3 +113,48 @@ library:
           expression:  sum(op_cost * generation)
         - id: invest_objective
           expression: invest_cost * p_max
+
+    - id: generator_with_discrete_invest
+      parameters:
+        - id: op_cost
+          scenario-dependent: false
+          time-dependent: false
+        - id: invest_cost
+          scenario-dependent: false
+          time-dependent: false
+        - id: p_max_per_unit
+          scenario-dependent: false
+          time-dependent: false
+      variables:
+        - id: p_max
+          scenario-dependent: false
+          time-dependent: false
+          lower-bound: 0
+          variable-type: continuous
+        - id: generation
+          lower-bound: 0
+          variable-type: continuous
+        - id: nb_units
+          scenario-dependent: false
+          time-dependent: false
+          lower-bound: 0
+          upper-bound: 10
+          variable-type: integer
+      constraints:
+        - id: max_generation
+          expression: generation <= p_max
+        - id: p_max_nb_units_relation
+          expression: p_max = p_max_per_unit * nb_units
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+      objective-contributions: 
+        - id: operational_objective
+          expression:  sum(op_cost * generation)
+        - id: invest_objective
+          expression: invest_cost * p_max
+      
