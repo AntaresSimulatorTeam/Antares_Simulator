@@ -40,8 +40,8 @@ int main(int argc, char** argv)
     const unsigned int year = std::atoi(argv[2]);
     const unsigned int week = std::atoi(argv[3]);
 
-    Antares::FileTreeStudyLoader study_loader(argv[1]);
-    auto study = study_loader.load();
+    Antares::FileTreeStudyLoader loader(argv[1]);
+    auto study = loader.load();
 
     Antares::Solver::SingleProblemGetter getter(std::move(study));
     auto constant = getter.getConstantData();
