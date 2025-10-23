@@ -394,7 +394,7 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* cont
 // TODO implement this
 std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
 {
-    throw NotImplemented("Node function not implemented yet");
+    throw NotImplemented("This function doesn't exists: " + context->IDENTIFIER()->getText());
 }
 
 Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)
