@@ -36,8 +36,6 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
     study_->computePThetaInfForThermalClusters(); // PthetaInf
 
-    scratchmap_ = study_->areas.buildScratchMap(numSpace);
-
     // TODO duplication
     if (!pb_.LeProblemeADejaEteInstancie)
     {
@@ -58,6 +56,8 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
         pb_.LeProblemeADejaEteInstancie = true;
     }
+
+    scratchmap_ = study_->areas.buildScratchMap(numSpace);
 }
 
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
