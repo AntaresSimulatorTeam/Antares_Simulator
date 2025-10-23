@@ -125,6 +125,11 @@ public:
         setUb(ub);
     }
 
+    double dual() const override
+    {
+        return 0;
+    }
+
     // IHasName interface
     const std::string& getName() const override
     {

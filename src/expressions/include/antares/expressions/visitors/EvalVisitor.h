@@ -325,5 +325,6 @@ private:
     EvaluationResult visit(const Nodes::ExtraOutputIdentifierNode* node) override;
 
     EvaluationResult handleReducedCost(const Nodes::ExtraOutputIdentifierNode* node);
+    EvaluationResult handleDual(const Nodes::ExtraOutputIdentifierNode* node);
 };
 } // namespace Antares::Expressions::Visitors
