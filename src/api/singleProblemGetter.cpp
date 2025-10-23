@@ -58,6 +58,28 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
     }
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
+    initializeRandomNumbers();
+}
+
+void SingleProblemGetter::initializeRandomNumbers()
+{
+    int nbYears = 0;
+    std::map<unsigned int, bool> isYearPerformed; // TODO check year number
+    for (uint year = 0; year < study_->parameters.nbYears; ++year)
+    {
+        isYearPerformed[year] = study_->parameters.yearsFilter[year];
+        if (study_->parameters.yearsFilter[year])
+        {
+            ++nbYears;
+        }
+    }
+
+    randomForParallelYears_.emplace(nbYears, study_->parameters.power.fluctuations);
+    randomForParallelYears_->allocate(*study_);
+
+    MersenneTwister randomHydroGenerator;
+    randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
+    randomForParallelYears_->compute(*study_, 1, isYearPerformed, randomHydroGenerator);
 }
 
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
@@ -104,30 +126,7 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
         return allData_.at(year);
     }
 
-    int nbYears = 0;
-    std::map<unsigned int, bool> isYearPerformed; // TODO check year number
-    for (uint year = 0; year < study_->parameters.nbYears; ++year)
-    {
-        isYearPerformed[year] = study_->parameters.yearsFilter[year];
-        if (study_->parameters.yearsFilter[year])
-        {
-            ++nbYears;
-        }
-    }
-
     auto& dataForYear = allData_[year];
-    auto& randomForParallelYears = dataForYear.randomForParallelYears;
-
-    randomForParallelYears.emplace(nbYears, study_->parameters.power.fluctuations);
-    randomForParallelYears->allocate(*study_);
-
-    MersenneTwister randomHydroGenerator;
-    randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
-    randomForParallelYears->compute(*study_, 1, isYearPerformed, randomHydroGenerator);
-
-    // Getting random tables for this year
-    // Index of the current year in the list of structures
-    uint indexYear = randomForParallelYears->yearNumberToIndex[year];
 
     /*
       Side effects for HydroInputsChecker are limited to the year scope
@@ -141,16 +140,16 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
 
     prepareClustersInMustRunMode(*study_, scratchmap_, year);
 
-    auto& randomForCurrentYear = randomForParallelYears->pYears[indexYear];
-    std::tie(dataForYear.hydroLevels, dataForYear.ventilationResults) = computeHydroLevels(
-      year,
-      randomForCurrentYear.pReservoirLevels);
+    uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
+    auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
+
+    dataForYear = computeHydroLevels(year, randomForCurrentYear.pReservoirLevels);
 
     return dataForYear;
 }
 
-std::pair<Details::HydroLevels, Antares::HYDRO_VENTILATION_RESULTS>
-SingleProblemGetter::computeHydroLevels(unsigned year, const std::vector<double>& initialLevel)
+Details::YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
+                                                            const std::vector<double>& initialLevel)
 {
     // For each year
     Antares::HydroManagement hydroManagement(study_->areas,
@@ -223,7 +222,14 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     pb_.year = id.year;
     pb_.weekInTheYear = week;
 
-    auto [hydroLevels, randomForParallelYears, ventilationResults] = getYearlyData(year);
+    const auto [hydroLevels, ventilationResults] = getYearlyData(year);
+
+    // TODO
+    uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
+    auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
+
+    // TODO once per year, not every week
+    Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
 
     const auto hourInTheYear = 168 * week; // TODO
     SIM_RenseignementProblemeHebdo(*study_,
@@ -237,12 +243,12 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     for (uint areaIndex = 0; areaIndex < study_->areas.size(); ++areaIndex)
     {
         const auto* area = study_->areas.byIndex[areaIndex];
-        double initialLevel = hydroLevels[area][week];
-        pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
+        if (area->hydro.reservoirManagement)
+        {
+            double initialLevel = hydroLevels.at(area)[week];
+            pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
+        }
     }
-
-    uint indexYear = randomForParallelYears->yearNumberToIndex[year];
-    auto& randomForCurrentYear = randomForParallelYears->pYears[indexYear];
 
     // required at least for OPT_SommeDesPminThermiques (RHS)
     Antares::Solver::Simulation::BuildThermalPartOfWeeklyProblem(

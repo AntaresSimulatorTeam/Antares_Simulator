@@ -19,8 +19,6 @@ using HydroLevels = std::map<const Antares::Data::Area*, std::array<double, 53 /
 struct YearlyData
 {
     HydroLevels hydroLevels;
-    std::optional<Antares::Solver::Simulation::randomNumbers>
-      randomForParallelYears; // Allow the use of std::optional<T>::emplace for delayed building
     Antares::HYDRO_VENTILATION_RESULTS ventilationResults;
 };
 
@@ -39,13 +37,14 @@ public:
 
 private:
     const Details::YearlyData& getYearlyData(unsigned year);
-    std::pair<Details::HydroLevels, Antares::HYDRO_VENTILATION_RESULTS> computeHydroLevels(
-      unsigned year,
-      const std::vector<double>& initialLevel);
+    Details::YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
+    void initializeRandomNumbers();
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;
     std::unique_ptr<Antares::Data::Study> study_;
     PROBLEME_HEBDO pb_;
     Details::AllData allData_;
+    std::optional<Antares::Solver::Simulation::randomNumbers>
+      randomForParallelYears_; // Allow the use of std::optional<T>::emplace for delayed building
 };
 } // namespace Antares::Solver

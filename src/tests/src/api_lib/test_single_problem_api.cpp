@@ -31,6 +31,8 @@
 
 #include "in-memory-study.h"
 
+constexpr double EPSILON = 1.e-6;
+
 std::size_t findIndex(const std::vector<std::string>& v, const std::string& value)
 {
     std::size_t ret = std::distance(v.begin(), std::find(v.begin(), v.end(), value));
@@ -94,10 +96,15 @@ BOOST_AUTO_TEST_CASE(single_problem_nominal_case)
 
     const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 0});
     // COST
-    BOOST_CHECK_EQUAL(firstWeekData.LinearCost[dispatchableVariable],
-                      20.717999329259154); // thermal cost 20 + noise
-    BOOST_CHECK_EQUAL(firstWeekData.LinearCost[unsuppliedVariable], 1000.); // unsupplied cost
-    BOOST_CHECK_EQUAL(firstWeekData.LinearCost[spilledVariable], 1000.);    // spilled cost
+    BOOST_CHECK_CLOSE(firstWeekData.LinearCost[dispatchableVariable],
+                      19.999456400134147,
+                      EPSILON); // thermal cost 20 + noise
+    BOOST_CHECK_CLOSE(firstWeekData.LinearCost[unsuppliedVariable],
+                      999.99941243777027,
+                      EPSILON); // unsupplied cost
+    BOOST_CHECK_CLOSE(firstWeekData.LinearCost[spilledVariable],
+                      999.99941243777027,
+                      EPSILON); // spilled cost
     // BOUNDS
     BOOST_CHECK_EQUAL(firstWeekData.Xmin[dispatchableVariable], 0.);
     BOOST_CHECK_EQUAL(firstWeekData.Xmin[unsuppliedVariable], 0.);
