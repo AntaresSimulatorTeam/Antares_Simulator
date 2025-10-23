@@ -4,12 +4,15 @@
 #include <map>
 #include <optional>
 
-#include "antares/solver/hydro/management/management.h"
+// clang-format off
+
 #include "antares/solver/lps/LpsFromAntares.h"
 #include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 #include "antares/solver/simulation/random.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/study.h"
+#include "antares/solver/hydro/management/management.h"
+// clang-format on
 
 // TODO split header
 namespace Details
@@ -32,7 +35,7 @@ namespace Antares::Solver
 class SingleProblemGetter
 {
 public:
-    void load(const std::filesystem::path& study_path);
+    SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study);
 
     ConstantDataFromAntares getConstantData();
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);

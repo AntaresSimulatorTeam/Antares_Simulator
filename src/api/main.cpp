@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "antares/api/singleProblemGetter.h"
+#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 
 constexpr int kMaxDisplay = 10'000;
 
@@ -11,7 +12,7 @@ template<typename T>
 std::string to_string_any(const T& value)
 {
     std::ostringstream oss;
-    oss << value;
+    oss << std::setprecision(8) << value;
     return oss.str();
 }
 
@@ -39,8 +40,10 @@ int main(int argc, char** argv)
     const unsigned int year = std::atoi(argv[2]);
     const unsigned int week = std::atoi(argv[3]);
 
-    Antares::Solver::SingleProblemGetter getter;
-    getter.load(argv[1]);
+    Antares::FileTreeStudyLoader study_loader(argv[1]);
+    auto study = study_loader.load();
+
+    Antares::Solver::SingleProblemGetter getter(std::move(study));
     auto constant = getter.getConstantData();
     auto weekly = getter.getWeeklyData({year, week});
 

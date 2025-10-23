@@ -2,11 +2,12 @@
 
 #include <ranges>
 
-#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
+#include "antares/benchmarking/DurationCollector.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/simulation.h"
 
 namespace
@@ -17,18 +18,21 @@ constexpr int numSpace = 0;            // full sequential
 constexpr int PremierPdtDeLIntervalle = 0;
 constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
 const std::string kName = "my-name";         // Arbitrary
+static Antares::Solver::NullResultWriter gResultWriter;
+static Benchmarking::DurationCollector gDurationCollector;
 } // namespace
 
 namespace Antares::Solver
 {
-void SingleProblemGetter::load(const std::filesystem::path& study_path)
+SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study):
+    study_(std::move(study))
 {
-    FileTreeStudyLoader study_loader(study_path);
-    study_ = study_loader.load();
     SIM_InitialisationProblemeHebdo(*study_,
                                     pb_,
                                     /* NombreDePasDeTemps = */ 168,
                                     numSpace);
+
+    Antares::Solver::Simulation::regenerateTimeSeries(*study_, gResultWriter, gDurationCollector);
 
     study_->computePThetaInfForThermalClusters(); // PthetaInf
 
@@ -149,11 +153,10 @@ std::pair<Details::HydroLevels, Antares::HYDRO_VENTILATION_RESULTS>
 SingleProblemGetter::computeHydroLevels(unsigned year, const std::vector<double>& initialLevel)
 {
     // For each year
-    Antares::Solver::NullResultWriter resultWriter;
     Antares::HydroManagement hydroManagement(study_->areas,
                                              study_->parameters,
                                              study_->calendar,
-                                             resultWriter);
+                                             gResultWriter);
 
     Details::HydroLevels hydroLevels;
     hydroManagement.makeVentilation(initialLevel, year, scratchmap_);
