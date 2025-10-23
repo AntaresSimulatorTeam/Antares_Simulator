@@ -167,6 +167,11 @@ SingleProblemGetter::computeHydroLevels(unsigned year, const std::vector<double>
     int areaIndex = 0;
     for (const auto& [_, area]: study_->areas)
     {
+        if (!area->hydro.reservoirManagement)
+        {
+            areaIndex++;
+            continue;
+        }
         auto inflows = area->hydro.series->storage.getColumn(year);
         auto& level = hydroLevels[area];
 
