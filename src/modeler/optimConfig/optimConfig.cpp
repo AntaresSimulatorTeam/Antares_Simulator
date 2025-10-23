@@ -24,9 +24,24 @@
 #include <unordered_map>
 
 #include <antares/exception/LoadingError.hpp>
+#include <antares/exception/RuntimeError.hpp>
 
 namespace Antares::Modeler::Config
 {
+
+std::ostream& operator<<(std::ostream& os, Location loc)
+{
+    switch (loc)
+    {
+    case Location::MASTER:
+        return os << "MASTER";
+    case Location::MASTER_AND_SUBPROBLEMS:
+        return os << "MASTER_AND_SUBPROBLEMS";
+    case Location::SUBPROBLEMS:
+        return os << "SUBPROBLEMS";
+    }
+    throw Error::RuntimeError("Unknown Location enum value");
+}
 
 void OptimConfig::checkDuplicateModelIds() const
 {

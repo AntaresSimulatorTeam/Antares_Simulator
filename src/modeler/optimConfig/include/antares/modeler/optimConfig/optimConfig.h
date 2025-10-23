@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -32,6 +33,8 @@ enum class Location
     MASTER_AND_SUBPROBLEMS,
     SUBPROBLEMS
 };
+
+std::ostream& operator<<(std::ostream& os, Location loc);
 
 class Variable
 {
