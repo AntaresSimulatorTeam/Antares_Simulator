@@ -355,8 +355,6 @@ void SetInitialHydroLevel(Data::Study& study,
                                                                    .NiveauxReservoirsDebutJours
                                                                      [firstDaySimu]
                                                                  * capacity;
-              logs.notice() << "area " << area.name << " SetInitialHydroLevel = "
-                            << problem.previousSimulationFinalLevel[area.index];
           }
       });
 }
