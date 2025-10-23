@@ -21,7 +21,7 @@
 
 #include "antares/io/inputs/yml-optim-config/converter.h"
 
-#include <stdexcept>
+#include <antares/exception/RuntimeError.hpp>
 
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
@@ -43,7 +43,7 @@ Modeler::Config::Location convertLocation(const std::string& locationStr)
     {
         return Modeler::Config::Location::SUBPROBLEMS;
     }
-    throw std::runtime_error("Unknown location: " + locationStr);
+    throw Error::RuntimeError("Unknown location: " + locationStr);
 }
 
 Modeler::Config::Variable convertVariable(const Variable& ymlVar)
