@@ -2,7 +2,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -15,11 +14,6 @@
 #include "component-filler-utils/variables-creators.h"
 #include "component-filler-utils/objectives-creators.h"
 
-using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Expressions;
-using namespace Antares::Expressions::Nodes;
-using namespace Antares::Modeler;
-using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
