@@ -295,7 +295,6 @@ target_link_libraries(study
         yuni-static-core
         Antares::date #parameters
         Antares::inifile #parameters
-        Antares::stdcxx #enum.hxx
         Antares::utils #area.hxx
         Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
         Antares::correlation
@@ -312,6 +311,7 @@ target_link_libraries(study
         Antares::load-modeler-files
         Antares::modeler-parameters
         Antares::modeler-lib
+        Antares::enums
         PRIVATE
         Antares::exception
         fmt::fmt
@@ -323,6 +323,7 @@ target_link_libraries(study
 target_include_directories(study
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../enums/include>
 
         # Make more than just study visible but it's the lesser evil for now
 )

@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+#include <antares/enums/Enum.hpp>
+
 namespace Antares::Modeler::Config
 {
 
@@ -33,6 +35,25 @@ enum class Location
     MASTER_AND_SUBPROBLEMS,
     SUBPROBLEMS
 };
+
+} // namespace Antares::Modeler::Config
+
+namespace Antares::Data::Enum
+{
+
+template<>
+inline const std::initializer_list<std::string>& getNames<Antares::Modeler::Config::Location>()
+{
+    static const std::initializer_list<std::string> il = {"master",
+                                                          "master_and_subproblems",
+                                                          "subproblems"};
+    return il;
+}
+
+} // namespace Antares::Data::Enum
+
+namespace Antares::Modeler::Config
+{
 
 std::ostream& operator<<(std::ostream& os, Location loc);
 

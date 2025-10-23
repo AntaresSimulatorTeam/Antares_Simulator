@@ -22,7 +22,6 @@ set(TARGET_LIBS #No alias
         array
         date
         inifile
-        stdcxx
         StudyUtils
         utils
         correlation
@@ -112,6 +111,7 @@ set(TARGET_LIBS #No alias
         scenario-group-parser
         modeler-optim-config
         yml-optim-config
+        enums
 )
 
 install(TARGETS ${TARGET_LIBS}
