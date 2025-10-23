@@ -86,11 +86,6 @@ public:
 
 private:
     /*!
-    ** \brief Regenerate time-series if required for a given year
-    */
-    void regenerateTimeSeries();
-
-    /*!
     ** \brief Computes statistics on annual (system and solution) costs, to be printed in output
     *into separate files
     **
