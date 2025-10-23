@@ -100,13 +100,6 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
         return allData_.at(year);
     }
 
-    // For each year
-    Antares::Solver::NullResultWriter resultWriter;
-    Antares::HydroManagement hydroManagement(study_->areas,
-                                             study_->parameters,
-                                             study_->calendar,
-                                             resultWriter);
-
     int nbYears = 0;
     std::map<unsigned int, bool> isYearPerformed; // TODO check year number
     for (uint year = 0; year < study_->parameters.nbYears; ++year)
@@ -131,8 +124,6 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
     // Getting random tables for this year
     // Index of the current year in the list of structures
     uint indexYear = randomForParallelYears->yearNumberToIndex[year];
-    auto& randomForCurrentYear = randomForParallelYears->pYears[indexYear];
-    const auto& hydroReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
     /*
       Side effects for HydroInputsChecker are limited to the year scope
@@ -146,7 +137,26 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
 
     prepareClustersInMustRunMode(*study_, scratchmap_, year);
 
-    hydroManagement.makeVentilation(hydroReservoirLevel, year, scratchmap_);
+    auto& randomForCurrentYear = randomForParallelYears->pYears[indexYear];
+    std::tie(dataForYear.hydroLevels, dataForYear.ventilationResults) = computeHydroLevels(
+      year,
+      randomForCurrentYear.pReservoirLevels);
+
+    return dataForYear;
+}
+
+std::pair<Details::HydroLevels, Antares::HYDRO_VENTILATION_RESULTS>
+SingleProblemGetter::computeHydroLevels(unsigned year, const std::vector<double>& initialLevel)
+{
+    // For each year
+    Antares::Solver::NullResultWriter resultWriter;
+    Antares::HydroManagement hydroManagement(study_->areas,
+                                             study_->parameters,
+                                             study_->calendar,
+                                             resultWriter);
+
+    Details::HydroLevels hydroLevels;
+    hydroManagement.makeVentilation(initialLevel, year, scratchmap_);
 
     const auto& ventilationResults = hydroManagement.ventilationResults();
     const auto& calendar = study_->calendar;
@@ -155,11 +165,11 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
     for (const auto& [_, area]: study_->areas)
     {
         auto inflows = area->hydro.series->storage.getColumn(year);
-        auto& level = dataForYear.hydroLevels[area];
+        auto& level = hydroLevels[area];
 
         // Initialize first week level
         uint firstDay = calendar.weeks[0].daysYear.first;
-        level[0] = dataForYear.ventilationResults[areaIndex].NiveauxReservoirsDebutJours[firstDay]
+        level[0] = ventilationResults[areaIndex].NiveauxReservoirsDebutJours[firstDay]
                    * area->hydro.reservoirCapacity;
 
         // Compute sums for first week to use in week 1
@@ -168,8 +178,7 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
              ++day)
         {
             inflowsPrevWeek += inflows[day];
-            turbinedPrevWeek += dataForYear.ventilationResults[areaIndex]
-                                  .HydrauliqueModulableQuotidien[day];
+            turbinedPrevWeek += ventilationResults[areaIndex].HydrauliqueModulableQuotidien[day];
         }
 
         // Loop over remaining weeks
@@ -186,18 +195,17 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
                  ++day)
             {
                 inflowsPrevWeek += inflows[day];
-                turbinedPrevWeek += dataForYear.ventilationResults[areaIndex]
+                turbinedPrevWeek += ventilationResults[areaIndex]
                                       .HydrauliqueModulableQuotidien[day];
             }
 
-            logs.notice() << "week=" << week << " prevInflows=" << inflowsPrevWeek
-                          << " prevTurbined=" << turbinedPrevWeek << " level=" << level[week];
+            logs.debug() << "week=" << week << " prevInflows=" << inflowsPrevWeek
+                         << " prevTurbined=" << turbinedPrevWeek << " level=" << level[week];
         }
 
         areaIndex++;
     }
-
-    return dataForYear;
+    return {hydroLevels, ventilationResults};
 }
 
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
@@ -209,14 +217,6 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 
     auto [hydroLevels, randomForParallelYears, ventilationResults] = getYearlyData(year);
 
-    // Apply hydro levels
-    for (uint areaIndex = 0; areaIndex < study_->areas.size(); ++areaIndex)
-    {
-        const auto* area = study_->areas.byIndex[areaIndex];
-        double initialLevel = hydroLevels[area][week];
-        pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
-    }
-
     const auto hourInTheYear = 168 * week; // TODO
     SIM_RenseignementProblemeHebdo(*study_,
                                    pb_,
@@ -224,6 +224,14 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                    hourInTheYear,
                                    ventilationResults,
                                    scratchmap_);
+
+    // Apply hydro levels
+    for (uint areaIndex = 0; areaIndex < study_->areas.size(); ++areaIndex)
+    {
+        const auto* area = study_->areas.byIndex[areaIndex];
+        double initialLevel = hydroLevels[area][week];
+        pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
+    }
 
     uint indexYear = randomForParallelYears->yearNumberToIndex[year];
     auto& randomForCurrentYear = randomForParallelYears->pYears[indexYear];
