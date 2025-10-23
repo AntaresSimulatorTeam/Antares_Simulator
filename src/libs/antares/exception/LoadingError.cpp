@@ -44,6 +44,11 @@ Duplicates::Duplicates():
 {
 }
 
+Duplicates::Duplicates(const std::string& message):
+    LoadingError(message)
+{
+}
+
 InvalidFileName::InvalidFileName():
     LoadingError("Invalid file names detected.")
 {
@@ -145,39 +150,7 @@ IncompatibleOptRangeUCMode::IncompatibleOptRangeUCMode():
 {
 }
 
-IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
-  const Antares::Data::AreaName& name):
-    LoadingError(
-      std::string("Area ") + name.c_str()
-      + " : simplex daily optimization and use heuristic target == no are not compatible")
-{
-}
-
-std::string InvalidParametersForThermalClusters::buildMessage(
-  const std::map<int, Yuni::String>& clusterNames) const
-{
-    const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
-                                   "modulation for the following clusters : ");
-    std::string clusters;
-    for (const auto& it: clusterNames)
-    {
-        clusters += it.second.c_str();
-        clusters += ";";
-    }
-    if (!clusters.empty())
-    {
-        clusters.pop_back(); // Remove final semicolon
-    }
-    return startMessage + clusters;
-}
-
-InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
-  const std::map<int, Yuni::String>& clusterNames):
-    LoadingError(buildMessage(clusterNames))
-{
-}
-
-CommandLineArguments::CommandLineArguments(uint errors):
+CommandLineArguments::CommandLineArguments(unsigned int errors):
     LoadingError("Invalid command-line arguments provided : " + std::to_string(errors)
                  + " error(s) found")
 {

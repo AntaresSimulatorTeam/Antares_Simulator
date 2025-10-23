@@ -235,7 +235,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 /* Sets the cost of the pumping variable when such a variable is actually defined
                 (i.e. var>=0)
 
-
                 1-   When the "AccurateWaterValue" optimization mode is not used, the pumping
                 variable must be given an explicit meaningful value, because no reservoir level
                 variables are defined in this case. The pumping cost is based on the water value
@@ -287,7 +286,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             {
                 /* Sets the cost of the overflow variable when such a variable is actually defined
                (i.e. var>=0)
-
 
                1-   When the "AccurateWaterValue" optimization mode is not used, the overflow
                variable must be given a cost translating the fact that overflowing is at the same
