@@ -29,6 +29,8 @@
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
+#include <antares/logs/logs.h>
+
 namespace Antares::Expressions::Visitors
 {
 
@@ -225,9 +227,10 @@ EvaluationResult EvalVisitor::handleReducedCost(const Nodes::ExtraOutputIdentifi
                                                                               nbTimeStep);
     for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
     {
+        logs.notice() << varInd;
         varValues[varInd] = componentVariables[varInd]->reducedCost();
     }
-
+    logs.notice() << "end";
     return EvaluationResult{varValues};
 }
 
