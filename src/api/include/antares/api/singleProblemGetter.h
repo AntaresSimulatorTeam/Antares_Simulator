@@ -4,15 +4,12 @@
 #include <map>
 #include <optional>
 
-// clang-format off
-
+#include "antares/solver/hydro/management/management.h"
 #include "antares/solver/lps/LpsFromAntares.h"
 #include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 #include "antares/solver/simulation/random.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/study.h"
-#include "antares/solver/hydro/management/management.h"
-// clang-format on
 
 // TODO split header
 namespace Details
