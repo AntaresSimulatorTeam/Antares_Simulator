@@ -34,4 +34,3 @@ public:
 };
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig
-

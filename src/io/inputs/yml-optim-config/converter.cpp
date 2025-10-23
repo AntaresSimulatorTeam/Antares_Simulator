@@ -76,8 +76,7 @@ Modeler::Config::Model convertModel(const Model& ymlModel)
 
 } // namespace
 
-Modeler::Config::OptimConfig OptimConfigConverter::convert(
-  const OptimConfig& ymlOptimConfig)
+Modeler::Config::OptimConfig OptimConfigConverter::convert(const OptimConfig& ymlOptimConfig)
 {
     std::vector<Modeler::Config::Model> models;
     for (const auto& ymlModel: ymlOptimConfig)
@@ -88,4 +87,3 @@ Modeler::Config::OptimConfig OptimConfigConverter::convert(
 }
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig
-
