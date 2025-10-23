@@ -50,7 +50,7 @@ public:
                         const unsigned int firstMonthOfSimulation,
                         HydroErrorsCollector& errorCollector);
     bool check();
-    bool finalLevelFineForUse();
+    bool finalLevelFineForUse() const;
 
 private:
     bool wasSetInScenarioBuilder();
