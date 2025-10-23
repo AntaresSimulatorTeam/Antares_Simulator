@@ -23,7 +23,8 @@
 #include <string>
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-#include "antares/antares/Enum.hpp"
+
+#include "../enums/include/antares/enums/Enum.hpp"
 
 namespace Antares::Data
 {

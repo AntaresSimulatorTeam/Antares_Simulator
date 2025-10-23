@@ -14,6 +14,7 @@ add_library(Antares::checks ALIAS checks)
 target_include_directories(checks
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../enums/include>
 )
 
 target_link_libraries(checks

@@ -18,16 +18,25 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#pragma once
 
-#include <vector>
+#include <antares/enums/class_name.h>
 
-#include "antares/writer/i_writer.h"
+namespace stdcxx
+{
 
-#include "../../../../../../libs/antares/enums/include/antares/enums/Enum.hpp"
-struct PROBLEME_HEBDO;
+std::string simpleClassName(const char* className)
+{
+    const std::string& strClassName = className;
+    std::size_t index = strClassName.find_last_of("::");
 
-void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* problemeHebdo);
-void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
-                        const std::vector<const char*>& areaNames);
-void OPT_ExportStructures(PROBLEME_HEBDO* problemeHebdo, Antares::Solver::IResultWriter& writer);
+    return (index == std::string::npos) ? strClassName
+                                        : strClassName.substr(index + 1, strClassName.size());
+}
+
+template<>
+std::string simpleClassName(const std::type_info& type)
+{
+    return simpleClassName(type.name());
+}
+
+} // namespace stdcxx
