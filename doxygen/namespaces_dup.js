@@ -1525,6 +1525,7 @@ var namespaces_dup =
           [ "operator<=", "remix-utils_8h.html#a5a6560fe2d6cf303b79fa394f9555e4c", null ],
           [ "operator>=", "remix-utils_8h.html#afc277ce775d2105dbe1e8cb38f37db56", null ],
           [ "PrepareRandomNumbers", "common-eco-adq_8cpp.html#acf7a9024f8a18f667ceff51d36c9e74a", null ],
+          [ "regenerateTimeSeries", "regenerate__timeseries_8h.html#a1ebea0829a0b311b9da682b6fd203711", null ],
           [ "RemixHydroForAllAreas", "common-hydro-remix_8cpp.html#aca97579cee91661b6133b470d464aa47", null ],
           [ "retrieveAverageNTC", "common-eco-adq_8cpp.html#a77ba3d4e4fb8887d4812f2b39869fa31", null ],
           [ "searchForExhange", "shave-peaks-by-remix-help_8h.html#af8d74f9a2276d5691612bc3a19099e6e", null ],

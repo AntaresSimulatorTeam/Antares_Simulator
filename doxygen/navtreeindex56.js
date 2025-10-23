@@ -1,5 +1,7 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#ac0b0985d8f11135aa86fd4bfd956ae09":[8,0,0,19,4,0,0,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[8,0,0,19,4,0,2],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a1d2dfffc8dbf3e6b2debbac2abef063d":[8,0,0,19,4,0,2,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a8cd0653f9b095636f0e5217a394d3762":[8,0,0,19,4,0,2,1],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0":[8,0,0,19,4,0,2,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a950087a552b95236a86913b2371f8cd0":[8,0,0,19,4,4,77,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#af2fc84d731cd291e52eb82b52a4ab388":[8,0,0,19,4,4,77,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html":[8,0,0,19,4,4,12],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a500884d4187ee64804dbf8835b13be8a":[8,0,0,19,4,4,12,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a9daff9c043206460b61b9b2c6d08e917":[8,0,0,19,4,4,12,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a9ebe5523a0075db564b9337999c7cd6a":[8,0,0,19,4,4,12,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a500884d4187ee64804dbf8835b13be8a":[8,0,0,19,4,4,12,3]
 };
