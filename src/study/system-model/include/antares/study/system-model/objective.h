@@ -32,9 +32,12 @@ namespace Antares::ModelerStudy::SystemModel
 class Objective final
 {
 public:
-    Objective(std::string id, Expression&& expression):
+    Objective(std::string id,
+              Expression&& expression,
+              Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
         id_(std::move(id)),
-        expression_(std::move(expression))
+        expression_(std::move(expression)),
+        location_(location)
     {
     }
 

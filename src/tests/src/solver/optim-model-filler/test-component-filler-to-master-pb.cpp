@@ -116,6 +116,7 @@ protected:
 class NoObjectiveCreator: public ObjectivesCreator
 {
     using ObjectivesCreator::ObjectivesCreator;
+
 public:
     std::vector<Objective> create() override
     {
@@ -123,14 +124,43 @@ public:
     }
 };
 
- class TwoObjSubPbCreator: public ObjectivesCreator
+Objective makeSimpleObjective(Registry<Nodes::Node>& nodeRegistry,
+                              const std::string varId,
+                              unsigned varIndex,
+                              const std::string objectiveId,
+                              Config::Location locoation)
 {
-     using ObjectivesCreator::ObjectivesCreator;
+    auto varNode = nodeRegistry.create<Nodes::VariableNode>(varId,
+                                                            varIndex,
+                                                            TimeIndex::VARYING_IN_TIME_ONLY);
+    NodeRegistry node_registry(varNode, std::move(nodeRegistry));
+    Expression expression("expr-" + objectiveId, std::move(node_registry));
+    Objective objective(objectiveId, std::move(expression), locoation);
+    return objective;
+}
+
+class TwoObjsCreator_OneSubPb_OneMaster: public ObjectivesCreator
+{
+    using ObjectivesCreator::ObjectivesCreator;
 public:
-     std::vector<Objective> create() override
-     {
-        
-     }
+    std::vector<Objective> create() override
+    {
+        std::vector<Objective> objectives;
+        auto obj_1 = makeSimpleObjective(nodeRegistry_,
+                                         "var-1",
+                                         0,
+                                         "obj-1",
+                                         Config::Location::SUBPROBLEMS);
+        auto obj_2 = makeSimpleObjective(nodeRegistry_,
+                                         "var-2",
+                                         1,
+                                         "obj-2",
+                                         Config::Location::MASTER);
+
+        objectives.emplace_back(std::move(obj_1));
+        objectives.emplace_back(std::move(obj_2));
+        return objectives;
+    }
 };
 
 struct FactoryFixture
@@ -141,9 +171,8 @@ struct FactoryFixture
     {
     }
 
-    void initialize(
-      std::unique_ptr<VariablesCreator> varCreator,
-      std::unique_ptr<ObjectivesCreator> objCreator)
+    void initialize(std::unique_ptr<VariablesCreator> varCreator,
+                    std::unique_ptr<ObjectivesCreator> objCreator)
     {
         variables = varCreator->create();
         objectives = objCreator->create();
@@ -233,21 +262,28 @@ BOOST_AUTO_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_variab
 
 BOOST_AUTO_TEST_SUITE_END()
 
-// BOOST_FIXTURE_TEST_SUITE(add_constraints_to_master_linear_problem, FactoryFixture)
-//
-// BOOST_AUTO_TEST_CASE(adding_objectves_to_pb_actually_adds_only_subproblem_objectives)
-//{
-//     // Arrange
-//     initialize(std::make_unique<TwoSubPbVarsCreator>(nodeRegistry));
-//     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
-//
-//     // Act
-//     componentFiller.addVariables(time_scenario_ctx);
-//
-//     // Assert
-//     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
-//     auto* var = linear_pb.lookupVariable("my-component.var-1");
-//     BOOST_REQUIRE(var);
-// }
-//
-// BOOST_AUTO_TEST_SUITE_END()
+BOOST_FIXTURE_TEST_SUITE(add_constraints_to_master_linear_problem, FactoryFixture)
+
+BOOST_AUTO_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objectives)
+{
+    // Arrange
+    initialize(std::make_unique<TwoSubPbVarsCreator>(nodeRegistry),
+               std::make_unique<TwoObjsCreator_OneSubPb_OneMaster>(nodeRegistry));
+    ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
+
+    // Act
+    componentFiller.addVariables(time_scenario_ctx);
+    componentFiller.addObjectives(time_scenario_ctx);
+
+    // Assert
+    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 2);
+    auto* var1 = linear_pb.lookupVariable("my-component.var-1");
+    auto* var2 = linear_pb.lookupVariable("my-component.var-2");
+    BOOST_REQUIRE(var1);
+    BOOST_REQUIRE(var2);
+
+    BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var1), 1);
+    BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var2), 0);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
