@@ -14,10 +14,12 @@
 #include "component-filler-utils/variables-creators.h"
 #include "component-filler-utils/objectives-creators.h"
 
+using namespace Antares::Optimisation;
+using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Expressions::Nodes;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
-
 
 struct FactoryFixture
 {
