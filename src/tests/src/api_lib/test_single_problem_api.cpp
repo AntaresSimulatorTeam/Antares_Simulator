@@ -113,5 +113,5 @@ BOOST_AUTO_TEST_CASE(single_problem_nominal_case)
     BOOST_CHECK_EQUAL(firstWeekData.Xmax[dispatchableVariable], 102.);
     BOOST_CHECK_EQUAL(firstWeekData.Xmax[unsuppliedVariable],
                       1.e-5); // default value when there is no residual load
-    BOOST_CHECK_EQUAL(firstWeekData.Xmax[spilledVariable], 1.e80);
+    BOOST_CHECK_EQUAL(firstWeekData.Xmax[spilledVariable], 1.e80); // infinite
 }
