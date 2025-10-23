@@ -34,7 +34,6 @@ std::vector<Variable> TwoVarsCreator_OneSubPb_OneMaster::create()
     return variables;
 }
 
-
 std::vector<Variable> TwoSubPbVarsCreator::create()
 {
     Variable var_1("var-1",

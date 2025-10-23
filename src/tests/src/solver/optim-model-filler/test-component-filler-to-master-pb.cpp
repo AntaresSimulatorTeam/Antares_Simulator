@@ -11,8 +11,8 @@
 #include "antares/study/system-model/model.h"
 #include "antares/study/system-model/variable.h"
 
-#include "component-filler-utils/variables-creators.h"
 #include "component-filler-utils/objectives-creators.h"
+#include "component-filler-utils/variables-creators.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::ModelerStudy::SystemModel;

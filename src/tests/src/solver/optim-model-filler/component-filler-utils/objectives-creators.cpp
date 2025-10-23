@@ -1,11 +1,11 @@
 #include "objectives-creators.h"
+
 #include "antares/modeler/optimConfig/optimConfig.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
 using namespace Antares::Modeler;
-
 
 Objective makeObjectiveFromVariable(Registry<Nodes::Node>& nodeRegistry,
                                     const std::string varId,
@@ -46,7 +46,6 @@ std::vector<Objective> TwoObjsCreator_OneSubPb_OneMaster::create()
     return objectives;
 }
 
-
 std::vector<Objective> TwoSubPbObjsCreator::create()
 {
     std::vector<Objective> objectives;
@@ -65,6 +64,3 @@ std::vector<Objective> TwoSubPbObjsCreator::create()
     objectives.emplace_back(std::move(obj_2));
     return objectives;
 }
-
-
-
