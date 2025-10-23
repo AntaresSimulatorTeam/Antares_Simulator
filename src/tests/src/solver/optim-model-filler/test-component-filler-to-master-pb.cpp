@@ -124,11 +124,11 @@ public:
     }
 };
 
-Objective makeSimpleObjective(Registry<Nodes::Node>& nodeRegistry,
-                              const std::string varId,
-                              unsigned varIndex,
-                              const std::string objectiveId,
-                              Config::Location locoation)
+Objective makeObjectiveFromVariable(Registry<Nodes::Node>& nodeRegistry,
+                                    const std::string varId,
+                                    unsigned varIndex,
+                                    const std::string objectiveId,
+                                    Config::Location locoation)
 {
     auto varNode = nodeRegistry.create<Nodes::VariableNode>(varId,
                                                             varIndex,
@@ -142,20 +142,46 @@ Objective makeSimpleObjective(Registry<Nodes::Node>& nodeRegistry,
 class TwoObjsCreator_OneSubPb_OneMaster: public ObjectivesCreator
 {
     using ObjectivesCreator::ObjectivesCreator;
+
 public:
     std::vector<Objective> create() override
     {
         std::vector<Objective> objectives;
-        auto obj_1 = makeSimpleObjective(nodeRegistry_,
-                                         "var-1",
-                                         0,
-                                         "obj-1",
-                                         Config::Location::SUBPROBLEMS);
-        auto obj_2 = makeSimpleObjective(nodeRegistry_,
-                                         "var-2",
-                                         1,
-                                         "obj-2",
-                                         Config::Location::MASTER);
+        auto obj_1 = makeObjectiveFromVariable(nodeRegistry_,
+                                               "var-1",
+                                               0,
+                                               "obj-1",
+                                               Config::Location::SUBPROBLEMS);
+        auto obj_2 = makeObjectiveFromVariable(nodeRegistry_,
+                                               "var-2",
+                                               1,
+                                               "obj-2",
+                                               Config::Location::MASTER);
+
+        objectives.emplace_back(std::move(obj_1));
+        objectives.emplace_back(std::move(obj_2));
+        return objectives;
+    }
+};
+
+class TwoSubPbObjsCreator: public ObjectivesCreator
+{
+    using ObjectivesCreator::ObjectivesCreator;
+
+public:
+    std::vector<Objective> create() override
+    {
+        std::vector<Objective> objectives;
+        auto obj_1 = makeObjectiveFromVariable(nodeRegistry_,
+                                               "var-1",
+                                               0,
+                                               "obj-1",
+                                               Config::Location::SUBPROBLEMS);
+        auto obj_2 = makeObjectiveFromVariable(nodeRegistry_,
+                                               "var-2",
+                                               1,
+                                               "obj-2",
+                                               Config::Location::SUBPROBLEMS);
 
         objectives.emplace_back(std::move(obj_1));
         objectives.emplace_back(std::move(obj_2));
@@ -283,7 +309,31 @@ BOOST_AUTO_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objec
     BOOST_REQUIRE(var2);
 
     BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var1), 1);
+    // No objective associated to var2 found in problem
     BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var2), 0);
+}
+
+BOOST_AUTO_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master_objectives)
+{
+    // Arrange
+    initialize(std::make_unique<TwoSubPbVarsCreator>(nodeRegistry),
+               std::make_unique<TwoObjsCreator_OneSubPb_OneMaster>(nodeRegistry));
+    ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
+
+    // Act
+    componentFiller.addVariables(time_scenario_ctx);
+    componentFiller.addObjectivesToMaster(time_scenario_ctx);
+
+    // Assert
+    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 2);
+    auto* var1 = linear_pb.lookupVariable("my-component.var-1");
+    auto* var2 = linear_pb.lookupVariable("my-component.var-2");
+    BOOST_REQUIRE(var1);
+    BOOST_REQUIRE(var2);
+
+    // No objective associated to var1 found in problem
+    BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var1), 0);
+    BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var2), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

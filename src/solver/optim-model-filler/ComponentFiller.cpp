@@ -393,7 +393,7 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 void ComponentFiller::addObjectivesToMaster(const LinearProblemApi::FillContext& ctx)
 {
     objectivesFilter_ = masterproblemObjectives;
-    this->addObjectivesToMaster(ctx);
+    this->addObjectives(ctx);
     objectivesFilter_ = subproblemObjectives; // Reset to initial state
 }
 
