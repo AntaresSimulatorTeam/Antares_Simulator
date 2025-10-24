@@ -123,7 +123,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
                            Solver::Simulation::ISimulationObserver& simulationObserver,
-                           ISimulationTable& simulationTable)
+                           ISimulationTable* simulationTable)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -240,7 +240,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
                               Solver::Simulation::ISimulationObserver& simulationObserver,
-                              OptimisationsSimulationTable& simulationTables)
+                              OptimisationsSimulationTable* simulationTables)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -273,13 +273,15 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                        [&problemeHebdo, &writer]()
                        { OPT_ExportStructures(problemeHebdo, writer); });
     }
-
+    auto* firstOptimSimulationTable = simulationTables
+                                        ? simulationTables->firstOptimSimulationTable()
+                                        : nullptr;
     bool ret = runWeeklyOptimization(options.firstOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
                                      simulationObserver,
-                                     simulationTables.firstOptimSimulationTable());
+                                     firstOptimSimulationTable);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -288,12 +290,15 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
+        auto* secondOptimSimulationTable = simulationTables
+                                             ? simulationTables->secondOptimSimulationTable()
+                                             : nullptr;
         return runWeeklyOptimization(options.secondOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      DEUXIEME_OPTIMISATION,
                                      simulationObserver,
-                                     simulationTables.secondOptimSimulationTable());
+                                     secondOptimSimulationTable);
     }
     return ret;
 }

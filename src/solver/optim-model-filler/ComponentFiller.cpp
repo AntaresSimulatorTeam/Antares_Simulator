@@ -311,7 +311,7 @@ void ComponentFiller::addTimeDependentConstraints(
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
-    Optimisation::ReadLinearConstraintVisitor visitor(ctx, component_, optimEntityContainer_);
+    Optimisation::ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto& modelConstraints = component_.getModel()->Constraints();
     for (auto constraintLocalIndex = 0; constraintLocalIndex < modelConstraints.size();
@@ -336,26 +336,25 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
-void ComponentFiller::addObjective(const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx)
 {
-    auto model = component_.getModel();
-    if (model->Objective().Empty())
-    {
-        return;
-    }
-
+    const auto* model = component_.getModel();
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    ReadLinearExpressionVisitor visitor(optimEntityContainer_, component_, ctx);
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
-    const auto linearExpression = visitor.visitRemoveDuplicates(model->Objective().RootNode());
-
-    auto& pb = optimEntityContainer_.Problem();
-    for (const auto& expr: linearExpression)
+    for (const auto& objective: model->Objectives())
     {
-        for (const auto& [index, value]: expr)
+        const auto linearExpression = visitor.visitMergeDuplicates(
+          objective.expression().RootNode());
+
+        auto& pb = optimEntityContainer_.Problem();
+        for (const auto& expr: linearExpression)
         {
-            pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
-                                       value);
+            for (const auto& [index, value]: expr)
+            {
+                pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
+                                           value);
+            }
         }
     }
 }

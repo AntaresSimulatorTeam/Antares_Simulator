@@ -21,8 +21,6 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
-#include <yuni/io/io.h>
-
 #include <antares/antares/fatal-error.h>
 #include <antares/date/date.h>
 #include <antares/exception/InitializationError.hpp>
@@ -33,6 +31,8 @@
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/numspace_manager.h"
 #include "antares/solver/simulation/opt_time_writer.h"
+#include "antares/solver/simulation/random.h"
+#include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 #include "antares/solver/variable/print.h"
@@ -141,8 +141,8 @@ public:
 
         // 2 - Getting the numpspace and scratchMap associated to the current year
         unsigned numSpace = numspaceManager.getAvailableNumSpace();
+        Yuni::Logs::threadNumber() = numSpace;
         logs.info() << "Year " << y + 1 << " started";
-        logs.debug() << "year " << y + 1 << " received numSpace " << numSpace;
 
         Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
 
@@ -172,11 +172,14 @@ public:
                                              hydroManagement.ventilationResults(),
                                              optWriter,
                                              scratchmap);
-        auto& simTable = simulation_->getSimulationTable(numSpace);
+        if (!study.parameters.noOutput)
+        {
+            auto& simTable = simulation_->getSimulationTable(numSpace);
 
-        auto buffers = simTable.moveBuffers();
+            auto buffers = simTable.moveBuffers();
 
-        simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
+            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
+        }
 
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
@@ -302,7 +305,7 @@ void ISimulation<ImplementationType>::run()
         // in general data of the study.
         logs.info() << " Only the preprocessors are enabled.";
 
-        regenerateTimeSeries();
+        regenerateTimeSeries(study, pResultWriter, pDurationCollector);
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output at the same time
@@ -787,8 +790,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
 
-    regenerateTimeSeries();
-
+    regenerateTimeSeries(study, pResultWriter, pDurationCollector);
     HydroInputsChecker hydroInputsChecker(study);
     logs.info() << " Doing hydro validation";
 
@@ -825,8 +827,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     randomNumbers randomForParallelYears(pNbYearsReallyPerformed,
                                          study.parameters.power.fluctuations);
 
-    allocateMemoryForRandomNumbers(randomForParallelYears);
-    computeRandomNumbers(randomForParallelYears, endYear, isYearPerformed, randomHydroGenerator);
+    randomForParallelYears.allocate(study);
+    randomForParallelYears.compute(study, endYear, isYearPerformed, randomHydroGenerator);
 
     // hydro checks
     for (uint year = firstYear; year < endYear; ++year)
@@ -871,7 +873,10 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     pQueueService->wait(Yuni::qseIdle);
     pQueueService->stop();
-    aggregateAndWriteSimulationTables();
+    if (!study.parameters.noOutput)
+    {
+        aggregateAndWriteSimulationTables();
+    }
     results.join();
     pResultWriter.flush();
     // On regarde si au moins une année du lot n'a pas trouvé de solution

@@ -80,15 +80,13 @@ static void fillModelerComponents(
   OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
-    optimEntityContainer.reserveOptimComponents(components.size());
+    optimEntityContainer.addFromSystemComponents(components);
     for (const auto& component: components)
     {
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository));
-
-        optimEntityContainer.addFromSystemComponent(component);
     }
 }
 
@@ -168,19 +166,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
                                           IResultWriter& writer,
-                                          ISimulationTable& simulationTable)
+                                          ISimulationTable* simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto* solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
-
-    ORTOOLS_LibererProbleme(solver);
-
-    ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
     LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
@@ -199,11 +192,13 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    solver = fillAndGetMpSolver(ortoolsProblem,
-                                fillCtx,
-                                problemeHebdo,
-                                optimEntityContainer,
-                                problemeHebdo->NamedProblems);
+    auto* solver = fillAndGetMpSolver(ortoolsProblem,
+                                      fillCtx,
+                                      problemeHebdo,
+                                      optimEntityContainer,
+                                      problemeHebdo->NamedProblems);
+
+    ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
 
     std::call_once(logProblemSizeFlag, logProblemSize, solver);
 
@@ -218,11 +213,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mps_writer->runIfNeeded(writer, filename);
 
     Utils::TimeMeasurement measure;
-    solver = ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
-    if (solver != nullptr)
-    {
-        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
-    }
+    ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
 
     measure.tick();
     logs.info() << "Solved in " << measure.toStringInSeconds();
@@ -235,11 +226,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         {
             if (solver)
             {
-                ORTOOLS_LibererProbleme(solver);
-
-                ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
-
-                solver = nullptr;
+                ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset();
             }
 
             logs.info() << " Solver: resolution failed";
@@ -253,7 +240,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    if (modelerData)
+    if (simulationTable && modelerData)
     {
         unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                                   ? problemeHebdo->weekInTheYear
@@ -261,7 +248,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
-        FillSimulationTable(simulationTable,
+        FillSimulationTable(*simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
                             *modelerData,
@@ -284,7 +271,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer,
-                         ISimulationTable& simulationTable)
+                         ISimulationTable* simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 

@@ -15,8 +15,9 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/simulation.h
         include/antares/solver/simulation/solver.h
         include/antares/solver/simulation/solver.hxx
-		include/antares/solver/simulation/numspace_manager.h
-		numspace_manager.cpp
+        include/antares/solver/simulation/numspace_manager.h
+        include/antares/solver/simulation/random.h
+        numspace_manager.cpp
         include/antares/solver/simulation/timeseries-numbers.h
         sim_alloc_probleme_hebdo.cpp
         sim_binding_constraints_rhs.cpp
@@ -49,6 +50,9 @@ set(SRC_SIMULATION
         TimeSeriesNumbersWriter.cpp
         include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h
         include/antares/solver/simulation/ISimulationObserver.h
+        include/antares/solver/simulation/regenerate_timeseries.h
+	regenerate_timeseries.cpp
+        random.cpp
 )
 source_group("simulation" FILES ${SRC_SIMULATION})
 

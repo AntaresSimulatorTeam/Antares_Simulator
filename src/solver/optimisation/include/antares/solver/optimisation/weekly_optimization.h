@@ -36,7 +36,7 @@ public:
                        PROBLEME_HEBDO* problemeHebdo,
                        IResultWriter& writer,
                        Simulation::ISimulationObserver& simulationObserver,
-                       OptimisationsSimulationTable& simulationTables);
+                       OptimisationsSimulationTable* simulationTables);
     ~WeeklyOptimization() = default;
     void solve();
 
@@ -45,6 +45,6 @@ private:
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     IResultWriter& writer_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    OptimisationsSimulationTable& simulationTables_;
+    OptimisationsSimulationTable* simulationTables_ = nullptr;
 };
 } // namespace Antares::Solver::Optimization

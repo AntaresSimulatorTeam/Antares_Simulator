@@ -16,7 +16,7 @@ public:
 
     void addVariables(const FillContext& ctx) override;
     void addConstraints(const FillContext& ctx) override;
-    void addObjective(const FillContext& ctx) override;
+    void addObjectives(const FillContext& ctx) override;
     OptimEntityContainer& optimEntityContainer_;
 };
 
@@ -29,7 +29,7 @@ void OneConstraintFiller::addConstraints([[maybe_unused]] const FillContext& ctx
     optimEntityContainer_.Problem().addConstraint(1, 2, "constraint-by-OneConstraintFiller");
 }
 
-void OneConstraintFiller::addObjective([[maybe_unused]] const FillContext& ctx)
+void OneConstraintFiller::addObjectives([[maybe_unused]] const FillContext& ctx)
 {
 }
 

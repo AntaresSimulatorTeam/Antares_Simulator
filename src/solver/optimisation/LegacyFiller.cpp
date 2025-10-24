@@ -31,9 +31,10 @@ namespace Antares::Optimization
 LegacyFiller::LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
                            const PROBLEME_HEBDO* problemeHebdo,
                            bool namedProblems):
-    linearProblem_(linearProblem),
+
     problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
-    useNamedProblems_(namedProblems)
+    useNamedProblems_(namedProblems),
+    linearProblem_(linearProblem)
 {
 }
 
@@ -50,7 +51,7 @@ void LegacyFiller::addConstraints(const FillContext&)
     CopyMatrix();
 }
 
-void LegacyFiller::addObjective(const FillContext&)
+void LegacyFiller::addObjectives(const FillContext&)
 {
     // nothing to do: objective coefficients are set along with variables definition
 }

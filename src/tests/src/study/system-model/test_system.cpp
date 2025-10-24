@@ -21,13 +21,17 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <unit_test_utils.h>
-
 #include <boost/test/unit_test.hpp>
 
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/system.h"
+
+// If we don't turn clang-format off here, some antlr4 header does not compile :
+// it collides with a #include <windows.h> somewhere in Yuni
+// clang-format off
+#include <unit_test_utils.h>
+// clang-format on
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs::ModelConverter;
@@ -78,7 +82,7 @@ static Model createModelWith2PortsOneWayExchange()
                              .port_field_definitions = {{"port1", "field", var.id}},
                              .constraints = {},
                              .binding_constraints = {},
-                             .objective = "",
+                             .objectives = {},
                              .extra_outputs = {}};
     auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
@@ -159,7 +163,7 @@ static Model createModelWith2Ports2WayExchange()
                                                         {"port2", "corn", p.id}},
                              .constraints = {},
                              .binding_constraints = {},
-                             .objective = "",
+                             .objectives = {},
                              .extra_outputs = {}};
     auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel);
     auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel);

@@ -139,6 +139,7 @@ add_library(yuni-static-core STATIC
 		core/iterator.h
 		core/logs/buffer.h
 		core/logs/decorators/applicationname.h
+		core/logs/decorators/threadNumber.cpp
 		core/logs/decorators/message.h
 		core/logs/decorators/time.cpp
 		core/logs/decorators/time.h

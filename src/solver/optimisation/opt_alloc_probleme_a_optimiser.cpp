@@ -72,7 +72,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo)
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-    ProblemeAResoudre->ProblemesSpx.assign(NbIntervalles, nullptr);
+    ProblemeAResoudre->ProblemesSpx.resize(NbIntervalles);
 }
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)

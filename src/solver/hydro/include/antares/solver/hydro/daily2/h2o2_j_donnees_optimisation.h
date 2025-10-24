@@ -21,29 +21,13 @@
 #ifndef __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 #define __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
-
-#include "spx_definition_arguments.h"
-
-#ifdef __CPLUSPLUS
-}
-
-#endif
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/study.h>
 
 #include "../daily/h2o_j_donnees_optimisation.h"
+#include "spx_definition_arguments.h"
 
 #define LINFINI 1.e+80
-
-#define JOURS_28 28
-#define JOURS_29 29
-#define JOURS_30 30
-#define JOURS_31 31
-#define NOMBRE_DE_TYPE_DE_MOIS 4
 
 /*--------------------------------------------------------------------------------------*/
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */

@@ -18,8 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#ifndef __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
-#define __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
+#pragma once
 
 #include "antares/solver/variable/variable.h"
 
@@ -200,7 +199,7 @@ public:
 
         // Intermediate values
         VarT<Container::EndOfList>::InitializeResultsFromStudy(AncestorType::pResults, study);
-        pValuesForTheCurrentYear = new IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear = std::make_unique<IntermediateValuesBaseType[]>(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
@@ -486,12 +485,23 @@ private:
 
 private:
     //! Intermediate values for each year
-    typename VCardType::IntermediateValuesTypeForSpatialAg pValuesForTheCurrentYear;
+    VCardType::IntermediateValuesTypeForSpatialAg pValuesForTheCurrentYear;
 
     unsigned int pNbYearsParallel;
 
 }; // class SpatialAggregate
 
-} // namespace Antares::Solver::Variable::Common
+// Variadic meta-template to build nested spatial aggregates
+template<template<class> class Head, template<class> class... Tail>
+struct SpatialAggregateAll
+{
+    using type = SpatialAggregate<Head, typename SpatialAggregateAll<Tail...>::type>;
+};
 
-#endif // __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
+template<template<class> class Last>
+struct SpatialAggregateAll<Last>
+{
+    using type = SpatialAggregate<Last>;
+};
+
+} // namespace Antares::Solver::Variable::Common

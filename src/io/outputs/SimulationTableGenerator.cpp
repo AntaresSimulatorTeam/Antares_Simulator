@@ -28,7 +28,6 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/logs/logs.h"
-#include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/modeler/data.h"
@@ -304,7 +303,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                     std::optional<unsigned> scenario,
                     bool forceExportForScenarioIndex)
 {
-    const auto& cid = component.Id();
+    const auto& componentId = component.Id();
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
@@ -335,7 +334,7 @@ void addPortEntries(ISimulationTable& simulationTable,
             auto value = ts.has_value() ? portValue.valuesAsVector()[ts.value()]
                                         : portValue.valueAsDouble();
             simulationTable.addEntry({.block = tb.block,
-                                      .component = cid,
+                                      .component = componentId,
                                       .output = portFieldKey.portId + "." + portFieldKey.fieldId,
                                       .absolute_time_index = tb.absoluteTimeIndex,
                                       .block_time_index = tb.blockTimeIndex,
@@ -391,8 +390,6 @@ void FillSimulationTable(ISimulationTable& simulationTable,
 
     for (const auto& component: modelerData.system->Components())
     {
-        EmptyScenario emptyScenario;
-
         addVariableEntries(simulationTable,
                            linearProblem,
                            fillContext,
