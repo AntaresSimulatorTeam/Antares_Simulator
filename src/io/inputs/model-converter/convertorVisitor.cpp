@@ -358,24 +358,29 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
 std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
 {
     const std::string constraint_id = context->IDENTIFIER()->getText();
-    const auto search_constraint = [&](const auto& constraints) -> Node* {
-        for (const auto& c : constraints)
+    const auto search_constraint = [&](const auto& constraints) -> Node*
+    {
+        for (const auto& c: constraints)
         {
             if (c.id == constraint_id)
             {
                 return static_cast<Node*>(
-                    registry_.create<ExtraOutputIdentifierNode>(ExtraOutputIdentifierOperation::DUAL,
-                                                               c.id,
-                                                               0)); // TODO index constraint
+                  registry_.create<ExtraOutputIdentifierNode>(ExtraOutputIdentifierOperation::DUAL,
+                                                              c.id,
+                                                              0)); // TODO index constraint
             }
         }
         return nullptr;
     };
 
     if (Node* node = search_constraint(model_.constraints))
+    {
         return node;
+    }
     if (Node* node = search_constraint(model_.binding_constraints))
+    {
         return node;
+    }
 
     throw NoConstraintWithThisName(constraint_id);
 }
