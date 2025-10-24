@@ -22,9 +22,8 @@
 
 #include <vector>
 
-#include "antares/writer/i_writer.h"
-
 #include "antares/enums/Enum.hpp"
+#include "antares/writer/i_writer.h"
 struct PROBLEME_HEBDO;
 
 void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* problemeHebdo);
