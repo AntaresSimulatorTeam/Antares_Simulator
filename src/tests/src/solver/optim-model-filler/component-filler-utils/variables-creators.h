@@ -7,32 +7,14 @@
 
 using namespace Antares;
 
-class VariablesCreator
+struct TwoVarsCreator_OneSubPb_OneMaster
 {
-public:
-    explicit VariablesCreator(Expressions::Registry<Expressions::Nodes::Node>& nodeRegistry):
-        nodeRegistry_(nodeRegistry)
-    {
-    }
-
-    virtual std::vector<ModelerStudy::SystemModel::Variable> create() = 0;
-
-protected:
-    Expressions::Registry<Expressions::Nodes::Node>& nodeRegistry_;
+    static std::vector<ModelerStudy::SystemModel::Variable> Create(
+      Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& registry);
 };
 
-class TwoVarsCreator_OneSubPb_OneMaster: public VariablesCreator
+struct TwoSubPbVarsCreator
 {
-    using VariablesCreator::VariablesCreator;
-
-public:
-    std::vector<ModelerStudy::SystemModel::Variable> create() override;
-};
-
-class TwoSubPbVarsCreator: public VariablesCreator
-{
-    using VariablesCreator::VariablesCreator;
-
-public:
-    std::vector<ModelerStudy::SystemModel::Variable> create() override;
+    static std::vector<ModelerStudy::SystemModel::Variable> Create(
+      Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& registry);
 };

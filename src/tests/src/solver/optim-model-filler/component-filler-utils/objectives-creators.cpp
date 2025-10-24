@@ -22,20 +22,21 @@ Objective makeObjectiveFromVariable(Registry<Nodes::Node>& nodeRegistry,
     return objective;
 }
 
-std::vector<Objective> NoObjectiveCreator::create()
+std::vector<Objective> NoObjectiveCreator::Create(Registry<Nodes::Node>&)
 {
     return {};
 }
 
-std::vector<Objective> TwoObjsCreator_OneSubPb_OneMaster::create()
+std::vector<Objective> TwoObjsCreator_OneSubPb_OneMaster::Create(
+  Registry<Nodes::Node>& nodeRegistry)
 {
     std::vector<Objective> objectives;
-    auto obj_1 = makeObjectiveFromVariable(nodeRegistry_,
+    auto obj_1 = makeObjectiveFromVariable(nodeRegistry,
                                            "var-1",
                                            0,
                                            "obj-1",
                                            Config::Location::SUBPROBLEMS);
-    auto obj_2 = makeObjectiveFromVariable(nodeRegistry_,
+    auto obj_2 = makeObjectiveFromVariable(nodeRegistry,
                                            "var-2",
                                            1,
                                            "obj-2",
@@ -46,15 +47,15 @@ std::vector<Objective> TwoObjsCreator_OneSubPb_OneMaster::create()
     return objectives;
 }
 
-std::vector<Objective> TwoSubPbObjsCreator::create()
+std::vector<Objective> TwoSubPbObjsCreator::Create(Registry<Nodes::Node>& nodeRegistry)
 {
     std::vector<Objective> objectives;
-    auto obj_1 = makeObjectiveFromVariable(nodeRegistry_,
+    auto obj_1 = makeObjectiveFromVariable(nodeRegistry,
                                            "var-1",
                                            0,
                                            "obj-1",
                                            Config::Location::SUBPROBLEMS);
-    auto obj_2 = makeObjectiveFromVariable(nodeRegistry_,
+    auto obj_2 = makeObjectiveFromVariable(nodeRegistry,
                                            "var-2",
                                            1,
                                            "obj-2",

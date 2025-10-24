@@ -8,40 +8,20 @@
 
 using namespace Antares;
 
-class ObjectivesCreator
+struct NoObjectiveCreator
 {
-public:
-    explicit ObjectivesCreator(Expressions::Registry<Expressions::Nodes::Node>& nodeRegistry):
-        nodeRegistry_(nodeRegistry)
-    {
-    }
-
-    virtual std::vector<ModelerStudy::SystemModel::Objective> create() = 0;
-
-protected:
-    Expressions::Registry<Expressions::Nodes::Node>& nodeRegistry_;
+    static std::vector<ModelerStudy::SystemModel::Objective> Create(
+      Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& registry);
 };
 
-class NoObjectiveCreator: public ObjectivesCreator
+struct TwoObjsCreator_OneSubPb_OneMaster
 {
-    using ObjectivesCreator::ObjectivesCreator;
-
-public:
-    std::vector<ModelerStudy::SystemModel::Objective> create() override;
+    static std::vector<ModelerStudy::SystemModel::Objective> Create(
+      Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& registry);
 };
 
-class TwoObjsCreator_OneSubPb_OneMaster: public ObjectivesCreator
+struct TwoSubPbObjsCreator
 {
-    using ObjectivesCreator::ObjectivesCreator;
-
-public:
-    std::vector<ModelerStudy::SystemModel::Objective> create() override;
-};
-
-class TwoSubPbObjsCreator: public ObjectivesCreator
-{
-    using ObjectivesCreator::ObjectivesCreator;
-
-public:
-    std::vector<ModelerStudy::SystemModel::Objective> create() override;
+    static std::vector<ModelerStudy::SystemModel::Objective> Create(
+      Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& registry);
 };
