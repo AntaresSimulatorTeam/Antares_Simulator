@@ -244,6 +244,7 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::ExtraOutputIdentifierNode*
     {
         constraintValues[constraintInd] = componentConstraints.first[constraintInd]->dual();
     }
+
     return EvaluationResult{constraintValues};
 }
 
@@ -278,7 +279,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node
         return handleReducedCost(node);
     }
 
-    return EvaluationResult{0};
+    return handleDual(node);
 }
 
 std::string EvalVisitor::name() const

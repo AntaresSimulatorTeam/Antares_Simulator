@@ -22,11 +22,9 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/TimeSumNode.h"
-#include "antares/expressions/visitors/CompareVisitor.h"
 
 #include "ExprLexer.h"
 #include "ExprParser.h"
-#include "antlr4-runtime.h"
 
 namespace Antares::IO::Inputs::ModelConverter
 {
