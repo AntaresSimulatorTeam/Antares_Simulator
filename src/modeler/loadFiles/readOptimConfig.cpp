@@ -33,42 +33,56 @@ namespace fs = std::filesystem;
 namespace Antares::Solver::LoadFiles
 {
 
-std::unique_ptr<Modeler::Config::OptimConfig> loadOptimConfig(const fs::path& studyPath)
+static std::string readOptimConfigFile(const fs::path& studyPath)
 {
     std::string filename = "optim-config.yml";
-    std::string optimConfigStr;
     try
     {
-        optimConfigStr = IO::readFile(studyPath / "input" / filename);
+        return IO::readFile(studyPath / "input" / filename);
     }
     catch (const std::runtime_error& e)
     {
         logs.error() << "Error while trying to read file " << filename;
         throw ErrorLoadingYaml(e.what());
     }
+}
 
+static IO::Inputs::YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
+                                                                const std::string& filename)
+{
     IO::Inputs::YmlOptimConfig::Parser parser;
-    IO::Inputs::YmlOptimConfig::OptimConfig optimConfigObj;
     try
     {
-        optimConfigObj = parser.parse(optimConfigStr);
+        return parser.parse(content);
     }
     catch (const YAML::Exception& e)
     {
         handleYamlError(e, filename);
         throw ErrorLoadingYaml(e.what());
     }
+}
 
+static std::unique_ptr<Modeler::Config::OptimConfig> convertOptimConfig(
+  const IO::Inputs::YmlOptimConfig::OptimConfig& obj)
+{
     try
     {
         return std::make_unique<Modeler::Config::OptimConfig>(
-          IO::Inputs::YmlOptimConfig::OptimConfigConverter::convert(optimConfigObj));
+          IO::Inputs::YmlOptimConfig::OptimConfigConverter::convert(obj));
     }
     catch (const std::runtime_error& e)
     {
         logs.error() << "Error while converting optim config yaml: " << e.what();
         throw ErrorLoadingYaml(e.what());
     }
+}
+
+std::unique_ptr<Modeler::Config::OptimConfig> loadOptimConfig(const fs::path& studyPath)
+{
+    std::string filename = "optim-config.yml";
+    std::string content = readOptimConfigFile(studyPath);
+    const auto&& obj = parseOptimConfig(content, filename);
+    return convertOptimConfig(obj);
 }
 
 } // namespace Antares::Solver::LoadFiles
