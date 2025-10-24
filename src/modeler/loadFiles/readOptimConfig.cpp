@@ -38,6 +38,11 @@ namespace Antares::Solver::LoadFiles
 static std::string readOptimConfigFile(const fs::path& studyPath)
 {
     std::string filename = "optim-config.yml";
+    if (!std::filesystem::exists(studyPath / "input" / filename))
+    {
+        logs.info() << "Optim config file not found: " << filename;
+        return "";
+    }
     try
     {
         return IO::readFile(studyPath / "input" / filename);
