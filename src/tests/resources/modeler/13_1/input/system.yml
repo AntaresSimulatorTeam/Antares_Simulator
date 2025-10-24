@@ -90,4 +90,4 @@ system:
     - component1: my_node
       port1: balance_port
       component2: continuous_generator_candidate
-      port2: injection_port
+      port2: balance_port
