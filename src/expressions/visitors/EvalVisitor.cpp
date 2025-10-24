@@ -222,7 +222,7 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::ExtraOutputIdentifierNode*
                                     + component_.Id());
     }
 
-    const auto& [constraintId, timeIndex] = optimContainer_.getConstraintData(component_,
+    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_,
                                                                               constraintLocalIndex);
 
     if (timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
@@ -230,7 +230,7 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::ExtraOutputIdentifierNode*
     {
         const auto componentConstraints = optimContainer_.getComponentConstraint(
           component_,
-          constraintId,
+          constraintLocalIndex,
           1 /* single timestep*/);
         return EvaluationResult(componentConstraints.first[0]->dual());
     }
@@ -238,7 +238,7 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::ExtraOutputIdentifierNode*
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
     const auto componentConstraints = optimContainer_.getComponentConstraint(component_,
-                                                                             constraintId,
+                                                                             constraintLocalIndex,
                                                                              nbTimeStep);
     for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
     {
