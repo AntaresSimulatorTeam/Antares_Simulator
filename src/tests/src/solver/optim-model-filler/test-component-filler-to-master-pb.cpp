@@ -84,9 +84,10 @@ void FactoryFixture::setOptimEntityContainer()
     optimEntityContainer.addFromSystemComponents(components);
 }
 
-BOOST_FIXTURE_TEST_SUITE(add_variables_to_master_linear_problem, FactoryFixture)
+BOOST_AUTO_TEST_SUITE(add_variables_to_master_linear_problem)
 
-BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_variables)
+BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_variables,
+                        FactoryFixture)
 {
     // Arrange
     initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry),
@@ -102,7 +103,8 @@ BOOST_AUTO_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_var
     BOOST_REQUIRE(var);
 }
 
-BOOST_AUTO_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_variables)
+BOOST_FIXTURE_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_variables,
+                        FactoryFixture)
 {
     // Arrange
     initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry),
@@ -120,9 +122,10 @@ BOOST_AUTO_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_variab
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_FIXTURE_TEST_SUITE(add_constraints_to_master_linear_problem, FactoryFixture)
+BOOST_AUTO_TEST_SUITE(add_constraints_to_master_linear_problem)
 
-BOOST_AUTO_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objectives)
+BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objectives,
+                        FactoryFixture)
 {
     // Arrange
     initialize(std::make_unique<TwoSubPbVarsCreator>(nodeRegistry),
@@ -145,7 +148,8 @@ BOOST_AUTO_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objec
     BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var2), 0);
 }
 
-BOOST_AUTO_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master_objectives)
+BOOST_FIXTURE_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master_objectives,
+                        FactoryFixture)
 {
     // Arrange
     initialize(std::make_unique<TwoSubPbVarsCreator>(nodeRegistry),
