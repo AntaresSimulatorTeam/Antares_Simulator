@@ -99,7 +99,7 @@ private:
     Optimisation::OptimEntityContainer optimEntityContainer_;
 };
 
-void Modeler::solve() const
+void Antares::Solver::Modeler::run() const
 {
     try
     {
