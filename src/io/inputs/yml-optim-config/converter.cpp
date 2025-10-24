@@ -31,7 +31,21 @@ namespace
 
 Modeler::Config::Location convertLocation(const std::string& locationStr)
 {
-    return Data::Enum::fromString<Modeler::Config::Location>(locationStr);
+    std::string locLower = locationStr;
+    std::ranges::transform(locLower, locLower.begin(), ::tolower);
+    if (locLower == "master")
+    {
+        return Modeler::Config::Location::MASTER;
+    }
+    if (locLower == "master_and_subproblems")
+    {
+        return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+    if (locLower == "subproblems")
+    {
+        return Modeler::Config::Location::SUBPROBLEMS;
+    }
+    throw Error::RuntimeError("Unknown location: " + locationStr);
 }
 
 Modeler::Config::Variable convertVariable(const Variable& ymlVar)
