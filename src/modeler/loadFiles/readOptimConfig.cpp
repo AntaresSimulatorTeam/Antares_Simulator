@@ -29,6 +29,8 @@
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
 namespace fs = std::filesystem;
+using namespace Antares::IO::Inputs;
+using namespace Antares::Modeler;
 
 namespace Antares::Solver::LoadFiles
 {
@@ -47,10 +49,10 @@ static std::string readOptimConfigFile(const fs::path& studyPath)
     }
 }
 
-static IO::Inputs::YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
-                                                                const std::string& filename)
+static YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
+                                                    const std::string& filename)
 {
-    IO::Inputs::YmlOptimConfig::Parser parser;
+    YmlOptimConfig::Parser parser;
     try
     {
         return parser.parse(content);
@@ -62,13 +64,13 @@ static IO::Inputs::YmlOptimConfig::OptimConfig parseOptimConfig(const std::strin
     }
 }
 
-static std::unique_ptr<Modeler::Config::OptimConfig> convertOptimConfig(
-  const IO::Inputs::YmlOptimConfig::OptimConfig& obj)
+static std::unique_ptr<Config::OptimConfig> convertOptimConfig(
+  const YmlOptimConfig::OptimConfig& obj)
 {
     try
     {
-        return std::make_unique<Modeler::Config::OptimConfig>(
-          IO::Inputs::YmlOptimConfig::OptimConfigConverter::convert(obj));
+        return std::make_unique<Config::OptimConfig>(
+          YmlOptimConfig::OptimConfigConverter::convert(obj));
     }
     catch (const std::runtime_error& e)
     {
@@ -77,7 +79,7 @@ static std::unique_ptr<Modeler::Config::OptimConfig> convertOptimConfig(
     }
 }
 
-std::unique_ptr<Modeler::Config::OptimConfig> loadOptimConfig(const fs::path& studyPath)
+std::unique_ptr<Config::OptimConfig> loadOptimConfig(const fs::path& studyPath)
 {
     std::string filename = "optim-config.yml";
     std::string content = readOptimConfigFile(studyPath);
