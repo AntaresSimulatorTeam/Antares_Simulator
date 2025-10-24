@@ -29,11 +29,6 @@
 namespace Antares::Modeler::Config
 {
 
-std::ostream& operator<<(std::ostream& os, Location loc)
-{
-    return os << Data::Enum::toString(loc);
-}
-
 void OptimConfig::checkDuplicateModelIds() const
 {
     std::unordered_map<std::string, int> modelIds;

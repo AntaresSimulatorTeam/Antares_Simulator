@@ -26,6 +26,28 @@
 
 namespace IOYML = Antares::IO::Inputs::YmlOptimConfig;
 
+namespace Antares::Data::Enum
+{
+
+template<>
+inline const std::initializer_list<std::string>& getNames<Modeler::Config::Location>()
+{
+    static const std::initializer_list<std::string> il = {"master",
+                                                          "master_and_subproblems",
+                                                          "subproblems"};
+    return il;
+}
+
+} // namespace Antares::Data::Enum
+
+namespace Antares::Modeler::Config
+{
+std::ostream& operator<<(std::ostream& os, Location loc)
+{
+    return os << Data::Enum::toString(loc);
+}
+} // namespace Antares::Modeler::Config
+
 BOOST_AUTO_TEST_SUITE(OptimConfigConverterSuite)
 
 BOOST_AUTO_TEST_CASE(ConvertEmptyConfig)
