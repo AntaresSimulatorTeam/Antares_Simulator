@@ -40,20 +40,33 @@ std::size_t findIndex(const std::vector<std::string>& v, const std::string& valu
     return ret;
 }
 
-BOOST_AUTO_TEST_CASE(single_problem_nominal_case)
+std::unique_ptr<Antares::Data::Study> buildStudy(bool thermal, bool hydro)
 {
     StudyBuilder builder;
     builder.simulationBetweenDays(0, 14);
     builder.setNumberMCyears(2);
     auto* area = builder.addAreaToStudy("AREA");
     area->hydro.reservoirManagement = false;
-    auto thCluster = addClusterToArea(area, "dispatch-cluster");
-    ThermalClusterConfig clusterConfig(thCluster);
-    clusterConfig.setNominalCapacity(100)
-      .setUnitCount(1)
-      .setCosts(20.)
-      .setAvailablePowerNumberOfTS(1)
-      .setAvailablePower(0, 102.);
+    if (thermal)
+    {
+        auto thCluster = addClusterToArea(area, "dispatch-cluster");
+        ThermalClusterConfig clusterConfig(thCluster);
+        clusterConfig.setNominalCapacity(100)
+          .setUnitCount(1)
+          .setCosts(20.)
+          .setAvailablePowerNumberOfTS(1)
+          .setAvailablePower(0, 102.);
+    }
+    if (hydro)
+    {
+        auto& h = area->hydro;
+        h.reservoirManagement = true;
+        h.reservoirCapacity = 1.e4;
+        auto& inflows = h.series->storage;
+        inflows.resize(/* nbInflowTS */ 1, 365);
+        inflows.timeSeries.fill(100);
+    }
+
     // TODO StudyBuilder should have a `run` method that
     // calls addScratchpadToEachArea and initializeRuntimeInfos
     // auto study = builder.run();
@@ -64,8 +77,13 @@ BOOST_AUTO_TEST_CASE(single_problem_nominal_case)
     // more specifically, this resize is usually done when loading from files. It's all good, except
     // when you DON'T LOAD FILES.
     area->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
+    return std::move(builder.study);
+}
 
-    Antares::Solver::SingleProblemGetter getter(std::move(builder.study));
+BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
+{
+    auto study = buildStudy(true, false);
+    Antares::Solver::SingleProblemGetter getter(std::move(study));
     const Antares::Solver::ConstantDataFromAntares constantData = getter.getConstantData();
     // 504 = 3*168, 3 sets of variables
     // unsupplied energy
