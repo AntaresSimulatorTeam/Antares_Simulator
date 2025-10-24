@@ -72,20 +72,31 @@ Modeler::Config::Objective convertObjective(const Objective& ymlObj)
     }
 }
 
-Modeler::Config::Model convertModel(const Model& ymlModel)
+std::vector<Modeler::Config::Variable> convertVariables(const Model& ymlModel)
 {
     std::vector<Modeler::Config::Variable> variables;
     for (const auto& var: ymlModel.variables)
     {
         variables.push_back(convertVariable(var));
     }
+    return variables;
+}
 
+std::vector<Modeler::Config::Objective> convertObjectives(const Model& ymlModel)
+{
     std::vector<Modeler::Config::Objective> objectives;
     for (const auto& obj: ymlModel.objectives)
     {
         objectives.push_back(convertObjective(obj));
+        std::vector<Modeler::Config::Objective> objectives;
     }
+    return objectives;
+}
 
+Modeler::Config::Model convertModel(const Model& ymlModel)
+{
+    std::vector<Modeler::Config::Variable> variables = convertVariables(ymlModel);
+    std::vector<Modeler::Config::Objective> objectives = convertObjectives(ymlModel);
     Modeler::Config::ModelDecomposition decomposition(variables, objectives);
     return Modeler::Config::Model(ymlModel.id, decomposition);
 }
