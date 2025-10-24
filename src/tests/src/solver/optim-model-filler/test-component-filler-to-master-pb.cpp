@@ -21,15 +21,15 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 
-template<class Variables, class Objectives>
+template<class VariablesCreator, class ObjectivesCreator>
 class FactoryFixture
 {
 public:
     FactoryFixture():
         linear_pb(false, "sirius"),
         optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo),
-        variables(Variables::Create(nodeRegistry)),
-        objectives(Objectives::Create(nodeRegistry))
+        variables(VariablesCreator::Create(nodeRegistry)),
+        objectives(ObjectivesCreator::Create(nodeRegistry))
     {
         createModel();
         createComponent();

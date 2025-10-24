@@ -12,7 +12,7 @@ Expression createLiteral(std::string name, double value, Registry<Nodes::Node>& 
 }
 
 std::vector<Variable> TwoVarsCreator_OneSubPb_OneMaster::Create(
-  Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& nodeRegistry)
+  Antares::Expressions::Registry<Node>& nodeRegistry)
 {
     Variable var_1("var-1",
                    createLiteral("low-bound", 0., nodeRegistry),
@@ -36,7 +36,7 @@ std::vector<Variable> TwoVarsCreator_OneSubPb_OneMaster::Create(
 }
 
 std::vector<Variable> TwoSubPbVarsCreator::Create(
-  Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& nodeRegistry)
+  Antares::Expressions::Registry<Node>& nodeRegistry)
 {
     Variable var_1("var-1",
                    createLiteral("low-bound", 0., nodeRegistry),
