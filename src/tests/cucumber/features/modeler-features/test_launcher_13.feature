@@ -18,12 +18,17 @@ Feature: 13 - Invest in object
     #                             + 45 * 200 (Generator)
     #                 =    80_000 +   11_000
     #                 = 91_000
-    @fast
-    Scenario: 13.1: One system with one electric node (1 thermal cluster, 1 load) and one candidate with continuous invest option
-        Given the modeler study path is "modeler/13_1"
-        When I run antares modeler
-        Then the simulation succeeds
-        And the objective value is greater than 90999 and lower than 91001
+  @fast
+  Scenario: 13.1: One system with one electric node (1 thermal cluster, 1 load) and one candidate with continuous invest option
+    Given the modeler study path is "modeler/13_1"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is greater than 90999 and lower than 91001
+    And the master problem contains the following variables
+      | name              | objective coef |
+      | CAND_p_max        | 490            |
+      | DISCRETE_p_max    | 200            |
+      | DISCRETE_nb_units |                |
 
     # Study case 13_2 : to test investment problems
     # Simple generation expansion problem on one node, one timestep and one scenario with two candidates: one continuous and one discrete.
@@ -45,9 +50,9 @@ Feature: 13 - Invest in object
     #                             + 45 * 200 (Generator)
     #                 =    69_000 +   11_000
     #                 = 80_000
-    @fast
-    Scenario: 13.2: One system with one electric node (1 thermal cluster, 1 load) and two candidates : one with continuous invest option and one with discrete invest option
-        Given the modeler study path is "modeler/13_2"
-        When I run antares modeler
-        Then the simulation succeeds
-        And the objective value is greater than 79999 and lower than 80001
+  @fast
+  Scenario: 13.2: One system with one electric node (1 thermal cluster, 1 load) and two candidates : one with continuous invest option and one with discrete invest option
+    Given the modeler study path is "modeler/13_2"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is greater than 79999 and lower than 80001
