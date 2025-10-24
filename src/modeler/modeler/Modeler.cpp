@@ -110,8 +110,6 @@ void Antares::Solver::Modeler::run() const
 
         Utils::TimeMeasurement measure;
 
-        writer_.init(!parameters.noOutput, simulationTableSuffix);
-
         logs.info() << "linear problem of System loaded";
         // Problem is MIP if any variable of any component is not continuous
         bool isMip = std::ranges::any_of(
@@ -125,7 +123,7 @@ void Antares::Solver::Modeler::run() const
                                             != ModelerStudy::SystemModel::ValueType::FLOAT;
                                  });
           });
-        OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
+
         // Todo: scenario
         FillContext timeScenarioCtx = {
           parameters.firstTimeStep,
@@ -133,6 +131,9 @@ void Antares::Solver::Modeler::run() const
           parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
           parameters.lastTimeStep,  // global = local
           0};
+
+        // Sub problem
+        OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
         SystemLinearProblemBuilder system_linear_problem(data.system.get(),
                                                          ortools_linear_problem,
                                                          *data.dataSeries,
@@ -149,6 +150,7 @@ void Antares::Solver::Modeler::run() const
         logs.info();
         logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
+        writer_.init(!parameters.noOutput, simulationTableSuffix);
         writer_.writeProblem(ortools_linear_problem);
 
         logs.info() << "Launching resolution...";
