@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -20,35 +21,16 @@
  */
 
 #pragma once
-#include <functional>
-#include <set>
-#include <string>
+#include "OptimConfig.h"
 
-#include "yuni/core/event/interfaces.h"
-
-std::function<bool(const std::exception&)> checkMessage(std::string expected_message);
-std::function<bool(const std::exception&)> containsMessage(std::string expected_message);
-
-namespace Antares::UnitTests
+namespace Antares::IO::Inputs::YmlOptimConfig
 {
-class CaptureAntaresLogs
-    : public Yuni::IEventObserver<CaptureAntaresLogs, Yuni::Policy::SingleThreaded>
+class Parser final
 {
 public:
-    CaptureAntaresLogs();
-    ~CaptureAntaresLogs();
+    Parser() = default;
+    ~Parser() = default;
 
-    const std::set<std::string>& getFatals() const;
-    const std::set<std::string>& getErrors() const;
-    const std::set<std::string>& getWarnings() const;
-    const std::set<std::string>& getInfos() const;
-
-private:
-    void onLogMessage(int level, const std::string& message);
-
-    std::set<std::string> fatals_;
-    std::set<std::string> errors_;
-    std::set<std::string> warnings_;
-    std::set<std::string> infos_;
+    OptimConfig parse(const std::string& content);
 };
-} // namespace Antares::UnitTests
+} // namespace Antares::IO::Inputs::YmlOptimConfig

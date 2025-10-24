@@ -1,62 +1,71 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
 #pragma once
 
-#include "../variable.h"
+#include <antares/memory/memory.h>
+#include <antares/solver/variable/categories.h>
+#include <antares/solver/variable/container.h>
+#include <antares/solver/variable/state.h>
+#include <antares/solver/variable/storage/intermediate.h>
+#include <antares/solver/variable/storage/results.h>
+#include <antares/solver/variable/surveyresults.h>
+#include <antares/solver/variable/variable.h>
+#include <antares/study/area/area.h>
+#include <antares/study/area/links.h>
+#include <antares/study/study.h>
 
 namespace Antares::Solver::Variable::Economy
 {
-struct VCardLOLP_CSR
+
+template<class Traits>
+struct VCardLOLD_Base
 {
     //! Caption
     static std::string Caption()
     {
-        return "LOLP CSR";
+        return Traits::Caption();
     }
 
     //! Unit
     static std::string Unit()
     {
-        return "%";
+        return Traits::Unit();
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "LOLP for CSR";
+        return Traits::Description();
     }
 
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
+      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
+        R::AllYears::Min<                 // The minimum values throughout all years
+          R::AllYears::Max<               // The maximum values throughout all years
+            >>>>>
       ResultsType;
 
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardLOLP_CSR VCardForSpatialAggregate;
+    typedef VCardLOLD_Base VCardForSpatialAggregate;
 
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
     //! File level (provided by the type of the results)
@@ -68,11 +77,11 @@ struct VCardLOLP_CSR
     //! Indentation (GUI)
     static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
-    static constexpr uint8_t decimal = 2;
+    static constexpr uint8_t decimal = 4;
     //! Number of columns used by the variable (One ResultsType per column)
     static constexpr int columnCount = 1;
     //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateOr;
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSumThen1IfPositive;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
     static constexpr uint8_t spatialAggregatePostProcessing = 0;
     //! Intermediate values
@@ -88,18 +97,18 @@ struct VCardLOLP_CSR
 }; // class VCard
 
 /*!
-** \brief
+** \brief Base class for LOLD and LOLD_CSR variables
 */
-template<class NextT = Container::EndOfList>
-class LOLP_CSR: public Variable::IVariable<LOLP_CSR<NextT>, NextT, VCardLOLP_CSR>
+template<class Traits, class NextT = Container::EndOfList>
+class LOLD_Base: public Variable::IVariable<LOLD_Base<Traits, NextT>, NextT, VCardLOLD_Base<Traits>>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardLOLP_CSR VCardType;
+    typedef VCardLOLD_Base<Traits> VCardType;
     //! Ancestor
-    typedef Variable::IVariable<LOLP_CSR<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<LOLD_Base<Traits, NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -138,7 +147,6 @@ public:
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
         }
-
         // Next
         NextType::initializeFromStudy(study);
     }
@@ -147,6 +155,18 @@ public:
     static void InitializeResultsFromStudy(R& results, Data::Study& study)
     {
         VariableAccessorType::InitializeAndReset(results, study);
+    }
+
+    void initializeFromArea(Data::Study* study, Data::Area* area)
+    {
+        // Next
+        NextType::initializeFromArea(study, area);
+    }
+
+    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    {
+        // Next
+        NextType::initializeFromAreaLink(study, link);
     }
 
     void simulationBegin()
@@ -159,6 +179,11 @@ public:
         NextType::simulationBegin();
     }
 
+    void simulationEnd()
+    {
+        NextType::simulationEnd();
+    }
+
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
@@ -168,10 +193,16 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
+    {
+        // Next variable
+        NextType::yearEndBuild(state, year, numSpace);
+    }
+
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsOrForTheCurrentYear();
+        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -186,11 +217,17 @@ public:
         NextType::computeSummary(year, numSpace);
     }
 
+    void hourBegin(unsigned int hourInTheYear)
+    {
+        // Next variable
+        NextType::hourBegin(hourInTheYear);
+    }
+
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        if (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.0)
+        if (Traits::checkCondition(state))
         {
-            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 100;
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
         }
 
         // Next variable
@@ -227,6 +264,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class LOLP_CSR
+}; // class LOLD_Base
 
 } // namespace Antares::Solver::Variable::Economy

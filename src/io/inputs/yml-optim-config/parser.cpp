@@ -18,39 +18,19 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#pragma once
 
-#include "lold_base.h"
+#include "antares/io/inputs/yml-optim-config/parser.h"
 
-namespace Antares::Solver::Variable::Economy
+#include "decoders.hxx"
+
+namespace Antares::IO::Inputs::YmlOptimConfig
 {
-
-struct LOLDTraits
+OptimConfig Parser::parse(const std::string& content)
 {
-    static std::string Caption()
-    {
-        return "LOLD";
-    }
+    YAML::Node root = YAML::Load(content);
 
-    static std::string Unit()
-    {
-        return "Hours";
-    }
+    OptimConfig optimConfig = root["models"].as<std::vector<Model>>();
 
-    static std::string Description()
-    {
-        return "LOLD";
-    }
-
-    static bool checkCondition(const State& state)
-    {
-        return state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] > 0.5;
-    }
-};
-
-using VCardLOLD = VCardLOLD_Base<LOLDTraits>;
-
-template<class NextT = Container::EndOfList>
-using LOLD = LOLD_Base<LOLDTraits, NextT>;
-
-} // namespace Antares::Solver::Variable::Economy
+    return optimConfig;
+}
+} // namespace Antares::IO::Inputs::YmlOptimConfig
