@@ -11,18 +11,19 @@ Expression createLiteral(std::string name, double value, Registry<Nodes::Node>& 
     return Expression(name, std::move(node_registry));
 }
 
-std::vector<Variable> TwoVarsCreator_OneSubPb_OneMaster::create()
+std::vector<Variable> TwoVarsCreator_OneSubPb_OneMaster::Create(
+  Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& nodeRegistry)
 {
     Variable var_1("var-1",
-                   createLiteral("low-bound", 0., nodeRegistry_),
-                   createLiteral("up-bound", 1., nodeRegistry_),
+                   createLiteral("low-bound", 0., nodeRegistry),
+                   createLiteral("up-bound", 1., nodeRegistry),
                    ValueType::FLOAT,
                    TimeDependent::NO,
                    ScenarioDependent::NO,
                    Config::Location::SUBPROBLEMS);
     Variable var_2("var-2",
-                   createLiteral("low-bound", 0., nodeRegistry_),
-                   createLiteral("up-bound", 1., nodeRegistry_),
+                   createLiteral("low-bound", 0., nodeRegistry),
+                   createLiteral("up-bound", 1., nodeRegistry),
                    ValueType::FLOAT,
                    TimeDependent::NO,
                    ScenarioDependent::NO,
@@ -34,18 +35,19 @@ std::vector<Variable> TwoVarsCreator_OneSubPb_OneMaster::create()
     return variables;
 }
 
-std::vector<Variable> TwoSubPbVarsCreator::create()
+std::vector<Variable> TwoSubPbVarsCreator::Create(
+  Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& nodeRegistry)
 {
     Variable var_1("var-1",
-                   createLiteral("low-bound", 0., nodeRegistry_),
-                   createLiteral("up-bound", 1., nodeRegistry_),
+                   createLiteral("low-bound", 0., nodeRegistry),
+                   createLiteral("up-bound", 1., nodeRegistry),
                    ValueType::FLOAT,
                    TimeDependent::NO,
                    ScenarioDependent::NO,
                    Config::Location::SUBPROBLEMS);
     Variable var_2("var-2",
-                   createLiteral("low-bound", 0., nodeRegistry_),
-                   createLiteral("up-bound", 1., nodeRegistry_),
+                   createLiteral("low-bound", 0., nodeRegistry),
+                   createLiteral("up-bound", 1., nodeRegistry),
                    ValueType::FLOAT,
                    TimeDependent::NO,
                    ScenarioDependent::NO,

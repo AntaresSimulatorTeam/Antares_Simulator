@@ -21,31 +21,24 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 
-struct FactoryFixture
+template<class Variables, class Objectives>
+class FactoryFixture
 {
+public:
     FactoryFixture():
         linear_pb(false, "sirius"),
-        optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo)
+        optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo),
+        variables(Variables::Create(nodeRegistry)),
+        objectives(Objectives::Create(nodeRegistry))
     {
-    }
-
-    void initialize(std::unique_ptr<VariablesCreator> varCreator,
-                    std::unique_ptr<ObjectivesCreator> objCreator)
-    {
-        variables = varCreator->create();
-        objectives = objCreator->create();
         createModel();
         createComponent();
         setOptimEntityContainer();
     }
 
-    // Function members
-    void createModel();
-    void createComponent();
-    void setOptimEntityContainer();
-
     // Data members
-    Registry<Node> nodeRegistry; // Storing AST Nodes (to destroy them at end of test)
+    Antares::Expressions::Registry<Node>
+      nodeRegistry; // Storing AST Nodes (to destroy them at end of test)
     std::vector<Variable> variables;
     std::vector<Objective> objectives;
     Model model;
@@ -59,39 +52,46 @@ struct FactoryFixture
     OptimEntityContainer optimEntityContainer;
 
     FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
+
+private:
+    // Function members
+    void createModel()
+    {
+        ModelBuilder model_builder;
+        model_builder.withId("my-model")
+          .withVariables(std::move(variables))
+          .withObjectives(std::move(objectives));
+
+        model = model_builder.build();
+    }
+
+    void createComponent()
+    {
+        ComponentBuilder component_builder;
+        component_builder.withModel(&model).withId("my-component");
+        component = std::make_unique<Component>(component_builder.build());
+    }
+
+    void setOptimEntityContainer()
+    {
+        std::vector<Component> components = {*component};
+        optimEntityContainer.addFromSystemComponents(components);
+    }
 };
 
-void FactoryFixture::createModel()
+namespace Fixtures
 {
-    ModelBuilder model_builder;
-    model_builder.withId("my-model")
-      .withVariables(std::move(variables))
-      .withObjectives(std::move(objectives));
-
-    model = model_builder.build();
-}
-
-void FactoryFixture::createComponent()
-{
-    ComponentBuilder component_builder;
-    component_builder.withModel(&model).withId("my-component");
-    component = std::make_unique<Component>(component_builder.build());
-}
-
-void FactoryFixture::setOptimEntityContainer()
-{
-    std::vector<Component> components = {*component};
-    optimEntityContainer.addFromSystemComponents(components);
-}
+using _1 = FactoryFixture<TwoVarsCreator_OneSubPb_OneMaster, NoObjectiveCreator>;
+using _2 = FactoryFixture<TwoVarsCreator_OneSubPb_OneMaster, NoObjectiveCreator>;
+using _3 = FactoryFixture<TwoSubPbVarsCreator, TwoObjsCreator_OneSubPb_OneMaster>;
+using _4 = FactoryFixture<TwoSubPbVarsCreator, TwoObjsCreator_OneSubPb_OneMaster>;
+} // namespace Fixtures
 
 BOOST_AUTO_TEST_SUITE(add_variables_to_master_linear_problem)
 
 BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_variables,
-                        FactoryFixture)
+                        Fixtures::_1)
 {
-    // Arrange
-    initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry),
-               std::make_unique<NoObjectiveCreator>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
@@ -104,11 +104,8 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_
 }
 
 BOOST_FIXTURE_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_variables,
-                        FactoryFixture)
+                        Fixtures::_2)
 {
-    // Arrange
-    initialize(std::make_unique<TwoVarsCreator_OneSubPb_OneMaster>(nodeRegistry),
-               std::make_unique<NoObjectiveCreator>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
@@ -125,11 +122,8 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE(add_constraints_to_master_linear_problem)
 
 BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objectives,
-                        FactoryFixture)
+                        Fixtures::_3)
 {
-    // Arrange
-    initialize(std::make_unique<TwoSubPbVarsCreator>(nodeRegistry),
-               std::make_unique<TwoObjsCreator_OneSubPb_OneMaster>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
@@ -149,11 +143,8 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_ob
 }
 
 BOOST_FIXTURE_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master_objectives,
-                        FactoryFixture)
+                        Fixtures::_4)
 {
-    // Arrange
-    initialize(std::make_unique<TwoSubPbVarsCreator>(nodeRegistry),
-               std::make_unique<TwoObjsCreator_OneSubPb_OneMaster>(nodeRegistry));
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
