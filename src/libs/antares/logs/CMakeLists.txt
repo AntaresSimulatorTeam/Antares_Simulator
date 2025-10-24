@@ -7,7 +7,6 @@ set(HEADERS
 set(SRC_LOGS
         ${HEADERS}
         logs.cpp
-        logs-functions.cpp
         hostinfo.cpp
 )
 source_group("misc\\logs" FILES ${SRC_LOGS})

@@ -80,23 +80,6 @@ using LoggingDecorators = Yuni::Logs::Time< // Date/Time when the entry log is a
 //! Our log facility
 extern Yuni::Logs::Logger<LoggingHandlers, LoggingDecorators> logs;
 
-/*!
-** \brief Generate a compatibility notice
-** \ingroup logs
-**
-** \param format The format string
-** \return Always 0
-*/
-int LogCompatibility(const char format[], ...);
-
-/*!
-** \brief Display informations about encountered errors
-*/
-void LogDisplayErrorInfos(uint errors,
-                          uint warnings,
-                          const char* message,
-                          bool printAsError = true);
-
 } // namespace Antares
 
 /*!
@@ -113,5 +96,22 @@ enum LogLevel
     logInfo,
     logDebug
 };
+
+/*!
+** \brief Generate a compatibility notice
+** \ingroup logs
+**
+** \param format The format string
+** \return Always 0
+*/
+int LogCompatibility(const char format[], ...);
+
+/*!
+** \brief Display informations about encountered errors
+*/
+void LogDisplayErrorInfos(uint errors,
+                          uint warnings,
+                          const char* message,
+                          bool printAsError = true);
 
 #endif /* __ANTARES_LIBS_LOGS_LOGS_H__ */
