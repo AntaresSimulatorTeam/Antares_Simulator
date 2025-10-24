@@ -50,12 +50,26 @@ Modeler::Config::Location convertLocation(const std::string& locationStr)
 
 Modeler::Config::Variable convertVariable(const Variable& ymlVar)
 {
-    return {ymlVar.id, convertLocation(ymlVar.location)};
+    try
+    {
+        return {ymlVar.id, convertLocation(ymlVar.location)};
+    }
+    catch (const Error::RuntimeError& e)
+    {
+        throw Error::RuntimeError("Error converting variable '" + ymlVar.id + "': " + e.what());
+    }
 }
 
 Modeler::Config::Objective convertObjective(const Objective& ymlObj)
 {
-    return {ymlObj.id, convertLocation(ymlObj.location)};
+    try
+    {
+        return {ymlObj.id, convertLocation(ymlObj.location)};
+    }
+    catch (const Error::RuntimeError& e)
+    {
+        throw Error::RuntimeError("Error converting objective '" + ymlObj.id + "': " + e.what());
+    }
 }
 
 Modeler::Config::Model convertModel(const Model& ymlModel)
