@@ -38,7 +38,7 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     data.libraries = loadLibraries(studyPath);
     logs.info() << "Libraries loaded";
 
-    data.invest_models = loadOptimConfig(studyPath);
+    data.optimConfig = loadOptimConfig(studyPath);
 
     data.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
       loadSystem(studyPath, data.libraries));
