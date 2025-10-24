@@ -26,6 +26,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/antares/constants.h"
 #include "antares/api/singleProblemGetter.h"
 #include "antares/study/study.h"
 
@@ -36,7 +37,7 @@ constexpr double EPSILON = 1.e-6;
 std::size_t findIndex(const std::vector<std::string>& v, const std::string& value)
 {
     std::size_t ret = std::distance(v.begin(), std::find(v.begin(), v.end(), value));
-    BOOST_REQUIRE(ret < v.size());
+    BOOST_REQUIRE_MESSAGE(ret < v.size(), value + " not found");
     return ret;
 }
 
@@ -60,11 +61,26 @@ std::unique_ptr<Antares::Data::Study> buildStudy(bool thermal, bool hydro)
     if (hydro)
     {
         auto& h = area->hydro;
+
+        hydro = &area->hydro;
+
+        TimeSeriesConfigurer genP(h.series->maxHourlyGenPower);
+        genP.setDimensions(1).fillColumnWith(0, 100.);
+
+        TimeSeriesConfigurer hydroStorage(h.series->storage);
+        hydroStorage.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 10.);
+
+        TimeSeriesConfigurer genE(h.dailyNbHoursAtGenPmax);
+        genE.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
+
+        h.reservoirCapacity = 1e4;
         h.reservoirManagement = true;
-        h.reservoirCapacity = 1.e4;
-        auto& inflows = h.series->storage;
-        inflows.resize(/* nbInflowTS */ 1, 365);
-        inflows.timeSeries.fill(100);
+        h.prepro.release(); // eliminate "prepro" since we don't want TS generation
+
+        // LOAD
+        area->load.prepro.release(); // eliminate "prepro" since we don't want TS generation
+        TimeSeriesConfigurer loadTSconfig(area->load.series);
+        loadTSconfig.setDimensions(1).fillColumnWith(0, 120.);
     }
 
     // TODO StudyBuilder should have a `run` method that
@@ -95,9 +111,6 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     // fictive loads
     BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 336);
 
-    const auto dispatchableVariable = findIndex(
-      constantData.VariablesMeaning,
-      "DispatchableProduction::area<area>::ThermalCluster<dispatch-cluster>::hour<0>");
     const auto unsuppliedVariable = findIndex(constantData.VariablesMeaning,
                                               "PositiveUnsuppliedEnergy::area<area>::hour<0>");
     const auto spilledVariable = findIndex(constantData.VariablesMeaning,
@@ -105,6 +118,10 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 
     const auto areaBalanceConstraint = findIndex(constantData.ConstraintsMeaning,
                                                  "AreaBalance::area<area>::hour<0>");
+
+    const auto dispatchableVariable = findIndex(
+      constantData.VariablesMeaning,
+      "DispatchableProduction::area<area>::ThermalCluster<dispatch-cluster>::hour<0>");
 
     // TODO explain
     BOOST_CHECK_EQUAL(constantData.ColumnIndexes[0], 0);
@@ -132,4 +149,63 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(firstWeekData.Xmax[unsuppliedVariable],
                       1.e-5); // default value when there is no residual load
     BOOST_CHECK_EQUAL(firstWeekData.Xmax[spilledVariable], 1.e80); // infinite
+}
+
+BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
+{
+    auto study = buildStudy(false, true);
+    Antares::Solver::SingleProblemGetter getter(std::move(study));
+    const Antares::Solver::ConstantDataFromAntares constantData = getter.getConstantData();
+    // Total 1008
+    // 168 unsupplied energy
+    // 168 spilled energy
+    // 168 hydro level
+    // 168 hydro prod
+    // 168 overflow
+    BOOST_CHECK_EQUAL(constantData.VariablesCount, 840);
+    // Total 505
+    // 168 area balance
+    // 168 fictive loads
+    // 168 hydro level
+    // 1 hydro power
+    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 505);
+
+    const auto hydroLevelVariable = findIndex(constantData.VariablesMeaning,
+                                              "HydroLevel::area<area>::hour<0>");
+
+    const auto hydroProdVariable = findIndex(constantData.VariablesMeaning,
+                                             "HydProd::area<area>::hour<0>");
+
+    const auto unsuppliedVariable = findIndex(constantData.VariablesMeaning,
+                                              "PositiveUnsuppliedEnergy::area<area>::hour<0>");
+    const auto spilledVariable = findIndex(constantData.VariablesMeaning,
+                                           "NegativeUnsuppliedEnergy::area<area>::hour<0>");
+
+    const auto areaHydroLevel = findIndex(constantData.ConstraintsMeaning,
+                                          "AreaHydroLevel::area<area>::hour<0>");
+
+    const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 0});
+    // COST
+    BOOST_CHECK_CLOSE(firstWeekData.LinearCost[hydroLevelVariable],
+                      -1.e-6,
+                      EPSILON); // default value
+    BOOST_CHECK_CLOSE(firstWeekData.LinearCost[hydroProdVariable],
+                      -0.00094518442622950813,
+                      EPSILON); // hydro cost noise
+    BOOST_CHECK_CLOSE(firstWeekData.LinearCost[unsuppliedVariable],
+                      999.99941243777027,
+                      EPSILON); // unsupplied cost
+    BOOST_CHECK_CLOSE(firstWeekData.LinearCost[spilledVariable],
+                      999.99941243777027,
+                      EPSILON); // spilled cost
+    // RHS
+    BOOST_CHECK_CLOSE(firstWeekData.RHS[areaHydroLevel],
+                      3048.5130614352684,
+                      EPSILON); // random initial level
+
+    const Antares::Solver::WeeklyDataFromAntares secondWeekData = getter.getWeeklyData({0, 1});
+    // RHS
+    BOOST_CHECK_CLOSE(firstWeekData.RHS[areaHydroLevel],
+                      3048.5130614352684,
+                      EPSILON); // random initial level
 }
