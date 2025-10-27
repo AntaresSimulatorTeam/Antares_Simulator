@@ -165,7 +165,6 @@ bool CompareVisitor::visit(const Nodes::DualNode* node, const Nodes::Node* other
     return compareGetValue(node, other);
 }
 
-
 std::string CompareVisitor::name() const
 {
     return "CompareVisitor";
