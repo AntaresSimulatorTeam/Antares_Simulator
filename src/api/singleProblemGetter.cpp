@@ -18,8 +18,8 @@ constexpr int numSpace = 0;            // full sequential
 constexpr int PremierPdtDeLIntervalle = 0;
 constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
 const std::string kName = "my-name";         // Arbitrary
-static Antares::Solver::NullResultWriter gResultWriter;
-static Benchmarking::DurationCollector gDurationCollector;
+Antares::Solver::NullResultWriter gResultWriter;
+Benchmarking::DurationCollector gDurationCollector;
 } // namespace
 
 namespace Antares::Solver

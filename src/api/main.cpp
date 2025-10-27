@@ -30,6 +30,11 @@ void print_side_by_side(size_t n, const Vecs&... vecs)
     }
 }
 
+int toInt(const char* in)
+{
+    return strtol(in, nullptr, 10);
+}
+
 int main(int argc, char** argv)
 {
     if (argc != 4)
@@ -37,8 +42,9 @@ int main(int argc, char** argv)
         std::cerr << "Usage \n" << argv[0] << " path/to/study year week\n";
         return 1;
     }
-    const unsigned int year = std::atoi(argv[2]);
-    const unsigned int week = std::atoi(argv[3]);
+
+    const unsigned int year = toInt(argv[2]);
+    const unsigned int week = toInt(argv[3]);
 
     Antares::FileTreeStudyLoader loader(argv[1]);
     auto study = loader.load();
