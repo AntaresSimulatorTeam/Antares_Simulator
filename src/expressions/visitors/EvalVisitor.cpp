@@ -223,7 +223,7 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::ExtraOutputIdentifierNode*
     }
 
     const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_,
-                                                                              constraintLocalIndex);
+                                                                   constraintLocalIndex);
 
     if (timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || timeIndex == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
