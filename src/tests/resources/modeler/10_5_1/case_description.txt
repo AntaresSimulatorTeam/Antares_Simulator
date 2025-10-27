@@ -11,5 +11,5 @@ Expected results:
 
 objective = 1500
 base_zone.price = 50
-gas_base_zone.generation_reduced_cost = 0
+gas_base_zone.generation_reduced_cost = -40
 oil_base_zone.generation_reduced_cost = 0
