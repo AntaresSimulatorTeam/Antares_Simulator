@@ -51,11 +51,14 @@ add_library(single_problem_api)
 target_sources(single_problem_api
 	PRIVATE
 	singleProblemGetter.cpp
+	singleProblemGetterImpl.cpp
 	include/antares/api/singleProblemGetter.h)
 
 target_include_directories(single_problem_api
         PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>)
 
 target_link_libraries(single_problem_api
         PRIVATE
