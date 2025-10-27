@@ -21,6 +21,8 @@
 
 #include "antares/io/inputs/yml-optim-config/converter.h"
 
+#include <algorithm>
+
 #include <antares/exception/RuntimeError.hpp>
 
 namespace Antares::IO::Inputs::YmlOptimConfig

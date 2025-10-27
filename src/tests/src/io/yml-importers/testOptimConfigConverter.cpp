@@ -21,30 +21,26 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/exception/RuntimeError.hpp>
 #include <antares/io/inputs/yml-optim-config/converter.h>
 #include <antares/modeler/optimConfig/optimConfig.h>
 
 namespace IOYML = Antares::IO::Inputs::YmlOptimConfig;
 
-namespace Antares::Data::Enum
-{
-
-template<>
-inline const std::initializer_list<std::string>& getNames<Modeler::Config::Location>()
-{
-    static const std::initializer_list<std::string> il = {"master",
-                                                          "master_and_subproblems",
-                                                          "subproblems"};
-    return il;
-}
-
-} // namespace Antares::Data::Enum
-
 namespace Antares::Modeler::Config
 {
-std::ostream& operator<<(std::ostream& os, Location loc)
+inline std::ostream& operator<<(std::ostream& os, Location loc)
 {
-    return os << Data::Enum::toString(loc);
+    switch (loc)
+    {
+    case Location::MASTER:
+        return os << "MASTER";
+    case Location::MASTER_AND_SUBPROBLEMS:
+        return os << "MASTER_AND_SUBPROBLEMS";
+    case Location::SUBPROBLEMS:
+        return os << "SUBPROBLEMS";
+    }
+    throw Error::RuntimeError("Unknown Location enum value");
 }
 } // namespace Antares::Modeler::Config
 
