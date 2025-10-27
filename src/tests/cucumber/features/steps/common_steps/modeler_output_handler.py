@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 
+
 class modeler_output_handler:
 
     def __init__(self, simulation_table_location):
@@ -20,7 +21,7 @@ class modeler_output_handler:
             df[col] = df[col].astype(float)
         return df
 
-    def get_simulation_table_entry(self, component : str, output : str, block : int, timestep : int, scenario : int):
+    def get_simulation_table_entry(self, component: str, output: str, block: int, timestep: int, scenario: int):
         df = self.simulation_table[(self.simulation_table["component"] == component)
                                    & (self.simulation_table["output"] == output)]
         if not pd.isna(block):
@@ -34,7 +35,8 @@ class modeler_output_handler:
         else:
             df = df[df["scenario_index"] == scenario]
         if len(df) != 1:
-            raise LookupError(f"Simulation table contains {len(df)} row(s) (expected 1) for component '{component}', output '{output}', block '{block}', timestep '{timestep}', scenario '{scenario}'")
+            raise LookupError(
+                f"Simulation table contains {len(df)} row(s) (expected 1) for component '{component}', output '{output}', block '{block}', timestep '{timestep}', scenario '{scenario}'")
         return df["value"].iloc[0]
 
     def get_objective_value(self):

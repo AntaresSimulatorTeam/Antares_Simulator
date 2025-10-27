@@ -14,6 +14,7 @@ class result_type(Enum):
     DETAILS = "details"
     DETAILS_STS = "details-STstorage"
 
+
 class solver_output_handler:
 
     def __init__(self, study_output_path, mode):
@@ -82,7 +83,8 @@ class solver_output_handler:
 
     def __get_values_hourly_for_specific_week(self, area: str, year: int, week: int):
         df = self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
-        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
+        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (
+                df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
 
     def __get_values_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
         df = self.__get_values_hourly(area, year)

@@ -240,6 +240,8 @@ def check_simulation_tables(context):
     ref_simulation_table2 = context.sih.get_optim2_simulation_table()
     if ref_simulation_table2:
         assert ref_simulation_table2 == context.soh.get_optim2_simulation_table(), "second simulation table does not match the reference"
+
+
 def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
 

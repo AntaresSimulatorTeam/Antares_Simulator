@@ -64,10 +64,13 @@ def modeler_output_values(context):
             for scenario in scenario_range:
                 for ts in ts_range:
                     assert_double_close(
-                        get_value(row, ts), context.moh.get_simulation_table_entry(row["component"], row["output"], block, ts, scenario), 1e-6
+                        get_value(row, ts),
+                        context.moh.get_simulation_table_entry(row["component"], row["output"], block, ts, scenario),
+                        1e-6
                     )
 
-def read_int_range(row, key : str):
+
+def read_int_range(row, key: str):
     if row[key] != "":
         array = row[key].split("-")
         start = int(array[0])
@@ -75,6 +78,7 @@ def read_int_range(row, key : str):
         return range(start, end + 1)
     else:
         return [math.nan]
+
 
 def get_value(row, ts):
     ret = row["value"]
@@ -121,7 +125,6 @@ def parse_simulation_table_from_logs(logs: str) -> str:
         if 'Simulation table is written in: ' in line:
             return line.split('Simulation table is written in: ')[1]
     raise LookupError("Could not find simulation table location in output logs")
-
 
 
 def build_antares_modeler_command(context):
