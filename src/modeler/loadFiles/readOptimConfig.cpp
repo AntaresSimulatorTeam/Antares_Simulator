@@ -37,11 +37,6 @@ namespace Antares::Solver::LoadFiles
 
 static std::string readOptimConfigFile(const fs::path& configPath)
 {
-    if (!std::filesystem::exists(configPath))
-    {
-        logs.info() << "Optim config file not found at " << configPath;
-        return "";
-    }
     try
     {
         return IO::readFile(configPath);
@@ -81,9 +76,15 @@ static Config::OptimConfig convertOptimConfig(const YmlOptimConfig::OptimConfig&
     }
 }
 
-Config::OptimConfig loadOptimConfig(const fs::path& studyPath)
+std::optional<Config::OptimConfig> loadOptimConfig(const fs::path& studyPath)
 {
     const fs::path configPath = studyPath / "input" / "optim-config.yml";
+    if (!std::filesystem::exists(configPath))
+    {
+        logs.info() << "Optim config file not found at " << configPath;
+        return std::nullopt;
+    }
+
     std::string content = readOptimConfigFile(configPath);
     const auto&& obj = parseOptimConfig(content, configPath);
     return convertOptimConfig(obj);
