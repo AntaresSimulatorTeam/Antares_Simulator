@@ -55,7 +55,7 @@ namespace Antares::Optimisation
 class VariablesBulkAddition
 {
 public:
-    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+    VariablesBulkAddition(LinearProblemApi::ILinearProblem& linear_problem,
                           OptimEntityContainer& optimEntityContainer);
 
     void addVariable(const std::string& compoId,
@@ -63,28 +63,28 @@ public:
                      double lb,
                      double ub,
                      bool integer,
-                     const Optimisation::Dimensions& dim) const;
+                     const Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      const std::vector<double>& lb,
                      double ub,
                      bool integer,
-                     const Optimisation::Dimensions& dim) const;
+                     const Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      double lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimisation::Dimensions& dim) const;
+                     const Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      const std::vector<double>& lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimisation::Dimensions& dim) const;
+                     const Dimensions& dim) const;
 
     class BoundsSizeMismatch: public std::invalid_argument
     {
@@ -92,13 +92,12 @@ public:
     };
 
 private:
-    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
+    LinearProblemApi::ILinearProblem& linear_problem_;
     OptimEntityContainer& optimEntityContainer_;
 };
 
-VariablesBulkAddition::VariablesBulkAddition(
-  Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-  OptimEntityContainer& optimEntityContainer):
+VariablesBulkAddition::VariablesBulkAddition(LinearProblemApi::ILinearProblem& linear_problem,
+                                             OptimEntityContainer& optimEntityContainer):
     linear_problem_(linear_problem),
     optimEntityContainer_(optimEntityContainer)
 {
@@ -109,7 +108,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         double lb,
                                         double ub,
                                         bool integer,
-                                        const Optimisation::Dimensions& dim) const
+                                        const Dimensions& dim) const
 {
     optimEntityContainer_.addStartColumn();
     for (const auto& s: dim.getScenarioIndices())
@@ -133,7 +132,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::vector<double>& lb,
                                         double ub,
                                         bool integer,
-                                        const Optimisation::Dimensions& dim) const
+                                        const Dimensions& dim) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != count)
@@ -166,7 +165,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         double lb,
                                         const std::vector<double>& ub,
                                         bool integer,
-                                        const Optimisation::Dimensions& dim) const
+                                        const Dimensions& dim) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (ub.size() != count)
@@ -198,7 +197,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
                                         const std::vector<double>& lb,
                                         const std::vector<double>& ub,
                                         bool integer,
-                                        const Optimisation::Dimensions& dim) const
+                                        const Dimensions& dim) const
 {
     auto count = dim.getNumberOfTimesteps();
     if (lb.size() != ub.size() || lb.size() != count)
@@ -323,7 +322,7 @@ void ComponentFiller::addVariablesToMaster(const LinearProblemApi::FillContext& 
     variablesFilter_ = subproblemVariables; // Reset to initial state
 }
 
-void ComponentFiller::addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
+void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constraint,
                                           const std::string& constraint_id)
 {
     auto* ct = optimEntityContainer_.Problem().addConstraint(linear_constraint.lb[0],
@@ -339,10 +338,9 @@ void ComponentFiller::addStaticConstraint(const Optimisation::LinearConstraint& 
     }
 }
 
-void ComponentFiller::addTimeDependentConstraints(
-  const Optimisation::LinearConstraint& linear_constraints,
-  const std::string& constraint_id,
-  const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear_constraints,
+                                                  const std::string& constraint_id,
+                                                  const LinearProblemApi::FillContext& ctx)
 {
     auto& pb = optimEntityContainer_.Problem();
     const auto dims = getDimensions(ctx);
@@ -368,7 +366,7 @@ void ComponentFiller::addTimeDependentConstraints(
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
-    Optimisation::ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
+    ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto& contraints = component_.getModel()->Constraints();
     for (const auto& constraint: contraints)
@@ -398,7 +396,7 @@ void ComponentFiller::addObjectivesToMaster(const LinearProblemApi::FillContext&
     objectivesFilter_ = subproblemObjectives; // Reset to initial state
 }
 
-void ComponentFiller::addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
     const auto* model = component_.getModel();
     const auto& solverVariables = optimEntityContainer_.getVariables();
