@@ -114,11 +114,10 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
     hydroInputsChecker.Execute(year);
     hydroInputsChecker.CheckForErrors();
 
-    Antares::Solver::Simulation::prepareClustersInMustRunMode(
-      *study_,
-      scratchmap_,
-      year,
-      Antares::Data::SimulationMode::Economy);
+    Antares::Solver::Simulation::prepareClustersInMustRunMode(*study_,
+                                                              scratchmap_,
+                                                              year,
+                                                              study_->parameters.mode);
 
     uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
