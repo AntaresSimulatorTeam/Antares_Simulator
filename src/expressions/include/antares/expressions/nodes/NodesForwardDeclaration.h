@@ -43,5 +43,5 @@ class TimeIndexNode;
 class TimeSumNode;
 class ParentNode;
 class AllTimeSumNode;
-class ExtraOutputIdentifierNode;
+class ReducedCostNode;
 } // namespace Antares::Expressions::Nodes

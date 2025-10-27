@@ -181,7 +181,7 @@ void AstDOTStyleVisitor::visit(const Nodes::AllTimeSumNode* node, std::ostream& 
     processParentNode(node, "sum[]", NodeStyle::TimeIndexStyle, os);
 }
 
-void AstDOTStyleVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::ReducedCostNode* node, std::ostream& os)
 {
     auto id = getNodeID(node);
     std::string label = "";

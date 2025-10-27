@@ -322,9 +322,9 @@ private:
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
-    EvaluationResult visit(const Nodes::ExtraOutputIdentifierNode* node) override;
+    EvaluationResult visit(const Nodes::ReducedCostNode* node) override;
 
-    EvaluationResult handleReducedCost(const Nodes::ExtraOutputIdentifierNode* node);
-    EvaluationResult handleDual(const Nodes::ExtraOutputIdentifierNode* node);
+    EvaluationResult handleReducedCost(const Nodes::ReducedCostNode* node);
+    EvaluationResult handleDual(const Nodes::ReducedCostNode* node);
 };
 } // namespace Antares::Expressions::Visitors

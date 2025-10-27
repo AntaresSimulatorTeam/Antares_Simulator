@@ -37,10 +37,10 @@ enum class ExtraOutputIdentifierOperation
     REDUCED_COST
 };
 
-class ExtraOutputIdentifierNode final: public Leaf<std::string>
+class ReducedCostNode final: public Leaf<std::string>
 {
 public:
-    explicit ExtraOutputIdentifierNode(const ExtraOutputIdentifierOperation operation,
+    explicit ReducedCostNode(const ExtraOutputIdentifierOperation operation,
                                        const std::string& value,
                                        const unsigned index,
                                        const Optimisation::TimeIndex time_index = Optimisation::
@@ -54,7 +54,7 @@ public:
 
     std::string name() const override
     {
-        return "ExtraOutputIdentifierNode";
+        return "ReducedCostNode";
     }
 
     ExtraOutputIdentifierOperation operation() const

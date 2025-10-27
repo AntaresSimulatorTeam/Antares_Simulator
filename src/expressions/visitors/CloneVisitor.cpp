@@ -130,9 +130,9 @@ Nodes::Node* CloneVisitor::visit(const Nodes::AllTimeSumNode* node)
     return registry_.create<Nodes::AllTimeSumNode>(dispatch(node->child()));
 }
 
-Nodes::Node* CloneVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node)
+Nodes::Node* CloneVisitor::visit(const Nodes::ReducedCostNode* node)
 {
-    return registry_.create<Nodes::ExtraOutputIdentifierNode>(node->operation(),
+    return registry_.create<Nodes::ReducedCostNode>(node->operation(),
                                                               node->value(),
                                                               node->index());
 }

@@ -119,7 +119,7 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNod
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ExtraOutputIdentifierNode*)
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ReducedCostNode*)
 {
     return LinearStatus::CONSTANT;
 }

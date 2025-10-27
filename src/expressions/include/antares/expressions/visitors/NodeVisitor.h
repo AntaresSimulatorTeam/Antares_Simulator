@@ -116,7 +116,7 @@ public:
           Nodes::TimeIndexNode,
           Nodes::TimeSumNode,
           Nodes::AllTimeSumNode,
-          Nodes::ExtraOutputIdentifierNode>();
+          Nodes::ReducedCostNode>();
 
         try
         {
@@ -294,13 +294,13 @@ public:
      */
     virtual R visit(const Nodes::AllTimeSumNode*, Args... args) = 0;
     /**
-     * @brief Visits a ExtraOutputIdentifierNode.
+     * @brief Visits a ReducedCostNode.
      *
-     * @param node A pointer to the ExtraOutputIdentifierNode to be visited.
+     * @param node A pointer to the ReducedCostNode to be visited.
      * @param args Additional arguments to be passed to the visitor's methods.
      *
-     * @return The result of processing the ExtraOutputIdentifierNode.
+     * @return The result of processing the ReducedCostNode.
      */
-    virtual R visit(const Nodes::ExtraOutputIdentifierNode*, Args... args) = 0;
+    virtual R visit(const Nodes::ReducedCostNode*, Args... args) = 0;
 };
 } // namespace Antares::Expressions::Visitors

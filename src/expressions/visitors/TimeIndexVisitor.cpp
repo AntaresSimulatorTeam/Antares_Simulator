@@ -145,7 +145,7 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(
     return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ExtraOutputIdentifierNode* node)
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ReducedCostNode* node)
 {
     if (node->operation() == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST)
     {
