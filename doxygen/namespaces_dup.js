@@ -1149,8 +1149,8 @@ var namespaces_dup =
             [ "ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound" ],
             [ "TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ],
             [ "ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
-            [ "convert", "converter_8h.html#ada2347e748f40b1e85c758563ccbd5e0", null ],
-            [ "convert", "converter_8cpp.html#a0dbfc4098d51cf91c178b6baa33baa55", null ]
+            [ "convert", "yml-system_2converter_8cpp.html#a9f842fbbb321672e7e73e2b80a544ee5", null ],
+            [ "convert", "yml-system_2include_2antares_2io_2inputs_2yml-system_2converter_8h.html#ada2347e748f40b1e85c758563ccbd5e0", null ]
           ] ],
           [ "YmlModel", null, [
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter" ],
@@ -1173,6 +1173,7 @@ var namespaces_dup =
             [ "toString", "Library_8h.html#a4ab8a249c390873b9a32120dff43c548", null ]
           ] ],
           [ "YmlOptimConfig", null, [
+            [ "OptimConfigConverter", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfigConverter.html", null ],
             [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],
@@ -1263,7 +1264,8 @@ var namespaces_dup =
             [ "MASTER", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7a89a1533c37ec9254f22b5e0f29c9c0ff", null ],
             [ "MASTER_AND_SUBPROBLEMS", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7ad7980d7942431594b42f9f74d6fe92c8", null ],
             [ "SUBPROBLEMS", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7ae5f1fb19e86a7c3fdabd4fcabbbaa4bd", null ]
-          ] ]
+          ] ],
+          [ "operator<<", "testOptimConfigConverter_8cpp.html#aae4dbff5124607920b7cad6c92caefab", null ]
         ] ],
         [ "FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", "classAntares_1_1Modeler_1_1FileWriter" ],
         [ "Data", "structAntares_1_1Modeler_1_1Data.html", "structAntares_1_1Modeler_1_1Data" ]
@@ -1442,6 +1444,8 @@ var namespaces_dup =
           [ "loadDataSeries", "loadFiles_8h.html#ae7e06ed8aa17a4652bbe2c62205c3496", null ],
           [ "loadLibraries", "readLibraries_8cpp.html#afcca1b64c07d2560f09018ae21643417", null ],
           [ "loadLibraries", "loadFiles_8h.html#aff904c8613f4c1757a9b56fd397fcb19", null ],
+          [ "loadOptimConfig", "readOptimConfig_8cpp.html#a2a59b3519bf8d56a57904f40155d4e04", null ],
+          [ "loadOptimConfig", "loadFiles_8h.html#a20365890097983fea0c1d013fe96ba7c", null ],
           [ "loadParameters", "readParameters_8cpp.html#a851d9bdb147028b9f37d6bb7d4b68ce3", null ],
           [ "loadParameters", "loadFiles_8h.html#aefa634dcb9ba9c6ba4ec4ac55065fe3b", null ],
           [ "loadScenarioGroupRepository", "loadFiles_8h.html#a0090c27f5dec990dc65e6482653feb99", null ],

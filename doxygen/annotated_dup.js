@@ -513,6 +513,7 @@ var annotated_dup =
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser" ]
           ] ],
           [ "YmlOptimConfig", null, [
+            [ "OptimConfigConverter", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfigConverter.html", null ],
             [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],

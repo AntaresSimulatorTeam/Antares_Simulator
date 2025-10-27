@@ -1288,6 +1288,7 @@ var hierarchy =
     [ "Benchmarking::DurationCollector::OperationTimer", "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html", null ],
     [ "Antares::Optimisation::OptimComponent", "structAntares_1_1Optimisation_1_1OptimComponent.html", null ],
     [ "Antares::Modeler::Config::OptimConfig", "classAntares_1_1Modeler_1_1Config_1_1OptimConfig.html", null ],
+    [ "Antares::IO::Inputs::YmlOptimConfig::OptimConfigConverter", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfigConverter.html", null ],
     [ "Antares::Optimisation::OptimEntityContainer", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html", null ],
     [ "OptimisationsSimulationTable", "classOptimisationsSimulationTable.html", null ],
     [ "Benchmarking::OptimizationInfo", "structBenchmarking_1_1OptimizationInfo.html", null ],
