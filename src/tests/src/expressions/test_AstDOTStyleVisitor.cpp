@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <sstream>
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
@@ -26,8 +27,6 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/AstDOTStyleVisitor.h>
-
-#include <fstream>
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -332,12 +331,12 @@ BOOST_FIXTURE_TEST_CASE(
   dot_visitor_is_run_on_other_complex_expression___resulting_dot_content_as_expected,
   Fixture)
 {
-    std::ofstream dotContentStream("/tmp/ast.dot");
+    std::ostringstream dotContentStream;
 
     AstDOTStyleVisitor astGraphVisitor;
     astGraphVisitor(dotContentStream, makeBiggerExpression());
 
-    /*BOOST_CHECK_EQUAL(dotContentStream.str(), expectedForBiggerDotContent());*/
+    BOOST_CHECK_EQUAL(dotContentStream.str(), expectedForBiggerDotContent());
 }
 
 BOOST_FIXTURE_TEST_CASE(AstDOTStyleVisitor_name, Registry<Node>)
