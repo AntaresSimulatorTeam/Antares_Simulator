@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 // CostVariationInjection[h] - Injection[h+1] + Injection[h]  >= 0
 void ShortTermStorageCostVariationInjectionForward::buildConstraint(int index)
@@ -44,7 +45,7 @@ int& ShortTermStorageCostVariationInjectionForward::ShortTermStorageCostVariatio
 }
 
 bool ShortTermStorageCostVariationInjectionForward::IsConstraintEnabled(
-  const ShortTermStorage::PROPERTIES& properties)
+  const PROPERTIES& properties)
 {
     return properties.penalizeVariationInjection;
 }

@@ -18,18 +18,44 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
-
+//
+#pragma push_macro("ERROR")
+#undef ERROR
+#include <HoursFieldBaseVisitor.h>
+//
 #include <BaseErrorListener.h>
 
-#include <boost/algorithm/string.hpp>
-
-#include "antares/study/parts/short-term-storage/HoursCollectorVisitor.h"
-
 #include "HoursFieldLexer.h"
+//
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
+#pragma pop_macro("ERROR")
 
 namespace Antares::Data::ShortTermStorage
 {
+
+class HoursCollectorVisitor: public HoursFieldBaseVisitor
+{
+public:
+    std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override
+    {
+        std::vector<std::set<int>> result;
+        for (auto groupCtx: ctx->group())
+        {
+            result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
+        }
+        return result;
+    }
+
+    std::any visitGroup(HoursFieldParser::GroupContext* ctx) override
+    {
+        std::set<int> hours;
+        for (auto hourCtx: ctx->hour())
+        {
+            hours.insert(std::stoi(hourCtx->getText()));
+        }
+        return hours;
+    }
+};
 
 class CustomErrorListener final: public antlr4::BaseErrorListener
 {

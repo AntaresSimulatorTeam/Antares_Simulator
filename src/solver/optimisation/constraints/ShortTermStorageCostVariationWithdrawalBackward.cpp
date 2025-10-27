@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 // CostVariationWithdrawal[h] + Withdrawal[h+1] - Withdrawal[h]  >= 0
 void ShortTermStorageCostVariationWithdrawalBackward::buildConstraint(int index)
@@ -43,7 +44,7 @@ int& ShortTermStorageCostVariationWithdrawalBackward::TargetConstraintIndex(int 
 }
 
 bool ShortTermStorageCostVariationWithdrawalBackward::IsConstraintEnabled(
-  const ShortTermStorage::PROPERTIES& properties)
+  const PROPERTIES& properties)
 {
     return properties.penalizeVariationWithdrawal;
 }

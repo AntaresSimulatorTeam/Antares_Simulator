@@ -25,6 +25,8 @@
 #include <memory>
 #include <stdexcept>
 
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
 struct CumulationConstraint
 {
     const std::string name;
@@ -33,7 +35,7 @@ struct CumulationConstraint
 
 CumulationConstraint makeCumulationConstraint(const std::string& variable,
                                               ConstraintBuilder& builder,
-                                              const ShortTermStorage::PROPERTIES& props)
+                                              const PROPERTIES& props)
 {
     if (variable == "withdrawal")
     {

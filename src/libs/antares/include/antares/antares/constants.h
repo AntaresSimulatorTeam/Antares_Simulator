@@ -61,6 +61,9 @@ namespace Antares::Constants
 {
 extern const std::array<unsigned int, MONTHS_PER_YEAR> daysPerMonth;
 extern const unsigned int nbHoursInAWeek;
+constexpr double noiseAmplitude = 1e-3;
+constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa
+
 } // namespace Antares::Constants
 
 enum AntaresConstants

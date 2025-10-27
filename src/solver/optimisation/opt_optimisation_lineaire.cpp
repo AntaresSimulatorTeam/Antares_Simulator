@@ -65,7 +65,8 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     logs.info() << "Solver Criterion File: `" << filename << "'";
 
     buffer.appendFormat("* Optimal criterion value :   %11.10e\n", optimalSolutionCost);
-    writer.addEntryFromBuffer(filename, buffer);
+    std::string bufferStr = buffer.c_str();
+    writer.addEntryFromBuffer(filename, bufferStr);
 }
 
 void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
@@ -81,7 +82,8 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
     {
         buffer.appendFormat("%s\t%11.10e\n", pb.NomDesVariables[s(var)].c_str(), pb.X[s(var)]);
     }
-    writer.addEntryFromBuffer(filename, buffer);
+    std::string bufferStr = buffer.c_str();
+    writer.addEntryFromBuffer(filename, bufferStr);
     buffer.clear();
 
     filename = createMarginalCostFilename(optPeriodStringGenerator, optimizationNumber);
@@ -91,7 +93,8 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
                             pb.NomDesContraintes[s(cont)].c_str(),
                             pb.CoutsMarginauxDesContraintes[s(cont)]);
     }
-    writer.addEntryFromBuffer(filename, buffer);
+    bufferStr = buffer.c_str();
+    writer.addEntryFromBuffer(filename, bufferStr);
     buffer.clear();
 
     filename = createReducedCostFilename(optPeriodStringGenerator, optimizationNumber);
@@ -101,7 +104,8 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
                             pb.NomDesVariables[s(var)].c_str(),
                             pb.CoutsReduits[s(var)]);
     }
-    writer.addEntryFromBuffer(filename, buffer);
+    std::string content = buffer.c_str();
+    writer.addEntryFromBuffer(filename, content);
 }
 
 namespace
