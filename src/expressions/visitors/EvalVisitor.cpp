@@ -209,8 +209,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 
 EvaluationResult EvalVisitor::handleDual(const Nodes::ExtraOutputIdentifierNode* node)
 {
-    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_,
-                                                                   node->index());
+    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, node->index());
 
     if (timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || timeIndex == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)

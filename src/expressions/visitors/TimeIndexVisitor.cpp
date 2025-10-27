@@ -152,8 +152,7 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ExtraOutputIdentifi
         return node->timeIndex();
     }
 
-    const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_,
-                                                                         node->index());
+    const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_, node->index());
 
     return timeIndex;
 }
