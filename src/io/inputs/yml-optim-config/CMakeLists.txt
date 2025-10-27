@@ -1,5 +1,6 @@
 set(SOURCES
         parser.cpp
+        converter.cpp
         decoders.hxx
         include/antares/io/inputs/yml-optim-config/parser.h
 )
@@ -18,6 +19,9 @@ target_include_directories(yml-optim-config
 target_link_libraries(yml-optim-config
         PRIVATE
         yaml-cpp::yaml-cpp
+        Antares::exception
+        PUBLIC
+        Antares::modeler-optim-config
 )
 
 install(DIRECTORY include/antares

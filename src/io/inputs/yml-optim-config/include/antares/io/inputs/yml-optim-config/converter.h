@@ -21,26 +21,16 @@
 
 #pragma once
 
-#include <antares/study/system-model/library.h>
-#include <antares/study/system-model/system.h>
+#include <antares/io/inputs/yml-optim-config/OptimConfig.h>
+#include <antares/modeler/optimConfig/optimConfig.h>
 
-#include "parser.h"
-
-namespace Antares::IO::Inputs::SystemConverter
+namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
-struct TwoFieldsOfSameRole final: std::invalid_argument
+class OptimConfigConverter
 {
-    using std::invalid_argument::invalid_argument;
+public:
+    static Modeler::Config::OptimConfig convert(const OptimConfig& ymlOptimConfig);
 };
 
-struct ConnectingPortToItSelf final: std::invalid_argument
-{
-    using std::invalid_argument::invalid_argument;
-};
-
-ModelerStudy::SystemModel::System convert(
-  const YmlSystem::System& ymlSystem,
-  const std::vector<ModelerStudy::SystemModel::Library>& libraries);
-
-} // namespace Antares::IO::Inputs::SystemConverter
+} // namespace Antares::IO::Inputs::YmlOptimConfig
