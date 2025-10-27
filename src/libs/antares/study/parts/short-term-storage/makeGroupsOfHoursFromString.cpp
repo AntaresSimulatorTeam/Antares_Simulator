@@ -20,6 +20,8 @@
  */
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
+#include <BaseErrorListener.h>
+
 #include <boost/algorithm/string.hpp>
 
 #include "antares/study/parts/short-term-storage/HoursCollectorVisitor.h"
@@ -29,13 +31,15 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-void CustomErrorListener::syntaxError(antlr4::Recognizer*,
-                                      antlr4::Token* offendingSymbol,
-                                      size_t line,
-                                      size_t charPositionInLine,
-                                      const std::string& msg,
-                                      [[maybe_unused]] std::exception_ptr e)
+class CustomErrorListener final: public antlr4::BaseErrorListener
 {
+public:
+    void syntaxError(antlr4::Recognizer* recognizer,
+                     antlr4::Token* offendingSymbol,
+                     size_t line,
+                     size_t charPositionInLine,
+                     const std::string& msg,
+                     std::exception_ptr e) override{
     std::ostringstream os;
     os << "Syntax error at line " << line << ":" << charPositionInLine << " - " << msg << std::endl;
     if (offendingSymbol)
@@ -44,6 +48,9 @@ void CustomErrorListener::syntaxError(antlr4::Recognizer*,
     }
     throw ShortTermStorageAdditionalConstraintsError(os.str());
 }
+
+};
+
 
 class GroupsHours final
 {
