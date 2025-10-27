@@ -62,13 +62,13 @@ target_include_directories(single_problem_api
 
 target_link_libraries(single_problem_api
         PRIVATE
-        Antares::study
         antares-solver-simulation
-        PUBLIC
         Antares::optimization-options
-        Antares::lps
 	model_antares
-	Antares::hydro)
+	Antares::hydro
+        PUBLIC
+        Antares::study
+        Antares::lps)
 
 # TODO move
 add_executable(api_test main.cpp)
