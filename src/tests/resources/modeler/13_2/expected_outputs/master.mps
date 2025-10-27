@@ -9,15 +9,15 @@
 NAME          
 ROWS
  N  COST
- E  DISCRETE_Max_investment_t0_s0
+ E  DISCRETE.Max_investment
 COLUMNS
-    CAND_p_max                     COST                              490
-    DISCRETE_p_max                 COST                              200  DISCRETE_Max_investment_t0_s0       1
-    DISCRETE_nb_units              DISCRETE_Max_investment_t0_s0     -10
+    CAND.p_max               COST                        490
+    DISCRETE.p_max           COST                        200  DISCRETE.Max_investment       1
+    DISCRETE.nb_units        DISCRETE.Max_investment     -10
 RHS
-    RHS                            DISCRETE_Max_investment_t0_s0       0
+    RHS                      DISCRETE.Max_investment       0
 BOUNDS
- UP BOUND                          CAND_p_max                       1000
- PL BOUND                          DISCRETE_p_max
- UP BOUND                          DISCRETE_nb_units                  10
+ UP BOUND                    CAND.p_max                 1000
+ PL BOUND                    DISCRETE.p_max
+ UP BOUND                    DISCRETE.nb_units            10
 ENDATA

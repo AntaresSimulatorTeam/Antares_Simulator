@@ -34,83 +34,83 @@
 system:
   id: case_13_2
   components:
-  - id: my_node
-    model: lib_example_13_2.area
-    parameters:
-    - id: spillage_cost
-      time-dependent: false
-      scenario-dependent: false
-      value: 1
-    - id: ens_cost
-      time-dependent: false
-      scenario-dependent: false
-      value: 501
+    - id: my_node
+      model: lib_example_13_2.area
+      parameters:
+        - id: spillage_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 1
+        - id: ens_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 501
 
-  - id: load
-    model: lib_example_13_2.load
-    parameters:
     - id: load
-      time-dependent: false
-      scenario-dependent: false
-      value: 400
+      model: lib_example_13_2.load
+      parameters:
+        - id: load
+          time-dependent: false
+          scenario-dependent: false
+          value: 400
 
-  - id: already_installed_generator
-    model: lib_example_13_2.generator
-    parameters:
-    - id: p_max
-      scenario-dependent: false
-      time-dependent: false
-      value: 200
-    - id: cost
-      scenario-dependent: false
-      time-dependent: false
-      value: 45
+    - id: already_installed_generator
+      model: lib_example_13_2.generator
+      parameters:
+        - id: p_max
+          scenario-dependent: false
+          time-dependent: false
+          value: 200
+        - id: cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 45
 
-  - id: continuous_generator_candidate
-    model: lib_example_13_2.generator_with_continuous_invest
-    parameters:
-    - id: op_cost
-      scenario-dependent: false
-      time-dependent: false
-      value: 10
-    - id: invest_cost
-      scenario-dependent: false
-      time-dependent: false
-      value: 490
+    - id: continuous_generator_candidate
+      model: lib_example_13_2.generator_with_continuous_invest
+      parameters:
+        - id: op_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 10
+        - id: invest_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 490
 
-  - id: discrete_generator_candidate
-    model: lib_example_13_2.generator_with_discrete_invest
-    parameters:
-    - id: op_cost
-      scenario-dependent: false
-      time-dependent: false
-      value: 10
-    - id: invest_cost
-      scenario-dependent: false
-      time-dependent: false
-      value: 200
-    - id: p_max_per_unit
-      scenario-dependent: false
-      time-dependent: false
-      value: 10
+    - id: discrete_generator_candidate
+      model: lib_example_13_2.generator_with_discrete_invest
+      parameters:
+        - id: op_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 10
+        - id: invest_cost
+          scenario-dependent: false
+          time-dependent: false
+          value: 200
+        - id: p_max_per_unit
+          scenario-dependent: false
+          time-dependent: false
+          value: 10
 
   connections:
-  - component1: my_node
-    port1: balance_port
-    component2: load
-    port2: balance_port
+    - component1: my_node
+      port1: balance_port
+      component2: load
+      port2: balance_port
 
-  - component1: my_node
-    port1: balance_port
-    component2: already_installed_generator
-    port2: balance_port
+    - component1: my_node
+      port1: balance_port
+      component2: already_installed_generator
+      port2: balance_port
 
-  - component1: my_node
-    port1: balance_port
-    component2: continuous_generator_candidate
-    port2: balance_port
+    - component1: my_node
+      port1: balance_port
+      component2: continuous_generator_candidate
+      port2: balance_port
 
-  - component1: my_node
-    port1: balance_port
-    component2: discrete_generator_candidate
-    port2: balance_port
+    - component1: my_node
+      port1: balance_port
+      component2: discrete_generator_candidate
+      port2: balance_port

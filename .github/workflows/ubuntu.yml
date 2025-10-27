@@ -413,7 +413,7 @@ jobs:
         mv _build/antares-*-Ubuntu-22.04.tar.gz _build/antares-cd-Ubuntu-22.04.tar.gz
         mv _build/antares-*-Ubuntu-22.04.deb _build/antares-cd-Ubuntu-22.04.deb
         gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.deb
-        gh release edit continuous-delivery --title "continuous dellivery of $(date +'%Y-%m-%d %H:%M')"
+        gh release edit continuous-delivery --title "continuous delivery (generated $(date +'%Y-%m-%d %H:%M'))"
         #update continuous delivery tag to point to the latest develop commit
         gh api repos/${{ github.repository }}/git/refs/tags/continuous-delivery -X PATCH -f sha=$(git rev-parse HEAD)
 

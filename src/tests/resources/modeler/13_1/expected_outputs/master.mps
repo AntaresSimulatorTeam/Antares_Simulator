@@ -10,7 +10,7 @@ NAME
 ROWS
  N  COST
 COLUMNS
-    CAND_p_max  COST           400
+    CAND.p_max  COST           400
 BOUNDS
- UP BOUND       CAND_p_max    1000
+ UP BOUND       CAND.p_max    1000
 ENDATA
