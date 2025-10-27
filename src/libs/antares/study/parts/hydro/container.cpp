@@ -799,26 +799,48 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
                      const Matrix<double>& waterValues,
                      const uint day)
 {
-    assert((level >= 0. && level <= 100.) && "getWaterValue function : invalid level");
-    double levelUp = ceil(level);
-    double levelDown = floor(level);
-
-    if ((int)(levelUp) == (int)(levelDown))
+    if (level < 0. - 1e-6 || level > 100. + 1e-6)
     {
-        return waterValues[(int)(levelUp)][day];
+        logs.error() << "Invalid level for water values: " << level;
     }
-    return waterValues[(int)(levelUp)][day] * (level - levelDown)
-           + waterValues[(int)(levelDown)][day] * (levelUp - level);
+    int levelDown = floor(level);
+
+    // if level has value like -0.000001 because of numerical precision problems and we ceil it
+    if (levelDown < 0)
+    {
+        levelDown = 0;
+    }
+
+    // special case, we don't want to use the last layer
+    if (levelDown >= 100)
+    {
+        levelDown = 99;
+    }
+    return waterValues[levelDown][day];
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
                            Matrix<double, double>& creditMod,
                            int modType)
 {
-    assert((level >= 0. && level <= 100.) && "getWeeklyModulation function : invalid level");
+    if (level < 0. - 1e-6 || level > 100. + 1e-6)
+    {
+        logs.error() << "Invalid level for weekly modulation: " << level;
+    }
     double valueToReturn = 1.;
     double levelUp = ceil(level);
     double levelDown = floor(level);
+
+    // if level has value like 100.0000001 because of numerical precision problems and we ceil it
+    if (levelDown < 0)
+    {
+        levelDown = 0;
+    }
+    if (levelUp > 100)
+    {
+        levelUp = 100;
+    }
+
     if ((int)(levelUp) == (int)(levelDown))
     {
         valueToReturn = creditMod[(int)(levelUp)][modType];
