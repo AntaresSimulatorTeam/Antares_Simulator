@@ -129,7 +129,7 @@ class NoVariableWithThisName final: public std::runtime_error
 {
 public:
     explicit NoVariableWithThisName(const std::string& name):
-        runtime_error("Model doesn't contains this variable in reduced_cost function: " + name)
+        runtime_error("Model doesn't contain this variable in reduced_cost function: " + name)
     {
     }
 };
@@ -138,7 +138,7 @@ class NoConstraintWithThisName final: public std::runtime_error
 {
 public:
     explicit NoConstraintWithThisName(const std::string& name):
-        runtime_error("Model doesn't contains this constraint in dual function: " + name)
+        runtime_error("Model doesn't contain this constraint in dual function: " + name)
     {
     }
 };
@@ -409,7 +409,7 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* cont
 // TODO implement this
 std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
 {
-    throw NotImplemented("This function doesn't exists: " + context->IDENTIFIER()->getText());
+    throw NotImplemented("This function doesn't exist: " + context->IDENTIFIER()->getText());
 }
 
 Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)
