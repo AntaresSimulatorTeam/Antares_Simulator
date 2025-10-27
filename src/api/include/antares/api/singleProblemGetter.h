@@ -30,7 +30,7 @@ namespace Antares::Solver
 class SingleProblemGetter
 {
 public:
-    SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study);
+    explicit SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study);
 
     ConstantDataFromAntares getConstantData();
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);

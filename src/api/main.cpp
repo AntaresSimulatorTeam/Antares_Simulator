@@ -30,9 +30,9 @@ void print_side_by_side(size_t n, const Vecs&... vecs)
     }
 }
 
-int toInt(const char* in)
+unsigned int toInt(const char* in)
 {
-    return strtol(in, nullptr, 10);
+    return strtoul(in, nullptr, 10);
 }
 
 int main(int argc, char** argv)

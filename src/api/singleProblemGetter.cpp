@@ -96,10 +96,9 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
 
 const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
 {
-    // TODO Use std::find for a single search
-    if (allData_.contains(year)) // We already have data for this year
+    if (auto it = allData_.find(year); it != allData_.end()) // We already have data for this year
     {
-        return allData_.at(year);
+        return it->second;
     }
 
     auto& dataForYear = allData_[year];
