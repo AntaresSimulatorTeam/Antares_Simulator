@@ -51,7 +51,7 @@ set(TARGET_LIBS #No alias
         model_antares
         antares-solver-ts-generator
         shave-peaks-by-remix-storage-gen
-		storage-for-remix-list-sort
+        storage-for-remix-list-sort
 
         # lps : nothing
 
@@ -111,6 +111,7 @@ set(TARGET_LIBS #No alias
         scenario-builder-antlr
         scenario-group-parser
         modeler-optim-config
+        yml-optim-config
 )
 
 install(TARGETS ${TARGET_LIBS}
