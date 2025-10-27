@@ -42,6 +42,6 @@ public:
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
 
 private:
-    std::unique_ptr<Implementation::SingleProblemGetter> impl;
+    std::unique_ptr<Implementation::SingleProblemGetter> impl_;
 };
 } // namespace Antares::Solver

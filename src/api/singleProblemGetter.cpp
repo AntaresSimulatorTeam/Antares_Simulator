@@ -26,7 +26,7 @@
 namespace Antares::Solver
 {
 SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study):
-    impl(std::make_unique<Implementation::SingleProblemGetter>(std::move(study)))
+    impl_(std::make_unique<Implementation::SingleProblemGetter>(std::move(study)))
 {
 }
 
@@ -36,12 +36,12 @@ SingleProblemGetter::~SingleProblemGetter() = default;
 
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
 {
-    return impl->getConstantData();
+    return impl_->getConstantData();
 }
 
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
-    return impl->getWeeklyData(id);
+    return impl_->getWeeklyData(id);
 }
 
 } // namespace Antares::Solver
