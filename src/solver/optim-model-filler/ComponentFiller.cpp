@@ -247,6 +247,13 @@ bool checkTimeSteps(const LinearProblemApi::FillContext& ctx)
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
+Dimensions getDimensions(const LinearProblemApi::FillContext& ctx)
+{
+    const Dimensions dims(IntegerInterval{ctx.getYear(), ctx.getYear()},
+                          IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
+    return dims;
+}
+
 void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
@@ -276,15 +283,11 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                                         variable.Type() == ValueType::BOOL ? 1 : pb.infinity());
         if (variable.isTimeDependent())
         {
-            const Optimisation::Dimensions dim(
-              Optimisation::IntegerInterval{ctx.getYear(),
-                                            ctx.getYear()}, /*TODO Handle range of year ? */
-              Optimisation::IntegerInterval(ctx.getLocalFirstTimeStep(),
-                                            ctx.getLocalLastTimeStep()));
+            const auto dims = getDimensions(ctx);
             // std::visit to handle the 4 cases: double/double, vector/double,
             // double/vector and vector/vector.
             std::visit(
-              [&pb, &variable, this, &dim](const auto& lb_, const auto& ub_)
+              [&pb, &variable, this, &dims](const auto& lb_, const auto& ub_)
               {
                   VariablesBulkAddition(pb, optimEntityContainer_)
                     .addVariable(component_.Id(),
@@ -292,7 +295,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                                  lb_,
                                  ub_,
                                  variable.Type() != ValueType::FLOAT,
-                                 dim);
+                                 dims);
               },
               lb.value(),
               ub.value());
@@ -300,7 +303,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         else
         {
             // No time component
-            const Optimisation::Dimensions dim({}, {});
+            const Dimensions dims({}, {});
 
             VariablesBulkAddition(pb, optimEntityContainer_)
               .addVariable(component_.Id(),
@@ -308,7 +311,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            lb.valueAsDouble(),
                            ub.valueAsDouble(),
                            variable.Type() != ValueType::FLOAT,
-                           dim);
+                           dims);
         }
     }
 }
@@ -342,14 +345,12 @@ void ComponentFiller::addTimeDependentConstraints(
   const Optimisation::LinearProblemApi::FillContext& ctx)
 {
     auto& pb = optimEntityContainer_.Problem();
-    const Optimisation::Dimensions dim(
-      Optimisation::IntegerInterval{ctx.getYear(), ctx.getYear()}, /*TODO Handle range of year ? */
-      Optimisation::IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
+    const auto dims = getDimensions(ctx);
 
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    for (const auto s: dim.getScenarioIndices()) // TODO
+    for (const auto s: dims.getScenarioIndices()) // TODO
     {
-        for (const auto t: dim.getTimesteps())
+        for (const auto t: dims.getTimesteps())
         {
             auto* ct = pb.addConstraint(linear_constraints.lb[t],
                                         linear_constraints.ub[t],

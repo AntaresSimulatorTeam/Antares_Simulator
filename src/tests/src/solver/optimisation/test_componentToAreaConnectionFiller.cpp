@@ -39,8 +39,9 @@ using namespace std::string_literals;
 
 using namespace Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Optimisation::LinearProblemApi;
-using namespace Optimisation::LinearProblemDataImpl;
+using namespace Optimisation;
+using namespace LinearProblemApi;
+using namespace LinearProblemDataImpl;
 
 static const auto libraryYaml = R"(
 library:
@@ -132,8 +133,8 @@ struct ComponentToAreaConnectionFillerFixture
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     std::unique_ptr<Modeler::Data> modelerData;
     std::vector<Library> libraries;
-    Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
-    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
+    ScenarioGroupRepository scenarioGroupRepository;
     std::remove_reference_t<LinearProblemData&> data;
 
     ComponentToAreaConnectionFillerFixture():
@@ -172,9 +173,9 @@ struct ComponentToAreaConnectionFillerFixture
 
     void setUpModelerVariables(unsigned int ts_start,
                                unsigned int ts_end,
-                               Optimisation::OptimEntityContainer& optimEntityContainer)
+                               OptimEntityContainer& optimEntityContainer)
     {
-        const Optimisation::Dimensions dim({}, Optimisation::IntegerInterval(ts_start, ts_end));
+        const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
         for (const auto& component: modelerData->system->Components())
         {
             for (const auto& variable: component.getModel()->Variables())
@@ -184,19 +185,16 @@ struct ComponentToAreaConnectionFillerFixture
                 {
                     for (auto t = ts_start; t <= ts_end; ++t)
                     {
-                        auto name = Optimisation::buildVariableName(component.Id(),
-                                                                    variable.Id(),
-                                                                    {},
-                                                                    t);
+                        auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
                         linearProblem.addVariable(-999, 999, false, name);
                     }
                 }
                 else
                 {
-                    auto name = Optimisation::buildVariableName(component.Id(),
-                                                                variable.Id(),
-                                                                std::nullopt,
-                                                                std::nullopt);
+                    auto name = buildVariableName(component.Id(),
+                                                  variable.Id(),
+                                                  std::nullopt,
+                                                  std::nullopt);
                     linearProblem.addVariable(-999, 999, false, name);
                 }
             }
@@ -238,8 +236,7 @@ struct ComponentToAreaConnectionFillerFixture
         addEmptyConstraints(constraintNames, useNamedProblems, rhs);
     }
 
-    void fillProblem(const FillContext& fillCtx,
-                     Optimisation::OptimEntityContainer& optimEntityContainer)
+    void fillProblem(const FillContext& fillCtx, OptimEntityContainer& optimEntityContainer)
     {
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
 
@@ -259,9 +256,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 {
     setData({4.0});
 
-    Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
-                                                            &data,
-                                                            &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
@@ -303,9 +298,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 {
     setData({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
-    Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
-                                                            &data,
-                                                            &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(10, 11, optimEntityContainer);
@@ -371,9 +364,7 @@ BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
 {
     setData({4.0});
 
-    Optimisation::OptimEntityContainer optimEntityContainer(linearProblem,
-                                                            &data,
-                                                            &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
