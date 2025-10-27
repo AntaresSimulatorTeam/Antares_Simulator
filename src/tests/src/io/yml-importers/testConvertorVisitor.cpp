@@ -425,16 +425,24 @@ BOOST_AUTO_TEST_CASE(dualExpression)
                           .ports = {},
                           .port_field_definitions = {},
                           .constraints = {{"constraintA", ""}},
-                          .binding_constraints = {},
+                          .binding_constraints = {{"constraintB", ""}},
                           .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
+    // constraints
     std::string expression = "dual(constraintA)";
     auto expr = converter.run(expression);
     BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
     auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
     BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
+
+    // binding constraints
+    expression = "dual(constraintB)";
+    expr = converter.run(expression);
+    dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dualNode->value(), "constraintB");
+    BOOST_CHECK_EQUAL(dualNode->index(), 1);
 
     std::string badExpression = "dual(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
@@ -449,7 +457,8 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
       .id = "model0",
       .description = "description",
       .parameters = {},
-      .variables = {{"varP", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
@@ -458,11 +467,12 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
       .extra_outputs = {}};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
-    std::string expression = "reduced_cost(varP)";
+    std::string expression = "reduced_cost(varB)";
     auto expr = converter.run(expression);
     BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
     auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
-    BOOST_CHECK_EQUAL(reducedCostNode->value(), "varP");
+    BOOST_CHECK_EQUAL(reducedCostNode->value(), "varB");
+    BOOST_CHECK_EQUAL(reducedCostNode->index(), 1);
 
     std::string badExpression = "reduced_cost(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
