@@ -35,29 +35,26 @@ using namespace Antares::Modeler;
 namespace Antares::Solver::LoadFiles
 {
 
-const std::string OptimConfigFilename = "optim-config.yml";
-
-static std::string readOptimConfigFile(const fs::path& studyPath)
+static std::string readOptimConfigFile(const fs::path& configPath)
 {
-    auto full_path = studyPath / "input" / OptimConfigFilename;
-    if (!std::filesystem::exists(full_path))
+    if (!std::filesystem::exists(configPath))
     {
-        logs.info() << "Optim config file not found: " << full_path;
+        logs.info() << "Optim config file not found at " << configPath;
         return "";
     }
     try
     {
-        return IO::readFile(full_path);
+        return IO::readFile(configPath);
     }
     catch (const std::runtime_error& e)
     {
-        logs.error() << "Error while trying to read file " << full_path;
+        logs.error() << "Error while trying to read file " << configPath;
         throw ErrorLoadingYaml(e.what());
     }
 }
 
 static YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
-                                                    const std::string& filename)
+                                                    const fs::path& configPath)
 {
     YmlOptimConfig::Parser parser;
     try
@@ -66,7 +63,7 @@ static YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
     }
     catch (const YAML::Exception& e)
     {
-        handleYamlError(e, filename);
+        handleYamlError(e, configPath.string());
         throw ErrorLoadingYaml(e.what());
     }
 }
@@ -86,8 +83,9 @@ static Config::OptimConfig convertOptimConfig(const YmlOptimConfig::OptimConfig&
 
 Config::OptimConfig loadOptimConfig(const fs::path& studyPath)
 {
-    std::string content = readOptimConfigFile(studyPath);
-    const auto&& obj = parseOptimConfig(content, OptimConfigFilename);
+    const fs::path configPath = studyPath / "input" / "optim-config.yml";
+    std::string content = readOptimConfigFile(configPath);
+    const auto&& obj = parseOptimConfig(content, configPath);
     return convertOptimConfig(obj);
 }
 
