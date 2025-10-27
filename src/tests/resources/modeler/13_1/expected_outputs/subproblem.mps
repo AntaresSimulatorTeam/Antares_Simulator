@@ -9,24 +9,24 @@
 NAME          
 ROWS
  N  COST
- E  N_Balance_t0_s0
- L  G1_Max_generation_t0_s0
- L  CAND_Max_generation_t0_s0
+ E  N.Balance
+ L  G1.Max_generation
+ L  CAND.Max_generation
 COLUMNS
-    N_spillage                 COST                            1  N_Balance_t0_s0                -1
-    N_unsupplied_energy        COST                          501  N_Balance_t0_s0                 1
-    G1_generation              COST                           45  N_Balance_t0_s0                 1
-    G1_generation              G1_Max_generation_t0_s0         1
-    CAND_generation            COST                           10  N_Balance_t0_s0                 1
-    CAND_generation            CAND_Max_generation_t0_s0       1
-    CAND_p_max                 CAND_Max_generation_t0_s0      -1
+    N.spillage           COST                      1  N.Balance                -1
+    N.unsupplied_energy  COST                    501  N.Balance                 1
+    G1.generation        COST                     45  N.Balance                 1
+    G1.generation        G1.Max_generation         1
+    CAND.generation      COST                     10  N.Balance                 1
+    CAND.generation      CAND.Max_generation       1
+    CAND.p_max           CAND.Max_generation      -1
 RHS
-    RHS                        N_Balance_t0_s0               400  G1_Max_generation_t0_s0       200
-    RHS                        CAND_Max_generation_t0_s0       0
+    RHS                  N.Balance               400  G1.Max_generation       200
+    RHS                  CAND.Max_generation       0
 BOUNDS
- PL BOUND                      N_spillage
- PL BOUND                      N_unsupplied_energy
- PL BOUND                      G1_generation
- PL BOUND                      CAND_generation
- UP BOUND                      CAND_p_max                   1000
+ PL BOUND                N.spillage
+ PL BOUND                N.unsupplied_energy
+ PL BOUND                G1.generation
+ PL BOUND                CAND.generation
+ UP BOUND                CAND.p_max             1000
 ENDATA
