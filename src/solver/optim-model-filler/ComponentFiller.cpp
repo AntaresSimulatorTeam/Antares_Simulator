@@ -161,6 +161,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
         for (const auto t: dim.getTimesteps())
         {
             linear_problem_.addVariable(lb[t], ub, integer, variableNames_.name(index));
+            index++;
         }
     }
 }
@@ -184,6 +185,7 @@ void VariablesBulkAddition::addVariable(double lb,
         for (const auto t: dim.getTimesteps())
         {
             linear_problem_.addVariable(lb, ub[t], integer, variableNames_.name(index));
+            index++;
         }
     }
 }
@@ -208,6 +210,7 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
         for (const auto t: dim.getTimesteps())
         {
             linear_problem_.addVariable(lb[t], ub[t], integer, variableNames_.name(index));
+            index++;
         }
     }
 }
