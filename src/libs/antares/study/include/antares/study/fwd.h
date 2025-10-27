@@ -31,7 +31,6 @@
 
 #include "antares/antares/antares.h"
 #include "antares/antares/constants.h"
-#include "antares/enums/Enum.hpp"
 
 namespace Antares
 {
@@ -496,6 +495,7 @@ enum class mpsExportStatus : int
 
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
 mpsExportStatus stringToMPSexportStatus(const AnyString& value);
+
 } // namespace Data
 } // namespace Antares
 

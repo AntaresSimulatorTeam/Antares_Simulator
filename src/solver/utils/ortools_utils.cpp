@@ -18,7 +18,6 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <../../libs/antares/enums/include/antares/enums/Enum.hpp>
 #include <filesystem>
 #include <optional>
 #include <ortools/math_opt/cpp/parameters.h>
@@ -26,6 +25,7 @@
 
 #include <boost/algorithm/string/join.hpp>
 
+#include <antares/antares/Enum.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>

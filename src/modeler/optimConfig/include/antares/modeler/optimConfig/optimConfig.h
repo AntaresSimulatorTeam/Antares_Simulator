@@ -24,8 +24,6 @@
 #include <string>
 #include <vector>
 
-#include <antares/enums/Enum.hpp>
-
 namespace Antares::Modeler::Config
 {
 
