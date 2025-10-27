@@ -116,7 +116,8 @@ public:
           Nodes::TimeIndexNode,
           Nodes::TimeSumNode,
           Nodes::AllTimeSumNode,
-          Nodes::ReducedCostNode>();
+          Nodes::ReducedCostNode,
+          Nodes::DualNode>();
 
         try
         {
