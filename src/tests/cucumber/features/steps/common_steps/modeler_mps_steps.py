@@ -53,8 +53,7 @@ def get_problem_data(mps_file: str):
 @step('the master problem is as expected')
 def master_is_same(context):
     expected_mps_path = os.path.join(context.study_path, "expected_outputs", "master.mps")
-    # actual_mps_path = os.path.join(context.output_path, "master.mps")
-    actual_mps_path = os.path.join(context.study_path, "expected_outputs", "master.mps")
+    actual_mps_path = os.path.join(context.output_path, "master.mps")
 
     expected_data = get_problem_data(expected_mps_path)
     actual_data = get_problem_data(actual_mps_path)
