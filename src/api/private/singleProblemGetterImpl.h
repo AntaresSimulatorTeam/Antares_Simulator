@@ -1,3 +1,7 @@
+
+
+#pragma once
+
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/lps/LpsFromAntares.h"
 #include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
