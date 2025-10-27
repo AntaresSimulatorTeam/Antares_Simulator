@@ -24,11 +24,7 @@ Feature: 13 - Invest in object
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is greater than 90999 and lower than 91001
-    And the master problem contains the following variables
-      | name              | objective coef |
-      | CAND_p_max        | 490            |
-      | DISCRETE_p_max    | 200            |
-      | DISCRETE_nb_units |                |
+    And the master problem is as expected
 
     # Study case 13_2 : to test investment problems
     # Simple generation expansion problem on one node, one timestep and one scenario with two candidates: one continuous and one discrete.
