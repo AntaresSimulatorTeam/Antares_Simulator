@@ -68,13 +68,11 @@ static YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
     }
 }
 
-static std::unique_ptr<Config::OptimConfig> convertOptimConfig(
-  const YmlOptimConfig::OptimConfig& obj)
+static Config::OptimConfig convertOptimConfig(const YmlOptimConfig::OptimConfig& obj)
 {
     try
     {
-        return std::make_unique<Config::OptimConfig>(
-          YmlOptimConfig::OptimConfigConverter::convert(obj));
+        return YmlOptimConfig::OptimConfigConverter::convert(obj);
     }
     catch (const std::runtime_error& e)
     {
@@ -83,7 +81,7 @@ static std::unique_ptr<Config::OptimConfig> convertOptimConfig(
     }
 }
 
-std::unique_ptr<Config::OptimConfig> loadOptimConfig(const fs::path& studyPath)
+Config::OptimConfig loadOptimConfig(const fs::path& studyPath)
 {
     const fs::path configPath = studyPath / "input" / "optim-config.yml";
     std::string content = readOptimConfigFile(configPath);
