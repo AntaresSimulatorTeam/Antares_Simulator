@@ -25,6 +25,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/expressions/nodes/Node.h"
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/io/inputs/yml-model/parser.h"
@@ -41,6 +42,7 @@ void checkParameter(const SystemModel::Parameter& parameter,
                     bool timeDependent,
                     bool scenarioDependent)
 {
+    std::cout << "Parameter: " << parameter.Id() << std::endl;
     BOOST_CHECK_EQUAL(parameter.Id(), name);
     BOOST_CHECK_EQUAL(parameter.isTimeDependent(), timeDependent);
     BOOST_CHECK_EQUAL(parameter.isScenarioDependent(), scenarioDependent);
