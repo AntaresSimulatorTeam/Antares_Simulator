@@ -47,7 +47,7 @@ public:
         if (offendingSymbol)
         {
             os << "Offending symbol: " << offendingSymbol->getText() << std::endl;
-    }
+        }
     throw ShortTermStorageAdditionalConstraintsError(os.str());
     }
 };
