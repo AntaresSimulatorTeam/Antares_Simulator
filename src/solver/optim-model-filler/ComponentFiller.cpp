@@ -66,6 +66,7 @@ private:
 void VariableNames::makeNames(const Component& compo, const Variable& var, const Dimensions& dims)
 {
     unsigned index = 0;
+    names_.resize(dims.getScenarioIndices().size() * dims.getTimesteps().size());
     for (const auto& s: dims.getScenarioIndices())
     {
         for (const auto t: dims.getTimesteps())
