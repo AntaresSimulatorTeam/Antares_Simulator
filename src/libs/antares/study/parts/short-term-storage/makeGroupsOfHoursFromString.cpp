@@ -39,16 +39,17 @@ public:
                      size_t line,
                      size_t charPositionInLine,
                      const std::string& msg,
-                     std::exception_ptr e) override{
-    std::ostringstream os;
-    os << "Syntax error at line " << line << ":" << charPositionInLine << " - " << msg << std::endl;
-    if (offendingSymbol)
+                     std::exception_ptr e) override
     {
-        os << "Offending symbol: " << offendingSymbol->getText() << std::endl;
+        std::ostringstream os;
+        os << "Syntax error at line " << line << ":" << charPositionInLine << " - " << msg
+           << std::endl;
+        if (offendingSymbol)
+        {
+            os << "Offending symbol: " << offendingSymbol->getText() << std::endl;
     }
     throw ShortTermStorageAdditionalConstraintsError(os.str());
-}
-
+    }
 };
 
 
