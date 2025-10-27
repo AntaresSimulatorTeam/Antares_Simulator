@@ -93,5 +93,3 @@ library:
         - id: generation_reduced_cost
           expression: reduced_cost(generation)
         
-
-    

@@ -10,7 +10,7 @@
 #
 # This file is part of the Antares project.
 
-   # Study case 10_4 : to test extra-output features
+   # Study case 10_5 : to test extra-output features
    # Small test case with one node (1 thermal cluster, 1 one load)
 
 system:
@@ -81,8 +81,3 @@ system:
       component2: oil_base_zone
       port2: balance_port
 
-
-
-
- 
- 
