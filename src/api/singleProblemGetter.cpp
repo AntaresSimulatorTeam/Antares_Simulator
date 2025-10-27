@@ -94,30 +94,6 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
 }
 
-// TODO duplication (economy)
-void prepareClustersInMustRunMode(const Antares::Data::Study& study,
-                                  Data::Area::ScratchMap& scratchmap,
-                                  uint year)
-{
-    for (uint i = 0; i < study.areas.size(); ++i)
-    {
-        auto& area = *study.areas[i];
-        auto& scratchpad = scratchmap.at(&area);
-
-        std::ranges::fill(scratchpad.mustrunSum, 0);
-
-        auto& mrs = scratchpad.mustrunSum;
-        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-            {
-                mrs[h] += availableProduction[h];
-            }
-        }
-    }
-}
-
 const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
 {
     // TODO Use std::find for a single search
@@ -138,7 +114,11 @@ const Details::YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
     hydroInputsChecker.Execute(year);
     hydroInputsChecker.CheckForErrors();
 
-    prepareClustersInMustRunMode(*study_, scratchmap_, year);
+    Antares::Solver::Simulation::prepareClustersInMustRunMode(
+      *study_,
+      scratchmap_,
+      year,
+      Antares::Data::SimulationMode::Economy);
 
     uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
