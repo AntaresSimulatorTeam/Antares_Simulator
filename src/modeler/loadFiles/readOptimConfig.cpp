@@ -35,21 +35,23 @@ using namespace Antares::Modeler;
 namespace Antares::Solver::LoadFiles
 {
 
+const std::string OptimConfigFilename = "optim-config.yml";
+
 static std::string readOptimConfigFile(const fs::path& studyPath)
 {
-    std::string filename = "optim-config.yml";
-    if (!std::filesystem::exists(studyPath / "input" / filename))
+    auto full_path = studyPath / "input" / OptimConfigFilename;
+    if (!std::filesystem::exists(full_path))
     {
-        logs.info() << "Optim config file not found: " << filename;
+        logs.info() << "Optim config file not found: " << full_path;
         return "";
     }
     try
     {
-        return IO::readFile(studyPath / "input" / filename);
+        return IO::readFile(full_path);
     }
     catch (const std::runtime_error& e)
     {
-        logs.error() << "Error while trying to read file " << filename;
+        logs.error() << "Error while trying to read file " << full_path;
         throw ErrorLoadingYaml(e.what());
     }
 }
@@ -86,9 +88,8 @@ static std::unique_ptr<Config::OptimConfig> convertOptimConfig(
 
 std::unique_ptr<Config::OptimConfig> loadOptimConfig(const fs::path& studyPath)
 {
-    std::string filename = "optim-config.yml";
     std::string content = readOptimConfigFile(studyPath);
-    const auto&& obj = parseOptimConfig(content, filename);
+    const auto&& obj = parseOptimConfig(content, OptimConfigFilename);
     return convertOptimConfig(obj);
 }
 
