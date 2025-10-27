@@ -1,3 +1,4 @@
 behave
 pyyaml
 pandas
+xpress==9.6
