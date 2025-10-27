@@ -358,6 +358,7 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
 std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
 {
     const std::string constraint_id = context->IDENTIFIER()->getText();
+    unsigned index = 0;
     const auto search_constraint = [&](const auto& constraints) -> Node*
     {
         for (const auto& c: constraints)
@@ -367,8 +368,9 @@ std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
                 return static_cast<Node*>(
                   registry_.create<ExtraOutputIdentifierNode>(ExtraOutputIdentifierOperation::DUAL,
                                                               c.id,
-                                                              0)); // TODO index constraint
+                                                              index));
             }
+            ++index;
         }
         return nullptr;
     };

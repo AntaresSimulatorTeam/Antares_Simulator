@@ -152,21 +152,8 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ExtraOutputIdentifi
         return node->timeIndex();
     }
 
-    unsigned constraintLocalIndex = 0;
-    const auto& modelConstraints = component_.getModel()->Constraints();
-    while (constraintLocalIndex < modelConstraints.size()
-           && modelConstraints[constraintLocalIndex].Id() != node->value())
-    {
-        ++constraintLocalIndex;
-    }
-    if (constraintLocalIndex == modelConstraints.size())
-    {
-        throw std::invalid_argument("Constraint " + node->value() + " not found in component "
-                                    + component_.Id());
-    }
-
     const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_,
-                                                                         constraintLocalIndex);
+                                                                         node->index());
 
     return timeIndex;
 }
