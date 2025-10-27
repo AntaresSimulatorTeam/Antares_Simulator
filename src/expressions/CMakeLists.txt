@@ -46,6 +46,7 @@ set(SRC_Expressions
         include/antares/expressions/nodes/VariableNode.h
         include/antares/expressions/nodes/TimeIndexNode.h
         include/antares/expressions/nodes/ReducedCostNode.h
+        include/antares/expressions/nodes/DualNode.h
 
 
         include/antares/expressions/visitors/CloneVisitor.h
