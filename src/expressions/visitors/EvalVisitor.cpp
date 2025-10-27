@@ -206,7 +206,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
     return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
-EvaluationResult EvalVisitor::handleDual(const Nodes::ReducedCostNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
 {
     const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, node->index());
 
@@ -233,7 +233,7 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::ReducedCostNode* node)
     return EvaluationResult{constraintValues};
 }
 
-EvaluationResult EvalVisitor::handleReducedCost(const Nodes::ReducedCostNode* node)
+EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
 {
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
@@ -255,16 +255,6 @@ EvaluationResult EvalVisitor::handleReducedCost(const Nodes::ReducedCostNode* no
         varValues[varInd] = componentVariables[varInd]->reducedCost();
     }
     return EvaluationResult{varValues};
-}
-
-EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
-{
-    if (node->operation() == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST)
-    {
-        return handleReducedCost(node);
-    }
-
-    return handleDual(node);
 }
 
 std::string EvalVisitor::name() const

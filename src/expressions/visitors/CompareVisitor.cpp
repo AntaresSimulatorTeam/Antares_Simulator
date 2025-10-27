@@ -157,12 +157,14 @@ bool CompareVisitor::visit(const Nodes::AllTimeSumNode* alltimeSumNode, const No
 
 bool CompareVisitor::visit(const Nodes::ReducedCostNode* node, const Nodes::Node* other)
 {
-    if (const auto* other_node = dynamic_cast<const Nodes::ReducedCostNode*>(other))
-    {
-        return node->value() == other_node->value() && node->operation() == other_node->operation();
-    }
-    return false;
+    return compareGetValue(node, other);
 }
+
+bool CompareVisitor::visit(const Nodes::DualNode* node, const Nodes::Node* other)
+{
+    return compareGetValue(node, other);
+}
+
 
 std::string CompareVisitor::name() const
 {

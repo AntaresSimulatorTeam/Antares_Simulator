@@ -292,7 +292,14 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
   const Nodes::ReducedCostNode*)
 {
     throw Antares::Error::InvalidArgumentError(
-      "A linear expression can't contain extra output operators like dual and reduced_cost.");
+      "A linear expression can't contain extra output operator reduced_cost.");
+}
+
+Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+  const Nodes::DualNode*)
+{
+    throw Antares::Error::InvalidArgumentError(
+      "A linear expression can't contain extra output operator dual.");
 }
 
 } // Namespace Antares::Optimisation

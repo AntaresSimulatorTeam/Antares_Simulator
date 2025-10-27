@@ -323,8 +323,6 @@ private:
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult visit(const Nodes::ReducedCostNode* node) override;
-
-    EvaluationResult handleReducedCost(const Nodes::ReducedCostNode* node);
-    EvaluationResult handleDual(const Nodes::ReducedCostNode* node);
+    EvaluationResult visit(const Nodes::DualNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

@@ -147,13 +147,12 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(
 
 Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ReducedCostNode* node)
 {
-    if (node->operation() == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST)
-    {
-        return node->timeIndex();
-    }
+    return node->timeIndex();
+}
 
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::DualNode* node)
+{
     const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_, node->index());
-
     return timeIndex;
 }
 

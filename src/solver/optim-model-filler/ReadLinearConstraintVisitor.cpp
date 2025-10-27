@@ -166,4 +166,9 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const ReducedCostNode*)
 {
     throw IllegalNodeException();
 }
+
+LinearConstraint ReadLinearConstraintVisitor::visit(const DualNode*)
+{
+    throw IllegalNodeException();
+}
 } // namespace Antares::Optimisation

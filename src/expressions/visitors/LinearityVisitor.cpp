@@ -124,6 +124,11 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ReducedCostNo
     return LinearStatus::CONSTANT;
 }
 
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::DualNode*)
+{
+    return LinearStatus::CONSTANT;
+}
+
 std::string LinearityVisitor::name() const
 {
     return "LinearityVisitor";

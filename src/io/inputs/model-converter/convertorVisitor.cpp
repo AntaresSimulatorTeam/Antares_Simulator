@@ -365,10 +365,7 @@ std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
         {
             if (c.id == constraint_id)
             {
-                return static_cast<Node*>(
-                  registry_.create<ReducedCostNode>(ExtraOutputIdentifierOperation::DUAL,
-                                                              c.id,
-                                                              index));
+                return static_cast<Node*>(registry_.create<DualNode>(c.id, index));
             }
             ++index;
         }
@@ -395,11 +392,12 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* cont
         const auto& var = variables[index];
         if (var.id == context->IDENTIFIER()->getText())
         {
-            return static_cast<Node*>(registry_.create<ReducedCostNode>(
-              ExtraOutputIdentifierOperation::REDUCED_COST,
-              var.id,
-              index,
-              convertToTimeIndex(var.time_dependent, var.scenario_dependent)));
+            return static_cast<Node*>(
+              registry_.create<ReducedCostNode>(ExtraOutputIdentifierOperation::REDUCED_COST,
+                                                var.id,
+                                                index,
+                                                convertToTimeIndex(var.time_dependent,
+                                                                   var.scenario_dependent)));
         }
     }
 
