@@ -112,7 +112,7 @@ Modeler::Config::OptimConfig OptimConfigConverter::convert(const OptimConfig& ym
     {
         models.push_back(convertModel(ymlModel));
     }
-    return Modeler::Config::OptimConfig(models);
+    return {models};
 }
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig
