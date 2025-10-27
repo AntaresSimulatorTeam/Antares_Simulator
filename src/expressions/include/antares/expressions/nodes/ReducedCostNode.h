@@ -28,25 +28,17 @@
 namespace Antares::Expressions::Nodes
 {
 /**
- * @brief Represents a dual node in a syntax tree, storing a constraint name.
+ * @brief Represents a reduced cost node in a syntax tree, storing a variable name.
  */
-
-enum class ExtraOutputIdentifierOperation
-{
-    DUAL,
-    REDUCED_COST
-};
 
 class ReducedCostNode final: public Leaf<std::string>
 {
 public:
-    explicit ReducedCostNode(const ExtraOutputIdentifierOperation operation,
-                                       const std::string& value,
-                                       const unsigned index,
-                                       const Optimisation::TimeIndex time_index = Optimisation::
-                                         TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
+    explicit ReducedCostNode(const std::string& value,
+                             const unsigned index,
+                             const Optimisation::TimeIndex time_index = Optimisation::TimeIndex::
+                               VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
-        operation_(operation),
         index_(index),
         time_index_(time_index)
     {
@@ -55,11 +47,6 @@ public:
     std::string name() const override
     {
         return "ReducedCostNode";
-    }
-
-    ExtraOutputIdentifierOperation operation() const
-    {
-        return operation_;
     }
 
     unsigned index() const
@@ -73,7 +60,6 @@ public:
     }
 
 private:
-    ExtraOutputIdentifierOperation operation_;
     unsigned index_;
     const Optimisation::TimeIndex time_index_;
 };

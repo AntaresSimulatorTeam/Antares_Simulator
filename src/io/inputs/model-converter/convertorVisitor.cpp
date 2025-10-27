@@ -393,8 +393,7 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* cont
         if (var.id == context->IDENTIFIER()->getText())
         {
             return static_cast<Node*>(
-              registry_.create<ReducedCostNode>(ExtraOutputIdentifierOperation::REDUCED_COST,
-                                                var.id,
+              registry_.create<ReducedCostNode>(var.id,
                                                 index,
                                                 convertToTimeIndex(var.time_dependent,
                                                                    var.scenario_dependent)));

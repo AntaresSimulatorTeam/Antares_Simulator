@@ -428,16 +428,15 @@ BOOST_AUTO_TEST_CASE(dualExpression)
 
     std::string expression = "dual(constraintA)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
-    auto dualNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
+    BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
+    auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
     BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
-    BOOST_CHECK(dualNode->operation() == Nodes::ExtraOutputIdentifierOperation::DUAL);
 
     std::string badExpression = "dual(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
                           std::runtime_error,
                           checkMessage(
-                            "Model doesn't contains this constraint in dual function: abc"));
+                            "Model doesn't contain this constraint in dual function: abc"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
@@ -460,12 +459,10 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
     BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
     auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
     BOOST_CHECK_EQUAL(reducedCostNode->value(), "varP");
-    BOOST_CHECK(reducedCostNode->operation()
-                == Nodes::ExtraOutputIdentifierOperation::REDUCED_COST);
 
     std::string badExpression = "reduced_cost(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
                           std::runtime_error,
                           checkMessage(
-                            "Model doesn't contains this variable in reduced_cost function: abc"));
+                            "Model doesn't contain this variable in reduced_cost function: abc"));
 }
