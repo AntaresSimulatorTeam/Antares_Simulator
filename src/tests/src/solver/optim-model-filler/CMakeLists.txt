@@ -14,5 +14,5 @@ add_boost_test(unit-tests-for-component-filler
         Antares::optim-model-filler
         Antares::linear-problem-data-impl
         Antares::tests::inmemory-modeler
+        mock-modeler-objects
         test_utils_unit)
-

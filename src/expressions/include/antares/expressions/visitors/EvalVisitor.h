@@ -300,10 +300,10 @@ public:
     std::string name() const override;
 
 private:
+    const Optimisation::OptimEntityContainer& optimContainer_;
     const Optimisation::EvaluationContext& context_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
-    const Optimisation::OptimEntityContainer& optimContainer_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;
@@ -322,5 +322,7 @@ private:
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
+    EvaluationResult visit(const Nodes::ReducedCostNode* node) override;
+    EvaluationResult visit(const Nodes::DualNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

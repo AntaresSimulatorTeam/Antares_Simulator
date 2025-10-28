@@ -22,11 +22,9 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/TimeSumNode.h"
-#include "antares/expressions/visitors/CompareVisitor.h"
 
 #include "ExprLexer.h"
 #include "ExprParser.h"
-#include "antlr4-runtime.h"
 
 namespace Antares::IO::Inputs::ModelConverter
 {
@@ -70,6 +68,8 @@ public:
     std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context) override;
     std::any visitPortFieldExpr(ExprParser::PortFieldExprContext* context) override;
     std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
+    std::any visitDual(ExprParser::DualContext* context) override;
+    std::any visitReducedCost(ExprParser::ReducedCostContext* context) override;
 
 private:
     Expressions::Registry<Node>& registry_;
@@ -121,6 +121,24 @@ class NoParameterOrVariableWithThisName final: public std::runtime_error
 public:
     explicit NoParameterOrVariableWithThisName(const std::string& name):
         runtime_error("No parameter or variable found for this identifier: " + name)
+    {
+    }
+};
+
+class NoVariableWithThisName final: public std::runtime_error
+{
+public:
+    explicit NoVariableWithThisName(const std::string& name):
+        runtime_error("Model doesn't contain this variable in reduced_cost function: " + name)
+    {
+    }
+};
+
+class NoConstraintWithThisName final: public std::runtime_error
+{
+public:
+    explicit NoConstraintWithThisName(const std::string& name):
+        runtime_error("Model doesn't contain this constraint in dual function: " + name)
     {
     }
 };
@@ -337,10 +355,58 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
     return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
+std::any ConvertorVisitor::visitDual(ExprParser::DualContext* context)
+{
+    const std::string constraint_id = context->IDENTIFIER()->getText();
+    unsigned index = 0;
+    const auto search_constraint = [&](const auto& constraints) -> Node*
+    {
+        for (const auto& c: constraints)
+        {
+            if (c.id == constraint_id)
+            {
+                return static_cast<Node*>(registry_.create<DualNode>(c.id, index));
+            }
+            ++index;
+        }
+        return nullptr;
+    };
+
+    if (Node* node = search_constraint(model_.constraints))
+    {
+        return node;
+    }
+    if (Node* node = search_constraint(model_.binding_constraints))
+    {
+        return node;
+    }
+
+    throw NoConstraintWithThisName(constraint_id);
+}
+
+std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* context)
+{
+    const auto& variables = model_.variables;
+    for (std::size_t index = 0; index < variables.size(); ++index)
+    {
+        const auto& var = variables[index];
+        if (var.id == context->IDENTIFIER()->getText())
+        {
+            return static_cast<Node*>(
+              registry_.create<ReducedCostNode>(var.id,
+                                                index,
+                                                convertToTimeIndex(var.time_dependent,
+                                                                   var.scenario_dependent)));
+        }
+    }
+
+    throw NoVariableWithThisName(context->IDENTIFIER()->getText());
+}
+
 // TODO implement this
 std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
 {
-    throw NotImplemented("Node function not implemented yet");
+    throw NotImplemented("This function doesn't exist: " + context->IDENTIFIER()->getText());
 }
 
 Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)

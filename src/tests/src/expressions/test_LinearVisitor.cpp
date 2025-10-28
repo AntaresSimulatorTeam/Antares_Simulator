@@ -30,6 +30,7 @@
 #include <antares/expressions/visitors/LinearStatus.h>
 #include <antares/expressions/visitors/LinearityVisitor.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/modeler-optimisation-container/TimeIndex.h>
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -361,6 +362,32 @@ BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, Registry<Node>)
     Node* expr1 = create<AllTimeSumNode>(var1);
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
                 == LinearStatus::CONSTANT); // because var1 is linear
+}
+
+BOOST_FIXTURE_TEST_CASE(dual_reducedCost, Registry<Node>)
+{
+    Node* dual = create<DualNode>("constraint1", 0);
+    BOOST_CHECK_EXCEPTION(LinearityVisitor().dispatch(dual),
+                          NodeTypeShouldBeInExtraOutput,
+                          [](const NodeTypeShouldBeInExtraOutput& e)
+                          {
+                              return std::string(e.what())
+                                     == "This type of node: 'dual' should only be used in "
+                                        "extra outputs expressions";
+                          });
+
+    Node* reducedCost = create<ReducedCostNode>(
+      "constraint1",
+      0,
+      Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EXCEPTION(LinearityVisitor().dispatch(reducedCost),
+                          NodeTypeShouldBeInExtraOutput,
+                          [](const NodeTypeShouldBeInExtraOutput& e)
+                          {
+                              return std::string(e.what())
+                                     == "This type of node: 'reduced_cost' should only be used in "
+                                        "extra outputs expressions";
+                          });
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_node_cases, Registry<Node>)
