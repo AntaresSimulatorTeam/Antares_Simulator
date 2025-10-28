@@ -503,6 +503,7 @@ struct MockMipSolution: IMipSolution
         return 11.18;
     }
 };
+
 struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
 {
     void addRandomVariables(const FillContext& fillContext,
