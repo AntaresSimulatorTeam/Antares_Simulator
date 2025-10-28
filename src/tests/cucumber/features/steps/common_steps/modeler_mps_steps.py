@@ -18,13 +18,12 @@ def get_problem_data(mps_file: str):
     }
 
     col_names = prob.getnamelist(2, 0, cols - 1) if cols > 0 else []
-    obj_coeffs = []
-    prob.getobj(obj_coeffs, 0, cols - 1)
-    lower_bounds = []
-    prob.getlb(lower_bounds, 0, cols - 1)
-    upper_bounds = []
-    prob.getub(upper_bounds, 0, cols - 1)
-
+    if cols > 0:
+        prob.getobj(obj_coeffs, 0, cols - 1)
+    if cols > 0:
+        prob.getlb(lower_bounds, 0, cols - 1)
+    if cols > 0:
+        prob.getub(upper_bounds, 0, cols - 1)
     print(f"Cols : {data["cols"]}")
     print(f"Col name size: {len(col_names)}\n")
     for i in range(data["cols"]):
@@ -36,8 +35,7 @@ def get_problem_data(mps_file: str):
         }
 
     row_names = prob.getnamelist(1, 0, rows - 1) if rows > 0 else []
-    if data["rows"] > 0:
-        rhs = []
+    if rows > 0:
         prob.getrhs(rhs, 0, rows - 1)
         row_types = []
         prob.getrowtype(row_types, 0, rows - 1)
@@ -50,14 +48,7 @@ def get_problem_data(mps_file: str):
     return data
 
 
-@step('the master problem is as expected')
-def master_is_same(context):
-    expected_mps_path = os.path.join(context.study_path, "expected_outputs", "master.mps")
-    actual_mps_path = os.path.join(context.output_path, "master.mps")
-
-    expected_data = get_problem_data(expected_mps_path)
-    actual_data = get_problem_data(actual_mps_path)
-
+def problems_are_same(expected_data, actual_data):
     assert expected_data["rows"] == actual_data["rows"], "Number of rows does not match"
     assert expected_data["cols"] == actual_data["cols"], "Number of columns does not match"
 
@@ -75,3 +66,27 @@ def master_is_same(context):
         actual_con_data = actual_data["cons"][name]
         assert_double_close(con_data["rhs"], actual_con_data["rhs"], 1e-6)
         assert con_data["type"] == actual_con_data["type"]
+
+
+@step('the master problem is as expected')
+def master_is_same(context):
+    expected_mps_path = os.path.join(context.study_path, "expected_outputs", "master.mps")
+    actual_mps_path = os.path.join(context.output_path, "master.mps")
+
+    expected_data = get_problem_data(expected_mps_path)
+    actual_data = get_problem_data(actual_mps_path)
+
+    problems_are_same(expected_data, actual_data)
+
+
+@step('the sub problems are as expected')
+def subproblems_are_same(context):
+    for row in context.table:
+        sub_problem_name = row["Sub problem name (mps file)"]
+        expected_mps_path = os.path.join(context.study_path, "expected_outputs", sub_problem_name)
+        actual_mps_path = os.path.join(context.output_path, sub_problem_name)
+
+        expected_data = get_problem_data(expected_mps_path)
+        actual_data = get_problem_data(actual_mps_path)
+        print(f"Comparing sub problem: {sub_problem_name}")
+        problems_are_same(expected_data, actual_data)

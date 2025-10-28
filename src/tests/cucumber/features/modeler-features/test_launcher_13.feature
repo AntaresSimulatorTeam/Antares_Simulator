@@ -25,6 +25,9 @@ Feature: 13 - Invest in object
     Then the simulation succeeds
     And the objective value is greater than 90999 and lower than 91001
     And the master problem is as expected
+    And the sub problems are as expected
+    | Sub problem name (mps file) |
+    | subproblem.mps              |
 
     # Study case 13_2 : to test investment problems
     # Simple generation expansion problem on one node, one timestep and one scenario with two candidates: one continuous and one discrete.
