@@ -34,6 +34,7 @@ struct Data
     std::unique_ptr<ModelerStudy::SystemModel::System> system;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    std::optional<Config::OptimConfig> optimConfig;
 };
 
 } // namespace Antares::Modeler

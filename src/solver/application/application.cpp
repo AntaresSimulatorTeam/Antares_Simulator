@@ -100,8 +100,25 @@ bool Application::handleOptions(const Data::StudyLoadOptions& options)
     return true;
 }
 
+void Application::LogMessageStack(std::vector<std::pair<LogType, std::string>>& stack)
+{
+    for (const auto& [level, message]: stack)
+    {
+        switch (level)
+        {
+        case Application::LogType::Error:
+            logs.error() << message;
+            break;
+        case Application::LogType::Warning:
+            logs.warning() << message;
+            break;
+        }
+    }
+}
+
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
+    logs.callback.connect(this, &Application::onLogMessage);
     auto& study = *pStudy;
 
     // Name of the simulation
@@ -187,22 +204,25 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Errors
-    if (pErrorCount || pWarningCount)
+    if (pErrorCount > 0)
     {
-        if (pErrorCount || !pSettings.ignoreWarningsErrors)
+        if (!pSettings.ignoreLoadingErrors)
         {
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue
             LogDisplayErrorInfos(pErrorCount, pWarningCount, "The simulation must stop.");
+            LogMessageStack(messagesStack);
             throw FatalError("The simulation must stop.");
         }
         else
         {
             LogDisplayErrorInfos(
-              0,
+              pErrorCount,
               pWarningCount,
               "As requested, the warnings can be ignored and the simulation will continue",
               false /* not an error */);
+            logs.info() << "However here is the list of errors:";
+            LogMessageStack(messagesStack);
             // Actually importing the log file is useless here.
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
@@ -254,8 +274,6 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
     WriteCommandLineIntoLogs(pArgc, pArgv);
 
     logs.info() << "  :: log filename: " << logs.logfile();
-
-    logs.callback.connect(this, &Application::onLogMessage);
 
     pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
 
@@ -370,16 +388,18 @@ void Application::prepare(int argc, const char* argv[])
     pStudy->parameters.optOptions.initializeWith(options.solverOptions);
 }
 
-void Application::onLogMessage(int level, const std::string& /*message*/)
+void Application::onLogMessage(int level, const std::string& message)
 {
     switch (level)
     {
     case Yuni::Logs::Verbosity::Warning::level:
         ++pWarningCount;
+        messagesStack.emplace_back(LogType::Warning, message);
         break;
     case Yuni::Logs::Verbosity::Error::level:
     case Yuni::Logs::Verbosity::Fatal::level:
         ++pErrorCount;
+        messagesStack.emplace_back(LogType::Error, message);
         break;
     default:
         break;
@@ -487,6 +507,18 @@ void Application::writeExectutionInfo()
     }
 
     logTotalTime(pDurationCollector.getTime(totalTimeKey));
+    if (pErrorCount == 0 && pWarningCount > 0)
+    {
+        logs.warning()
+          << "Simulation completed but there were some warnings during loading. Here is the list:";
+        LogMessageStack(messagesStack);
+    }
+    if (pErrorCount > 0)
+    {
+        logs.error()
+          << "Simulation completed but there were some errors during loading. Here is the list:";
+        LogMessageStack(messagesStack);
+    }
 
     // If no writer is available, we can't write
     if (!resultWriter)
