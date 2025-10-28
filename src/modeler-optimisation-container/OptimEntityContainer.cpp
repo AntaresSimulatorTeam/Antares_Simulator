@@ -40,6 +40,7 @@ void OptimEntityContainer::addFromSystemComponents(
 {
     optimComponents_.clear();
     optimComponents_.reserve(components.size());
+    unsigned variableGlobalIndex = 0;
     for (const auto& component: components)
     {
         const auto* model = component.getModel();
@@ -47,7 +48,6 @@ void OptimEntityContainer::addFromSystemComponents(
         std::vector<unsigned int> modelVariableGlobalIndices;
         modelVariableGlobalIndices.resize(variables.size());
 
-        unsigned variableGlobalIndex = 0;
         for (auto variableLocalIndex = 0; variableLocalIndex < variables.size();
              ++variableLocalIndex)
         {
