@@ -24,6 +24,7 @@
 #include <numeric>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/InvalidNode.h>
 #include <antares/expressions/visitors/LinearStatus.h>
 
 namespace Antares::Expressions::Visitors
@@ -121,12 +122,12 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNod
 
 LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ReducedCostNode*)
 {
-    return LinearStatus::CONSTANT;
+    throw NodeTypeShouldBeInExtraOutput("reduced_cost");
 }
 
 LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::DualNode*)
 {
-    return LinearStatus::CONSTANT;
+    throw NodeTypeShouldBeInExtraOutput("dual");
 }
 
 std::string LinearityVisitor::name() const

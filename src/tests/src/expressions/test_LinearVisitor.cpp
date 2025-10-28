@@ -363,6 +363,19 @@ BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, Registry<Node>)
                 == LinearStatus::CONSTANT); // because var1 is linear
 }
 
+BOOST_FIXTURE_TEST_CASE(dual_reducedCost, Registry<Node>)
+{
+    Node* dual = create<DualNode>("constraint1", 0);
+    BOOST_CHECK_EXCEPTION(LinearityVisitor().dispatch(dual),
+                          NodeTypeShouldBeInExtraOutput,
+                          [](const NodeTypeShouldBeInExtraOutput& e)
+                          {
+                              return std::string(e.what())
+                                     == "This type of node: 'dual' should only be used in "
+                                        "extra outputs expressions";
+                          });
+}
+
 BOOST_FIXTURE_TEST_CASE(sum_node_cases, Registry<Node>)
 {
     LinearityVisitor linearVisitor;
