@@ -350,6 +350,7 @@ void SetInitialHydroLevel(Data::Study& study,
           if (updatePreviousLevel)
           {
               double capacity = area.hydro.reservoirCapacity;
+
               problem.previousSimulationFinalLevel[area.index] = hydroVentilationResults[area.index]
                                                                    .NiveauxReservoirsDebutJours
                                                                      [firstDaySimu]
@@ -361,7 +362,7 @@ void SetInitialHydroLevel(Data::Study& study,
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
-                                     std::vector<std::vector<double>>& thermalNoises,
+                                     const std::vector<std::vector<double>>& thermalNoises,
                                      unsigned int year)
 {
     int hourInYear = PasDeTempsDebut;
@@ -469,6 +470,44 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
     firstOptStat.reset();
     secondOptStat.reset();
+}
+
+void prepareClustersInMustRunMode(Data::Study& study,
+                                  Data::Area::ScratchMap& scratchmap,
+                                  uint year,
+                                  Data::SimulationMode mode)
+{
+    for (uint i = 0; i < study.areas.size(); ++i)
+    {
+        auto& area = *study.areas[i];
+        auto& scratchpad = scratchmap.at(&area);
+
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+        if (mode == Data::SimulationMode::Adequacy)
+        {
+            std::ranges::fill(scratchpad.originalMustrunSum, 0);
+        }
+
+        auto& mrs = scratchpad.mustrunSum;
+        auto& adq = scratchpad.originalMustrunSum;
+
+        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            {
+                mrs[h] += availableProduction[h];
+            }
+            if (cluster->mustrunOrigin && mode == Data::SimulationMode::Adequacy)
+            {
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                {
+                    adq[h] += 2 * availableProduction[h]; // Why do we add the available production
+                                                          // twice ?
+                }
+            }
+        }
+    }
 }
 
 } // namespace Antares::Solver::Simulation

@@ -45,6 +45,8 @@ public:
         return "adequacy";
     }
 
+    static constexpr Data::SimulationMode mode = Data::SimulationMode::Adequacy;
+
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -85,11 +87,6 @@ protected:
     void incrementProgression(Progression::Task& progression) const;
 
     void simulationEnd();
-
-    /*!
-    ** \brief Prepare clusters in 'must-run' mode
-    */
-    void prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year);
 
     void initializeState(Variable::State& state, uint numSpace);
 

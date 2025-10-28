@@ -29,6 +29,7 @@
 #include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
+#include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/numspace_manager.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/random.h"
@@ -147,7 +148,7 @@ public:
         Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
 
         // 3 - Preparing data related to Clusters in 'must-run' mode
-        simulation_->prepareClustersInMustRunMode(scratchmap, y);
+        prepareClustersInMustRunMode(study, scratchmap, y, Impl::mode);
 
         // 4 - Hydraulic ventilation
         pDurationCollector("hydro_ventilation") << [this, &scratchmap, &randomReservoirLevel]
