@@ -18,6 +18,9 @@ def get_problem_data(mps_file: str):
     }
 
     col_names = prob.getnamelist(2, 0, cols - 1) if cols > 0 else []
+    obj_coeffs = []
+    lower_bounds = []
+    upper_bounds = []
     if cols > 0:
         prob.getobj(obj_coeffs, 0, cols - 1)
     if cols > 0:
@@ -35,6 +38,7 @@ def get_problem_data(mps_file: str):
         }
 
     row_names = prob.getnamelist(1, 0, rows - 1) if rows > 0 else []
+    rhs = []
     if rows > 0:
         prob.getrhs(rhs, 0, rows - 1)
         row_types = []
@@ -90,3 +94,42 @@ def subproblems_are_same(context):
         actual_data = get_problem_data(actual_mps_path)
         print(f"Comparing sub problem: {sub_problem_name}")
         problems_are_same(expected_data, actual_data)
+
+
+def parse_structure_file(file_path: str):
+    """
+    Parses a structure file and returns a dictionary of problems.
+    The file format is expected to be: problem_name candidate_name value
+    """
+    problems = {}
+    if not os.path.exists(file_path):
+        return problems
+
+    with open(file_path, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split()
+            if len(parts) != 3:
+                continue
+            problem_name, candidate_name, value = parts
+            if problem_name not in problems:
+                problems[problem_name] = {}
+            problems[problem_name][candidate_name] = value
+    return problems
+
+
+@step('the structure are exported properly')
+def structure_is_exported_properly(context):
+    expected_structure_path = os.path.join(context.study_path, "expected_outputs", "structure.txt")
+    actual_structure_path = os.path.join(context.output_path, "structure.txt")
+
+    expected_problems = parse_structure_file(expected_structure_path)
+    actual_problems = parse_structure_file(actual_structure_path)
+
+    assert expected_problems.keys() == actual_problems.keys(), "Problem names do not match"
+
+    for problem_name, expected_candidates in expected_problems.items():
+        actual_candidates = actual_problems[problem_name]
+        assert expected_candidates == actual_candidates, f"Candidates for problem {problem_name} do not match"
