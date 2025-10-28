@@ -53,23 +53,48 @@ def get_problem_data(mps_file: str):
 
 
 def problems_are_same(expected_data, actual_data):
-    assert expected_data["rows"] == actual_data["rows"], "Number of rows does not match"
-    assert expected_data["cols"] == actual_data["cols"], "Number of columns does not match"
+    errors = []
+    if expected_data["rows"] != actual_data["rows"]:
+        errors.append(f"Number of rows does not match: expected={expected_data['rows']}, actual={actual_data['rows']}")
+    if expected_data["cols"] != actual_data["cols"]:
+        errors.append(
+            f"Number of columns does not match: expected={expected_data['cols']}, actual={actual_data['cols']}")
 
-    assert len(expected_data["vars"]) == len(actual_data["vars"])
-    for name, var_data in expected_data["vars"].items():
-        assert name in actual_data["vars"]
-        actual_var_data = actual_data["vars"][name]
-        assert_double_close(var_data["obj"], actual_var_data["obj"], 1e-6)
-        assert_double_close(var_data["lb"], actual_var_data["lb"], 1e-6)
-        assert_double_close(var_data["ub"], actual_var_data["ub"], 1e-6)
+    if len(expected_data["vars"]) != len(actual_data["vars"]):
+        errors.append(
+            f"Number of variables does not match: expected={len(expected_data['vars'])}, actual={len(actual_data['vars'])}")
+    else:
+        for name, var_data in expected_data["vars"].items():
+            if name not in actual_data["vars"]:
+                errors.append(f"Variable '{name}' not found in actual data")
+                continue
+            actual_var_data = actual_data["vars"][name]
+            error = check_double_close(var_data["obj"], actual_var_data["obj"], 1e-6, f"Var '{name}' obj")
+            if error:
+                errors.append(error)
+            error = check_double_close(var_data["lb"], actual_var_data["lb"], 1e-6, f"Var '{name}' lb")
+            if error:
+                errors.append(error)
+            error = check_double_close(var_data["ub"], actual_var_data["ub"], 1e-6, f"Var '{name}' ub")
+            if error:
+                errors.append(error)
 
-    assert len(expected_data["cons"]) == len(actual_data["cons"])
-    for name, con_data in expected_data["cons"].items():
-        assert name in actual_data["cons"]
-        actual_con_data = actual_data["cons"][name]
-        assert_double_close(con_data["rhs"], actual_con_data["rhs"], 1e-6)
-        assert con_data["type"] == actual_con_data["type"]
+    if len(expected_data["cons"]) != len(actual_data["cons"]):
+        errors.append(
+            f"Number of constraints does not match: expected={len(expected_data['cons'])}, actual={len(actual_data['cons'])}")
+    else:
+        for name, con_data in expected_data["cons"].items():
+            if name not in actual_data["cons"]:
+                errors.append(f"Constraint '{name}' not found in actual data")
+                continue
+            actual_con_data = actual_data["cons"][name]
+            error = check_double_close(con_data["rhs"], actual_con_data["rhs"], 1e-6, f"Con '{name}' rhs")
+            if error:
+                errors.append(error)
+            if con_data["type"] != actual_con_data["type"]:
+                errors.append(
+                    f"Con '{name}' type does not match: expected={con_data['type']}, actual={actual_con_data['type']}")
+    return errors
 
 
 @step('the master problem is as expected')
@@ -80,11 +105,14 @@ def master_is_same(context):
     expected_data = get_problem_data(expected_mps_path)
     actual_data = get_problem_data(actual_mps_path)
 
-    problems_are_same(expected_data, actual_data)
+    errors = problems_are_same(expected_data, actual_data)
+    if errors:
+        raise AssertionError("\n".join(errors))
 
 
 @step('the sub problems are as expected')
 def subproblems_are_same(context):
+    all_errors = []
     for row in context.table:
         sub_problem_name = row["Sub problem name (mps file)"]
         expected_mps_path = os.path.join(context.study_path, "expected_outputs", sub_problem_name)
@@ -93,7 +121,12 @@ def subproblems_are_same(context):
         expected_data = get_problem_data(expected_mps_path)
         actual_data = get_problem_data(actual_mps_path)
         print(f"Comparing sub problem: {sub_problem_name}")
-        problems_are_same(expected_data, actual_data)
+        errors = problems_are_same(expected_data, actual_data)
+        if errors:
+            all_errors.append(f"Subproblem '{sub_problem_name}' has errors:")
+            all_errors.extend(errors)
+    if all_errors:
+        raise AssertionError("\n".join(all_errors))
 
 
 def parse_structure_file(file_path: str):
