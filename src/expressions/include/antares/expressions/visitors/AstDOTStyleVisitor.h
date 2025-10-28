@@ -138,6 +138,7 @@ private:
     void visit(const Nodes::AllTimeSumNode* node, std::ostream& os) override;
     void visit(const Nodes::ReducedCostNode* node, std::ostream& os) override;
     void visit(const Nodes::DualNode* node, std::ostream& os) override;
+    void visit(const Nodes::PowerNode* node, std::ostream& os) override;
 
     void computeNumberNodesPerType();
     void makeLegend(std::ostream& os);

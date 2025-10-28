@@ -21,6 +21,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
+#include "antares/expressions/nodes/PowerNode.h"
 #include "antares/expressions/nodes/TimeSumNode.h"
 
 #include "ExprLexer.h"
@@ -53,6 +54,7 @@ public:
     std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override;
     std::any visitTimeShift(ExprParser::TimeShiftContext* context) override;
     std::any visitFunction(ExprParser::FunctionContext* context) override;
+    std::any visitPower(ExprParser::PowerContext* context) override;
 
     std::any visitTimeSum(ExprParser::TimeSumContext* context) override;
     std::any visitAllTimeSum(ExprParser::AllTimeSumContext* context) override;
@@ -413,6 +415,13 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ReducedCostContext* cont
 std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
 {
     throw NotImplemented("This function doesn't exist: " + context->IDENTIFIER()->getText());
+}
+
+std::any ConvertorVisitor::visitPower(ExprParser::PowerContext* context)
+{
+    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
+    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
+    return static_cast<Node*>(registry_.create<PowerNode>(left, right));
 }
 
 Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)

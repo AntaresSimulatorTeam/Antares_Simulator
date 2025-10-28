@@ -150,6 +150,11 @@ std::string PrintVisitor::visit(const Nodes::DualNode* node)
     return "dual(" + node->value() + ")";
 }
 
+std::string PrintVisitor::visit(const Nodes::PowerNode* node)
+{
+    return "(" + dispatch(node->left()) + "^" + dispatch(node->right()) + ")";
+}
+
 std::string PrintVisitor::name() const
 {
     return "PrintVisitor";

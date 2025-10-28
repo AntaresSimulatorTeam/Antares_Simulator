@@ -156,6 +156,11 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::DualNode* node)
     return timeIndex;
 }
 
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PowerNode* node)
+{
+    return dispatch(node->left()) | dispatch(node->right());
+}
+
 TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
                                    const ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),

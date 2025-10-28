@@ -104,6 +104,7 @@ public:
           Nodes::SubtractionNode,
           Nodes::MultiplicationNode,
           Nodes::DivisionNode,
+          Nodes::PowerNode,
           Nodes::EqualNode,
           Nodes::LessThanOrEqualNode,
           Nodes::GreaterThanOrEqualNode,
@@ -316,5 +317,7 @@ public:
      * @return The result of processing the DualNode.
      */
     virtual R visit(const Nodes::DualNode*, Args... args) = 0;
+
+    virtual R visit(const Nodes::PowerNode*, Args... args) = 0;
 };
 } // namespace Antares::Expressions::Visitors

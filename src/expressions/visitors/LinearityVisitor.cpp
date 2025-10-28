@@ -26,6 +26,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/InvalidNode.h>
 #include <antares/expressions/visitors/LinearStatus.h>
+#include "antares/expressions/nodes/PowerNode.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -128,6 +129,19 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ReducedCostNo
 LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::DualNode*)
 {
     throw NodeTypeShouldBeInExtraOutput("dual");
+}
+
+LinearStatus LinearityVisitor::visit(const Nodes::PowerNode* node)
+{
+    // A power node is linear only if the exponent is 1 (i.e., the right child is a literal node
+    // with value 1)
+    LinearStatus baseStatus = dispatch(node->left());
+    const auto* exponentNode = dynamic_cast<const Nodes::LiteralNode*>(node->right());
+    if (exponentNode && exponentNode->value() == 1.0)
+    {
+        return baseStatus;
+    }
+    return LinearStatus::NON_LINEAR;
 }
 
 std::string LinearityVisitor::name() const

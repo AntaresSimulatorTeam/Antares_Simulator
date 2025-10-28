@@ -257,6 +257,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
     return EvaluationResult{varValues};
 }
 
+EvaluationResult EvalVisitor::visit(const Nodes::PowerNode* node)
+{
+    return dispatch(node->left()).pow(dispatch(node->right()));
+}
+
 std::string EvalVisitor::name() const
 {
     return "EvalVisitor";
@@ -317,6 +322,11 @@ EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const
         ret += operator[](t);
     }
     return ret;
+}
+
+EvaluationResult EvaluationResult::pow(const EvaluationResult& exponent) const
+{
+    return evaluateBinaryOperation(exponent, std::pow<double, double>);
 }
 
 EvaluationResult EvaluationResult::operator[](int timeIndex) const

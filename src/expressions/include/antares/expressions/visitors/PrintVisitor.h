@@ -53,5 +53,6 @@ private:
     std::string visit(const Nodes::AllTimeSumNode* node) override;
     std::string visit(const Nodes::ReducedCostNode* node) override;
     std::string visit(const Nodes::DualNode* node) override;
+    std::string visit(const Nodes::PowerNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

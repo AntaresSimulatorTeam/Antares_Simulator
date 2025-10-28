@@ -59,6 +59,7 @@ private:
     Optimisation::TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
     Optimisation::TimeIndex visit(const Nodes::ReducedCostNode* node) override;
     Optimisation::TimeIndex visit(const Nodes::DualNode* node) override;
+    Optimisation::TimeIndex visit(const Nodes::PowerNode* node) override;
 
     std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
 

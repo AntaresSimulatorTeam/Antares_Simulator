@@ -29,6 +29,7 @@ class SumNode;
 class SubtractionNode;
 class MultiplicationNode;
 class DivisionNode;
+class PowerNode;
 class EqualNode;
 class LessThanOrEqualNode;
 class GreaterThanOrEqualNode;

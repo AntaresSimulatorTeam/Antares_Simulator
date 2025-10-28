@@ -298,4 +298,11 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
       "A linear expression can't contain extra output operator dual.");
 }
 
+Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+  const Nodes::PowerNode*)
+{
+    throw Antares::Error::InvalidArgumentError(
+      "A linear expression can't contain power operators.");
+}
+
 } // Namespace Antares::Optimisation

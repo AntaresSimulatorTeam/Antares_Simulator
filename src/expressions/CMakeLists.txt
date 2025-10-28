@@ -23,6 +23,7 @@ set(SRC_Expressions
 
         NodeRegistry.cpp
         include/antares/expressions/NodeRegistry.h
+        include/antares/expressions/nodes/AllTimeSumNode.h
         include/antares/expressions/nodes/SumNode.h
         include/antares/expressions/nodes/ParentNode.h
         include/antares/expressions/nodes/BinaryNode.h
@@ -41,6 +42,7 @@ set(SRC_Expressions
         include/antares/expressions/nodes/ParameterNode.h
         include/antares/expressions/nodes/PortFieldNode.h
         include/antares/expressions/nodes/PortFieldSumNode.h
+        include/antares/expressions/nodes/PowerNode.h
         include/antares/expressions/nodes/SubtractionNode.h
         include/antares/expressions/nodes/UnaryNode.h
         include/antares/expressions/nodes/VariableNode.h

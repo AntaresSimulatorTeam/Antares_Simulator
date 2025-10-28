@@ -53,5 +53,6 @@ public:
     bool visit(const Nodes::AllTimeSumNode* alltimeSumNode, const Nodes::Node* other) override;
     bool visit(const Nodes::ReducedCostNode* node, const Nodes::Node* other) override;
     bool visit(const Nodes::DualNode* node, const Nodes::Node* other) override;
+    bool visit(const Nodes::PowerNode* node, const Nodes::Node* other) override;
 };
 } // namespace Antares::Expressions::Visitors

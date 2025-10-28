@@ -140,6 +140,11 @@ Nodes::Node* CloneVisitor::visit(const Nodes::DualNode* node)
     return registry_.create<Nodes::DualNode>(node->value(), node->index());
 }
 
+Nodes::Node* CloneVisitor::visit(const Nodes::PowerNode* node)
+{
+    return registry_.create<Nodes::PowerNode>(dispatch(node->left()), dispatch(node->right()));
+}
+
 std::string CloneVisitor::name() const
 {
     return "CloneVisitor";

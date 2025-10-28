@@ -113,6 +113,8 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::DualNode* node) override;
 
+    Optimization::TimeDependentLinearExpression visit(const Nodes::PowerNode*) override;
+
 private:
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Antares::ModelerStudy::SystemModel::Component& component_;

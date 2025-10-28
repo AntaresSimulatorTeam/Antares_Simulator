@@ -170,6 +170,7 @@ public:
     EvaluationResult timeShift(int time_shift) const;
     EvaluationResult timeSum(int from, int to) const;
     EvaluationResult alltimeSum(int numberOfTimeStep) const;
+    EvaluationResult pow(const EvaluationResult& exponent) const;
 
 private:
     std::variant<double, std::vector<double>> value_;
@@ -324,5 +325,6 @@ private:
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult visit(const Nodes::ReducedCostNode* node) override;
     EvaluationResult visit(const Nodes::DualNode* node) override;
+    EvaluationResult visit(const Nodes::PowerNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

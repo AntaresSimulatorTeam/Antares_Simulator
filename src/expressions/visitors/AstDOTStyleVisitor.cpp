@@ -195,6 +195,11 @@ void AstDOTStyleVisitor::visit(const Nodes::DualNode* node, std::ostream& os)
     emitNode(id, label, NodeStyle::VariableStyle, os);
 }
 
+void AstDOTStyleVisitor::visit(const Nodes::PowerNode* node, std::ostream& os)
+{
+    processParentNode(node, "^", NodeStyle::BinaryStyle, os);
+}
+
 std::string AstDOTStyleVisitor::name() const
 {
     return "AstDOTStyleVisitor";
