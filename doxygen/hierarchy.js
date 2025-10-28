@@ -142,8 +142,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -1622,6 +1622,8 @@ var hierarchy =
     [ "Antares::Data::ShortTermStorage::SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", null ],
     [ "Antares::Solver::Optimization::SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", null ],
     [ "TestingSimulationObserver::SingleProblem", "structTestingSimulationObserver_1_1SingleProblem.html", null ],
+    [ "Antares::Solver::Implementation::SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html", null ],
+    [ "Antares::Solver::SingleProblemGetter", "classAntares_1_1Solver_1_1SingleProblemGetter.html", null ],
     [ "Antares::TSGenerator::Predicate::Solar", "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
     [ "Antares::Solver::Variable::Economy::SolarTag", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTag.html", null ],
     [ "Antares::Solver::Variable::Economy::SolarTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html", [
@@ -2234,6 +2236,7 @@ var hierarchy =
       [ "Antares::Toolbox::InputSelector::TreeLeaf", "classAntares_1_1Toolbox_1_1InputSelector_1_1TreeLeaf.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::yearJob< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html", null ],
+    [ "Antares::Solver::Implementation::YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", null ],
     [ "Antares::Solver::Simulation::yearRandomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html", null ],
     [ "Antares::Solver::ZipWriteJob< ContentT >", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
     [ "check_interface", null, [

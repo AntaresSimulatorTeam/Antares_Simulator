@@ -1,5 +1,13 @@
 var NAVTREEINDEX37 =
 {
+"classAntares_1_1Window_1_1Options_1_1SelectOutput.html#a5aac23964b678251d6200f58e78fd4b1":[8,0,0,25,2,8,8],
+"classAntares_1_1Window_1_1Options_1_1SelectOutput.html#a5bd5d1d423567d4ce206565df8d5617f":[8,0,0,25,2,8,6],
+"classAntares_1_1Window_1_1Options_1_1SelectOutput.html#a6b1c12b7c5f74db5d1589f1e15e03888":[8,0,0,25,2,8,10],
+"classAntares_1_1Window_1_1Options_1_1SelectOutput.html#a6f31b54b980f3adcb7319aed7cf2c2b6":[8,0,0,25,2,8,2],
+"classAntares_1_1Window_1_1Options_1_1SelectOutput.html#aec16ee87063e48ed43e97621e883f5bd":[8,0,0,25,2,8,3],
+"classAntares_1_1Window_1_1Options_1_1areasTrimming.html":[8,0,0,25,2,4],
+"classAntares_1_1Window_1_1Options_1_1areasTrimming.html#a8b75ccf8706122fb08f8bda9e3bef82b":[8,0,0,25,2,4,0],
+"classAntares_1_1Window_1_1Options_1_1geographicTrimming.html":[8,0,0,25,2,3],
 "classAntares_1_1Window_1_1Options_1_1geographicTrimming.html#a87a3c8c59bfc63184fdca005265d91f0":[8,0,0,25,2,3,1],
 "classAntares_1_1Window_1_1Options_1_1geographicTrimming.html#a8d8c57149d3285f21f868ac07e3fee9d":[8,0,0,25,2,3,2],
 "classAntares_1_1Window_1_1Options_1_1geographicTrimming.html#a9e65fc679343bc598ab8b98bd3dd3e23":[8,0,0,25,2,3,3],
@@ -241,13 +249,5 @@ var NAVTREEINDEX37 =
 "classAntares_1_1Window_1_1ntcUsageButton.html#a512f220dbe1471a285d547a4149accda":[8,0,0,25,36,0],
 "classAntares_1_1Window_1_1phaseShifterUsageButton.html":[8,0,0,25,41],
 "classAntares_1_1Window_1_1phaseShifterUsageButton.html#aa7704ed5138c383d061bd1c7d48d218e":[8,0,0,25,41,1],
-"classAntares_1_1Window_1_1phaseShifterUsageButton.html#afc86398082301ca270cc7742a4efc93d":[8,0,0,25,41,0],
-"classAntares_1_1areaInfo.html":[8,0,0,44],
-"classAntares_1_1areaInfo.html#a0e85b51314c105555126488746341db1":[8,0,0,44,0],
-"classAntares_1_1areaInfo.html#a7be1a81e8193069d7f5e36b0fbee2e67":[8,0,0,44,2],
-"classAntares_1_1areaInfo.html#aa4143d6e11f365e453b36184ca53f7fe":[8,0,0,44,1],
-"classAntares_1_1areaInfo.html#af714b953659b37b0f0b80cc57bda2862":[8,0,0,44,3],
-"classAntares_1_1linkInfo.html":[8,0,0,45],
-"classAntares_1_1linkInfo.html#a1633e46f70ba62d05a989a3f945a4dbc":[8,0,0,45,12],
-"classAntares_1_1linkInfo.html#a2b2401e00cf4b206c784232e842efbcd":[8,0,0,45,16]
+"classAntares_1_1Window_1_1phaseShifterUsageButton.html#afc86398082301ca270cc7742a4efc93d":[8,0,0,25,41,0]
 };

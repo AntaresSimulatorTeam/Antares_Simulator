@@ -1,5 +1,13 @@
 var NAVTREEINDEX41 =
 {
+"classHourlyCSRProblem.html#ad162ff146d6f4b66ad8e49ed87e99d1f":[8,0,138,0],
+"classHourlyCSRProblem.html#afa523f3b628a7b39da9842dc53038bde":[8,0,138,1],
+"classHoursCollectorVisitor.html":[8,0,139],
+"classHoursCollectorVisitor.html#a2967b8fde88bb5a3fb6489094b8d1ab3":[8,0,139,1],
+"classHoursCollectorVisitor.html#a5f484bea069206295325f32362db57b4":[8,0,139,0],
+"classHoursFieldBaseVisitor.html":[8,0,140],
+"classHoursFieldBaseVisitor.html#a8446dba2021f6ff50c19381004bae970":[8,0,140,0],
+"classHoursFieldBaseVisitor.html#ace43d03e08fd13d98d8b55030d4af0f5":[8,0,140,1],
 "classHoursFieldBaseVisitor.html#ad82fc4a0a45dc5c6000ed02ef7e462e7":[8,0,140,2],
 "classHoursFieldLexer.html":[8,0,141],
 "classHoursFieldLexer.html#a02cdeb5c3b8d099265ea712116abbd0c":[8,0,141,7],
@@ -241,13 +249,5 @@ var NAVTREEINDEX41 =
 "classJobFileReader.html#ac0140032b098e5f4cbbedb62a4fee2a7":[8,0,167,3],
 "classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c":[8,0,167,5],
 "classJobFileReader.html#adde9c393e3088ec51984f977513d741e":[8,0,167,6],
-"classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461":[8,0,167,4],
-"classJobFileReader.html#af6f42affc1e8f8ec0a262fd51dc0384c":[8,0,167,2],
-"classLargeValues.html":[8,0,168],
-"classLargeValues.html#a24cb6acda282216f048613359171f0be":[8,0,168,0],
-"classLinearProblemMatrix.html":[8,0,173],
-"classLinearProblemMatrix.html#a05fa2974d3c20257614273d0a3e282b6":[8,0,173,0],
-"classLinearProblemMatrix.html#aa5a8ce45fc98448cc45cb7138a7b0396":[8,0,173,1],
-"classLinearProblemMatrixStartUpCosts.html":[8,0,174],
-"classLinearProblemMatrixStartUpCosts.html#a31fc9d2648fc1718a6cc0520d5f9e389":[8,0,174,0]
+"classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461":[8,0,167,4]
 };

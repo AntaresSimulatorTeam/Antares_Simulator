@@ -1,5 +1,13 @@
 var NAVTREEINDEX44 =
 {
+"classShortTermStorageCostVariationInjectionForward.html#a2bd86b33caee6047a09a438a0eed1f90":[8,0,270,2],
+"classShortTermStorageCostVariationInjectionForward.html#a92810f50be4340f16068480970655ae2":[8,0,270,1],
+"classShortTermStorageCostVariationInjectionForward.html#ac8bce40b2ac003404af2f0e6366e8e29":[8,0,270,3],
+"classShortTermStorageCostVariationInjectionForward.html#af936b682e59df97c58c18d9ddd7fc530":[8,0,270,4],
+"classShortTermStorageCostVariationWithdrawalBackward.html":[8,0,271],
+"classShortTermStorageCostVariationWithdrawalBackward.html#a5f8ca74c18741368185217c12d362bb5":[8,0,271,1],
+"classShortTermStorageCostVariationWithdrawalBackward.html#a64452a3fb729542b9755ec033eefde99":[8,0,271,4],
+"classShortTermStorageCostVariationWithdrawalBackward.html#ac8bce40b2ac003404af2f0e6366e8e29":[8,0,271,3],
 "classShortTermStorageCostVariationWithdrawalBackward.html#acce8653c25a618e969903b7de2dedb21":[8,0,271,2],
 "classShortTermStorageCostVariationWithdrawalBackward.html#acf5c6aced1b3ccdd95fe2a09b6ce114c":[8,0,271,0],
 "classShortTermStorageCostVariationWithdrawalForward.html":[8,0,272],
@@ -241,13 +249,5 @@ var NAVTREEINDEX44 =
 "classcheck__logs__content_1_1check__logs__content.html#a3ca7df2302f60c0727d6dc0fcdd6d266":[8,0,5,0,3],
 "classcheck__logs__content_1_1check__logs__content.html#a75b63cc3520e69a4feff87d8afc87674":[8,0,5,0,0],
 "classcheck__logs__content_1_1check__logs__content.html#a97f2e009f91e7636745f83cc8a42c4a9":[8,0,5,0,1],
-"classcheck__logs__content_1_1check__logs__content.html#ad9f5d4b5db5c639fb040bcba965dcf18":[8,0,5,0,4],
-"classcheck__logs__content_1_1check__logs__content.html#af0884878e98ad01facaec9ef39f72566":[8,0,5,0,2],
-"classcheck__mps__existence_1_1check__mps__existence.html":[8,0,6,0],
-"classcheck__mps__existence_1_1check__mps__existence.html#a2fcd2b6864e161bea70ee87063e6005a":[8,0,6,0,2],
-"classcheck__mps__existence_1_1check__mps__existence.html#a824f700f13ddf4200bb67fc8c3b34341":[8,0,6,0,4],
-"classcheck__mps__existence_1_1check__mps__existence.html#a8d2b28512fd063e0f127be6c6bbee2ad":[8,0,6,0,0],
-"classcheck__mps__existence_1_1check__mps__existence.html#ae68cb641eba890ffb5062f61acd7b059":[8,0,6,0,3],
-"classcheck__mps__existence_1_1check__mps__existence.html#aeb2de00973a9d91a0a4f9f979095a0b7":[8,0,6,0,1],
-"classcheck__no__mps_1_1check__no__mps.html":[8,0,7,0]
+"classcheck__logs__content_1_1check__logs__content.html#ad9f5d4b5db5c639fb040bcba965dcf18":[8,0,5,0,4]
 };

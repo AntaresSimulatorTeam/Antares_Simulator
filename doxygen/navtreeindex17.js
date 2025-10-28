@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Data_1_1ThermalCluster.html#a4dfaea030940a9b3bfc40cdde6af4029":[8,0,0,5,57,16],
 "classAntares_1_1Data_1_1ThermalCluster.html#a67ac1264f98779e79e5f4c3be02a1fe5":[8,0,0,5,57,36],
 "classAntares_1_1Data_1_1ThermalCluster.html#a730f262032ef10eb4ce8f1071d5e76a0":[8,0,0,5,57,43],
 "classAntares_1_1Data_1_1ThermalCluster.html#a74b7198e7e40f11334ace0617ae73b31":[8,0,0,5,57,19],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Error_1_1InvalidSimulationMode.html#a9db107aa1d976827ea86b414bc4bc53e":[8,0,0,7,15,0],
 "classAntares_1_1Error_1_1InvalidSolver.html":[8,0,0,7,16],
 "classAntares_1_1Error_1_1InvalidSolver.html#ad465ed599b972363fc516aef3a6c167e":[8,0,0,7,16,0],
-"classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html":[8,0,0,7,17],
-"classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html#a962b2bcd56ac0ee367c3f4a654281730":[8,0,0,7,17,0]
+"classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html":[8,0,0,7,17]
 };

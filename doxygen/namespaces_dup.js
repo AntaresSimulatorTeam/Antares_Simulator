@@ -1438,6 +1438,12 @@ var namespaces_dup =
         [ "WxFindFile", "ui_2simulator_2toolbox_2resources_8cpp.html#a0c0410c636d9341742b5d75cb6bf75a3", null ]
       ] ],
       [ "Solver", null, [
+        [ "Implementation", null, [
+          [ "YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData" ],
+          [ "SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter" ],
+          [ "AllData", "singleProblemGetterImpl_8h.html#a2b9ca4b32a64c5d8437d4c350a5785e3", null ],
+          [ "HydroLevels", "singleProblemGetterImpl_8h.html#afe2acc563fb1a49f02e132fab30bfa79", null ]
+        ] ],
         [ "Initialization", null, [
           [ "Error", null, [
             [ "NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService" ]
@@ -1506,7 +1512,7 @@ var namespaces_dup =
           [ "AvgExchangeResults", "common-eco-adq_8h.html#aeee36dc5935ddf77aa0506bd8bf2fce8", null ],
           [ "AvgExchangeVCardBalance", "common-eco-adq_8h.html#a03f83cef439caae74b1af3abbf37b064", null ],
           [ "ListStorageForRemix", "storage-for-remix-interface_8h.html#ada39ded35ada218f53885a46c2263cf1", null ],
-          [ "BuildThermalPartOfWeeklyProblem", "common-eco-adq_8cpp.html#aa1d5010a4bd506a7c02c781ec03d031d", null ],
+          [ "BuildThermalPartOfWeeklyProblem", "common-eco-adq_8cpp.html#a7bec232f61630e4911ba948d7d2079dd", null ],
           [ "checkInput", "shave-peaks-by-remix-storage-gen_8h.html#a586c540400f03bb38022fe5f5f450164", null ],
           [ "computeExchange", "shave-peaks-by-remix-help_8h.html#a0dca85fdb36f5289211a7723ba109b2d", null ],
           [ "ComputeFlowQuad", "common-eco-adq_8cpp.html#a95d4ee7d313da8fda265079d92413916", null ],
@@ -1535,6 +1541,7 @@ var namespaces_dup =
           [ "operator<=", "remix-utils_8h.html#a85315454e4f7e3e8e200843caa7c587c", null ],
           [ "operator<=", "remix-utils_8h.html#a5a6560fe2d6cf303b79fa394f9555e4c", null ],
           [ "operator>=", "remix-utils_8h.html#afc277ce775d2105dbe1e8cb38f37db56", null ],
+          [ "prepareClustersInMustRunMode", "common-eco-adq_8cpp.html#ac509e7fc9182372967c38e3055559b52", null ],
           [ "PrepareRandomNumbers", "common-eco-adq_8cpp.html#acf7a9024f8a18f667ceff51d36c9e74a", null ],
           [ "regenerateTimeSeries", "regenerate__timeseries_8h.html#a1ebea0829a0b311b9da682b6fd203711", null ],
           [ "RemixHydroForAllAreas", "common-hydro-remix_8cpp.html#aca97579cee91661b6133b470d464aa47", null ],
@@ -1877,6 +1884,7 @@ var namespaces_dup =
           [ "VCardDummyVariable", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable" ],
           [ "DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable" ]
         ] ],
+        [ "SingleProblemGetter", "classAntares_1_1Solver_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1SingleProblemGetter" ],
         [ "Progression", "classAntares_1_1Solver_1_1Progression.html", "classAntares_1_1Solver_1_1Progression" ],
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],

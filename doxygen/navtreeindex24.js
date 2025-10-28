@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"classAntares_1_1Optimization_1_1BasisStatusImpl.html#a96dc6c8886d645178d7ffe9007dd4c70":[8,0,0,17,23,0],
 "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html":[8,0,0,17,20],
 "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html#a1bc2dc895034775ca77a101946abf033":[8,0,0,17,20,1],
 "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html#a1dae06cb83c13d98535130fc50da6108":[8,0,0,17,20,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ae88a26ff00d64b5bcff23e92380c3338":[8,0,0,18,2,4,5],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html":[8,0,0,18,2,4,0],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html#a0b700684a884b3aa654072f51fd178c0":[8,0,0,18,2,4,0,1],
-"classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html#aa35db16d0be4f41d59d6eb9cd3446751":[8,0,0,18,2,4,0,0],
-"classAntares_1_1Private_1_1OutputViewerData_1_1SpotlightMiniFrame.html":[8,0,0,18,2,2]
+"classAntares_1_1Private_1_1OutputViewerData_1_1Panel_1_1IData.html#aa35db16d0be4f41d59d6eb9cd3446751":[8,0,0,18,2,4,0,0]
 };

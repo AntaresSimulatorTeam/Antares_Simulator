@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"classAntares_1_1Memory.html#ab1a595168ea1870ce436dfd2d8e69b6d":[8,0,0,39,8],
 "classAntares_1_1Memory.html#adc8a97da306bfb55156a5df222a8d50d":[8,0,0,39,5],
 "classAntares_1_1Memory.html#ae270a72a98480eba1328922797d1c8ed":[8,0,0,39,4],
 "classAntares_1_1Memory.html#ae52786b2c1f35d82f6ad1d9579020071":[8,0,0,39,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX22 =
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html":[8,0,0,16,0,2],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html#a2f5bccd5b993ab5e6666a2f4b9933452":[8,0,0,16,0,2,0],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html":[8,0,0,16,0,7],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a0ce44b552d8f0e29bcb18fa11b97d795":[8,0,0,16,0,7,14],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a1030be994c27b07f8315634ec045fbea":[8,0,0,16,0,7,8]
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a0ce44b552d8f0e29bcb18fa11b97d795":[8,0,0,16,0,7,14]
 };
