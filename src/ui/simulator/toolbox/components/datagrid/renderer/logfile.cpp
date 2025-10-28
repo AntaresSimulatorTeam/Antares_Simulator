@@ -20,7 +20,6 @@
  */
 
 #include "logfile.h"
-#include <yuni/core/math.h>
 
 using namespace Yuni;
 

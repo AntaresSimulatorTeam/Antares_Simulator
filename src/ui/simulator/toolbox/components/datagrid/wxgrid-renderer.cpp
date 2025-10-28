@@ -30,12 +30,13 @@ namespace Antares::Component::Datagrid
 namespace // anonymous
 {
 // The font re-used for each drawing
-enum
+enum WXGRIDFONTSIZE
 {
     fontSize = 8,
 };
 
-const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
+const wxFont font(
+  wxFontInfo(WXGRIDFONTSIZE::fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
 } // anonymous namespace
 
