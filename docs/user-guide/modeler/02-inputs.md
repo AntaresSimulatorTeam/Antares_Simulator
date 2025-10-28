@@ -112,7 +112,7 @@ models:
   - id: respect_min_p
     expression: active_power >= is_on * min_active_power_setpoint
 
-  objective-contributions: active_power * proportional_cost
+  objective-contributions:
   - id: objective
     expression: active_power * proportional_cost
 
