@@ -53,13 +53,12 @@ static const wxColour gradientRowStart = wxColour(234, 237, 237);
 static const wxColour gradientRowEnd = wxColour(216, 224, 238);
 
 // The font re-used for each drawing
-enum DBGridFontSize
+enum
 {
     fontSize = 8,
 };
 
-static const wxFont font(
-  wxFontInfo(DBGridFontSize::fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
+static const wxFont font(wxFontInfo(fontSize).Family(wxFONTFAMILY_SWISS).FaceName("Tahoma"));
 
 BEGIN_EVENT_TABLE(DBGrid, wxGrid)
 EVT_GRID_SELECT_CELL(DBGrid::onGridSelectCell)
