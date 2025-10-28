@@ -102,13 +102,12 @@ void MasterAndSubPbVariables::add(const std::vector<std::string>& names, unsigne
     unsigned nbVars = names.size();
     unsigned startIndexInPb = varsCountInPb - nbVars;
     unsigned varIndex = startIndexInPb;
-    for (const auto& name: names)    
+    for (const auto& name: names)
     {
         masterAndSubPbVars_[pbIdentifier_].push_back({name, varIndex});
         varIndex++;
     }
 }
-
 
 class VariablesBulkAddition
 {
