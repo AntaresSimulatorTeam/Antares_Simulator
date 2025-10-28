@@ -11,8 +11,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/sets.hxx
         scenario-builder/sets.cpp
         include/antares/study/scenario-builder/updater.hxx
-        include/antares/study/scenario-builder/scBuilderUtils.h
-        scenario-builder/scBuilderUtils.cpp
         scenario-builder/BindingConstraintsTSNumbersData.cpp
         scenario-builder/NTCTSNumberData.cpp
         include/antares/study/scenario-builder/NTCTSNumberData.h
@@ -285,7 +283,20 @@ set(SRC_ALL
         ${SRC_STUDY_SCENARIO_BUILDER}
         ${SRC_STUDY}
 )
+add_library(scenario-builder-utils
+        include/antares/study/scenario-builder/scBuilderUtils.h
+        scenario-builder/scBuilderUtils.cpp)
+add_library(Antares::scenario-builder-utils ALIAS scenario-builder-utils)
+target_link_libraries(scenario-builder-utils
+        PUBLIC
+        yuni-static-core)
 
+
+target_include_directories(scenario-builder-utils
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+
+)
 add_library(study ${SRC_ALL})
 add_library(Antares::study ALIAS study)
 
@@ -311,6 +322,7 @@ target_link_libraries(study
         Antares::load-modeler-files
         Antares::modeler-parameters
         Antares::modeler-lib
+        Antares::scenario-builder-utils
         PRIVATE
         Antares::exception
         fmt::fmt
