@@ -1169,6 +1169,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         || key == "refreshintervalwind" || key == "refreshintervalthermal"
         || key == "refreshintervalsolar")
     {
+        logNotSupported(key, StudyVersion(9, 3));
         return true;
     }
 
