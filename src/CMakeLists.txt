@@ -277,6 +277,7 @@ if (BUILD_UI)
     add_subdirectory(ui)  #all antares ui libs + antares simulator
 endif ()
 set(CMAKE_UNITY_BUILD ON)
+
 add_subdirectory(api)
 add_subdirectory(io)
 add_subdirectory(libs)   #antares-core fswalker
