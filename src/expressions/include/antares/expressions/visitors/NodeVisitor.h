@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <fmt/format.h>
 #include <typeindex>
 #include <unordered_map>
 
@@ -126,7 +127,10 @@ public:
         catch (std::exception& e)
         {
             using namespace std::string_literals;
-            logError("Antares::Expressions::Visitor: could not visit the node! "s + e.what());
+            logError(fmt::format("Antares::Expressions::Visitor: could not visit the node!"
+                                 "\n\tNode: {}\n\tException: {}",
+                                 node->name(),
+                                 e.what()));
             throw;
         }
     }
