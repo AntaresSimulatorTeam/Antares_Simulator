@@ -1,5 +1,11 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[8,0,0,19,4,0,1,0],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[8,0,0,19,4,0,3,0],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[8,0,0,19,4,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a3199272e542da6cf04e649fcbc2ff0e8":[8,0,0,19,4,0,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a854c5d2699f58392bf9403bf3446e5a6":[8,0,0,19,4,0,0,3],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[8,0,0,19,4,0,0,4],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#aac4a857b4236eaf769e72ca3c6465e2c":[8,0,0,19,4,0,0,2],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#ac0b0985d8f11135aa86fd4bfd956ae09":[8,0,0,19,4,0,0,1],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[8,0,0,19,4,0,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#a76595bdd6c0f2e76f5c4294b4f485ed0":[8,0,0,19,4,4,57,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#aced4e0865cb18c815e20390897886ff5":[8,0,0,19,4,4,57,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#affef9e80220d3dfee67dacd1db501ffc":[8,0,0,19,4,4,57,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html":[8,0,0,19,4,4,77],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a24addc5ae803cafc19c153a2f197fa3c":[8,0,0,19,4,4,77,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a479fafcfb6aca33627fde8b1b10509d1":[8,0,0,19,4,4,77,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a82fdeb648e15c95aa84c1cfe7be73695":[8,0,0,19,4,4,77,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a950087a552b95236a86913b2371f8cd0":[8,0,0,19,4,4,77,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#af2fc84d731cd291e52eb82b52a4ab388":[8,0,0,19,4,4,77,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html":[8,0,0,19,4,4,12]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html":[8,0,0,19,4,4,77]
 };

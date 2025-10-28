@@ -350,10 +350,17 @@ var namespaces_dup =
           [ "defaultValueThresholdVarBoundsRelaxation", "adq-patch-params_8h.html#a8f932219473a96ebf993109b2a671d0d", null ]
         ] ],
         [ "Enum", null, [
+          [ "MyEnum", "Enum-test_8cpp.html#aedcb2621c7523ea49792f20fdf82bb59", [
+            [ "Value1", "Enum-test_8cpp.html#aedcb2621c7523ea49792f20fdf82bb59a7ee5a281b28d7ca1fab06b43d0b7d8ac", null ],
+            [ "Value2", "Enum-test_8cpp.html#aedcb2621c7523ea49792f20fdf82bb59a0fe13ed1638da4d4b1ef316729f3bb32", null ],
+            [ "Value3", "Enum-test_8cpp.html#aedcb2621c7523ea49792f20fdf82bb59a121bcef76aa7694f7d8ef4d381b86dad", null ]
+          ] ],
           [ "enumList", "Enum_8hpp.html#aa62696136419ebeacca7afcc90e6bfee", null ],
           [ "fromString", "Enum_8hpp.html#a6e6d3ffeed659dab6186cf3d3b35a62c", null ],
           [ "getNames", "Enum_8hpp.html#ae5ef0bbd19c114ab929ed3f797a82173", null ],
+          [ "getNames< MyEnum >", "Enum-test_8cpp.html#af86425379260397cf1c751ed19ac41c5", null ],
           [ "getNames< UnfeasibleProblemBehavior >", "UnfeasibleProblemBehavior_8cpp.html#a0625da50c5ffe4a077e6d2f7374c81dc", null ],
+          [ "operator<<", "Enum-test_8cpp.html#a1c7c2c04cac019d9814d99a977efe917", null ],
           [ "toString", "Enum_8hpp.html#a5a614eed12a083caba8acac8bbcc17f2", null ]
         ] ],
         [ "Load", null, [

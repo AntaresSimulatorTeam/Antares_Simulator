@@ -5,7 +5,7 @@ var classSettings =
     [ "displayProgression", "classSettings.html#aa742a4d5b98ed4e1fa60847e5a738db8", null ],
     [ "forceZipOutput", "classSettings.html#abca7349ce43deac6f66a70acd9c8bcbe", null ],
     [ "ignoreConstraints", "classSettings.html#adb034c947f06b715917880d531b6fe6b", null ],
-    [ "ignoreWarningsErrors", "classSettings.html#ab2dd1b0cb71d32dd2522526794d4ce4e", null ],
+    [ "ignoreLoadingErrors", "classSettings.html#a0861603bba644d21d26807e06aa75450", null ],
     [ "noOutput", "classSettings.html#a7cf7176a50ff929e8954f32c4767e470", null ],
     [ "PID", "classSettings.html#a7e3032664b2d4a1a06317571315eebf1", null ],
     [ "simplexOptimRange", "classSettings.html#a533bd3e503ce147fdf74467a7251c511", null ],

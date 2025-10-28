@@ -1,5 +1,11 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Date_1_1HourInterval.html#a8e699af7f35137c818d5a00934f38a53":[8,0,0,6,0,1],
+"structAntares_1_1Date_1_1HourInterval.html#af683944cd6ecd18ffb9f977e8b7fb790":[8,0,0,6,0,0],
+"structAntares_1_1DebugData.html":[8,0,0,55],
+"structAntares_1_1DebugData.html#a02bc55683169d012e89e0b3f61adb3e7":[8,0,0,55,19],
+"structAntares_1_1DebugData.html#a06a88317bba1a0e30fbf6cc7dca729cb":[8,0,0,55,6],
+"structAntares_1_1DebugData.html#a08326154d2f98a7b832b484b7cd9895f":[8,0,0,55,20],
 "structAntares_1_1DebugData.html#a0aaeeeb0f3406fcdb118a4687cb96b7a":[8,0,0,55,10],
 "structAntares_1_1DebugData.html#a0b7a332cee3db8569de6400ba3015c23":[8,0,0,55,9],
 "structAntares_1_1DebugData.html#a0fd1a9004b469319a93ff229e845906e":[8,0,0,55,8],
@@ -243,11 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#a8f331d6df37b5625c67ecceacb01712f":[8,0,0,19,3,29,3],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#a91ec18e612d5f4bcf5c457942331cffa":[8,0,0,19,3,29,2],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#abb623102716da99184d04d65ed50c0e2":[8,0,0,19,3,29,7],
-"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#aeb24bd26b88d153db5857a559d84107c":[8,0,0,19,3,29,5],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[8,0,0,19,4,0,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[8,0,0,19,4,0,3,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[8,0,0,19,4,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a3199272e542da6cf04e649fcbc2ff0e8":[8,0,0,19,4,0,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a854c5d2699f58392bf9403bf3446e5a6":[8,0,0,19,4,0,0,3],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[8,0,0,19,4,0,0,4]
+"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#aeb24bd26b88d153db5857a559d84107c":[8,0,0,19,3,29,5]
 };

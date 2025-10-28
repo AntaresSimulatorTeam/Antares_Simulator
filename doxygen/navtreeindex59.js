@@ -1,5 +1,11 @@
 var NAVTREEINDEX59 =
 {
+"structAntares_1_1Window_1_1Inspector_1_1PStudyPlaylist.html":[8,0,0,25,1,10],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyPlaylist.html#a6bac110ef6483c110d26b6a9ead3367d":[8,0,0,25,1,10,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html":[8,0,0,25,1,12],
+"structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html#a7d4db039e78611084632dda7724081a2":[8,0,0,25,1,12,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyThematicTrimming.html":[8,0,0,25,1,14],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyThematicTrimming.html#a492c2e57b60dbba89fd0edc10e5282fa":[8,0,0,25,1,14,0],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyYearByYear.html":[8,0,0,25,1,11],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyYearByYear.html#a859f0722f74a83cc876a217bd3665a60":[8,0,0,25,1,11,0],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyYears.html":[8,0,0,25,1,18],
@@ -243,11 +249,5 @@ var NAVTREEINDEX59 =
 "structCsrAreaBalanceData.html#ae5446fc635ee2a78818d49cebb2a3af5":[8,0,88,2],
 "structCsrAreaBalanceData.html#ae92b8e94ce8f83fa2711b1888ee30ad1":[8,0,88,6],
 "structCsrAreaBalanceData.html#afc79a2a15aa8bfbd098ced3c6accb94a":[8,0,88,3],
-"structCsrAreaBalanceData.html#afffa3e00db5b055ff8bea7ae6096c186":[8,0,88,8],
-"structCsrBindingConstraintHourData.html":[8,0,90],
-"structCsrBindingConstraintHourData.html#a15e2624e86dd6bce483e62c6c1206a65":[8,0,90,3],
-"structCsrBindingConstraintHourData.html#a73d02fd17c87cc5eb6d3e8869544cac4":[8,0,90,0],
-"structCsrBindingConstraintHourData.html#ad44847e83b7e397e9d1da493d06caa7d":[8,0,90,1],
-"structCsrBindingConstraintHourData.html#af14807ac8053e066b5c9fe583d3b7309":[8,0,90,2],
-"structCsrBindingConstraintHourData.html#af74bdea5c2a860adeca6467c6e0814cb":[8,0,90,4]
+"structCsrAreaBalanceData.html#afffa3e00db5b055ff8bea7ae6096c186":[8,0,88,8]
 };

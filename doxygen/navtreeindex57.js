@@ -1,5 +1,11 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a24addc5ae803cafc19c153a2f197fa3c":[8,0,0,19,4,4,77,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a479fafcfb6aca33627fde8b1b10509d1":[8,0,0,19,4,4,77,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a82fdeb648e15c95aa84c1cfe7be73695":[8,0,0,19,4,4,77,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a950087a552b95236a86913b2371f8cd0":[8,0,0,19,4,4,77,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#af2fc84d731cd291e52eb82b52a4ab388":[8,0,0,19,4,4,77,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html":[8,0,0,19,4,4,12],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a500884d4187ee64804dbf8835b13be8a":[8,0,0,19,4,4,12,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a9daff9c043206460b61b9b2c6d08e917":[8,0,0,19,4,4,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a9ebe5523a0075db564b9337999c7cd6a":[8,0,0,19,4,4,12,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html#a323f2fe45932cff77aa14f148d86e524":[8,0,0,19,4,6,0,2,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html#a7a28d22fd8b09d074e00af264b8a5a49":[8,0,0,19,4,6,0,2,0,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html":[8,0,0,19,4,6,0,9],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a010d69528b95fd6e9d32611d597f605d":[8,0,0,19,4,6,0,9,7],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a020057f73f46233b224a00499c7f32ab":[8,0,0,19,4,6,0,9,8],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a259a2d881d92d9432aa0133343e9a273":[8,0,0,19,4,6,0,9,4],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a622ac0eef11558ca6d7597d63495651f":[8,0,0,19,4,6,0,9,3],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a7eced0a5c80c17d3b3fd318d40662509":[8,0,0,19,4,6,0,9,10],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#abd0753b91b382df30b7c6e028d8684a5":[8,0,0,19,4,6,0,9,9],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ada37935b4e18bad9341852d49456baf0":[8,0,0,19,4,6,0,9,5]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a010d69528b95fd6e9d32611d597f605d":[8,0,0,19,4,6,0,9,7]
 };

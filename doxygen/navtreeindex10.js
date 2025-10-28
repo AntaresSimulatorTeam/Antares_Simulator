@@ -1,5 +1,11 @@
 var NAVTREEINDEX10 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Minimum.html#af70af226e556bc0713cc773c4405b5de":[8,0,0,3,0,1,4,0],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Sum.html":[8,0,0,3,0,1,2],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Sum.html#a0b4d445cf2c080bd81d7aff07d449b3e":[8,0,0,3,0,1,2,0],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Sum.html#a1bfaf86b24a440cbf8398950bf51c35e":[8,0,0,3,0,1,2,4],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Sum.html#a7a1cc8de3b32701b3074b8a4e00d6ef1":[8,0,0,3,0,1,2,1],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Sum.html#a8427b00421128436155f6c4db3e30455":[8,0,0,3,0,1,2,2],
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Sum.html#ac7d138ee18065a946d0126185ce24367":[8,0,0,3,0,1,2,3],
 "classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html":[8,0,0,3,0,8],
 "classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html#a004656c605a058d1a426555e9f336ee6":[8,0,0,3,0,8,28],
@@ -243,11 +249,5 @@ var NAVTREEINDEX10 =
 "classAntares_1_1Component_1_1MapNotebook_1_1MapTabs.html#a7088ad2351624ac796ed5b0bd01118d3":[8,0,0,3,12,0,3],
 "classAntares_1_1Component_1_1MapNotebook_1_1MapTabs.html#aadd0c9ea8357243e1c8e7c1aca1610ad":[8,0,0,3,12,0,6],
 "classAntares_1_1Component_1_1MapNotebook_1_1MapTabs.html#ab7b19093e0a06ba67ae537bf4f8b5863":[8,0,0,3,12,0,1],
-"classAntares_1_1Component_1_1MapNotebook_1_1MapTabs.html#ad49547562b65dd2b934ee165199c47c9":[8,0,0,3,12,0,4],
-"classAntares_1_1Component_1_1MapNotebook_1_1MapTabs.html#ada54f2f03f64847717008d292c777232":[8,0,0,3,12,0,2],
-"classAntares_1_1Component_1_1MapNotebook_1_1MapTabs.html#adac8e399cc7974bee4ea626e7e8c21c3":[8,0,0,3,12,0,9],
-"classAntares_1_1Component_1_1MapNotebook_1_1TabTextCtrl.html":[8,0,0,3,12,1],
-"classAntares_1_1Component_1_1MapNotebook_1_1TabTextCtrl.html#a1c4caae85b24d8ddf0b20de95133d5cb":[8,0,0,3,12,1,1],
-"classAntares_1_1Component_1_1MapNotebook_1_1TabTextCtrl.html#a260d1b54e8d3d9e3253b8bd97abd124b":[8,0,0,3,12,1,2],
-"classAntares_1_1Component_1_1MapNotebook_1_1TabTextCtrl.html#a3c04653529a762d496e22f057df8c228":[8,0,0,3,12,1,0]
+"classAntares_1_1Component_1_1MapNotebook_1_1MapTabs.html#ad49547562b65dd2b934ee165199c47c9":[8,0,0,3,12,0,4]
 };

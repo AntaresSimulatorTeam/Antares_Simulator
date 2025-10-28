@@ -1,5 +1,11 @@
 var NAVTREEINDEX60 =
 {
+"structCsrBindingConstraintHourData.html":[8,0,90],
+"structCsrBindingConstraintHourData.html#a15e2624e86dd6bce483e62c6c1206a65":[8,0,90,3],
+"structCsrBindingConstraintHourData.html#a73d02fd17c87cc5eb6d3e8869544cac4":[8,0,90,0],
+"structCsrBindingConstraintHourData.html#ad44847e83b7e397e9d1da493d06caa7d":[8,0,90,1],
+"structCsrBindingConstraintHourData.html#af14807ac8053e066b5c9fe583d3b7309":[8,0,90,2],
+"structCsrBindingConstraintHourData.html#af74bdea5c2a860adeca6467c6e0814cb":[8,0,90,4],
 "structCsrFlowDissociationData.html":[8,0,92],
 "structCsrFlowDissociationData.html#a265585c099ccfd554b8a3fcccc83a012":[8,0,92,1],
 "structCsrFlowDissociationData.html#a302cad09aaa374a645ac3040d92e3370":[8,0,92,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX60 =
 "structFixture_1_1STSAdditionalConstraints.html":[8,0,124,3],
 "structFixture_1_1STSAdditionalConstraints.html#a6d9bd1fa8d8c33b8e9d3ec2416d55af5":[8,0,124,3,2],
 "structFixture_1_1STSAdditionalConstraints.html#aabbf8d25963c82abee981f2c1574e42e":[8,0,124,3,1],
-"structFixture_1_1STSAdditionalConstraints.html#ac8db8b3f561a8412c39bbde053028562":[8,0,124,3,0],
-"structFixture_1_1STSInflows.html":[8,0,124,4],
-"structFixture_1_1STSInflows.html#a0148d9a54c76aea1d11da44cc0882431":[8,0,124,4,1],
-"structFixture_1_1STSInflows.html#ad926a89cd506c6220494720d540f8dd8":[8,0,124,4,0],
-"structFixture_1_1STSInflows.html#ae11aaaa7ca63398e2207bbafb017f974":[8,0,124,4,2],
-"structFixture_1_1Thermal.html":[8,0,124,5],
-"structFixture_1_1Thermal.html#a1be1f508074a7dd41bff86155d9e3aee":[8,0,124,5,0]
+"structFixture_1_1STSAdditionalConstraints.html#ac8db8b3f561a8412c39bbde053028562":[8,0,124,3,0]
 };
