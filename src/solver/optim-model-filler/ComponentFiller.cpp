@@ -58,6 +58,7 @@ public:
     VariableNames() = default;
     void makeNames(const Component& compo, const Variable& var, const Dimensions& dims);
     std::string name(unsigned index) const;
+    std::vector<std::string> names();
 
 private:
     std::vector<std::string> names_;
@@ -85,6 +86,29 @@ std::string VariableNames::name(unsigned index) const
 {
     return names_[index];
 }
+
+std::vector<std::string> VariableNames::names()
+{
+    return names_;
+}
+
+void MasterAndSubPbVariables::setProblemIdentifier(std::string id)
+{
+    pbIdentifier_ = id;
+}
+
+void MasterAndSubPbVariables::add(const std::vector<std::string>& names, unsigned varsCountInPb)
+{
+    unsigned nbVars = names.size();
+    unsigned startIndexInPb = varsCountInPb - nbVars;
+    unsigned varIndex = startIndexInPb;
+    for (const auto& name: names)    
+    {
+        masterAndSubPbVars_[pbIdentifier_].push_back({name, varIndex});
+        varIndex++;
+    }
+}
+
 
 class VariablesBulkAddition
 {
@@ -223,12 +247,14 @@ auto masterproblemObjectives = [](const Objective& o) { return o.isInMasterProbl
 
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  OptimEntityContainer& optimEntityContainer,
-                                 const ScenarioGroupRepository& scenarioGroupRepository):
+                                 const ScenarioGroupRepository& scenarioGroupRepository,
+                                 MasterAndSubPbVariables* masterAndSubPbvars):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
     scenarioGroupRepository_(scenarioGroupRepository),
     variablesFilter_(subproblemVariables),
-    objectivesFilter_(subproblemObjectives)
+    objectivesFilter_(subproblemObjectives),
+    masterAndSubPbvars_(masterAndSubPbvars)
 {
 }
 
@@ -309,10 +335,9 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            dims);
         }
 
-        if (variable.isInBothProblemTypes())
+        if (variable.isInBothProblemTypes() && masterAndSubPbvars_)
         {
-            // optimEntityContainer_.addToMasterAndSubProblemsVariables(variableNames);
-            // pb.variableCount();
+            masterAndSubPbvars_->add(variableNames.names(), pb.variableCount());
         }
     }
 }

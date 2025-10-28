@@ -78,7 +78,8 @@ static void logProblemSize(const MPSolver* mpSolver)
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Modeler::Data* modelerData,
-  OptimEntityContainer& optimEntityContainer)
+  OptimEntityContainer& optimEntityContainer,
+  MasterAndSubPbVariables* masterAndSubPbvars)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
@@ -87,7 +88,8 @@ static void fillModelerComponents(
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
-                                            modelerData->scenarioGroupRepository));
+                                            modelerData->scenarioGroupRepository,
+                                            masterAndSubPbvars));
     }
 }
 
@@ -117,14 +119,12 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
-static LinearProblemData dummy_data = LinearProblemData();
-
-// Returns a non-owning pointer
 void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
                         FillContext& fillCtx,
                         const PROBLEME_HEBDO* problemeHebdo,
                         OptimEntityContainer& optimEntityContainer,
-                        bool namedProblems)
+                        bool namedProblems,
+                        MasterAndSubPbVariables* masterAndSubPbvars = nullptr)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
@@ -132,8 +132,10 @@ void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
-        // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, optimEntityContainer);
+        fillModelerComponents(fillersCollection,
+                              problemeHebdo->modelerData,
+                              optimEntityContainer,
+                              masterAndSubPbvars);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
@@ -186,6 +188,15 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
       = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
+    // This instance should be created in problemeHebdo, so that it lives longer
+    // than a week, as it is currently the case.
+    std::unique_ptr<MasterAndSubPbVariables> masterAndSubPbvars; // is currently nullptr
+    if (problemeHebdo->year != 0 && optimizationNumber == PREMIERE_OPTIMISATION)
+    {
+        masterAndSubPbvars = std::make_unique<MasterAndSubPbVariables>();
+        masterAndSubPbvars->setProblemIdentifier(optPeriodStringGenerator.to_string());
+    }
+
     OptimEntityContainer optimEntityContainer(ortoolsProblem,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
@@ -194,7 +205,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                        fillCtx,
                        problemeHebdo,
                        optimEntityContainer,
-                       problemeHebdo->NamedProblems);
+                       problemeHebdo->NamedProblems,
+                       masterAndSubPbvars.get());
 
     auto* solver = ortoolsProblem.getMpSolver();
 

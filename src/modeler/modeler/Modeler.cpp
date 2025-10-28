@@ -57,11 +57,13 @@ public:
       const ModelerStudy::SystemModel::System* system,
       ILinearProblem& pb,
       const LinearProblemApi::ILinearProblemData& dataSeries,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
+      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
+      MasterAndSubPbVariables* masterAndSubPbvars = nullptr):
         system_(system),
         dataSeries_(dataSeries),
         scenarioGroupRepository_(scenarioGroupRepository),
-        optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository)
+        optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository),
+        masterAndSubPbvars_(masterAndSubPbvars)
     {
     }
 
@@ -73,17 +75,16 @@ public:
         const auto& components = system_->Components();
         optimEntityContainer_.addFromSystemComponents(components);
 
-        // All LP variables coordinates (component id, variable id, scenario, time step)
         for (const auto& component: components)
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       optimEntityContainer_,
-                                                                      scenarioGroupRepository_);
+                                                                      scenarioGroupRepository_,
+                                                                      masterAndSubPbvars_);
             fillers.push_back(std::move(cf));
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);
-
         linear_problem_builder.build(timeScenarioCtx);
     }
 
@@ -97,6 +98,7 @@ private:
     const LinearProblemApi::ILinearProblemData& dataSeries_;
     const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
     Optimisation::OptimEntityContainer optimEntityContainer_;
+    MasterAndSubPbVariables* masterAndSubPbvars_ = nullptr;
 };
 
 void Modeler::run() const
@@ -140,11 +142,19 @@ void Modeler::run() const
       0};
 
     // Sub problem
+    auto masterAndSubPbvars = std::make_unique<MasterAndSubPbVariables>();
+    std::string pbId = "1-1";
+    masterAndSubPbvars->setProblemIdentifier(pbId);
+
     OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
+
+    // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
+    // gp : and build() should return the vector of component fillers
     SystemLinearProblemBuilder system_linear_problem(data.system.get(),
                                                      ortools_linear_problem,
                                                      *data.dataSeries,
-                                                     data.scenarioGroupRepository);
+                                                     data.scenarioGroupRepository,
+                                                     masterAndSubPbvars.get());
 
     system_linear_problem.build(timeScenarioCtx);
 

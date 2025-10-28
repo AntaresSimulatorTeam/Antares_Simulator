@@ -33,6 +33,24 @@
 namespace Antares::Optimisation
 {
 
+struct MasterAndSubPbVar
+{
+    std::string name;
+    unsigned indexInProblem;
+};
+
+class MasterAndSubPbVariables
+{
+public:
+    MasterAndSubPbVariables() = default;
+    void setProblemIdentifier(std::string id);
+    void add(const std::vector<std::string>& names, unsigned varsCountInPb);
+
+private:
+    std::string pbIdentifier_ = "master";
+    std::map<std::string, std::vector<MasterAndSubPbVar>> masterAndSubPbVars_;
+};
+
 /**
  * Component filler
  * Implements LinearProblemFiller interface.
@@ -47,7 +65,8 @@ public:
 
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              OptimEntityContainer& optimEntityContainer,
-                             const ScenarioGroupRepository& scenarioGroupRepository);
+                             const ScenarioGroupRepository& scenarioGroupRepository,
+                             MasterAndSubPbVariables* masterAndSubPbvars = nullptr);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addVariablesToMaster(const Optimisation::LinearProblemApi::FillContext& ctx);
@@ -72,5 +91,6 @@ private:
     const ScenarioGroupRepository& scenarioGroupRepository_;
     std::function<bool(const ModelerStudy::SystemModel::Variable&)> variablesFilter_;
     std::function<bool(const ModelerStudy::SystemModel::Objective&)> objectivesFilter_;
+    MasterAndSubPbVariables* masterAndSubPbvars_ = nullptr;
 };
 } // namespace Antares::Optimisation
