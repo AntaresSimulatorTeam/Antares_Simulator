@@ -174,7 +174,6 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const DualNode*)
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const Expressions::Nodes::PowerNode*)
 {
-    throw Antares::Error::InvalidArgumentError(
-      "A constraint expression can't contain power operators.");
+    throw IllegalNodeException();
 }
 } // namespace Antares::Optimisation

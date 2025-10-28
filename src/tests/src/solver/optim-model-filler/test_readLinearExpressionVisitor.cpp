@@ -284,4 +284,14 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
       checkMessage("A linear expression can't contain extra output operator reduced_cost."));
 }
 
+BOOST_FIXTURE_TEST_CASE(power_node__exception_thrown, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* base = create<LiteralNode>(2.);
+    Node* exponent = create<LiteralNode>(3.);
+    Node* node = create<PowerNode>(base, exponent);
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
+                          Antares::Error::InvalidArgumentError,
+                          checkMessage("A linear expression can't contain power operators."));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
