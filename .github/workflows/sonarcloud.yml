@@ -58,17 +58,18 @@ jobs:
     - name: Install ccache
       run: sudo apt-get install -y ccache
 
+    # Can't use ubuntu cache. Cache hit is only single digit %
     - name: Restore ccache cache
       uses: actions/cache/restore@v4
       with:
-        path: ${{ github.workspace }}/.ccache_ubuntu
-        key: ${{ matrix.os }}-${{ github.event.pull_request.head.ref }}
+        path: ${{ github.workspace }}/.ccache_sonar
+        key: sonar-${{ github.event.pull_request.head.ref }}
         restore-keys: |
-          ${{ matrix.os }}- 
+          sonar- 
 
     - name: Configure ccache
       run: |
-        ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_ubuntu
+        ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_sonar
         ccache --set-config=max_size=500M
         ccache --set-config=compression=true
         ccache -p
@@ -248,5 +249,20 @@ jobs:
     - name: Display ccache statistics
       run: ccache -s
 
-    #Don't save cache to avoid race condition with ubuntu workflow
+      # Delete the old cache on hit to emulate a cache update. See
+    # https://github.com/actions/cache/issues/342.
+    - name: Delete old cache
+      env:
+        GH_TOKEN: ${{ github.token }}
+      if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
+      # Using `--repo` makes it so that this step doesn't require checking out the
+      # repo first.
+      run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
+
+    - name: Save ccache cache
+      if: ${{ !cancelled() }}
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/.ccache_sonar
+        key: ${{ steps.cache.outputs.cache-primary-key }}
 
