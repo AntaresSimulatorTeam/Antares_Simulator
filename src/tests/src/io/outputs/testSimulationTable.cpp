@@ -467,6 +467,30 @@ BOOST_AUTO_TEST_CASE(DoubleValues_PrecisionBoundaries)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+// Mock solver traits for testing
+struct MockSolverTraits
+{
+    static double getValue(const MockMipVariable* var)
+    {
+        return var ? var->solutionValue() : 0.0;
+    }
+
+    static MipBasisStatus getStatus(const MockMipVariable* var)
+    {
+        return var ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE;
+    }
+
+    static MipBasisStatus getStatus(const MockMipConstraint* cst)
+    {
+        return cst ? cst->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE;
+    }
+
+    static std::optional<double> getValue(const MockMipConstraint*)
+    {
+        return std::nullopt;
+    }
+};
+
 struct MockMipSolution: IMipSolution
 {
     [[nodiscard]] MipStatus getStatus() const override
@@ -479,7 +503,6 @@ struct MockMipSolution: IMipSolution
         return 11.18;
     }
 };
-
 struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
 {
     void addRandomVariables(const FillContext& fillContext,
@@ -619,130 +642,7 @@ struct TempDirFixture
     std::filesystem::path tempDir;
 };
 
-// Mock solver traits for testing
-struct MockSolverTraits
-{
-    static double getValue(const MockMipVariable* var)
-    {
-        return var ? var->solutionValue() : 0.0;
-    }
-
-    static MipBasisStatus getStatus(const MockMipVariable* var)
-    {
-        return var ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE;
-    }
-
-    static MipBasisStatus getStatus(const MockMipConstraint* cst)
-    {
-        return cst ? cst->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE;
-    }
-
-    static std::optional<double> getValue(const MockMipConstraint*)
-    {
-        return std::nullopt;
-    }
-};
 BOOST_FIXTURE_TEST_SUITE(ComponentModelIntegrationTests, BasicProblemFixture)
-
-// Mock component and model classes for testing template functions
-class MockVariable
-{
-public:
-    MockVariable(bool scenDependent, bool timeDependent):
-        scenDependent_(scenDependent),
-        timeDependent_(timeDependent)
-    {
-    }
-
-    bool IsScenarioDependent() const
-    {
-        return scenDependent_;
-    }
-
-    bool isTimeDependent() const
-    {
-        return timeDependent_;
-    }
-
-private:
-    bool scenDependent_;
-    bool timeDependent_;
-};
-
-class MockConstraint
-{
-public:
-    MockConstraint(const std::string& name):
-        name_(name)
-    {
-    }
-
-    // Mock expression method
-    struct MockExpression
-    {
-        struct MockNode
-        {
-            // Mock node for constraint expression
-        };
-
-        MockNode* RootNode() const
-        {
-            return nullptr;
-        }
-    };
-
-    MockExpression expression() const
-    {
-        return MockExpression{};
-    }
-
-private:
-    std::string name_;
-};
-
-class MockModel
-{
-public:
-    std::map<std::string, MockVariable> Variables() const
-    {
-        return {
-          {"var1", MockVariable(false, false)}, // Neither time nor scenario dependent
-          {"var2", MockVariable(true, false)},  // Scenario dependent only
-          {"var3", MockVariable(false, true)},  // Time dependent only
-          {"var4", MockVariable(true, true)}    // Both time and scenario dependent
-        };
-    }
-
-    std::map<std::string, MockConstraint> Constraints() const
-    {
-        return {{"constraint1", MockConstraint("constraint1")},
-                {"constraint2", MockConstraint("constraint2")}};
-    }
-};
-
-class MockComponent
-{
-public:
-    MockComponent(const std::string& id):
-        id_(id),
-        model_(std::make_shared<MockModel>())
-    {
-    }
-
-    const std::string& Id() const
-    {
-        return id_;
-    }
-
-    std::shared_ptr<MockModel> getModel() const
-    {
-        return model_;
-    }
-
-private:
-    std::string id_;
-    std::shared_ptr<MockModel> model_;
-};
 
 BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {
