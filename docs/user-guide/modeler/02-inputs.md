@@ -146,9 +146,9 @@ models:
   the [system file](#system-file).
     - **id**: an ID for the parameter. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
-    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the parameter depends on time or is constant 
+    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the parameter depends on time or is constant
       across the whole simulation horizon. Defaults to `true`.
-    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the 
+    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the
       simulated scenario, or is the same for all scenarios. Defaults to `true`.
 - **variables** _(optional)_: a collection of optimization variables that are defined for this model
     - **id**: an ID for the variable. Must be unique inside the scope of the model, and
@@ -160,9 +160,9 @@ models:
     - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. The
       expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to +inf for continuous and integer types, or 1 for binary.
-    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the variable depends on time or is constant 
+    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the variable depends on time or is constant
       across the whole simulation horizon. Defaults to `true`.
-    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the 
+    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the
       simulated scenario, or is the same for all scenarios. Defaults to `true`.
 - **constraints** _(optional)_: a collection of "internal" optimization constraints set by the model
     - **id**: an ID for the constraint. Must be unique inside the scope of the model, and
@@ -195,12 +195,14 @@ models:
     - **definition**: an [expression](#expressions) representing the definition of the field. Can use scalars,
       parameters, and variables of the model.
 - **extra-outputs** _(optional)_: a collection of outputs relevant to the model, that can be computed after optimization
-  (i.e. using the optimal values of the variables). 
-  The values of these extra outputs will appear in the [output files](03-outputs.md) along with variable and port values.
+  (i.e. using the optimal values of the variables).
+  The values of these extra outputs will appear in the [output files](03-outputs.md) along with variable and port
+  values.
     - **id**: an ID for the extra-output. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
-    - **expression**: the [expression](#expressions) of the output. Can use all operators, as long as the expression can be 
-      evaluated after optimization. Note that using an output's id in another output's expression is not allowed. 
+    - **expression**: the [expression](#expressions) of the output. Can use all operators, as long as the expression can
+      be
+      evaluated after optimization. Note that using an output's id in another output's expression is not allowed.
 
 ### Expressions
 
@@ -217,6 +219,7 @@ The following operators are allowed between two elements:
 - **=**: equality, only allowed for constraint definitions
 - **<=**: less or equal to, only allowed for constraint definitions
 - **>=**: greater or equal to, only allowed for constraint definitions
+- **^**: power, only allowed in extra outputs
 
 #### Scalars
 
@@ -420,8 +423,8 @@ components:
         - If the parameter is scenario-dependent, then this is the ID of a scenario-dependent [data serie](#data-series)
         - If the parameter is time and scenario-dependent, then this is the ID of a
           time-and-scenario-dependent [data serie](#data-series)
-      
-        Note that using an expression is not allowed (e.g. neither `3 * 4`, nor `6 * some_time_series`).
+
+      Note that using an expression is not allowed (e.g. neither `3 * 4`, nor `6 * some_time_series`).
 
 ### Port connections
 
