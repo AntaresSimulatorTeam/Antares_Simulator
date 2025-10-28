@@ -120,7 +120,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 static LinearProblemData dummy_data = LinearProblemData();
 
 // Returns a non-owning pointer
-void fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
+void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
                         FillContext& fillCtx,
                         const PROBLEME_HEBDO* problemeHebdo,
                         OptimEntityContainer& optimEntityContainer,
@@ -190,7 +190,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    fillAndGetMpSolver(ortoolsProblem,
+    fillOrtoolsProblem(ortoolsProblem,
                        fillCtx,
                        problemeHebdo,
                        optimEntityContainer,
@@ -343,7 +343,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        fillAndGetMpSolver(infeasibleProblem, fillCtx, problemeHebdo, optimEntityContainer, true);
+        fillOrtoolsProblem(infeasibleProblem, fillCtx, problemeHebdo, optimEntityContainer, true);
         std::unique_ptr<MPSolver> MPproblem(infeasibleProblem.getMpSolver());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
