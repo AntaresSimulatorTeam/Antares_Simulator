@@ -32,8 +32,8 @@
 #include <antares/expressions/nodes/ParameterNode.h>
 #include <antares/expressions/nodes/PortFieldNode.h>
 #include <antares/expressions/nodes/PortFieldSumNode.h>
-#include <antares/expressions/nodes/ReducedCostNode.h>
 #include <antares/expressions/nodes/PowerNode.h>
+#include <antares/expressions/nodes/ReducedCostNode.h>
 #include <antares/expressions/nodes/SubtractionNode.h>
 #include <antares/expressions/nodes/SumNode.h>
 #include <antares/expressions/nodes/TimeIndexNode.h>
