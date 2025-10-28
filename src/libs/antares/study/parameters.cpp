@@ -104,7 +104,7 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
         return true;
     }
 
-    logs.warning() << "parameters: invalid renewable generation modelling. Got '" << text << "'";
+    logs.error() << "parameters: invalid renewable generation modelling. Got '" << text << "'";
     out = rgUnknown;
 
     return false;
@@ -131,7 +131,7 @@ static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
         return true;
     }
 
-    logs.warning() << "parameters:  invalid result format. Got '" << text << "'";
+    logs.error() << "parameters:  invalid result format. Got '" << text << "'";
     out = legacyFilesDirectories;
 
     return false;
@@ -674,8 +674,8 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         d.include.exportMPS = stringToMPSexportStatus(value);
         if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
         {
-            logs.warning() << "Reading parameters : invalid MPS export status : " << value
-                           << ". Reset to no MPS export.";
+            logs.error() << "Reading parameters : invalid MPS export status : " << value
+                         << ". Reset to no MPS export.";
             return false;
         }
         return true;
@@ -702,14 +702,14 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         }
         catch (AssertionError& ex)
         {
-            logs.warning()
+            logs.error()
               << "Assertion error for unfeasible problem behavior from string conversion : "
               << ex.what();
 
             result = false;
             d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
-            logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value
-                           << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
+            logs.error() << "parameters: invalid unfeasible problem behavior. Got '" << value
+                         << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
         }
         return result;
     }
@@ -719,7 +719,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         d.simplexOptimizationRange = (!value.ifind("day")) ? sorDay : sorWeek;
         if (d.simplexOptimizationRange == sorDay)
         {
-            logs.warning()
+            logs.error()
               << "simplex-range = day is deprecated and will be removed from future versions";
         }
         return true;
@@ -758,8 +758,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.hydroHeuristicPolicy.hhPolicy = hhpolicy;
             return true;
         }
-        logs.warning() << "parameters: invalid hydro heuristic policy. Got '" << value
-                       << "'. Reset to default accommodate rule curves.";
+        logs.error() << "parameters: invalid hydro heuristic policy. Got '" << value
+                     << "'. Reset to default accommodate rule curves.";
         d.hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
         return false;
     }
@@ -771,8 +771,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.hydroPricing.hpMode = hpricing;
             return true;
         }
-        logs.warning() << "parameters: invalid hydro pricing mode. Got '" << value
-                       << "'. reset to fast mode";
+        logs.error() << "parameters: invalid hydro pricing mode. Got '" << value
+                     << "'. reset to fast mode";
         d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
@@ -785,8 +785,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.nbCores.ncMode = ncores;
             return true;
         }
-        logs.warning() << "parameters: invalid number of cores mode. Got '" << value
-                       << "'. reset to fast mode";
+        logs.error() << "parameters: invalid number of cores mode. Got '" << value
+                     << "'. reset to fast mode";
         d.nbCores.ncMode = ncMin;
         return false;
     }
@@ -824,8 +824,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.unitCommitment.ucMode = ucommitment;
             return true;
         }
-        logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
-                       << "'. reset to fast mode";
+        logs.error() << "parameters: invalid unit commitment mode. Got '" << value
+                     << "'. reset to fast mode";
         d.unitCommitment.ucMode = ucHeuristicFast;
         return false;
     }
@@ -925,7 +925,7 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
             if (y > d.nbYears)
             {
                 valid = false;
-                logs.warning()
+                logs.error()
                   << "parameters: invalid MC year index for MC year weight definition. Got '" << y
                   << "'. Value not used";
             }
@@ -933,8 +933,8 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
             if (weight < 0.f)
             {
                 valid = false;
-                logs.warning() << "parameters: invalid MC year weight.Got '" << weight
-                               << "'. Value not used";
+                logs.error() << "parameters: invalid MC year weight.Got '" << weight
+                             << "'. Value not used";
             }
 
             if (valid)
@@ -946,9 +946,9 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
         }
         else
         {
-            logs.warning() << "parameters: invalid MC year index and weight definition. Must be "
-                              "defined by [year],[weight] Got '"
-                           << value << "'. Value not used";
+            logs.error() << "parameters: invalid MC year index and weight definition. Must be "
+                            "defined by [year],[weight] Got '"
+                         << value << "'. Value not used";
             return false;
         }
     }
@@ -1169,6 +1169,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         || key == "refreshintervalwind" || key == "refreshintervalthermal"
         || key == "refreshintervalsolar")
     {
+        logNotSupported(key, StudyVersion(9, 3));
         return true;
     }
 
@@ -1231,7 +1232,7 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
         catch (const std::out_of_range&)
         {
             // Continue on error
-            logs.warning() << ini.filename() << ": '" << section->name << "': Unknown section name";
+            logs.error() << ini.filename() << ": '" << section->name << "': Unknown section name";
             continue;
         }
 
@@ -1258,7 +1259,7 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
                 if (!SGDIntLoadFamily_Legacy(*this, p->key, value, p->value, version))
                 {
                     // Continue on error
-                    logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
+                    logs.error() << ini.filename() << ": '" << p->key << "': Unknown property";
                 }
             }
         }
@@ -1457,17 +1458,17 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     if (derated && userPlaylist)
     {
         userPlaylist = false;
-        logs.warning() << "The user's playlist will be ignored";
+        logs.error() << "The user's playlist will be ignored";
     }
     if (derated && useCustomScenario)
     {
         useCustomScenario = false;
-        logs.warning() << "The custom build mode can not be used with the derated option";
+        logs.error() << "The custom build mode can not be used with the derated option";
     }
     if (useCustomScenario && activeRulesScenario.empty())
     {
         useCustomScenario = false;
-        logs.warning() << "The custom build mode will be ignored (no active ruleset)";
+        logs.error() << "The custom build mode will be ignored (no active ruleset)";
     }
 
     // If the user's playlist is disabled, the filter must be reset
