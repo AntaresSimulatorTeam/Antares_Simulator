@@ -155,12 +155,11 @@ public:
     }
 
     Antares::Optimisation::LinearProblemApi::IMipConstraint* lookupConstraint(
-      const std::string& name) const override
+      const std::string&) const override
     {
-        // static MockMipConstraint mockConstraint(
-        //   Antares::Optimisation::LinearProblemApi::MipBasisStatus::BASIC);
-        // return &mockConstraint;
-        return nullptr;
+        static MockMipConstraint mockConstraint(
+          Antares::Optimisation::LinearProblemApi::MipBasisStatus::BASIC);
+        return &mockConstraint;
     }
 
     // ILinearProblem interface (minimal implementation for testing)
@@ -169,19 +168,15 @@ public:
                                                                        bool,
                                                                        const std::string&) override
     {
-        // variables_.push_back(std::move(RandomVariable()));
-        // return variables_.back().get();
-        variableCount_++;
-        return nullptr;
+        variables_.push_back(RandomVariable());
+        return variables_.back().get();
     }
 
     Antares::Optimisation::LinearProblemApi::IMipConstraint*
     addConstraint(double, double, const std::string&) override
     {
-        // constraints_.push_back(std::move(RandomConstraint()));
-        // return constraints_.back().get();
-        constraintCount_++;
-        return nullptr;
+        constraints_.push_back(RandomConstraint());
+        return constraints_.back().get();
     }
 
     void setObjectiveCoefficient(Antares::Optimisation::LinearProblemApi::IMipVariable*,
@@ -204,21 +199,19 @@ public:
     }
 
     Antares::Optimisation::LinearProblemApi::IMipVariable*
-    addNumVariable(double lb, double ub, const std::string& name) override
+    addNumVariable(double, double, const std::string&) override
     {
         variableCount_++;
-        // variables_.push_back(std::move(RandomVariable()));
-        // return variables_.back().get();
-        return nullptr;
+        variables_.push_back(RandomVariable());
+        return variables_.back().get();
     }
 
     Antares::Optimisation::LinearProblemApi::IMipVariable*
-    addIntVariable(double lb, double ub, const std::string& name) override
+    addIntVariable(double, double, const std::string&) override
     {
         variableCount_++;
-        // variables_.push_back(std::move(RandomVariable()));
-        // return variables_.back().get();
-        return nullptr;
+        variables_.push_back(RandomVariable());
+        return variables_.back().get();
     }
 
     static std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable> RandomVariable()
@@ -228,7 +221,7 @@ public:
             12.25,
             Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND,
             false);
-        return std::move(mockMipVariable);
+        return mockMipVariable;
     }
 
     static std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>
@@ -237,14 +230,13 @@ public:
         std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>
           mockMipConstraint = std::make_unique<MockMipConstraint>(
             Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND);
-        return std::move(mockMipConstraint);
+        return mockMipConstraint;
     }
 
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* getVariable(
       std::size_t t) const override
     {
-        // return variables_.at(t).get();
-        return nullptr;
+        return variables_.at(t).get();
     }
 
     [[nodiscard]]
@@ -258,8 +250,7 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipConstraint* getConstraint(
       std::size_t) const override
     {
-        // return RandomConstraint().get();
-        return nullptr;
+        return RandomConstraint().get();
     }
 
     [[nodiscard]]
@@ -272,8 +263,7 @@ public:
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* lookupVariable(
       const std::string& name) const override
     {
-        // return RandomVariable().get();
-        return nullptr;
+        return RandomVariable().get();
     }
 
     [[nodiscard]] int variableCount() const override
@@ -287,7 +277,7 @@ public:
     }
 
     double getObjectiveCoefficient(
-      const Antares::Optimisation::LinearProblemApi::IMipVariable* var) const override
+      const Antares::Optimisation::LinearProblemApi::IMipVariable*) const override
     {
         return 0.;
     }
