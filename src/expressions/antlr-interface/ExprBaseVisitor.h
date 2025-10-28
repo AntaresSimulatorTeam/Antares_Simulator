@@ -91,6 +91,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitPower(ExprParser::PowerContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitNumber(ExprParser::NumberContext *ctx) override {
     return visitChildren(ctx);
   }

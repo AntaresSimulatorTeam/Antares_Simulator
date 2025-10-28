@@ -14,8 +14,8 @@ public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
-    T__14 = 15, NUMBER = 16, TIME = 17, IDENTIFIER = 18, COMPARISON = 19, 
-    WS = 20
+    T__14 = 15, T__15 = 16, NUMBER = 17, TIME = 18, IDENTIFIER = 19, COMPARISON = 20, 
+    WS = 21
   };
 
   enum {
@@ -253,6 +253,16 @@ public:
 
     antlr4::tree::TerminalNode *IDENTIFIER();
     ExprContext *expr();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  PowerContext : public ExprContext {
+  public:
+    PowerContext(ExprContext *ctx);
+
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

@@ -22,6 +22,7 @@ expr
     | portFieldExpr                            # portField
     | '-' expr                                 # negation
     | '(' expr ')'                             # expression
+    | expr '^' expr                            # power
     | expr op=('/' | '*') expr                 # muldiv
     | expr op=('+' | '-') expr                 # addsub
     | expr COMPARISON expr                     # comparison
