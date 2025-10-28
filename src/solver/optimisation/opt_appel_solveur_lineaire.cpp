@@ -47,6 +47,7 @@
 
 using namespace operations_research;
 using namespace Antares::Optimisation;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::IO;
@@ -116,19 +117,18 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
-static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
-  LinearProblemDataImpl::LinearProblemData();
+static LinearProblemData dummy_data = LinearProblemData();
 
 // Returns a non-owning pointer
-MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
-                             FillContext& fillCtx,
-                             const PROBLEME_HEBDO* problemeHebdo,
-                             OptimEntityContainer& optimEntityContainer,
-                             bool namedProblems)
+void fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
+                        FillContext& fillCtx,
+                        const PROBLEME_HEBDO* problemeHebdo,
+                        OptimEntityContainer& optimEntityContainer,
+                        bool namedProblems)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
+      std::make_unique<LegacyFiller>(ortoolsProblem, problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -156,8 +156,6 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
 
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
-
-    return ortoolsProblem.getMpSolver();
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
@@ -192,11 +190,13 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    auto* solver = fillAndGetMpSolver(ortoolsProblem,
-                                      fillCtx,
-                                      problemeHebdo,
-                                      optimEntityContainer,
-                                      problemeHebdo->NamedProblems);
+    fillAndGetMpSolver(ortoolsProblem,
+                       fillCtx,
+                       problemeHebdo,
+                       optimEntityContainer,
+                       problemeHebdo->NamedProblems);
+
+    auto* solver = ortoolsProblem.getMpSolver();
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
 
@@ -343,11 +343,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        std::unique_ptr<MPSolver> MPproblem(fillAndGetMpSolver(infeasibleProblem,
-                                                               fillCtx,
-                                                               problemeHebdo,
-                                                               optimEntityContainer,
-                                                               true));
+        fillAndGetMpSolver(infeasibleProblem, fillCtx, problemeHebdo, optimEntityContainer, true);
+        std::unique_ptr<MPSolver> MPproblem(infeasibleProblem.getMpSolver());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
