@@ -23,6 +23,8 @@
 
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
+using namespace Antares::ModelerStudy::SystemModel;
+
 namespace Antares::Optimisation
 {
 
@@ -35,8 +37,7 @@ OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& lin
 {
 }
 
-void OptimEntityContainer::addFromSystemComponents(
-  const std::vector<Antares::ModelerStudy::SystemModel::Component>& components)
+void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>& components)
 {
     optimComponents_.clear();
     optimComponents_.reserve(components.size());
@@ -64,7 +65,7 @@ void OptimEntityContainer::addFromSystemComponents(
     }
 }
 
-void OptimEntityContainer::registerConstraint(const ModelerStudy::SystemModel::Component& component,
+void OptimEntityContainer::registerConstraint(const Component& component,
                                               const TimeIndex& timeIndex)
 {
     unsigned gLobalIndex = constraintGLobalIndex();
