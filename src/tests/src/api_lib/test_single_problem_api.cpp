@@ -62,8 +62,6 @@ std::unique_ptr<Antares::Data::Study> buildStudy(bool thermal, bool hydro)
     {
         auto& h = area->hydro;
 
-        hydro = &area->hydro;
-
         TimeSeriesConfigurer genP(h.series->maxHourlyGenPower);
         genP.setDimensions(1).fillColumnWith(0, 100.);
 
