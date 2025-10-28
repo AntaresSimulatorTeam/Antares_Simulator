@@ -82,6 +82,12 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
+    [[nodiscard]] bool isInBothProblemTypes() const
+    {
+        return location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+
+
     [[nodiscard]] bool isInSubProblem() const
     {
         return location_ == Modeler::Config::Location::SUBPROBLEMS

@@ -308,6 +308,12 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            variable.Type() != ValueType::FLOAT,
                            dims);
         }
+
+        if (variable.isInBothProblemTypes())
+        {
+            // optimEntityContainer_.addToMasterAndSubProblemsVariables(variableNames);
+            // pb.variableCount();
+        }
     }
 }
 
