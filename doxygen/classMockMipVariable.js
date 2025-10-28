@@ -6,6 +6,7 @@ var classMockMipVariable =
     [ "getName", "classMockMipVariable.html#acdd76cc0fae5672910cd2728fc189ba7", null ],
     [ "getUb", "classMockMipVariable.html#a04e08742f544c69a1352bf1b2e22c014", null ],
     [ "isInteger", "classMockMipVariable.html#a8491c358ff4528c617df72ff2e8fdbe4", null ],
+    [ "reducedCost", "classMockMipVariable.html#a24fd6505ff92a09336ae9d2e6598f56b", null ],
     [ "setBounds", "classMockMipVariable.html#a87ad9b49a2ecb70adfdcdc32cf9bd595", null ],
     [ "setLb", "classMockMipVariable.html#aa30ae127921193bc8e376f35a386dff8", null ],
     [ "setUb", "classMockMipVariable.html#a3d475a750b75160d32835918dd48a9a6", null ],

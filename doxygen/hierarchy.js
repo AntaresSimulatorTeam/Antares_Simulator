@@ -898,8 +898,7 @@ var hierarchy =
       ] ],
       [ "MockLinearProblem", "classMockLinearProblem.html", [
         [ "PredfinedSolutionLinearProblemMock", "structPredfinedSolutionLinearProblemMock.html", null ]
-      ] ],
-      [ "MockLinearProblem", "classMockLinearProblem.html", null ]
+      ] ]
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::ILinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html", [
       [ "Antares::Optimisation::LinearProblemDataImpl::LinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html", null ],
@@ -911,15 +910,9 @@ var hierarchy =
       [ "Antares::Solver::LoadFiles::FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", null ],
       [ "InMemoryLoader< Fixture >", "classInMemoryLoader.html", null ]
     ] ],
-    [ "IMipConstraint", null, [
-      [ "MockMipConstraint", "classMockMipConstraint.html", null ]
-    ] ],
     [ "Antares::Optimisation::LinearProblemApi::IMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html", [
       [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", null ],
       [ "MockMipSolution", "structMockMipSolution.html", null ]
-    ] ],
-    [ "IMipVariable", null, [
-      [ "MockMipVariable", "classMockMipVariable.html", null ]
     ] ],
     [ "Impl", null, [
       [ "Antares::Solver::Simulation::ISimulation< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
@@ -957,7 +950,9 @@ var hierarchy =
           [ "Antares::Expressions::Nodes::LiteralNode", "classAntares_1_1Expressions_1_1Nodes_1_1LiteralNode.html", null ]
         ] ],
         [ "Antares::Expressions::Nodes::Leaf< std::string >", "classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html", [
+          [ "Antares::Expressions::Nodes::DualNode", "classAntares_1_1Expressions_1_1Nodes_1_1DualNode.html", null ],
           [ "Antares::Expressions::Nodes::ParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ParameterNode.html", null ],
+          [ "Antares::Expressions::Nodes::ReducedCostNode", "classAntares_1_1Expressions_1_1Nodes_1_1ReducedCostNode.html", null ],
           [ "Antares::Expressions::Nodes::VariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html", null ]
         ] ],
         [ "Antares::Expressions::Nodes::Leaf< T >", "classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html", null ],
@@ -1009,6 +1004,7 @@ var hierarchy =
       [ "Antares::Error::InvalidArgumentError", "classAntares_1_1Error_1_1InvalidArgumentError.html", null ],
       [ "Antares::Expressions::Visitors::EvalVisitorNotImplemented", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented.html", null ],
       [ "Antares::Expressions::Visitors::InvalidNode", "classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html", null ],
+      [ "Antares::Expressions::Visitors::NodeTypeShouldBeInExtraOutput", "classAntares_1_1Expressions_1_1Visitors_1_1NodeTypeShouldBeInExtraOutput.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository::DataSeriesAlreadyExists", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html", null ],
@@ -1341,12 +1337,14 @@ var hierarchy =
         [ "ExprParser::AddsubContext", "classExprParser_1_1AddsubContext.html", null ],
         [ "ExprParser::AllTimeSumContext", "classExprParser_1_1AllTimeSumContext.html", null ],
         [ "ExprParser::ComparisonContext", "classExprParser_1_1ComparisonContext.html", null ],
+        [ "ExprParser::DualContext", "classExprParser_1_1DualContext.html", null ],
         [ "ExprParser::ExpressionContext", "classExprParser_1_1ExpressionContext.html", null ],
         [ "ExprParser::FunctionContext", "classExprParser_1_1FunctionContext.html", null ],
         [ "ExprParser::MuldivContext", "classExprParser_1_1MuldivContext.html", null ],
         [ "ExprParser::NegationContext", "classExprParser_1_1NegationContext.html", null ],
         [ "ExprParser::PortFieldContext", "classExprParser_1_1PortFieldContext.html", null ],
         [ "ExprParser::PortFieldSumContext", "classExprParser_1_1PortFieldSumContext.html", null ],
+        [ "ExprParser::ReducedCostContext", "classExprParser_1_1ReducedCostContext.html", null ],
         [ "ExprParser::TimeIndexContext", "classExprParser_1_1TimeIndexContext.html", null ],
         [ "ExprParser::TimeIndexExprContext", "classExprParser_1_1TimeIndexExprContext.html", null ],
         [ "ExprParser::TimeShiftContext", "classExprParser_1_1TimeShiftContext.html", null ],
@@ -1567,8 +1565,10 @@ var hierarchy =
       [ "Antares::FatalError", "classAntares_1_1FatalError.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::ConstraintWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConstraintWithThisIdAlreadyExists.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::FieldNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition.html", null ],
+      [ "Antares::IO::Inputs::ModelConverter::NoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::NoParameterOrVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::NoPortWithThisId", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId.html", null ],
+      [ "Antares::IO::Inputs::ModelConverter::NoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::NotImplemented", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NotImplemented.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::PortInDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::PortNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition.html", null ],

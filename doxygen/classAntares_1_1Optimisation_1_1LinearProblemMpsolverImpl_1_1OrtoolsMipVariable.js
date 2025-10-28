@@ -8,6 +8,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVaria
     [ "getName", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#aee6c7fd6d4cb9d8e1ae97557ef566538", null ],
     [ "getUb", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#a730a9a274b710c8b7543fd4ecd6c2236", null ],
     [ "isInteger", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#afd587a1d84aef1ee56bf6a0ee8c642b6", null ],
+    [ "reducedCost", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#acc498e3342a447ac01662a72e9f14371", null ],
     [ "setBounds", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#a5d0a34ddc33024225ca9041788d16a42", null ],
     [ "setLb", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#aad82499cafdda4706bc0d1775a87c43a", null ],
     [ "setUb", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#af3382d4e4c3065fde77c79fe101e58d0", null ],

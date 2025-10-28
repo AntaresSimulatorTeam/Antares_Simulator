@@ -2,6 +2,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConst
 [
     [ "~OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html#a6f84a54701ee1f3d0bce0c4d9f6b1593", null ],
     [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html#a9d9d2de36507ed4b5dd02444f84f5fc5", null ],
+    [ "dual", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html#aeab1f89aacb3b32436e42795bd21d23b", null ],
     [ "getCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html#a733b67bbb58274341aa4de591563e4a0", null ],
     [ "getLb", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html#a5b8a9bccb8750b2edd63bc9365d37295", null ],
     [ "getMipBasisStatus", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html#a1b93d4f421e989191f62691258b22546", null ],
