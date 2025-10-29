@@ -26,7 +26,9 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
+#include "antares/expressions/visitors/LinearityVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
 namespace Antares::Expressions::Visitors
@@ -259,6 +261,12 @@ EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PowerNode* node)
 {
+    LinearityVisitor linVisitor;
+    auto exponentStatus = linVisitor.dispatch(node->right());
+    if (exponentStatus != LinearStatus::CONSTANT)
+    {
+        throw Error::RuntimeError("PowerNode with non-constant exponent");
+    }
     return dispatch(node->left()).pow(dispatch(node->right()));
 }
 

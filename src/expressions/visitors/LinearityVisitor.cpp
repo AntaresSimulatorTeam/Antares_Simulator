@@ -133,15 +133,29 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::DualNode*)
 
 LinearStatus LinearityVisitor::visit(const Nodes::PowerNode* node)
 {
-    // A power node is linear only if the exponent is 1 (i.e., the right child is a literal node
-    // with value 1)
-    LinearStatus baseStatus = dispatch(node->left());
-    const auto* exponentNode = dynamic_cast<const Nodes::LiteralNode*>(node->right());
-    if (exponentNode && exponentNode->value() == 1.0)
+    auto operandStatus = dispatch(node->left());
+    auto exponentStatus = dispatch(node->right());
+    if (exponentStatus == LinearStatus::CONSTANT)
     {
-        return baseStatus;
+        // Constant exponent
+        if (operandStatus == LinearStatus::CONSTANT)
+        {
+            return LinearStatus::CONSTANT;
+        }
+        else if (operandStatus == LinearStatus::LINEAR)
+        {
+            return LinearStatus::LINEAR;
+        }
+        else
+        {
+            return LinearStatus::NON_LINEAR;
+        }
     }
-    return LinearStatus::NON_LINEAR;
+    else
+    {
+        // Non-constant exponent makes the expression non-linear
+        return LinearStatus::NON_LINEAR;
+    }
 }
 
 std::string LinearityVisitor::name() const
