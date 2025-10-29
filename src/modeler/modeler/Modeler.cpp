@@ -77,10 +77,12 @@ public:
 
         for (const auto& component: components)
         {
-            auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      optimEntityContainer_,
-                                                                      scenarioGroupRepository_,
-                                                                      masterAndSubPbvars_);
+            auto cf = std::make_unique<Optimisation::ComponentFiller>(
+              component,
+              optimEntityContainer_,
+              scenarioGroupRepository_,
+              Antares::Modeler::Config::Location::SUBPROBLEMS,
+              masterAndSubPbvars_);
             fillers.push_back(std::move(cf));
         }
 

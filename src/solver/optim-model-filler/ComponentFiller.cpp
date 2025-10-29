@@ -239,20 +239,15 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     }
 }
 
-auto subproblemVariables = [](const Variable& v) { return v.isInSubProblem(); };
-auto masterproblemVariables = [](const Variable& v) { return v.isInMasterProblem(); };
-auto subproblemObjectives = [](const Objective& o) { return o.isInSubProblem(); };
-auto masterproblemObjectives = [](const Objective& o) { return o.isInMasterProblem(); };
-
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository,
+                                 Modeler::Config::Location targetLocation,
                                  MasterAndSubPbVariables* masterAndSubPbvars):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
     scenarioGroupRepository_(scenarioGroupRepository),
-    variablesFilter_(subproblemVariables),
-    objectivesFilter_(subproblemObjectives),
+    targetLocation_(targetLocation),
     masterAndSubPbvars_(masterAndSubPbvars)
 {
 }
@@ -299,8 +294,13 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 
     const auto& variables = component_.getModel()->Variables();
     auto& pb = optimEntityContainer_.Problem();
-    for (const auto& variable: variables | std::views::filter(variablesFilter_))
+    for (const auto& variable: variables)
     {
+        // Skip the variable in case of location mismatch
+        if (!AreLocationsCompatible(variable.location(), targetLocation_))
+        {
+            continue;
+        }
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == ValueType::BOOL ? 0 : -pb.infinity());
         const auto& ub = valueOrDefault(variable.UpperBound(),
@@ -334,18 +334,12 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            dims);
         }
 
-        if (variable.isInBothProblemTypes() && masterAndSubPbvars_)
+        if (variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS
+            && masterAndSubPbvars_)
         {
             masterAndSubPbvars_->add(variableNames.names(), pb.variableCount());
         }
     }
-}
-
-void ComponentFiller::addVariablesToMaster(const LinearProblemApi::FillContext& ctx)
-{
-    variablesFilter_ = masterproblemVariables;
-    this->addVariables(ctx);
-    variablesFilter_ = subproblemVariables; // Reset to initial state
 }
 
 void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constraint,
@@ -415,21 +409,19 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
-void ComponentFiller::addObjectivesToMaster(const LinearProblemApi::FillContext& ctx)
-{
-    objectivesFilter_ = masterproblemObjectives;
-    this->addObjectives(ctx);
-    objectivesFilter_ = subproblemObjectives; // Reset to initial state
-}
-
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
     const auto* model = component_.getModel();
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
-    for (const auto& objective: model->Objectives() | std::views::filter(objectivesFilter_))
+    for (const auto& objective: model->Objectives())
     {
+        // Skip the objective in case of location mismatch
+        if (!AreLocationsCompatible(objective.location(), targetLocation_))
+        {
+            continue;
+        }
         const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());
 
