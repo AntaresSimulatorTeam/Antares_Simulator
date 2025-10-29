@@ -26,6 +26,7 @@
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 #include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/exception/RuntimeError.hpp"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
@@ -60,7 +61,7 @@ void LinearProblemBuilder::build(const FillContext& ctx)
         {
             errMessage << "\n- " << msg;
         }
-        logs.error() << errMessage.str();
+        throw Error::RuntimeError(errMessage.str());
     }
 }
 } // namespace Antares::Optimisation::LinearProblemApi
