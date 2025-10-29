@@ -30,9 +30,6 @@ using namespace Antares::ModelerStudy;
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
-namespace
-{
-
 Modeler::Config::Location convertLocation(const std::string& locationStr)
 {
     std::string locLower = locationStr;
@@ -51,61 +48,6 @@ Modeler::Config::Location convertLocation(const std::string& locationStr)
     }
     throw Error::RuntimeError("Unknown location: " + locationStr);
 }
-
-Modeler::Config::Variable convertVariable(const Variable& ymlVar)
-{
-    try
-    {
-        return {ymlVar.id, convertLocation(ymlVar.location)};
-    }
-    catch (const Error::RuntimeError& e)
-    {
-        throw Error::RuntimeError("Error converting variable '" + ymlVar.id + "': " + e.what());
-    }
-}
-
-Modeler::Config::Objective convertObjective(const Objective& ymlObj)
-{
-    try
-    {
-        return {ymlObj.id, convertLocation(ymlObj.location)};
-    }
-    catch (const Error::RuntimeError& e)
-    {
-        throw Error::RuntimeError("Error converting objective '" + ymlObj.id + "': " + e.what());
-    }
-}
-
-std::vector<Modeler::Config::Variable> convertVariables(const Model& ymlModel)
-{
-    std::vector<Modeler::Config::Variable> variables;
-    for (const auto& var: ymlModel.variables)
-    {
-        variables.push_back(convertVariable(var));
-    }
-    return variables;
-}
-
-std::vector<Modeler::Config::Objective> convertObjectives(const Model& ymlModel)
-{
-    std::vector<Modeler::Config::Objective> objectives;
-    for (const auto& obj: ymlModel.objectives)
-    {
-        objectives.push_back(convertObjective(obj));
-        std::vector<Modeler::Config::Objective> objectives;
-    }
-    return objectives;
-}
-
-Modeler::Config::Model convertModel(const Model& ymlModel)
-{
-    std::vector<Modeler::Config::Variable> variables = convertVariables(ymlModel);
-    std::vector<Modeler::Config::Objective> objectives = convertObjectives(ymlModel);
-    Modeler::Config::ModelDecomposition decomposition(variables, objectives);
-    return Modeler::Config::Model(ymlModel.id, decomposition);
-}
-
-} // namespace
 
 // gp : copied from readSystem.cpp, should be moved to a common utils file
 static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)

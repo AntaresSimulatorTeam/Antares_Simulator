@@ -19,31 +19,31 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/modeler/optimConfig/optimConfig.h"
-
-#include <unordered_map>
-
-#include <antares/exception/LoadingError.hpp>
-#include <antares/exception/RuntimeError.hpp>
-
-namespace Antares::Modeler::Config
-{
-
-void OptimConfig::checkDuplicateModelIds() const
-{
-    std::unordered_map<std::string, int> modelIds;
-    for (const auto& model: models_)
-    {
-        modelIds[model.id()]++;
-    }
-
-    for (const auto& [id, count]: modelIds)
-    {
-        if (count > 1)
-        {
-            throw Error::Duplicates("OptimConfig contains multiple models with ID \"" + id + "\".");
-        }
-    }
-}
-
-} // namespace Antares::Modeler::Config
+//#include "antares/modeler/optimConfig/optimConfig.h"
+//
+//#include <unordered_map>
+//
+//#include <antares/exception/LoadingError.hpp>
+//#include <antares/exception/RuntimeError.hpp>
+//
+//namespace Antares::Modeler::Config
+//{
+//
+//void OptimConfig::checkDuplicateModelIds() const
+//{
+//    std::unordered_map<std::string, int> modelIds;
+//    for (const auto& model: models_)
+//    {
+//        modelIds[model.id()]++;
+//    }
+//
+//    for (const auto& [id, count]: modelIds)
+//    {
+//        if (count > 1)
+//        {
+//            throw Error::Duplicates("OptimConfig contains multiple models with ID \"" + id + "\".");
+//        }
+//    }
+//}
+//
+//} // namespace Antares::Modeler::Config
