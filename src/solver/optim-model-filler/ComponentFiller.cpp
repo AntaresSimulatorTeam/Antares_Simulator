@@ -295,7 +295,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
     for (const auto& variable: variables)
     {
         // Skip the variable in case of location mismatch
-        if (!(variable.location() <= ctx.location()))
+        if (!AreLocationsCompatible(variable.location(), ctx.location()))
         {
             continue;
         }
@@ -416,7 +416,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     for (const auto& objective: model->Objectives())
     {
         // Skip the objective in case of location mismatch
-        if (!(objective.location() <= ctx.location()))
+        if (!AreLocationsCompatible(objective.location(), ctx.location()))
         {
             continue;
         }

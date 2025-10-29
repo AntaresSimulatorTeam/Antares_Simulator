@@ -33,7 +33,7 @@ enum class Location
     SUBPROBLEMS
 };
 
-constexpr bool operator<=(Location lhs, Location rhs)
+constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
 {
     switch (rhs)
     {
