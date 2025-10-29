@@ -1,6 +1,5 @@
 add_library(modeler-optim-config
-            include/antares/modeler/optimConfig/optimConfig.h
-            optimConfig.cpp)
+            include/antares/modeler/optimConfig/optimConfig.h)
 
 add_library(Antares::modeler-optim-config ALIAS modeler-optim-config)
 
