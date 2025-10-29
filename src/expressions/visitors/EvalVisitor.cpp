@@ -334,7 +334,22 @@ EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const
 
 EvaluationResult EvaluationResult::pow(const EvaluationResult& exponent) const
 {
-    return evaluateBinaryOperation(exponent, std::pow<double, double>);
+    if (std::holds_alternative<double>(exponent.value_))
+    {
+        double expValue = std::get<double>(exponent.value_);
+        if (expValue == 0.0)
+        {
+            // Any number to the power of 0 is 1
+            return EvaluationResult(1.0);
+        }
+        else if (expValue == 1.0)
+        {
+            // Any number to the power of 1 is itself
+            return *this;
+        }
+        return evaluateBinaryOperation(exponent, std::pow<double, double>);
+    }
+    throw EvalResultTypeError("Exponent must be a double for pow operation.");
 }
 
 EvaluationResult EvaluationResult::operator[](int timeIndex) const
