@@ -82,6 +82,11 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
+    void setLocation(Modeler::Config::Location loc)
+    {
+        location_ = loc;
+    }
+
     [[nodiscard]] bool isInBothProblemTypes() const
     {
         return location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;

@@ -86,9 +86,8 @@ public:
         return parameters_;
     }
 
-    const std::vector<Variable>& Variables() const
+    std::vector<Variable>& Variables()
     {
-        // TODO : convert to vector?
         return variables_;
     }
 

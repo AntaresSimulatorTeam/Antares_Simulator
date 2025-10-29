@@ -25,6 +25,8 @@
 
 #include <antares/exception/RuntimeError.hpp>
 
+using namespace Antares::ModelerStudy;
+
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
@@ -105,14 +107,78 @@ Modeler::Config::Model convertModel(const Model& ymlModel)
 
 } // namespace
 
-Modeler::Config::OptimConfig OptimConfigConverter::convert(const OptimConfig& ymlOptimConfig)
+// gp : copied from readSystem.cpp, should be moved to a common utils file
+static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
-    std::vector<Modeler::Config::Model> models;
+    size_t pos = s.find('.');
+    if (pos == std::string::npos)
+    {
+        throw std::runtime_error(s);
+    }
+
+    std::string library = s.substr(0, pos);
+    std::string model = s.substr(pos + 1);
+    return {library, model};
+}
+
+static SystemModel::Model& getModel(const std::vector<SystemModel::Library>& libraries,
+                                    const std::string& libraryId,
+                                    const std::string& modelId)
+{
+    auto lib = std::ranges::find_if(libraries,
+                                    [&libraryId](const auto& l) { return l.Id() == libraryId; });
+    if (lib == libraries.end())
+    {
+        throw std::runtime_error("No library found with this name: " + libraryId);
+    }
+
+    auto search = lib->Models().find(modelId);
+    if (search == lib->Models().end())
+    {
+        throw std::runtime_error("No library found with this name: " + modelId);
+    }
+
+    return search->second;
+}
+
+SystemModel::Model& findSystemModel(const YmlOptimConfig::Model& ymlModel,
+                                    const std::vector<SystemModel::Library>& libraries)
+{
+    const auto [libraryId, modelId] = splitLibraryModelString(ymlModel.id);
+    return getModel(libraries, libraryId, modelId);
+}
+
+SystemModel::Variable& findSystemVariable(std::string variable_id, SystemModel::Model& sysModel)
+{
+    auto filter = [&variable_id](const SystemModel::Variable& v) { return v.Id() == variable_id; };
+    auto& sysVariables = sysModel.Variables();
+    auto sysVar = std::ranges::find_if(sysVariables, filter);
+    if (sysVar == sysVariables.end())
+    {
+        throw std::runtime_error("No variable found with this name: " + variable_id);
+    }
+    return *sysVar;
+}
+
+void updateSystemModel(SystemModel::Model& sysModel, const YmlOptimConfig::Model& ymlModel)
+{
+    for (const auto& var: ymlModel.variables)
+    {
+        auto& sysVariable = findSystemVariable(var.id, sysModel);
+        sysVariable.setLocation(convertLocation(var.location));
+    }
+}
+
+void OptimConfigConverter::updateLibrairies(const OptimConfig& ymlOptimConfig,
+                                            std::vector<SystemModel::Library>& libraries)
+{
     for (const auto& ymlModel: ymlOptimConfig)
     {
-        models.push_back(convertModel(ymlModel));
+        auto& sysModel = findSystemModel(ymlModel, libraries);
+        updateSystemModel(sysModel, ymlModel);
     }
-    return {models};
+
+    // Same with objectives
 }
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig

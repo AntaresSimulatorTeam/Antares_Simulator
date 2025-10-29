@@ -22,6 +22,7 @@ target_link_libraries(yml-optim-config
         Antares::exception
         PUBLIC
         Antares::modeler-optim-config
+        Antares::antares-study-system-model
 )
 
 install(DIRECTORY include/antares
