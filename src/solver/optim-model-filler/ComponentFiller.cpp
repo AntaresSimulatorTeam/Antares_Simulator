@@ -424,7 +424,7 @@ void ComponentFiller::addObjectivesToMaster(const LinearProblemApi::FillContext&
 
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
-    const auto* model = component_.getModel();
+    auto* model = component_.getModel();
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 

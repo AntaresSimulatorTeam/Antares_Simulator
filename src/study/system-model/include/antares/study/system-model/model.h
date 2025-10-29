@@ -71,7 +71,7 @@ public:
         return id_;
     }
 
-    const std::vector<Objective>& Objectives() const
+    std::vector<Objective>& Objectives()
     {
         return objectives_;
     }

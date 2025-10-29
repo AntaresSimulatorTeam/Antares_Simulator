@@ -51,6 +51,11 @@ public:
         return expression_;
     }
 
+    void setLocation(Modeler::Config::Location loc)
+    {
+        location_ = loc;
+    }
+
     [[nodiscard]] bool isInSubProblem() const
     {
         return location_ == Modeler::Config::Location::SUBPROBLEMS

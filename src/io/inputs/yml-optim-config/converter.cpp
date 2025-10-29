@@ -102,12 +102,31 @@ SystemModel::Variable& findSystemVariable(std::string variable_id, SystemModel::
     return *sysVar;
 }
 
+
+SystemModel::Objective& findSystemObjective(std::string obj_id, SystemModel::Model& sysModel)
+{
+    auto filter = [&obj_id](const SystemModel::Objective& o) { return o.Id() == obj_id; };
+    auto& sysObjectives = sysModel.Objectives();
+    auto sysObj = std::ranges::find_if(sysObjectives, filter);
+    if (sysObj == sysObjectives.end())
+    {
+        throw std::runtime_error("No objetctive found with this name: " + obj_id);
+    }
+    return *sysObj;
+}
+
 void updateSystemModel(SystemModel::Model& sysModel, const YmlOptimConfig::Model& ymlModel)
 {
-    for (const auto& var: ymlModel.variables)
+    for (const auto& ymlVar: ymlModel.variables)
     {
-        auto& sysVariable = findSystemVariable(var.id, sysModel);
-        sysVariable.setLocation(convertLocation(var.location));
+        auto& sysVariable = findSystemVariable(ymlVar.id, sysModel);
+        sysVariable.setLocation(convertLocation(ymlVar.location));
+    }
+
+    for (const auto& ymlObj: ymlModel.objectives)
+    {
+        auto& sysObjective = findSystemObjective(ymlObj.id, sysModel);
+        sysObjective.setLocation(convertLocation(ymlObj.location));
     }
 }
 
@@ -119,8 +138,6 @@ void OptimConfigConverter::updateLibrairies(const OptimConfig& ymlOptimConfig,
         auto& sysModel = findSystemModel(ymlModel, libraries);
         updateSystemModel(sysModel, ymlModel);
     }
-
-    // Same with objectives
 }
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig
