@@ -139,8 +139,7 @@ void Modeler::run() const
       parameters.lastTimeStep,
       parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
       parameters.lastTimeStep,  // global = local
-      0,
-      Antares::Modeler::Config::Location::SUBPROBLEMS};
+      0};
 
     // Sub problem
     auto masterAndSubPbvars = std::make_unique<MasterAndSubPbVariables>();

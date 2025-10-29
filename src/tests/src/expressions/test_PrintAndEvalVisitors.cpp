@@ -740,12 +740,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
-                        {hour_0,
-                         hour_1 /*two hours*/,
-                         hour_0,
-                         hour_1,
-                         0,
-                         Antares::Modeler::Config::Location::SUBPROBLEMS},
+                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
                         components.front());
 
     const auto eval = visitor.dispatch(&root).valuesAsVector();
@@ -789,10 +784,9 @@ EvaluationResult CreateAndEvaluateTimeNode(const right& p)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
     optimContainer.addFromSystemComponents(components);
-    EvalVisitor visitor(
-      optimContainer,
-      {first, last /*two hours*/, first, last, 0, Antares::Modeler::Config::Location::SUBPROBLEMS},
-      components.back());
+    EvalVisitor visitor(optimContainer,
+                        {first, last /*two hours*/, first, last, 0},
+                        components.back());
 
     return visitor.dispatch(&root);
 }
@@ -844,12 +838,7 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
-                        {first,
-                         last /*three hours*/,
-                         first,
-                         last,
-                         0,
-                         Antares::Modeler::Config::Location::SUBPROBLEMS},
+                        {first, last /*three hours*/, first, last, 0},
                         components.back());
 
     return visitor.dispatch(&root);
@@ -892,12 +881,7 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
-                        {first,
-                         last /*three hours*/,
-                         first,
-                         last,
-                         0,
-                         Antares::Modeler::Config::Location::SUBPROBLEMS},
+                        {first, last /*three hours*/, first, last, 0},
                         components.back());
     return visitor.dispatch(&root);
 }
@@ -935,12 +919,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
-                        {hour_0,
-                         hour_1 /*two hours*/,
-                         hour_0,
-                         hour_1,
-                         0,
-                         Antares::Modeler::Config::Location::SUBPROBLEMS},
+                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
                         components.back());
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
@@ -1004,12 +983,7 @@ void evaluate_time_dependent_operation()
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
-                        {hour_0,
-                         hour_1 /*two hours*/,
-                         hour_0,
-                         hour_1,
-                         0,
-                         Antares::Modeler::Config::Location::SUBPROBLEMS},
+                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
                         components.back());
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
@@ -1045,12 +1019,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
-                        {hours.at(0),
-                         hours.at(1) /*two hours*/,
-                         hours.at(0),
-                         hours.at(1),
-                         0,
-                         Antares::Modeler::Config::Location::SUBPROBLEMS},
+                        {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
                         components.back());
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
@@ -1093,12 +1062,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
-                        {hours.at(0),
-                         hours.at(1) /*two hours*/,
-                         hours.at(0),
-                         hours.at(1),
-                         0,
-                         Antares::Modeler::Config::Location::SUBPROBLEMS},
+                        {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
                         components.back());
 
     const auto eval = visitor.dispatch(&root).valueAsDouble();
@@ -1451,8 +1415,7 @@ BOOST_AUTO_TEST_CASE(HandleEmptyString)
 
 BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 {
-    Antares::Optimisation::LinearProblemApi::FillContext
-      fillContext{0, 2, 10, 12, 0, Antares::Modeler::Config::Location::SUBPROBLEMS};
+    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 2, 10, 12, 0};
     ModelBuilder modelBuilder;
 
     unsigned varIndex = 0;

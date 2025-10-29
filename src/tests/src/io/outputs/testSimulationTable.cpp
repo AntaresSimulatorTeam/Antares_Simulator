@@ -860,12 +860,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         }
     }
 
-    void build(const FillContext& fillContext = {0,
-                                                 4,
-                                                 0,
-                                                 4,
-                                                 0,
-                                                 Antares::Modeler::Config::Location::SUBPROBLEMS},
+    void build(const FillContext& fillContext = {0, 4, 0, 4, 0},
                MockLinearProblem* linearProblem = nullptr)
     {
         if (!linearProblem)
@@ -1029,12 +1024,7 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {
     SimulationTableCsv table;
     MockLinearProblem linearProblem(true);
-    const FillContext fillContext(0,
-                                  9,
-                                  0,
-                                  9,
-                                  0,
-                                  Antares::Modeler::Config::Location::SUBPROBLEMS); // 10 time steps
+    const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
     build(fillContext, &linearProblem);
 
     const auto& component = components.front();
@@ -1187,12 +1177,7 @@ BOOST_FIXTURE_TEST_SUITE(SimulationTableGeneratorTemplateTests, BasicProblemFixt
 BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 {
     SimulationTableCsv table;
-    FillContext fillContext(0,
-                            4,
-                            0,
-                            4,
-                            0,
-                            Antares::Modeler::Config::Location::SUBPROBLEMS); // 5 time steps
+    FillContext fillContext(0, 4, 0, 4, 0); // 5 time steps
     MockLinearProblem linearProblem(true);
     LinearProblemData data;
 

@@ -44,13 +44,7 @@ struct Fixture
 
     std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
     LinearProblemData LP_Data;
-    FillContext ctx = {
-      0,
-      0,
-      0,
-      0,
-      0,
-      Antares::Modeler::Config::Location::SUBPROBLEMS}; // dummy value for other tests than context
+    FillContext ctx = {0, 0, 0, 0, 0}; // dummy value for other tests than context
     std::unique_ptr<ILinearProblem> pb;
 };
 
@@ -126,7 +120,7 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
     Antares::Optimisation::OptimEntityContainer optimEntityContainer(*pb, nullptr, nullptr);
     fillers.push_back(std::make_unique<VarFillerContext>(optimEntityContainer));
 
-    ctx = FillContext(0, 5, 0, 5, 0, Antares::Modeler::Config::Location::SUBPROBLEMS);
+    ctx = FillContext(0, 5, 0, 5, 0);
 
     ctx.addSelectedScenarios(0);
     ctx.addSelectedScenarios(2);

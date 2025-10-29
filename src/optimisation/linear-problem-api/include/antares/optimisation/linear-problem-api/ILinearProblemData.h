@@ -26,8 +26,6 @@
 #include <string>
 #include <vector>
 
-#include "antares/modeler/optimConfig/optimConfig.h"
-
 namespace Antares::Optimisation::LinearProblemApi
 {
 /** \brief Context for filling linear problem data.
@@ -40,13 +38,10 @@ public:
                 unsigned localLastTimeStep,
                 unsigned globalFirstTimeStep,
                 unsigned globalLastTimeStep,
-                unsigned year,
-                Antares::Modeler::Config::Location location):
+                unsigned year):
         local{localFirstTimeStep, localLastTimeStep},
         global{globalFirstTimeStep, globalLastTimeStep},
-        year_(year),
-        location_(location)
-
+        year_(year)
     {
     }
 
@@ -114,7 +109,6 @@ private:
     GlobalTimeInterval global;
 
     unsigned year_ = 0;
-    Antares::Modeler::Config::Location location_;
 };
 
 /**
