@@ -184,8 +184,7 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository):
     component_(component),
-    optimEntityContainer_(optimEntityContainer),
-    scenarioGroupRepository_(scenarioGroupRepository)
+    optimEntityContainer_(optimEntityContainer)
 {
 }
 
@@ -262,7 +261,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 }
 
 void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constraint,
-                                          const std::string& constraint_id) const
+                                          const std::string& constraint_id)
 {
     auto* ct = optimEntityContainer_.Problem().addConstraint(linear_constraint.lb[0],
                                                              linear_constraint.ub[0],
@@ -279,7 +278,7 @@ void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constra
 
 void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                                   const std::string& constraint_id,
-                                                  const LinearProblemApi::FillContext& ctx) const
+                                                  const LinearProblemApi::FillContext& ctx)
 {
     auto& pb = optimEntityContainer_.Problem();
     const Dimensions dim(IntegerInterval{ctx.getYear(),
@@ -310,25 +309,54 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto& modelConstraints = component_.getModel()->Constraints();
+    using ConstraintId = std::string;
+    using ErrorMessage = std::string;
+    std::map<ConstraintId, std::vector<ErrorMessage>> messageStack;
     for (auto constraintLocalIndex = 0; constraintLocalIndex < modelConstraints.size();
          ++constraintLocalIndex)
     {
-        const auto& constraint = modelConstraints[constraintLocalIndex];
-        auto* root_node = constraint.expression().RootNode();
-        auto linear_constraints = visitor.dispatch(root_node);
-        const auto timeIndex = getConstraintTimeIndex(root_node, component_);
-
-        optimEntityContainer_.registerConstraint(component_, timeIndex);
-
-        if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
-            || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+        try
         {
-            addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx);
+            const auto& constraint = modelConstraints[constraintLocalIndex];
+            auto* root_node = constraint.expression().RootNode();
+            auto linear_constraints = visitor.dispatch(root_node);
+            const auto timeIndex = getConstraintTimeIndex(root_node, component_);
+
+            optimEntityContainer_.registerConstraint(component_, timeIndex);
+
+            if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
+                || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+            {
+                addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx);
+            }
+            else
+            {
+                addStaticConstraint(linear_constraints, constraint.Id());
+            }
         }
-        else
+        catch (const Error::InvalidArgumentError& e)
         {
-            addStaticConstraint(linear_constraints, constraint.Id());
+            messageStack[modelConstraints[constraintLocalIndex].Id()].emplace_back(e.what());
         }
+        catch (...)
+        {
+            throw;
+        }
+    }
+    if (messageStack.size() > 0)
+    {
+        std::ostringstream errMessage;
+        errMessage << fmt::format("There are some errors in model: {}.",
+                                  component_.getModel()->Id());
+        for (const auto& [constraintId, messages]: messageStack)
+        {
+            errMessage << fmt::format("\n\tIn constraint: {}:", constraintId);
+            for (const auto& msg: messages)
+            {
+                errMessage << fmt::format("\n\t\t- {}", msg);
+            }
+        }
+        throw Error::InvalidArgumentError(errMessage.str());
     }
 }
 
@@ -388,7 +416,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
             objectiveOffset = updateOffset(objectiveOffset, expr.constant(), objective.Id(), pb);
             }
         }
-        catch (const std::exception& e)
+        catch (const Error::InvalidArgumentError& e)
         {
             messageStack[objective.Id()].emplace_back(e.what());
         }

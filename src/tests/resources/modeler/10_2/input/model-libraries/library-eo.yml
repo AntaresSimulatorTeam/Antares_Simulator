@@ -38,7 +38,7 @@ library:
       type: flow
     binding-constraints:
     - id: balance
-      expression: sum_connections(balance_port.flow) = spillage - unsupplied_energy
+      expression: sum_connections(balance_port.flow) = spillage - unsupplied_energy ^ 2
     objective-contributions:
     - id: objective
       expression: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)

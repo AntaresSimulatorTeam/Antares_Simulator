@@ -60,31 +60,30 @@ public:
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository);
 
-    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addVariables(const LinearProblemApi::FillContext& ctx) override;
 
-    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(const LinearProblemApi::FillContext& ctx) override;
+    void addObjectives(const LinearProblemApi::FillContext& ctx) override;
 
 private:
-    void addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
-                             const std::string& constraint_id) const;
+    void addStaticConstraint(const LinearConstraint& linear_constraint,
+                             const std::string& constraint_id);
 
-    void addTimeDependentConstraints(const Optimisation::LinearConstraint& linear_constraints,
+    void addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
-                                     const Optimisation::LinearProblemApi::FillContext& ctx) const;
+                                     const LinearProblemApi::FillContext& ctx);
 
-    TimeIndex getConstraintTimeIndex(const Expressions::Nodes::Node* node,
+    TimeIndex getConstraintTimeIndex(const Nodes::Node* node,
                                      const ModelerStudy::SystemModel::Component& component) const;
 
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
-    const ScenarioGroupRepository& scenarioGroupRepository_;
 };
 
 class VariablesBulkAddition
 {
 public:
-    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
+    VariablesBulkAddition(LinearProblemApi::ILinearProblem& linear_problem,
                           OptimEntityContainer& optimEntityContainer);
 
     void addVariable(const std::string& compoId,
@@ -92,28 +91,28 @@ public:
                      double lb,
                      double ub,
                      bool integer,
-                     const Optimisation::Dimensions& dim) const;
+                     const Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      const std::vector<double>& lb,
                      double ub,
                      bool integer,
-                     const Optimisation::Dimensions& dim) const;
+                     const Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      double lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimisation::Dimensions& dim) const;
+                     const Dimensions& dim) const;
 
     void addVariable(const std::string& compoId,
                      const std::string& variableId,
                      const std::vector<double>& lb,
                      const std::vector<double>& ub,
                      bool integer,
-                     const Optimisation::Dimensions& dim) const;
+                     const Dimensions& dim) const;
 
     class BoundsSizeMismatch: public std::invalid_argument
     {
@@ -121,7 +120,7 @@ public:
     };
 
 private:
-    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
+    LinearProblemApi::ILinearProblem& linear_problem_;
     OptimEntityContainer& optimEntityContainer_;
 };
 } // namespace Antares::Optimisation
