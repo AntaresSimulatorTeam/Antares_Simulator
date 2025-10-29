@@ -33,6 +33,21 @@ enum class Location
     SUBPROBLEMS
 };
 
+constexpr bool operator<=(Location lhs, Location rhs)
+{
+    switch (rhs)
+    {
+    case Location::MASTER:
+        return lhs == Location::MASTER;
+    case Location::SUBPROBLEMS:
+        return lhs == Location::SUBPROBLEMS;
+    case Location::MASTER_AND_SUBPROBLEMS:
+        return true;
+    default:
+        return false;
+    }
+}
+
 } // namespace Antares::Modeler::Config
 
 namespace Antares::Modeler::Config
