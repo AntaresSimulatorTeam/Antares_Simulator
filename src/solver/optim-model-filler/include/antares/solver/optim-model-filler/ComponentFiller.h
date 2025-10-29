@@ -69,11 +69,9 @@ public:
                              MasterAndSubPbVariables* masterAndSubPbvars = nullptr);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addVariablesToMaster(const Optimisation::LinearProblemApi::FillContext& ctx);
 
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjectivesToMaster(const Optimisation::LinearProblemApi::FillContext& ctx);
 
 private:
     void addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
@@ -89,8 +87,6 @@ private:
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
-    std::function<bool(const ModelerStudy::SystemModel::Variable&)> variablesFilter_;
-    std::function<bool(const ModelerStudy::SystemModel::Objective&)> objectivesFilter_;
     MasterAndSubPbVariables* masterAndSubPbvars_ = nullptr;
 };
 } // namespace Antares::Optimisation

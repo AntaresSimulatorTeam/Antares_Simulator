@@ -100,7 +100,7 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_
     ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
 
     // Act
-    componentFiller.addVariablesToMaster(time_scenario_ctx);
+    componentFiller.addVariables(time_scenario_ctx);
 
     // Assert
     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
@@ -154,7 +154,7 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master
 
     // Act
     componentFiller.addVariables(time_scenario_ctx);
-    componentFiller.addObjectivesToMaster(time_scenario_ctx);
+    componentFiller.addObjectives(time_scenario_ctx);
 
     // Assert
     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 2);
