@@ -25,10 +25,12 @@
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 
 #include "mock-fillers/FillerContext.h"
 #include "mock-fillers/OneConstraintFiller.h"
 #include "mock-fillers/OneVarFiller.h"
+#include "mock-fillers/PowerInObjectiveFiller.h"
 #include "mock-fillers/TwoVarsTwoConstraintsFiller.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -134,6 +136,16 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 
     auto var2 = pb->lookupVariable("variable-ts3-sc2");
     BOOST_CHECK_EQUAL(var2->getLb(), 12);
+}
+
+// Build should throw Error::RuntimeError if objective contains power node
+BOOST_FIXTURE_TEST_CASE(power_in_objective___throws, Fixture)
+{
+    Antares::Optimisation::OptimEntityContainer optimEntityContainer(*pb, nullptr, nullptr);
+    fillers.push_back(std::make_unique<PowerInObjectiveFiller>(optimEntityContainer));
+
+    LinearProblemBuilder lpBuilder(std::move(fillers));
+    BOOST_CHECK_THROW(lpBuilder.build(ctx), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
