@@ -21,7 +21,6 @@
 
 #pragma once
 
-
 #include <antares/expressions/NodeRegistry.h>
 #include "antares/io/inputs/yml-model/Library.h"
 

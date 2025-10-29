@@ -6,6 +6,7 @@
 
 namespace Antares::Solver::Simulation
 {
+
 StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal,
                                                  std::vector<double>& unsupE,
                                                  const std::vector<double> Pmax,
@@ -38,18 +39,18 @@ void StorageForRemixNoLevels::checkInput(size_t size)
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
-        throw std::invalid_argument(error_msg_start + "arrays of different sizes");
+        throw std::invalid_argument(error_msg_start_hydro_remix + "arrays of different sizes");
     }
 
     if (!(withdrawal_ <= pmax_ + TOLERANCE))
     {
-        throw std::invalid_argument(error_msg_start
+        throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "Storage withdrawal not smaller than Pmax everywhere");
     }
 
     if (!(pmin_ - TOLERANCE <= withdrawal_))
     {
-        throw std::invalid_argument(error_msg_start
+        throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "Storage withdrawal not greater than Pmin everywhere");
     }
 }

@@ -78,7 +78,6 @@ public:
     }
 };
 
-
 class GroupsHours final
 {
 public:

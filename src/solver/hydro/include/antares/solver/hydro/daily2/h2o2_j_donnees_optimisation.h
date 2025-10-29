@@ -123,7 +123,6 @@ typedef struct
       ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 } PROBLEME_HYDRAULIQUE_ETENDU;
 
-
 class Hydro_problem_costs final
 {
 public:

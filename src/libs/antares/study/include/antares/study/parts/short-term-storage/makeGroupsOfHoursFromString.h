@@ -33,7 +33,6 @@ struct ShortTermStorageAdditionalConstraintsError final: std::invalid_argument
     using std::invalid_argument::invalid_argument;
 };
 
-
 std::vector<std::set<int>> makeGroupsOfHours(const std::string& hoursField);
 
 } // namespace Antares::Data::ShortTermStorage
