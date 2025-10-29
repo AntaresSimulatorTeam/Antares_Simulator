@@ -37,8 +37,8 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     const auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
     Antares::MersenneTwister noiseGenerator;
-    noiseGenerator.reset(
-      Antares::Constants::seed); // Arbitrary seed, hard-coded since we don't really want
+    constexpr unsigned int noiseSeed = 0x79686d64; // "hydm" in hexa
+    noiseGenerator.reset(noiseSeed); // Arbitrary seed, hard-coded since we don't really want
     // the user to change it
     const std::vector<const std::vector<int>*> monthlyVariables = {
       &CorrespondanceDesVariables.NumeroDeVariableVolume,

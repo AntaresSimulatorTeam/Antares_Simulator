@@ -32,8 +32,9 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
     auto& CorrespondanceDesVariables = ProblemeHydraulique.CorrespondanceDesVariables;
     auto NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
     Antares::MersenneTwister noiseGenerator;
-    noiseGenerator.reset(
-      Antares::Constants::seed); // Arbitrary seed, hard-coded since we don't really want
+    constexpr unsigned int costNoiseSeed = 0x79686a64; // "hydj" in hexa
+
+    noiseGenerator.reset(costNoiseSeed); // Arbitrary seed, hard-coded since we don't really want
     // the user to change it
 
     for (int i = 0; i < NombreDeProblemes; i++)

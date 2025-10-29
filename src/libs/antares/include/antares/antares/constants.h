@@ -63,7 +63,6 @@ constexpr std::array<unsigned int, MONTHS_PER_YEAR>
   daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 constexpr unsigned int nbHoursInAWeek = 168;
 constexpr double noiseAmplitude = 1e-3;
-constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa
 
 } // namespace Antares::Constants
 
