@@ -242,10 +242,12 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository,
+                                 Modeler::Config::Location targetLocation,
                                  MasterAndSubPbVariables* masterAndSubPbvars):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
     scenarioGroupRepository_(scenarioGroupRepository),
+    targetLocation_(targetLocation),
     masterAndSubPbvars_(masterAndSubPbvars)
 {
 }
@@ -295,7 +297,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
     for (const auto& variable: variables)
     {
         // Skip the variable in case of location mismatch
-        if (!AreLocationsCompatible(variable.location(), ctx.location()))
+        if (!AreLocationsCompatible(variable.location(), targetLocation_))
         {
             continue;
         }
@@ -416,7 +418,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     for (const auto& objective: model->Objectives())
     {
         // Skip the objective in case of location mismatch
-        if (!AreLocationsCompatible(objective.location(), ctx.location()))
+        if (!AreLocationsCompatible(objective.location(), targetLocation_))
         {
             continue;
         }

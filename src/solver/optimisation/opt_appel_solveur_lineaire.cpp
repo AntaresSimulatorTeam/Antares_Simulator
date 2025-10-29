@@ -89,6 +89,7 @@ static void fillModelerComponents(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
+                                            Antares::Modeler::Config::Location::SUBPROBLEMS,
                                             masterAndSubPbvars));
     }
 }

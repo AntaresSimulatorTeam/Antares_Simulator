@@ -66,6 +66,7 @@ public:
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository,
+                             Modeler::Config::Location targetLocation,
                              MasterAndSubPbVariables* masterAndSubPbvars = nullptr);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -87,6 +88,7 @@ private:
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
+    const Modeler::Config::Location targetLocation_;
     MasterAndSubPbVariables* masterAndSubPbvars_ = nullptr;
 };
 } // namespace Antares::Optimisation
