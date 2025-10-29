@@ -137,6 +137,13 @@ Nodes::Node* LinearProblemBuildingFixture::add(Nodes::Node* node1, Nodes::Node* 
     return nodes.create<Nodes::SumNode>(node1, node2);
 }
 
+Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::power(
+  Antares::Expressions::Nodes::Node* node1,
+  Antares::Expressions::Nodes::Node* node2)
+{
+    return nodes.create<Antares::Expressions::Nodes::PowerNode>(node1, node2);
+}
+
 Nodes::Node* LinearProblemBuildingFixture::negate(Nodes::Node* node)
 {
     return nodes.create<Nodes::NegationNode>(node);

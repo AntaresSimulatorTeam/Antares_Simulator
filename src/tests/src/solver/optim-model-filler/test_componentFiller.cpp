@@ -826,4 +826,14 @@ BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
     }
 }
 
+BOOST_AUTO_TEST_CASE(objective_with_power_node___throws)
+{
+    // objective : param ^ 2
+    auto objective = power(parameter("param"), literal((2)));
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+
+    BOOST_CHECK_THROW(buildLinearProblem(), Antares::Error::RuntimeError);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
