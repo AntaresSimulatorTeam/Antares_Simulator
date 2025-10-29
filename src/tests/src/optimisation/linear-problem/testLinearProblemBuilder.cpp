@@ -43,7 +43,6 @@ struct Fixture
     }
 
     std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
-    LinearProblemData LP_Data;
     FillContext ctx = {0, 0, 0, 0, 0}; // dummy value for other tests than context
     std::unique_ptr<ILinearProblem> pb;
 };
