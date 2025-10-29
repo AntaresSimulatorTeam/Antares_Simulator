@@ -71,7 +71,8 @@ void LinearProblemBuildingFixture::buildLinearProblem(
           scenario_group_repository);
         fillers.push_back(std::move(cf));
     }
-    Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
+    Antares::Optimisation::LinearProblemApi::LinearProblemBuilder linear_problem_builder(
+      std::move(fillers));
 
     linear_problem_builder.build(time_scenario_ctx);
 }
