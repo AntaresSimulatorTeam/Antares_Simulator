@@ -368,22 +368,52 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
+    using ObjectiveId = std::string;
+    using ErrorMessage = std::string;
+    std::map<ObjectiveId, std::vector<ErrorMessage>> messageStack;
     for (const auto& objective: model->Objectives())
     {
-        const auto linearExpression = visitor.visitMergeDuplicates(
-          objective.expression().RootNode());
-
-        auto& pb = optimEntityContainer_.Problem();
-        std::optional<double> objectiveOffset;
-        for (const auto& expr: linearExpression)
+        try
         {
-            for (const auto& [index, value]: expr)
+            const auto linearExpression = visitor.visitMergeDuplicates(
+              objective.expression().RootNode());
+
+            auto& pb = optimEntityContainer_.Problem();
+        std::optional<double> objectiveOffset;
+            for (const auto& expr: linearExpression)
             {
-                pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
-                                           value);
-            }
+                for (const auto& [index, value]: expr)
+                {
+                    pb.setObjectiveCoefficient(
+                      solverVariables[static_cast<std::size_t>(index)].get(),
+                      value);
+                }
             objectiveOffset = updateOffset(objectiveOffset, expr.constant(), objective.Id(), pb);
+            }
         }
+        catch (const std::exception& e)
+        {
+            messageStack[objective.Id()].emplace_back(e.what());
+        }
+        catch (...)
+        {
+            throw;
+        }
+    }
+    if (messageStack.size() > 0)
+    {
+        std::ostringstream errMessage;
+        errMessage << fmt::format("There are some errors in model: {}.",
+                                  component_.getModel()->Id());
+        for (const auto& [objectiveId, messages]: messageStack)
+        {
+            errMessage << fmt::format("\n\tIn objective contribution: {}:", objectiveId);
+            for (const auto& msg: messages)
+            {
+                errMessage << fmt::format("\n\t\t- {}", msg);
+            }
+        }
+        throw Error::InvalidArgumentError(errMessage.str());
     }
 }
 
