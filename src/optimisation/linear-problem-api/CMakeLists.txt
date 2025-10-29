@@ -19,7 +19,11 @@ add_library(${PROJ} ${SRC_API})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
-
+target_link_libraries(${PROJ}
+        PRIVATE
+        Antares::exception
+        Antares::logs
+)
 
 target_include_directories(${PROJ}
         PUBLIC

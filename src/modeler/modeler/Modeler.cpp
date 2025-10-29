@@ -82,7 +82,7 @@ public:
             fillers.push_back(std::move(cf));
         }
 
-        LinearProblemBuilder linear_problem_builder(fillers);
+        LinearProblemBuilder linear_problem_builder(std::move(fillers));
 
         linear_problem_builder.build(timeScenarioCtx);
     }

@@ -144,7 +144,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
           problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
-    LinearProblemBuilder linearProblemBuilder(fillersCollection);
+    LinearProblemBuilder linearProblemBuilder(std::move(fillersCollection));
 
     // Note that the modeler is only called for the 1st simulation week,
     // this limitation must be lifted later,

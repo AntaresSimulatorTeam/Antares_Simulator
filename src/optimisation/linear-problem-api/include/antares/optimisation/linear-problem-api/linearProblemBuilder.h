@@ -31,7 +31,7 @@ namespace Antares::Optimisation::LinearProblemApi
 class LinearProblemBuilder final
 {
 public:
-    explicit LinearProblemBuilder(std::vector<std::unique_ptr<LinearProblemFiller>>& fillers);
+    explicit LinearProblemBuilder(std::vector<std::unique_ptr<LinearProblemFiller>>&& fillers);
     void build(const FillContext& ctx);
 
 private:

@@ -21,14 +21,16 @@
 
 #include <algorithm>
 #include <memory>
+#include <sstream>
 
+#include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
-
 LinearProblemBuilder::LinearProblemBuilder(
-  std::vector<std::unique_ptr<LinearProblemFiller>>& fillers):
+  std::vector<std::unique_ptr<LinearProblemFiller>>&& fillers):
     fillers_(std::move(fillers))
 {
 }
@@ -37,7 +39,28 @@ void LinearProblemBuilder::build(const FillContext& ctx)
 {
     std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addVariables(ctx); });
     std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addConstraints(ctx); });
-    std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addObjectives(ctx); });
+    std::vector<std::string> errorMessages;
+    std::ranges::for_each(fillers_,
+                          [&](const auto& filler)
+                          {
+                              try
+                              {
+                                  filler->addObjectives(ctx);
+                              }
+                              catch (Error::InvalidArgumentError& e)
+                              {
+                                  errorMessages.emplace_back(e.what());
+                              }
+                          });
+    if (!errorMessages.empty())
+    {
+        std::ostringstream errMessage;
+        errMessage << "Errors occurred while building the linear problem:";
+        for (const auto& msg: errorMessages)
+        {
+            errMessage << "\n- " << msg;
+        }
+        logs.error() << errMessage.str();
+    }
 }
-
 } // namespace Antares::Optimisation::LinearProblemApi
