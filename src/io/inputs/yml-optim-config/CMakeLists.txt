@@ -21,7 +21,6 @@ target_link_libraries(yml-optim-config
         yaml-cpp::yaml-cpp
         Antares::exception
         PUBLIC
-        Antares::modeler-optim-config
         Antares::antares-study-system-model
 )
 

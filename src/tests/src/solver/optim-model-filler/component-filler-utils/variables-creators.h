@@ -2,7 +2,6 @@
 
 #include "antares/expressions/expression.h"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/modeler/optimConfig/optimConfig.h"
 #include "antares/study/system-model/variable.h"
 
 using namespace Antares;

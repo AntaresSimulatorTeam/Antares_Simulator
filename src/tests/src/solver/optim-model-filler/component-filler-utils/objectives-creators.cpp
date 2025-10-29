@@ -1,7 +1,5 @@
 #include "objectives-creators.h"
 
-#include "antares/modeler/optimConfig/optimConfig.h"
-
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;

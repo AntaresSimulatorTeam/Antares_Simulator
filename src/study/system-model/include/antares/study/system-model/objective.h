@@ -23,7 +23,8 @@
 #include <string>
 
 #include <antares/expressions/expression.h>
-#include "antares/modeler/optimConfig/optimConfig.h"
+
+#include "optimConfig.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {

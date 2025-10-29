@@ -22,7 +22,6 @@
 #pragma once
 
 #include <antares/io/inputs/yml-optim-config/OptimConfig.h>
-#include <antares/modeler/optimConfig/optimConfig.h>
 #include "antares/study/system-model/library.h"
 
 namespace Antares::IO::Inputs::YmlOptimConfig
