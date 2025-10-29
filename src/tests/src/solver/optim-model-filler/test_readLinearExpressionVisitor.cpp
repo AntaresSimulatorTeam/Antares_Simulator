@@ -97,7 +97,12 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<TimeSumNode>(from, to, create<ParameterNode>("param_ts")));
 
-    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    ctx = LinearProblemApi::FillContext(0,
+                                        2,
+                                        0,
+                                        2,
+                                        0,
+                                        Antares::Modeler::Config::Location::SUBPROBLEMS);
 
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 3 /* timesteps */);
@@ -120,7 +125,12 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVis
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<AllTimeSumNode>(create<ParameterNode>("param_ts")));
 
-    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    ctx = LinearProblemApi::FillContext(0,
+                                        2,
+                                        0,
+                                        2,
+                                        0,
+                                        Antares::Modeler::Config::Location::SUBPROBLEMS);
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 3 /* timesteps */);
 
@@ -144,7 +154,12 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    ctx = LinearProblemApi::FillContext(hour_0, hour_1, hour_0, hour_1, 0);
+    ctx = LinearProblemApi::FillContext(hour_0,
+                                        hour_1,
+                                        hour_0,
+                                        hour_1,
+                                        0,
+                                        Antares::Modeler::Config::Location::SUBPROBLEMS);
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 2 /* timesteps */);
     // Constants

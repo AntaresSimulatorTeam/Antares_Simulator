@@ -51,7 +51,12 @@ public:
     ScenarioGroupRepository scenario_group_repo;
     OptimEntityContainer optimEntityContainer;
 
-    FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
+    FillContext time_scenario_ctx = {0,
+                                     0,
+                                     0,
+                                     0,
+                                     0,
+                                     Antares::Modeler::Config::Location::SUBPROBLEMS};
 
 private:
     // Function members

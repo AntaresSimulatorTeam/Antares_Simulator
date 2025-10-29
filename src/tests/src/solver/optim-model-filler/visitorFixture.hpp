@@ -59,7 +59,12 @@ struct VisitorFixture: Registry<Node>
 
     OptimEntityContainer optimContainer;
     std::vector<SystemModel::Component> components;
-    LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    LinearProblemApi::FillContext ctx{0,
+                                      0,
+                                      0,
+                                      0,
+                                      0,
+                                      Antares::Modeler::Config::Location::SUBPROBLEMS};
 
     VisitorFixture():
         linearProblem(false),

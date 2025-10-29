@@ -346,7 +346,8 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
       = getscenarioGroupRepository(components.front());
 
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    Antares::Optimisation::LinearProblemApi::FillContext
+      ctx{0, 0, 0, 0, 0, Antares::Modeler::Config::Location::SUBPROBLEMS};
 
     Antares::Optimisation::OptimEntityContainer optimEntityContainer = Antares::Optimisation::
       OptimEntityContainer(linearProblem, &data, &scenarioGroupRepository);

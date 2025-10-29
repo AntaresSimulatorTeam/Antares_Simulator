@@ -80,7 +80,13 @@ void LinearProblemBuildingFixture::buildLinearProblem(
 
 void LinearProblemBuildingFixture::buildLinearProblem()
 {
-    LinearProblemApi::FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
+    LinearProblemApi::FillContext time_scenario_ctx = {
+      0,
+      0,
+      0,
+      0,
+      0,
+      Antares::Modeler::Config::Location::SUBPROBLEMS};
     buildLinearProblem(time_scenario_ctx);
 }
 

@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
                                true);
     createComponent("some_model", "some_component");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, 0, 0, 0};
+    FillContext ctx{0, last_time_step, 0, 0, 0, Antares::Modeler::Config::Location::SUBPROBLEMS};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
@@ -207,7 +207,12 @@ BOOST_AUTO_TEST_CASE(
     createComponent("m1", "component_1");
     createComponent("m2", "component_2");
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
+    FillContext ctx{0,
+                    last_time_step,
+                    0,
+                    last_time_step,
+                    0,
+                    Antares::Modeler::Config::Location::SUBPROBLEMS};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
 
@@ -357,7 +362,12 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     constexpr unsigned int last_time_step = 9;
     std::vector<unsigned int> timeSteps(last_time_step + 1);
     std::ranges::generate(timeSteps, [i = 0]() mutable { return i++; });
-    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
+    FillContext ctx{0,
+                    last_time_step,
+                    0,
+                    last_time_step,
+                    0,
+                    Antares::Modeler::Config::Location::SUBPROBLEMS};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
 
@@ -426,7 +436,12 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
                                     Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)});
 
     const vector<unsigned int> timeSteps{0, 1};
-    FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 0};
+    FillContext ctx{timeSteps.at(0),
+                    timeSteps.at(1),
+                    timeSteps.at(0),
+                    timeSteps.at(1),
+                    0,
+                    Antares::Modeler::Config::Location::SUBPROBLEMS};
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
     bounds_time_series->add({0., 1., 2.});
@@ -483,7 +498,12 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
       "GROUPENAME");
 
     const vector<unsigned int> timeSteps{0, 1};
-    FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 3};
+    FillContext ctx{timeSteps.at(0),
+                    timeSteps.at(1),
+                    timeSteps.at(0),
+                    timeSteps.at(1),
+                    3,
+                    Antares::Modeler::Config::Location::SUBPROBLEMS};
 
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
     // setting 3 hours (including h 1 and 2)
@@ -694,7 +714,12 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
     createComponent("model", "componentA", {});
 
     constexpr unsigned int last_time_step = 9;
-    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
+    FillContext ctx{0,
+                    last_time_step,
+                    0,
+                    last_time_step,
+                    0,
+                    Antares::Modeler::Config::Location::SUBPROBLEMS};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
 

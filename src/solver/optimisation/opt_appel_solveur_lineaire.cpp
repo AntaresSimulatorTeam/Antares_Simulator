@@ -116,7 +116,8 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             localLast,
             globalFirst,
             globalLast,
-            problemeHebdo->year}; // TODO: handle scenarios/year
+            problemeHebdo->year,
+            Antares::Modeler::Config::Location::SUBPROBLEMS};
 }
 
 void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
