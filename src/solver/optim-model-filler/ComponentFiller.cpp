@@ -239,11 +239,6 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     }
 }
 
-auto subproblemVariables = [](const Variable& v) { return v.isInSubProblem(); };
-auto masterproblemVariables = [](const Variable& v) { return v.isInMasterProblem(); };
-auto subproblemObjectives = [](const Objective& o) { return o.isInSubProblem(); };
-auto masterproblemObjectives = [](const Objective& o) { return o.isInMasterProblem(); };
-
 ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository,
@@ -299,6 +294,11 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
     auto& pb = optimEntityContainer_.Problem();
     for (const auto& variable: variables)
     {
+        // Skip the variable in case of location mismatch
+        if (!(variable.location() <= ctx.location()))
+        {
+            continue;
+        }
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == ValueType::BOOL ? 0 : -pb.infinity());
         const auto& ub = valueOrDefault(variable.UpperBound(),
@@ -332,7 +332,8 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            dims);
         }
 
-        if (variable.isInBothProblemTypes() && masterAndSubPbvars_)
+        if (variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS
+            && masterAndSubPbvars_)
         {
             masterAndSubPbvars_->add(variableNames.names(), pb.variableCount());
         }
@@ -414,6 +415,11 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 
     for (const auto& objective: model->Objectives())
     {
+        // Skip the objective in case of location mismatch
+        if (!(objective.location() <= ctx.location()))
+        {
+            continue;
+        }
         const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());
 

@@ -90,6 +90,11 @@ public:
         return year_;
     }
 
+    [[nodiscard]] Antares::Modeler::Config::Location location() const
+    {
+        return location_;
+    }
+
 private:
     std::vector<unsigned> selectedScenario;
 

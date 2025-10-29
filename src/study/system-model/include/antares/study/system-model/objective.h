@@ -51,16 +51,9 @@ public:
         return expression_;
     }
 
-    [[nodiscard]] bool isInSubProblem() const
+    [[nodiscard]] Modeler::Config::Location location() const
     {
-        return location_ == Modeler::Config::Location::SUBPROBLEMS
-               || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
-    }
-
-    [[nodiscard]] bool isInMasterProblem() const
-    {
-        return location_ == Modeler::Config::Location::MASTER
-               || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+        return location_;
     }
 
 private:
