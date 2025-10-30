@@ -44,7 +44,7 @@ class MasterAndSubPbVariables
 public:
     MasterAndSubPbVariables() = default;
     void setProblemIdentifier(std::string id);
-    void add(const std::vector<std::string>& names, unsigned varsCountInPb);
+    void add(std::vector<std::string>&& varnames, unsigned varsCountInPb);
 
 private:
     std::string pbIdentifier_ = "master";

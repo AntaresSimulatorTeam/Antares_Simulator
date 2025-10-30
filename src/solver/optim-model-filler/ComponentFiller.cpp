@@ -97,8 +97,9 @@ void MasterAndSubPbVariables::setProblemIdentifier(std::string id)
     pbIdentifier_ = id;
 }
 
-void MasterAndSubPbVariables::add(const std::vector<std::string>& names, unsigned varsCountInPb)
+void MasterAndSubPbVariables::add(std::vector<std::string>&& varnames, unsigned varsCountInPb)
 {
+    std::vector<std::string> names = std::move(varnames);
     unsigned nbVars = names.size();
     unsigned startIndexInPb = varsCountInPb - nbVars;
     unsigned varIndex = startIndexInPb;
