@@ -90,22 +90,21 @@ SystemModel::Model& findSystemModel(const YmlOptimConfig::Model& ymlModel,
     return getModel(libraries, libraryId, modelId);
 }
 
-SystemModel::Variable& findSystemVariable(std::string variable_id, SystemModel::Model& sysModel)
+SystemModel::Variable& findSystemVariable(const std::string var_id, SystemModel::Model& sysModel)
 {
-    auto filter = [&variable_id](const SystemModel::Variable& v) { return v.Id() == variable_id; };
+    auto filter = [&var_id](const SystemModel::Variable& v) { return v.Id() == var_id; };
     auto& sysVariables = sysModel.Variables();
     auto sysVar = std::ranges::find_if(sysVariables, filter);
     if (sysVar == sysVariables.end())
     {
-        throw std::runtime_error("No variable found with this name: " + variable_id);
+        throw std::runtime_error("No variable found with this name: " + var_id);
     }
     return *sysVar;
 }
 
-
-SystemModel::Objective& findSystemObjective(std::string obj_id, SystemModel::Model& sysModel)
+SystemModel::Objective& findSystemObjective(const std::string obj_id, SystemModel::Model& sysModel)
 {
-    auto filter = [&obj_id](const SystemModel::Objective& o) { return o.Id() == obj_id; };
+    auto filter = [&obj_id](const SystemModel::Objective& obj) { return obj.Id() == obj_id; };
     auto& sysObjectives = sysModel.Objectives();
     auto sysObj = std::ranges::find_if(sysObjectives, filter);
     if (sysObj == sysObjectives.end())
