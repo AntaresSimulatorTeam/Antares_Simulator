@@ -33,10 +33,10 @@ using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Test::Modeler
 {
-std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
-build_context_parameter_with(const std::string& id,
-                             const std::string& value,
-                             const Antares::ModelerStudy::SystemModel::ParameterType& type)
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
+  const std::string& id,
+  const std::string& value,
+  const ParameterType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
@@ -92,7 +92,7 @@ void LinearProblemBuildingFixture::buildLinearProblem()
 void LinearProblemBuildingFixture::createComponent(
   const std::string& modelId,
   const std::string& componentId,
-  std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> parameterValues,
+  std::map<std::string, ParameterTypeAndValue> parameterValues,
   std::string scenarioGroupId)
 {
     ComponentBuilder component_builder;
@@ -106,44 +106,46 @@ void LinearProblemBuildingFixture::createComponent(
     componentIndex_++;
 }
 
-Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::literal(double value)
+Nodes::Node* LinearProblemBuildingFixture::literal(double value)
 {
-    return nodes.create<Antares::Expressions::Nodes::LiteralNode>(value);
+    return nodes.create<Nodes::LiteralNode>(value);
 }
 
-Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::parameter(
+Nodes::Node* LinearProblemBuildingFixture::parameter(
   const std::string& paramId,
   const Antares::Optimisation::TimeIndex& timeIndex)
 {
-    return nodes.create<Antares::Expressions::Nodes::ParameterNode>(paramId, timeIndex);
+    return nodes.create<Nodes::ParameterNode>(paramId, timeIndex);
 }
 
-Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::variable(
+Nodes::Node* LinearProblemBuildingFixture::variable(
   const std::string& varId,
   unsigned index,
   const Antares::Optimisation::TimeIndex& timeIndex)
 {
-    return nodes.create<Antares::Expressions::Nodes::VariableNode>(varId, index, timeIndex);
+    return nodes.create<Nodes::VariableNode>(varId, index, timeIndex);
 }
 
-Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::multiply(
-  Antares::Expressions::Nodes::Node* node1,
-  Antares::Expressions::Nodes::Node* node2)
+Nodes::Node* LinearProblemBuildingFixture::multiply(Nodes::Node* node1, Nodes::Node* node2)
 {
-    return nodes.create<Antares::Expressions::Nodes::MultiplicationNode>(node1, node2);
+    return nodes.create<Nodes::MultiplicationNode>(node1, node2);
 }
 
-Antares::Expressions::Nodes::Node* LinearProblemBuildingFixture::negate(
-  Antares::Expressions::Nodes::Node* node)
+Nodes::Node* LinearProblemBuildingFixture::add(Nodes::Node* node1, Nodes::Node* node2)
 {
-    return nodes.create<Antares::Expressions::Nodes::NegationNode>(node);
+    return nodes.create<Nodes::SumNode>(node1, node2);
+}
+
+Nodes::Node* LinearProblemBuildingFixture::negate(Nodes::Node* node)
+{
+    return nodes.create<Nodes::NegationNode>(node);
 }
 
 void LinearProblemBuildingFixture::createModel(const std::string& modelId,
                                                const std::vector<std::string>& parameterIds,
                                                const std::vector<VariableData>& variablesData,
                                                const std::vector<ConstraintData>& constraintsData,
-                                               Antares::Expressions::Nodes::Node* objective)
+                                               Nodes::Node* objective)
 {
     std::vector<Parameter> parameters;
     for (const auto& parameter_id: std::move(parameterIds))
@@ -162,11 +164,11 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
   std::vector<Parameter> parameters,
   const std::vector<VariableData>& variablesData,
   const std::vector<ConstraintData>& constraintsData,
-  Antares::Expressions::Nodes::Node* objective)
+  Nodes::Node* objective)
 {
-    auto createExpression = [this](Antares::Expressions::Nodes::Node* node)
+    auto createExpression = [this](Nodes::Node* node)
     {
-        Antares::Expressions::NodeRegistry node_registry(node, std::move(nodes));
+        NodeRegistry node_registry(node, std::move(nodes));
         Expression expression("expression", std::move(node_registry));
         return expression;
     };
@@ -206,10 +208,10 @@ void LinearProblemBuildingFixture::createModelWithOneFloatVar(
   const std::string& modelId,
   const std::vector<std::string>& parameterIds,
   const std::string& varId,
-  Antares::Expressions::Nodes::Node* lb,
-  Antares::Expressions::Nodes::Node* ub,
+  Nodes::Node* lb,
+  Nodes::Node* ub,
   const std::vector<ConstraintData>& constraintsData,
-  Antares::Expressions::Nodes::Node* objective,
+  Nodes::Node* objective,
   bool time_dependent)
 {
     createModel(modelId,

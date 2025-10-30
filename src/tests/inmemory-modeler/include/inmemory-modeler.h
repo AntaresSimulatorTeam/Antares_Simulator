@@ -111,6 +111,8 @@ struct LinearProblemBuildingFixture
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
                                                 Antares::Expressions::Nodes::Node* node2);
+    Antares::Expressions::Nodes::Node* add(Antares::Expressions::Nodes::Node* node1,
+                                           Antares::Expressions::Nodes::Node* node2);
 
     Antares::Expressions::Nodes::Node* negate(Antares::Expressions::Nodes::Node* node);
 

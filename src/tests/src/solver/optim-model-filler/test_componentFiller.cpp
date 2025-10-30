@@ -736,4 +736,36 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x")), -25);
 }
 
+BOOST_AUTO_TEST_CASE(one_var_no_offset)
+{
+    auto objective = variable("x", 0);
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 0);
+}
+
+// One var with param no offset
+BOOST_AUTO_TEST_CASE(one_var_with_param_no_offset)
+{
+    auto objective = multiply(parameter("param"), variable("x", 0));
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+    buildLinearProblem();
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 0);
+}
+
+// One var with offset
+BOOST_AUTO_TEST_CASE(one_var_with_offset)
+{
+    auto objective = add(variable("x", 0), literal(10));
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 10);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
