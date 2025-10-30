@@ -212,7 +212,9 @@ BOOST_AUTO_TEST_CASE(variable_decomposition)
     ModelBuilder model_builder;
     model_builder.withId("model");
     std::vector<Variable> variables;
+    variables.push_back({"x", {}, {}, ValueType::FLOAT, {}, {}});
     variables.push_back({"y", {}, {}, ValueType::FLOAT, {}, {}});
+    variables.push_back({"z", {}, {}, ValueType::FLOAT, {}, {}});
     model_builder.withVariables(std::move(variables));
     auto model = model_builder.build();
     std::vector<Model> models;
@@ -225,19 +227,38 @@ BOOST_AUTO_TEST_CASE(variable_decomposition)
 
     // optim-config's YAML
     const auto folder = std::filesystem::temp_directory_path();
+    const auto input = folder / "input";
 
-    const auto yamlPath = folder / "optim-config.yml";
-    std::ofstream outfile(yamlPath);
+    std::filesystem::create_directory(input);
+    const auto yamlPath = input / "optim-config.yml";
+    std::ofstream outfile(yamlPath, std::ofstream::trunc | std::ofstream::out);
     outfile << R"(models:
   - id: library.model
     model-decomposition:
       variables:
+        - id: x
+          location: master
         - id: y
-          location: master-and-subproblems)";
+          location: master-and-subproblems
+        - id: z
+          location: subproblems)";
+    outfile.flush();
 
     Antares::Solver::LoadFiles::loadOptimConfig(folder, libraries);
-    BOOST_CHECK(libraries[0].Models()["model"].Variables()[0].location()
-                == Antares::Modeler::Config::Location::MASTER_AND_SUBPROBLEMS);
+    const auto& modelVariables = libraries[0].Models()["model"].Variables();
+
+    using namespace Antares::Modeler::Config;
+    // x
+    BOOST_CHECK_EQUAL(modelVariables[0].Id(), "x");
+    BOOST_CHECK(modelVariables[0].location() == Location::MASTER);
+
+    // y
+    BOOST_CHECK_EQUAL(modelVariables[1].Id(), "y");
+    BOOST_CHECK(modelVariables[1].location() == Location::MASTER_AND_SUBPROBLEMS);
+
+    // z
+    BOOST_CHECK_EQUAL(modelVariables[2].Id(), "z");
+    BOOST_CHECK(modelVariables[2].location() == Location::SUBPROBLEMS);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
