@@ -21,11 +21,14 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <filesystem>
+#include <fstream>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/study/system-model/model.h"
 #include "antares/study/system-model/portType.h"
 
@@ -200,6 +203,41 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
                           std::invalid_argument,
                           checkMessage("Field \"secondField\" selected for area connections was "
                                        "not defined in PortType \"portTypeId\"."));
+}
+
+// NOTE The design should be improved. We shouldn't have to rely on files to test the "join" feature
+BOOST_AUTO_TEST_CASE(variable_decomposition)
+{
+    // Model
+    ModelBuilder model_builder;
+    model_builder.withId("model");
+    std::vector<Variable> variables;
+    variables.push_back({"y", {}, {}, ValueType::FLOAT, {}, {}});
+    model_builder.withVariables(std::move(variables));
+    auto model = model_builder.build();
+    std::vector<Model> models;
+    models.emplace_back(std::move(model));
+
+    // Library
+    LibraryBuilder library_builder;
+    Library lib = library_builder.withId("library").withModels(std::move(models)).build();
+    std::vector<Library> libraries{lib};
+
+    // optim-config's YAML
+    const auto folder = std::filesystem::temp_directory_path();
+
+    const auto yamlPath = folder / "optim-config.yml";
+    std::ofstream outfile(yamlPath);
+    outfile << R"(models:
+  - id: library.model
+    model-decomposition:
+      variables:
+        - id: y
+          location: master-and-subproblems)";
+
+    Antares::Solver::LoadFiles::loadOptimConfig(folder, libraries);
+    BOOST_CHECK(libraries[0].Models()["model"].Variables()[0].location()
+                == Antares::Modeler::Config::Location::MASTER_AND_SUBPROBLEMS);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
