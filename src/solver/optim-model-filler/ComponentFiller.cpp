@@ -354,6 +354,7 @@ void ComponentFiller::addObjectives(const Optimisation::LinearProblemApi::FillCo
             {
                 pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
                                            value);
+                pb.setObjectiveOffset(pb.getObjectiveOffset() + expr.constant());
             }
         }
     }
