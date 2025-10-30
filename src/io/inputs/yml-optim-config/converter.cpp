@@ -90,7 +90,7 @@ SystemModel::Model& findSystemModel(const YmlOptimConfig::Model& ymlModel,
     return getModel(libraries, libraryId, modelId);
 }
 
-SystemModel::Variable& findSystemVariable(const std::string var_id, SystemModel::Model& sysModel)
+SystemModel::Variable& findSystemVariable(const std::string& var_id, SystemModel::Model& sysModel)
 {
     auto filter = [&var_id](const SystemModel::Variable& v) { return v.Id() == var_id; };
     auto& sysVariables = sysModel.Variables();
@@ -102,7 +102,7 @@ SystemModel::Variable& findSystemVariable(const std::string var_id, SystemModel:
     return *sysVar;
 }
 
-SystemModel::Objective& findSystemObjective(const std::string obj_id, SystemModel::Model& sysModel)
+SystemModel::Objective& findSystemObjective(const std::string& obj_id, SystemModel::Model& sysModel)
 {
     auto filter = [&obj_id](const SystemModel::Objective& obj) { return obj.Id() == obj_id; };
     auto& sysObjectives = sysModel.Objectives();
