@@ -319,17 +319,15 @@ std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndex
 
 std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context)
 {
-    Node* shift;
     if (auto shift_maybe = context->shift_expr()) // [t+1], [t-1], etc.
     {
-        shift = std::any_cast<Node*>(shift_maybe->accept(this));
+        Node* shift = std::any_cast<Node*>(shift_maybe->accept(this));
+        return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, shift));
     }
     else // [t]
     {
-        shift = registry_.create<LiteralNode>(0); // no shift
+        return shifted_expr; // implicit conversion to std::any
     }
-
-    return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, shift));
 }
 
 std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
