@@ -104,7 +104,7 @@ void MasterAndSubPbVariables::add(const std::vector<std::string>& names, unsigne
     unsigned varIndex = startIndexInPb;
     for (const auto& name: names)
     {
-        masterAndSubPbVars_[pbIdentifier_].push_back({name, varIndex});
+        masterAndSubPbVars_[pbIdentifier_].emplace_back(name, varIndex);
         varIndex++;
     }
 }
