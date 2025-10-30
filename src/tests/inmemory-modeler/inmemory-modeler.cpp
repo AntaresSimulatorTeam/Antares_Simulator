@@ -61,9 +61,11 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     optimEntityContainer.addFromSystemComponents(components);
     for (auto& component: components)
     {
-        auto cf = std::make_unique<ComponentFiller>(component,
-                                                    optimEntityContainer,
-                                                    scenario_group_repo);
+        auto cf = std::make_unique<ComponentFiller>(
+          component,
+          optimEntityContainer,
+          scenario_group_repo,
+          Antares::Modeler::Config::Location::SUBPROBLEMS);
         fillers.push_back(std::move(cf));
     }
     LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
