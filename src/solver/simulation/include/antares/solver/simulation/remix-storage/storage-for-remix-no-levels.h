@@ -16,12 +16,18 @@ public:
     StorageForRemixNoLevels(std::vector<double>& generation,
                             std::vector<double>& unsupE,
                             const std::vector<double> Pmax,
-                            const std::vector<double> Pmin);
+                            const std::vector<double> Pmin,
+                            const std::string& name = "");
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;
     const std::vector<double>& initWithdrawal() const override;
     std::vector<double>& withdrawal() override;
+
+    const std::string& name() const
+    {
+        return name_;
+    }
 
 protected:
     void checkInput(size_t size) override;
@@ -31,6 +37,8 @@ protected:
     std::vector<double>& unsupE_;
     const std::vector<double> pmax_;
     const std::vector<double> pmin_;
+
+    std::string name_;
 };
 
 } // namespace Antares::Solver::Simulation

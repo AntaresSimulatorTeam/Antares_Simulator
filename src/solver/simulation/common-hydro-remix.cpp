@@ -21,6 +21,8 @@
 
 #include <cassert>
 #include <cmath>
+#include <fstream>
+#include <string>
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/logs/logs.h>
@@ -377,6 +379,12 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
     }
 
     return stsListSort.makeSortedList();
+}
+
+static void writeDebugInfos(PROBLEME_HEBDO& problem)
+{
+    std::ofstream out("remix-" + std::to_string(problem.year) + "-"
+                      + std::to_string(problem.weekInTheYear));
 }
 
 static void RunAccurateShavePeaks(const Data::AreaList& areas,

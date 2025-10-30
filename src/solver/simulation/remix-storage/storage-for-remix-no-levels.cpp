@@ -9,12 +9,14 @@ namespace Antares::Solver::Simulation
 StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal,
                                                  std::vector<double>& unsupE,
                                                  const std::vector<double> Pmax,
-                                                 const std::vector<double> Pmin):
+                                                 const std::vector<double> Pmin,
+                                                 const std::string& name):
     withdrawal_(withdrawal),
     initWithdrawal_(withdrawal),
     unsupE_(unsupE),
     pmax_(Pmax),
-    pmin_(Pmin)
+    pmin_(Pmin),
+    name_(name)
 {
     checkInput(unsupE_.size());
 }

@@ -20,7 +20,8 @@ public:
                               const std::vector<double> upRuleCurve,
                               const double initLevel,
                               const double withdrawalEff,
-                              const double injectionEff);
+                              const double injectionEff,
+                              const std::string& name = "");
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;
