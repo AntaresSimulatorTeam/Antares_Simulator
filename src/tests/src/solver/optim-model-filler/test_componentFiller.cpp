@@ -830,10 +830,24 @@ BOOST_AUTO_TEST_CASE(objective_with_constant_exponent_power_node_ok)
 {
     // objective : param ^ 2
     auto objective = power(parameter("param"), literal((2)));
-    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-100), literal(100), {}, objective);
     createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
 
     BOOST_CHECK_NO_THROW(buildLinearProblem());
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 25);
+}
+
+BOOST_AUTO_TEST_CASE(objective_with_variable_and_constant_exponent_power_node_ok)
+{
+    // objective : x ^ 2
+    auto objective = power(variable("x", 0), literal((2)));
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-100), literal(100), {}, objective);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+
+    BOOST_CHECK_NO_THROW(buildLinearProblem());
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x")), 1);
+    pb->solve(false);
 }
 
 BOOST_AUTO_TEST_CASE(objective_with_linear_exponent_power_node_throw)
