@@ -71,7 +71,7 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
         rhs.variables = modelDecompositionNode["variables"]
                           .as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>();
 
-        rhs.objectives = modelDecompositionNode["objectives"]
+        rhs.objectives = modelDecompositionNode["objective-contributions"]
                            .as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>();
 
         return true;

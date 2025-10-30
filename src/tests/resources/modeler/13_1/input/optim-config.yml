@@ -16,7 +16,7 @@ models:
         - id: p_max
           location: master-and-subproblems
         # Variable generation has default settings, no need to make it appear here
-      objectives:
+      objective-contributions:
         - id: invest_objective
           location: master
         - id: operational_objective
