@@ -77,7 +77,7 @@ static SystemModel::Model& getModel(const std::vector<SystemModel::Library>& lib
     auto search = lib->Models().find(modelId);
     if (search == lib->Models().end())
     {
-        throw std::runtime_error("No library found with this name: " + modelId);
+        throw std::runtime_error("No model found with this name: " + modelId);
     }
 
     return search->second;
@@ -109,7 +109,7 @@ SystemModel::Objective& findSystemObjective(const std::string obj_id, SystemMode
     auto sysObj = std::ranges::find_if(sysObjectives, filter);
     if (sysObj == sysObjectives.end())
     {
-        throw std::runtime_error("No objetctive found with this name: " + obj_id);
+        throw std::runtime_error("No objective found with this name: " + obj_id);
     }
     return *sysObj;
 }
