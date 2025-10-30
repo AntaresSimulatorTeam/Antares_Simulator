@@ -183,6 +183,16 @@ double OrtoolsLinearProblem::getObjectiveCoefficient(
     return objective_->GetCoefficient(getMpVar(var));
 }
 
+void OrtoolsLinearProblem::setObjectiveOffset(double offset)
+{
+    objective_->SetOffset(offset);
+}
+
+double OrtoolsLinearProblem::getObjectiveOffset() const
+{
+    return objective_->offset();
+}
+
 void OrtoolsLinearProblem::setMinimization()
 {
     objective_->SetMinimization();

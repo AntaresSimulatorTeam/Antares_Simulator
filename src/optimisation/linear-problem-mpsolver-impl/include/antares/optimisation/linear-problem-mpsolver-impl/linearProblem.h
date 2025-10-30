@@ -72,6 +72,9 @@ public:
     void setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
     double getObjectiveCoefficient(const LinearProblemApi::IMipVariable* var) const override;
 
+    void setObjectiveOffset(double offset) override;
+    double getObjectiveOffset() const override;
+
     void setMinimization() override;
     void setMaximization() override;
 
