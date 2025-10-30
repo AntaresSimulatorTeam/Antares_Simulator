@@ -27,11 +27,7 @@
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
-class OptimConfigConverter
-{
-public:
-    static void updateLibrairies(const OptimConfig& ymlOptimConfig,
-                                 std::vector<ModelerStudy::SystemModel::Library>& libraries);
-};
+void updateLibrairies(const OptimConfig& ymlOptimConfig,
+                      std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig

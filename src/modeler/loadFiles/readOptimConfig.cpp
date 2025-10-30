@@ -67,7 +67,7 @@ static void updateLibraries(const YmlOptimConfig::OptimConfig& obj,
 {
     try
     {
-        YmlOptimConfig::OptimConfigConverter::updateLibrairies(obj, libraries);
+        YmlOptimConfig::updateLibrairies(obj, libraries);
     }
     catch (const std::runtime_error& e)
     {

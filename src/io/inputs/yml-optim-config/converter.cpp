@@ -129,8 +129,8 @@ void updateSystemModel(SystemModel::Model& sysModel, const YmlOptimConfig::Model
     }
 }
 
-void OptimConfigConverter::updateLibrairies(const OptimConfig& ymlOptimConfig,
-                                            std::vector<SystemModel::Library>& libraries)
+void updateLibrairies(const OptimConfig& ymlOptimConfig,
+                      std::vector<SystemModel::Library>& libraries)
 {
     for (const auto& ymlModel: ymlOptimConfig)
     {
