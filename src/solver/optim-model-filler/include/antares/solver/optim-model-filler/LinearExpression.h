@@ -23,7 +23,9 @@
 #include <utility>
 #include <vector>
 
-namespace Antares::Optimization
+#include "antares/expressions/visitors/EvalVisitor.h"
+
+namespace Antares::Optimisation
 {
 class LinearExpression final
 {
@@ -42,6 +44,7 @@ public:
     LinearExpression& operator*=(const LinearExpression& other);
     void addVariable(int index, double value);
     double constant() const;
+    void pow(const LinearExpression& exponent);
 
     using const_iterator = std::vector<std::pair<int, double>>::const_iterator;
     const_iterator begin() const;
@@ -55,4 +58,4 @@ private:
     double constant_ = 0.;
 };
 
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

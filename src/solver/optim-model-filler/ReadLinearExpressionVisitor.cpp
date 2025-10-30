@@ -54,7 +54,7 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
 {
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visitMergeDuplicates(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visitMergeDuplicates(
   const Nodes::Node* node)
 {
     auto expr = dispatch(node);
@@ -67,11 +67,11 @@ std::string ReadLinearExpressionVisitor::name() const
     return "ReadLinearExpressionVisitor";
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::SumNode* node)
 {
     const auto& operands = node->getOperands();
-    Optimization::TimeDependentLinearExpression ret(nbtimeSteps_);
+    Optimisation::TimeDependentLinearExpression ret(nbtimeSteps_);
     for (auto* operand: operands)
     {
         ret += dispatch(operand);
@@ -79,7 +79,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     return ret;
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::SubtractionNode* node)
 {
     auto ret = dispatch(node->left());
@@ -87,7 +87,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     return ret;
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::MultiplicationNode* node)
 {
     auto ret = dispatch(node->left());
@@ -95,52 +95,52 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     return ret;
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::DivisionNode* node)
 {
     return dispatch(node->left()) / dispatch(node->right());
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::EqualNode*)
 {
     throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::LessThanOrEqualNode*)
 {
     throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::GreaterThanOrEqualNode*)
 {
     throw Error::InvalidArgumentError("A linear expression can't contain comparison operators.");
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::NegationNode* node)
 {
     auto ret = dispatch(node->child());
     return -ret;
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::VariableNode* node)
 {
     const auto variableStart = optimEntityContainer_.getVariableStartColumn(component_,
                                                                             node->Index());
     if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        return Optimization::TimeDependentLinearExpression({{variableStart, 1.}}, 0.);
+        return Optimisation::TimeDependentLinearExpression({{variableStart, 1.}}, 0.);
     }
     if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
         || node->timeIndex()
              == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not
                                                                               handled !*/
     {
-        Optimization::TimeDependentLinearExpression out(nbtimeSteps_);
+        Optimisation::TimeDependentLinearExpression out(nbtimeSteps_);
 
         auto variableIndex = variableStart;
         for (int ts = 0; ts < nbtimeSteps_; ts++)
@@ -154,7 +154,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
       "the support of scenario dependent variables is not available for now");
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
@@ -169,7 +169,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         double value = evalContext_.getSystemParameterValueAsDouble(node->value());
-        return Optimization::TimeDependentLinearExpression({}, value);
+        return Optimisation::TimeDependentLinearExpression({}, value);
     }
     // only dependent
 
@@ -179,28 +179,28 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
                                                             fillContext_.getGlobalFirstTimeStep(),
                                                             fillContext_.getGlobalLastTimeStep());
 
-    return Optimization::TimeDependentLinearExpression(parameters);
+    return Optimisation::TimeDependentLinearExpression(parameters);
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::LiteralNode* node)
 {
-    return Optimization::TimeDependentLinearExpression({}, node->value());
+    return Optimisation::TimeDependentLinearExpression({}, node->value());
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::PortFieldNode*)
 {
     throw Error::InvalidArgumentError("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::PortFieldSumNode* node)
 {
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
 
-    Optimization::TimeDependentLinearExpression to_return(nbtimeSteps_);
+    Optimisation::TimeDependentLinearExpression to_return(nbtimeSteps_);
 
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
@@ -216,7 +216,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     return to_return;
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::TimeShiftNode* node)
 {
     auto expression = dispatch(node->left());
@@ -230,7 +230,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     return expression;
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::TimeIndexNode* node)
 {
     auto expression = dispatch(node->left());
@@ -241,10 +241,10 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     }
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
     const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
-    return Optimization::TimeDependentLinearExpression(std::move(expression[timeIndex]));
+    return Optimisation::TimeDependentLinearExpression(std::move(expression[timeIndex]));
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::TimeSumNode* node)
 {
     auto expression = dispatch(node->expression());
@@ -259,7 +259,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
         return expression;
     }
 
-    Optimization::TimeDependentLinearExpression ret(nbtimeSteps_);
+    Optimisation::TimeDependentLinearExpression ret(nbtimeSteps_);
     expression.rotate(from);
     for (int t = from; t <= to; ++t)
     {
@@ -272,37 +272,38 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     return ret;
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::AllTimeSumNode* node)
 {
-    Optimization::LinearExpression ret; // Constant expr
+    Optimisation::LinearExpression ret; // Constant expr
     auto expr = dispatch(node->child());
     for (auto& s: expr)
     {
         ret += s;
     }
-    return Optimization::TimeDependentLinearExpression(std::move(ret));
+    return Optimisation::TimeDependentLinearExpression(std::move(ret));
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::ReducedCostNode*)
 {
     throw Error::InvalidArgumentError(
       "A linear expression can't contain extra output operator reduced_cost.");
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::DualNode*)
 {
     throw Error::InvalidArgumentError(
       "A linear expression can't contain extra output operator dual.");
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::PowerNode*)
+Optimisation::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+  const Nodes::PowerNode* node)
 {
-    throw Antares::Error::InvalidArgumentError(
-      "A linear expression can't contain power operators.");
+    auto operand = node->left();
+    auto exponent = node->right();
+    return dispatch(operand).pow(dispatch(exponent));
 }
 
 } // Namespace Antares::Optimisation

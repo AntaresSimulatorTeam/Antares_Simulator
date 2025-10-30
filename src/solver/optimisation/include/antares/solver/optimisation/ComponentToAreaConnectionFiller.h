@@ -72,7 +72,7 @@ private:
       unsigned ts) const;
     void addExpressionToConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
-      const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
+      const Antares::Optimisation::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const std::string& areaId) const;
     void addComponentPortContributionToArea(Optimisation::LinearProblemApi::ILinearProblem& pb,

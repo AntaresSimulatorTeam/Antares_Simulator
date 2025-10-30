@@ -71,7 +71,7 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
         for (const auto t: dim.getTimesteps())
         {
             auto year = buildOptional(dim.isScenarioDependent(),
-                                      static_cast<Optimization::MCYearAndTime::MCYear>(s));
+                                      static_cast<MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
 
             linear_problem_.addVariable(lb,
@@ -102,9 +102,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
     {
         for (const auto t: dim.getTimesteps())
         {
-            auto year = buildOptional<Optimization::MCYearAndTime::MCYear>(
-              dim.isScenarioDependent(),
-              static_cast<Optimization::MCYearAndTime::MCYear>(s));
+            auto year = buildOptional<MCYearAndTime::MCYear>(dim.isScenarioDependent(),
+                                                             static_cast<MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
 
             linear_problem_.addVariable(lb[t],
@@ -134,9 +133,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
     {
         for (const auto t: dim.getTimesteps())
         {
-            auto year = buildOptional<Optimization::MCYearAndTime::MCYear>(
-              dim.isScenarioDependent(),
-              static_cast<Optimization::MCYearAndTime::MCYear>(s));
+            auto year = buildOptional<MCYearAndTime::MCYear>(dim.isScenarioDependent(),
+                                                             static_cast<MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
 
             linear_problem_.addVariable(lb,
@@ -167,9 +165,8 @@ void VariablesBulkAddition::addVariable(const std::string& compoId,
     {
         for (const auto t: dim.getTimesteps())
         {
-            auto year = buildOptional<Optimization::MCYearAndTime::MCYear>(
-              dim.isScenarioDependent(),
-              static_cast<Optimization::MCYearAndTime::MCYear>(s));
+            auto year = buildOptional<MCYearAndTime::MCYear>(dim.isScenarioDependent(),
+                                                             static_cast<MCYearAndTime::MCYear>(s));
             const auto ts = buildOptional(dim.isTimeDependent(), t);
 
             linear_problem_.addVariable(lb[t],

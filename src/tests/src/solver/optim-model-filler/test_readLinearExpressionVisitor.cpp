@@ -37,7 +37,7 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy;
-using namespace Antares::Optimization;
+using namespace Antares::Optimisation;
 
 BOOST_AUTO_TEST_SUITE(_read_linear_expression_visitor_)
 

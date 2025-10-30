@@ -43,7 +43,7 @@ using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Optimisation;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimization;
+using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Test::Modeler;
@@ -826,14 +826,43 @@ BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
     }
 }
 
-BOOST_AUTO_TEST_CASE(objective_with_power_node___throws)
+BOOST_AUTO_TEST_CASE(objective_with_constant_exponent_power_node_ok)
 {
     // objective : param ^ 2
     auto objective = power(parameter("param"), literal((2)));
     createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
 
+    BOOST_CHECK_NO_THROW(buildLinearProblem());
+}
+
+BOOST_AUTO_TEST_CASE(objective_with_linear_exponent_power_node_throw)
+{
+    // objective : param ^ x
+    auto objective = power(parameter("param"), variable("x", 0));
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+
     BOOST_CHECK_THROW(buildLinearProblem(), Antares::Error::RuntimeError);
+}
+
+BOOST_AUTO_TEST_CASE(objective_with_time_dependent_power_with_constant_exponent_ok)
+{
+    // objective : param(t) ^ 2
+    auto objective = power(parameter("param", TimeIndex::VARYING_IN_TIME_ONLY), literal((2)));
+    createModelWithOneFloatVar("model",
+                               {"param"},
+                               "x",
+                               literal(-50),
+                               literal(-40),
+                               {},
+                               objective,
+                               true);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
+    BOOST_CHECK_NO_THROW(buildLinearProblem(ctx));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

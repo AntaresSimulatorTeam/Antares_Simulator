@@ -38,7 +38,7 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
   OptimEntityContainer& optimEntityContainer,
   const ILinearProblemData& linearProblemData,
-  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
+  const ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
     optimEntityContainer_(optimEntityContainer)
@@ -68,10 +68,9 @@ static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Compone
     return field.value();
 }
 
-IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
-  Optimisation::LinearProblemApi::ILinearProblem& pb,
-  const std::string& areaId,
-  unsigned ts) const
+IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem& pb,
+                                                                      const std::string& areaId,
+                                                                      unsigned ts) const
 {
     auto pdt = ts % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
     if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end())
@@ -89,8 +88,8 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
 }
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
-  Optimisation::LinearProblemApi::ILinearProblem& pb,
-  const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
+  ILinearProblem& pb,
+  const TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
   const std::string& areaId) const
 {

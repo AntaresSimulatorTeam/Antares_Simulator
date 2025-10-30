@@ -22,9 +22,8 @@
 #include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
 
 #include <algorithm>
-#include <stdexcept>
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 
 TimeDependentLinearExpression::TimeDependentLinearExpression(std::size_t nbTimesteps):
@@ -100,6 +99,21 @@ TimeDependentLinearExpression::const_iterator TimeDependentLinearExpression::end
 bool TimeDependentLinearExpression::isConstant() const
 {
     return v_.size() == 1;
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::pow(
+  const TimeDependentLinearExpression& exponent)
+{
+    if (exponent.size() > size())
+    {
+        expandTo(exponent.size());
+    }
+    int t = 0;
+    for (std::size_t t = 0; t < size(); t++)
+    {
+        this->operator[](t).pow(exponent[t]);
+    }
+    return *this;
 }
 
 LinearExpression& TimeDependentLinearExpression::operator[](std::size_t idx)
@@ -217,4 +231,4 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
     result *= -1.0;
     return result;
 }
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

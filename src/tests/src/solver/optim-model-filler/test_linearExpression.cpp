@@ -28,7 +28,7 @@
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 
-using namespace Antares::Optimization;
+using namespace Antares::Optimisation;
 
 BOOST_AUTO_TEST_SUITE(_linear_expressions_)
 

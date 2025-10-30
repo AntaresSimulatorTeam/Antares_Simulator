@@ -88,7 +88,7 @@ private:
 // TODO Move me
 std::string buildVariableName(const std::string& compoId,
                               const std::string& variableId,
-                              std::optional<Optimization::MCYearAndTime::MCYear> mcyear,
+                              std::optional<MCYearAndTime::MCYear> mcyear,
                               std::optional<unsigned int> timestep);
 
 } // namespace Antares::Optimisation

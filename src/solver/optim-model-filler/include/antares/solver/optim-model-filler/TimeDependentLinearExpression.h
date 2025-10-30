@@ -23,7 +23,7 @@
 
 #include "LinearExpression.h"
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 class TimeDependentLinearExpression final
 {
@@ -44,6 +44,8 @@ public:
     std::size_t size() const;
 
     bool isConstant() const;
+
+    TimeDependentLinearExpression pow(const TimeDependentLinearExpression& exponent);
 
     using iterator = std::vector<LinearExpression>::iterator;
     iterator begin();
@@ -77,4 +79,4 @@ private:
     std::vector<LinearExpression> v_;
 };
 
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

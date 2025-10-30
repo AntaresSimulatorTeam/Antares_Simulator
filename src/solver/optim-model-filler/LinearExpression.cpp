@@ -64,7 +64,7 @@ void mergeDuplicates(std::vector<std::pair<int, double>>& v)
 }
 } // namespace
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 LinearExpression::LinearExpression() = default;
 
@@ -152,6 +152,24 @@ LinearExpression LinearExpression::operator-() const
 double LinearExpression::constant() const
 {
     return constant_;
+}
+
+void LinearExpression::pow(const LinearExpression& exponent)
+{
+    if (double expValue = exponent.constant(); expValue == 0.0)
+    {
+        // Any number to the power of 0 is 1
+        constant_ = 1.0;
+    }
+    else if (expValue == 1.0)
+    {
+        // Any number to the power of 1 is itself
+        return;
+    }
+    else
+    {
+        constant_ = std::pow(constant_, expValue);
+    }
 }
 
 LinearExpression::const_iterator LinearExpression::begin() const

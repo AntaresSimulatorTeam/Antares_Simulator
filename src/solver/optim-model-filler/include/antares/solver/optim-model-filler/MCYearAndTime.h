@@ -24,7 +24,7 @@
 #include <fmt/format.h>
 #include <ostream>
 
-namespace Antares::Optimization
+namespace Antares::Optimisation
 {
 /**
  * Association of a Scenario (year) and time step
