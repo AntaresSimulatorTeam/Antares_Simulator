@@ -38,7 +38,7 @@ Modeler::Config::Location convertLocation(const std::string& locationStr)
     {
         return Modeler::Config::Location::MASTER;
     }
-    if (locLower == "master_and_subproblems")
+    if (locLower == "master-and-subproblems")
     {
         return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
     }
