@@ -25,7 +25,6 @@
 #include <memory>
 #include <stdexcept>
 
-
 struct CumulationConstraint
 {
     const std::string name;
