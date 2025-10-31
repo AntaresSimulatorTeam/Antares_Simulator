@@ -27,7 +27,6 @@
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
-using namespace Antares::ModelerStudy;
 
 BOOST_AUTO_TEST_CASE(empty_system)
 {
