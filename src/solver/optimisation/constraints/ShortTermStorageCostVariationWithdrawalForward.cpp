@@ -20,7 +20,6 @@
 */
 
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 // CostVariationWithdrawal[h] - Withdrawal[h+1] + Withdrawal[h]  >= 0
 void ShortTermStorageCostVariationWithdrawalForward::buildConstraint(int index)

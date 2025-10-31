@@ -25,7 +25,6 @@
 #include <memory>
 #include <stdexcept>
 
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 struct CumulationConstraint
 {

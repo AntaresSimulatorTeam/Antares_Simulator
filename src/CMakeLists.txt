@@ -264,8 +264,12 @@ add_subdirectory(config)
 # Configure config.h with current ANTARES version
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config/config.h.in"
         "${CMAKE_CURRENT_SOURCE_DIR}/config/include/antares/config/config.h")
-
+#save the flag
+set(UNITY_BUILD ${CMAKE_UNITY_BUILD})
 # Yuni Framework
+# UNITY_BUILD is yet not available for yuni and ui
+set(CMAKE_UNITY_BUILD OFF)
+
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
 add_subdirectory("ext/yuni/src")
 
@@ -276,7 +280,9 @@ if (BUILD_UI)
     add_compile_definitions(BUILD_UI)
     add_subdirectory(ui)  #all antares ui libs + antares simulator
 endif ()
-set(CMAKE_UNITY_BUILD ON)
+
+#restore the original flag
+set(CMAKE_UNITY_BUILD ${UNITY_BUILD})
 
 add_subdirectory(api)
 add_subdirectory(io)

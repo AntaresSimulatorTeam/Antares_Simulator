@@ -9,7 +9,7 @@ set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 
 add_boost_test(tests-ts-numbers
-        SRC tests-ts-numbers.cpp ${SRC_TS_NUMBERS}
+        SRC tests-ts-numbers.cpp
         INCLUDE
         "${src_solver_simulation}"
         "${src_libs_antares_study}"
