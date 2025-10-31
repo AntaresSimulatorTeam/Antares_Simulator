@@ -381,7 +381,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
                     auto offset = expr.constant();
                     if (offset != 0.0)
                     {
-                        if (objectiveOffset.has_value())
+                        if (objectiveOffset.has_value() && offset != objectiveOffset)
                         {
                             throw Error::RuntimeError(fmt::format(
                               "Trying to set multiple objective offset for the same objective."

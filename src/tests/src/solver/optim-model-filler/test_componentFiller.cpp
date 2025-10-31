@@ -794,7 +794,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_offset)
 
 BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
 {
-    auto objective = parameter("param", TimeIndex::VARYING_IN_TIME_ONLY);
+    auto objective = add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_TIME_ONLY));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::YES, ScenarioDependent::NO}},
