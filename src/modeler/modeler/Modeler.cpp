@@ -58,12 +58,12 @@ public:
       ILinearProblem& pb,
       const LinearProblemApi::ILinearProblemData& dataSeries,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-      MasterAndSubPbVariables* masterAndSubPbvars = nullptr):
+      BendersDecomposition* bendersDecomposition = nullptr):
         system_(system),
         dataSeries_(dataSeries),
         scenarioGroupRepository_(scenarioGroupRepository),
         optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository),
-        masterAndSubPbvars_(masterAndSubPbvars)
+        bendersDecomposition_(bendersDecomposition)
     {
     }
 
@@ -82,7 +82,7 @@ public:
               optimEntityContainer_,
               scenarioGroupRepository_,
               Antares::Modeler::Config::Location::SUBPROBLEMS,
-              masterAndSubPbvars_);
+              bendersDecomposition_);
             fillers.push_back(std::move(cf));
         }
 
@@ -100,7 +100,7 @@ private:
     const LinearProblemApi::ILinearProblemData& dataSeries_;
     const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
     Optimisation::OptimEntityContainer optimEntityContainer_;
-    MasterAndSubPbVariables* masterAndSubPbvars_ = nullptr;
+    BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
 void Modeler::run() const
@@ -143,11 +143,16 @@ void Modeler::run() const
       parameters.lastTimeStep,  // global = local
       0};
 
-    // Sub problem
-    auto masterAndSubPbvars = std::make_unique<MasterAndSubPbVariables>();
-    std::string pbId = "1-1";
-    masterAndSubPbvars->setProblemIdentifier(pbId);
+    std::unique_ptr<BendersDecomposition> bendersDecomposition;
+    if (data.resolutionMode == Antares::Modeler::ResolutionMode::BENDERS_DECOMPOSITION)
+    {
+        bendersDecomposition = std::make_unique<BendersDecomposition>();
+    }
 
+    // Sub problem
+    std::string pbId = "1-1";
+    bendersDecomposition->setCurrentProblemId(pbId);
+    
     OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
 
     // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
@@ -156,7 +161,7 @@ void Modeler::run() const
                                                      ortools_linear_problem,
                                                      *data.dataSeries,
                                                      data.scenarioGroupRepository,
-                                                     masterAndSubPbvars.get());
+                                                     bendersDecomposition.get());
 
     system_linear_problem.build(timeScenarioCtx);
 

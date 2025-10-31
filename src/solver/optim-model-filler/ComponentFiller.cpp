@@ -92,12 +92,13 @@ std::vector<std::string> VariableNames::names()
     return names_;
 }
 
-void MasterAndSubPbVariables::setProblemIdentifier(std::string id)
+void BendersDecomposition::setCurrentProblemId(std::string id)
 {
-    pbIdentifier_ = id;
+    currentProblemId_ = id;
 }
 
-void MasterAndSubPbVariables::add(std::vector<std::string>&& varnames, unsigned varsCountInPb)
+void BendersDecomposition::collectConnexionVariables(std::vector<std::string>&& varnames,
+                                                     unsigned varsCountInPb)
 {
     std::vector<std::string> names = std::move(varnames);
     unsigned nbVars = names.size();
@@ -105,7 +106,7 @@ void MasterAndSubPbVariables::add(std::vector<std::string>&& varnames, unsigned 
     unsigned varIndex = startIndexInPb;
     for (const auto& name: names)
     {
-        masterAndSubPbVars_[pbIdentifier_].emplace_back(name, varIndex);
+        connexionVars_[currentProblemId_].emplace_back(name, varIndex);
         varIndex++;
     }
 }
@@ -244,12 +245,12 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository,
                                  Modeler::Config::Location targetLocation,
-                                 MasterAndSubPbVariables* masterAndSubPbvars):
+                                 BendersDecomposition* bendersDecomposition):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
     scenarioGroupRepository_(scenarioGroupRepository),
     targetLocation_(targetLocation),
-    masterAndSubPbvars_(masterAndSubPbvars)
+    bendersDecomposition_(bendersDecomposition)
 {
 }
 
@@ -335,10 +336,11 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            dims);
         }
 
-        if (variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS
-            && masterAndSubPbvars_)
+        if (bendersDecomposition_
+            && variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
-            masterAndSubPbvars_->add(variableNames.names(), pb.variableCount());
+            bendersDecomposition_->collectConnexionVariables(variableNames.names(),
+                                                             pb.variableCount());
         }
     }
 }

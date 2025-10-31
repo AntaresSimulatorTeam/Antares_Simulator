@@ -74,11 +74,18 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
 }
 
+std::once_flag isFirstWeeklyProblemEver;
+
+static void setProblemIdToMaster(std::string& problemId)
+{
+    problemId = "master";
+}
+
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Modeler::Data* modelerData,
   OptimEntityContainer& optimEntityContainer,
-  MasterAndSubPbVariables* masterAndSubPbvars)
+  BendersDecomposition* bendersDecomposition)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
@@ -88,8 +95,8 @@ static void fillModelerComponents(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
-                                            Antares::Modeler::Config::Location::SUBPROBLEMS,
-                                            masterAndSubPbvars));
+                                            Modeler::Config::Location::SUBPROBLEMS,
+                                            bendersDecomposition));
     }
 }
 
@@ -124,7 +131,7 @@ void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
                         const PROBLEME_HEBDO* problemeHebdo,
                         OptimEntityContainer& optimEntityContainer,
                         bool namedProblems,
-                        MasterAndSubPbVariables* masterAndSubPbvars = nullptr)
+                        BendersDecomposition* bendersDecomposition = nullptr)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
@@ -135,7 +142,7 @@ void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
         fillModelerComponents(fillersCollection,
                               problemeHebdo->modelerData,
                               optimEntityContainer,
-                              masterAndSubPbvars);
+                              bendersDecomposition);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
@@ -190,11 +197,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     // This instance should be created in problemeHebdo, so that it lives longer
     // than a week, as it is currently the case.
-    std::unique_ptr<MasterAndSubPbVariables> masterAndSubPbvars; // is currently nullptr
-    if (problemeHebdo->year != 0 && optimizationNumber == PREMIERE_OPTIMISATION)
+    std::unique_ptr<BendersDecomposition> bendersDecomposition; // is currently nullptr
+    if (modelerData->resolutionMode == Modeler::ResolutionMode::BENDERS_DECOMPOSITION)
     {
-        masterAndSubPbvars = std::make_unique<MasterAndSubPbVariables>();
-        masterAndSubPbvars->setProblemIdentifier(optPeriodStringGenerator.to_string());
+        bendersDecomposition = std::make_unique<BendersDecomposition>();
+        std::string problemId = optPeriodStringGenerator.to_string();
+        // If current weekly problem is first problem ever, then set problem id to "master"
+        std::call_once(isFirstWeeklyProblemEver, setProblemIdToMaster, problemId);
+        bendersDecomposition->setCurrentProblemId(problemId);
     }
 
     OptimEntityContainer optimEntityContainer(ortoolsProblem,
@@ -206,7 +216,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                        problemeHebdo,
                        optimEntityContainer,
                        problemeHebdo->NamedProblems,
-                       masterAndSubPbvars.get());
+                       bendersDecomposition.get());
 
     auto* solver = ortoolsProblem.getMpSolver();
 
