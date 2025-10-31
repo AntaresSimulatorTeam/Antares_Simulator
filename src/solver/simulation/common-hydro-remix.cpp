@@ -286,7 +286,8 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              initLevel,
                              capacity,
                              efficiency,
-                             reservoirManagement);
+                             reservoirManagement,
+                             std::string(area.name) + " hydro");
 }
 
 std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
@@ -360,7 +361,8 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
                            upRuleCurve,
                            initLevel,
                            withdrawalEff,
-                           injectionEff);
+                           injectionEff,
+                           std::string(area.name) + " " + stsProperties.name);
 }
 
 ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
@@ -381,18 +383,14 @@ ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
     return stsListSort.makeSortedList();
 }
 
-static void writeDebugInfos(PROBLEME_HEBDO& problem)
-{
-    std::ofstream out("remix-" + std::to_string(problem.year) + "-"
-                      + std::to_string(problem.weekInTheYear));
-}
-
 static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   PROBLEME_HEBDO& problem,
                                   uint numSpace,
                                   uint firstHourOfWeek,
                                   bool includeSTS)
 {
+    std::ofstream debugStream("remix-" + std::to_string(problem.year) + "-"
+                              + std::to_string(problem.weekInTheYear));
     areas.each(
       [&](const Data::Area& area)
       {
@@ -418,7 +416,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           try
           {
               checkInput(load, unsupE, spillage, dtgMrg, listStorage);
-              shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage);
+              shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage, &debugStream);
           }
           catch (std::exception& e)
           {

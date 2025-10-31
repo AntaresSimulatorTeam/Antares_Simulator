@@ -1,10 +1,13 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
+#include <fstream>
 #include <ranges>
 #include <set>
 #include <stdexcept>
 #include <vector>
 
+#include <antares/logs/logs.h>
+#include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
 
@@ -41,7 +44,8 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    ListStorageForRemix& listStorage)
+                                    ListStorageForRemix& listStorage,
+                                    std::ofstream* debug)
 {
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;
@@ -62,6 +66,12 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         if (!exchange.isPossible())
         {
+            StorageForRemixNoLevels* s = dynamic_cast<StorageForRemixNoLevels*>((*cyclic_it).get());
+            auto& withdrawal = s->withdrawal();
+            for (unsigned h = 0; h < 168; ++h)
+            {
+                *debug << s->name() << " " << h << " " << withdrawal[h] << std::endl;
+            }
             delete_current(cyclic_it);
         }
         else
