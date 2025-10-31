@@ -57,7 +57,6 @@ using Solver::Optimization::SingleOptimOptions;
 
 struct SimplexResult
 {
-    bool success = false;
     TIME_MEASURE timeMeasure;
     mpsWriterFactory mps_writer_factory;
     double objectiveValue;
@@ -245,8 +244,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
-            return {.success = false,
-                    .timeMeasure = timeMeasure,
+            return {.timeMeasure = timeMeasure,
                     .mps_writer_factory = mps_writer_factory,
                     .objectiveValue = 0};
         }
@@ -272,10 +270,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             true);
     }
 
-    return {.success = true,
-            .timeMeasure = timeMeasure,
+    return {.timeMeasure = timeMeasure,
             .mps_writer_factory = mps_writer_factory,
-            .objectiveValue = solver != nullptr ? getObjectiveValue(solver) : 0};
+            .objectiveValue = getObjectiveValue(solver)};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
