@@ -760,12 +760,21 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_no_offset)
 // One var with offset
 BOOST_AUTO_TEST_CASE(one_var_with_offset)
 {
-    auto objective = add(variable("x", 0), literal(10));
+    const auto objective = add(variable("x", 0), literal(10));
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {});
     buildLinearProblem();
 
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(one_param_offset)
+{
+    auto objective = parameter("param");
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+    buildLinearProblem();
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 5);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

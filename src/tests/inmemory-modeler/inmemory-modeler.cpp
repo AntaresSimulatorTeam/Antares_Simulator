@@ -58,7 +58,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     }
     pb = std::make_unique<Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem>(
       false,
-      "sirius");
+      "highs");
     Antares::Optimisation::OptimEntityContainer optimEntityContainer(*pb,
                                                                      &dummy_data,
                                                                      &scenario_group_repository);

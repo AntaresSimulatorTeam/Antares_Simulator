@@ -350,11 +350,19 @@ void ComponentFiller::addObjectives(const Optimisation::LinearProblemApi::FillCo
         auto& pb = optimEntityContainer_.Problem();
         for (const auto& expr: linearExpression)
         {
-            for (const auto& [index, value]: expr)
+            if (expr.size() == 0)
             {
-                pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
-                                           value);
                 pb.setObjectiveOffset(pb.getObjectiveOffset() + expr.constant());
+            }
+            else
+            {
+                for (const auto& [index, value]: expr)
+                {
+                    pb.setObjectiveCoefficient(
+                      solverVariables[static_cast<std::size_t>(index)].get(),
+                      value);
+                    pb.setObjectiveOffset(pb.getObjectiveOffset() + expr.constant());
+                }
             }
         }
     }
