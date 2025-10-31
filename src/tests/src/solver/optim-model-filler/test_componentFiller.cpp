@@ -777,4 +777,25 @@ BOOST_AUTO_TEST_CASE(one_param_offset)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 5);
 }
 
+BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_offset)
+{
+    auto objective = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10));
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
+    createComponent("model", "componentA", {});
+
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
+    for (unsigned i = 0; i < nb_var; i++)
+    {
+        const auto var_name = "componentA.x_s0_t" + to_string(i);
+        BOOST_CHECK_NO_THROW((void)pb->lookupVariable(var_name));
+        BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 10);
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
