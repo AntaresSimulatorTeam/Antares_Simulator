@@ -335,6 +335,33 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
+namespace
+{
+std::optional<double> updateOffset(std::optional<double> objectiveOffset,
+                                   double offset,
+                                   std::string objectiveId,
+                                   LinearProblemApi::ILinearProblem& pb)
+{
+    if (offset != 0.0 && offset != *objectiveOffset)
+    {
+        if (objectiveOffset.has_value() && offset != objectiveOffset)
+        {
+            throw Error::RuntimeError(
+              fmt::format("Trying to set multiple objective offset for the same objective."
+                          "\n\tObjective: {}"
+                          "\n\tExisting offset: {}"
+                          "\n\tNew offset: {}",
+                          objectiveId,
+                          *objectiveOffset,
+                          offset));
+        }
+        pb.setObjectiveOffset(offset);
+        return offset;
+    }
+    return std::nullopt;
+}
+} // namespace
+
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
     const auto* model = component_.getModel();
@@ -350,53 +377,12 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
         std::optional<double> objectiveOffset;
         for (const auto& expr: linearExpression)
         {
-            if (expr.size() == 0)
+            for (const auto& [index, value]: expr)
             {
-                auto offset = expr.constant();
-                pb.setObjectiveOffset(expr.constant());
-                if (offset != 0.0)
-                {
-                    if (objectiveOffset.has_value())
-                    {
-                        throw Error::RuntimeError(fmt::format(
-                          "Trying to set multiple objective offset for the same objective."
-                          "\n\tObjective: {}"
-                          "\n\tExisting offset: {}"
-                          "\n\tNew offset: {}",
-                          objective.Id(),
-                          *objectiveOffset,
-                          offset));
-                    }
-                    pb.setObjectiveOffset(expr.constant());
-                    objectiveOffset = offset;
-                }
+                pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
+                                           value);
             }
-            else
-            {
-                for (const auto& [index, value]: expr)
-                {
-                    pb.setObjectiveCoefficient(
-                      solverVariables[static_cast<std::size_t>(index)].get(),
-                      value);
-                    auto offset = expr.constant();
-                    if (offset != 0.0)
-                    {
-                        if (objectiveOffset.has_value() && offset != objectiveOffset)
-                        {
-                            throw Error::RuntimeError(fmt::format(
-                              "Trying to set multiple objective offset for the same objective."
-                              "\n\tObjective: {}"
-                              "\n\tExisting offset: {}"
-                              "\n\tNew offset: {}",
-                              objective.Id(),
-                              *objectiveOffset,
-                              offset));
-                        }
-                        pb.setObjectiveOffset(expr.constant());
-                        objectiveOffset = offset;
-                    }
-                }
-            }
+            objectiveOffset = updateOffset(objectiveOffset, expr.constant(), objective.Id(), pb);
         }
     }
 }
