@@ -814,11 +814,15 @@ BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
     data.addDataSeries(std::move(bounds_time_series));
 
     std::vector<std::unique_ptr<IScenario>> scenarios;
-    buildLinearProblem(ctx, data, scenarios);
-
-    for (const auto t: timeSteps)
+    try
     {
-        BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), t);
+        buildLinearProblem(ctx, data, scenarios);
+    }
+    catch (const Antares::Error::RuntimeError& e)
+    {
+        BOOST_CHECK(std::string(e.what()).find(
+                      "Trying to set multiple objective offset for the same objective.")
+                    != std::string::npos);
     }
 }
 

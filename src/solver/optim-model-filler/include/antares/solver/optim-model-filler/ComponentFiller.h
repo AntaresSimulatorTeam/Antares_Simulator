@@ -67,11 +67,11 @@ public:
 
 private:
     void addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
-                             const std::string& constraint_id);
+                             const std::string& constraint_id) const;
 
     void addTimeDependentConstraints(const Optimisation::LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
-                                     const Optimisation::LinearProblemApi::FillContext& ctx);
+                                     const Optimisation::LinearProblemApi::FillContext& ctx) const;
 
     TimeIndex getConstraintTimeIndex(const Expressions::Nodes::Node* node,
                                      const ModelerStudy::SystemModel::Component& component) const;
