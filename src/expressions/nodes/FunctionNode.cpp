@@ -18,32 +18,25 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
+
+#include "antares/expressions/nodes/FunctionNode.h"
 
 namespace Antares::Expressions::Nodes
 {
-class Node;
-class BinaryNode;
-class UnaryNode;
-class SumNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanOrEqualNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
-class PortFieldSumNode;
-class TimeShiftNode;
-class TimeIndexNode;
-class TimeSumNode;
-class ParentNode;
-class AllTimeSumNode;
-class ReducedCostNode;
-class DualNode;
-class FunctionNode;
+std::string FunctionNodeTypeToString(FunctionNodeType type)
+{
+    switch (type)
+    {
+    case FunctionNodeType::max:
+        return "max";
+    default:
+        return "Unknown function";
+    }
+}
+
+FunctionNode::FunctionNode(FunctionNodeType type, NodePtr... operands):
+    type_(type),
+    ParentNode(operands...)
+{
+}
 } // namespace Antares::Expressions::Nodes

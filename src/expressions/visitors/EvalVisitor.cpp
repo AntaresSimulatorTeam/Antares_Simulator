@@ -233,6 +233,28 @@ EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
     return EvaluationResult{constraintValues};
 }
 
+template<class Operation>
+EvaluationResult EvalVisitor::applyOperation(const Nodes::FunctionNode* node, Operation op)
+{
+    EvaluationResult result(0);
+    for (const auto* operand: node->getOperands())
+    {
+        result.applyOperation(dispatch(operand), op);
+    }
+    return result;
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
+{
+    switch (node->type())
+    {
+    case Nodes::FunctionNodeType::max:
+        return applyOperation(node, [](const auto& a, const auto& b) { return std::max(a, b); });
+    default:
+        return EvaluationResult(0);
+    }
+}
+
 EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
 {
     if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO

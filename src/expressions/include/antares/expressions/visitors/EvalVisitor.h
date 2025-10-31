@@ -90,6 +90,12 @@ public:
         return evaluateBinaryOperation(right, std::greater_equal<>());
     }
 
+    template<class Operation>
+    void applyOperation(const EvaluationResult& rhs, Operation op)
+    {
+        return evaluateBinaryOperation(rhs, op);
+    }
+
     struct SafeDivides
     {
         static constexpr double DEFAULT_THRESHOLD = 1e-16;
@@ -324,5 +330,8 @@ private:
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult visit(const Nodes::ReducedCostNode* node) override;
     EvaluationResult visit(const Nodes::DualNode* node) override;
+    template<class Operation>
+    EvaluationResult applyOperation(const Nodes::FunctionNode* node, Operation op);
+    EvaluationResult visit(const Nodes::FunctionNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

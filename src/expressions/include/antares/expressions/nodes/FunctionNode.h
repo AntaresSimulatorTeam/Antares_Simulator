@@ -20,30 +20,47 @@
 */
 #pragma once
 
+#include <string>
+
+#include "antares/expressions/nodes/ParentNode.h"
+
+#include "ParentNode.h"
+
 namespace Antares::Expressions::Nodes
 {
-class Node;
-class BinaryNode;
-class UnaryNode;
-class SumNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanOrEqualNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
-class PortFieldSumNode;
-class TimeShiftNode;
-class TimeIndexNode;
-class TimeSumNode;
-class ParentNode;
-class AllTimeSumNode;
-class ReducedCostNode;
-class DualNode;
-class FunctionNode;
+enum class FunctionNodeType
+{
+    max,
+};
+
+std::string FunctionNodeTypeToString(FunctionNodeType type);
+
+class FunctionNode final: public ParentNode
+{
+public:
+    template<typename... NodePtr>
+    explicit FunctionNode(FunctionNodeType type, NodePtr... operands):
+        type_(type),
+        ParentNode(operands...)
+    {
+    }
+
+    std::string name() const override
+    {
+        return "FunctionNode";
+    }
+
+    FunctionNodeType type() const
+    {
+        return type_;
+    }
+
+    std::string typeToString() const
+    {
+        return FunctionNodeTypeToString(type_);
+    }
+
+private:
+    FunctionNodeType type_;
+};
 } // namespace Antares::Expressions::Nodes
