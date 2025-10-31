@@ -418,12 +418,9 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
         false}},
       {{"ct1", ct_node}});
 
-    createComponent(
-      "model",
-      "componentToto",
-      {build_context_parameter_with("bounds",
-                                    "bounds",
-                                    Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)});
+    createComponent("model",
+                    "componentToto",
+                    {build_context_parameter_with("bounds", "bounds", ParameterType::TIMESERIE)});
 
     const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 0};
@@ -474,13 +471,10 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
         false}},
       {{"ct1", ct_node}});
 
-    createComponent(
-      "model",
-      "componentToto",
-      {build_context_parameter_with("bounds",
-                                    "bounds",
-                                    Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)},
-      "GROUPENAME");
+    createComponent("model",
+                    "componentToto",
+                    {build_context_parameter_with("bounds", "bounds", ParameterType::TIMESERIE)},
+                    "GROUPENAME");
 
     const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 3};
@@ -795,6 +789,36 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_offset)
         const auto var_name = "componentA.x_s0_t" + to_string(i);
         BOOST_CHECK_NO_THROW((void)pb->lookupVariable(var_name));
         BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 10);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
+{
+    auto objective = parameter("param", TimeIndex::VARYING_IN_TIME_ONLY);
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"param", TimeDependent::YES, ScenarioDependent::NO}},
+      {{"x", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+      {},
+      objective);
+    createComponent("model",
+                    "componentA",
+                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIE)});
+
+    const vector<unsigned int> timeSteps{0, 1, 2};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(2), timeSteps.at(0), timeSteps.at(2), 0};
+    auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
+    // setting 3 hours (including h 1 and 2)
+    bounds_time_series->add({10., 11., 12.});
+    LinearProblemData data;
+    data.addDataSeries(std::move(bounds_time_series));
+
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    buildLinearProblem(ctx, data, scenarios);
+
+    for (const auto t: timeSteps)
+    {
+        BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), t);
     }
 }
 
