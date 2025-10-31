@@ -66,11 +66,15 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         if (!exchange.isPossible())
         {
-            StorageForRemixNoLevels* s = dynamic_cast<StorageForRemixNoLevels*>((*cyclic_it).get());
-            auto& withdrawal = s->withdrawal();
-            for (unsigned h = 0; h < 168; ++h)
+            if (debug)
             {
-                *debug << s->name() << " " << h << " " << withdrawal[h] << std::endl;
+                StorageForRemixNoLevels* s = dynamic_cast<StorageForRemixNoLevels*>(
+                  (*cyclic_it).get());
+                auto& withdrawal = s->withdrawal();
+                for (unsigned h = 0; h < withdrawal.size(); ++h)
+                {
+                    *debug << s->name() << " " << h << " " << withdrawal[h] << std::endl;
+                }
             }
             delete_current(cyclic_it);
         }
