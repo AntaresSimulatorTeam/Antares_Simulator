@@ -433,8 +433,10 @@ BOOST_AUTO_TEST_CASE(dualExpression)
     // constraints
     std::string expression = "dual(constraintA)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode");
     auto dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dualNode->typeToString(), "dual");
+
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(dualNode->getOperands().at(0))->value(),
                       "constraintA");
 
@@ -471,8 +473,9 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
 
     std::string expression = "reduced_cost(varB)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode");
     auto reducedCostNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(reducedCostNode->typeToString(), "reduced_cost");
     BOOST_CHECK_EQUAL(
       dynamic_cast<Nodes::ParameterNode*>(reducedCostNode->getOperands().at(0))->value(),
       "varB");
