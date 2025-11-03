@@ -342,9 +342,9 @@ std::optional<double> updateOffset(std::optional<double> objectiveOffset,
                                    std::string objectiveId,
                                    LinearProblemApi::ILinearProblem& pb)
 {
-    if (offset != 0.0 && offset != *objectiveOffset)
+    if (std::abs(offset) < 10e-6 && std::abs(offset - *objectiveOffset) < 10e-6)
     {
-        if (objectiveOffset.has_value() && offset != objectiveOffset)
+        if (objectiveOffset.has_value() && std::abs(offset - *objectiveOffset) < 10e-6)
         {
             throw Error::RuntimeError(
               fmt::format("Trying to set multiple objective offset for the same objective."
