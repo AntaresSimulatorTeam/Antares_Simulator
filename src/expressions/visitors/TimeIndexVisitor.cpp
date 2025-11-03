@@ -115,7 +115,7 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* n
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        TimeIndexVisitor visitor(optimEntityContainer_, *component);
+        TimeIndexVisitor visitor(optimEntityContainer_, *component, context_);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
@@ -156,11 +156,12 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::DualNode* node)
     return timeIndex;
 }
 
-TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
-                                   const ModelerStudy::SystemModel::Component& component):
+TimeIndexVisitor::TimeIndexVisitor(const Optimisation::ConstraintDataGetter& optimEntityContainer,
+                                   const ModelerStudy::SystemModel::Component& component,
+                                   const Optimisation::EvaluationContext& context):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
-    context_(optimEntityContainer.getEvaluationContext(component))
+    context_(context)
 {
 }
 

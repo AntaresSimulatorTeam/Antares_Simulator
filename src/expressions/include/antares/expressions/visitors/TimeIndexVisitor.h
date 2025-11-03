@@ -34,8 +34,9 @@ namespace Antares::Expressions::Visitors
 class TimeIndexVisitor: public NodeVisitor<Optimisation::TimeIndex>
 {
 public:
-    explicit TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
-                              const ModelerStudy::SystemModel::Component& component);
+    explicit TimeIndexVisitor(const Optimisation::ConstraintDataGetter& optimEntityContainer,
+                              const ModelerStudy::SystemModel::Component& component,
+                              const Optimisation::EvaluationContext& context);
 
     std::string name() const override;
 
@@ -62,7 +63,7 @@ private:
 
     std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
 
-    const Optimisation::OptimEntityContainer& optimEntityContainer_;
+    const Optimisation::ConstraintDataGetter& optimEntityContainer_;
     const ModelerStudy::SystemModel::Component& component_;
     const Optimisation::EvaluationContext& context_;
 };

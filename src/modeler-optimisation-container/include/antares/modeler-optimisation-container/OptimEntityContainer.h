@@ -43,7 +43,16 @@ struct OptimComponent
     EvaluationContext evaluationContext;
 };
 
-class OptimEntityContainer
+class ConstraintDataGetter
+{
+public:
+    virtual std::pair<unsigned int, TimeIndex> getConstraintData(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      unsigned int index) const
+      = 0;
+};
+
+class OptimEntityContainer: public ConstraintDataGetter
 {
 public:
     OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
@@ -73,7 +82,7 @@ public:
 
     [[nodiscard]] std::pair<unsigned int, TimeIndex> getConstraintData(
       const Antares::ModelerStudy::SystemModel::Component& component,
-      unsigned int index) const
+      unsigned int index) const override
     {
         const auto& optimComponent = optimComponents_.at(component.Index());
         return {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),

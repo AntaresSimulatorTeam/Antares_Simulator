@@ -363,7 +363,10 @@ TimeIndex ComponentFiller::getConstraintTimeIndex(
   const Expressions::Nodes::Node* node,
   const ModelerStudy::SystemModel::Component& component) const
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(optimEntityContainer_, component);
+    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(
+      optimEntityContainer_,
+      component,
+      optimEntityContainer_.getEvaluationContext(component));
     return timeIndexVisitor.dispatch(node);
 }
 } // namespace Antares::Optimisation
