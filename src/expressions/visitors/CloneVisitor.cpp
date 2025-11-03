@@ -31,9 +31,11 @@ CloneVisitor::CloneVisitor(Registry<Nodes::Node>& registry):
 std::vector<Nodes::Node*> CloneVisitor::cloneOperands(const Nodes::ParentNode* node)
 {
     std::vector<Nodes::Node*> clonedOperands(node->size());
-    for (auto* operand: node->getOperands())
+    const auto& operands = node->getOperands();
+    for (int i = 0; i < node->size(); ++i)
     {
-        clonedOperands.push_back(dispatch(operand));
+        auto* operand = operands.at(i);
+        clonedOperands[i] = dispatch(operand);
     }
     return clonedOperands;
 }

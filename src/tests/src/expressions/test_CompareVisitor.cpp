@@ -230,6 +230,8 @@ BOOST_FIXTURE_TEST_CASE(compare_dual, ComparisonFixture)
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(dual1);
+    const auto* n = dynamic_cast<FunctionNode*>(clone);
+    std::cout << "**** clone.type = " << n->typeToString() << std::endl;
     BOOST_CHECK(compareVisitor.dispatch(dual1, clone));
     BOOST_CHECK(!compareVisitor.dispatch(dual1, dual2));
 }
