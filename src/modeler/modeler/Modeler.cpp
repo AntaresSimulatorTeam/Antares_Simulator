@@ -127,12 +127,11 @@ void Modeler::run() const
       data.system->Components(),
       [](const auto& component)
       {
-          return std::any_of(component.getModel()->Variables().cbegin(),
-                             component.getModel()->Variables().cend(),
-                             [](const auto& variable) {
-                                 return variable.Type()
-                                        != ModelerStudy::SystemModel::ValueType::FLOAT;
-                             });
+          return std::ranges::any_of(component.getModel()->Variables(),
+                                     [](const auto& variable) {
+                                         return variable.Type()
+                                                != ModelerStudy::SystemModel::ValueType::FLOAT;
+                                     });
       });
 
     // Todo: scenario
