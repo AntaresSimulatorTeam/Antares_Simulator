@@ -235,7 +235,6 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
     return EvaluationResult{constraintValues};
 }
 
-
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())

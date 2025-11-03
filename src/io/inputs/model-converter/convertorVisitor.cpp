@@ -143,16 +143,14 @@ public:
     }
 };
 
-
-
 Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
 {
     for (const auto& param: model_.parameters)
     {
         if (param.id == identifier)
         {
-            return static_cast<Node*>(
-              registry_.create<ParameterNode>(param.id,
+            return static_cast<Node*>(registry_.create<ParameterNode>(
+              param.id,
               Optimisation::convertToTimeIndex(param.time_dependent, param.scenario_dependent)));
         }
     }
@@ -163,9 +161,9 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         const auto& var = variables[index];
         if (var.id == identifier)
         {
-            return static_cast<Node*>(
-              registry_.create<VariableNode>(var.id,
-                                             index,
+            return static_cast<Node*>(registry_.create<VariableNode>(
+              var.id,
+              index,
               Optimisation::convertToTimeIndex(var.time_dependent, var.scenario_dependent)));
         }
     }

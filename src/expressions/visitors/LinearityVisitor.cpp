@@ -129,6 +129,7 @@ LinearStatus LinearityVisitor::handleDual([[maybe_unused]] const Nodes::Function
 {
     throw NodeTypeShouldBeInExtraOutput("dual");
 }
+
 LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())

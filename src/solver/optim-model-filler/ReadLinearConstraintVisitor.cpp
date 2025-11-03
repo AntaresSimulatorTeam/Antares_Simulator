@@ -162,7 +162,6 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
     throw IllegalNodeException();
 }
 
-
 LinearConstraint ReadLinearConstraintVisitor::visit(const FunctionNode*)
 {
     throw IllegalNodeException();
