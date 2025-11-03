@@ -11,7 +11,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
                                     ListStorageForRemix& storagesForRemix,
-                                    std::ofstream* debug = nullptr);
+                                    std::stringstream* debug = nullptr);
 
 void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,

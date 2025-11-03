@@ -22,6 +22,7 @@
 #include <cassert>
 #include <cmath>
 #include <fstream>
+#include <sstream>
 #include <string>
 
 #include <antares/exception/AssertionError.hpp>
@@ -390,8 +391,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   bool includeSTS,
                                   bool debugInfos)
 {
-    std::ofstream debugStream("remix-" + std::to_string(problem.year) + "-"
-                              + std::to_string(problem.weekInTheYear));
+    std::stringstream debugStream;
     areas.each(
       [&](const Data::Area& area)
       {
@@ -422,7 +422,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                              spillage,
                                              dtgMrg,
                                              listStorage,
-                                             debugInfos ? &(debugStream) : nullptr);
+                                             debugInfos ? &debugStream : nullptr);
           }
           catch (std::exception& e)
           {
@@ -433,6 +433,12 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
               logs.warning(msg);
           }
       });
+    if (debugInfos)
+    {
+        std::ofstream outfile("remix-" + std::to_string(problem.year) + "-"
+                              + std::to_string(problem.weekInTheYear));
+        outfile << debugStream.str();
+    }
 }
 
 void RemixHydroForAllAreas(const Data::AreaList& areas,

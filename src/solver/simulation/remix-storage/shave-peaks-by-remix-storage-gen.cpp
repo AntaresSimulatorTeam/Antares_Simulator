@@ -4,6 +4,7 @@
 #include <optional>
 #include <ranges>
 #include <set>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -46,7 +47,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
                                     ListStorageForRemix& listStorage,
-                                    std::ofstream* debugStream)
+                                    std::stringstream* debugStream)
 {
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;

@@ -1,3 +1,4 @@
+#include <sstream>
 #define BOOST_TEST_MODULE multi storage remix
 
 #define WIN32_LEAN_AND_MEAN
@@ -74,8 +75,10 @@ struct InputFixture
         storagesForRemix.push_back(sts_1.createSTS(UnsupE, "sts1"));
         storagesForRemix.push_back(sts_2.createSTS(UnsupE, "sts2"));
 
-        std::ofstream debug ("debug_sts_remix.txt");
+        std::stringstream debug;
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix, &debug);
+        std::ofstream outfile ("debug_sts_remix.txt");
+        outfile << debug.str();
     }
 
     STS_holder<nb_hours> sts_1;
