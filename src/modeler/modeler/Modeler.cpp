@@ -58,7 +58,7 @@ public:
       ILinearProblem& pb,
       const LinearProblemApi::ILinearProblemData& dataSeries,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-      MasterAndSubPbVariables* masterAndSubPbvars = nullptr):
+      MasterAndSubPbVariables* masterAndSubPbvars):
         system_(system),
         dataSeries_(dataSeries),
         scenarioGroupRepository_(scenarioGroupRepository),

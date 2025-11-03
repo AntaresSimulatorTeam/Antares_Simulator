@@ -45,6 +45,7 @@ public:
     MasterAndSubPbVariables() = default;
     void setProblemIdentifier(std::string id);
     void add(const std::vector<std::string>& names, unsigned varsCountInPb);
+    void write(std::ostream& os) const;
 
 private:
     std::string pbIdentifier_ = "master";

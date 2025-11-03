@@ -109,6 +109,17 @@ void MasterAndSubPbVariables::add(const std::vector<std::string>& names, unsigne
     }
 }
 
+void MasterAndSubPbVariables::write(std::ostream& os) const
+{
+    for (const auto& [problemId, v]: masterAndSubPbVars_)
+    {
+        for (const auto& [variableName, variableIndex]: v)
+        {
+            os << problemId << '\t' << variableName << '\t' << variableIndex << '\n';
+        }
+    }
+}
+
 class VariablesBulkAddition
 {
 public:
