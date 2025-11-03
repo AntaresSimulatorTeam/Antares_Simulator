@@ -23,8 +23,8 @@
 #include <string>
 
 #include <antares/expressions/expression.h>
-#include "antares/modeler/optimConfig/optimConfig.h"
 
+#include "optimConfig.h"
 #include "timeAndScenarioType.h"
 #include "valueType.h"
 
@@ -80,6 +80,11 @@ public:
     [[nodiscard]] bool IsScenarioDependent() const
     {
         return scenarioDependent_ == ScenarioDependent::YES;
+    }
+
+    void setLocation(Modeler::Config::Location loc)
+    {
+        location_ = loc;
     }
 
     [[nodiscard]] Modeler::Config::Location location() const

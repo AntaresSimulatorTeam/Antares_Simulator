@@ -110,7 +110,6 @@ set(TARGET_LIBS #No alias
         modeler-simulation-table
         scenario-builder-antlr
         scenario-group-parser
-        modeler-optim-config
         yml-optim-config
 )
 

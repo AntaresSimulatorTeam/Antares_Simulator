@@ -23,7 +23,8 @@
 #include <string>
 
 #include <antares/expressions/expression.h>
-#include "antares/modeler/optimConfig/optimConfig.h"
+
+#include "optimConfig.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -49,6 +50,11 @@ public:
     const Expression& expression() const
     {
         return expression_;
+    }
+
+    void setLocation(Modeler::Config::Location loc)
+    {
+        location_ = loc;
     }
 
     [[nodiscard]] Modeler::Config::Location location() const

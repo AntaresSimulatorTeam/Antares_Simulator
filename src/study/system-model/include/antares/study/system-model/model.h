@@ -71,7 +71,7 @@ public:
         return id_;
     }
 
-    const std::vector<Objective>& Objectives() const
+    std::vector<Objective>& Objectives()
     {
         return objectives_;
     }
@@ -86,9 +86,8 @@ public:
         return parameters_;
     }
 
-    const std::vector<Variable>& Variables() const
+    std::vector<Variable>& Variables()
     {
-        // TODO : convert to vector?
         return variables_;
     }
 

@@ -13,4 +13,6 @@ add_boost_test(test-system-model
   Antares::yml-system
   Antares::antares-study-system-model
   Antares::antlr-interface
+  Antares::load-modeler-files
+  Antares::modeler-lib # TODO dependency of Antares::load-modeler-files
   test_utils_unit)

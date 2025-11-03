@@ -365,7 +365,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
 
     Antares::ModelerStudy::SystemModel::Component* addComponent(
       const std::string& id,
-      const Antares::ModelerStudy::SystemModel::Model& model,
+      Antares::ModelerStudy::SystemModel::Model& model,
       std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
         paramsAndValues)
     {
