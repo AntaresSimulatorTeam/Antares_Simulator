@@ -387,7 +387,8 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   PROBLEME_HEBDO& problem,
                                   uint numSpace,
                                   uint firstHourOfWeek,
-                                  bool includeSTS)
+                                  bool includeSTS,
+                                  bool debugInfos)
 {
     std::ofstream debugStream("remix-" + std::to_string(problem.year) + "-"
                               + std::to_string(problem.weekInTheYear));
@@ -416,7 +417,12 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           try
           {
               checkInput(load, unsupE, spillage, dtgMrg, listStorage);
-              shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage, &debugStream);
+              shavePeaksByRemixingStorageGen(load,
+                                             unsupE,
+                                             spillage,
+                                             dtgMrg,
+                                             listStorage,
+                                             debugInfos ? &(debugStream) : nullptr);
           }
           catch (std::exception& e)
           {
@@ -461,9 +467,10 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
     else if (params.shedding.policy == Data::shpAccurateShavePeaks)
     {
         bool includeSTS = params.accurateShavePeaksIncludeShortTermStorage;
+        bool debugInfos = params.remixStorageDebug;
         try
         {
-            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear, includeSTS);
+            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear, includeSTS, debugInfos);
         }
         catch (std::invalid_argument& invalidArgExc)
         {

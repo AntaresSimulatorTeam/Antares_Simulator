@@ -1,6 +1,7 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
 #include <fstream>
+#include <optional>
 #include <ranges>
 #include <set>
 #include <stdexcept>
@@ -45,7 +46,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
                                     ListStorageForRemix& listStorage,
-                                    std::ofstream* debug)
+                                    std::ofstream* debugStream)
 {
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;
@@ -66,14 +67,14 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         if (!exchange.isPossible())
         {
-            if (debug)
+            if (debugStream)
             {
                 StorageForRemixNoLevels* s = dynamic_cast<StorageForRemixNoLevels*>(
                   (*cyclic_it).get());
                 auto& withdrawal = s->withdrawal();
                 for (unsigned h = 0; h < withdrawal.size(); ++h)
                 {
-                    *debug << s->name() << " " << h << " " << withdrawal[h] << std::endl;
+                    *debugStream << s->name() << " " << h << " " << withdrawal[h] << std::endl;
                 }
             }
             delete_current(cyclic_it);

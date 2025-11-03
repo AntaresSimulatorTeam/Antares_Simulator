@@ -431,8 +431,6 @@ public:
         HydroPricingMode hpMode;
     } hydroPricing;
 
-    // TODO VP: remove this comment
-    // This parameters does nothing right now, it will be implemented later in 9.3.x
     bool accurateShavePeaksIncludeShortTermStorage = false;
 
     //! Transmission capacities
@@ -457,6 +455,9 @@ public:
     //@}
 
     bool hydroDebug;
+
+    /// Used to create debug informations for both hydro and short term storages
+    bool remixStorageDebug = false;
 
     //! \name Seeds
     //@{
