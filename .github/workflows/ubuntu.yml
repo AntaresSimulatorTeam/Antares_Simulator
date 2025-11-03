@@ -32,6 +32,7 @@ env:
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
+  GH_DEBUG: api gh cache delete
 
 jobs:
 
@@ -170,239 +171,9 @@ jobs:
          cd _build
          ctest -C Release --output-on-failure
 
-    - name: Read simtest version
-      run: |
-        echo 'SIMTEST_JSON<<EOF' >> $GITHUB_ENV
-        cat ./simtest.json >> $GITHUB_ENV
-        echo 'EOF' >> $GITHUB_ENV
-
-    - name: Export simtest version
-      run: |
-        echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
-
-    - name: Init submodule Antares_Simulator_Tests_NR
-      run: |
-        git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
-
-    - name: Run named mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-named-mps
-        os: ${{ env.os }}
-        variant: "named-mps"
-
-    - name: Run fast cucumber
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        tags: "fast"
-
-    - name: Run cucumber on modeler
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        feature: "features/modeler-features"
-
-    - name: Run unit and end-to-end tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      run: |
-        cd _build
-        ctest -C Release --output-on-failure -L "unit|end-to-end"
-
-    - name: Merge XML reports into single HTML
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      run: |
-        cd _build/tests
-        ${{github.workspace}}/src/tests/merge_all.sh ${{github.workspace}}/src/tests/format_xml_report.xsl
-
-    - name: Rename report
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      run: |
-        mkdir testing-report
-        mv ${{ github.workspace }}/_build/tests/report.html testing-report/$PAGE
-      env:
-        PAGE: ${{ github.sha }}.html
-
-    - name: Upload logs for failed tests
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v5
-      with:
-        name: test-log
-        path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
-
-    - name: Run tests about infinity on BCs RHS
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-v830
-        os: ${{ env.os }}
-
-    - name: Run MILP with CBC
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-milp
-        variant: "milp-cbc"
-        os: ${{ env.os }}
-
-    - name: Run tests on adequacy patch (CSR)
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: adequacy-patch-CSR
-        os: ${{ env.os }}
-
-    - name: Run tests introduced in 8.6.0
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-v860
-        os: ${{ env.os }}
-
-    - name: Run tests introduced in 8.7.0
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-v870
-        os: ${{ env.os }}
-
-    - name: Run tests introduced in 9.1.0
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-v910
-        os: ${{ env.os }}
-
-    - name: Run tests introduced in 9.2.0
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-v920
-        os: ${{ env.os }}
-
-    - name: Run tests introduced in 9.3.0
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-v930
-        os: ${{ env.os }}
-
-    - name: Run short-tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: short-tests
-        os: ${{ env.os }}
-
-
-    - name: Run cucumber on v9.2 tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        feature: "features/solver-features/tests_for_v9.2.feature"
-
-    - name: Run mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-mps
-        os: ${{ env.os }}
-
-    - name: Run unfeasibility-related tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      run: |
-        cd _build
-        ctest -C Release --output-on-failure -R "^unfeasible$"
-
-    - name: Run parallel tests
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: valid-parallel
-        os: ${{ env.os }}
-        variant: "parallel"
-
-    - name: Run medium-tests
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: medium-tests
-        os: ${{ env.os }}
-
-    - name: Run cucumber on medium-tests
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        feature: "features/solver-features/medium_tests.feature"
-
-    - name: Run long-tests-1
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: long-tests-1
-        os: ${{ env.os }}
-
-    - name: Run long-tests-2
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: long-tests-2
-        os: ${{ env.os }}
-
-    - name: Run long-tests-3
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{ env.SIMTEST }}
-        batch-name: long-tests-3
-        os: ${{ env.os }}
-
-
-    - name: Run cucumber on hybrid studies
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        feature: "features/solver-features/hybrid_studies.feature"
-
     - name: Barrier
       if: ${{ !success() }}
       run: exit 1
-
-    - name: Installer .deb creation
-      run: |
-        cd _build
-        cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
-
-    - name: Installer deb upload push
-      uses: actions/upload-artifact@v5
-      with:
-        name: deb
-        path: _build/*.deb
-
-
-    - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-        tag: ${{ github.event.inputs.release_tag }}
-      run: |
-        gh release upload "$tag" _build/*.tar.gz _build/*.deb
 
 
     - name: Update continuous-delivery release
@@ -437,6 +208,14 @@ jobs:
       # Using `--repo` makes it so that this step doesn't require checking out the
       # repo first.
       run: gh cache delete --repo ${{ github.repository }} "$(jq -Rr @uri <<< ${{ steps.cache.outputs.cache-primary-key }})"
+
+    - name: Delete old cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+        if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
+        # Using `--repo` makes it so that this step doesn't require checking out the
+        # repo first.
+        run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
