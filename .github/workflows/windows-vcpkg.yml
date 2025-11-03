@@ -161,7 +161,7 @@ jobs:
       if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
       # Using `--repo` makes it so that this step doesn't require checking out the
       # repo first.
-      run: gh cache delete --repo "$(jq -Rr @uri <<< ${{ github.repository }})" "$(jq -Rr @uri <<< ${{ steps.cache.outputs.cache-primary-key }})"
+      run: gh cache delete --repo "$(jq -Rr @uri <<< ${{ github.repository }})" ${{ steps.cache.outputs.cache-primary-key }}
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
