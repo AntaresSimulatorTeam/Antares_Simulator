@@ -152,7 +152,7 @@ void Modeler::run() const
     // Sub problem
     std::string pbId = "1-1";
     bendersDecomposition->setCurrentProblemId(pbId);
-    
+
     OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
 
     // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
