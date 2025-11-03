@@ -145,15 +145,33 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(
     return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ReducedCostNode* node)
+Optimisation::TimeIndex TimeIndexVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    return node->timeIndex();
+    const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
+    unsigned int varIndex = static_cast<unsigned int>(indexNode->value());
+    return optimEntityContainer_.getVariableTimeIndex(component_, varIndex);
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::DualNode* node)
+Optimisation::TimeIndex TimeIndexVisitor::handleDual(const Nodes::FunctionNode* node)
 {
-    const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_, node->index());
+    const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
+    unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
+    const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_, cstrIndex);
     return timeIndex;
+}
+
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::FunctionNode* node)
+{
+    switch (node->type())
+    {
+    case Nodes::FunctionNodeType::reduced_cost:
+        return handleReducedCost(node);
+    case Nodes::FunctionNodeType::dual:
+        return handleDual(node);
+    default:
+        // TODO
+        return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    }
 }
 
 TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,

@@ -140,14 +140,29 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
     return "sum(" + dispatch(node->child()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::ReducedCostNode* node)
+std::string PrintVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    return "reduced_cost(" + node->value() + ")";
+    const auto* varIdNode = dynamic_cast<Nodes::ParameterNode*>(node->getOperands().at(0));
+    return "reduced_cost(" + varIdNode->value() + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::DualNode* node)
+std::string PrintVisitor::handleDual(const Nodes::FunctionNode* node)
 {
-    return "dual(" + node->value() + ")";
+    const auto* cstrIdNode = dynamic_cast<Nodes::ParameterNode*>(node->getOperands().at(0));
+    return "dual(" + cstrIdNode->value() + ")";
+}
+
+std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
+{
+    switch (node->type())
+    {
+    case Nodes::FunctionNodeType::reduced_cost:
+        return handleReducedCost(node);
+    case Nodes::FunctionNodeType::dual:
+        return handleDual(node);
+    default:
+        return "";
+    }
 }
 
 std::string PrintVisitor::name() const

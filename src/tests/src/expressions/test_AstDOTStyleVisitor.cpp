@@ -91,11 +91,13 @@ public:
         Node* div = registry_.create<DivisionNode>(parameterNode3, lit3);
         Node* timeSumNode = registry_.create<TimeSumNode>(from, to, div);
 
-        Node* dual = registry_.create<DualNode>("constraint", 0);
-        Node* reducedCost = registry_.create<ReducedCostNode>(
-          "variable",
-          0,
-          Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+        Node* dual = registry_.create<FunctionNode>(FunctionNodeType::dual,
+                                                    registry_.create<ParameterNode>("constraint"),
+                                                    registry_.create<LiteralNode>(0));
+        Node* reducedCost = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                           registry_.create<ParameterNode>(
+                                                             "variable"),
+                                                           registry_.create<LiteralNode>(0));
 
         return registry_.create<SumNode>(gt,
                                          timeIndexNode,

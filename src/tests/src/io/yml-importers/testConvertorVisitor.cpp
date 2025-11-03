@@ -434,15 +434,17 @@ BOOST_AUTO_TEST_CASE(dualExpression)
     std::string expression = "dual(constraintA)";
     auto expr = converter.run(expression);
     BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
-    auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
-    BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
+    auto dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(dualNode->getOperands().at(0))->value(),
+                      "constraintA");
 
     // binding constraints
     expression = "dual(constraintB)";
     expr = converter.run(expression);
-    dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
-    BOOST_CHECK_EQUAL(dualNode->value(), "constraintB");
-    BOOST_CHECK_EQUAL(dualNode->index(), 1);
+    dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(dualNode->getOperands().at(0))->value(),
+                      "constraintB");
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::LiteralNode*>(dualNode->getOperands().at(1))->value(), 1);
 
     std::string badExpression = "dual(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
@@ -470,9 +472,13 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
     std::string expression = "reduced_cost(varB)";
     auto expr = converter.run(expression);
     BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
-    auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
-    BOOST_CHECK_EQUAL(reducedCostNode->value(), "varB");
-    BOOST_CHECK_EQUAL(reducedCostNode->index(), 1);
+    auto reducedCostNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(
+      dynamic_cast<Nodes::ParameterNode*>(reducedCostNode->getOperands().at(0))->value(),
+      "varB");
+    BOOST_CHECK_EQUAL(
+      dynamic_cast<Nodes::LiteralNode*>(reducedCostNode->getOperands().at(1))->value(),
+      1);
 
     std::string badExpression = "reduced_cost(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),

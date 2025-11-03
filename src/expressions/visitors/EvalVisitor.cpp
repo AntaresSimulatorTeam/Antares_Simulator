@@ -206,16 +206,18 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
     return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
+EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
 {
-    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, node->index());
+    const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
+    unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
+    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, cstrIndex);
 
     if (timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || timeIndex == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
         const auto componentConstraints = optimContainer_.getComponentConstraint(
           component_,
-          node->index(),
+          cstrIndex,
           1 /* single timestep*/);
         return EvaluationResult(componentConstraints.first[0]->dual());
     }
@@ -223,7 +225,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
     const auto componentConstraints = optimContainer_.getComponentConstraint(component_,
-                                                                             node->index(),
+                                                                             cstrIndex,
                                                                              nbTimeStep);
     for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
     {
@@ -233,36 +235,32 @@ EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
     return EvaluationResult{constraintValues};
 }
 
-template<class Operation>
-EvaluationResult EvalVisitor::applyOperation(const Nodes::FunctionNode* node, Operation op)
-{
-    EvaluationResult result(0);
-    for (const auto* operand: node->getOperands())
-    {
-        result.applyOperation(dispatch(operand), op);
-    }
-    return result;
-}
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())
     {
-    case Nodes::FunctionNodeType::max:
-        return applyOperation(node, [](const auto& a, const auto& b) { return std::max(a, b); });
+    case Nodes::FunctionNodeType::reduced_cost:
+        return handleReducedCost(node);
+    case Nodes::FunctionNodeType::dual:
+        return handleDual(node);
     default:
         return EvaluationResult(0);
     }
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
+EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
+    unsigned int varIndex = static_cast<unsigned int>(indexNode->value());
+
+    if (const auto timeIndex = optimContainer_.getVariableTimeIndex(component_, varIndex);
+        timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || timeIndex == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
-          node->index(),
+          varIndex,
           1 /* single timestep*/);
         return EvaluationResult(componentVariables[0]->reducedCost());
     }
@@ -270,7 +268,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> varValues(nbTimeStep, 0.0);
     const std::span componentVariables = optimContainer_.getComponentVariable(component_,
-                                                                              node->index(),
+                                                                              varIndex,
                                                                               nbTimeStep);
     for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
     {

@@ -80,6 +80,17 @@ public:
                 optimComponent.modelConstraintsTimeIndex.at(index)};
     }
 
+    [[nodiscard]] TimeIndex getVariableTimeIndex(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      unsigned int index) const
+    {
+        const auto* model = component.getModel();
+        const auto& modelVar = model->Variables().at(index);
+        bool isVarTimeDep = modelVar.isTimeDependent();
+        bool isVarScenarioDep = modelVar.IsScenarioDependent();
+        return Optimisation::convertToTimeIndex(isVarTimeDep, isVarScenarioDep);
+    }
+
     [[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
     {
         return constraintStartLine_;

@@ -24,13 +24,12 @@
 
 #include "antares/expressions/nodes/ParentNode.h"
 
-#include "ParentNode.h"
-
 namespace Antares::Expressions::Nodes
 {
 enum class FunctionNodeType
 {
-    max,
+    reduced_cost,
+    dual,
 };
 
 std::string FunctionNodeTypeToString(FunctionNodeType type);
@@ -42,6 +41,18 @@ public:
     explicit FunctionNode(FunctionNodeType type, NodePtr... operands):
         type_(type),
         ParentNode(operands...)
+    {
+    }
+
+    explicit FunctionNode(FunctionNodeType type, const std::vector<Node*>& operands):
+        type_(type),
+        ParentNode(operands)
+    {
+    }
+
+    explicit FunctionNode(FunctionNodeType type, const std::vector<Node*>&& operands):
+        type_(type),
+        ParentNode(std::move(operands))
     {
     }
 

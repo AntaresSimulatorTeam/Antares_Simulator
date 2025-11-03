@@ -116,8 +116,6 @@ public:
           Nodes::TimeIndexNode,
           Nodes::TimeSumNode,
           Nodes::AllTimeSumNode,
-          Nodes::ReducedCostNode,
-          Nodes::DualNode,
           Nodes::FunctionNode>();
 
         try
@@ -295,24 +293,7 @@ public:
      * @return The result of processing the AllTimeSumNode.
      */
     virtual R visit(const Nodes::AllTimeSumNode*, Args... args) = 0;
-    /**
-     * @brief Visits a ReducedCostNode.
-     *
-     * @param node A pointer to the ReducedCostNode to be visited.
-     * @param args Additional arguments to be passed to the visitor's methods.
-     *
-     * @return The result of processing the ReducedCostNode.
-     */
-    virtual R visit(const Nodes::ReducedCostNode*, Args... args) = 0;
-    /**
-     * @brief Visits a DualNode.
-     *
-     * @param node A pointer to the DualNode to be visited.
-     * @param args Additional arguments to be passed to the visitor's methods.
-     *
-     * @return The result of processing the DualNode.
-     */
-    virtual R visit(const Nodes::DualNode*, Args... args) = 0;
+
     /**
      * @brief Visits a FunctionNode.
      *

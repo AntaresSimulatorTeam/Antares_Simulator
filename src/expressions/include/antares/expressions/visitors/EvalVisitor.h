@@ -328,10 +328,8 @@ private:
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
-    EvaluationResult visit(const Nodes::ReducedCostNode* node) override;
-    EvaluationResult visit(const Nodes::DualNode* node) override;
-    template<class Operation>
-    EvaluationResult applyOperation(const Nodes::FunctionNode* node, Operation op);
+    EvaluationResult handleReducedCost(const Nodes::FunctionNode* node);
+    EvaluationResult handleDual(const Nodes::FunctionNode* node);
     EvaluationResult visit(const Nodes::FunctionNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

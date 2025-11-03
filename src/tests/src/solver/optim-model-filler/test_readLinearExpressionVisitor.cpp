@@ -271,13 +271,17 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
                           Antares::Error::InvalidArgumentError,
                           checkMessage("ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
 
-    node = create<DualNode>("constraint1", 0);
+    node = create<FunctionNode>(FunctionNodeType::dual,
+                                create<ParameterNode>("constraint1"),
+                                create<LiteralNode>(0));
     BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
                           Antares::Error::InvalidArgumentError,
                           checkMessage(
                             "A linear expression can't contain extra output operator dual."));
 
-    node = create<ReducedCostNode>("var", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    node = create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                create<ParameterNode>("var"),
+                                create<LiteralNode>(0));
     BOOST_CHECK_EXCEPTION(
       visitor().dispatch(node),
       Antares::Error::InvalidArgumentError,

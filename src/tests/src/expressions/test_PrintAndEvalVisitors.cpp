@@ -1299,14 +1299,18 @@ BOOST_FIXTURE_TEST_CASE(PrintAllTimeSumNode, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(PrintDualNode, MyDummyFixture)
 {
-    Node* dual = create<DualNode>("constraint", 0);
+    Node* dual = create<FunctionNode>(FunctionNodeType::dual,
+                                      create<ParameterNode>("constraint"),
+                                      create<LiteralNode>(0));
     PrintVisitor printVisitor;
     BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint)");
 }
 
 BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
 {
-    Node* reducedCost = create<ReducedCostNode>("var", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    Node* reducedCost = create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                             create<ParameterNode>("var"),
+                                             create<LiteralNode>(0));
     PrintVisitor printVisitor;
     BOOST_CHECK(printVisitor.dispatch(reducedCost) == "reduced_cost(var)");
 }

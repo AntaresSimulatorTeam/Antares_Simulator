@@ -120,14 +120,26 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNod
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ReducedCostNode*)
+LinearStatus LinearityVisitor::handleReducedCost([[maybe_unused]] const Nodes::FunctionNode*)
 {
     throw NodeTypeShouldBeInExtraOutput("reduced_cost");
 }
 
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::DualNode*)
+LinearStatus LinearityVisitor::handleDual([[maybe_unused]] const Nodes::FunctionNode*)
 {
     throw NodeTypeShouldBeInExtraOutput("dual");
+}
+LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
+{
+    switch (node->type())
+    {
+    case Nodes::FunctionNodeType::reduced_cost:
+        return handleReducedCost(node);
+    case Nodes::FunctionNodeType::dual:
+        return handleDual(node);
+    default:
+        return LinearStatus::CONSTANT;
+    }
 }
 
 std::string LinearityVisitor::name() const

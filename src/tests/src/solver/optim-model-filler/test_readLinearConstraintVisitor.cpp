@@ -136,8 +136,12 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, VisitorFixture<ReadLinearConstr
       create<TimeIndexNode>(lit, lit),
       create<TimeSumNode>(lit, lit, lit),
       create<AllTimeSumNode>(lit),
-      create<DualNode>("constraint", 0),
-      create<ReducedCostNode>("var", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)};
+                                        create<FunctionNode>(FunctionNodeType::dual,
+                                                             create<ParameterNode>("constraint"),
+                                                             create<LiteralNode>(0)),
+                                        create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                             create<ParameterNode>("var"),
+                                                             create<LiteralNode>(0))};
 
     for (Node* node: illegal_nodes)
     {

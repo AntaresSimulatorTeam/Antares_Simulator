@@ -27,16 +27,13 @@ std::string FunctionNodeTypeToString(FunctionNodeType type)
 {
     switch (type)
     {
-    case FunctionNodeType::max:
-        return "max";
+    case FunctionNodeType::reduced_cost:
+        return "reduced_cost";
+    case FunctionNodeType::dual:
+        return "dual";
     default:
         return "Unknown function";
     }
 }
 
-FunctionNode::FunctionNode(FunctionNodeType type, NodePtr... operands):
-    type_(type),
-    ParentNode(operands...)
-{
-}
 } // namespace Antares::Expressions::Nodes

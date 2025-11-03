@@ -366,7 +366,9 @@ BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(dual_reducedCost, Registry<Node>)
 {
-    Node* dual = create<DualNode>("constraint1", 0);
+    Node* dual = create<FunctionNode>(FunctionNodeType::dual,
+                                      create<ParameterNode>("constraint1"),
+                                      create<LiteralNode>(0));
     BOOST_CHECK_EXCEPTION(LinearityVisitor().dispatch(dual),
                           NodeTypeShouldBeInExtraOutput,
                           [](const NodeTypeShouldBeInExtraOutput& e)
@@ -376,10 +378,9 @@ BOOST_FIXTURE_TEST_CASE(dual_reducedCost, Registry<Node>)
                                         "extra outputs expressions";
                           });
 
-    Node* reducedCost = create<ReducedCostNode>(
-      "constraint1",
-      0,
-      Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    Node* reducedCost = create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                             create<ParameterNode>("var1"),
+                                             create<LiteralNode>(0));
     BOOST_CHECK_EXCEPTION(LinearityVisitor().dispatch(reducedCost),
                           NodeTypeShouldBeInExtraOutput,
                           [](const NodeTypeShouldBeInExtraOutput& e)
