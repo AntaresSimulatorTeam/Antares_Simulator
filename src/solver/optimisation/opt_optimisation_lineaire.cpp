@@ -38,6 +38,7 @@ using Antares::Solver::Optimization::OptimizationOptions;
 
 namespace
 {
+// TODO move
 void callIfExport(ExportBehavior exportBehavior, auto&& function)
 {
     switch (exportBehavior)
@@ -54,8 +55,7 @@ void callIfExport(ExportBehavior exportBehavior, auto&& function)
         function();
         break;
     default:
-        Antares::logs.error() << "Invalid exportBehavior";
-        break;
+        throw std::invalid_argument("Invalid ExportBehavior");
     }
 }
 
