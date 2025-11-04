@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <functional>
 #include <mutex>
 
 #include <antares/logs/logs.h>
@@ -39,7 +40,7 @@ using Antares::Solver::Optimization::OptimizationOptions;
 namespace
 {
 // TODO move
-void callIfExport(ExportBehavior exportBehavior, auto&& function)
+void callIfExport(ExportBehavior exportBehavior, const std::function<void(void)>& function)
 {
     switch (exportBehavior)
     {
