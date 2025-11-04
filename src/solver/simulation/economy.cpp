@@ -113,7 +113,8 @@ bool Economy::simulationBegin()
               numSpace,
               study.areas,
               study.parameters,
-              study.calendar);
+              study.calendar,
+              resultWriter);
         }
     }
 

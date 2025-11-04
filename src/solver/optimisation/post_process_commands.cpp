@@ -75,11 +75,13 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
 RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                                    AreaList& areas,
                                                    const Data::Parameters& params,
-                                                   unsigned int numSpace):
+                                                   unsigned int numSpace,
+                                                   IResultWriter& resultWriter):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     numSpace_(numSpace),
-    params_(params)
+    params_(params),
+    resultWriter_(resultWriter)
 {
 }
 
