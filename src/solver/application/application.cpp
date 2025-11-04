@@ -390,8 +390,8 @@ void Application::prepare(int argc, const char* argv[])
     using namespace Antares::Solver::Optimization;
     // TODO
     pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
-                                                     ? ExportBehavior::Never
-                                                     : ExportBehavior::Once;
+                                                     ? ExportBehavior::Once
+                                                     : ExportBehavior::Never;
 }
 
 void Application::onLogMessage(int level, const std::string& message)
