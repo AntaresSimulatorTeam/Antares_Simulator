@@ -49,6 +49,7 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
         const auto& variables = model->Variables();
         std::vector<unsigned int> modelVariableGlobalIndices;
 
+        modelVariableGlobalIndices.reserve(variables.size());
         for (const auto& variable: variables)
         {
             if (AreLocationsCompatible(variable.location(), targetLocation))
@@ -58,6 +59,8 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
             }
             else
             {
+                // We add dummy data to avoid "holes" in modelVariableGlobalIndices
+                // but these are not to be used
                 modelVariableGlobalIndices.push_back(-1);
             }
         }
