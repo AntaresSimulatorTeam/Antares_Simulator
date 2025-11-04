@@ -69,6 +69,6 @@ public:
     SingleOptimOptions secondOptimOptions;
     SingleOptimOptions quadraticOptimOptions;
     bool solverLogs = false;
-    ExportBehavior exportBehavior = ExportBehavior::Once;
+    ExportBehavior exportBehavior = ExportBehavior::Never;
 };
 } // namespace Antares::Solver::Optimization
