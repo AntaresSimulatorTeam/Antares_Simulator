@@ -143,15 +143,14 @@ void Modeler::run() const
       parameters.lastTimeStep,  // global = local
       0};
 
+    // Sub problem
     std::unique_ptr<BendersDecomposition> bendersDecomposition;
     if (data.resolutionMode == Antares::Modeler::ResolutionMode::BENDERS_DECOMPOSITION)
     {
         bendersDecomposition = std::make_unique<BendersDecomposition>();
+        std::string pbId = "1-1";
+        bendersDecomposition->setCurrentProblemId(pbId);
     }
-
-    // Sub problem
-    std::string pbId = "1-1";
-    bendersDecomposition->setCurrentProblemId(pbId);
 
     OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
 
