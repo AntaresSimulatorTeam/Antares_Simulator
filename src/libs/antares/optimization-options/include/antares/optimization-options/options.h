@@ -50,6 +50,13 @@ struct CmdLineOptimOptions
     bool solverLogs = false;
 };
 
+enum class ExportBehavior
+{
+    None,
+    Once,
+    Always
+};
+
 class OptimizationOptions final
 {
 public:
@@ -59,5 +66,6 @@ public:
     SingleOptimOptions secondOptimOptions;
     SingleOptimOptions quadraticOptimOptions;
     bool solverLogs = false;
+    ExportBehavior exportBehavior = ExportBehavior::Once;
 };
 } // namespace Antares::Solver::Optimization

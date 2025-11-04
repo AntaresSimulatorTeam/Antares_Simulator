@@ -464,7 +464,6 @@ struct PROBLEME_HEBDO
 
     Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
-    bool ExportStructure = false;
     bool NamedProblems = false;
     bool exportSolutions = false;
 

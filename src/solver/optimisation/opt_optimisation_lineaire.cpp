@@ -33,12 +33,32 @@
 #include "antares/solver/utils/filename.h"
 
 using namespace Antares::Solver;
+using Antares::Solver::Optimization::ExportBehavior;
 using Antares::Solver::Optimization::OptimizationOptions;
-
-std::once_flag export_once;
 
 namespace
 {
+void callIfExport(ExportBehavior exportBehavior, auto&& function)
+{
+    switch (exportBehavior)
+    {
+    case ExportBehavior::None:
+        break;
+    case ExportBehavior::Once:
+    {
+        static std::once_flag once;
+        std::call_once(once, function);
+        break;
+    }
+    case ExportBehavior::Always:
+        function();
+        break;
+    default:
+        Antares::logs.error() << "Invalid exportBehavior";
+        break;
+    }
+}
+
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
                                    const int optimizationNumber)
@@ -267,12 +287,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),
                    problemeHebdo->ProblemeAResoudre->NombreDeVariables,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-    if (problemeHebdo->ExportStructure)
-    {
-        std::call_once(export_once,
-                       [&problemeHebdo, &writer]()
-                       { OPT_ExportStructures(problemeHebdo, writer); });
-    }
+
+    callIfExport(options.exportBehavior, [&] { OPT_ExportStructures(problemeHebdo, writer); });
     auto* firstOptimSimulationTable = simulationTables
                                         ? simulationTables->firstOptimSimulationTable()
                                         : nullptr;

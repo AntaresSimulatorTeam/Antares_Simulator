@@ -133,7 +133,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.exportSolutions = study.parameters.include.exportSolutions;
-    problem.ExportStructure = study.parameters.include.exportStructure;
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
