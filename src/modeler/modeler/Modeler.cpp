@@ -73,7 +73,7 @@ public:
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         const auto& components = system_->Components();
-        optimEntityContainer_.addFromSystemComponents(components);
+        optimEntityContainer_.addFromSystemComponents(components, location);
 
         for (const auto& component: components)
         {
