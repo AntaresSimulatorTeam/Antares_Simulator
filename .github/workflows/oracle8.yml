@@ -138,13 +138,13 @@ jobs:
           rm -rf install
 
       - name: Installer TGZ push
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: oracle-targz
           path: _build/*.tar.gz
 
       - name: Installer RPM push
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: oracle-rpm
           path: _build/*.rpm

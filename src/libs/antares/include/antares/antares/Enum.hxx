@@ -27,6 +27,7 @@
 #include <stdexcept>
 
 #include <antares/stdcxx/class_name.h>
+#include "antares/exception/AssertionError.hpp"
 
 namespace Antares::Data::Enum
 {
@@ -37,7 +38,7 @@ E fromString(const std::string& name)
     const auto& it = std::find(names.begin(), names.end(), name);
     if (it == names.end())
     {
-        throw std::runtime_error("Unexpected " + stdcxx::simpleClassName<E>() + " name " + name);
+        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " name " + name);
     }
 
     return static_cast<E>(it - names.begin());

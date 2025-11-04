@@ -82,4 +82,9 @@ bool OrtoolsMipVariable::isInteger() const
     return mpVar_->integer();
 }
 
+double OrtoolsMipVariable::reducedCost() const
+{
+    return mpVar_->reduced_cost();
+}
+
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

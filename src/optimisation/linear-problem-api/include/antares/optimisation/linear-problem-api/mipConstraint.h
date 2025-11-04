@@ -32,6 +32,8 @@ public:
     virtual void setCoefficient(IMipVariable* var, double coefficient) = 0;
 
     virtual double getCoefficient(const LinearProblemApi::IMipVariable* var) const = 0;
+
+    virtual double dual() const = 0;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

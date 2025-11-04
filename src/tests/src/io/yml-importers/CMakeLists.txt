@@ -3,6 +3,7 @@ include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 add_boost_test(TestYmlModel
         SRC
         testYmlModel.cpp
+        testYmlOptimConfig.cpp
         testModelConverter.cpp
         testConvertorVisitor.cpp
         test_full.cpp
@@ -10,11 +11,13 @@ add_boost_test(TestYmlModel
         testYmlSystem.cpp
         testSystemConverter.cpp
         test-system-with-connexions.cpp
+        testOptimConfigConverter.cpp
         LIBS
         Antares::exception
         Antares::expressions
         Antares::model-converter
         Antares::yml-model
+        Antares::yml-optim-config
         Antares::yml-system
         Antares::antares-study-system-model
         Antares::antlr-interface

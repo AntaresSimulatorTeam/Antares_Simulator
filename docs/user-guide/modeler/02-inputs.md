@@ -95,6 +95,7 @@ models:
   - id: proportional_cost
     time-dependent: false
     scenario-dependent: true
+
   variables:
   - id: is_on
     variable-type: boolean
@@ -106,20 +107,28 @@ models:
     variable-type: continuous
     lower-bound: 0
     upper-bound: max_active_power_setpoint
+
   constraints:
   - id: respect_min_p
     expression: active_power >= is_on * min_active_power_setpoint
-  objective: active_power * proportional_cost
+
+  objective-contributions:
+  - id: objective
+    expression: active_power * proportional_cost
+
   ports:
   - id: injection
     type: dc_port
+
   port-field-definitions:
   - port: injection
     field: flow
     definition: active_power
+
   extra-outputs:
   - id: total_cost_in_millions
     expression: sum(active_power * proportional_cost) / 1000000
+
 - id: node
   description: A balance node with injections (productions and loads)
   ports:
@@ -169,9 +178,12 @@ models:
       respect [these rules](#rules-for-ids).
     - **expression**: an [expression](#expressions) representing the constraint. Can use scalars, parameters, internal
       variables, ports, and time, scenario, and port operators.
-- **objective** _(optional)_: an [expression](#expressions) representing the (additive) participation of the model to
-  the optimization objective.
-  Note that **minimization** is implied. The expression can use scalars, parameters and variables of the model.
+- **objective-contributions** _(optional)_: an collection of contributions to the objective function
+    - **id**: an ID for the objective contribution. Must be unique inside the scope of the model, and
+      respect [these rules](#rules-for-ids).
+    - **expression**: an [expression](#expressions) representing the (additive) participation of the model to
+      the optimization objective.
+      Note that **minimization** is implied. The expression can use scalars, parameters and variables of the model.
 - **ports** _(optional)_: a collection of ports exposed by the model, either as input or output
     - **id**: an ID for the port. Must be unique in the scope of the model, and respect [these rules](#rules-for-ids).
     - **type**: the type of the port. Must refer to the ID of a port type defined in the [port types](#port-types)
