@@ -345,7 +345,8 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            dims);
         }
 
-        if (variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS
+        if ((variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS
+             || variable.location() == Modeler::Config::Location::MASTER)
             && masterAndSubPbvars_)
         {
             masterAndSubPbvars_->add(variableNames.names(), pb.variableCount());

@@ -85,7 +85,7 @@ void FileWriter::writeProblem(
 {
     if (output)
     {
-        logs.info() << "Writing problem.lp...";
+        logs.info() << "Writing " << filename << "...";
         const auto lp_path = outputPath_ / filename;
         problem.Write(lp_path.string());
     }
