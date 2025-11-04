@@ -42,7 +42,7 @@ void callIfExport(ExportBehavior exportBehavior, auto&& function)
 {
     switch (exportBehavior)
     {
-    case ExportBehavior::None:
+    case ExportBehavior::Never:
         break;
     case ExportBehavior::Once:
     {

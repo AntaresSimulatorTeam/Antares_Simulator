@@ -52,7 +52,7 @@ struct CmdLineOptimOptions
 
 enum class ExportBehavior
 {
-    None,
+    Never,
     Once,
     Always
 };
