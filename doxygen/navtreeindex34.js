@@ -1,7 +1,5 @@
 var NAVTREEINDEX34 =
 {
-"classAntares_1_1Toolbox_1_1Filter_1_1Week.html#a898ab04b4f31dc1d42be8b1f94b6efce":[8,0,0,21,1,8,3],
-"classAntares_1_1Toolbox_1_1Filter_1_1Week.html#a8da4230fdd6d304f43a13d885472d0e1":[8,0,0,21,1,8,0],
 "classAntares_1_1Toolbox_1_1Filter_1_1Week.html#aade52d9d044215cfb2ef2b402bf89d97":[8,0,0,21,1,8,1],
 "classAntares_1_1Toolbox_1_1Filter_1_1Week.html#ae0f3bf3a57ac8b70714131b82152dbc2":[8,0,0,21,1,8,6],
 "classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html":[8,0,0,21,1,9],
@@ -249,5 +247,7 @@ var NAVTREEINDEX34 =
 "classAntares_1_1WIP_1_1Locker.html#a280399c6ca9786db91719ae3de928b47":[8,0,0,26,0,0],
 "classAntares_1_1WIP_1_1Locker.html#a903a0bfa53fd4565985133b3b1f6c47c":[8,0,0,26,0,1],
 "classAntares_1_1Window_1_1AboutBox.html":[8,0,0,25,15],
-"classAntares_1_1Window_1_1AboutBox.html#a4f0971b46687dc9631514aee262f44e2":[8,0,0,25,15,1]
+"classAntares_1_1Window_1_1AboutBox.html#a4f0971b46687dc9631514aee262f44e2":[8,0,0,25,15,1],
+"classAntares_1_1Window_1_1AboutBox.html#aa8f13d7360c4bdf97968237f8c7834be":[8,0,0,25,15,0],
+"classAntares_1_1Window_1_1ApplyActionsDialog.html":[8,0,0,25,14]
 };

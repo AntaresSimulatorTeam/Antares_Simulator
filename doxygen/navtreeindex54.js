@@ -1,7 +1,5 @@
 var NAVTREEINDEX54 =
 {
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a68396c97bd74e23aff6729789143d52f":[8,0,0,5,0,1,6],
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#aafbda319fe706010aa04f3f5be772e3e":[8,0,0,5,0,1,4],
 "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#abc16abcf613979195f296760cd732647":[8,0,0,5,0,1,0],
 "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#ac6bbc49948539f19dc5b53092f189595":[8,0,0,5,0,1,2],
 "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#ad95b1c8da4d3568b9ae35959953bb640":[8,0,0,5,0,1,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX54 =
 "structAntares_1_1IO_1_1TimeBlock.html#a0679c50b4f71627bb01daf565ca9e784":[8,0,0,12,1,1],
 "structAntares_1_1IO_1_1TimeBlock.html#a82653a3170b5301e84ac858bfc19aa0a":[8,0,0,12,1,0],
 "structAntares_1_1IO_1_1TimeBlock.html#aaf3f28c98280ec0d02b82d32ac3f2d54":[8,0,0,12,1,2],
-"structAntares_1_1Map_1_1Item_1_1SetCompare.html":[8,0,0,13,10,0]
+"structAntares_1_1Map_1_1Item_1_1SetCompare.html":[8,0,0,13,10,0],
+"structAntares_1_1Map_1_1Item_1_1SetCompare.html#a74521bb0e7405de920cfa8abf58a4d4e":[8,0,0,13,10,0,0],
+"structAntares_1_1Map_1_1MapRenderOptions.html":[8,0,0,13,12]
 };

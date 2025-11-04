@@ -1,7 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"classVariableManagement_1_1VariableManager.html#a6339bf52361262365c5504a75ab45d80":[8,0,31,0,3],
-"classVariableManagement_1_1VariableManager.html#a66e38ec7baf1dadf5d9830565b12358d":[8,0,31,0,7],
 "classVariableManagement_1_1VariableManager.html#a7d5fc73eb1b0f5262fffc1b7f7568129":[8,0,31,0,10],
 "classVariableManagement_1_1VariableManager.html#a8ae2ecf25176c721838d8ccf5eb73f12":[8,0,31,0,24],
 "classVariableManagement_1_1VariableManager.html#a95e7ed4852ffbdc52612d443afa1b734":[8,0,31,0,9],
@@ -249,5 +247,7 @@ var NAVTREEINDEX44 =
 "classsim__return__code_1_1simulation__success.html#aea70601fc42b48c37c0a1dd194356d93":[8,0,22,0,3],
 "classsolver__input__handler_1_1solver__input__handler.html":[8,0,23,0],
 "classsolver__input__handler_1_1solver__input__handler.html#a13673d7f17020e1590f73ac35e2c36b7":[8,0,23,0,9],
-"classsolver__input__handler_1_1solver__input__handler.html#a439096baff57212cc0b522e0497877a7":[8,0,23,0,1]
+"classsolver__input__handler_1_1solver__input__handler.html#a439096baff57212cc0b522e0497877a7":[8,0,23,0,1],
+"classsolver__input__handler_1_1solver__input__handler.html#a45a5dea2c98387e46e525bda9dc86840":[8,0,23,0,6],
+"classsolver__input__handler_1_1solver__input__handler.html#a5c4399875c063b5f341b72fe5d0101f2":[8,0,23,0,0]
 };

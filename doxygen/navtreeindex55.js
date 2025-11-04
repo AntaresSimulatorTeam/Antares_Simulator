@@ -1,7 +1,5 @@
 var NAVTREEINDEX55 =
 {
-"structAntares_1_1Map_1_1Item_1_1SetCompare.html#a74521bb0e7405de920cfa8abf58a4d4e":[8,0,0,13,10,0,0],
-"structAntares_1_1Map_1_1MapRenderOptions.html":[8,0,0,13,12],
 "structAntares_1_1Map_1_1MapRenderOptions.html#a16f79f13bab10a29edc7e7ae9ed03dff":[8,0,0,13,12,2],
 "structAntares_1_1Map_1_1MapRenderOptions.html#a1e0f64c04e8e3cf1f3d5b0303b38bc44":[8,0,0,13,12,5],
 "structAntares_1_1Map_1_1MapRenderOptions.html#a60e4a5a7da21c568e2c30f2f9dc85c8a":[8,0,0,13,12,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a619922888a16b56c3b24fb072c63aee7":[8,0,0,19,5,4,23,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a999bc95509b49928ddefc68cfe8035c8":[8,0,0,19,5,4,23,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#af71714d1380a4afdd8ac7496fb62fd19":[8,0,0,19,5,4,23,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html":[8,0,0,19,5,4,25]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html":[8,0,0,19,5,4,25],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a621a539cd5a98cc3b775d7946cccf22e":[8,0,0,19,5,4,25,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#ab829a8c7c8e037d4362a6ba356d33d43":[8,0,0,19,5,4,25,0]
 };

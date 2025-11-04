@@ -1,7 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a0d217ecec39e7584f6167f63be17dd61":[8,0,0,19,6,3],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#aa223c37a230b8f3ce347606ce3fa05d8":[8,0,0,19,6,2],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#aa3f22eef8a4a0c56884490c755a3e5fd":[8,0,0,19,6,1],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#ac149739da7e089a7cedf905ed45dda0d":[8,0,0,19,6,0],
 "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[8,0,0,19,33],
@@ -249,5 +247,7 @@ var NAVTREEINDEX26 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#aeb53aa1cdb1825f90ecfffdd38fa2d82":[8,0,0,19,5,4,24,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#af386fba01228e6263b83018d893d692c":[8,0,0,19,5,4,24,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#af86a03c81a4d8982784bf4c96671bb8b":[8,0,0,19,5,4,24,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html":[8,0,0,19,5,4,26]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html":[8,0,0,19,5,4,26],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a1fc77d590567494a5bdefed251019656":[8,0,0,19,5,4,26,24],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a29ff605f45c21be58b31bdf9b4c0e4c9":[8,0,0,19,5,4,26,16]
 };

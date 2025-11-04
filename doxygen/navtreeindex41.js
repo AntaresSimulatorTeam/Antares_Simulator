@@ -1,7 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"classIItem.html#acb1ab49561344ed5bd289c23491d7715":[8,0,155,10],
-"classIItem.html#acebf43ba0162c873ef24342a1c96fa61":[8,0,155,34],
 "classIItem.html#acf491e0eb198f49dcdd45d5047111a10":[8,0,155,12],
 "classIItem.html#ad392d236661618fd32bb871b5ad89532":[8,0,155,21],
 "classIItem.html#adf02dbccf0532f56f1cf6d645e686bf6":[8,0,155,27],
@@ -249,5 +247,7 @@ var NAVTREEINDEX41 =
 "classMyStudyFinder.html#a003f153d7f4bfabfe207c1d616cf1acd":[8,0,204,3],
 "classMyStudyFinder.html#a107166525bfd233824332ac1bdeecfd7":[8,0,204,0],
 "classMyStudyFinder.html#a748a79050702c60bb65b7fc018913d62":[8,0,204,1],
-"classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31":[8,0,204,4]
+"classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31":[8,0,204,4],
+"classMyStudyFinder.html#af2ed39729a10dcdf4c864d62e67a690b":[8,0,204,2],
+"classNamer.html":[8,0,205]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX61 =
 {
-"structPALIERS__THERMIQUES.html":[8,0,225],
-"structPALIERS__THERMIQUES.html#a037ce3d06e541fcbf0ac16beb7ca17c2":[8,0,225,13],
 "structPALIERS__THERMIQUES.html#a08777e4bfe0491bcc801aa0314f7215a":[8,0,225,12],
 "structPALIERS__THERMIQUES.html#a0954213139bd580f7aa203b569c72c86":[8,0,225,10],
 "structPALIERS__THERMIQUES.html#a149cc50e87d77f26a520c88717e21afb":[8,0,225,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX61 =
 "structShortTermStorage_1_1PROPERTIES.html#aeb6617bbf72cb89ecd0673b3a70cf1af":[8,0,21,0,7],
 "structShortTermStorage_1_1PROPERTIES.html#afe7cf8944bd6b8975da7a6bfbbdee2d6":[8,0,21,0,9],
 "structShortTermStorage_1_1RESULTS.html":[8,0,21,1],
-"structShortTermStorage_1_1RESULTS.html#a9e0e4559873e637284c91f573b35c7c3":[8,0,21,1,1]
+"structShortTermStorage_1_1RESULTS.html#a9e0e4559873e637284c91f573b35c7c3":[8,0,21,1,1],
+"structShortTermStorage_1_1RESULTS.html#a9e2b39aa9c61e45f8e549dcec81f9c30":[8,0,21,1,2],
+"structShortTermStorage_1_1RESULTS.html#af7822c1da057b24e6b9769dd6ed212ee":[8,0,21,1,0]
 };

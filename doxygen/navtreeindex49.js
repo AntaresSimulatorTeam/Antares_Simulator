@@ -1,7 +1,5 @@
 var NAVTREEINDEX49 =
 {
-"h2o__m__fonctions_8h.html#a6fbec8127cad1ffbfe5d59aa18181925":[7,0,16,10],
-"h2o__m__fonctions_8h.html#a80152f7e99435e3d824e3fe4b77366bb":[7,0,16,6],
 "h2o__m__fonctions_8h.html#a906b27690c88fa2f2b4df583679e60d6":[7,0,16,11],
 "h2o__m__fonctions_8h.html#aa02d24eb4b8328b9daccbc3a7133f443":[7,0,16,12],
 "h2o__m__fonctions_8h.html#aa6ab1256dc66b50f42f6923c5e788cab":[7,0,16,14],
@@ -249,5 +247,7 @@ var NAVTREEINDEX49 =
 "io_8h_source.html":[9,0,0,11,1,1],
 "item_8hxx_source.html":[9,0,0,12,2,1,1,2,1,7],
 "jit_8h_source.html":[9,0,0,4,0,13,0,0,0,0],
-"jit_8hxx_source.html":[9,0,0,4,0,13,0,0,0,1]
+"jit_8hxx_source.html":[9,0,0,4,0,13,0,0,0,1],
+"job_8hxx_source.html":[9,0,0,11,2,2],
+"jobs_8h_source.html":[9,0,0,12,2,1,12]
 };

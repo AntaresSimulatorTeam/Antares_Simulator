@@ -1,7 +1,5 @@
 var NAVTREEINDEX28 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a07e516ee530c207b5c9ba9069a0f01a2":[8,0,0,19,5,4,36,18],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a0e1dd3e54d3cd21ff8f1c97094525b87":[8,0,0,19,5,4,36,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a117e535d2e4346b10226c2587ea0294c":[8,0,0,19,5,4,36,17],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a2190bc0764195921e59ca598c5d041d7":[8,0,0,19,5,4,36,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a34ea43df961d4e91d7afd1422bc52a86":[8,0,0,19,5,4,36,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html#acbccca1d4044a50c3ab139c668d89310":[8,0,0,19,5,4,13,17],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html#ace7e52491984cffd0108a97ebf60a057":[8,0,0,19,5,4,13,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html#acef1e64e76d34487820686635138ecd8":[8,0,0,19,5,4,13,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html#ae1584e720811a86d8965697eaafece9c":[8,0,0,19,5,4,13,12]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html#ae1584e720811a86d8965697eaafece9c":[8,0,0,19,5,4,13,12],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html":[8,0,0,19,5,4,80],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a052cd7047b77218772246f23d07d3357":[8,0,0,19,5,4,80,6]
 };

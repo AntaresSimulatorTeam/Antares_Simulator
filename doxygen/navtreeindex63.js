@@ -1,7 +1,5 @@
 var NAVTREEINDEX63 =
 {
-"study_2system-model_2include_2antares_2study_2system-model_2connection_8h.html#a30dcd9191930b1afa420e123a7234456aa9d093d11bc6e98b0c8e586ffa545c85":[7,0,0,19,0,26,1],
-"study_2system-model_2include_2antares_2study_2system-model_2connection_8h.html#a4abb4fd7c458500f26ff69554f194304":[7,0,0,19,0,33],
 "study_2system-model_2include_2antares_2study_2system-model_2connection_8h.html#ae45ef4db58e6ad298f4f4c2295387e97":[7,0,0,19,0,25],
 "study_2system-model_2include_2antares_2study_2system-model_2connection_8h_source.html":[9,0,0,9,0,0,0,0,0,1],
 "study_2system-model_2include_2antares_2study_2system-model_2constraint_8h_source.html":[9,0,0,9,0,0,0,0,0,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX63 =
 "ui_2simulator_2toolbox_2components_2datagrid_2filter_2parameter_2parameter_8h_source.html":[9,0,0,12,2,1,1,1,0,2,0],
 "ui_2simulator_2toolbox_2components_2datagrid_2renderer_2area_2hydro_2allocation_8h_source.html":[9,0,0,12,2,1,1,1,1,0,0,0],
 "ui_2simulator_2toolbox_2components_2datagrid_2renderer_2area_8h_source.html":[9,0,0,12,2,1,1,1,1,5],
-"ui_2simulator_2toolbox_2components_2datagrid_2renderer_2bindingconstraint_2data_8h_source.html":[9,0,0,12,2,1,1,1,1,1,0]
+"ui_2simulator_2toolbox_2components_2datagrid_2renderer_2bindingconstraint_2data_8h_source.html":[9,0,0,12,2,1,1,1,1,1,0],
+"ui_2simulator_2toolbox_2components_2datagrid_2renderer_2connection_8h_source.html":[9,0,0,12,2,1,1,1,1,8],
+"ui_2simulator_2toolbox_2components_2datagrid_2renderer_2constraintsbuilder_2links_8h_source.html":[9,0,0,12,2,1,1,1,1,2,0]
 };

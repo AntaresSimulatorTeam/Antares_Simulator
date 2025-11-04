@@ -1,7 +1,5 @@
 var NAVTREEINDEX35 =
 {
-"classAntares_1_1Window_1_1AboutBox.html#aa8f13d7360c4bdf97968237f8c7834be":[8,0,0,25,15,0],
-"classAntares_1_1Window_1_1ApplyActionsDialog.html":[8,0,0,25,14],
 "classAntares_1_1Window_1_1ApplyActionsDialog.html#a910dcd6bc1a6c3dafbb7548e48ebf7fe":[8,0,0,25,14,0],
 "classAntares_1_1Window_1_1ApplyActionsDialog.html#aa39db3e57927d6965ad39fd2b872d856":[8,0,0,25,14,1],
 "classAntares_1_1Window_1_1BindingConstraint.html":[8,0,0,25,18],
@@ -249,5 +247,7 @@ var NAVTREEINDEX35 =
 "classAntares_1_1Window_1_1ItemWindow.html":[8,0,0,25,8],
 "classAntares_1_1Window_1_1ItemWindow.html#a0dfe73e0dc11ff184fa4873e1e7e747b":[8,0,0,25,8,0],
 "classAntares_1_1Window_1_1ItemWindow.html#a378278c01025f7dc019670b516b5f6a0":[8,0,0,25,8,3],
-"classAntares_1_1Window_1_1ItemWindow.html#a38135e38f92aa917f9dd98603972c143":[8,0,0,25,8,1]
+"classAntares_1_1Window_1_1ItemWindow.html#a38135e38f92aa917f9dd98603972c143":[8,0,0,25,8,1],
+"classAntares_1_1Window_1_1ItemWindow.html#ad8bc5e3aef14baaffa7b9e36e44d2d16":[8,0,0,25,8,2],
+"classAntares_1_1Window_1_1JobGUIUpdate.html":[8,0,0,25,48]
 };
