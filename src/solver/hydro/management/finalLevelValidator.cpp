@@ -66,15 +66,7 @@ bool FinalLevelValidator::check()
 
 bool FinalLevelValidator::skippingFinalLevelUse()
 {
-    if (!wasSetInScenarioBuilder())
-    {
-        return true;
-    }
-    if (!compatibleWithReservoirProperties())
-    {
-        return true;
-    }
-    return false;
+    return !wasSetInScenarioBuilder() || !compatibleWithReservoirProperties();
 }
 
 bool FinalLevelValidator::wasSetInScenarioBuilder()
@@ -165,7 +157,7 @@ bool FinalLevelValidator::isBetweenRuleCurves() const
     return true;
 }
 
-bool FinalLevelValidator::finalLevelFineForUse()
+bool FinalLevelValidator::finalLevelFineForUse() const
 {
     return finalLevelFineForUse_;
 }

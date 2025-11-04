@@ -46,6 +46,8 @@
 #include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
 
+#include "UtilMocks.h"
+
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
@@ -69,133 +71,6 @@ auto count_lines = [](std::string_view s)
     }
     return count;
 };
-
-namespace
-{
-// Mock classes for testing
-class MockMipVariable: public IMipVariable
-{
-public:
-    MockMipVariable(double value, MipBasisStatus status, bool integer = false):
-        value_(value),
-        status_(status),
-        integer_(integer)
-    {
-    }
-
-    double solutionValue() const override
-    {
-        return value_;
-    }
-
-    MipBasisStatus getMipBasisStatus() const override
-    {
-        return status_;
-    }
-
-    bool isInteger() const override
-    {
-        return integer_;
-    }
-
-    // IHasBounds interface
-    void setLb(double) override
-    {
-    }
-
-    void setUb(double) override
-    {
-    }
-
-    double getLb() const override
-    {
-        return 0.0;
-    }
-
-    double getUb() const override
-    {
-        return 1.0;
-    }
-
-    void setBounds(double lb, double ub) override
-    {
-        setLb(lb);
-        setUb(ub);
-    }
-
-    // IHasName interface
-    const std::string& getName() const override
-    {
-        return name_;
-    }
-
-private:
-    double value_;
-    MipBasisStatus status_;
-    bool integer_;
-    std::string name_ = "test_var";
-};
-
-class MockMipConstraint: public IMipConstraint
-{
-public:
-    MockMipConstraint(MipBasisStatus status):
-        status_(status)
-    {
-    }
-
-    MipBasisStatus getMipBasisStatus() const override
-    {
-        return status_;
-    }
-
-    // IMipConstraint interface
-    void setCoefficient(IMipVariable*, double) override
-    {
-    }
-
-    double getCoefficient(const IMipVariable*) const override
-    {
-        return 1.0;
-    }
-
-    // IHasBounds interface
-    void setLb(double) override
-    {
-    }
-
-    void setUb(double) override
-    {
-    }
-
-    double getLb() const override
-    {
-        return 0.0;
-    }
-
-    double getUb() const override
-    {
-        return 1.0;
-    }
-
-    void setBounds(double lb, double ub) override
-    {
-        setLb(lb);
-        setUb(ub);
-    }
-
-    // IHasName interface
-    const std::string& getName() const override
-    {
-        return name_;
-    }
-
-private:
-    MipBasisStatus status_;
-    std::string name_ = "test_constraint";
-};
-
-} // namespace
 
 BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
@@ -592,155 +467,28 @@ BOOST_AUTO_TEST_CASE(DoubleValues_PrecisionBoundaries)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-// Test the template functions with mock data
-class MockLinearProblem: public ILinearProblem
+// Mock solver traits for testing
+struct MockSolverTraits
 {
-public:
-    explicit MockLinearProblem(bool isLP):
-        isLP_(isLP)
+    static double getValue(const MockMipVariable* var)
     {
+        return var ? var->solutionValue() : 0.0;
     }
 
-    bool isLP() const override
+    static MipBasisStatus getStatus(const MockMipVariable* var)
     {
-        return isLP_;
+        return var ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE;
     }
 
-    LinearProblemApi::IMipConstraint* lookupConstraint(const std::string& name) const override
+    static MipBasisStatus getStatus(const MockMipConstraint* cst)
     {
-        static MockMipConstraint mockConstraint(MipBasisStatus::BASIC);
-        return &mockConstraint;
+        return cst ? cst->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE;
     }
 
-    // ILinearProblem interface (minimal implementation for testing)
-    IMipVariable* addVariable(double, double, bool, const std::string&) override
+    static std::optional<double> getValue(const MockMipConstraint*)
     {
-        variables_.push_back(std::move(RandomVariable()));
-        return variables_.back().get();
+        return std::nullopt;
     }
-
-    IMipConstraint* addConstraint(double, double, const std::string&) override
-    {
-        constraints_.push_back(std::move(RandomConstraint()));
-        return constraints_.back().get();
-    }
-
-    void setObjectiveCoefficient(IMipVariable*, double) override
-    {
-    }
-
-    IMipSolution* solve(bool) override
-    {
-        return nullptr;
-    }
-
-    void WriteLP(const std::string&) const override
-    {
-    }
-
-    double infinity() const override
-    {
-        return std::numeric_limits<double>::infinity();
-    }
-
-    LinearProblemApi::IMipVariable* addNumVariable(double lb,
-                                                   double ub,
-                                                   const std::string& name) override
-    {
-        variables_.push_back(std::move(RandomVariable()));
-        return variables_.back().get();
-    }
-
-    LinearProblemApi::IMipVariable* addIntVariable(double lb,
-                                                   double ub,
-                                                   const std::string& name) override
-    {
-        variables_.push_back(std::move(RandomVariable()));
-        return variables_.back().get();
-    }
-
-    static std::unique_ptr<IMipVariable> RandomVariable()
-    {
-        std::unique_ptr<IMipVariable> mockMipVariable = std::make_unique<MockMipVariable>(
-          12.25,
-          MipBasisStatus::AT_LOWER_BOUND,
-          false);
-        return std::move(mockMipVariable);
-    }
-
-    static std::unique_ptr<IMipConstraint> RandomConstraint()
-    {
-        std::unique_ptr<IMipConstraint> mockMipConstraint = std::make_unique<MockMipConstraint>(
-          MipBasisStatus::AT_LOWER_BOUND);
-        return std::move(mockMipConstraint);
-    }
-
-    [[nodiscard]] IMipVariable* getVariable(std::size_t t) const override
-    {
-        return variables_.at(t).get();
-    }
-
-    [[nodiscard]]
-    const std::vector<std::unique_ptr<IMipVariable>>& getVariables() const override
-    {
-        return variables_;
-    }
-
-    [[nodiscard]]
-    IMipConstraint* getConstraint(std::size_t) const override
-    {
-        return RandomConstraint().get();
-    }
-
-    [[nodiscard]]
-    const std::vector<std::unique_ptr<IMipConstraint>>& getConstraints() const override
-    {
-        return constraints_;
-    }
-
-    [[nodiscard]] LinearProblemApi::IMipVariable* lookupVariable(
-      const std::string& name) const override
-    {
-        return RandomVariable().get();
-    }
-
-    [[nodiscard]] int variableCount() const override
-    {
-        return 0;
-    }
-
-    [[nodiscard]] int constraintCount() const override
-    {
-        return constraints_.size();
-    }
-
-    double getObjectiveCoefficient(const IMipVariable* var) const override
-    {
-        return 0.;
-    }
-
-    void setMinimization() override
-    {
-    }
-
-    void setMaximization() override
-    {
-    }
-
-    [[nodiscard]] bool isMinimization() const override
-    {
-        return true;
-    }
-
-    [[nodiscard]] bool isMaximization() const override
-    {
-        return !isMinimization();
-    }
-
-private:
-    bool isLP_;
-    std::vector<std::unique_ptr<IMipVariable>> variables_;
-    std::vector<std::unique_ptr<IMipConstraint>> constraints_;
 };
 
 struct MockMipSolution: IMipSolution
@@ -895,130 +643,7 @@ struct TempDirFixture
     std::filesystem::path tempDir;
 };
 
-// Mock solver traits for testing
-struct MockSolverTraits
-{
-    static double getValue(const MockMipVariable* var)
-    {
-        return var ? var->solutionValue() : 0.0;
-    }
-
-    static MipBasisStatus getStatus(const MockMipVariable* var)
-    {
-        return var ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE;
-    }
-
-    static MipBasisStatus getStatus(const MockMipConstraint* cst)
-    {
-        return cst ? cst->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE;
-    }
-
-    static std::optional<double> getValue(const MockMipConstraint*)
-    {
-        return std::nullopt;
-    }
-};
 BOOST_FIXTURE_TEST_SUITE(ComponentModelIntegrationTests, BasicProblemFixture)
-
-// Mock component and model classes for testing template functions
-class MockVariable
-{
-public:
-    MockVariable(bool scenDependent, bool timeDependent):
-        scenDependent_(scenDependent),
-        timeDependent_(timeDependent)
-    {
-    }
-
-    bool IsScenarioDependent() const
-    {
-        return scenDependent_;
-    }
-
-    bool isTimeDependent() const
-    {
-        return timeDependent_;
-    }
-
-private:
-    bool scenDependent_;
-    bool timeDependent_;
-};
-
-class MockConstraint
-{
-public:
-    MockConstraint(const std::string& name):
-        name_(name)
-    {
-    }
-
-    // Mock expression method
-    struct MockExpression
-    {
-        struct MockNode
-        {
-            // Mock node for constraint expression
-        };
-
-        MockNode* RootNode() const
-        {
-            return nullptr;
-        }
-    };
-
-    MockExpression expression() const
-    {
-        return MockExpression{};
-    }
-
-private:
-    std::string name_;
-};
-
-class MockModel
-{
-public:
-    std::map<std::string, MockVariable> Variables() const
-    {
-        return {
-          {"var1", MockVariable(false, false)}, // Neither time nor scenario dependent
-          {"var2", MockVariable(true, false)},  // Scenario dependent only
-          {"var3", MockVariable(false, true)},  // Time dependent only
-          {"var4", MockVariable(true, true)}    // Both time and scenario dependent
-        };
-    }
-
-    std::map<std::string, MockConstraint> Constraints() const
-    {
-        return {{"constraint1", MockConstraint("constraint1")},
-                {"constraint2", MockConstraint("constraint2")}};
-    }
-};
-
-class MockComponent
-{
-public:
-    MockComponent(const std::string& id):
-        id_(id),
-        model_(std::make_shared<MockModel>())
-    {
-    }
-
-    const std::string& Id() const
-    {
-        return id_;
-    }
-
-    std::shared_ptr<MockModel> getModel() const
-    {
-        return model_;
-    }
-
-private:
-    std::string id_;
-    std::shared_ptr<MockModel> model_;
-};
 
 BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {

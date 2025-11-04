@@ -25,18 +25,6 @@
 
 using namespace operations_research;
 
-MPSolver* ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeHebdo,
-                           MPSolver* ProbSpx,
-                           const Antares::Solver::Optimization::SingleOptimOptions& options);
-
-void ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, const double* costs, int nbVar);
-void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* ProbSpx,
-                                           const double* rhs,
-                                           const char* sens,
-                                           int nbRow);
-void ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,
-                               const double* bMin,
-                               const double* bMax,
-                               const int* typeVar,
-                               int nbVar);
-void ORTOOLS_LibererProbleme(MPSolver* ProbSpx);
+void ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeHebdo,
+                      MPSolver* ProbSpx,
+                      const Antares::Solver::Optimization::SingleOptimOptions& options);

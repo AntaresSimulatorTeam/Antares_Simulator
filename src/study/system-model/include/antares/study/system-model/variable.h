@@ -23,6 +23,7 @@
 #include <string>
 
 #include <antares/expressions/expression.h>
+#include "antares/modeler/optimConfig/optimConfig.h"
 
 #include "timeAndScenarioType.h"
 #include "valueType.h"
@@ -79,6 +80,18 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
+    [[nodiscard]] bool isInSubProblem() const
+    {
+        return location_ == Modeler::Config::Location::SUBPROBLEMS
+               || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+
+    [[nodiscard]] bool isInMasterProblem() const
+    {
+        return location_ == Modeler::Config::Location::MASTER
+               || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+
 private:
     std::string id_;
     ValueType type_;
@@ -86,6 +99,7 @@ private:
     Expression upperBound_;
     TimeDependent timeDependent_ = TimeDependent::YES;
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;
+    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel
