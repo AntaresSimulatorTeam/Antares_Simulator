@@ -397,6 +397,13 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
+    // For now we only handle constraints in subproblems
+    // TODO 6.3
+    if (targetLocation_ != Modeler::Config::Location::SUBPROBLEMS)
+    {
+        return;
+    }
+
     ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto& contraints = component_.getModel()->Constraints();
@@ -422,6 +429,13 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
+    // For now we only handle objective in subproblems
+
+    if (targetLocation_ != Modeler::Config::Location::SUBPROBLEMS)
+    {
+        return;
+    }
+
     auto* model = component_.getModel();
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
