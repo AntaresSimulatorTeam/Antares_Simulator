@@ -389,7 +389,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   uint numSpace,
                                   uint firstHourOfWeek,
                                   bool includeSTS,
-                                  bool debugInfos)
+                                  IResultWriter* writer)
 {
     std::stringstream debugStream;
     areas.each(
@@ -422,7 +422,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                              spillage,
                                              dtgMrg,
                                              listStorage,
-                                             debugInfos ? &debugStream : nullptr);
+                                             writer ? &debugStream : nullptr);
           }
           catch (std::exception& e)
           {
@@ -433,11 +433,12 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
               logs.warning(msg);
           }
       });
-    if (debugInfos)
+    if (writer)
     {
-        std::ofstream outfile("remix-" + std::to_string(problem.year) + "-"
-                              + std::to_string(problem.weekInTheYear));
-        outfile << debugStream.str();
+        std::string filename("remix-" + std::to_string(problem.year) + "-"
+                             + std::to_string(problem.weekInTheYear));
+        std::string s = debugStream.str();
+        writer->addEntryFromBuffer(filename, s); 
     }
 }
 
@@ -445,7 +446,8 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
                            const Data::Parameters& params,
                            uint numSpace,
-                           uint hourInYear)
+                           uint hourInYear,
+                           IResultWriter& resultWriter)
 {
     if (params.shedding.policy == Data::shpShavePeaks)
     {
@@ -476,7 +478,12 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
         bool debugInfos = params.remixStorageDebug;
         try
         {
-            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear, includeSTS, debugInfos);
+            RunAccurateShavePeaks(areas,
+                                  problem,
+                                  numSpace,
+                                  hourInYear,
+                                  includeSTS,
+                                  debugInfos ? &resultWriter : nullptr);
         }
         catch (std::invalid_argument& invalidArgExc)
         {

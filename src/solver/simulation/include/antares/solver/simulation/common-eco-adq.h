@@ -89,7 +89,8 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
                            const Data::Parameters& params,
                            uint numSpace,
-                           uint hourInYear);
+                           uint hourInYear,
+                           IResultWriter& resultWriter);
 
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only
