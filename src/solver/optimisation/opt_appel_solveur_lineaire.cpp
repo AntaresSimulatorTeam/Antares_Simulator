@@ -198,7 +198,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     // This instance should be created in problemeHebdo, so that it lives longer
     // than a week, as it is currently the case.
     std::unique_ptr<BendersDecomposition> bendersDecomposition; // is currently nullptr
-    if (modelerData->resolutionMode == Modeler::ResolutionMode::BENDERS_DECOMPOSITION)
+    if (modelerData
+        && modelerData->resolutionMode == Modeler::ResolutionMode::BENDERS_DECOMPOSITION)
     {
         bendersDecomposition = std::make_unique<BendersDecomposition>();
         std::string problemId = optPeriodStringGenerator.to_string();
