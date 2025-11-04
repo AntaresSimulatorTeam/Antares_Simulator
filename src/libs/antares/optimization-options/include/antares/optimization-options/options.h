@@ -52,8 +52,11 @@ struct CmdLineOptimOptions
 
 enum class ExportBehavior
 {
+    // Never export structure problems
     Never,
+    // Export once, on the first call
     Once,
+    // Always export the structure problems
     Always
 };
 
