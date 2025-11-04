@@ -86,7 +86,7 @@ public:
     /// Solve the problem, returns a IMipSolution
     virtual IMipSolution* solve(bool verboseSolver) = 0;
 
-    virtual void WriteLP(const std::string& filename) const = 0;
+    virtual void Write(const std::string& filename) const = 0;
 
     // Definition of infinity
     [[nodiscard]] virtual double infinity() const = 0;

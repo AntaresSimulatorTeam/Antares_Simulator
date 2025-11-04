@@ -211,7 +211,8 @@ public:
 
     void writeProblem(
       [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem) override
+        problem,
+      const std::string&) override
     {
     }
 

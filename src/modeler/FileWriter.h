@@ -54,8 +54,8 @@ public:
       const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);
 
-    void writeProblem(
-      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem) override;
+    void writeProblem(const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem,
+                      const std::string& filename) override;
 
 private:
     const std::filesystem::path studyPath_;

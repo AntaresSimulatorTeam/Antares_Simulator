@@ -429,13 +429,6 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
-    // For now we only handle objective in subproblems
-
-    if (targetLocation_ != Modeler::Config::Location::SUBPROBLEMS)
-    {
-        return;
-    }
-
     auto* model = component_.getModel();
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);

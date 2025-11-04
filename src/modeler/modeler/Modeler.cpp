@@ -182,7 +182,8 @@ void Modeler::run() const
 
     const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
     writer_.init(!parameters.noOutput, simulationTableSuffix);
-    writer_.writeProblem(subproblem);
+    writer_.writeProblem(subproblem, "1-1.mps");
+    writer_.writeProblem(master_problem, "master.mps");
 
     logs.info() << "Launching resolution...";
     measure.reset();

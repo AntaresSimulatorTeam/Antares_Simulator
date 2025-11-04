@@ -68,7 +68,8 @@ public:
       = 0;
 
     virtual void writeProblem(
-      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
+      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem,
+      const std::string& filename)
       = 0;
 };
 } // namespace Antares::Solver
