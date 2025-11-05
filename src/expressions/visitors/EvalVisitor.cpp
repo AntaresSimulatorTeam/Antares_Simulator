@@ -235,6 +235,26 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
     return EvaluationResult{constraintValues};
 }
 
+EvaluationResult EvalVisitor::handleMax(const Nodes::FunctionNode* node)
+{
+    EvaluationResult result(0.);
+    for (const auto* operand: node->getOperands())
+    {
+        result = result.applyOperation(dispatch(operand),
+                                       [](const auto& a, const auto& b) { return std::max(a, b); });
+    }
+    return result;
+}
+
+EvaluationResult EvalVisitor::handlePow(const Nodes::FunctionNode* node)
+{
+    const auto numbers = node->getOperands();
+    auto base = dispatch(numbers.at(0));
+    auto exponent = dispatch(numbers.at(1));
+    return base.applyOperation(exponent,
+                               [](const auto& a, const auto& b) { return std::pow(a, b); });
+}
+
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())
@@ -243,6 +263,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
         return handleReducedCost(node);
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
+    case Nodes::FunctionNodeType::max:
+        return handleMax(node);
+    case Nodes::FunctionNodeType::pow:
+        return handlePow(node);
     default:
         return EvaluationResult(0);
     }

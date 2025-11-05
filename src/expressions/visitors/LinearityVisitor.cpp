@@ -26,6 +26,9 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/InvalidNode.h>
 #include <antares/expressions/visitors/LinearStatus.h>
+#include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/expressions/visitors/PrintVisitor.h"
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -130,6 +133,62 @@ LinearStatus LinearityVisitor::handleDual([[maybe_unused]] const Nodes::Function
     throw NodeTypeShouldBeInExtraOutput("dual");
 }
 
+LinearStatus LinearityVisitor::handleMax(const Nodes::FunctionNode* node)
+{
+    LinearStatus result(LinearStatus::CONSTANT);
+    for (const auto* operand: node->getOperands())
+    {
+        result &= dispatch(operand);
+    }
+    return result;
+}
+
+LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
+{
+    const auto& operands = node->getOperands();
+    if (operands.size() != 2)
+    {
+        throw std::invalid_argument("Invalid operand count for pow: ");
+    }
+
+    LinearStatus base = dispatch(operands[0]);
+    LinearStatus exponent = dispatch(operands[1]);
+
+    // // If exponent is not constant, the result is non-linear
+    // if (exponent != LinearStatus::CONSTANT)
+    // {
+    //     return LinearStatus::NON_LINEAR;
+    // }
+    // Check if exponent is constant in time and scenario
+    TimeIndexVisitor timeVisitor(optimEntityContainer_, component_);
+    auto exponentTimeIndex = timeVisitor.dispatch(operands[1]);
+    if (exponentTimeIndex != Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    {
+        PrintVisitor visitor;
+        throw std::invalid_argument("exponent must be constant in time and scenario: "
+                                    + visitor.dispatch(node));
+    }
+
+    // If base is constant, the result is constant
+    if (base == LinearStatus::CONSTANT)
+    {
+        return LinearStatus::CONSTANT;
+    }
+    EvalVisitor evalVisitor(optimEntityContainer_, fillContext_, component_);
+    auto exponentValue = evalVisitor.dispatch(operands[1]).valueAsDouble();
+    if (std::abs(exponentValue) < 1e-12)
+    {
+        return LinearStatus::CONSTANT;
+    }
+    // If base is linear and exponent is 1 the result is linear
+    if (base == LinearStatus::LINEAR && std::abs(exponentValue - 1) < 1e-12)
+    {
+        return LinearStatus::LINEAR;
+    }
+
+    return LinearStatus::NON_LINEAR;
+}
+
 LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())
@@ -138,6 +197,10 @@ LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
         return handleReducedCost(node);
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
+    case Nodes::FunctionNodeType::max:
+        return handleMax(node);
+    case Nodes::FunctionNodeType::pow:
+        return handlePow(node);
     default:
         return LinearStatus::CONSTANT;
     }
@@ -146,5 +209,14 @@ LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
 std::string LinearityVisitor::name() const
 {
     return "LinearityVisitor";
+}
+
+LinearityVisitor::LinearityVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
+                                   const Optimisation::LinearProblemApi::FillContext& fillContext,
+                                   const ModelerStudy::SystemModel::Component& component):
+    optimEntityContainer_(optimEntityContainer),
+    fillContext_(fillContext),
+    component_(component)
+{
 }
 } // namespace Antares::Expressions::Visitors

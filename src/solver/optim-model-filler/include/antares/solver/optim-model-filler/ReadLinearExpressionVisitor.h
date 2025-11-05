@@ -112,6 +112,8 @@ public:
       const Nodes::FunctionNode* node);
     Antares::Optimization::TimeDependentLinearExpression handleDual(
       const Nodes::FunctionNode* node);
+    Optimization::TimeDependentLinearExpression handleMax(const Nodes::FunctionNode* node);
+    Optimization::TimeDependentLinearExpression handlePow(const Nodes::FunctionNode* node);
     Antares::Optimization::TimeDependentLinearExpression visit(const Nodes::FunctionNode* node);
 
 private:

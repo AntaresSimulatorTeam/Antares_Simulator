@@ -32,6 +32,8 @@
 #include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/modeler-optimisation-container/TimeIndex.h>
 
+#include "UtilMocks.h"
+
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
@@ -131,10 +133,10 @@ BOOST_DATA_TEST_CASE(linear_multiply_commutative,
     BOOST_CHECK_EQUAL(x * y, y * x);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_variable_is_linear, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_variable_is_linear, MyDummyFixture)
 {
     PrintVisitor printVisitor;
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
 
     VariableNode var1("x", 0);
     // variable
@@ -153,10 +155,10 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_variable_is_linear, Registry<N
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(gt), LinearStatus::LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_constant_is_linear, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_constant_is_linear, MyDummyFixture)
 {
     PrintVisitor printVisitor;
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
 
     VariableNode var1("x", 0);
     // variable
@@ -172,10 +174,10 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_constant_is_linear, Registry<N
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(gt), LinearStatus::LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_nodes_constant_constant_is_constant, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_constant_constant_is_constant, MyDummyFixture)
 {
     PrintVisitor printVisitor;
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
 
     LiteralNode literal1(2.);
     LiteralNode literal2(21.);
@@ -190,10 +192,10 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_constant_constant_is_constant, Registry
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(gt), LinearStatus::CONSTANT);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_nodes_non_lin_constant_is_constant, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_non_lin_constant_is_constant, MyDummyFixture)
 {
     PrintVisitor printVisitor;
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
 
     VariableNode var1("x", 0);
     // variable
@@ -206,7 +208,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_non_lin_constant_is_constant, Registry<
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(gt), LinearStatus::NON_LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(simple_linear, MyDummyFixture)
 {
     LiteralNode literalNode1(10.);
     VariableNode var1("x", 0);
@@ -222,11 +224,11 @@ BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "((10.000000*x)+(20.000000*id))");
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(simple_not_linear, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(simple_not_linear, MyDummyFixture)
 {
     VariableNode var1("x", 89);
     VariableNode var2("id", 782);
@@ -235,11 +237,11 @@ BOOST_FIXTURE_TEST_CASE(simple_not_linear, Registry<Node>)
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "(x*id)");
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(simple_linear_division, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(simple_linear_division, MyDummyFixture)
 {
     VariableNode var1("x", 0);
     // constant
@@ -249,11 +251,11 @@ BOOST_FIXTURE_TEST_CASE(simple_linear_division, Registry<Node>)
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "(x/y)");
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, MyDummyFixture)
 {
     VariableNode var1("x", 6);
     // variable
@@ -263,14 +265,14 @@ BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, Registry<Node>)
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "(x/y)");
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(simple_constant_expression, MyDummyFixture)
 {
     PrintVisitor printVisitor;
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
     LiteralNode var1(65.);
     // Parameter
     ParameterNode par("p1");
@@ -291,13 +293,13 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr2), LinearStatus::CONSTANT);
 }
 
-BOOST_FIXTURE_TEST_CASE(LinearityVisitor_name, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(LinearityVisitor_name, MyDummyFixture)
 {
     LinearityVisitor linearityVisitor;
     BOOST_CHECK_EQUAL(linearityVisitor.name(), "LinearityVisitor");
 }
 
-BOOST_FIXTURE_TEST_CASE(CheckTimeIndexNodeLinearity, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(CheckTimeIndexNodeLinearity, MyDummyFixture)
 {
     LinearityVisitor linearityVisitor;
     Node* literal1 = create<LiteralNode>(1.);
@@ -306,7 +308,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeIndexNodeLinearity, Registry<Node>)
     BOOST_CHECK(linearityVisitor.dispatch(expr1) == LinearStatus::CONSTANT);
 }
 
-BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnLiteralLinearity, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnLiteralLinearity, MyDummyFixture)
 {
     LinearityVisitor linearityVisitor;
     Node* literal1 = create<LiteralNode>(1.);
@@ -315,7 +317,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnLiteralLinearity, Registry<Node>)
                 == LinearStatus::CONSTANT); // because literal1 is constant
 }
 
-BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnVariableLinearity, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnVariableLinearity, MyDummyFixture)
 {
     LinearityVisitor linearityVisitor;
     Node* var1 = create<VariableNode>("variable1", 0);
@@ -325,7 +327,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnVariableLinearity, Registry<Node>)
                 == LinearStatus::LINEAR); // because literal1 is constant
 }
 
-BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnLiteralLinearity, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnLiteralLinearity, MyDummyFixture)
 {
     LinearityVisitor linearityVisitor;
     Node* literal = create<LiteralNode>(1.);
@@ -336,7 +338,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnLiteralLinearity, Registry<Node>)
                 == LinearStatus::CONSTANT); // because literal1 is constant
 }
 
-BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnVariableLinearity, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnVariableLinearity, MyDummyFixture)
 {
     LinearityVisitor linearityVisitor;
     Node* var1 = create<VariableNode>("variable1", 0);
@@ -346,7 +348,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnVariableLinearity, Registry<Node>)
     BOOST_CHECK(linearityVisitor.dispatch(expr1) == LinearStatus::LINEAR); // because var1 is linear
 }
 
-BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnLiteralLinearity, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnLiteralLinearity, MyDummyFixture)
 {
     LinearityVisitor linearityVisitor;
     Node* literal1 = create<LiteralNode>(1.);
@@ -355,7 +357,7 @@ BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnLiteralLinearity, Registry<Node>)
                 == LinearStatus::CONSTANT); // because literal1 is constant
 }
 
-BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, MyDummyFixture)
 {
     LinearityVisitor linearityVisitor;
     Node* var1 = create<VariableNode>("variable1", 0);
@@ -364,7 +366,7 @@ BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, Registry<Node>)
                 == LinearStatus::CONSTANT); // because var1 is linear
 }
 
-BOOST_FIXTURE_TEST_CASE(dual_reducedCost, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(dual_reducedCost, MyDummyFixture)
 {
     Node* dual = create<FunctionNode>(FunctionNodeType::dual,
                                       create<ParameterNode>("constraint1"),
@@ -391,9 +393,9 @@ BOOST_FIXTURE_TEST_CASE(dual_reducedCost, Registry<Node>)
                           });
 }
 
-BOOST_FIXTURE_TEST_CASE(sum_node_cases, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(sum_node_cases, MyDummyFixture)
 {
-    LinearityVisitor linearVisitor;
+    LinearityVisitor linearVisitor(optimEntityContainer, ctx, components.front());
 
     Node* expr = create<SumNode>();
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);

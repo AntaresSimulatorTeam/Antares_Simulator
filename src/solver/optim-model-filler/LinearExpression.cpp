@@ -20,6 +20,7 @@
  */
 
 #include <algorithm>
+#include <cmath>
 #include <stdexcept>
 
 #include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
@@ -197,6 +198,44 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
     }
     // Also if (!hasCoefs() && !other.hasCoefs())
     constant_ *= other.constant_;
+    return *this;
+}
+
+LinearExpression LinearExpression::max(const LinearExpression& other)
+{
+    if (hasCoefs() || other.hasCoefs())
+    {
+        throw std::invalid_argument(
+          "A linear expression can't have max operator can not have coefficients.");
+    }
+    LinearExpression out(*this);
+    out.constant_ = std::max(other.constant_, constant_);
+    return out;
+}
+
+LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
+{
+    if (other.hasCoefs())
+    {
+        throw std::invalid_argument("the exponent must be constant");
+    }
+
+    if (hasCoefs())
+    {
+        if (other.constant() == 0)
+        {
+            for (auto& [idx, coef]: coefs_)
+            {
+                coef = 1;
+            }
+            constant_ = 1;
+        }
+        if (other.constant() != 1)
+        {
+            throw std::invalid_argument("non-linear expression is not supported.");
+        }
+    }
+    constant_ = std::pow(constant_, other.constant_);
     return *this;
 }
 

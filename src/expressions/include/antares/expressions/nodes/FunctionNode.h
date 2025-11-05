@@ -30,6 +30,8 @@ enum class FunctionNodeType
 {
     reduced_cost,
     dual,
+    max,
+    pow,
 };
 
 std::string FunctionNodeTypeToString(FunctionNodeType type);

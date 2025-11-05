@@ -46,5 +46,4 @@ class AllTimeSumNode;
 class ReducedCostNode;
 class DualNode;
 class FunctionNode;
-class TimeIndexParameter;
 } // namespace Antares::Expressions::Nodes

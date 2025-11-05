@@ -40,6 +40,8 @@ public:
     LinearExpression operator-() const;
     LinearExpression operator/(const LinearExpression& other) const;
     LinearExpression& operator*=(const LinearExpression& other);
+    LinearExpression max(const LinearExpression& other);
+    LinearExpression& operator^=(const LinearExpression& other);
     void addVariable(int index, double value);
     double constant() const;
 

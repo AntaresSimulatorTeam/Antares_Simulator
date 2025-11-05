@@ -91,7 +91,7 @@ public:
     }
 
     template<class Operation>
-    void applyOperation(const EvaluationResult& rhs, Operation op)
+    EvaluationResult applyOperation(const EvaluationResult& rhs, Operation op)
     {
         return evaluateBinaryOperation(rhs, op);
     }
@@ -330,6 +330,8 @@ private:
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult handleReducedCost(const Nodes::FunctionNode* node);
     EvaluationResult handleDual(const Nodes::FunctionNode* node);
+    EvaluationResult handleMax(const Nodes::FunctionNode* node);
+    EvaluationResult handlePow(const Nodes::FunctionNode* node);
     EvaluationResult visit(const Nodes::FunctionNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

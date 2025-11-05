@@ -175,4 +175,15 @@ constexpr LinearStatus operator-(LinearStatus a)
 {
     return a;
 }
+
+constexpr LinearStatus operator&(LinearStatus a, LinearStatus b)
+{
+    return operator+(a, b);
+}
+
+constexpr LinearStatus& operator&=(LinearStatus& a, LinearStatus b)
+{
+    a = a & b;
+    return a;
+}
 } // namespace Antares::Expressions::Visitors

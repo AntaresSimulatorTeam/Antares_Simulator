@@ -53,6 +53,8 @@ private:
     std::string visit(const Nodes::AllTimeSumNode* node) override;
     std::string handleDual(const Nodes::FunctionNode* node);
     std::string handleReducedCost(const Nodes::FunctionNode* node);
+    std::string handleMax(const Nodes::FunctionNode* node);
+    std::string handlePow(const Nodes::FunctionNode* node);
     std::string visit(const Nodes::FunctionNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

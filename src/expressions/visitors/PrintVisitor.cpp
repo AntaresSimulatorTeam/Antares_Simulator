@@ -146,6 +146,27 @@ std::string PrintVisitor::handleReducedCost(const Nodes::FunctionNode* node)
     return "reduced_cost(" + varIdNode->value() + ")";
 }
 
+std::string PrintVisitor::handleMax(const Nodes::FunctionNode* node)
+{
+    std::string ret = "max(";
+    const auto nodes = node->getOperands();
+    for (size_t i = 0; i < nodes.size(); ++i)
+    {
+        ret += dispatch(nodes[i]);
+        if (i != nodes.size() - 1)
+        {
+            ret += ", ";
+        }
+    }
+    ret += ")";
+    return ret;
+}
+
+std::string PrintVisitor::handlePow(const Nodes::FunctionNode* node)
+{
+    return dispatch(node->getOperands().front()) + "^(" + dispatch(node->getOperands().at(1)) + ")";
+}
+
 std::string PrintVisitor::handleDual(const Nodes::FunctionNode* node)
 {
     const auto* cstrIdNode = dynamic_cast<Nodes::ParameterNode*>(node->getOperands().at(0));
@@ -160,6 +181,10 @@ std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
         return handleReducedCost(node);
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
+    case Nodes::FunctionNodeType::max:
+        return handleMax(node);
+    case Nodes::FunctionNodeType::pow:
+        return handlePow(node);
     default:
         return "";
     }

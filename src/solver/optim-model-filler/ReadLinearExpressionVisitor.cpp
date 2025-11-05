@@ -302,6 +302,36 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
       "A linear expression can't contain extra output operator dual.");
 }
 
+Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleMax(
+  const Nodes::FunctionNode* node)
+{
+    const auto& operands = node->getOperands();
+    Antares::Optimization::TimeDependentLinearExpression ret(nbtimeSteps_);
+    for (auto* operand: operands)
+    {
+        ret += dispatch(operand);
+    }
+    return ret;
+}
+
+Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handlePow(
+  const Nodes::FunctionNode* node)
+{
+    auto ret(dispatch(node->getOperands().front()));
+    auto exponentExpr = dispatch(node->getOperands().at(1));
+    if (exponentExpr.size() != 1)
+    {
+        // TODO
+        throw Antares::Error::InvalidArgumentError("exponent must be constant");
+    }
+    auto exponent = exponentExpr[0];
+    for (auto& s: ret)
+    {
+        s ^= exponent;
+    }
+    return ret;
+}
+
 Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::FunctionNode* node)
 {
@@ -311,6 +341,10 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
         return handleReducedCost(node);
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
+    case Nodes::FunctionNodeType::max:
+        return handleMax(node);
+    case Nodes::FunctionNodeType::pow:
+        return handlePow(node);
     default:
         // TODO
         throw std::runtime_error("");

@@ -31,6 +31,10 @@ std::string FunctionNodeTypeToString(FunctionNodeType type)
         return "reduced_cost";
     case FunctionNodeType::dual:
         return "dual";
+    case FunctionNodeType::max:
+        return "max";
+    case FunctionNodeType::pow:
+        return "pow";
     default:
         return "Unknown function";
     }
