@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <antares/logs/logs.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
@@ -39,8 +40,8 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
                                           .ProblemeLineairePartieVariable[NumeroDeProbleme]
                                           .SecondMembre;
 
-    SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
-
+    double turbineMin = 0;
+    double turbineMax = 0;
     const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
@@ -52,8 +53,21 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
         SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
         Cnt = CorrespondanceDesContraintes.NumeroDeContrainteSurXiMoins[Pdt];
         SecondMembre[Cnt] = -DonneesMensuelles->TurbineCible[Pdt];
+
+        turbineMin += DonneesMensuelles->TurbineMin[Pdt];
+        turbineMax += DonneesMensuelles->TurbineMax[Pdt];
     }
 
-    return;
+    if (DonneesMensuelles->TurbineDuMois > turbineMax
+        || DonneesMensuelles->TurbineDuMois < turbineMin)
+    {
+        Antares::logs.warning() << "target turbine (" << DonneesMensuelles->TurbineDuMois
+                                << ") outside of bounds ([" << turbineMin << " , " << turbineMax
+                                << "])";
+    }
+
+    SecondMembre[NumeroDeContrainteDEnergieMensuelle] = std::max(
+      std::min(DonneesMensuelles->TurbineDuMois, turbineMax),
+      turbineMin);
 }
 } // namespace DoneesOptimisationJournaliere
