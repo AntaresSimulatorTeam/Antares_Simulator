@@ -46,6 +46,7 @@ public:
     BendersDecomposition() = default;
     void setCurrentProblemId(std::string id);
     void collectConnexionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
+    void write(std::ostream& os) const;
 
 private:
     std::map<std::string, std::vector<ConnexionVariable>> connexionVars_;

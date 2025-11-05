@@ -635,7 +635,7 @@ public:
         return nullptr;
     }
 
-    void WriteLP(const std::string&) const override
+    void Write(const std::string&) const override
     {
     }
 

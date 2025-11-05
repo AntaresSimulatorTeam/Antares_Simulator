@@ -80,13 +80,14 @@ FileWriter::FileWriter(std::filesystem::path path):
 }
 
 void FileWriter::writeProblem(
-  const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
+  const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem,
+  const std::string& filename)
 {
     if (output)
     {
-        logs.info() << "Writing problem.lp...";
-        const auto lp_path = outputPath_ / "problem.lp";
-        problem.WriteLP(lp_path.string());
+        logs.info() << "Writing " << filename << "...";
+        const auto lp_path = outputPath_ / filename;
+        problem.Write(lp_path.string());
     }
 }
 } // namespace Antares::Modeler

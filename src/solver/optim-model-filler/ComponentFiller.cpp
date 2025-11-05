@@ -111,6 +111,17 @@ void BendersDecomposition::collectConnexionVariables(std::vector<std::string>&& 
     }
 }
 
+void BendersDecomposition::write(std::ostream& os) const
+{
+    for (const auto& [problemId, v]: connexionVars_)
+    {
+        for (const auto& [variableName, variableIndex]: v)
+        {
+            os << problemId << '\t' << variableName << '\t' << variableIndex << '\n';
+        }
+    }
+}
+
 class VariablesBulkAddition
 {
 public:
@@ -389,6 +400,13 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
+    // For now we only handle constraints in subproblems
+    // TODO 6.3
+    if (targetLocation_ != Modeler::Config::Location::SUBPROBLEMS)
+    {
+        return;
+    }
+
     ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto& contraints = component_.getModel()->Constraints();

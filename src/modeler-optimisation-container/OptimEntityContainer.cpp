@@ -37,7 +37,8 @@ OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& lin
 {
 }
 
-void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>& components)
+void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>& components,
+                                                   Modeler::Config::Location targetLocation)
 {
     optimComponents_.clear();
     optimComponents_.reserve(components.size());
@@ -47,13 +48,21 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
         auto* model = component.getModel();
         const auto& variables = model->Variables();
         std::vector<unsigned int> modelVariableGlobalIndices;
-        modelVariableGlobalIndices.resize(variables.size());
 
-        for (auto variableLocalIndex = 0; variableLocalIndex < variables.size();
-             ++variableLocalIndex)
+        modelVariableGlobalIndices.reserve(variables.size());
+        for (const auto& variable: variables)
         {
-            modelVariableGlobalIndices[variableLocalIndex] = variableGlobalIndex;
-            ++variableGlobalIndex;
+            if (AreLocationsCompatible(variable.location(), targetLocation))
+            {
+                modelVariableGlobalIndices.push_back(variableGlobalIndex);
+                ++variableGlobalIndex;
+            }
+            else
+            {
+                // We add dummy data to avoid "holes" in modelVariableGlobalIndices
+                // but these are not to be used
+                modelVariableGlobalIndices.push_back(-1);
+            }
         }
         optimComponents_.push_back(
           {.index = component.Index(),
