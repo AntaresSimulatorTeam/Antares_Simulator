@@ -23,11 +23,17 @@ struct InputFixture
         TotalGenNoHydro.assign(size, 0.);
         Load.assign(size, 0.);
         HydroGen.assign(size, 0.);
+        HydroGen2.assign(size, 0.);
+        HydroGen3.assign(size, 0.);
         UnsupE.assign(size, 0.);
         levels.assign(size, 0.);
+        levels2.assign(size, 0.);
+        levels3.assign(size, 0.);
         pmax.assign(size, std::numeric_limits<double>::max());
         pmin.assign(size, 0.);
         inflows.assign(size, 0.);
+        inflows2.assign(size, 0.);
+        inflows3.assign(size, 0.);
         ovf.assign(size, 0.);
         pump.assign(size, 0.);
         Spillage.assign(size, 0.);
