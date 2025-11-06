@@ -157,7 +157,7 @@ bool FinalLevelValidator::isBetweenRuleCurves() const
     return true;
 }
 
-bool FinalLevelValidator::finalLevelFineForUse()
+bool FinalLevelValidator::finalLevelFineForUse() const
 {
     return finalLevelFineForUse_;
 }

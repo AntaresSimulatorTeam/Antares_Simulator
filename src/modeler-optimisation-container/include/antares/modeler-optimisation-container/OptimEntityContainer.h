@@ -50,12 +50,6 @@ public:
                          const LinearProblemApi::ILinearProblemData* data,
                          const ScenarioGroupRepository* scenarioGroupRepository);
 
-    // TODO REMOVE
-    [[nodiscard]] const std::vector<unsigned int>& getVariableStartColumn() const
-    {
-        return variableStartColumn_;
-    }
-
     [[nodiscard]] unsigned int getVariableStartColumn(
       const Antares::ModelerStudy::SystemModel::Component& component,
       unsigned int index) const
@@ -78,11 +72,6 @@ public:
         const auto& optimComponent = optimComponents_.at(component.Index());
         return {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),
                 optimComponent.modelConstraintsTimeIndex.at(index)};
-    }
-
-    [[nodiscard]] const std::vector<unsigned int>& getConstraintStartLine() const
-    {
-        return constraintStartLine_;
     }
 
     LinearProblemApi::ILinearProblem& Problem()

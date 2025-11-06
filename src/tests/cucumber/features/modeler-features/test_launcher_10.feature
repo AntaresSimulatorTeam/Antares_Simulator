@@ -84,3 +84,27 @@ Feature: 10 - Modeler extra outputs
       | 1     | base_zone         | unsupplied_energy       | 5        | 0        | 10    |
       | 1     | base_zone         | loss_of_load            | 1-4      | 0        | 0     |
       | 1     | base_zone         | loss_of_load            | 5        | 0        | 1     |
+
+  @fast
+  Scenario: 10.5: Extra-outputs, with dual and reduced_cost, single timestep
+    Given the modeler study path is "modeler/10_5"
+    When I run antares modeler
+    Then the simulation succeeds
+    # price is dual of balance
+    And the modeler outputs contain the following entries
+      | block | component         | output                  | timestep | scenario | value |
+      | 1     | base_zone         | price                   | 1        | 0        | 10    |
+      | 1     | gas_base_zone     | generation_reduced_cost | 1        | 0        | 0     |
+      | 1     | oil_base_zone     | generation_reduced_cost | 1        | 0        | 40    |
+
+  @fast
+  Scenario: 10.5-1: Extra-outputs, with dual and reduced_cost
+    Given the modeler study path is "modeler/10_5_1"
+    When I run antares modeler
+    Then the simulation succeeds
+    # price is dual of balance
+    And the modeler outputs contain the following entries
+      | block | component         | output                  | timestep | scenario | value |
+      | 1     | base_zone         | price                   | 1        | 0        | 50    |
+      | 1     | gas_base_zone     | generation_reduced_cost | 1        | 0        | -40   |
+      | 1     | oil_base_zone     | generation_reduced_cost | 1        | 0        | 0     |

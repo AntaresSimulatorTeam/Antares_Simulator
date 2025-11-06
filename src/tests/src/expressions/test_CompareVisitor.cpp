@@ -217,4 +217,29 @@ BOOST_FIXTURE_TEST_CASE(compare_TimeShift, ComparisonFixture)
     const auto clone = clone_visitor.dispatch(expr1);
     BOOST_CHECK(compareVisitor.dispatch(expr1, clone));
 }
+
+BOOST_FIXTURE_TEST_CASE(compare_dual, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* dual1 = registry_.create<DualNode>("constraint1", 0);
+    Node* dual2 = registry_.create<DualNode>("constraint2", 1);
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(dual1);
+    BOOST_CHECK(compareVisitor.dispatch(dual1, clone));
+    BOOST_CHECK(!compareVisitor.dispatch(dual1, dual2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_reducedCost, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* reducedCost1 = registry_.create<ReducedCostNode>("var1", 0);
+    Node* reducedCost2 = registry_.create<ReducedCostNode>("var2", 1);
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(reducedCost1);
+    BOOST_CHECK(compareVisitor.dispatch(reducedCost1, clone));
+    BOOST_CHECK(!compareVisitor.dispatch(reducedCost1, reducedCost2));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

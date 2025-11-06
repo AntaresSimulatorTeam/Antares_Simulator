@@ -1,0 +1,5 @@
+                                            master                                        CAND.p_max         0
+                                            master                                    DISCRETE.p_max         1
+                                            master                                 DISCRETE.nb_units         2
+                                        subproblem                                        CAND.p_max         4
+                                        subproblem                                    DISCRETE.p_max         6

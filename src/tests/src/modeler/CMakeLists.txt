@@ -4,6 +4,7 @@ add_subdirectory(optimConfig)
 add_library(mock-modeler-objects
         mockModelerObjects.cpp
         mockModelerObjects.h
+        UtilMocks.h
         )
 
 target_link_libraries(mock-modeler-objects

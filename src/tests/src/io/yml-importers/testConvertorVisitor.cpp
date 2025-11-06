@@ -18,6 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
@@ -27,6 +28,12 @@
 #include "antares/expressions/visitors/CompareVisitor.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/io/inputs/yml-model/Library.h"
+
+// If we don't turn clang-format off here, some antlr4 header does not compile :
+// it collides with a #include <windows.h> somewhere in Yuni
+// clang-format off
+#include <unit_test_utils.h>
+// clang-format on
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
@@ -407,4 +414,69 @@ BOOST_AUTO_TEST_CASE(AlltimeSumExpression)
 
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
+}
+
+BOOST_AUTO_TEST_CASE(dualExpression)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {{"constraintA", ""}},
+                          .binding_constraints = {{"constraintB", ""}},
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    // constraints
+    std::string expression = "dual(constraintA)";
+    auto expr = converter.run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
+    auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
+
+    // binding constraints
+    expression = "dual(constraintB)";
+    expr = converter.run(expression);
+    dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dualNode->value(), "constraintB");
+    BOOST_CHECK_EQUAL(dualNode->index(), 1);
+
+    std::string badExpression = "dual(abc)";
+    BOOST_CHECK_EXCEPTION(converter.run(badExpression),
+                          std::runtime_error,
+                          checkMessage(
+                            "Model doesn't contain this constraint in dual function: abc"));
+}
+
+BOOST_AUTO_TEST_CASE(reducedCostExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "reduced_cost(varB)";
+    auto expr = converter.run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
+    auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
+    BOOST_CHECK_EQUAL(reducedCostNode->value(), "varB");
+    BOOST_CHECK_EQUAL(reducedCostNode->index(), 1);
+
+    std::string badExpression = "reduced_cost(abc)";
+    BOOST_CHECK_EXCEPTION(converter.run(badExpression),
+                          std::runtime_error,
+                          checkMessage(
+                            "Model doesn't contain this variable in reduced_cost function: abc"));
 }

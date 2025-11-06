@@ -6,13 +6,12 @@ import configparser
 from enum import Enum
 from pathlib import Path
 
-from numpy.ma.core import absolute
-
 
 class result_type(Enum):
     VALUES = "values"
     DETAILS = "details"
     DETAILS_STS = "details-STstorage"
+
 
 class solver_output_handler:
 
@@ -82,7 +81,8 @@ class solver_output_handler:
 
     def __get_values_hourly_for_specific_week(self, area: str, year: int, week: int):
         df = self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
-        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
+        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (
+                df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
 
     def __get_values_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
         df = self.__get_values_hourly(area, year)
@@ -151,3 +151,12 @@ class solver_output_handler:
 
     def get_non_proportional_cost(self, area: str, year: int) -> float:
         return self.__get_values_hourly(area, year)["NP COST"]["Euro"].sum()
+
+    def get_npcap_hours(self, area: str, year: int) -> int:
+        # Return total NPCAP HOURS over hourly results
+        return int(self.__get_values_hourly(area, year)["NPCAP HOURS"]["Hours"].sum())
+
+    def get_npcap_hours_for_hour(self, area: str, year: int, hour: int) -> int:
+        # Return NPCAP HOURS indicator at a specific hour (0-based index)
+        df = self.__get_values_hourly(area, year)
+        return int(df["NPCAP HOURS"]["Hours"].iloc[hour])
