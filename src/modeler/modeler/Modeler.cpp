@@ -181,9 +181,10 @@ void Modeler::run() const
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
     const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
-    writer_.init(!parameters.noOutput, simulationTableSuffix);
 
+    if (!parameters.noOutput)
     {
+        writer_.init(!parameters.noOutput, simulationTableSuffix);
         auto output = writer_.outputPath();
 
         Write(subproblem, output / "1-1.mps");
