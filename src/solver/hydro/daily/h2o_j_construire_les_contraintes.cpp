@@ -26,7 +26,7 @@ namespace DoneesOptimisationJournaliere
 {
 void H2O_J_ConstruireLesContraintes(int NbPdt,
                                     std::vector<int>& NumeroDeVariableTurbine,
-                                    int NumeroDeLaVariableXi,
+                                    std::vector<int>& NumeroDeLaVariableXi,
                                     int NumeroDeLaVariableXiPlus,
                                     int NumeroDeLaVariableXiMoins,
                                     std::vector<int>& IndicesDebutDeLigne,
@@ -67,7 +67,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = NumeroDeLaVariableXi;
+        IndicesColonnes[il] = NumeroDeLaVariableXi[Pdt];
         il++;
 
         Sens[NombreDeContraintes] = '>';
@@ -85,7 +85,7 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
         CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
         IndicesColonnes[il++] = NumeroDeVariableTurbine[Pdt];
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il++] = NumeroDeLaVariableXi;
+        IndicesColonnes[il++] = NumeroDeLaVariableXi[Pdt];
 
         Sens[NombreDeContraintes] = '>';
         NombreDeTermesDesLignes[NombreDeContraintes] = 2;

@@ -30,7 +30,7 @@ void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES*, const std::string&);
 void H2O_J_Free(DONNEES_MENSUELLES*);
 void H2O_J_ConstruireLesContraintes(int,
                                     std::vector<int>&,
-                                    int,
+                                    std::vector<int>&,
                                     int,
                                     int,
                                     std::vector<int>&,

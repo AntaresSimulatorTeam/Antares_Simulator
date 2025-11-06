@@ -74,6 +74,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
         const int NbPdt = NbJoursDUnProbleme[i];
 
         CorrespondanceDesVariables[i].NumeroDeVariableTurbine.assign(NbPdt, 0);
+        CorrespondanceDesVariables[i].NumeroDeLaVariableXi.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXi.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXiSym.assign(NbPdt, 0);
         CorrespondanceDesContraintes[i].NumeroDeContrainteSurXiPlus.assign(NbPdt, 0);
@@ -83,7 +84,7 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
 
         int NombreDeVariables = 0;
         NombreDeVariables += NbPdt; // turbines
-        NombreDeVariables += 1;     // xi
+        NombreDeVariables += NbPdt; // xi
         NombreDeVariables += 1;     // xi_plus
         NombreDeVariables += 1;     // xi_moins
 
@@ -154,10 +155,14 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
         {
             ProblemeLineairePartieFixe[i].CoutLineaire[j] = 0.0;
         }
-
-        ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
+       
+        for(int pdt = 0; pdt < NbPdt; pdt++)
+        {
+          ProblemeLineairePartieFixe[i]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi[pdt]]
           = 1.0;
+        }
+
         ProblemeLineairePartieFixe[i]
           .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiPlus]
           = 1.0;
