@@ -45,6 +45,8 @@ public:
 
     [[nodiscard]] double getCoefficient(const LinearProblemApi::IMipVariable* var) const override;
 
+    [[nodiscard]] double dual() const override;
+
     [[nodiscard]] const std::string& getName() const override;
     LinearProblemApi::MipBasisStatus getMipBasisStatus() const override;
     ~OrtoolsMipConstraint() override = default;

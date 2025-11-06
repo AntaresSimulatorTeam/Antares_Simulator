@@ -1,9 +1,31 @@
+/*
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+
 #pragma once
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
-#include "../modeler/mockModelerObjects.h"
+#include "mockModelerObjects.h"
 
 class MockMipVariable: public Antares::Optimisation::LinearProblemApi::IMipVariable
 {
@@ -20,6 +42,11 @@ public:
     double solutionValue() const override
     {
         return value_;
+    }
+
+    double reducedCost() const override
+    {
+        return 0;
     }
 
     Antares::Optimisation::LinearProblemApi::MipBasisStatus getMipBasisStatus() const override
@@ -119,6 +146,11 @@ public:
         setUb(ub);
     }
 
+    double dual() const override
+    {
+        return 0;
+    }
+
     // IHasName interface
     const std::string& getName() const override
     {
@@ -144,12 +176,11 @@ public:
     }
 
     Antares::Optimisation::LinearProblemApi::IMipConstraint* lookupConstraint(
-      const std::string& name) const override
+      const std::string&) const override
     {
-        // static MockMipConstraint mockConstraint(
-        //   Antares::Optimisation::LinearProblemApi::MipBasisStatus::BASIC);
-        // return &mockConstraint;
-        return nullptr;
+        static MockMipConstraint mockConstraint(
+          Antares::Optimisation::LinearProblemApi::MipBasisStatus::BASIC);
+        return &mockConstraint;
     }
 
     // ILinearProblem interface (minimal implementation for testing)
@@ -158,19 +189,15 @@ public:
                                                                        bool,
                                                                        const std::string&) override
     {
-        // variables_.push_back(std::move(RandomVariable()));
-        // return variables_.back().get();
-        variableCount_++;
-        return nullptr;
+        variables_.push_back(RandomVariable());
+        return variables_.back().get();
     }
 
     Antares::Optimisation::LinearProblemApi::IMipConstraint*
     addConstraint(double, double, const std::string&) override
     {
-        // constraints_.push_back(std::move(RandomConstraint()));
-        // return constraints_.back().get();
-        constraintCount_++;
-        return nullptr;
+        constraints_.push_back(RandomConstraint());
+        return constraints_.back().get();
     }
 
     void setObjectiveCoefficient(Antares::Optimisation::LinearProblemApi::IMipVariable*,
@@ -193,21 +220,19 @@ public:
     }
 
     Antares::Optimisation::LinearProblemApi::IMipVariable*
-    addNumVariable(double lb, double ub, const std::string& name) override
+    addNumVariable(double, double, const std::string&) override
     {
         variableCount_++;
-        // variables_.push_back(std::move(RandomVariable()));
-        // return variables_.back().get();
-        return nullptr;
+        variables_.push_back(RandomVariable());
+        return variables_.back().get();
     }
 
     Antares::Optimisation::LinearProblemApi::IMipVariable*
-    addIntVariable(double lb, double ub, const std::string& name) override
+    addIntVariable(double, double, const std::string&) override
     {
         variableCount_++;
-        // variables_.push_back(std::move(RandomVariable()));
-        // return variables_.back().get();
-        return nullptr;
+        variables_.push_back(RandomVariable());
+        return variables_.back().get();
     }
 
     static std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable> RandomVariable()
@@ -217,7 +242,7 @@ public:
             12.25,
             Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND,
             false);
-        return std::move(mockMipVariable);
+        return mockMipVariable;
     }
 
     static std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>
@@ -226,14 +251,13 @@ public:
         std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>
           mockMipConstraint = std::make_unique<MockMipConstraint>(
             Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND);
-        return std::move(mockMipConstraint);
+        return mockMipConstraint;
     }
 
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* getVariable(
       std::size_t t) const override
     {
-        // return variables_.at(t).get();
-        return nullptr;
+        return variables_.at(t).get();
     }
 
     [[nodiscard]]
@@ -247,8 +271,7 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipConstraint* getConstraint(
       std::size_t) const override
     {
-        // return RandomConstraint().get();
-        return nullptr;
+        return RandomConstraint().get();
     }
 
     [[nodiscard]]
@@ -261,8 +284,7 @@ public:
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* lookupVariable(
       const std::string& name) const override
     {
-        // return RandomVariable().get();
-        return nullptr;
+        return RandomVariable().get();
     }
 
     [[nodiscard]] int variableCount() const override
@@ -276,7 +298,7 @@ public:
     }
 
     double getObjectiveCoefficient(
-      const Antares::Optimisation::LinearProblemApi::IMipVariable* var) const override
+      const Antares::Optimisation::LinearProblemApi::IMipVariable*) const override
     {
         return 0.;
     }
@@ -306,6 +328,106 @@ protected:
       constraints_;
     int variableCount_ = 0;
     int constraintCount_ = 0;
+};
+
+// Mock component and model classes for testing template functions
+class MockVariable
+{
+public:
+    MockVariable(bool scenDependent, bool timeDependent):
+        scenDependent_(scenDependent),
+        timeDependent_(timeDependent)
+    {
+    }
+
+    bool IsScenarioDependent() const
+    {
+        return scenDependent_;
+    }
+
+    bool isTimeDependent() const
+    {
+        return timeDependent_;
+    }
+
+private:
+    bool scenDependent_;
+    bool timeDependent_;
+};
+
+class MockConstraint
+{
+public:
+    MockConstraint(const std::string& name):
+        name_(name)
+    {
+    }
+
+    // Mock expression method
+    struct MockExpression
+    {
+        struct MockNode
+        {
+            // Mock node for constraint expression
+        };
+
+        MockNode* RootNode() const
+        {
+            return nullptr;
+        }
+    };
+
+    MockExpression expression() const
+    {
+        return MockExpression{};
+    }
+
+private:
+    std::string name_;
+};
+
+class MockModel
+{
+public:
+    std::map<std::string, MockVariable> Variables() const
+    {
+        return {
+          {"var1", MockVariable(false, false)}, // Neither time nor scenario dependent
+          {"var2", MockVariable(true, false)},  // Scenario dependent only
+          {"var3", MockVariable(false, true)},  // Time dependent only
+          {"var4", MockVariable(true, true)}    // Both time and scenario dependent
+        };
+    }
+
+    std::map<std::string, MockConstraint> Constraints() const
+    {
+        return {{"constraint1", MockConstraint("constraint1")},
+                {"constraint2", MockConstraint("constraint2")}};
+    }
+};
+
+class MockComponent
+{
+public:
+    MockComponent(const std::string& id):
+        id_(id),
+        model_(std::make_shared<MockModel>())
+    {
+    }
+
+    const std::string& Id() const
+    {
+        return id_;
+    }
+
+    std::shared_ptr<MockModel> getModel() const
+    {
+        return model_;
+    }
+
+private:
+    std::string id_;
+    std::shared_ptr<MockModel> model_;
 };
 
 struct PredfinedSolutionLinearProblemMock: MockLinearProblem

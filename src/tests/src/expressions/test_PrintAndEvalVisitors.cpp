@@ -1297,6 +1297,20 @@ BOOST_FIXTURE_TEST_CASE(PrintAllTimeSumNode, MyDummyFixture)
     // --
 }
 
+BOOST_FIXTURE_TEST_CASE(PrintDualNode, MyDummyFixture)
+{
+    Node* dual = create<DualNode>("constraint", 0);
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint)");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
+{
+    Node* reducedCost = create<ReducedCostNode>("var", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(reducedCost) == "reduced_cost(var)");
+}
+
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
 {
     std::vector<int> emptyVector;

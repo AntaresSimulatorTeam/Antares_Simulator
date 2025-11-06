@@ -68,6 +68,7 @@ jobs:
       run: sudo apt-get install -y ccache
 
     - name: Restore ccache cache
+      id: cache
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu
@@ -148,7 +149,7 @@ jobs:
 
     - name: Both previous archives upload
       if: ${{ success() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ubuntu-targz
         path: _build/*.tar.gz
@@ -226,7 +227,7 @@ jobs:
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
@@ -389,7 +390,7 @@ jobs:
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Installer deb upload push
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: deb
         path: _build/*.deb
@@ -412,7 +413,7 @@ jobs:
         mv _build/antares-*-Ubuntu-22.04.tar.gz _build/antares-cd-Ubuntu-22.04.tar.gz
         mv _build/antares-*-Ubuntu-22.04.deb _build/antares-cd-Ubuntu-22.04.deb
         gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.deb
-        gh release edit continuous-delivery --title "continuous dellivery of $(date +'%Y-%m-%d %H:%M')"
+        gh release edit continuous-delivery --title "continuous delivery (generated $(date +'%Y-%m-%d %H:%M'))"
         #update continuous delivery tag to point to the latest develop commit
         gh api repos/${{ github.repository }}/git/refs/tags/continuous-delivery -X PATCH -f sha=$(git rev-parse HEAD)
 
@@ -427,9 +428,19 @@ jobs:
     - name: Display ccache statistics
       run: ccache -s
 
+    # Delete the old cache on hit to emulate a cache update. See
+    # https://github.com/actions/cache/issues/342.
+    - name: Delete old cache
+      env:
+        GH_TOKEN: ${{ github.token }}
+      if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
+      # Using `--repo` makes it so that this step doesn't require checking out the
+      # repo first.
+      run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
+
     - name: Save ccache cache
       if: ${{ !cancelled() }}
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu
-        key: ${{ env.os }}-${{ github.ref_name }}
+        key: ${{ steps.cache.outputs.cache-primary-key }}

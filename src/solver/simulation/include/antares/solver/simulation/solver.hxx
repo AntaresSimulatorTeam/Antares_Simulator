@@ -29,9 +29,11 @@
 #include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
+#include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/numspace_manager.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/random.h"
+#include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 #include "antares/solver/variable/print.h"
@@ -146,7 +148,7 @@ public:
         Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
 
         // 3 - Preparing data related to Clusters in 'must-run' mode
-        simulation_->prepareClustersInMustRunMode(scratchmap, y);
+        prepareClustersInMustRunMode(study, scratchmap, y, Impl::mode);
 
         // 4 - Hydraulic ventilation
         pDurationCollector("hydro_ventilation") << [this, &scratchmap, &randomReservoirLevel]
@@ -304,7 +306,7 @@ void ISimulation<ImplementationType>::run()
         // in general data of the study.
         logs.info() << " Only the preprocessors are enabled.";
 
-        regenerateTimeSeries();
+        regenerateTimeSeries(study, pResultWriter, pDurationCollector);
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output at the same time
@@ -414,64 +416,6 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 }
 
 template<class ImplementationType>
-void ISimulation<ImplementationType>::regenerateTimeSeries()
-{
-    // A preprocessor can be launched for several reasons:
-    // * The option "Preprocessor" is checked in the interface _and_ year == 0
-    // * Both options "Preprocessor" and "Refresh" are checked in the interface
-    //   _and_ the refresh must be done for the given year (always done for the first year).
-    using namespace TSGenerator;
-
-    const Data::Parameters& p = study.parameters;
-    // Load
-    if (Data::timeSeriesLoad & p.timeSeriesToGenerate)
-    {
-        pDurationCollector("tsgen_load")
-          << [this] { GenerateTimeSeries<Data::timeSeriesLoad>(study, pResultWriter); };
-    }
-    // Solar
-    if (Data::timeSeriesSolar & p.timeSeriesToGenerate)
-    {
-        pDurationCollector("tsgen_solar")
-          << [this] { GenerateTimeSeries<Data::timeSeriesSolar>(study, pResultWriter); };
-    }
-    // Wind
-    if (Data::timeSeriesWind & p.timeSeriesToGenerate)
-    {
-        pDurationCollector("tsgen_wind")
-          << [this] { GenerateTimeSeries<Data::timeSeriesWind>(study, pResultWriter); };
-    }
-    // Hydro
-    if (Data::timeSeriesHydro & p.timeSeriesToGenerate)
-    {
-        pDurationCollector("tsgen_hydro")
-          << [this] { GenerateTimeSeries<Data::timeSeriesHydro>(study, pResultWriter); };
-    }
-
-    pDurationCollector("tsgen_thermal") << [this]
-    {
-        bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
-                                         & Data::timeSeriesThermal;
-        auto clusters = getAllClustersToGen(study.areas, globalThermalTSgeneration);
-        generateThermalTimeSeries(study, clusters, study.runtime.random[Data::seedTsGenThermal]);
-
-        bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
-        bool doWeWrite = archive && !study.parameters.noOutput;
-        if (doWeWrite)
-        {
-            fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-" / "0";
-            writeThermalTimeSeries(clusters, savePath);
-        }
-
-        // apply the spinning if we generated some in memory clusters
-        for (auto* cluster: clusters)
-        {
-            cluster->calculationOfSpinning();
-        }
-    };
-}
-
-template<class ImplementationType>
 void ISimulation<ImplementationType>::computeAnnualCostsStatistics(Variable::State s)
 {
     pAnnualStatistics.systemCost.addCost(s.annualSystemCost);
@@ -499,8 +443,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
 
-    regenerateTimeSeries();
-
+    regenerateTimeSeries(study, pResultWriter, pDurationCollector);
     HydroInputsChecker hydroInputsChecker(study);
     logs.info() << " Doing hydro validation";
 
