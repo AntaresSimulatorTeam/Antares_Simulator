@@ -33,6 +33,26 @@
 namespace Antares::Optimisation
 {
 
+// Represents a variable shared by master and subproblems
+struct ConnexionVariable
+{
+    std::string name;
+    unsigned indexInProblem;
+};
+
+class BendersDecomposition
+{
+public:
+    BendersDecomposition() = default;
+    void setCurrentProblemId(std::string id);
+    void collectConnexionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
+    void write(std::ostream& os) const;
+
+private:
+    std::map<std::string, std::vector<ConnexionVariable>> connexionVars_;
+    std::string currentProblemId_ = "master";
+};
+
 /**
  * Component filler
  * Implements LinearProblemFiller interface.
@@ -47,14 +67,14 @@ public:
 
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              OptimEntityContainer& optimEntityContainer,
-                             const ScenarioGroupRepository& scenarioGroupRepository);
+                             const ScenarioGroupRepository& scenarioGroupRepository,
+                             Modeler::Config::Location targetLocation,
+                             BendersDecomposition* masterAndSubPbvars = nullptr);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addVariablesToMaster(const Optimisation::LinearProblemApi::FillContext& ctx);
 
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjectivesToMaster(const Optimisation::LinearProblemApi::FillContext& ctx);
 
 private:
     void addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
@@ -70,7 +90,7 @@ private:
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
-    std::function<bool(const ModelerStudy::SystemModel::Variable&)> variablesFilter_;
-    std::function<bool(const ModelerStudy::SystemModel::Objective&)> objectivesFilter_;
+    const Modeler::Config::Location targetLocation_;
+    BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 } // namespace Antares::Optimisation

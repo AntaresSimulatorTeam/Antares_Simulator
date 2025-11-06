@@ -123,7 +123,8 @@ public:
     }
 
     void addFromSystemComponents(
-      const std::vector<Antares::ModelerStudy::SystemModel::Component>& component);
+      const std::vector<Antares::ModelerStudy::SystemModel::Component>& component,
+      Modeler::Config::Location targetLocation = Modeler::Config::Location::SUBPROBLEMS);
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
                             const TimeIndex& timeIndex);
 
@@ -135,7 +136,6 @@ public:
 private:
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
-    unsigned int variableGlobalIndex_ = 0;
     std::vector<unsigned int> constraintStartLine_;
     LinearProblemApi::ILinearProblem& linearProblem_;
     const LinearProblemApi::ILinearProblemData* data_;

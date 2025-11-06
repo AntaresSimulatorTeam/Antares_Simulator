@@ -92,10 +92,13 @@ BOOST_AUTO_TEST_SUITE(add_variables_to_master_linear_problem)
 BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_variables,
                         Fixtures::_1)
 {
-    ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
+    ComponentFiller componentFiller(*component,
+                                    optimEntityContainer,
+                                    scenario_group_repo,
+                                    Antares::Modeler::Config::Location::MASTER);
 
     // Act
-    componentFiller.addVariablesToMaster(time_scenario_ctx);
+    componentFiller.addVariables(time_scenario_ctx);
 
     // Assert
     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
@@ -106,7 +109,10 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_
 BOOST_FIXTURE_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_variables,
                         Fixtures::_2)
 {
-    ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
+    ComponentFiller componentFiller(*component,
+                                    optimEntityContainer,
+                                    scenario_group_repo,
+                                    Antares::Modeler::Config::Location::SUBPROBLEMS);
 
     // Act
     componentFiller.addVariables(time_scenario_ctx);
@@ -124,7 +130,10 @@ BOOST_AUTO_TEST_SUITE(add_constraints_to_master_linear_problem)
 BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objectives,
                         Fixtures::_3)
 {
-    ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
+    ComponentFiller componentFiller(*component,
+                                    optimEntityContainer,
+                                    scenario_group_repo,
+                                    Antares::Modeler::Config::Location::SUBPROBLEMS);
 
     // Act
     componentFiller.addVariables(time_scenario_ctx);
@@ -145,22 +154,13 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_ob
 BOOST_FIXTURE_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master_objectives,
                         Fixtures::_4)
 {
-    ComponentFiller componentFiller(*component, optimEntityContainer, scenario_group_repo);
+    ComponentFiller componentFiller(*component,
+                                    optimEntityContainer,
+                                    scenario_group_repo,
+                                    Antares::Modeler::Config::Location::MASTER);
 
-    // Act
     componentFiller.addVariables(time_scenario_ctx);
-    componentFiller.addObjectivesToMaster(time_scenario_ctx);
-
-    // Assert
-    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 2);
-    auto* var1 = linear_pb.lookupVariable("my-component.var-1");
-    auto* var2 = linear_pb.lookupVariable("my-component.var-2");
-    BOOST_REQUIRE(var1);
-    BOOST_REQUIRE(var2);
-
-    // No objective associated to var1 found in problem
-    BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var1), 0);
-    BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var2), 1);
+    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

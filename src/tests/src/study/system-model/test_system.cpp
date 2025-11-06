@@ -115,7 +115,7 @@ BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
     BOOST_CHECK(compo2 != compos.cend());
 }
 
-Component buildComponent(const std::string& id, const Model& model)
+Component buildComponent(const std::string& id, Model& model)
 {
     ComponentBuilder component_builder;
     auto component = component_builder.withId(id)

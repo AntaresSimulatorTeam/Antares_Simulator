@@ -47,6 +47,7 @@
 
 using namespace operations_research;
 using namespace Antares::Optimisation;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::IO;
@@ -56,7 +57,6 @@ using Solver::Optimization::SingleOptimOptions;
 
 struct SimplexResult
 {
-    bool success = false;
     TIME_MEASURE timeMeasure;
     mpsWriterFactory mps_writer_factory;
     double objectiveValue;
@@ -74,10 +74,18 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
 }
 
+std::once_flag isFirstWeeklyProblemEver;
+
+static void setProblemIdToMaster(std::string& problemId)
+{
+    problemId = "master";
+}
+
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Modeler::Data* modelerData,
-  OptimEntityContainer& optimEntityContainer)
+  OptimEntityContainer& optimEntityContainer,
+  BendersDecomposition* bendersDecomposition)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
@@ -86,7 +94,9 @@ static void fillModelerComponents(
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
-                                            modelerData->scenarioGroupRepository));
+                                            modelerData->scenarioGroupRepository,
+                                            Modeler::Config::Location::SUBPROBLEMS,
+                                            bendersDecomposition));
     }
 }
 
@@ -116,24 +126,23 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
-static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
-  LinearProblemDataImpl::LinearProblemData();
-
-// Returns a non-owning pointer
-MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
-                             FillContext& fillCtx,
-                             const PROBLEME_HEBDO* problemeHebdo,
-                             OptimEntityContainer& optimEntityContainer,
-                             bool namedProblems)
+void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
+                        FillContext& fillCtx,
+                        const PROBLEME_HEBDO* problemeHebdo,
+                        OptimEntityContainer& optimEntityContainer,
+                        bool namedProblems,
+                        BendersDecomposition* bendersDecomposition = nullptr)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
+      std::make_unique<LegacyFiller>(ortoolsProblem, problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
-        // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, optimEntityContainer);
+        fillModelerComponents(fillersCollection,
+                              problemeHebdo->modelerData,
+                              optimEntityContainer,
+                              bendersDecomposition);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
@@ -156,8 +165,6 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
 
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
-
-    return ortoolsProblem.getMpSolver();
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
@@ -188,15 +195,31 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
       = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
+    // This instance should be created in problemeHebdo, so that it lives longer
+    // than a week, as it is currently the case.
+    std::unique_ptr<BendersDecomposition> bendersDecomposition; // is currently nullptr
+    if (modelerData
+        && modelerData->resolutionMode == Modeler::ResolutionMode::BENDERS_DECOMPOSITION)
+    {
+        bendersDecomposition = std::make_unique<BendersDecomposition>();
+        std::string problemId = optPeriodStringGenerator.to_string();
+        // If current weekly problem is first problem ever, then set problem id to "master"
+        std::call_once(isFirstWeeklyProblemEver, setProblemIdToMaster, problemId);
+        bendersDecomposition->setCurrentProblemId(problemId);
+    }
+
     OptimEntityContainer optimEntityContainer(ortoolsProblem,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    auto* solver = fillAndGetMpSolver(ortoolsProblem,
-                                      fillCtx,
-                                      problemeHebdo,
-                                      optimEntityContainer,
-                                      problemeHebdo->NamedProblems);
+    fillOrtoolsProblem(ortoolsProblem,
+                       fillCtx,
+                       problemeHebdo,
+                       optimEntityContainer,
+                       problemeHebdo->NamedProblems,
+                       bendersDecomposition.get());
+
+    auto* solver = ortoolsProblem.getMpSolver();
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
 
@@ -232,8 +255,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
-            return {.success = false,
-                    .timeMeasure = timeMeasure,
+            return {.timeMeasure = timeMeasure,
                     .mps_writer_factory = mps_writer_factory,
                     .objectiveValue = 0};
         }
@@ -259,10 +281,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             true);
     }
 
-    return {.success = true,
-            .timeMeasure = timeMeasure,
+    return {.timeMeasure = timeMeasure,
             .mps_writer_factory = mps_writer_factory,
-            .objectiveValue = solver != nullptr ? getObjectiveValue(solver) : 0};
+            .objectiveValue = getObjectiveValue(solver)};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
@@ -343,11 +364,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        std::unique_ptr<MPSolver> MPproblem(fillAndGetMpSolver(infeasibleProblem,
-                                                               fillCtx,
-                                                               problemeHebdo,
-                                                               optimEntityContainer,
-                                                               true));
+        fillOrtoolsProblem(infeasibleProblem, fillCtx, problemeHebdo, optimEntityContainer, true);
+        std::unique_ptr<MPSolver> MPproblem(infeasibleProblem.getMpSolver());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

@@ -23,7 +23,8 @@
 #include <string>
 
 #include <antares/expressions/expression.h>
-#include "antares/modeler/optimConfig/optimConfig.h"
+
+#include "optimConfig.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -51,16 +52,14 @@ public:
         return expression_;
     }
 
-    [[nodiscard]] bool isInSubProblem() const
+    void setLocation(Modeler::Config::Location loc)
     {
-        return location_ == Modeler::Config::Location::SUBPROBLEMS
-               || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+        location_ = loc;
     }
 
-    [[nodiscard]] bool isInMasterProblem() const
+    [[nodiscard]] Modeler::Config::Location location() const
     {
-        return location_ == Modeler::Config::Location::MASTER
-               || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+        return location_;
     }
 
 private:

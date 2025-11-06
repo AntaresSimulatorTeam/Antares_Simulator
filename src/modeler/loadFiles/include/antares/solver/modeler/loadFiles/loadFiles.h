@@ -51,8 +51,8 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeri
 Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath);
 
-std::optional<Antares::Modeler::Config::OptimConfig> loadOptimConfig(
-  const std::filesystem::path& studyPath);
+void loadOptimConfig(const std::filesystem::path& studyPath,
+                     std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 void handleYamlError(const YAML::Exception& e, const std::string& filename);
 

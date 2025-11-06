@@ -204,15 +204,15 @@ class InMemoryWriter final: public Antares::Solver::IWriter
 public:
     mutable Solution solution_{};
 
-    void init(bool, const std::string&) override
+    void init(const std::string&) override
     {
         // No initialization needed for in-memory writer
     }
 
-    void writeProblem(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem) override
+    const std::filesystem::path& outputPath() const override
     {
+        static std::filesystem::path dummy;
+        return dummy;
     }
 
     void writeSimulationTable(
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
     InMemoryWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
-    modeler.solve();
+    modeler.run();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 0);
 }
 
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10)
     InMemoryWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
-    modeler.solve();
+    modeler.run();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 5);
 }
 
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
     InMemoryWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
-    modeler.solve();
+    modeler.run();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 2);
 }
 
@@ -327,6 +327,6 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
     InMemoryWriter inMemoryWriter;
 
     const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
-    modeler.solve();
+    modeler.run();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 3);
 }
