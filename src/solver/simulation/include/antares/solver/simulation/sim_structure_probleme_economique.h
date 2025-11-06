@@ -410,7 +410,6 @@ struct PROBLEME_HEBDO
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
     bool OptimisationAvecVariablesEntieres = false;
     uint32_t NombreDePays = 0;

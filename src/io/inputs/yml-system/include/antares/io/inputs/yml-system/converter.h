@@ -24,7 +24,6 @@
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
-#include "../../../../../../yml-model/include/antares/io/inputs/yml-model/parser.h"
 #include "parser.h"
 
 namespace Antares::IO::Inputs::SystemConverter

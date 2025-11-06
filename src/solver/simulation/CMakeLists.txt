@@ -50,6 +50,8 @@ set(SRC_SIMULATION
         TimeSeriesNumbersWriter.cpp
         include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h
         include/antares/solver/simulation/ISimulationObserver.h
+        include/antares/solver/simulation/regenerate_timeseries.h
+	regenerate_timeseries.cpp
         random.cpp
 )
 source_group("simulation" FILES ${SRC_SIMULATION})

@@ -24,6 +24,7 @@
 #include <unordered_map>
 
 #include <antares/exception/LoadingError.hpp>
+#include <antares/exception/RuntimeError.hpp>
 
 namespace Antares::Modeler::Config
 {
