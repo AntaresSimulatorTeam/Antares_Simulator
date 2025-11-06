@@ -34,7 +34,7 @@ namespace Antares::Optimisation
 {
 
 // Represents a variable shared by master and subproblems
-struct ConnexionVariable
+struct ConnectionVariable
 {
     std::string name;
     unsigned indexInProblem;
@@ -45,11 +45,11 @@ class BendersDecomposition
 public:
     BendersDecomposition() = default;
     void setCurrentProblemId(std::string id);
-    void collectConnexionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
+    void collectConnectionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
     void write(std::ostream& os) const;
 
 private:
-    std::map<std::string, std::vector<ConnexionVariable>> connexionVars_;
+    std::map<std::string, std::vector<ConnectionVariable>> connectionVars_;
     std::string currentProblemId_ = "master";
 };
 
