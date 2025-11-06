@@ -97,8 +97,8 @@ void BendersDecomposition::setCurrentProblemId(std::string id)
     currentProblemId_ = id;
 }
 
-void BendersDecomposition::collectConnexionVariables(std::vector<std::string>&& varnames,
-                                                     unsigned varsCountInPb)
+void BendersDecomposition::collectConnectionVariables(std::vector<std::string>&& varnames,
+                                                      unsigned varsCountInPb)
 {
     std::vector<std::string> names = std::move(varnames);
     unsigned nbVars = names.size();
@@ -106,14 +106,14 @@ void BendersDecomposition::collectConnexionVariables(std::vector<std::string>&& 
     unsigned varIndex = startIndexInPb;
     for (const auto& name: names)
     {
-        connexionVars_[currentProblemId_].emplace_back(name, varIndex);
+        connectionVars_[currentProblemId_].emplace_back(name, varIndex);
         varIndex++;
     }
 }
 
 void BendersDecomposition::write(std::ostream& os) const
 {
-    for (const auto& [problemId, v]: connexionVars_)
+    for (const auto& [problemId, v]: connectionVars_)
     {
         for (const auto& [variableName, variableIndex]: v)
         {
@@ -324,8 +324,8 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         if (bendersDecomposition_
             && variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
-            bendersDecomposition_->collectConnexionVariables(variableNames.names(),
-                                                             pb.variableCount());
+            bendersDecomposition_->collectConnectionVariables(variableNames.names(),
+                                                              pb.variableCount());
         }
     }
 }
