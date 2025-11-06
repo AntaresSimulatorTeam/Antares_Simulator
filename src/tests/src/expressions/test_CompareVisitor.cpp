@@ -240,11 +240,9 @@ BOOST_FIXTURE_TEST_CASE(compare_reducedCost, ComparisonFixture)
 {
     CompareVisitor compareVisitor;
     Node* reducedCost1 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
-                                                        registry_.create<ParameterNode>("var1"),
-                                                        registry_.create<LiteralNode>(0));
+                                                        registry_.create<VariableNode>("var1", 0));
     Node* reducedCost2 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
-                                                        registry_.create<ParameterNode>("var2"),
-                                                        registry_.create<LiteralNode>(1));
+                                                        registry_.create<VariableNode>("var2", 1));
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(reducedCost1);

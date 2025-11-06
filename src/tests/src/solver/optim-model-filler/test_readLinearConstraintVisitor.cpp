@@ -139,8 +139,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, VisitorFixture<ReadLinearConstr
                                                              create<ParameterNode>("constraint"),
                                                              create<LiteralNode>(0)),
                                         create<FunctionNode>(FunctionNodeType::reduced_cost,
-                                                             create<ParameterNode>("var"),
-                                                             create<LiteralNode>(0))};
+                                                             create<VariableNode>("var", 0))};
 
     for (Node* node: illegal_nodes)
     {

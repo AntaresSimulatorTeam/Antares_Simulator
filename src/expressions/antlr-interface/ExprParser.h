@@ -18,8 +18,8 @@ public:
   };
 
   enum {
-    RulePortFieldExpr = 0, RuleFullexpr = 1, RuleExpr = 2, RuleAtom = 3, 
-    RuleShift = 4, RuleShift_expr = 5, RuleRight_expr = 6
+    RulePortFieldExpr = 0, RuleFullexpr = 1, RuleExpr = 2, RuleArgList = 3, 
+    RuleAtom = 4, RuleShift = 5, RuleShift_expr = 6, RuleRight_expr = 7
   };
 
   explicit ExprParser(antlr4::TokenStream *input);
@@ -42,6 +42,7 @@ public:
   class PortFieldExprContext;
   class FullexprContext;
   class ExprContext;
+  class ArgListContext;
   class AtomContext;
   class ShiftContext;
   class Shift_exprContext;
@@ -233,13 +234,27 @@ public:
     FunctionContext(ExprContext *ctx);
 
     antlr4::tree::TerminalNode *IDENTIFIER();
-    ExprContext *expr();
+    ArgListContext *argList();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   ExprContext* expr();
   ExprContext* expr(int precedence);
+  class  ArgListContext : public antlr4::ParserRuleContext {
+  public:
+    ArgListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ArgListContext* argList();
+
   class  AtomContext : public antlr4::ParserRuleContext {
   public:
     AtomContext(antlr4::ParserRuleContext *parent, size_t invokingState);

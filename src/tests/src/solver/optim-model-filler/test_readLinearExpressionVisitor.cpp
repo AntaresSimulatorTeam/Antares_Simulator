@@ -279,9 +279,7 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
                           checkMessage(
                             "A linear expression can't contain extra output operator dual."));
 
-    node = create<FunctionNode>(FunctionNodeType::reduced_cost,
-                                create<ParameterNode>("var"),
-                                create<LiteralNode>(0));
+    node = create<FunctionNode>(FunctionNodeType::reduced_cost, create<VariableNode>("var", 0));
     BOOST_CHECK_EXCEPTION(
       visitor().dispatch(node),
       Antares::Error::InvalidArgumentError,

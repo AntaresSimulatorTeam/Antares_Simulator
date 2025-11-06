@@ -1309,8 +1309,7 @@ BOOST_FIXTURE_TEST_CASE(PrintDualNode, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
 {
     Node* reducedCost = create<FunctionNode>(FunctionNodeType::reduced_cost,
-                                             create<ParameterNode>("var"),
-                                             create<LiteralNode>(0));
+                                             create<VariableNode>("var", 0));
     PrintVisitor printVisitor;
     BOOST_CHECK(printVisitor.dispatch(reducedCost) == "reduced_cost(var)");
 }

@@ -53,6 +53,8 @@ public:
 
     virtual std::any visitFunction(ExprParser::FunctionContext *context) = 0;
 
+    virtual std::any visitArgList(ExprParser::ArgListContext *context) = 0;
+
     virtual std::any visitNumber(ExprParser::NumberContext *context) = 0;
 
     virtual std::any visitIdentifier(ExprParser::IdentifierContext *context) = 0;

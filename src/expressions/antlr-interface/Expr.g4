@@ -28,13 +28,13 @@ expr
     | 'sum' '(' expr ')'                       # allTimeSum
     | 'sum_connections' '(' portFieldExpr ')'           # portFieldSum
     | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
-    | IDENTIFIER '(' expr ')'                  # function
+    | IDENTIFIER '(' argList? ')'              # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex
     | '(' expr ')' '[' shift ']'               # timeShiftExpr
     | '(' expr ')' '[' expr ']'                # timeIndexExpr
     ;
-
+argList : expr (',' expr)* ;
 atom
     : NUMBER                                   # number
     | IDENTIFIER                               # identifier

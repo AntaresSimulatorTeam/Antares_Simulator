@@ -83,6 +83,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitArgList(ExprParser::ArgListContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitNumber(ExprParser::NumberContext *ctx) override {
     return visitChildren(ctx);
   }

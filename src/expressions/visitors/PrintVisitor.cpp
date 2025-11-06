@@ -142,7 +142,7 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
 
 std::string PrintVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    const auto* varIdNode = dynamic_cast<Nodes::ParameterNode*>(node->getOperands().at(0));
+    const auto* varIdNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(1));
     return "reduced_cost(" + varIdNode->value() + ")";
 }
 

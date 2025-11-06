@@ -382,8 +382,7 @@ BOOST_FIXTURE_TEST_CASE(dual_reducedCost, MyDummyFixture)
                           });
 
     Node* reducedCost = create<FunctionNode>(FunctionNodeType::reduced_cost,
-                                             create<ParameterNode>("var1"),
-                                             create<LiteralNode>(0));
+                                             create<VariableNode>("var1", 0));
     BOOST_CHECK_EXCEPTION(LinearityVisitor(optimEntityContainer, ctx, components.front())
                             .dispatch(reducedCost),
                           NodeTypeShouldBeInExtraOutput,

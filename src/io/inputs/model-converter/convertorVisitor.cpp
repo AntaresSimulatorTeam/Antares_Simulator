@@ -52,8 +52,10 @@ public:
     std::any visitNumber(ExprParser::NumberContext* context) override;
     std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override;
     std::any visitTimeShift(ExprParser::TimeShiftContext* context) override;
+    std::any handleMax(ExprParser::ArgListContext* context);
+    std::any handlePow(ExprParser::ArgListContext* arglist);
     std::any visitFunction(ExprParser::FunctionContext* context) override;
-
+    std::any visitArgList(ExprParser::ArgListContext* context) override;
     std::any visitTimeSum(ExprParser::TimeSumContext* context) override;
     std::any visitAllTimeSum(ExprParser::AllTimeSumContext* context) override;
     std::any visitSignedAtom(ExprParser::SignedAtomContext* context) override;
@@ -68,8 +70,8 @@ public:
     std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context) override;
     std::any visitPortFieldExpr(ExprParser::PortFieldExprContext* context) override;
     std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
-    std::any handleDual(ExprParser::FunctionContext* context);
-    std::any handleReducedCost(ExprParser::FunctionContext* context);
+    std::any handleDual(ExprParser::ArgListContext* context);
+    std::any handleReducedCost(ExprParser::ArgListContext* context);
 
 private:
     Expressions::Registry<Node>& registry_;
@@ -346,9 +348,14 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
     return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
-std::any ConvertorVisitor::handleDual(ExprParser::FunctionContext* context)
+std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 {
-    const std::string constraint_id = context->expr()->getText();
+    const auto constraintId = context->expr();
+    if (constraintId.size() != 1)
+    {
+        throw std::invalid_argument("dual operator expect only one constraint id");
+    }
+    const std::string constraint_id = constraintId.at(0)->getText();
     unsigned index = 0;
     const auto search_constraint = [&](const auto& constraints) -> Node*
     {
@@ -379,40 +386,70 @@ std::any ConvertorVisitor::handleDual(ExprParser::FunctionContext* context)
     throw NoConstraintWithThisName(constraint_id);
 }
 
-std::any ConvertorVisitor::handleReducedCost(ExprParser::FunctionContext* context)
+std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)
 {
-    const auto& variables = model_.variables;
-    auto varName = context->expr()->getText();
+    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
 
-    for (std::size_t index = 0; index < variables.size(); ++index)
+    if (nodes.size() != 1)
     {
-        const auto& var = variables[index];
-        if (var.id == varName)
-        {
-            auto* varIdNode = registry_.create<ParameterNode>(var.id);
-            auto* varIndex = registry_.create<LiteralNode>(index);
-            // auto* timeIndex = registry_.create<TimeIndexParameter>(
-            Optimisation::convertToTimeIndex(var.time_dependent, var.scenario_dependent);
-            return static_cast<Node*>(
-              registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varIdNode, varIndex));
-        }
+        throw std::invalid_argument("reduced_cost operator expect only one variable id");
     }
 
-    throw NoVariableWithThisName(varName);
+    return static_cast<Node*>(
+      registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
+}
+
+std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
+{
+    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
+}
+
+std::any ConvertorVisitor::handlePow(ExprParser::ArgListContext* context)
+{
+    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+    if (nodes.size() != 2)
+    {
+        throw std::invalid_argument("pow operator expect only two expressions");
+    }
+    return static_cast<Node*>(
+      registry_.create<FunctionNode>(FunctionNodeType::pow, nodes.at(0), nodes.at(1)));
 }
 
 std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
+    auto* arglist = context->argList();
     if (functionName == "reduced_cost")
     {
-        return handleReducedCost(context);
+        return handleReducedCost(arglist);
     }
     else if (functionName == "dual")
     {
-        return handleDual(context);
+        return handleDual(arglist);
+    }
+    else if (functionName == "max")
+    {
+        return handleMax(arglist);
+    }
+    else if (functionName == "dual")
+    {
+        return handlePow(arglist);
     }
     throw std::invalid_argument("Invalid function: '" + functionName + "'");
+}
+
+std::any ConvertorVisitor::visitArgList(ExprParser::ArgListContext* context)
+{
+    const auto exprContexts = context->expr();
+    std::vector<Node*> nodes(exprContexts.size());
+    for (unsigned int i = 0; i < exprContexts.size(); ++i)
+    {
+        auto* expr = exprContexts.at(i);
+        nodes[i] = std::any_cast<Node*>(expr->accept(this));
+    }
+    return nodes;
 }
 
 Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)

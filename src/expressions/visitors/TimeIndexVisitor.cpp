@@ -153,9 +153,8 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(
 
 Optimisation::TimeIndex TimeIndexVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
-    unsigned int varIndex = static_cast<unsigned int>(indexNode->value());
-    return optimEntityContainer_.getVariableTimeIndex(component_, varIndex);
+    const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(1));
+    return varNode->timeIndex();
 }
 
 Optimisation::TimeIndex TimeIndexVisitor::handleDual(const Nodes::FunctionNode* node)
