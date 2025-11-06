@@ -20,9 +20,9 @@
  */
 // this is needed to avoid macro redefinition conflicts on Windows
 #ifdef _WIN32
-  #pragma push_macro("ERROR")
-  #undef ERROR
-#endif 
+#pragma push_macro("ERROR")
+#undef ERROR
+#endif
 #include <HoursFieldBaseVisitor.h>
 //
 #include <BaseErrorListener.h>
@@ -31,7 +31,7 @@
 //
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 #ifdef _WIN32
-  #pragma pop_macro("ERROR")
+#pragma pop_macro("ERROR")
 #endif
 namespace Antares::Data::ShortTermStorage
 {
