@@ -106,14 +106,14 @@ void BendersDecomposition::collectConnectionVariables(std::vector<std::string>&&
     unsigned varIndex = startIndexInPb;
     for (const auto& name: names)
     {
-        connexionVars_[currentProblemId_].emplace_back(name, varIndex);
+        connectionVars_[currentProblemId_].emplace_back(name, varIndex);
         varIndex++;
     }
 }
 
 void BendersDecomposition::write(std::ostream& os) const
 {
-    for (const auto& [problemId, v]: connexionVars_)
+    for (const auto& [problemId, v]: connectionVars_)
     {
         for (const auto& [variableName, variableIndex]: v)
         {

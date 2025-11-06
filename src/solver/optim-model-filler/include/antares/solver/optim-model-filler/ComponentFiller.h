@@ -49,7 +49,7 @@ public:
     void write(std::ostream& os) const;
 
 private:
-    std::map<std::string, std::vector<ConnectionVariable>> connexionVars_;
+    std::map<std::string, std::vector<ConnectionVariable>> connectionVars_;
     std::string currentProblemId_ = "master";
 };
 
