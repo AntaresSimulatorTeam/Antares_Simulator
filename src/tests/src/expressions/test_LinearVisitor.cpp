@@ -295,13 +295,13 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(LinearityVisitor_name, MyDummyFixture)
 {
-    LinearityVisitor linearityVisitor;
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
     BOOST_CHECK_EQUAL(linearityVisitor.name(), "LinearityVisitor");
 }
 
 BOOST_FIXTURE_TEST_CASE(CheckTimeIndexNodeLinearity, MyDummyFixture)
 {
-    LinearityVisitor linearityVisitor;
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
     Node* literal1 = create<LiteralNode>(1.);
     Node* param1 = create<ParameterNode>("value");
     Node* expr1 = create<TimeIndexNode>(literal1, param1);
@@ -310,7 +310,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeIndexNodeLinearity, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnLiteralLinearity, MyDummyFixture)
 {
-    LinearityVisitor linearityVisitor;
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
     Node* literal1 = create<LiteralNode>(1.);
     Node* expr1 = create<TimeShiftNode>(literal1, literal1);
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
@@ -319,7 +319,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnLiteralLinearity, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnVariableLinearity, MyDummyFixture)
 {
-    LinearityVisitor linearityVisitor;
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
     Node* var1 = create<VariableNode>("variable1", 0);
     Node* lit1 = create<LiteralNode>(0);
     Node* expr1 = create<TimeShiftNode>(var1, lit1);
@@ -329,7 +329,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeShiftOnVariableLinearity, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnLiteralLinearity, MyDummyFixture)
 {
-    LinearityVisitor linearityVisitor;
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
     Node* literal = create<LiteralNode>(1.);
     Node* from = create<LiteralNode>(0.);
     Node* to = create<LiteralNode>(1.);
@@ -340,7 +340,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnLiteralLinearity, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnVariableLinearity, MyDummyFixture)
 {
-    LinearityVisitor linearityVisitor;
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
     Node* var1 = create<VariableNode>("variable1", 0);
     Node* from = create<LiteralNode>(0.);
     Node* to = create<LiteralNode>(1.);
@@ -350,7 +350,7 @@ BOOST_FIXTURE_TEST_CASE(CheckTimeSumOnVariableLinearity, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnLiteralLinearity, MyDummyFixture)
 {
-    LinearityVisitor linearityVisitor;
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
     Node* literal1 = create<LiteralNode>(1.);
     Node* expr1 = create<AllTimeSumNode>(literal1);
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
@@ -359,7 +359,7 @@ BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnLiteralLinearity, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(CheckAllTimeSumOnVariableLinearity, MyDummyFixture)
 {
-    LinearityVisitor linearityVisitor;
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
     Node* var1 = create<VariableNode>("variable1", 0);
     Node* expr1 = create<AllTimeSumNode>(var1);
     BOOST_CHECK(linearityVisitor.dispatch(expr1)
@@ -371,7 +371,8 @@ BOOST_FIXTURE_TEST_CASE(dual_reducedCost, MyDummyFixture)
     Node* dual = create<FunctionNode>(FunctionNodeType::dual,
                                       create<ParameterNode>("constraint1"),
                                       create<LiteralNode>(0));
-    BOOST_CHECK_EXCEPTION(LinearityVisitor().dispatch(dual),
+    BOOST_CHECK_EXCEPTION(LinearityVisitor(optimEntityContainer, ctx, components.front())
+                            .dispatch(dual),
                           NodeTypeShouldBeInExtraOutput,
                           [](const NodeTypeShouldBeInExtraOutput& e)
                           {
@@ -383,7 +384,8 @@ BOOST_FIXTURE_TEST_CASE(dual_reducedCost, MyDummyFixture)
     Node* reducedCost = create<FunctionNode>(FunctionNodeType::reduced_cost,
                                              create<ParameterNode>("var1"),
                                              create<LiteralNode>(0));
-    BOOST_CHECK_EXCEPTION(LinearityVisitor().dispatch(reducedCost),
+    BOOST_CHECK_EXCEPTION(LinearityVisitor(optimEntityContainer, ctx, components.front())
+                            .dispatch(reducedCost),
                           NodeTypeShouldBeInExtraOutput,
                           [](const NodeTypeShouldBeInExtraOutput& e)
                           {

@@ -23,7 +23,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
-#include <antares/optimisation/linear-problem-api/linearProblem.h>
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 #include "mockModelerObjects.h"
 
