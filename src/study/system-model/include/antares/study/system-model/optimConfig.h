@@ -35,9 +35,9 @@ constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
     switch (rhs)
     {
     case Location::MASTER:
-        return lhs == Location::MASTER;
+        return lhs == Location::MASTER || lhs == Location::MASTER_AND_SUBPROBLEMS;
     case Location::SUBPROBLEMS:
-        return lhs == Location::SUBPROBLEMS;
+        return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
     case Location::MASTER_AND_SUBPROBLEMS:
         return true;
     default:

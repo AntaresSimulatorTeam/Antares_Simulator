@@ -183,10 +183,6 @@ public:
         return nullptr;
     }
 
-    void WriteLP(const std::string&) const override
-    {
-    }
-
     double infinity() const override
     {
         return std::numeric_limits<double>::infinity();

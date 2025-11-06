@@ -204,15 +204,15 @@ class InMemoryWriter final: public Antares::Solver::IWriter
 public:
     mutable Solution solution_{};
 
-    void init(bool, const std::string&) override
+    void init(const std::string&) override
     {
         // No initialization needed for in-memory writer
     }
 
-    void writeProblem(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem) override
+    const std::filesystem::path& outputPath() const override
     {
+        static std::filesystem::path dummy;
+        return dummy;
     }
 
     void writeSimulationTable(

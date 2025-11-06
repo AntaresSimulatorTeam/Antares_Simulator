@@ -92,45 +92,48 @@ std::vector<std::string> VariableNames::names()
     return names_;
 }
 
-void MasterAndSubPbVariables::setProblemIdentifier(std::string id)
+void BendersDecomposition::setCurrentProblemId(std::string id)
 {
-    pbIdentifier_ = id;
+    currentProblemId_ = id;
 }
 
-void MasterAndSubPbVariables::add(const std::vector<std::string>& names, unsigned varsCountInPb)
+void BendersDecomposition::collectConnexionVariables(std::vector<std::string>&& varnames,
+                                                     unsigned varsCountInPb)
 {
+    std::vector<std::string> names = std::move(varnames);
     unsigned nbVars = names.size();
     unsigned startIndexInPb = varsCountInPb - nbVars;
     unsigned varIndex = startIndexInPb;
     for (const auto& name: names)
     {
-        masterAndSubPbVars_[pbIdentifier_].push_back({name, varIndex});
+        connexionVars_[currentProblemId_].emplace_back(name, varIndex);
         varIndex++;
     }
 }
 
-class VariablesBulkAddition
+void BendersDecomposition::write(std::ostream& os) const
+{
+    for (const auto& [problemId, v]: connexionVars_)
+    {
+        for (const auto& [variableName, variableIndex]: v)
+        {
+            os << problemId << '\t' << variableName << '\t' << variableIndex << '\n';
+        }
+    }
+}
+
+class AddVariableVisitor
 {
 public:
-    VariablesBulkAddition(LinearProblemApi::ILinearProblem& linear_problem,
-                          const VariableNames& variableNames);
+    AddVariableVisitor(const Variable& variable,
+                       LinearProblemApi::ILinearProblem& linear_problem,
+                       const VariableNames& variableNames,
+                       const Dimensions& dimensions);
 
-    void addVariable(double lb, double ub, bool integer, const Dimensions& dim) const;
-
-    void addVariable(const std::vector<double>& lb,
-                     double ub,
-                     bool integer,
-                     const Dimensions& dim) const;
-
-    void addVariable(double lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Dimensions& dim) const;
-
-    void addVariable(const std::vector<double>& lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Dimensions& dim) const;
+    void operator()(double lb, double ub) const;
+    void operator()(const std::vector<double>& lb, double ub) const;
+    void operator()(double lb, const std::vector<double>& ub) const;
+    void operator()(const std::vector<double>& lb, const std::vector<double>& ub) const;
 
     class BoundsSizeMismatch: public std::invalid_argument
     {
@@ -138,39 +141,39 @@ public:
     };
 
 private:
+    const bool isInteger_;
     LinearProblemApi::ILinearProblem& linear_problem_;
     const VariableNames& variableNames_;
+    const Dimensions& dims_;
 };
 
-VariablesBulkAddition::VariablesBulkAddition(LinearProblemApi::ILinearProblem& linear_problem,
-                                             const VariableNames& variableNames):
+AddVariableVisitor::AddVariableVisitor(const Variable& variable,
+                                       LinearProblemApi::ILinearProblem& linear_problem,
+                                       const VariableNames& variableNames,
+                                       const Dimensions& dimensions):
+    isInteger_(variable.Type() != ValueType::FLOAT),
     linear_problem_(linear_problem),
-    variableNames_(variableNames)
+    variableNames_(variableNames),
+    dims_(dimensions)
 {
 }
 
-void VariablesBulkAddition::addVariable(double lb,
-                                        double ub,
-                                        bool integer,
-                                        const Dimensions& dim) const
+void AddVariableVisitor::operator()(double lb, double ub) const
 {
     unsigned index = 0;
-    for (const auto& s: dim.getScenarioIndices())
+    for (const auto& s: dims_.getScenarioIndices())
     {
-        for (const auto t: dim.getTimesteps())
+        for (const auto t: dims_.getTimesteps())
         {
-            linear_problem_.addVariable(lb, ub, integer, variableNames_.name(index));
+            linear_problem_.addVariable(lb, ub, isInteger_, variableNames_.name(index));
             index++;
         }
     }
 }
 
-void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
-                                        double ub,
-                                        bool integer,
-                                        const Dimensions& dim) const
+void AddVariableVisitor::operator()(const std::vector<double>& lb, double ub) const
 {
-    auto count = dim.getNumberOfTimesteps();
+    auto count = dims_.getNumberOfTimesteps();
     if (lb.size() != count)
     {
         std::ostringstream errMessage;
@@ -180,22 +183,19 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     }
 
     unsigned index = 0;
-    for (const auto& s: dim.getScenarioIndices())
+    for (const auto& s: dims_.getScenarioIndices())
     {
-        for (const auto t: dim.getTimesteps())
+        for (const auto t: dims_.getTimesteps())
         {
-            linear_problem_.addVariable(lb[t], ub, integer, variableNames_.name(index));
+            linear_problem_.addVariable(lb[t], ub, isInteger_, variableNames_.name(index));
             index++;
         }
     }
 }
 
-void VariablesBulkAddition::addVariable(double lb,
-                                        const std::vector<double>& ub,
-                                        bool integer,
-                                        const Dimensions& dim) const
+void AddVariableVisitor::operator()(double lb, const std::vector<double>& ub) const
 {
-    auto count = dim.getNumberOfTimesteps();
+    auto count = dims_.getNumberOfTimesteps();
     if (ub.size() != count)
     {
         std::ostringstream errMessage;
@@ -204,22 +204,20 @@ void VariablesBulkAddition::addVariable(double lb,
     }
 
     unsigned index = 0;
-    for (const auto& s: dim.getScenarioIndices())
+    for (const auto& s: dims_.getScenarioIndices())
     {
-        for (const auto t: dim.getTimesteps())
+        for (const auto t: dims_.getTimesteps())
         {
-            linear_problem_.addVariable(lb, ub[t], integer, variableNames_.name(index));
+            linear_problem_.addVariable(lb, ub[t], isInteger_, variableNames_.name(index));
             index++;
         }
     }
 }
 
-void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
-                                        const std::vector<double>& ub,
-                                        bool integer,
-                                        const Dimensions& dim) const
+void AddVariableVisitor::operator()(const std::vector<double>& lb,
+                                    const std::vector<double>& ub) const
 {
-    auto count = dim.getNumberOfTimesteps();
+    auto count = dims_.getNumberOfTimesteps();
     if (lb.size() != ub.size() || lb.size() != count)
     {
         std::ostringstream errMessage;
@@ -229,11 +227,11 @@ void VariablesBulkAddition::addVariable(const std::vector<double>& lb,
     }
 
     unsigned index = 0;
-    for (const auto& s: dim.getScenarioIndices())
+    for (const auto& s: dims_.getScenarioIndices())
     {
-        for (const auto t: dim.getTimesteps())
+        for (const auto t: dims_.getTimesteps())
         {
-            linear_problem_.addVariable(lb[t], ub[t], integer, variableNames_.name(index));
+            linear_problem_.addVariable(lb[t], ub[t], isInteger_, variableNames_.name(index));
             index++;
         }
     }
@@ -243,12 +241,12 @@ ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& com
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository,
                                  Modeler::Config::Location targetLocation,
-                                 MasterAndSubPbVariables* masterAndSubPbvars):
+                                 BendersDecomposition* bendersDecomposition):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
     scenarioGroupRepository_(scenarioGroupRepository),
     targetLocation_(targetLocation),
-    masterAndSubPbvars_(masterAndSubPbvars)
+    bendersDecomposition_(bendersDecomposition)
 {
 }
 
@@ -281,7 +279,6 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         return;
     }
 
-    const auto& evaluationContext = optimEntityContainer_.getEvaluationContext(component_);
     Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
@@ -294,13 +291,14 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 
     const auto& variables = component_.getModel()->Variables();
     auto& pb = optimEntityContainer_.Problem();
-    for (const auto& variable: variables)
+
+    // Skip the variable in case of location mismatch
+    const auto locationFilter = std::views::filter(
+      [&](const auto& variable)
+      { return AreLocationsCompatible(variable.location(), targetLocation_); });
+
+    for (const auto& variable: variables | locationFilter)
     {
-        // Skip the variable in case of location mismatch
-        if (!AreLocationsCompatible(variable.location(), targetLocation_))
-        {
-            continue;
-        }
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == ValueType::BOOL ? 0 : -pb.infinity());
         const auto& ub = valueOrDefault(variable.UpperBound(),
@@ -312,32 +310,22 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         VariableNames variableNames;
         variableNames.makeNames(component_, variable, dims);
 
+        AddVariableVisitor addVariableVisitor(variable, pb, variableNames, dims);
         if (variable.isTimeDependent())
         {
-            // std::visit to handle the 4 cases: double/double, vector/double,
-            // double/vector and vector/vector.
-            std::visit(
-              [&pb, &variable, this, &dims, &variableNames](const auto& lb_, const auto& ub_)
-              {
-                  VariablesBulkAddition(pb, variableNames)
-                    .addVariable(lb_, ub_, variable.Type() != ValueType::FLOAT, dims);
-              },
-              lb.value(),
-              ub.value());
+            std::visit(addVariableVisitor, lb.value(), ub.value());
         }
         else
         {
-            VariablesBulkAddition(pb, variableNames)
-              .addVariable(lb.valueAsDouble(),
-                           ub.valueAsDouble(),
-                           variable.Type() != ValueType::FLOAT,
-                           dims);
+            addVariableVisitor(lb.valueAsDouble(), ub.valueAsDouble());
         }
 
-        if (variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS
-            && masterAndSubPbvars_)
+        // Add common variables
+        if (bendersDecomposition_
+            && variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
-            masterAndSubPbvars_->add(variableNames.names(), pb.variableCount());
+            bendersDecomposition_->collectConnexionVariables(variableNames.names(),
+                                                             pb.variableCount());
         }
     }
 }
@@ -386,6 +374,13 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
+    // For now we only handle constraints in subproblems
+    // TODO 6.3
+    if (targetLocation_ != Modeler::Config::Location::SUBPROBLEMS)
+    {
+        return;
+    }
+
     ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto& contraints = component_.getModel()->Constraints();
@@ -415,13 +410,13 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
-    for (const auto& objective: model->Objectives())
+    // Skip the objective in case of location mismatch
+    const auto locationFilter = std::views::filter(
+      [&](const auto& objective)
+      { return AreLocationsCompatible(objective.location(), targetLocation_); });
+
+    for (const auto& objective: model->Objectives() | locationFilter)
     {
-        // Skip the objective in case of location mismatch
-        if (!AreLocationsCompatible(objective.location(), targetLocation_))
-        {
-            continue;
-        }
         const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());
 
