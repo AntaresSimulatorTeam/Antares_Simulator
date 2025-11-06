@@ -13,8 +13,9 @@ class  ExprParser : public antlr4::Parser {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, NUMBER = 14, 
-    TIME = 15, IDENTIFIER = 16, COMPARISON = 17, WS = 18
+    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
+    T__14 = 15, NUMBER = 16, TIME = 17, IDENTIFIER = 18, COMPARISON = 19, 
+    WS = 20
   };
 
   enum {
@@ -204,6 +205,24 @@ public:
     ExprContext *expr();
     std::vector<ShiftContext *> shift();
     ShiftContext* shift(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  ReducedCostContext : public ExprContext {
+  public:
+    ReducedCostContext(ExprContext *ctx);
+
+    antlr4::tree::TerminalNode *IDENTIFIER();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  DualContext : public ExprContext {
+  public:
+    DualContext(ExprContext *ctx);
+
+    antlr4::tree::TerminalNode *IDENTIFIER();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

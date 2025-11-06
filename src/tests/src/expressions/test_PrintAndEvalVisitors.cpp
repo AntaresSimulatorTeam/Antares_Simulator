@@ -1297,6 +1297,20 @@ BOOST_FIXTURE_TEST_CASE(PrintAllTimeSumNode, MyDummyFixture)
     // --
 }
 
+BOOST_FIXTURE_TEST_CASE(PrintDualNode, MyDummyFixture)
+{
+    Node* dual = create<DualNode>("constraint", 0);
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint)");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
+{
+    Node* reducedCost = create<ReducedCostNode>("var", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(reducedCost) == "reduced_cost(var)");
+}
+
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
 {
     std::vector<int> emptyVector;
@@ -1463,6 +1477,12 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     EvalVisitor visitor(optimContainer, fillContext, components.back());
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
+
+    Node* reducedCost = create<ReducedCostNode>("my_const_variable",
+                                                0,
+                                                TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    eval = visitor.dispatch(reducedCost).valueAsDouble();
+    BOOST_CHECK_EQUAL(eval, 4.96);
 
     root = create<VariableNode>("my_const_variable", 0, TimeIndex::VARYING_IN_SCENARIO_ONLY);
     eval = visitor.dispatch(root).valueAsDouble();

@@ -43,6 +43,8 @@ public:
         return "economy";
     }
 
+    static constexpr Data::SimulationMode mode = Data::SimulationMode::Economy;
+
 public:
     //! \name Constructor & Destructor
     //@{
@@ -85,11 +87,6 @@ protected:
     void incrementProgression(Progression::Task& progression);
 
     void simulationEnd();
-
-    /*!
-    ** \brief Prepare clusters in 'must-run' mode
-    */
-    void prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year);
 
     void initializeState(Variable::State& state, uint numSpace);
     OptimisationsSimulationTable& getSimulationTable(uint numSpace);

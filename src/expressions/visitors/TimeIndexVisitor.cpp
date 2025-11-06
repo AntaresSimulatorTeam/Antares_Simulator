@@ -145,6 +145,17 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(
     return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ReducedCostNode* node)
+{
+    return node->timeIndex();
+}
+
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::DualNode* node)
+{
+    const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_, node->index());
+    return timeIndex;
+}
+
 TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
                                    const ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),
