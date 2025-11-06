@@ -306,11 +306,11 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
     auto& pb = optimEntityContainer_.Problem();
 
     // Skip the variable in case of location mismatch
-    const auto filter = std::views::filter(
+    const auto locationFilter = std::views::filter(
       [&](const auto& variable)
       { return AreLocationsCompatible(variable.location(), targetLocation_); });
 
-    for (const auto& variable: variables | filter)
+    for (const auto& variable: variables | locationFilter)
     {
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == ValueType::BOOL ? 0 : -pb.infinity());
@@ -435,11 +435,11 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
     // Skip the objective in case of location mismatch
-    const auto filter = std::views::filter(
+    const auto locationFilter = std::views::filter(
       [&](const auto& objective)
       { return AreLocationsCompatible(objective.location(), targetLocation_); });
 
-    for (const auto& objective: model->Objectives() | filter)
+    for (const auto& objective: model->Objectives() | locationFilter)
     {
         const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());
