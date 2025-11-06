@@ -125,9 +125,9 @@ void BendersDecomposition::write(std::ostream& os) const
 class AddVariableVisitor
 {
 public:
-    AddVariableVisitor(LinearProblemApi::ILinearProblem& linear_problem,
+    AddVariableVisitor(const Variable& variable,
+                       LinearProblemApi::ILinearProblem& linear_problem,
                        const VariableNames& variableNames,
-                       const bool isInteger,
                        const Dimensions& dimensions);
 
     void operator()(double lb, double ub) const;
@@ -141,19 +141,19 @@ public:
     };
 
 private:
+    const bool isInteger_;
     LinearProblemApi::ILinearProblem& linear_problem_;
     const VariableNames& variableNames_;
-    const bool isInteger_;
     const Dimensions& dims_;
 };
 
-AddVariableVisitor::AddVariableVisitor(LinearProblemApi::ILinearProblem& linear_problem,
+AddVariableVisitor::AddVariableVisitor(const Variable& variable,
+                                       LinearProblemApi::ILinearProblem& linear_problem,
                                        const VariableNames& variableNames,
-                                       const bool isInteger,
                                        const Dimensions& dimensions):
+    isInteger_(variable.Type() != ValueType::FLOAT),
     linear_problem_(linear_problem),
     variableNames_(variableNames),
-    isInteger_(isInteger),
     dims_(dimensions)
 {
 }
@@ -310,10 +310,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         VariableNames variableNames;
         variableNames.makeNames(component_, variable, dims);
 
-        AddVariableVisitor addVariableVisitor(pb,
-                                              variableNames,
-                                              variable.Type() != ValueType::FLOAT,
-                                              dims);
+        AddVariableVisitor addVariableVisitor(variable, pb, variableNames, dims);
         if (variable.isTimeDependent())
         {
             std::visit(addVariableVisitor, lb.value(), ub.value());
