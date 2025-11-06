@@ -1568,8 +1568,9 @@ std::any ExprParser::RightMuldivContext::accept(tree::ParseTreeVisitor * visitor
 }
 //----------------- RightAtomContext ------------------------------------------------------------------
 
-ExprParser::AtomContext* ExprParser::RightAtomContext::atom() {
-  return getRuleContext<ExprParser::AtomContext>(0);
+ExprParser::AtomContext* ExprParser::RightAtomContext::atom()
+{
+    return getRuleContext<ExprParser::AtomContext>(0);
 }
 
 ExprParser::RightAtomContext::RightAtomContext(Right_exprContext *ctx) { copyFrom(ctx); }
@@ -1577,9 +1578,9 @@ ExprParser::RightAtomContext::RightAtomContext(Right_exprContext *ctx) { copyFro
 
 std::any ExprParser::RightAtomContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<ExprVisitor*>(visitor))
-    return parserVisitor->visitRightAtom(this);
-  else
-    return visitor->visitChildren(this);
+    {
+        return parserVisitor->visitRightAtom(this);
+        else return visitor->visitChildren(this);
 }
 
 ExprParser::Right_exprContext* ExprParser::right_expr() {
@@ -1590,7 +1591,7 @@ ExprParser::Right_exprContext* ExprParser::right_expr(int precedence) {
   ParserRuleContext *parentContext = _ctx;
   size_t parentState = getState();
   ExprParser::Right_exprContext* _localctx = _tracker.createInstance<Right_exprContext>(_ctx, parentState);
-  ExprParser::Right_exprContext *previousContext = _localctx;
+  ExprParser::Right_exprContext* previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
   size_t startState = 14;
   enterRecursionRule(_localctx, 14, ExprParser::RuleRight_expr, precedence);
@@ -1611,7 +1612,7 @@ ExprParser::Right_exprContext* ExprParser::right_expr(int precedence) {
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case ExprParser::T__2: {
-        _localctx = _tracker.createInstance<RightExpressionContext>(_localctx);
+          _localctx = _tracker.createInstance<RightExpressionContext>(_localctx);
         _ctx = _localctx;
         previousContext = _localctx;
 
