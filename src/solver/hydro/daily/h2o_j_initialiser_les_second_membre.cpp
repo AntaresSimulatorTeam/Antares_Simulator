@@ -25,7 +25,9 @@
 
 namespace DoneesOptimisationJournaliere
 {
-void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
+void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles,
+                                     int NumeroDeProbleme,
+                                     const std::string& areaName)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
@@ -61,7 +63,8 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int 
     if (DonneesMensuelles->TurbineDuMois > turbineMax
         || DonneesMensuelles->TurbineDuMois < turbineMin)
     {
-        Antares::logs.warning() << "target turbine (" << DonneesMensuelles->TurbineDuMois
+        Antares::logs.warning() << "hydro daily heuristic for area " << areaName
+                                << " : target turbine (" << DonneesMensuelles->TurbineDuMois
                                 << ") outside of bounds ([" << turbineMin << " , " << turbineMax
                                 << "])";
     }
