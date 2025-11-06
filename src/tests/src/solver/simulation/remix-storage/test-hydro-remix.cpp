@@ -572,40 +572,48 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
 BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture<5>)
 {
     // 3 hydro units, same time horizon
-    HydroGen = {10., 20., 10., 20., 10.};       // Total = 70
-    HydroGen2 = {10., 20., 10., 20., 10.};      // Total = 70
-    HydroGen3 = {100., 200., 100., 200., 100.}; // Total = 700
-    // Total Hydro = {120, 240, 120, 240, 120}, Sum = 840, Mean = 168
+    HydroGen = {10., 20., 10., 20., 10.};       // Total = 70. Mean = 14.
+    HydroGen2 = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
+    HydroGen3 = {100., 200., 100., 200., 100.}; // Total = 700. Mean = 140.
+    // initial HydroSum = {120, 240, 120, 240, 120}, Sum = 840, Mean = 168
 
-    inflows = {20., 20., 20., 20., 20.};
-    inflows2 = {20., 20., 20., 20., 20.};
-    inflows3 = {50., 50., 50., 50., 50.};
+    // *** NEW CONSTRAINTS ***
+    // 1. Set inflows to match the mean generation for each reservoir
+    // This means if generation is flat, levels are flat.
+    std::ranges::fill(inflows, 14);   // Mean of HydroGen1
+    std::ranges::fill(inflows2, 14);  // Mean of HydroGen2
+    std::ranges::fill(inflows3, 140); // Mean of HydroGen3
 
-    init_level = init_level2 = 100.;
-    init_level3 = 500.;
-    capacity = capacity2 = 200.;
-    capacity3 = 1000.;
+    // 2. Set non-binding levels and capacities
+    init_level = init_level2 = init_level3 = 1000.;
+    capacity = capacity2 = capacity3 = 10000.;
 
-    std::ranges::fill(TotalGenNoHydro, 100.);
-
-    UnsupE = {10., 10., 10., 10., 10.};
+    // 3. Set driving signals
+    std::ranges::fill(TotalGenNoHydro, 100.); // Flat
+    UnsupE.assign(HydroGen.size(), 10.);
 
     callRemixStorageAlgorithmWith2or3storages(true);
 
-    // Expected: total hydro flattened to mean (840 / 5 = 168)
+    // --- Check Results ---
+
+    // 1. Check that total hydro generation is perfectly flat
     std::vector<double> HydroSum(HydroGen.size());
     for (size_t i = 0; i < HydroSum.size(); ++i)
     {
         HydroSum[i] = HydroGen[i] + HydroGen2[i] + HydroGen3[i];
     }
 
-    double mean_total_hydro = 168.0;
+    std::vector<double> expected_HydroSum = {168., 168., 168., 168., 168.};
+    BOOST_TEST(HydroSum == expected_HydroSum, boost::test_tools::per_element());
 
-    // Check near-flatness of total hydro output
-    for (double val: HydroSum)
-    {
-        BOOST_TEST(std::abs(val - mean_total_hydro) < 0.01);
-    }
+    // 2. (Optional but good) Check that individual reservoirs are also flat
+    std::vector<double> expected_Hydro1 = {14., 14., 14., 14., 14.};
+    std::vector<double> expected_Hydro2 = {14., 14., 14., 14., 14.};
+    std::vector<double> expected_Hydro3 = {140., 140., 140., 140., 140.};
+
+    BOOST_TEST(HydroGen == expected_Hydro1, boost::test_tools::per_element());
+    BOOST_TEST(HydroGen2 == expected_Hydro2, boost::test_tools::per_element());
+    BOOST_TEST(HydroGen3 == expected_Hydro3, boost::test_tools::per_element());
 }
 
 BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture<8>)
@@ -667,7 +675,6 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture<8>)
     // (Total Inflow - Total Generation) must equal (Change in Storage)
     double imbalance = std::abs((total_inflow_after - total_gen_after)
                                 - (total_final_level - total_init_level));
-
 
     BOOST_TEST(imbalance < 1e-3); // Flow perfectly conserved within tolerance
 }
