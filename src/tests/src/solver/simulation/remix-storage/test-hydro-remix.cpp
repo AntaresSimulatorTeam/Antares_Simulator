@@ -621,9 +621,6 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture<8>)
     init_level = 100.;
     init_level2 = 50.;
 
-    ovf.resize(HydroGen.size(), 0);
-    pump.resize(HydroGen.size(), 0);
-
     UnsupE.assign(HydroGen.size(), 0.); // Not relevant for flow conservation
 
     // ------------------------------
