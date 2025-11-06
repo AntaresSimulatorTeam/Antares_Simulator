@@ -274,7 +274,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
 
 EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(1));
+    const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
 
     if (const auto timeIndex = varNode->timeIndex();
         timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO

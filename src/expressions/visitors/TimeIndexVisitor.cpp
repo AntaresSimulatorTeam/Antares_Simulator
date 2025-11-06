@@ -153,7 +153,7 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(
 
 Optimisation::TimeIndex TimeIndexVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(1));
+    const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
     return varNode->timeIndex();
 }
 

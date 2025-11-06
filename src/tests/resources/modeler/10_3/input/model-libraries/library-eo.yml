@@ -63,6 +63,8 @@ library:
       extra-outputs:
         - id: load_parameter
           expression: load #test with only a parameter
+        - id: max_test
+          expression: max(load, 115)
 
     - id: simple_gen
       parameters:
