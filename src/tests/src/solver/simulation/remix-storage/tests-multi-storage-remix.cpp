@@ -3,6 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <fstream>>
 #include <unit_test_utils.h>
 #include <vector>
 
@@ -11,7 +12,6 @@
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
-#include <fstream>>
 
 using namespace Antares::Solver::Simulation;
 
@@ -30,7 +30,8 @@ struct STS_holder
         upRuleCurve.assign(nb_hours, capacity);
     }
 
-    std::shared_ptr<IStorageForRemix> createSTS(std::vector<double>& unsupE, const std::string& name)
+    std::shared_ptr<IStorageForRemix> createSTS(std::vector<double>& unsupE,
+                                                const std::string& name)
     {
         return makeSTSforRemix(withdrawal,
                                unsupE,
@@ -77,7 +78,7 @@ struct InputFixture
 
         std::stringstream debug;
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix, &debug);
-        std::ofstream outfile ("debug_sts_remix.txt");
+        std::ofstream outfile("debug_sts_remix.txt");
         outfile << debug.str();
     }
 

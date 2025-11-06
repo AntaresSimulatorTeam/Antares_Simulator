@@ -438,7 +438,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
         std::string filename("remix-" + std::to_string(problem.year) + "-"
                              + std::to_string(problem.weekInTheYear));
         std::string s = debugStream.str();
-        writer->addEntryFromBuffer(filename, s); 
+        writer->addEntryFromBuffer(filename, s);
     }
 }
 
