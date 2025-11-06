@@ -433,7 +433,7 @@ std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionCo
     {
         return handleMax(arglist);
     }
-    else if (functionName == "dual")
+    else if (functionName == "pow")
     {
         return handlePow(arglist);
     }
