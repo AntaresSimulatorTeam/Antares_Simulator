@@ -18,9 +18,11 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-//
-#pragma push_macro("ERROR")
-#undef ERROR
+// this is needed to avoid macro redefinition conflicts on Windows
+#ifdef _WIN32
+  #pragma push_macro("ERROR")
+  #undef ERROR
+#endif 
 #include <HoursFieldBaseVisitor.h>
 //
 #include <BaseErrorListener.h>
@@ -28,8 +30,9 @@
 #include "HoursFieldLexer.h"
 //
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
-#pragma pop_macro("ERROR")
-
+#ifdef _WIN32
+  #pragma pop_macro("ERROR")
+#endif
 namespace Antares::Data::ShortTermStorage
 {
 
