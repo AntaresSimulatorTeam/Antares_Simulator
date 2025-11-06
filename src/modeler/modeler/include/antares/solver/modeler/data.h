@@ -28,12 +28,19 @@
 namespace Antares::Modeler
 {
 
+enum class ResolutionMode : unsigned
+{
+    BENDERS_DECOMPOSITION = 0,
+    SEQUENTIAL_SUBPROBLEMS = 1
+};
+
 struct Data
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     std::unique_ptr<ModelerStudy::SystemModel::System> system;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
 };
 
 } // namespace Antares::Modeler

@@ -59,12 +59,12 @@ public:
       ILinearProblem& pb,
       const LinearProblemApi::ILinearProblemData& dataSeries,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-      MasterAndSubPbVariables* masterAndSubPbvars):
+      BendersDecomposition* bendersDecomposition):
         system_(system),
         dataSeries_(dataSeries),
         scenarioGroupRepository_(scenarioGroupRepository),
         optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository),
-        masterAndSubPbvars_(masterAndSubPbvars)
+        bendersDecomposition_(bendersDecomposition)
     {
     }
 
@@ -82,7 +82,7 @@ public:
                                                                       optimEntityContainer_,
                                                                       scenarioGroupRepository_,
                                                                       location,
-                                                                      masterAndSubPbvars_);
+                                                                      bendersDecomposition_);
             fillers.push_back(std::move(cf));
         }
 
@@ -100,7 +100,7 @@ private:
     const LinearProblemApi::ILinearProblemData& dataSeries_;
     const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
     Optimisation::OptimEntityContainer optimEntityContainer_;
-    MasterAndSubPbVariables* masterAndSubPbvars_ = nullptr;
+    BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
 void Modeler::run() const
@@ -142,8 +142,8 @@ void Modeler::run() const
       parameters.lastTimeStep,  // global = local
       0};
 
-    // Master & subproblem variables
-    MasterAndSubPbVariables masterAndSubPbvars;
+    // Sub problem
+    BendersDecomposition bendersDecomposition;
 
     // Master
     OrtoolsLinearProblem master_problem(isMip, parameters.solver);
@@ -151,9 +151,9 @@ void Modeler::run() const
                                               master_problem,
                                               *data.dataSeries,
                                               data.scenarioGroupRepository,
-                                              &masterAndSubPbvars);
+                                              &bendersDecomposition);
 
-    masterAndSubPbvars.setProblemIdentifier("master");
+    bendersDecomposition.setCurrentProblemId("master");
     master_builder.build(timeScenarioCtx, Antares::Modeler::Config::Location::MASTER);
 
     // Subproblem
@@ -166,9 +166,9 @@ void Modeler::run() const
                                                   subproblem,
                                                   *data.dataSeries,
                                                   data.scenarioGroupRepository,
-                                                  &masterAndSubPbvars);
+                                                  &bendersDecomposition);
 
-    masterAndSubPbvars.setProblemIdentifier("1-1");
+    bendersDecomposition.setCurrentProblemId("1-1");
     subproblem_builder.build(timeScenarioCtx, Antares::Modeler::Config::Location::SUBPROBLEMS);
 
     logs.info() << "Linear problem provided";
@@ -190,7 +190,7 @@ void Modeler::run() const
         Write(subproblem, output / "1-1.mps");
         Write(master_problem, output / "master.mps");
         std::ofstream of(output / "structure.txt");
-        masterAndSubPbvars.write(of);
+        bendersDecomposition.write(of);
     }
 
     logs.info() << "Launching resolution...";

@@ -33,23 +33,24 @@
 namespace Antares::Optimisation
 {
 
-struct MasterAndSubPbVar
+// Represents a variable shared by master and subproblems
+struct ConnexionVariable
 {
     std::string name;
     unsigned indexInProblem;
 };
 
-class MasterAndSubPbVariables
+class BendersDecomposition
 {
 public:
-    MasterAndSubPbVariables() = default;
-    void setProblemIdentifier(std::string id);
-    void add(const std::vector<std::string>& names, unsigned varsCountInPb);
+    BendersDecomposition() = default;
+    void setCurrentProblemId(std::string id);
+    void collectConnexionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
     void write(std::ostream& os) const;
 
 private:
-    std::string pbIdentifier_ = "master";
-    std::map<std::string, std::vector<MasterAndSubPbVar>> masterAndSubPbVars_;
+    std::map<std::string, std::vector<ConnexionVariable>> connexionVars_;
+    std::string currentProblemId_ = "master";
 };
 
 /**
@@ -68,7 +69,7 @@ public:
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository,
                              Modeler::Config::Location targetLocation,
-                             MasterAndSubPbVariables* masterAndSubPbvars = nullptr);
+                             BendersDecomposition* masterAndSubPbvars = nullptr);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
@@ -90,6 +91,6 @@ private:
     OptimEntityContainer& optimEntityContainer_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
     const Modeler::Config::Location targetLocation_;
-    MasterAndSubPbVariables* masterAndSubPbvars_ = nullptr;
+    BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 } // namespace Antares::Optimisation
