@@ -184,7 +184,7 @@ void Modeler::run() const
 
     if (!parameters.noOutput)
     {
-        writer_.init(!parameters.noOutput, simulationTableSuffix);
+        writer_.init(simulationTableSuffix);
         auto output = writer_.outputPath();
 
         Write(subproblem, output / "1-1.mps");

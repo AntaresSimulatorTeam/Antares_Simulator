@@ -204,7 +204,7 @@ class InMemoryWriter final: public Antares::Solver::IWriter
 public:
     mutable Solution solution_{};
 
-    void init(bool, const std::string&) override
+    void init(const std::string&) override
     {
         // No initialization needed for in-memory writer
     }
