@@ -292,7 +292,6 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         return;
     }
 
-    const auto& evaluationContext = optimEntityContainer_.getEvaluationContext(component_);
     Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
@@ -345,9 +344,9 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
                            dims);
         }
 
-        if ((variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS
-             || variable.location() == Modeler::Config::Location::MASTER)
-            && masterAndSubPbvars_)
+        // Add common variables
+        if (masterAndSubPbvars_
+            && variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
             masterAndSubPbvars_->add(variableNames.names(), pb.variableCount());
         }

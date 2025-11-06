@@ -23,6 +23,7 @@
 #include "antares/solver/modeler/Modeler.h"
 
 #include <chrono>
+#include <fstream>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
@@ -141,9 +142,21 @@ void Modeler::run() const
       parameters.lastTimeStep,  // global = local
       0};
 
-    // Sub problem
+    // Master & subproblem variables
     MasterAndSubPbVariables masterAndSubPbvars;
 
+    // Master
+    OrtoolsLinearProblem master_problem(isMip, parameters.solver);
+    SystemLinearProblemBuilder master_builder(data.system.get(),
+                                              master_problem,
+                                              *data.dataSeries,
+                                              data.scenarioGroupRepository,
+                                              &masterAndSubPbvars);
+
+    masterAndSubPbvars.setProblemIdentifier("master");
+    master_builder.build(timeScenarioCtx, Antares::Modeler::Config::Location::MASTER);
+
+    // Subproblem
     OrtoolsLinearProblem subproblem(isMip, parameters.solver);
 
     // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
@@ -158,19 +171,6 @@ void Modeler::run() const
     masterAndSubPbvars.setProblemIdentifier("1-1");
     subproblem_builder.build(timeScenarioCtx, Antares::Modeler::Config::Location::SUBPROBLEMS);
 
-    // Master
-    OrtoolsLinearProblem master_problem(isMip, parameters.solver);
-    SystemLinearProblemBuilder master_builder(data.system.get(),
-                                              master_problem,
-                                              *data.dataSeries,
-                                              data.scenarioGroupRepository,
-                                              &masterAndSubPbvars);
-
-    masterAndSubPbvars.setProblemIdentifier("master");
-    master_builder.build(timeScenarioCtx, Antares::Modeler::Config::Location::MASTER);
-
-    masterAndSubPbvars.write(std::cout);
-
     logs.info() << "Linear problem provided";
 
     logs.info() << "Number of variables: " << subproblem.variableCount();
@@ -182,8 +182,15 @@ void Modeler::run() const
 
     const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
     writer_.init(!parameters.noOutput, simulationTableSuffix);
-    writer_.writeProblem(subproblem, "1-1.mps");
-    writer_.writeProblem(master_problem, "master.mps");
+
+    {
+        auto output = writer_.outputPath();
+
+        Write(subproblem, output / "1-1.mps");
+        Write(master_problem, output / "master.mps");
+        std::ofstream of(output / "structure.txt");
+        masterAndSubPbvars.write(of);
+    }
 
     logs.info() << "Launching resolution...";
     measure.reset();
