@@ -47,7 +47,6 @@
 
 using namespace operations_research;
 using namespace Antares::Optimisation;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::IO;
@@ -74,18 +73,10 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
 }
 
-std::once_flag isFirstWeeklyProblemEver;
-
-static void setProblemIdToMaster(std::string& problemId)
-{
-    problemId = "master";
-}
-
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Modeler::Data* modelerData,
-  OptimEntityContainer& optimEntityContainer,
-  BendersDecomposition* bendersDecomposition)
+  OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
@@ -96,7 +87,7 @@ static void fillModelerComponents(
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
                                             Modeler::Config::Location::SUBPROBLEMS,
-                                            bendersDecomposition));
+                                            nullptr));
     }
 }
 
@@ -126,23 +117,24 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
-void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
-                        FillContext& fillCtx,
-                        const PROBLEME_HEBDO* problemeHebdo,
-                        OptimEntityContainer& optimEntityContainer,
-                        bool namedProblems,
-                        BendersDecomposition* bendersDecomposition = nullptr)
+static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
+  LinearProblemDataImpl::LinearProblemData();
+
+// Returns a non-owning pointer
+MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
+                             FillContext& fillCtx,
+                             const PROBLEME_HEBDO* problemeHebdo,
+                             OptimEntityContainer& optimEntityContainer,
+                             bool namedProblems)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(ortoolsProblem, problemeHebdo, namedProblems));
+      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
-        fillModelerComponents(fillersCollection,
-                              problemeHebdo->modelerData,
-                              optimEntityContainer,
-                              bendersDecomposition);
+        // All LP variables coordinates (component id, variable id, scenario, time step)
+        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, optimEntityContainer);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
@@ -165,6 +157,8 @@ void fillOrtoolsProblem(LegacyOrtoolsLinearProblem& ortoolsProblem,
 
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
+
+    return ortoolsProblem.getMpSolver();
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
@@ -195,31 +189,15 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
       = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
-    // This instance should be created in problemeHebdo, so that it lives longer
-    // than a week, as it is currently the case.
-    std::unique_ptr<BendersDecomposition> bendersDecomposition; // is currently nullptr
-    if (modelerData
-        && modelerData->resolutionMode == Modeler::ResolutionMode::BENDERS_DECOMPOSITION)
-    {
-        bendersDecomposition = std::make_unique<BendersDecomposition>();
-        std::string problemId = optPeriodStringGenerator.to_string();
-        // If current weekly problem is first problem ever, then set problem id to "master"
-        std::call_once(isFirstWeeklyProblemEver, setProblemIdToMaster, problemId);
-        bendersDecomposition->setCurrentProblemId(problemId);
-    }
-
     OptimEntityContainer optimEntityContainer(ortoolsProblem,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    fillOrtoolsProblem(ortoolsProblem,
-                       fillCtx,
-                       problemeHebdo,
-                       optimEntityContainer,
-                       problemeHebdo->NamedProblems,
-                       bendersDecomposition.get());
-
-    auto* solver = ortoolsProblem.getMpSolver();
+    auto* solver = fillAndGetMpSolver(ortoolsProblem,
+                                      fillCtx,
+                                      problemeHebdo,
+                                      optimEntityContainer,
+                                      problemeHebdo->NamedProblems);
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
 
@@ -364,8 +342,11 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        fillOrtoolsProblem(infeasibleProblem, fillCtx, problemeHebdo, optimEntityContainer, true);
-        std::unique_ptr<MPSolver> MPproblem(infeasibleProblem.getMpSolver());
+        std::unique_ptr<MPSolver> MPproblem(fillAndGetMpSolver(infeasibleProblem,
+                                                               fillCtx,
+                                                               problemeHebdo,
+                                                               optimEntityContainer,
+                                                               true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
