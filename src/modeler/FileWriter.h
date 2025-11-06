@@ -44,7 +44,7 @@ namespace Antares::Modeler
 class FileWriter: public Solver::IWriter
 {
 public:
-    void init(bool setOutput, const std::string& simulationId) override;
+    void init(const std::string& simulationId) override;
 
     void writeSimulationTable(
       const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
@@ -60,6 +60,5 @@ private:
     const std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
     std::string simulationId_;
-    bool output{true};
 };
 } // namespace Antares::Modeler
