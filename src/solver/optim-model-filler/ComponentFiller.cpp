@@ -279,7 +279,6 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         return;
     }
 
-    const auto& evaluationContext = optimEntityContainer_.getEvaluationContext(component_);
     Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
@@ -292,13 +291,14 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 
     const auto& variables = component_.getModel()->Variables();
     auto& pb = optimEntityContainer_.Problem();
-    for (const auto& variable: variables)
+
+    // Skip the variable in case of location mismatch
+    const auto locationFilter = std::views::filter(
+      [&](const auto& variable)
+      { return AreLocationsCompatible(variable.location(), targetLocation_); });
+
+    for (const auto& variable: variables | locationFilter)
     {
-        // Skip the variable in case of location mismatch
-        if (!AreLocationsCompatible(variable.location(), targetLocation_))
-        {
-            continue;
-        }
         const auto& lb = valueOrDefault(variable.LowerBound(),
                                         variable.Type() == ValueType::BOOL ? 0 : -pb.infinity());
         const auto& ub = valueOrDefault(variable.UpperBound(),
@@ -320,6 +320,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
             addVariableVisitor(lb.valueAsDouble(), ub.valueAsDouble());
         }
 
+        // Add common variables
         if (bendersDecomposition_
             && variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
@@ -409,13 +410,13 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
-    for (const auto& objective: model->Objectives())
+    // Skip the objective in case of location mismatch
+    const auto locationFilter = std::views::filter(
+      [&](const auto& objective)
+      { return AreLocationsCompatible(objective.location(), targetLocation_); });
+
+    for (const auto& objective: model->Objectives() | locationFilter)
     {
-        // Skip the objective in case of location mismatch
-        if (!AreLocationsCompatible(objective.location(), targetLocation_))
-        {
-            continue;
-        }
         const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());
 

@@ -209,11 +209,10 @@ public:
         // No initialization needed for in-memory writer
     }
 
-    void writeProblem(
-      [[maybe_unused]] const Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem&
-        problem,
-      const std::string&) override
+    const std::filesystem::path& outputPath() const override
     {
+        static std::filesystem::path dummy;
+        return dummy;
     }
 
     void writeSimulationTable(

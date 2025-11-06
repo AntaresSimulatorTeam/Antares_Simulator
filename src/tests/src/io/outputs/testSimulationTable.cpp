@@ -635,10 +635,6 @@ public:
         return nullptr;
     }
 
-    void Write(const std::string&) const override
-    {
-    }
-
     double infinity() const override
     {
         return std::numeric_limits<double>::infinity();

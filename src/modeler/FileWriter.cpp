@@ -51,6 +51,11 @@ void FileWriter::init(bool setOutput, const std::string& simulationId)
     }
 }
 
+const std::filesystem::path& FileWriter::outputPath() const
+{
+    return outputPath_;
+}
+
 void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
@@ -79,15 +84,4 @@ FileWriter::FileWriter(std::filesystem::path path):
 {
 }
 
-void FileWriter::writeProblem(
-  const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem,
-  const std::string& filename)
-{
-    if (output)
-    {
-        logs.info() << "Writing " << filename << "...";
-        const auto lp_path = outputPath_ / filename;
-        problem.Write(lp_path.string());
-    }
-}
 } // namespace Antares::Modeler

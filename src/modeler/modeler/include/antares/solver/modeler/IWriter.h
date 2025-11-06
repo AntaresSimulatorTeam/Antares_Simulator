@@ -54,6 +54,7 @@ class Component;
 
 namespace Antares::Solver
 {
+// TODO this class needs to be revamped
 class IWriter
 {
 public:
@@ -66,10 +67,6 @@ public:
       const Optimisation::OptimEntityContainer& variableContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const
       = 0;
-
-    virtual void writeProblem(
-      const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem,
-      const std::string& filename)
-      = 0;
+    virtual const std::filesystem::path& outputPath() const = 0;
 };
 } // namespace Antares::Solver
