@@ -572,9 +572,10 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
 BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture<5>)
 {
     // 3 hydro units, same time horizon
-    HydroGen = {10., 20., 10., 20., 10.};
-    HydroGen2 = {10., 20., 10., 20., 10.};
-    HydroGen3 = {100., 200., 100., 200., 100.}; // bigger hydro
+    HydroGen = {10., 20., 10., 20., 10.};       // Total = 70
+    HydroGen2 = {10., 20., 10., 20., 10.};      // Total = 70
+    HydroGen3 = {100., 200., 100., 200., 100.}; // Total = 700
+    // Total Hydro = {120, 240, 120, 240, 120}, Sum = 840, Mean = 168
 
     inflows = {20., 20., 20., 20., 20.};
     inflows2 = {20., 20., 20., 20., 20.};
@@ -586,19 +587,19 @@ BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture<5>)
     capacity3 = 1000.;
 
     std::ranges::fill(TotalGenNoHydro, 100.);
-    UnsupE.assign(HydroGen.size(), 0.);
+
+    UnsupE = {10., 10., 10., 10., 10.};
 
     callRemixStorageAlgorithmWith2or3storages(true);
 
-    // Expected: total hydro flattened to mean (sum(HydroGen)/5)
+    // Expected: total hydro flattened to mean (840 / 5 = 168)
     std::vector<double> HydroSum(HydroGen.size());
     for (size_t i = 0; i < HydroSum.size(); ++i)
     {
         HydroSum[i] = HydroGen[i] + HydroGen2[i] + HydroGen3[i];
     }
 
-    double mean_total_hydro = std::accumulate(HydroSum.begin(), HydroSum.end(), 0.0)
-                              / HydroSum.size();
+    double mean_total_hydro = 168.0;
 
     // Check near-flatness of total hydro output
     for (double val: HydroSum)
@@ -615,11 +616,13 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture<8>)
     HydroGen = {10., 15., 20., 15., 10., 5., 10., 15.};
     HydroGen2 = {5., 10., 15., 10., 5., 0., 5., 10.};
 
-    inflows = {12., 18., 22., 18., 12., 8., 12., 18.};
+    inflows = {12., 18., 20., 18., 12., 8., 12., 18.};
     inflows2 = {6., 12., 16., 12., 6., 2., 6., 12.};
 
     init_level = 100.;
     init_level2 = 50.;
+    capacity = 500.;
+    capacity2 = 300.;
 
     UnsupE.assign(HydroGen.size(), 0.); // Not relevant for flow conservation
 
@@ -651,10 +654,20 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture<8>)
     double total_final_level = levels.back() + levels2.back();
 
     // ------------------------------
-    // Check flow conservation: inflows - generation = Δstorage
+    // Check flow conservation
     // ------------------------------
+
+    // 1. Check that total inflows were not modified
+    BOOST_TEST(std::abs(total_inflow_after - total_inflow_before) < 1e-3);
+
+    // 2. Check that total generation was conserved (remixing just *shifts* energy)
+    BOOST_TEST(std::abs(total_gen_after - total_gen_before) < 1e-3);
+
+    // 3. Check the main flow balance equation:
+    // (Total Inflow - Total Generation) must equal (Change in Storage)
     double imbalance = std::abs((total_inflow_after - total_gen_after)
                                 - (total_final_level - total_init_level));
+
 
     BOOST_TEST(imbalance < 1e-3); // Flow perfectly conserved within tolerance
 }
