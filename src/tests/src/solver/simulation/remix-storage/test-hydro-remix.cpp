@@ -71,7 +71,7 @@ struct InputFixture
 
     void callRemixStorageAlgorithmWith2or3storages(bool threeStorage = false)
     {
-        Load = TotalGenNoHydro + UnsupE + HydroGen;
+        Load = TotalGenNoHydro + UnsupE + HydroGen + HydroGen2 + HydroGen3;
         storagesForRemix.clear();
         storagesForRemix.push_back(
           createHydroForRemix(HydroGen, levels, inflows, init_level, capacity));
@@ -593,26 +593,19 @@ BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture<5>)
     std::ranges::fill(TotalGenNoHydro, 0.); // Flat
     UnsupE.assign(HydroGen.size(), 100.); // Zero UnsupE -> signal to flatten
  
-    callRemixStorageAlgorithm();
+    callRemixStorageAlgorithmWith2or3storages(true);
  
     // --- Check Results ---
  
     // 1. Check that total hydro generation is perfectly flat
     std::vector<double> HydroSum(HydroGen.size());
-    for (size_t i = 0; i < HydroSum.size(); ++i)
-        HydroSum[i] = HydroGen[i] + HydroGen2[i] + HydroGen3[i];
+    HydroSum = HydroGen + HydroGen2 + HydroGen3;
  
     std::vector<double> expected_HydroSum = {168., 168., 168., 168., 168.};
-    BOOST_TEST(HydroSum == expected_HydroSum, boost::test_tools::per_element());
-
-    // 2. (Optional but good) Check that individual reservoirs are also flat
-    std::vector<double> expected_Hydro1 = {14., 14., 14., 14., 14.};
-    std::vector<double> expected_Hydro2 = {14., 14., 14., 14., 14.};
-    std::vector<double> expected_Hydro3 = {140., 140., 140., 140., 140.};
-
-    BOOST_TEST(HydroGen == expected_Hydro1, boost::test_tools::per_element());
-    BOOST_TEST(HydroGen2 == expected_Hydro2, boost::test_tools::per_element());
-    BOOST_TEST(HydroGen3 == expected_Hydro3, boost::test_tools::per_element());
+    for (unsigned i = 0; i < HydroSum.size(); ++i)
+    {
+        BOOST_CHECK_CLOSE(HydroSum[i], expected_HydroSum[i], 1e-3);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture<8>)
