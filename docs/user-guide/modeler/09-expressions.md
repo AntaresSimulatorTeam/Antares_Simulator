@@ -6,12 +6,13 @@ They allow a large flexibility in defining objects of optimization.
 
 Expressions can only be found in [models](../02-inputs.md#Models) (defined in libraries yaml files).
 
-More specifically, they can be found in the following parts of a model : 
+More specifically, they can be found in the following contexts inside a model : 
 - **constraints**
 - **binding-constraints**
 - **objective-contributions**
 - **port-field-definitions**
 - in fields **lower-bound** and **upper-bound** of **variables**.
+- **extra-output**
 
 
 Many elements can be found in an expression. In the following sections, we give a list of these elements, but have in mind that all these elements cannot be used in any kind of expression.
@@ -150,6 +151,19 @@ You can aggregate incoming ports using the following operator:
 expression: sum_connections(dc_port.flow) = 0
 ~~~
 
+### Dual operator
+
+To be done
+
+### Power operator
+
+To be done
+
+### Max operator
+
+To be done
+
+
 ## In which expression elements can be used
 
 ### Operators
@@ -157,23 +171,25 @@ expression: sum_connections(dc_port.flow) = 0
 **Caution** : multiplying (*) or dividing (/) 2 (references to) variables is always forbidden.
 We only multiply/divide scalars, parameters, or vaiables to scalars/parameters. 
 
-|Location                     | [+-]  | [*/] | [<>=] |  Time | Port | Scenario | Dual | Power | Max | sum |
+|Context                      | [+-]  | [*/] | [<>=] |  Time | Port | Scenario | Dual | Power | Max | sum |
 |-----------------------------|-------|------|-------|-------|------|----------|------|-------|-----|-----|
-|constraints                  |  x    |   x  |  x    |   x   |  x   |    ?     |   o  |   o   |  o  |  o  |
-|binding-constraints          |  x    |   x  |  x    |   x   |  x   |    ?     |   o  |   o   |  o  |  o  |
-|objective-contributions      |  o    |   x  |  o    |   o   |  o   |    ?     |   o  |   o   |  o  |  o  |
-|port-field-definitions       |  x    |   x  |  o    |   o   |  o   |    ?     |   o  |   o   |  o  |  o  |
-|variable bounds              |  x    |   x  |  o    |   x   |  o   |    ?     |   o  |   o   |  o  |  o  |
+|constraints                  |  x    |   x  |  x    |   x   |  x   |    ?     |   ?  |   ?   |  ?  |  ?  |
+|binding-constraints          |  x    |   x  |  x    |   x   |  x   |    ?     |   ?  |   ?   |  ?  |  ?  |
+|objective-contributions      |  o    |   x  |  o    |   o   |  o   |    ?     |   ?  |   ?   |  ?  |  ?  |
+|port-field-definitions       |  x    |   x  |  o    |   o   |  o   |    ?     |   ?  |   ?   |  ?  |  ?  |
+|variable bounds              |  x    |   x  |  o    |   x   |  o   |    ?     |   ?  |   ?   |  ?  |  ?  |
+|extra-output                 |  ?    |   ?  |  ?    |   ?   |  ?   |    ?     |   ?  |   ?   |  ?  |  ?  |
 
 ### References to elements defined elsewhere
 
-|Location                     | variable  | parameter| Port |
+|Context                      | variable  | parameter| Port |
 |-----------------------------|-----------|----------|------|
 |constraints                  |  x        |   x      |  x   |
 |binding-constraints          |  x        |   x      |  x   |
 |objective-contributions      |  o        |   x      |  o   |
 |port-field-definitions       |  x        |   x      |  o   |
 |variable bounds              |  0        |   x      |  o   |
+|extra-output                 |  ?        |   ?      |  ?   |
 
 
  
