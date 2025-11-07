@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <functional>
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/TimeSumNode.h"
@@ -53,7 +55,6 @@ public:
     std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override;
     std::any visitTimeShift(ExprParser::TimeShiftContext* context) override;
     std::any handleMax(ExprParser::ArgListContext* context);
-    std::any handlePow(ExprParser::ArgListContext* arglist);
     std::any visitFunction(ExprParser::FunctionContext* context) override;
     std::any visitArgList(ExprParser::ArgListContext* context) override;
     std::any visitTimeSum(ExprParser::TimeSumContext* context) override;
@@ -72,6 +73,12 @@ public:
     std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
     std::any handleDual(ExprParser::ArgListContext* context);
     std::any handleReducedCost(ExprParser::ArgListContext* context);
+    template<class T>
+    std::any processPower(std::vector<T*> exprContexts,
+                          const std::function<std::string()>& toStringTreeCallBack);
+    std::any visitPower(ExprParser::PowerContext* context) override;
+    std::any visitRightPower(ExprParser::RightPowerContext* context) override;
+    std::any visitShiftPower(ExprParser::ShiftPowerContext* context) override;
 
 private:
     Expressions::Registry<Node>& registry_;
@@ -80,6 +87,8 @@ private:
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
     PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
+    template<class T>
+    std::any ProcessChildren(const std::vector<T*>& exprContexts);
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
@@ -398,6 +407,52 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     return static_cast<Node*>(
       registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
 }
+template<class T>
+std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts,
+                                        const std::function<std::string()>& toStringTreeCallBack)
+{
+    if (exprContexts.size() != 2)
+    {
+        throw std::invalid_argument("power operator expect only two arguments got "
+                                    + std::to_string(exprContexts.size()) + " in "
+                                    + toStringTreeCallBack());
+    }
+    if (exprContexts.at(0) == nullptr)
+    {
+        throw std::invalid_argument("bad power expression, the base is invalid in "
+                                    + toStringTreeCallBack());
+    }
+    if (exprContexts.at(1) == nullptr)
+    {
+        throw std::invalid_argument("bad power expression, the exponent is invalid in "
+                                    + toStringTreeCallBack());
+    }
+    const auto powerExpr = std::any_cast<std::vector<Node*>>(ProcessChildren(exprContexts));
+    return static_cast<Node*>(
+      registry_.create<FunctionNode>(FunctionNodeType::pow, powerExpr.at(0), powerExpr.at(1)));
+}
+
+std::any ConvertorVisitor::visitPower(ExprParser::PowerContext* context)
+{
+    auto exprContexts = context->expr();
+    auto toStringTreeCallBack = [&context]() { return context->toStringTree(true); };
+    return processPower(exprContexts, toStringTreeCallBack);
+}
+
+std::any ConvertorVisitor::visitRightPower(ExprParser::RightPowerContext* context)
+{
+    auto exprContexts = context->right_expr();
+    auto toStringTreeCallBack = [&context]() { return context->toStringTree(true); };
+    return processPower(exprContexts, toStringTreeCallBack);
+}
+
+std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* context)
+{
+    auto base = std::any_cast<Node*>(context->shift_expr()->accept(this));
+    auto exponent = std::any_cast<Node*>(context->right_expr()->accept(this));
+    return static_cast<Node*>(
+      registry_.create<FunctionNode>(FunctionNodeType::pow, base, exponent));
+}
 
 std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
 {
@@ -408,18 +463,6 @@ std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
                                     + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
-}
-
-std::any ConvertorVisitor::handlePow(ExprParser::ArgListContext* context)
-{
-    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
-    if (nodes.size() != 2)
-    {
-        throw std::invalid_argument("pow operator expect exactly 2 operands got "
-                                    + std::to_string(nodes.size()));
-    }
-    return static_cast<Node*>(
-      registry_.create<FunctionNode>(FunctionNodeType::pow, nodes.at(0), nodes.at(1)));
 }
 
 std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
@@ -438,16 +481,13 @@ std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionCo
     {
         return handleMax(arglist);
     }
-    else if (functionName == "pow")
-    {
-        return handlePow(arglist);
-    }
+
     throw std::invalid_argument("Invalid function: '" + functionName + "'");
 }
 
-std::any ConvertorVisitor::visitArgList(ExprParser::ArgListContext* context)
+template<class T>
+std::any ConvertorVisitor::ProcessChildren(const std::vector<T*>& exprContexts)
 {
-    const auto exprContexts = context->expr();
     std::vector<Node*> nodes(exprContexts.size());
     for (unsigned int i = 0; i < exprContexts.size(); ++i)
     {
@@ -455,6 +495,12 @@ std::any ConvertorVisitor::visitArgList(ExprParser::ArgListContext* context)
         nodes[i] = std::any_cast<Node*>(expr->accept(this));
     }
     return nodes;
+}
+
+std::any ConvertorVisitor::visitArgList(ExprParser::ArgListContext* context)
+{
+    const auto exprContexts = context->expr();
+    return ProcessChildren(exprContexts);
 }
 
 Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr)
