@@ -78,8 +78,8 @@ public:
       const Antares::ModelerStudy::SystemModel::Component& component,
       unsigned int index) const
     {
-        const auto* model = component.getModel();
-        const auto& modelVar = model->Variables().at(index);
+        auto* model = component.getModel();
+        auto& modelVar = model->Variables().at(index);
         bool isVarTimeDep = modelVar.isTimeDependent();
         bool isVarScenarioDep = modelVar.IsScenarioDependent();
         return Optimisation::convertToTimeIndex(isVarTimeDep, isVarScenarioDep);
