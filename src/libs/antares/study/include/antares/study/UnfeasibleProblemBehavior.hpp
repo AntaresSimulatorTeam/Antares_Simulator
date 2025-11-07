@@ -49,7 +49,7 @@ const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
  *  \return displayName
  */
 std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
-#ifdef BUILD_UI
+#endif
 
 /*!
  *  \brief Define if MPS must be exported in case of unfeasible problem
