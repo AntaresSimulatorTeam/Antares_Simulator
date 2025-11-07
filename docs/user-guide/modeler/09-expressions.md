@@ -153,11 +153,12 @@ expression: sum_connections(dc_port.flow) = 0
 
 ### Dual operators
 
-In some cases, we need to access dual results of variables / constraints in the linear problem.
+In some cases, we need to access dual results of variables / constraints of the linear problem.
+For both case, there are a different unary operator : 
 - dual result of a variable of id **my_var** is accessed by **-reduced_cost(myVar)**
 - dual result of a constraint of if **my_constraint** is accessed by **dual(myConstraint)**
 
-Note that dual results can only used within an expression in the context of an extra output. 
+Note that dual results can only used within an expression whose context is an extra output. 
 
 **Exemple** : 
 
@@ -179,11 +180,46 @@ models:
 
 ### Power operator
 
-To be done
+This unary operator **^** is used within an expression whose context is an extra output.
+It can apply only to a reference an existing variable.
+
+**Example :** 
+
+```yaml
+models:
+  - id: myModel
+    variables:
+    - id: myVar
+    parameters:
+    - id: myParam
+    extra-outputs:
+    - id: myOutput
+      expression: myVar^(2 + myParam)
+```
 
 ### Max operator
 
-To be done
+This binary operator **max(u, v)** is used inside an expression whose context is either **constraints** or **extra-output**.
+- in the context of a constraint, the 2 operands must be parameters or literals
+- in the context of an output, there are no restriction on operands.
+
+**Example :**
+
+```yaml
+models:
+  - id: myModel
+    variables:
+    - id: x
+    parameters:
+    - id: a
+    - id: b
+    constraints:
+    - id: myConstraint
+      expression: x < max(a,b)
+    extra-outputs:
+    - id: myOutput
+      expression: max(x, a*b)
+```
 
 
 ## Cases where elements can be used in expressions
