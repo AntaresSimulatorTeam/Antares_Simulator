@@ -151,17 +151,17 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
           ProblemeLineairePartieFixe[i].IndicesColonnes,
           CorrespondanceDesContraintes[i]);
 
-          const int NbPdt = NbJoursDUnProbleme[i];
+        const int NbPdt = NbJoursDUnProbleme[i];
         for (int j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
         {
             ProblemeLineairePartieFixe[i].CoutLineaire[j] = 0.0;
         }
-       
-        for(int pdt = 0; pdt < NbPdt; pdt++)
+
+        for (int pdt = 0; pdt < NbPdt; pdt++)
         {
-          ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi[pdt]]
-          = 1.0;
+            ProblemeLineairePartieFixe[i]
+              .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi[pdt]]
+              = 1.0;
         }
 
         ProblemeLineairePartieFixe[i]

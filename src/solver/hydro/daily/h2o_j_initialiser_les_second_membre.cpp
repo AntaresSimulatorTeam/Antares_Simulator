@@ -20,6 +20,7 @@
 */
 
 #include <algorithm>
+
 #include <antares/logs/logs.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"

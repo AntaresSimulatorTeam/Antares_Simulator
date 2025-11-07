@@ -110,8 +110,8 @@ struct CORRESPONDANCE_DES_VARIABLES
     std::vector<int> NumeroDeVariableTurbine; /* Turbines */
     // int NumeroDeLaVariableMu{0};              /* Variable de deversement (total sur la periode)
     // */
-    std::vector<int> NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible quand le turbine
-                             est inferieur au turbine cible */
+    std::vector<int> NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible quand
+                             le turbine est inferieur au turbine cible */
 
     int NumeroDeLaVariableXiPlus{0};  /* Ecart global positif */
     int NumeroDeLaVariableXiMoins{0}; /* Ecart global négatif */

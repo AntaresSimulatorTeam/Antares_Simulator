@@ -44,13 +44,11 @@ void H2O_j_ConstruireLesVariables(
         Xmax[Var] = 0.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         Var++;
-      
     }
-    
-// is there any reason why this loop is separate from the previous one? (equivalent solution?)
+
+    // is there any reason why this loop is separate from the previous one? (equivalent solution?)
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-       
         CorrespondanceDesVariables.NumeroDeLaVariableXi[Pdt] = Var;
         Xmin[Var] = 0.0;
         Xmax[Var] = LINFINI;
@@ -59,7 +57,6 @@ void H2O_j_ConstruireLesVariables(
         Var++;
     }
 
-  
     // --- Variables globales xi_plus et xi_moins ---
     CorrespondanceDesVariables.NumeroDeLaVariableXiPlus = Var;
     Xmin[Var] = 0.0;
