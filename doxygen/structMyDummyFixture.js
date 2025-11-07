@@ -1,7 +1,7 @@
 var structMyDummyFixture =
 [
     [ "MyDummyFixture", "structMyDummyFixture.html#a388448fc60eda8a6628e36e33e052437", null ],
-    [ "addComponent", "structMyDummyFixture.html#abbea9888ef9998d157a4dbd77541a052", null ],
+    [ "addComponent", "structMyDummyFixture.html#a7883626694d18ad0d26af1a7b81130b9", null ],
     [ "components", "structMyDummyFixture.html#a729b86a6cc6b2fb4fcc9b920a47005ec", null ],
     [ "ctx", "structMyDummyFixture.html#adf8353bba45cd4aeb4f6fc527dcee020", null ],
     [ "data", "structMyDummyFixture.html#a68cb5dd51e0ca2b207e7f98d45ebbfed", null ],

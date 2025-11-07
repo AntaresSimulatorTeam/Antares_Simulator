@@ -138,9 +138,9 @@ $(document).ready(function(){initNavTree('classAntares_1_1ModelerStudy_1_1System
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac5dede1197a86442d4532074893557a3"><td class="memItemLeft" align="right" valign="top"><a id="ac5dede1197a86442d4532074893557a3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Variable</b> (std::string id, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a> lower_bound, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a> upper_bound, ValueType type, TimeDependent timeDependent, ScenarioDependent scenarioDependent)</td></tr>
-<tr class="separator:ac5dede1197a86442d4532074893557a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afedbffab61a09e0782ca51e0aa2e9206"><td class="memItemLeft" align="right" valign="top"><a id="afedbffab61a09e0782ca51e0aa2e9206"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Variable</b> (std::string id, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a> lower_bound, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a> upper_bound, ValueType type, TimeDependent timeDependent, ScenarioDependent scenarioDependent, Modeler::Config::Location location=Modeler::Config::Location::SUBPROBLEMS)</td></tr>
+<tr class="separator:afedbffab61a09e0782ca51e0aa2e9206"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2b4946fc425f5f9c458a03138cb263e"><td class="memItemLeft" align="right" valign="top"><a id="ab2b4946fc425f5f9c458a03138cb263e"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Id</b> () const</td></tr>
 <tr class="separator:ab2b4946fc425f5f9c458a03138cb263e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,12 +159,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTimeDependent</b> (
 <tr class="memitem:a7845e09d99ae51ebe62b71bfbe9cde88"><td class="memItemLeft" align="right" valign="top"><a id="a7845e09d99ae51ebe62b71bfbe9cde88"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsScenarioDependent</b> () const</td></tr>
 <tr class="separator:a7845e09d99ae51ebe62b71bfbe9cde88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b449d737c27d3de4a0f980f66d64a1c"><td class="memItemLeft" align="right" valign="top"><a id="a9b449d737c27d3de4a0f980f66d64a1c"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInSubProblem</b> () const</td></tr>
-<tr class="separator:a9b449d737c27d3de4a0f980f66d64a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a532ff4e3a84872e7dcfe1fd67df0db54"><td class="memItemLeft" align="right" valign="top"><a id="a532ff4e3a84872e7dcfe1fd67df0db54"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isInMasterProblem</b> () const</td></tr>
-<tr class="separator:a532ff4e3a84872e7dcfe1fd67df0db54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab3f59fd33a9a6fee4f44519c7140b39"><td class="memItemLeft" align="right" valign="top"><a id="aab3f59fd33a9a6fee4f44519c7140b39"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLocation</b> (Modeler::Config::Location loc)</td></tr>
+<tr class="separator:aab3f59fd33a9a6fee4f44519c7140b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5cb447536d369be4dbbd0bba273c114"><td class="memItemLeft" align="right" valign="top"><a id="aa5cb447536d369be4dbbd0bba273c114"></a>
+Modeler::Config::Location&#160;</td><td class="memItemRight" valign="bottom"><b>location</b> () const</td></tr>
+<tr class="separator:aa5cb447536d369be4dbbd0bba273c114"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A decision variable of the model. </p>

@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererForAreaSelector.html#ab08de0ed55782e4f531d55fd9e39b79f":[8,0,0,3,0,0,89,3],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererForAreaSelector.html#ac5f4d87dea5bd272f467a98fc6056974":[8,0,0,3,0,0,89,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1SeasonalCorrelationCell.html":[8,0,0,3,0,0,55],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1SeasonalCorrelationCell.html#a035a466d156b5f079f4cd6a44507db02":[8,0,0,3,0,0,55,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html#adac61e216fd430e6c57adbd55082c373":[8,0,0,3,0,0,39,12],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html#ae396e6c54be728cc2528de15d0333a1c":[8,0,0,3,0,0,39,13],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html#aee77648bc5ad5d8297ea77ebf8552781":[8,0,0,3,0,0,39,14],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html#af3c61ab45af16657fdc87ca889e21266":[8,0,0,3,0,0,39,0],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html#afe9d2a87db1cf3f6e4c659d66fd2e1d4":[8,0,0,3,0,0,39,5]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html#af3c61ab45af16657fdc87ca889e21266":[8,0,0,3,0,0,39,0]
 };

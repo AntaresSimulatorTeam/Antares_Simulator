@@ -22,7 +22,6 @@ var classMockLinearProblem =
     [ "setObjectiveCoefficient", "classMockLinearProblem.html#a0d5d32dc23d27e63cdfff60669abaf8a", null ],
     [ "solve", "classMockLinearProblem.html#a11f5b24f6205dd165a608fb2d491d118", null ],
     [ "variableCount", "classMockLinearProblem.html#af78b0d69d93e854f1a5542806176d54a", null ],
-    [ "WriteLP", "classMockLinearProblem.html#a18bdd1810ea90971f3a4ae3283aa1892", null ],
     [ "constraintCount_", "classMockLinearProblem.html#a1e5e030f206d269b7b082157c9a8a81e", null ],
     [ "constraints_", "classMockLinearProblem.html#a46f3d6cab52e01d560dbbd3cf6b35252", null ],
     [ "isLP_", "classMockLinearProblem.html#aee16a287b2f87dede7894bb57cab544a", null ],

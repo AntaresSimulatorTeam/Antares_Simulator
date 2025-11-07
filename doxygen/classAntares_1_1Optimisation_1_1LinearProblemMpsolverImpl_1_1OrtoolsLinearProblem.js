@@ -24,5 +24,5 @@ var classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearPr
     [ "setObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab41e6e0ace04662a545d9994998a4abd", null ],
     [ "solve", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a88ed3d6317fca4f49260a612490f996d", null ],
     [ "variableCount", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#acdc3201becddac071a8afba456b067e8", null ],
-    [ "WriteLP", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a058bac6bca2d26262e8da9c9ccd5aa66", null ]
+    [ "Write", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a78ff9aa8f5abee6c80ef8bdfbe0f821d", null ]
 ];

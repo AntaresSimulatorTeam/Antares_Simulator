@@ -1,14 +1,5 @@
 var NAVTREEINDEX28 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a52b87b62e143d64a7caa445b931105a7":[8,0,0,19,5,4,46,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a5302b5ab60234abcd409d5c150ff9cb3":[8,0,0,19,5,4,46,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a5f9aaa48561c34bfa553a3549f75089c":[8,0,0,19,5,4,46,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a627248407e12ab0100b7aed88b34af36":[8,0,0,19,5,4,46,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a83d3ddb8d650c0cb0f903f8d20ae1258":[8,0,0,19,5,4,46,14],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a86080191dcfc54ed0858732eccc7392b":[8,0,0,19,5,4,46,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8922dad9233664224a5eed9476a5b79b":[8,0,0,19,5,4,46,20],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8d0bbe52879e603361808382624530b0":[8,0,0,19,5,4,46,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8e264a7cd902a1290f9dcc39bf5c2915":[8,0,0,19,5,4,46,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#acd13d29fbdbad7c894a59965bd067bed":[8,0,0,19,5,4,46,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#ad412b52f6855ec63b0533aa9b5343b6c":[8,0,0,19,5,4,46,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html":[8,0,0,19,5,4,28],
@@ -249,5 +240,14 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html":[8,0,0,19,5,4,63],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a0fafd94917a28ed6a66855ae4a721561":[8,0,0,19,5,4,63,11],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a1b49cebb633cf71e02e5bde7a5de7202":[8,0,0,19,5,4,63,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a2747a8d6653aaaee113f67deba26799f":[8,0,0,19,5,4,63,17]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a2747a8d6653aaaee113f67deba26799f":[8,0,0,19,5,4,63,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a4d8627513799751cb05ddc2d20583715":[8,0,0,19,5,4,63,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a90fb7cbc9e239e0cbbe9afa6ee36507a":[8,0,0,19,5,4,63,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a92323566ba9e830b23bcc1592f2d6471":[8,0,0,19,5,4,63,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a9d760963c759a41a73112744ee93efc5":[8,0,0,19,5,4,63,14],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a9f84650fbfba75034117950f023086fb":[8,0,0,19,5,4,63,18],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#aa061f6c6d4a57f166e21c3360ff96443":[8,0,0,19,5,4,63,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#aba1707c05dff4b14f4596303cbefddfe":[8,0,0,19,5,4,63,15],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#ac9b444d1ac310a86ec1700789d5bb92e":[8,0,0,19,5,4,63,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#acd818436abde4291bbfa2e5c2b4d466c":[8,0,0,19,5,4,63,7]
 };

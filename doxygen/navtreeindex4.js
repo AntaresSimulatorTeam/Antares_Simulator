@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classAntares_1_1Action_1_1Settings_1_1DecalAreaPosition.html#addc794bb28d6696cd9e831ebc2573940":[8,0,0,0,1,0,2],
 "classAntares_1_1Action_1_1Settings_1_1DecalAreaPosition.html#ae1141789562f14a51bfb700ccb51cbea":[8,0,0,0,1,0,9],
 "classAntares_1_1Action_1_1Settings_1_1DecalAreaPosition.html#ae30fd18ea18fb38dc8be07727cc8e893":[8,0,0,0,1,0,6],
 "classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html":[8,0,0,0,1,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classAntares_1_1Component_1_1Datagrid_1_1InternalState.html#afe5fab0f80badcde51cb147955b13e7e":[8,0,0,3,0,2,10],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ARendererArea.html":[8,0,0,3,0,0,43],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ARendererArea.html#a20dd266925f20401564abde3ce071d07":[8,0,0,3,0,0,43,12],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ARendererArea.html#a216ee2dfc7b0194b3b11f8d1951bdaad":[8,0,0,3,0,0,43,7],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ARendererArea.html#a22cfb1bb5a39b72461f613c822bb3e0d":[8,0,0,3,0,0,43,8]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ARendererArea.html#a216ee2dfc7b0194b3b11f8d1951bdaad":[8,0,0,3,0,0,43,7]
 };

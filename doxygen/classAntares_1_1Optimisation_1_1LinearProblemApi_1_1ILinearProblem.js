@@ -21,6 +21,5 @@ var classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem =
     [ "setMinimization", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a59b06a4998978cb5f2b775ed519500f8", null ],
     [ "setObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87", null ],
     [ "solve", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#af4093d6dd854e4e013623803f16a8afa", null ],
-    [ "variableCount", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#aac94919884b7a2f4079ec8d3c7a71658", null ],
-    [ "WriteLP", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a2b2f1635b9994e6401d75b53638cecdc", null ]
+    [ "variableCount", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#aac94919884b7a2f4079ec8d3c7a71658", null ]
 ];

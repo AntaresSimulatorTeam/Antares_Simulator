@@ -1,14 +1,5 @@
 var NAVTREEINDEX31 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a8f02b29457ffc8b4c7164ec7c8c65ed0":[8,0,0,19,5,4,110,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a914f2725803adc2dc89cd31aaf97bbe2":[8,0,0,19,5,4,110,14],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a91cf9ed8e3df3b03acf414baa846023e":[8,0,0,19,5,4,110,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#ab49f3acb73f3023bf93801d673ed5fb9":[8,0,0,19,5,4,110,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#ac84b39bfddecd761e9394b6f48111153":[8,0,0,19,5,4,110,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#ad2ef7d82a6acd47a3adee8d83a588b4a":[8,0,0,19,5,4,110,6],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#af4ca698713a6f5f96aab632c591d2a90":[8,0,0,19,5,4,110,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html":[8,0,0,19,5,4,112],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a11f2a7882582613526dd2fb2b36c8f2c":[8,0,0,19,5,4,112,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a14b2c73689b17a530a3c3f742a29ac8d":[8,0,0,19,5,4,112,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a1c096c38a895dc60c4b1cc08939f32d2":[8,0,0,19,5,4,112,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a1e9898c3daad445288b024f95b2cea7a":[8,0,0,19,5,4,112,14],
@@ -249,5 +240,14 @@ var NAVTREEINDEX31 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a0ea7de2063bbb5525935d76da3f1482a":[8,0,0,19,5,4,132,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a2390503e7a4637953b409004ddd33b02":[8,0,0,19,5,4,132,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a306b92dea588a072d7aec1605cb41770":[8,0,0,19,5,4,132,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a313b9bffad9aa85eb07c1501587ab1b3":[8,0,0,19,5,4,132,17]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a313b9bffad9aa85eb07c1501587ab1b3":[8,0,0,19,5,4,132,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a4467dfe07b8e27c852cc1fac5bac5310":[8,0,0,19,5,4,132,16],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a56cd7ec498c292d6182c224c54f5c05a":[8,0,0,19,5,4,132,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a788ef27ba6294ad70dbe7f30be7fdd83":[8,0,0,19,5,4,132,9],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a811fd86973816a987463a10ef55c0557":[8,0,0,19,5,4,132,18],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a814653cc191183db47093f3d1ddc7fd7":[8,0,0,19,5,4,132,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a841cef9881bb44747615f0447b6c3a73":[8,0,0,19,5,4,132,14],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a8df8d00bd932902fe01a3e7c0018bd4e":[8,0,0,19,5,4,132,15],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a90d996922dab9d8a49843856c57cc546":[8,0,0,19,5,4,132,11],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#aa0ba0e49bf9bd0460d060e7f273b5af3":[8,0,0,19,5,4,132,6]
 };

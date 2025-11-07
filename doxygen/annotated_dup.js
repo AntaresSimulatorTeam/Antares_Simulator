@@ -518,7 +518,6 @@ var annotated_dup =
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser" ]
           ] ],
           [ "YmlOptimConfig", null, [
-            [ "OptimConfigConverter", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfigConverter.html", null ],
             [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],
@@ -559,13 +558,6 @@ var annotated_dup =
         [ "Settings", "classAntares_1_1Map_1_1Settings.html", null ]
       ] ],
       [ "Modeler", null, [
-        [ "Config", null, [
-          [ "Variable", "classAntares_1_1Modeler_1_1Config_1_1Variable.html", "classAntares_1_1Modeler_1_1Config_1_1Variable" ],
-          [ "Objective", "classAntares_1_1Modeler_1_1Config_1_1Objective.html", "classAntares_1_1Modeler_1_1Config_1_1Objective" ],
-          [ "ModelDecomposition", "classAntares_1_1Modeler_1_1Config_1_1ModelDecomposition.html", "classAntares_1_1Modeler_1_1Config_1_1ModelDecomposition" ],
-          [ "Model", "classAntares_1_1Modeler_1_1Config_1_1Model.html", "classAntares_1_1Modeler_1_1Config_1_1Model" ],
-          [ "OptimConfig", "classAntares_1_1Modeler_1_1Config_1_1OptimConfig.html", "classAntares_1_1Modeler_1_1Config_1_1OptimConfig" ]
-        ] ],
         [ "FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", "classAntares_1_1Modeler_1_1FileWriter" ],
         [ "Data", "structAntares_1_1Modeler_1_1Data.html", "structAntares_1_1Modeler_1_1Data" ]
       ] ],
@@ -635,8 +627,11 @@ var annotated_dup =
         [ "OptimEntityContainer", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html", "classAntares_1_1Optimisation_1_1OptimEntityContainer" ],
         [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository" ],
         [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ],
+        [ "VariableNames", "classAntares_1_1Optimisation_1_1VariableNames.html", "classAntares_1_1Optimisation_1_1VariableNames" ],
+        [ "AddVariableVisitor", "classAntares_1_1Optimisation_1_1AddVariableVisitor.html", "classAntares_1_1Optimisation_1_1AddVariableVisitor" ],
+        [ "ConnectionVariable", "structAntares_1_1Optimisation_1_1ConnectionVariable.html", "structAntares_1_1Optimisation_1_1ConnectionVariable" ],
+        [ "BendersDecomposition", "classAntares_1_1Optimisation_1_1BendersDecomposition.html", "classAntares_1_1Optimisation_1_1BendersDecomposition" ],
         [ "ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", "classAntares_1_1Optimisation_1_1ComponentFiller" ],
-        [ "VariablesBulkAddition", "classAntares_1_1Optimisation_1_1VariablesBulkAddition.html", "classAntares_1_1Optimisation_1_1VariablesBulkAddition" ],
         [ "IntegerInterval", "structAntares_1_1Optimisation_1_1IntegerInterval.html", "structAntares_1_1Optimisation_1_1IntegerInterval" ],
         [ "Dimensions", "classAntares_1_1Optimisation_1_1Dimensions.html", "classAntares_1_1Optimisation_1_1Dimensions" ],
         [ "EvaluationContextProvider", "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html", "classAntares_1_1Optimisation_1_1EvaluationContextProvider" ],
@@ -1564,6 +1559,7 @@ var annotated_dup =
     [ "ExprLexer", "classExprLexer.html", "classExprLexer" ],
     [ "ExprParser", "classExprParser.html", "classExprParser" ],
     [ "ExprVisitor", "classExprVisitor.html", "classExprVisitor" ],
+    [ "FactoryFixture", "classFactoryFixture.html", "classFactoryFixture" ],
     [ "fake_buffer_factory", "classfake__buffer__factory.html", "classfake__buffer__factory" ],
     [ "FictitiousLoad", "classFictitiousLoad.html", "classFictitiousLoad" ],
     [ "FictitiousLoadData", "structFictitiousLoadData.html", "structFictitiousLoadData" ],
@@ -1662,6 +1658,7 @@ var annotated_dup =
     [ "NbUnitsOutageLessThanNbUnitsStopData", "structNbUnitsOutageLessThanNbUnitsStopData.html", "structNbUnitsOutageLessThanNbUnitsStopData" ],
     [ "NbUnitsOutageLessThanNbUnitsStopGroup", "classNbUnitsOutageLessThanNbUnitsStopGroup.html", "classNbUnitsOutageLessThanNbUnitsStopGroup" ],
     [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", "structNonCopyableFunctionObject" ],
+    [ "NoObjectiveCreator", "structNoObjectiveCreator.html", null ],
     [ "nullMPSwriter", "classnullMPSwriter.html", "classnullMPSwriter" ],
     [ "NullProvider", "classNullProvider.html", "classNullProvider" ],
     [ "OneAreaStudy", "structOneAreaStudy.html", "structOneAreaStudy" ],
@@ -1768,6 +1765,10 @@ var annotated_dup =
     [ "TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE" ],
     [ "TSDimensions", "structTSDimensions.html", "structTSDimensions" ],
     [ "TSNumbersPredicate", "structTSNumbersPredicate.html", "structTSNumbersPredicate" ],
+    [ "TwoObjsCreator_OneSubPb_OneMaster", "structTwoObjsCreator__OneSubPb__OneMaster.html", null ],
+    [ "TwoSubPbObjsCreator", "structTwoSubPbObjsCreator.html", null ],
+    [ "TwoSubPbVarsCreator", "structTwoSubPbVarsCreator.html", null ],
+    [ "TwoVarsCreator_OneSubPb_OneMaster", "structTwoVarsCreator__OneSubPb__OneMaster.html", null ],
     [ "TypedColumn", "classTypedColumn.html", "classTypedColumn" ],
     [ "UserData", "classUserData.html", "classUserData" ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", "structVALEURS__DE__NTC__ET__RESISTANCES" ],

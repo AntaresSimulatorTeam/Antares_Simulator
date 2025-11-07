@@ -13,15 +13,19 @@ var namespaceAntares_1_1Optimisation =
       [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
       [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
       [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ],
-      [ "convertOrtoolsBasisStatus", "convertOrtoolsBasisStatus_8cpp.html#a82d1e8a5093f3f009bf7c358f7ec432f", null ]
+      [ "convertOrtoolsBasisStatus", "convertOrtoolsBasisStatus_8cpp.html#a82d1e8a5093f3f009bf7c358f7ec432f", null ],
+      [ "Write", "linearProblem_8cpp.html#ad57898e44d942c01aeb3b40bdc835f1e", null ]
     ] ],
     [ "EvaluationContext", "classAntares_1_1Optimisation_1_1EvaluationContext.html", "classAntares_1_1Optimisation_1_1EvaluationContext" ],
     [ "OptimComponent", "structAntares_1_1Optimisation_1_1OptimComponent.html", "structAntares_1_1Optimisation_1_1OptimComponent" ],
     [ "OptimEntityContainer", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html", "classAntares_1_1Optimisation_1_1OptimEntityContainer" ],
     [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository" ],
     [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ],
+    [ "VariableNames", "classAntares_1_1Optimisation_1_1VariableNames.html", "classAntares_1_1Optimisation_1_1VariableNames" ],
+    [ "AddVariableVisitor", "classAntares_1_1Optimisation_1_1AddVariableVisitor.html", "classAntares_1_1Optimisation_1_1AddVariableVisitor" ],
+    [ "ConnectionVariable", "structAntares_1_1Optimisation_1_1ConnectionVariable.html", "structAntares_1_1Optimisation_1_1ConnectionVariable" ],
+    [ "BendersDecomposition", "classAntares_1_1Optimisation_1_1BendersDecomposition.html", "classAntares_1_1Optimisation_1_1BendersDecomposition" ],
     [ "ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", "classAntares_1_1Optimisation_1_1ComponentFiller" ],
-    [ "VariablesBulkAddition", "classAntares_1_1Optimisation_1_1VariablesBulkAddition.html", "classAntares_1_1Optimisation_1_1VariablesBulkAddition" ],
     [ "IntegerInterval", "structAntares_1_1Optimisation_1_1IntegerInterval.html", "structAntares_1_1Optimisation_1_1IntegerInterval" ],
     [ "Dimensions", "classAntares_1_1Optimisation_1_1Dimensions.html", "classAntares_1_1Optimisation_1_1Dimensions" ],
     [ "EvaluationContextProvider", "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html", "classAntares_1_1Optimisation_1_1EvaluationContextProvider" ],
@@ -36,6 +40,8 @@ var namespaceAntares_1_1Optimisation =
     ] ],
     [ "buildVariableName", "namespaceAntares_1_1Optimisation.html#a3285d2e9ba0b174de3a9ec497ff79dc5", null ],
     [ "checkTimeSteps", "namespaceAntares_1_1Optimisation.html#a156d5abad9c6bc2cf8dfb5919a160ad4", null ],
+    [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a48c69d82095c9d4b7ac778aad53b0afa", null ],
+    [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a4f35767787ea7ad2c4ffa35bbb2254bb", null ],
     [ "operator-", "namespaceAntares_1_1Optimisation.html#a75b8a5eaeb2eedac8d8be9501ea647a6", null ],
     [ "operator|", "namespaceAntares_1_1Optimisation.html#aaa8ef259fea24e6b7402d5a380d08154", null ]
 ];

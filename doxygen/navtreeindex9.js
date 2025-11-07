@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html#afe9d2a87db1cf3f6e4c659d66fd2e1d4":[8,0,0,3,0,0,39,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastConversion.html":[8,0,0,3,0,0,40],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastConversion.html#a003654b601d0cebaa215f31bd8aa4ac6":[8,0,0,3,0,0,40,10],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastConversion.html#a0bec17dab43957e461cccdf94cce7ef1":[8,0,0,3,0,0,40,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Maximum.html#a99f69ce0aba607db885d201d5b23a5cc":[8,0,0,3,0,1,5,1],
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Maximum.html#aa0568789dd40b474f1255e6a75f110dd":[8,0,0,3,0,1,5,2],
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Maximum.html#af0e8238fb7746235efe9a261d0a99813":[8,0,0,3,0,1,5,0],
-"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Minimum.html":[8,0,0,3,0,1,4],
-"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Minimum.html#a090ad9da13caf3e1e0ccf3ad196915f3":[8,0,0,3,0,1,4,3]
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Minimum.html":[8,0,0,3,0,1,4]
 };

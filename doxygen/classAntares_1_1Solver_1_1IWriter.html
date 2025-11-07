@@ -143,15 +143,15 @@ Inheritance diagram for Antares::Solver::IWriter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a10c6e3543cec4feb248415fb8b1edc91"><td class="memItemLeft" align="right" valign="top"><a id="a10c6e3543cec4feb248415fb8b1edc91"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (bool, const std::string &amp;simulationId)=0</td></tr>
-<tr class="separator:a10c6e3543cec4feb248415fb8b1edc91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a453c16018a5fb26224862edc8eda3bc0"><td class="memItemLeft" align="right" valign="top"><a id="a453c16018a5fb26224862edc8eda3bc0"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (const std::string &amp;simulationId)=0</td></tr>
+<tr class="separator:a453c16018a5fb26224862edc8eda3bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5432158662182316febd3668703f5572"><td class="memItemLeft" align="right" valign="top"><a id="a5432158662182316febd3668703f5572"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSimulationTable</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a> &amp;linearProblem, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution, const <a class="el" href="structAntares_1_1Modeler_1_1Data.html">Antares::Modeler::Data</a> &amp;modelerData, const <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Optimisation::OptimEntityContainer</a> &amp;variableContainer, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext) const =0</td></tr>
 <tr class="separator:a5432158662182316febd3668703f5572"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b814837dc913c82714749635a1d708f"><td class="memItemLeft" align="right" valign="top"><a id="a0b814837dc913c82714749635a1d708f"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeProblem</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a> &amp;problem)=0</td></tr>
-<tr class="separator:a0b814837dc913c82714749635a1d708f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb93790905e2c4238cc74eab331e5bfd"><td class="memItemLeft" align="right" valign="top"><a id="afb93790905e2c4238cc74eab331e5bfd"></a>
+virtual const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>outputPath</b> () const =0</td></tr>
+<tr class="separator:afb93790905e2c4238cc74eab331e5bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/modeler/modeler/include/antares/solver/modeler/<a class="el" href="IWriter_8h_source.html">IWriter.h</a></li>
