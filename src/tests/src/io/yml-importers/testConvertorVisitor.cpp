@@ -451,8 +451,7 @@ BOOST_AUTO_TEST_CASE(dualExpression)
     std::string badExpression = "dual(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
                           std::runtime_error,
-                          checkMessage(
-                            "Model doesn't contain this constraint in dual function: abc"));
+                          checkMessage("dual called with unknown constraint 'abc' in model 'model0'"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
@@ -485,5 +484,5 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
                           std::runtime_error,
                           checkMessage(
-                            "Model doesn't contain this variable in reduced_cost function: abc"));
+                            "reduced_cost called with unknown variable 'abc' in model 'model0'"));
 }

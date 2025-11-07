@@ -139,8 +139,9 @@ public:
 class NoVariableWithThisName final: public std::runtime_error
 {
 public:
-    explicit NoVariableWithThisName(const std::string& name):
-        runtime_error("Model doesn't contain this variable in reduced_cost function: " + name)
+    explicit NoVariableWithThisName(const std::string& modelName, const std::string& varName):
+        runtime_error("reduced_cost called with unknown variable '" + varName + "' in model '"
+                      + modelName + "'")
     {
     }
 };
@@ -148,8 +149,10 @@ public:
 class NoConstraintWithThisName final: public std::runtime_error
 {
 public:
-    explicit NoConstraintWithThisName(const std::string& name):
-        runtime_error("Model doesn't contain this constraint in dual function: " + name)
+    explicit NoConstraintWithThisName(const std::string& modelName,
+                                      const std::string& constraintName):
+        runtime_error("dual called with unknown constraint '" + constraintName + "' in model '"
+                      + modelName + "'")
     {
     }
 };
@@ -392,13 +395,20 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         return node;
     }
 
-    throw NoConstraintWithThisName(constraint_id);
+    throw NoConstraintWithThisName(model_.id, constraint_id);
 }
 
 std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)
 {
-    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
-
+    std::vector<Node*> nodes;
+    try
+    {
+        nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+    }
+    catch (NoParameterOrVariableWithThisName) // to print accurate message
+    {
+        throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
+    }
     if (nodes.size() != 1)
     {
         throw std::invalid_argument("reduced_cost operator expect only one variable id");
