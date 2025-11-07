@@ -18,7 +18,9 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
+// clang-format off
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
+// clang-format on
 #include "antares/study/parts/short-term-storage/container.h"
 
 #include <algorithm>
@@ -29,7 +31,6 @@
 
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
-#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -283,7 +284,8 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
                                    sts.additionalConstraints.end(),
                                    0,
                                    [](size_t inner_constraint_count,
-                                      const auto& additionalConstraints) {
+                                      const auto& additionalConstraints)
+                                   {
                                        return inner_constraint_count
                                               + additionalConstraints->enabledConstraintsCount();
                                    });

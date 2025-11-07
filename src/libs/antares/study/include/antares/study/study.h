@@ -25,20 +25,13 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
-#include <yuni/thread/thread.h>
 
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
-#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/modeler/data.h>
 #include <antares/study/runtime/runtime.h>
-#include <antares/study/system-model/library.h>
-#include <antares/study/system-model/system.h>
 #include <antares/writer/i_writer.h>
-#include "antares/antares/antares.h"
-#include "antares/solver/modeler/data.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
@@ -47,12 +40,10 @@
 #include "fwd.h"
 #include "header.h"
 #include "layerdata.h"
-#include "load-options.h"
 #include "parameters.h"
 #include "progression/progression.h"
 #include "sets.h"
 #include "simulation.h"
-#include "version.h"
 
 namespace Antares::Data
 {

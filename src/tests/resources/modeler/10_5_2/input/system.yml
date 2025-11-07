@@ -1,0 +1,88 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+# Study case 10_4 : to test extra-output features
+# Small test case with one node (1 thermal cluster, 1 one load)
+
+system:
+
+  id: case_10_5
+  description: One timestep problem
+  components:
+    - id: base_zone
+      model: library-eo.area
+      parameters:
+        - id: spillage_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 1000
+        - id: ens_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 20000
+
+
+    - id: load_base_zone
+      model: library-eo.load
+      parameters:
+        - id: load_value
+          time-dependent: true
+          scenario-dependent: false
+          value: load_serie
+
+
+    - id: gas_base_zone
+      model: library-eo.simple_gen
+      parameters:
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false
+          time-dependent: false
+          value: 100
+        - id: marginal_generation_cost
+          scenario-dependent: false
+          time-dependent: true
+          value: gas_cost_serie
+
+    - id: oil_base_zone
+      model: library-eo.simple_gen
+      parameters:
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false
+          time-dependent: false
+          value: 100
+        - id: marginal_generation_cost
+          scenario-dependent: false
+          time-dependent: true
+          value: oil_cost_serie
+
+
+  connections:
+    - component1: base_zone
+      port1: balance_port
+      component2: load_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: gas_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: oil_base_zone
+      port2: balance_port
+
+
+
+
+ 
+ 

@@ -188,7 +188,6 @@ TimeDependentLinearExpression& TimeDependentLinearExpression::operator*=(
     {
         expandTo(other.size());
     }
-    int t = 0;
     for (std::size_t t = 0; t < size(); t++)
     {
         this->operator[](t) *= other[t];

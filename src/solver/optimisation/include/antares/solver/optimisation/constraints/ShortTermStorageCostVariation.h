@@ -38,7 +38,7 @@ public:
 protected:
     virtual void buildConstraint(int index) = 0;
 
-    virtual bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) = 0;
+    virtual bool IsConstraintEnabled(const PROPERTIES& properties) = 0;
 
     virtual int& TargetConstraintIndex(int pdt, int index) = 0;
 
@@ -52,7 +52,7 @@ public:
 
     void add(unsigned int pdt, unsigned int pays) override;
 
-    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    bool IsConstraintEnabled(const PROPERTIES& properties) override;
 
     int& TargetConstraintIndex(int pdt, int index) override;
 
@@ -66,7 +66,7 @@ public:
 
     void add(unsigned int pdt, unsigned int pays) override;
 
-    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    bool IsConstraintEnabled(const PROPERTIES& properties) override;
 
     int& TargetConstraintIndex(int pdt, int index) override;
 
@@ -80,7 +80,7 @@ public:
 
     void add(unsigned int pdt, unsigned int pays) override;
 
-    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    bool IsConstraintEnabled(const PROPERTIES& properties) override;
 
     int& TargetConstraintIndex(int pdt, int index) override;
 
@@ -94,7 +94,7 @@ public:
 
     void add(unsigned int pdt, unsigned int pays) override;
 
-    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    bool IsConstraintEnabled(const PROPERTIES& properties) override;
 
     int& TargetConstraintIndex(int pdt, int index) override;
 

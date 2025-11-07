@@ -14,6 +14,7 @@ set(TARGET_LIBS #No alias
 
         # solver_api
         study
+        scenario-builder-utils
         study-loader
         file-tree-study-loader
         antares-solver-simulation
@@ -110,7 +111,6 @@ set(TARGET_LIBS #No alias
         modeler-simulation-table
         scenario-builder-antlr
         scenario-group-parser
-        modeler-optim-config
         yml-optim-config
 )
 

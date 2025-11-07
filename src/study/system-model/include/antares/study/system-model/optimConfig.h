@@ -19,28 +19,30 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <HoursFieldBaseVisitor.h>
 
-class HoursCollectorVisitor: public HoursFieldBaseVisitor
+namespace Antares::Modeler::Config
 {
-public:
-    std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override
-    {
-        std::vector<std::set<int>> result;
-        for (auto groupCtx: ctx->group())
-        {
-            result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
-        }
-        return result;
-    }
 
-    std::any visitGroup(HoursFieldParser::GroupContext* ctx) override
-    {
-        std::set<int> hours;
-        for (auto hourCtx: ctx->hour())
-        {
-            hours.insert(std::stoi(hourCtx->getText()));
-        }
-        return hours;
-    }
+enum class Location
+{
+    MASTER,
+    MASTER_AND_SUBPROBLEMS,
+    SUBPROBLEMS
 };
+
+constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
+{
+    switch (rhs)
+    {
+    case Location::MASTER:
+        return lhs == Location::MASTER || lhs == Location::MASTER_AND_SUBPROBLEMS;
+    case Location::SUBPROBLEMS:
+        return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
+    case Location::MASTER_AND_SUBPROBLEMS:
+        return true;
+    default:
+        return false;
+    }
+}
+
+} // namespace Antares::Modeler::Config

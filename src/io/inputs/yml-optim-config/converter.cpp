@@ -25,10 +25,9 @@
 
 #include <antares/exception/RuntimeError.hpp>
 
-namespace Antares::IO::Inputs::YmlOptimConfig
-{
+using namespace Antares::ModelerStudy;
 
-namespace
+namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
 Modeler::Config::Location convertLocation(const std::string& locationStr)
@@ -39,7 +38,7 @@ Modeler::Config::Location convertLocation(const std::string& locationStr)
     {
         return Modeler::Config::Location::MASTER;
     }
-    if (locLower == "master_and_subproblems")
+    if (locLower == "master-and-subproblems")
     {
         return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
     }
@@ -50,69 +49,94 @@ Modeler::Config::Location convertLocation(const std::string& locationStr)
     throw Error::RuntimeError("Unknown location: " + locationStr);
 }
 
-Modeler::Config::Variable convertVariable(const Variable& ymlVar)
+// gp : copied from readSystem.cpp, should be moved to a common utils file
+static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
-    try
+    size_t pos = s.find('.');
+    if (pos == std::string::npos)
     {
-        return {ymlVar.id, convertLocation(ymlVar.location)};
+        throw std::runtime_error(s);
     }
-    catch (const Error::RuntimeError& e)
+
+    std::string library = s.substr(0, pos);
+    std::string model = s.substr(pos + 1);
+    return {library, model};
+}
+
+static SystemModel::Model& getModel(const std::vector<SystemModel::Library>& libraries,
+                                    const std::string& libraryId,
+                                    const std::string& modelId)
+{
+    auto lib = std::ranges::find_if(libraries,
+                                    [&libraryId](const auto& l) { return l.Id() == libraryId; });
+    if (lib == libraries.end())
     {
-        throw Error::RuntimeError("Error converting variable '" + ymlVar.id + "': " + e.what());
+        throw std::runtime_error("No library found with this name: " + libraryId);
+    }
+
+    auto search = lib->Models().find(modelId);
+    if (search == lib->Models().end())
+    {
+        throw std::runtime_error("No model found with this name: " + modelId);
+    }
+
+    return search->second;
+}
+
+SystemModel::Model& findSystemModel(const YmlOptimConfig::Model& ymlModel,
+                                    const std::vector<SystemModel::Library>& libraries)
+{
+    const auto [libraryId, modelId] = splitLibraryModelString(ymlModel.id);
+    return getModel(libraries, libraryId, modelId);
+}
+
+SystemModel::Variable& findSystemVariable(const std::string& var_id, SystemModel::Model& sysModel)
+{
+    auto filter = [&var_id](const SystemModel::Variable& v) { return v.Id() == var_id; };
+    auto& sysVariables = sysModel.Variables();
+    auto sysVar = std::ranges::find_if(sysVariables, filter);
+    if (sysVar == sysVariables.end())
+    {
+        throw std::runtime_error("No variable found with this name: " + var_id);
+    }
+    return *sysVar;
+}
+
+SystemModel::Objective& findSystemObjective(const std::string& obj_id, SystemModel::Model& sysModel)
+{
+    auto filter = [&obj_id](const SystemModel::Objective& obj) { return obj.Id() == obj_id; };
+    auto& sysObjectives = sysModel.Objectives();
+    auto sysObj = std::ranges::find_if(sysObjectives, filter);
+    if (sysObj == sysObjectives.end())
+    {
+        throw std::runtime_error("No objective found with this name: " + obj_id);
+    }
+    return *sysObj;
+}
+
+void updateSystemModel(SystemModel::Model& sysModel, const YmlOptimConfig::Model& ymlModel)
+{
+    for (const auto& ymlVar: ymlModel.variables)
+    {
+        auto& sysVariable = findSystemVariable(ymlVar.id, sysModel);
+        sysVariable.setLocation(convertLocation(ymlVar.location));
+    }
+
+    for (const auto& ymlObj: ymlModel.objectives)
+    {
+        auto& sysObjective = findSystemObjective(ymlObj.id, sysModel);
+        sysObjective.setLocation(convertLocation(ymlObj.location));
     }
 }
 
-Modeler::Config::Objective convertObjective(const Objective& ymlObj)
+void updateLibrairies(const OptimConfig& ymlOptimConfig,
+                      std::vector<SystemModel::Library>& libraries)
 {
-    try
-    {
-        return {ymlObj.id, convertLocation(ymlObj.location)};
-    }
-    catch (const Error::RuntimeError& e)
-    {
-        throw Error::RuntimeError("Error converting objective '" + ymlObj.id + "': " + e.what());
-    }
-}
-
-std::vector<Modeler::Config::Variable> convertVariables(const Model& ymlModel)
-{
-    std::vector<Modeler::Config::Variable> variables;
-    for (const auto& var: ymlModel.variables)
-    {
-        variables.push_back(convertVariable(var));
-    }
-    return variables;
-}
-
-std::vector<Modeler::Config::Objective> convertObjectives(const Model& ymlModel)
-{
-    std::vector<Modeler::Config::Objective> objectives;
-    for (const auto& obj: ymlModel.objectives)
-    {
-        objectives.push_back(convertObjective(obj));
-        std::vector<Modeler::Config::Objective> objectives;
-    }
-    return objectives;
-}
-
-Modeler::Config::Model convertModel(const Model& ymlModel)
-{
-    std::vector<Modeler::Config::Variable> variables = convertVariables(ymlModel);
-    std::vector<Modeler::Config::Objective> objectives = convertObjectives(ymlModel);
-    Modeler::Config::ModelDecomposition decomposition(variables, objectives);
-    return Modeler::Config::Model(ymlModel.id, decomposition);
-}
-
-} // namespace
-
-Modeler::Config::OptimConfig OptimConfigConverter::convert(const OptimConfig& ymlOptimConfig)
-{
-    std::vector<Modeler::Config::Model> models;
     for (const auto& ymlModel: ymlOptimConfig)
     {
-        models.push_back(convertModel(ymlModel));
+        auto& sysModel = findSystemModel(ymlModel, libraries);
+        updateSystemModel(sysModel, ymlModel);
     }
-    return {models};
 }
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig

@@ -30,6 +30,13 @@
 namespace YAML
 {
 
+// TODO this function is defined at least 3 times, deduplicate
+template<typename T>
+inline T as_fallback_default(const Node& n)
+{
+    return n.as<T>(T());
+}
+
 template<>
 struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
 {
@@ -68,11 +75,13 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
     {
         rhs.id = node["id"].as<std::string>();
         const auto& modelDecompositionNode = node["model-decomposition"];
-        rhs.variables = modelDecompositionNode["variables"]
-                          .as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>();
+        rhs.variables = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>(
+          modelDecompositionNode["variables"]);
 
-        rhs.objectives = modelDecompositionNode["objectives"]
-                           .as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>();
+        rhs.objectives = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>(
+          modelDecompositionNode["objective-contributions"]);
 
         return true;
     }

@@ -451,7 +451,8 @@ BOOST_AUTO_TEST_CASE(dualExpression)
     std::string badExpression = "dual(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
                           std::runtime_error,
-                          checkMessage("dual called with unknown constraint 'abc' in model 'model0'"));
+                          checkMessage(
+                            "dual called with unknown constraint 'abc' in model 'model0'"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
