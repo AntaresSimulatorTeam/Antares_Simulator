@@ -16,9 +16,9 @@ More specifically, they can be found in the following contexts inside a model :
 
 
 Many elements can be found in an expression. In the following sections, we give a list of these elements, but have in mind that all these elements cannot be used in any kind of expression.
-It depends on the location of the expression in the model.
-For instance, the expression used to define the **lower-bound** of a **variable** cannot contain a reference to a **variable**.
-For more precision see [In which expression elements can be used]
+It depends on the context of the expression inside the model.
+For instance, if the expression is used to define the **lower-bound** of a **variable**, it cannot contain a reference to any **variable**.
+For more precision see [Cases where elements can be used in expressions]
 
 Here is the list of elements possibly composing an expression :
 
@@ -137,13 +137,13 @@ For scenario-dependent parameters, variables, and port fields, you can use this 
 - **expec(X)** aggregator: where X is the scenario-dependent operand, this operator computes its expected value (i.e.
   its scenario-wise average).
 
-### Port operators
+### Ports' sum_connections operator
 
-You can aggregate incoming ports using the following operator:
+You can aggregate incoming ports using the following operator :
 
-- **sum_connections(port.field)**: where "port" is the port ID and "field" is the field ID, this operator computes the
-  sum of values of this port field, on all incoming connections from other models.  
-  Note that the resulting sum can be time-dependent and/or scenario-dependent, depending on the port definition.
+**sum_connections(port.field)** : where "port" is the port ID and "field" is the field ID, this operator computes the
+sum of values of this port field, on all incoming connections from other models.  
+Note that the resulting sum can be time-dependent and/or scenario-dependent, depending on the port definition.
 
 **Examples:**
 
@@ -151,9 +151,31 @@ You can aggregate incoming ports using the following operator:
 expression: sum_connections(dc_port.flow) = 0
 ~~~
 
-### Dual operator
+### Dual operators
 
-To be done
+In some cases, we need to access dual results of variables / constraints in the linear problem.
+- dual result of a variable of id **my_var** is accessed by **-reduced_cost(myVar)**
+- dual result of a constraint of if **my_constraint** is accessed by **dual(myConstraint)**
+
+Note that dual results can only used within an expression in the context of an extra output. 
+
+**Exemple** : 
+
+```yaml
+models:
+  - id: myModel
+    variables:
+    - id: myVar
+      upper_bound: 1
+    constraints:
+    - id: myConstraint
+      expression: x <= 1
+    extra-outputs:
+    - id: marginal_price_variable
+      expression: -reduced_cost(myVar)
+    - id: marginal_price_constraint
+      expression: dual(myConstraint)
+```
 
 ### Power operator
 
@@ -164,21 +186,35 @@ To be done
 To be done
 
 
-## In which expression elements can be used
+## Cases where elements can be used in expressions
 
 ### Operators
 
 **Caution** : multiplying (*) or dividing (/) 2 (references to) variables is always forbidden.
 We only multiply/divide scalars, parameters, or vaiables to scalars/parameters. 
 
-|Context                      | [+-]  | [*/] | [<>=] |  Time | Port | Scenario | Dual | Power | Max | sum |
-|-----------------------------|-------|------|-------|-------|------|----------|------|-------|-----|-----|
-|constraints                  |  x    |   x  |  x    |   x   |  x   |    ?     |   ?  |   ?   |  ?  |  ?  |
-|binding-constraints          |  x    |   x  |  x    |   x   |  x   |    ?     |   ?  |   ?   |  ?  |  ?  |
-|objective-contributions      |  o    |   x  |  o    |   o   |  o   |    ?     |   ?  |   ?   |  ?  |  ?  |
-|port-field-definitions       |  x    |   x  |  o    |   o   |  o   |    ?     |   ?  |   ?   |  ?  |  ?  |
-|variable bounds              |  x    |   x  |  o    |   x   |  o   |    ?     |   ?  |   ?   |  ?  |  ?  |
-|extra-output                 |  ?    |   ?  |  ?    |   ?   |  ?   |    ?     |   ?  |   ?   |  ?  |  ?  |
+---
+
+|Context                      | [+-]  | [*/] | [<>=] |  Time | sum_connections |
+|-----------------------------|-------|------|-------|-------|-----------------|
+|constraints                  |  x    |   x  |  x    |   x   |  x              |
+|binding-constraints          |  x    |   x  |  x    |   x   |  x              |
+|objective-contributions      |  o    |   x  |  o    |   o   |  o              |
+|port-field-definitions       |  x    |   x  |  o    |   o   |  o              |
+|variable bounds              |  x    |   x  |  o    |   x   |  o              |
+|extra-output                 |  ?    |   ?  |  ?    |   ?   |  ?              |
+
+---
+
+|Context                      | Scenario | Dual | Power | Max | sum |
+|-----------------------------|----------|------|-------|-----|-----|
+|constraints                  |    ?     |   o  |   ?   |  ?  |  ?  |
+|binding-constraints          |    ?     |   o  |   ?   |  ?  |  ?  |
+|objective-contributions      |    ?     |   o  |   ?   |  ?  |  ?  |
+|port-field-definitions       |    ?     |   o  |   ?   |  ?  |  ?  |
+|variable bounds              |    ?     |   o  |   ?   |  ?  |  ?  |
+|extra-output                 |    ?     |   o  |   ?   |  ?  |  ?  |
+
 
 ### References to elements defined elsewhere
 
