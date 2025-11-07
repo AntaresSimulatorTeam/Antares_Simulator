@@ -25,6 +25,7 @@
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/study/system-model/model.h"
 #include "antares/study/system-model/portType.h"
+
 // If we don't turn clang-format off here, some antlr4 header does not compile :
 // it collides with a #include <windows.h> somewhere in Yuni
 // clang-format off
