@@ -30,9 +30,10 @@
 // clang-format off
 #include <unit_test_utils.h>
 // clang-format on
-#include <boost/test/unit_test.hpp>
 #include <filesystem>
 #include <fstream>
+
+#include <boost/test/unit_test.hpp>
 
 using namespace Antares::ModelerStudy::SystemModel;
 
