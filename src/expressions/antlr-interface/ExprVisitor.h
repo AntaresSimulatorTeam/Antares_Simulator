@@ -53,6 +53,8 @@ public:
 
     virtual std::any visitFunction(ExprParser::FunctionContext *context) = 0;
 
+    virtual std::any visitPower(ExprParser::PowerContext *context) = 0;
+
     virtual std::any visitArgList(ExprParser::ArgListContext *context) = 0;
 
     virtual std::any visitNumber(ExprParser::NumberContext *context) = 0;
@@ -69,11 +71,15 @@ public:
 
     virtual std::any visitShiftAddsub(ExprParser::ShiftAddsubContext *context) = 0;
 
+    virtual std::any visitShiftPower(ExprParser::ShiftPowerContext *context) = 0;
+
     virtual std::any visitRightExpression(ExprParser::RightExpressionContext *context) = 0;
 
     virtual std::any visitRightMuldiv(ExprParser::RightMuldivContext *context) = 0;
 
     virtual std::any visitRightAtom(ExprParser::RightAtomContext *context) = 0;
+
+    virtual std::any visitRightPower(ExprParser::RightPowerContext *context) = 0;
 
 
 };

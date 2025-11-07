@@ -13,8 +13,8 @@ class  ExprParser : public antlr4::Parser {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, NUMBER = 14, 
-    TIME = 15, IDENTIFIER = 16, COMPARISON = 17, WS = 18
+    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
+    NUMBER = 15, TIME = 16, IDENTIFIER = 17, COMPARISON = 18, WS = 19
   };
 
   enum {
@@ -239,6 +239,16 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  PowerContext : public ExprContext {
+  public:
+    PowerContext(ExprContext *ctx);
+
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   ExprContext* expr();
   ExprContext* expr(int precedence);
   class  ArgListContext : public antlr4::ParserRuleContext {
@@ -357,6 +367,16 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  ShiftPowerContext : public Shift_exprContext {
+  public:
+    ShiftPowerContext(Shift_exprContext *ctx);
+
+    Shift_exprContext *shift_expr();
+    Right_exprContext *right_expr();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   Shift_exprContext* shift_expr();
   Shift_exprContext* shift_expr(int precedence);
   class  Right_exprContext : public antlr4::ParserRuleContext {
@@ -397,6 +417,16 @@ public:
     RightAtomContext(Right_exprContext *ctx);
 
     AtomContext *atom();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  RightPowerContext : public Right_exprContext {
+  public:
+    RightPowerContext(Right_exprContext *ctx);
+
+    std::vector<Right_exprContext *> right_expr();
+    Right_exprContext* right_expr(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
