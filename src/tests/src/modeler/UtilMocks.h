@@ -46,7 +46,7 @@ public:
 
     double reducedCost() const override
     {
-        return 0;
+        return 4.96; // arbitrary value for testing
     }
 
     Antares::Optimisation::LinearProblemApi::MipBasisStatus getMipBasisStatus() const override
@@ -148,7 +148,7 @@ public:
 
     double dual() const override
     {
-        return 0;
+        return 8.23; // arbitrary value for testing
     }
 
     // IHasName interface
@@ -208,10 +208,6 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipSolution* solve(bool) override
     {
         return nullptr;
-    }
-
-    void WriteLP(const std::string&) const override
-    {
     }
 
     double infinity() const override
@@ -487,7 +483,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
 
     Antares::ModelerStudy::SystemModel::Component* addComponent(
       const std::string& id,
-      const Antares::ModelerStudy::SystemModel::Model& model,
+      Antares::ModelerStudy::SystemModel::Model& model,
       std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
         paramsAndValues)
     {

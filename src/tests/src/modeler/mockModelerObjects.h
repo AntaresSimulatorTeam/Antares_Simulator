@@ -29,11 +29,11 @@ Antares::ModelerStudy::SystemModel::Model createModelWithParameters(
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
 Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
 Antares::ModelerStudy::SystemModel::Component createComponent(
-  const Antares::ModelerStudy::SystemModel::Model& model,
+  Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id = "component",
   unsigned index = 0);
 Antares::ModelerStudy::SystemModel::Component createComponent(
-  const Antares::ModelerStudy::SystemModel::Model& model,
+  Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id,
   std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> parameter_values,
   unsigned index = 0);

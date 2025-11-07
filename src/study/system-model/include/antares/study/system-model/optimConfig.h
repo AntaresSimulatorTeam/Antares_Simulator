@@ -18,31 +18,30 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-
-#include "antares/modeler/optimConfig/optimConfig.h"
-
-#include <unordered_map>
-
-#include <antares/exception/LoadingError.hpp>
-#include <antares/exception/RuntimeError.hpp>
+#pragma once
 
 namespace Antares::Modeler::Config
 {
 
-void OptimConfig::checkDuplicateModelIds() const
+enum class Location
 {
-    std::unordered_map<std::string, int> modelIds;
-    for (const auto& model: models_)
-    {
-        modelIds[model.id()]++;
-    }
+    MASTER,
+    MASTER_AND_SUBPROBLEMS,
+    SUBPROBLEMS
+};
 
-    for (const auto& [id, count]: modelIds)
+constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
+{
+    switch (rhs)
     {
-        if (count > 1)
-        {
-            throw Error::Duplicates("OptimConfig contains multiple models with ID \"" + id + "\".");
-        }
+    case Location::MASTER:
+        return lhs == Location::MASTER || lhs == Location::MASTER_AND_SUBPROBLEMS;
+    case Location::SUBPROBLEMS:
+        return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
+    case Location::MASTER_AND_SUBPROBLEMS:
+        return true;
+    default:
+        return false;
     }
 }
 

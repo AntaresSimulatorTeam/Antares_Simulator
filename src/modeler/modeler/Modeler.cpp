@@ -23,6 +23,7 @@
 #include "antares/solver/modeler/Modeler.h"
 
 #include <chrono>
+#include <fstream>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
@@ -57,33 +58,35 @@ public:
       const ModelerStudy::SystemModel::System* system,
       ILinearProblem& pb,
       const LinearProblemApi::ILinearProblemData& dataSeries,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
+      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
+      BendersDecomposition* bendersDecomposition):
         system_(system),
         dataSeries_(dataSeries),
         scenarioGroupRepository_(scenarioGroupRepository),
-        optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository)
+        optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository),
+        bendersDecomposition_(bendersDecomposition)
     {
     }
 
     ~SystemLinearProblemBuilder() = default;
 
-    void Provide(const FillContext& timeScenarioCtx)
+    void build(const FillContext& timeScenarioCtx, Antares::Modeler::Config::Location location)
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         const auto& components = system_->Components();
-        optimEntityContainer_.addFromSystemComponents(components);
+        optimEntityContainer_.addFromSystemComponents(components, location);
 
-        // All LP variables coordinates (component id, variable id, scenario, time step)
         for (const auto& component: components)
         {
             auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
                                                                       optimEntityContainer_,
-                                                                      scenarioGroupRepository_);
+                                                                      scenarioGroupRepository_,
+                                                                      location,
+                                                                      bendersDecomposition_);
             fillers.push_back(std::move(cf));
         }
 
         LinearProblemBuilder linear_problem_builder(fillers);
-
         linear_problem_builder.build(timeScenarioCtx);
     }
 
@@ -97,85 +100,119 @@ private:
     const LinearProblemApi::ILinearProblemData& dataSeries_;
     const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
     Optimisation::OptimEntityContainer optimEntityContainer_;
+    BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
-void Modeler::solve() const
+void Modeler::run() const
 {
+    Antares::Solver::ModelerParameters parameters;
+    Antares::Modeler::Data data;
+
     try
     {
-        const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
-        const auto parameters = loader_.loadParameters();
+        parameters = loader_.loadParameters();
         logs.info() << "Parameters loaded";
-        const auto data = loader_.loadAll();
-
-        Utils::TimeMeasurement measure;
-
-        writer_.init(!parameters.noOutput, simulationTableSuffix);
-
-        logs.info() << "linear problem of System loaded";
-        // Problem is MIP if any variable of any component is not continuous
-        bool isMip = std::ranges::any_of(
-          data.system->Components(),
-          [](const auto& component)
-          {
-              return std::any_of(component.getModel()->Variables().cbegin(),
-                                 component.getModel()->Variables().cend(),
-                                 [](const auto& variable) {
-                                     return variable.Type()
-                                            != ModelerStudy::SystemModel::ValueType::FLOAT;
-                                 });
-          });
-        OrtoolsLinearProblem ortools_linear_problem(isMip, parameters.solver);
-        // Todo: scenario
-        FillContext timeScenarioCtx = {
-          parameters.firstTimeStep,
-          parameters.lastTimeStep,
-          parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
-          parameters.lastTimeStep,  // global = local
-          0};
-        SystemLinearProblemBuilder system_linear_problem(data.system.get(),
-                                                         ortools_linear_problem,
-                                                         *data.dataSeries,
-                                                         data.scenarioGroupRepository);
-
-        system_linear_problem.Provide(timeScenarioCtx);
-
-        logs.info() << "Linear problem provided";
-
-        logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
-        logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
-
-        measure.tick();
-        logs.info();
-        logs.info() << "Modeler build took " << measure.toStringInSeconds();
-
-        writer_.writeProblem(ortools_linear_problem);
-
-        logs.info() << "Launching resolution...";
-        measure.reset();
-        auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
-        measure.tick();
-        logs.info() << "Solved in " << measure.toStringInSeconds();
-
-        switch (solution->getStatus())
-        {
-        case MipStatus::OPTIMAL:
-        case MipStatus::FEASIBLE:
-        {
-            writer_.writeSimulationTable(ortools_linear_problem,
-                                         *solution,
-                                         data,
-                                         system_linear_problem.getOptimEntityContainer(),
-                                         timeScenarioCtx);
-        }
-        break;
-        default:
-            logs.error() << "Problem during linear optimization";
-        }
+        data = loader_.loadAll();
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
         throw ModelerError("Error while loading files, exiting");
+    }
+
+    Utils::TimeMeasurement measure;
+
+    logs.info() << "linear problem of System loaded";
+    // Problem is MIP if any variable of any component is not continuous
+    bool isMip = std::ranges::any_of(
+      data.system->Components(),
+      [](const auto& component)
+      {
+          return std::ranges::any_of(component.getModel()->Variables(),
+                                     [](const auto& variable) {
+                                         return variable.Type()
+                                                != ModelerStudy::SystemModel::ValueType::FLOAT;
+                                     });
+      });
+
+    // Todo: scenario
+    FillContext timeScenarioCtx = {
+      parameters.firstTimeStep,
+      parameters.lastTimeStep,
+      parameters.firstTimeStep, // global = local, single time block in pure modeler (for now)
+      parameters.lastTimeStep,  // global = local
+      0};
+
+    // Sub problem
+    BendersDecomposition bendersDecomposition;
+
+    // Master
+    OrtoolsLinearProblem master_problem(isMip, parameters.solver);
+    SystemLinearProblemBuilder master_builder(data.system.get(),
+                                              master_problem,
+                                              *data.dataSeries,
+                                              data.scenarioGroupRepository,
+                                              &bendersDecomposition);
+
+    bendersDecomposition.setCurrentProblemId("master");
+    master_builder.build(timeScenarioCtx, Antares::Modeler::Config::Location::MASTER);
+
+    // Subproblem
+    OrtoolsLinearProblem subproblem(isMip, parameters.solver);
+
+    // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
+    // gp : and build() should return the vector of component fillers
+    // Subproblem
+    SystemLinearProblemBuilder subproblem_builder(data.system.get(),
+                                                  subproblem,
+                                                  *data.dataSeries,
+                                                  data.scenarioGroupRepository,
+                                                  &bendersDecomposition);
+
+    bendersDecomposition.setCurrentProblemId("1-1");
+    subproblem_builder.build(timeScenarioCtx, Antares::Modeler::Config::Location::SUBPROBLEMS);
+
+    logs.info() << "Linear problem provided";
+
+    logs.info() << "Number of variables: " << subproblem.variableCount();
+    logs.info() << "Number of constraints: " << subproblem.constraintCount();
+
+    measure.tick();
+    logs.info();
+    logs.info() << "Modeler build took " << measure.toStringInSeconds();
+
+    const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
+
+    if (!parameters.noOutput)
+    {
+        writer_.init(simulationTableSuffix);
+        auto output = writer_.outputPath();
+
+        Write(subproblem, output / "1-1.mps");
+        Write(master_problem, output / "master.mps");
+        std::ofstream of(output / "structure.txt");
+        bendersDecomposition.write(of);
+    }
+
+    logs.info() << "Launching resolution...";
+    measure.reset();
+    auto* solution = subproblem.solve(parameters.solverLogs);
+    measure.tick();
+    logs.info() << "Solved in " << measure.toStringInSeconds();
+
+    switch (solution->getStatus())
+    {
+    case MipStatus::OPTIMAL:
+    case MipStatus::FEASIBLE:
+    {
+        writer_.writeSimulationTable(subproblem,
+                                     *solution,
+                                     data,
+                                     subproblem_builder.getOptimEntityContainer(),
+                                     timeScenarioCtx);
+    }
+    break;
+    default:
+        logs.error() << "Problem during linear optimization";
     }
 }
 } // namespace Antares::Solver
