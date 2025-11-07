@@ -46,7 +46,7 @@ public:
 
     double reducedCost() const override
     {
-        return 0;
+        return 4.96; // arbitrary value for testing
     }
 
     Antares::Optimisation::LinearProblemApi::MipBasisStatus getMipBasisStatus() const override
@@ -148,7 +148,7 @@ public:
 
     double dual() const override
     {
-        return 0;
+        return 8.23; // arbitrary value for testing
     }
 
     // IHasName interface
