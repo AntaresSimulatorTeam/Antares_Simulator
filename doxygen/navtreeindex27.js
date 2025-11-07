@@ -1,5 +1,6 @@
 var NAVTREEINDEX27 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#afb2078b8ee97b4e94b9cb3cdd2c2cdd2":[8,0,0,19,5,8,13],
 "classAntares_1_1Solver_1_1Variable_1_1Areas.html#afe916efa756ebcf9966754eb48c4c70d":[8,0,0,19,5,8,21],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html":[8,0,0,19,5,10],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a04e2349cadc94aa99250921ce0c9e5fc":[8,0,0,19,5,10,28],
@@ -248,6 +249,5 @@ var NAVTREEINDEX27 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a83d3ddb8d650c0cb0f903f8d20ae1258":[8,0,0,19,5,4,46,14],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a86080191dcfc54ed0858732eccc7392b":[8,0,0,19,5,4,46,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8922dad9233664224a5eed9476a5b79b":[8,0,0,19,5,4,46,20],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8d0bbe52879e603361808382624530b0":[8,0,0,19,5,4,46,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8e264a7cd902a1290f9dcc39bf5c2915":[8,0,0,19,5,4,46,12]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8d0bbe52879e603361808382624530b0":[8,0,0,19,5,4,46,11]
 };

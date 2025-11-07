@@ -1,5 +1,9 @@
 var NAVTREEINDEX63 =
 {
+"structStudyFixture.html#ad030b15ed14595081f9c90fb6f7c2049":[8,0,297,8],
+"structStudyFixture.html#ae65400ddc7129fa01c5ae1ae44a6e00f":[8,0,297,10],
+"structStudyFixture.html#aebfb8a290fdbc5cc45b4fa56787601a9":[8,0,297,11],
+"structStudyForBCTest.html":[8,0,298],
 "structStudyForBCTest.html#a21d33195e504639be430c0ecc36958f7":[8,0,298,2],
 "structStudyForBCTest.html#a67d0e99a06e614f0069ebeae1b9758b8":[8,0,298,3],
 "structStudyForBCTest.html#a68dbaede56593916ffcc8ed365255a7e":[8,0,298,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX63 =
 "tests-matrix-load_8h_source.html":[9,0,0,10,2,1,0,0,2],
 "tests-matrix-save_8h_source.html":[9,0,0,10,2,1,0,0,3],
 "tests_2src_2libs_2antares_2logs_2antares_2logs_2logs_8h_source.html":[9,0,0,10,2,1,0,2,0,0,0],
-"tests_2src_2solver_2hydro_2monthly_8cpp.html#a0be944081ab92009f3606b96f6361d4a":[7,0,16,4],
-"tests_2src_2solver_2hydro_2monthly_8cpp.html#ad7ed9889fdbed519508a8a60603f2dd9":[7,0,16,5],
-"text_8hxx_source.html":[9,0,0,12,0,1,0,9],
-"thermal-cluster-item_8h_source.html":[9,0,0,12,2,1,1,2,1,10],
-"thermal-cluster-order_8cpp.html#aa869a4c7b8d4fbcc8abb030fe3d2cc7a":[7,0,0,3,2,0,19]
+"tests_2src_2solver_2hydro_2monthly_8cpp.html#a0be944081ab92009f3606b96f6361d4a":[7,0,16,4]
 };

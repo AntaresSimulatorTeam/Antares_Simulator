@@ -23,7 +23,6 @@ var structPROBLEME__HEBDO =
     [ "ExportMPS", "structPROBLEME__HEBDO.html#a7e189a08e30d403890eb6d019d987089", null ],
     [ "exportMPSOnError", "structPROBLEME__HEBDO.html#adede196407abda1325f677d5d62b371a", null ],
     [ "exportSolutions", "structPROBLEME__HEBDO.html#a7b4ca65395c08797f9114620591cab60", null ],
-    [ "ExportStructure", "structPROBLEME__HEBDO.html#a14a0692a07e3207e60bcb773f0078ff0", null ],
     [ "HeureDansLAnnee", "structPROBLEME__HEBDO.html#a127628b4d0876ef27e380a7476b4955f", null ],
     [ "IndexDebutIntercoExtremite", "structPROBLEME__HEBDO.html#aa288ff393af6abb410a767a92f9a6f54", null ],
     [ "IndexDebutIntercoOrigine", "structPROBLEME__HEBDO.html#ac87ec3a8d1bdf07351353269eeb498ed", null ],

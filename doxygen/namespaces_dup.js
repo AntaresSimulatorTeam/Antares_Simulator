@@ -1482,7 +1482,12 @@ var namespaces_dup =
           [ "CmdLineOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions" ],
           [ "OptimizationOptions", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions" ],
           [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem" ],
-          [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization" ]
+          [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization" ],
+          [ "ExportBehavior", "libs_2antares_2optimization-options_2include_2antares_2optimization-options_2options_8h.html#a094919444b03a1424c97a929efa27991", [
+            [ "Never", "libs_2antares_2optimization-options_2include_2antares_2optimization-options_2options_8h.html#a094919444b03a1424c97a929efa27991a6e7b34fa59e1bd229b207892956dc41c", null ],
+            [ "Once", "libs_2antares_2optimization-options_2include_2antares_2optimization-options_2options_8h.html#a094919444b03a1424c97a929efa27991ae1a9dc9f23534e63de9df0d540ac1611", null ],
+            [ "Always", "libs_2antares_2optimization-options_2include_2antares_2optimization-options_2options_8h.html#a094919444b03a1424c97a929efa27991a68eec46437c384d8dad18d5464ebc35c", null ]
+          ] ]
         ] ],
         [ "Simulation", null, [
           [ "AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList" ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX45 =
 {
+"classcheck__general_1_1check__interface.html#a2634863ab9b17a295718627507f6fd4a":[8,0,3,0,2],
 "classcheck__general_1_1check__interface.html#a4e40f92d3cf62806318272da1ac5b7a4":[8,0,3,0,4],
 "classcheck__general_1_1check__interface.html#a7233ca5e87c61ef817a009b4d35d3550":[8,0,3,0,0],
 "classcheck__general_1_1check__interface.html#ab749c996877141a0cf0ef3102ab1fc78":[8,0,3,0,1],
@@ -151,8 +152,8 @@ var NAVTREEINDEX45 =
 "classreferenceIniFile.html#ad8f56103cf90e97314837d175fb5cb8d":[8,0,252,9],
 "classreferenceIniFile.html#ae38f514c87175cb16d7d50c117aae175":[8,0,252,1],
 "classreferenceIniFile.html#ae38f514c87175cb16d7d50c117aae175":[8,0,252,3],
-"classreferenceIniFile.html#af14c0e9ad664aa1793c0671b25a5c9ed":[8,0,252,6],
 "classreferenceIniFile.html#af14c0e9ad664aa1793c0671b25a5c9ed":[8,0,252,7],
+"classreferenceIniFile.html#af14c0e9ad664aa1793c0671b25a5c9ed":[8,0,252,6],
 "classreferenceScBuilderFile.html":[8,0,253],
 "classreferenceScBuilderFile.html#a045962399a5c39cfb01d64c99b9fbf6c":[8,0,253,1],
 "classreferenceScBuilderFile.html#a260a01d7ddc68a8557180f6321dfdf9d":[8,0,253,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX45 =
 "classtolerances_1_1Linux__tolerances.html":[8,0,29,1],
 "classtolerances_1_1Linux__tolerances.html#a24cc598bfda4cc0b06d557e10036be32":[8,0,29,1,1],
 "classtolerances_1_1Linux__tolerances.html#a2a84e8453a3e485be29dd54780747baf":[8,0,29,1,0],
-"classtolerances_1_1Linux__tolerances.html#a582653cc66528a07f0112a2e8e5aafd1":[8,0,29,1,2],
-"classtolerances_1_1Tolerances.html":[8,0,29,0]
+"classtolerances_1_1Linux__tolerances.html#a582653cc66528a07f0112a2e8e5aafd1":[8,0,29,1,2]
 };

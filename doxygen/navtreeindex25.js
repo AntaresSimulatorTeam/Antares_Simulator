@@ -183,11 +183,12 @@ var NAVTREEINDEX25 =
 "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html#a27c8abb13bb5d2760fdc2e3d4f7df9f6":[8,0,0,19,3,3,1],
 "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html#af07677d9fa74d9aa65062d053fd05841":[8,0,0,19,3,3,0],
 "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[8,0,0,19,3,2],
-"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a3ad17dd29028cdb77143c46eff2dadcf":[8,0,0,19,3,2,4],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a3ad17dd29028cdb77143c46eff2dadcf":[8,0,0,19,3,2,5],
 "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a66536c0424eb4ffe05577f461b014831":[8,0,0,19,3,2,0],
-"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#aade4dbb9ddf41159c644bdd67dfb2491":[8,0,0,19,3,2,3],
-"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#ab51ef7b985dbc1302b55a94bad39e647":[8,0,0,19,3,2,1],
-"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#af4179a14f49df3c9993da10066c230e6":[8,0,0,19,3,2,2],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a7f5176c825f4bce612b45c1f813d0832":[8,0,0,19,3,2,1],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#aade4dbb9ddf41159c644bdd67dfb2491":[8,0,0,19,3,2,4],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#ab51ef7b985dbc1302b55a94bad39e647":[8,0,0,19,3,2,2],
+"classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#af4179a14f49df3c9993da10066c230e6":[8,0,0,19,3,2,3],
 "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html":[8,0,0,19,3,4],
 "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#a2963da2116d09bfd2e5d7df478692b97":[8,0,0,19,3,4,0],
 "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#a59b19addd7403fb8597e94c58817190c":[8,0,0,19,3,4,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html#a5889e8f887a0cdfdb2712a27e581a35f":[8,0,0,19,4,13,0],
 "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html#aa3e6427d82cbfc699935ac2b08fa5d11":[8,0,0,19,4,13,1],
 "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html#aab8af5651362e566bc7205bb6184c721":[8,0,0,19,4,13,2],
-"classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html":[8,0,0,19,4,8],
-"classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html#a470b15ac5d71d6e23c10fcb671146f62":[8,0,0,19,4,8,0]
+"classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html":[8,0,0,19,4,8]
 };

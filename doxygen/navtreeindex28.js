@@ -1,5 +1,6 @@
 var NAVTREEINDEX28 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a8e264a7cd902a1290f9dcc39bf5c2915":[8,0,0,19,5,4,46,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#acd13d29fbdbad7c894a59965bd067bed":[8,0,0,19,5,4,46,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#ad412b52f6855ec63b0533aa9b5343b6c":[8,0,0,19,5,4,46,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html":[8,0,0,19,5,4,28],
@@ -248,6 +249,5 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#a9f84650fbfba75034117950f023086fb":[8,0,0,19,5,4,63,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#aa061f6c6d4a57f166e21c3360ff96443":[8,0,0,19,5,4,63,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#aba1707c05dff4b14f4596303cbefddfe":[8,0,0,19,5,4,63,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#ac9b444d1ac310a86ec1700789d5bb92e":[8,0,0,19,5,4,63,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#acd818436abde4291bbfa2e5c2b4d466c":[8,0,0,19,5,4,63,7]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base.html#ac9b444d1ac310a86ec1700789d5bb92e":[8,0,0,19,5,4,63,2]
 };

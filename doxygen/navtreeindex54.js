@@ -1,5 +1,10 @@
 var NAVTREEINDEX54 =
 {
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a1dd1b36f0795c32bcb0ae5e2f8cc34da":[7,0,0,68],
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a2329aa8a66fd92377df919c542d3ea59":[7,0,0,67],
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a61fe8e29c1c9060a07d6e3a496d50908":[7,0,0,25,60],
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a6a2aa5ae8c8abb3498ef81ebdfb17dd9":[7,0,0,25,55],
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a98e9ba37267ba8e7700de5e6d01cf618":[7,0,0,25,44],
 "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h_source.html":[9,0,0,8,2,0,0,0,0,2,3],
 "solver_2hydro_2management_2monthly_8cpp.html#aca5e481dc01d20ffb6fd9baf8eb61458":[7,0,0,79],
 "solver_2misc_2include_2antares_2solver_2misc_2options_8h_source.html":[9,0,0,8,5,0,0,0,0,4],
@@ -244,10 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a263cd01c3656c44df0c72561ab0080a2":[8,0,0,5,41,2,1],
 "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a48b6687040a8d8304c2ad87647d1f255":[8,0,0,5,41,2,2],
 "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a526a4ac1db0e1f96c6934acad0acfcde":[8,0,0,5,41,2,4],
-"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a615ef35958bd3e8abd70238272e96a2c":[8,0,0,5,41,2,0],
-"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a7dac72b8db1434e647436c8bdb3c0bcd":[8,0,0,5,41,2,3],
-"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#aba1602032f42d6b2ee0b09fa6b7f7097":[8,0,0,5,41,2,5],
-"structAntares_1_1Data_1_1Parameters_1_1UCMode.html":[8,0,0,5,41,3],
-"structAntares_1_1Data_1_1Parameters_1_1UCMode.html#a54ca3186d2fc07dcf60311e8bd250c3d":[8,0,0,5,41,3,0],
-"structAntares_1_1Data_1_1Parameters_1_1UCMode.html#aa0b613cb0812e2bb6231b6f65b54aa01":[8,0,0,5,41,3,1]
+"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a615ef35958bd3e8abd70238272e96a2c":[8,0,0,5,41,2,0]
 };
