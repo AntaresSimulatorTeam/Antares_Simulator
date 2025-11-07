@@ -154,42 +154,39 @@ $(document).ready(function(){initNavTree('i__writer_8h_source.html',''); initRes
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1IResultWriter.html">   33</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">using</span> Ptr = std::shared_ptr&lt;IResultWriter&gt;;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::string&amp; entryPath, Yuni::Clob&amp; entryContent) = 0;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                    std::string&amp; entryContent)</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      = 0;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                  <span class="keyword">const</span> std::filesystem::path&amp; filePath)</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      = 0;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">   49</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">flush</a>() = 0;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span> verbose) = 0;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;};</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1NullResultWriter.html">   54</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1NullResultWriter.html">NullResultWriter</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::string&amp;, Yuni::Clob&amp;) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp;, std::string&amp;) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp;, <span class="keyword">const</span> std::filesystem::path&amp;) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> flush() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span>) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:34</div></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1IResultWriter.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">using</span> Ptr = std::shared_ptr&lt;IResultWriter&gt;;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                                    std::string&amp; entryContent)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      = 0;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                                  <span class="keyword">const</span> std::filesystem::path&amp; filePath)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      = 0;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">   47</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">flush</a>() = 0;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span> verbose) = 0;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1NullResultWriter.html">   52</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1NullResultWriter.html">NullResultWriter</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp;, std::string&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp;, <span class="keyword">const</span> std::filesystem::path&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> flush() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;};</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html_a866bc43cd373dc27cf69ec3968737c8c"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">Antares::Solver::IResultWriter::flush</a></div><div class="ttdeci">virtual void flush()=0</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1NullResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:55</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1NullResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:53</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

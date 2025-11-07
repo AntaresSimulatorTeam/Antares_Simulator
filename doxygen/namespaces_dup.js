@@ -321,10 +321,9 @@ var namespaces_dup =
         [ "AddTask", "concurrency_8cpp.html#abfb2aae84aed4bd80cdee1c9cdbec100", null ]
       ] ],
       [ "Constants", null, [
-        [ "daysPerMonth", "libs_2antares_2constants_8cpp.html#aa192eb1fa700dbb2b6e971fc16c1be85", null ],
-        [ "nbHoursInAWeek", "libs_2antares_2constants_8cpp.html#a0e905c5385ad3a0e418a6c0ae17dadac", null ],
-        [ "noiseAmplitude", "h2o2__j__donnees__optimisation_8h.html#a141305c24103c8f1d7b24b6822161990", null ],
-        [ "seed", "h2o2__j__donnees__optimisation_8h.html#aef55960759245c87a91be99665046086", null ]
+        [ "daysPerMonth", "libs_2antares_2include_2antares_2antares_2constants_8h.html#a0fce63f36e3f678c5597e6f38c5f90f0", null ],
+        [ "nbHoursInAWeek", "libs_2antares_2include_2antares_2antares_2constants_8h.html#afbbcbac413e7385fc4ab865f2c3ff1bb", null ],
+        [ "noiseAmplitude", "libs_2antares_2include_2antares_2antares_2constants_8h.html#a141305c24103c8f1d7b24b6822161990", null ]
       ] ],
       [ "Data", null, [
         [ "AdequacyPatch", null, [
@@ -402,9 +401,10 @@ var namespaces_dup =
           [ "STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster" ],
           [ "STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput" ],
           [ "ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
-          [ "CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener" ],
           [ "Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties" ],
           [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series" ],
+          [ "HoursCollectorVisitor", "classAntares_1_1Data_1_1ShortTermStorage_1_1HoursCollectorVisitor.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1HoursCollectorVisitor" ],
+          [ "CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener" ],
           [ "GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours" ],
           [ "fillIfEmpty", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a6a9536353d101348d6e0cea9a3042855", null ],
           [ "fillIfEmpty", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a2dd8e02fcd42eb2bcf12580d84e3e3e8", null ],
@@ -1539,10 +1539,10 @@ var namespaces_dup =
           [ "extractListSTSforRemix", "common-hydro-remix_8cpp.html#a0237a57eea5fb6fda988b5c6798b825b", null ],
           [ "extractLoadForCurrentWeek", "common-hydro-remix_8cpp.html#af7fdc6bc56af13a0c3236b60dc9e5738", null ],
           [ "extractSTSforRemix", "common-hydro-remix_8cpp.html#aca4ae031bccefe00cbd6fd74b6bc173e", null ],
-          [ "extractSTSinflows", "common-hydro-remix_8cpp.html#a30826a79b4f7f20b4d22a8d913fb9785", null ],
-          [ "extractSTSlowRuleCurve", "common-hydro-remix_8cpp.html#a8f78edca78638d2880ae79bd1dd39f68", null ],
-          [ "extractSTSpmax", "common-hydro-remix_8cpp.html#a42526cb4bc31f5ee8eb1aa16e3a96624", null ],
-          [ "extractSTSupRuleCurve", "common-hydro-remix_8cpp.html#a92e80be845f9bad4f0ebcc8dc8951c86", null ],
+          [ "extractSTSinflows", "common-hydro-remix_8cpp.html#a56fc00873da3157a62111767ea63c601", null ],
+          [ "extractSTSlowRuleCurve", "common-hydro-remix_8cpp.html#ae1041bd39443f5e83ad4216942375d73", null ],
+          [ "extractSTSpmax", "common-hydro-remix_8cpp.html#a311bb828fd4a5ea4bbf36e0fecfe72a6", null ],
+          [ "extractSTSupRuleCurve", "common-hydro-remix_8cpp.html#a04ce4d5763f6c22f3e87393be18a6777", null ],
           [ "finalizeOptimizationStatistics", "common-eco-adq_8cpp.html#a11dfb84267c82f2f802941ba9861c8a3", null ],
           [ "interpolateWaterValue", "common-hydro-levels_8cpp.html#a771c320a359d85099c258f03801f797a", null ],
           [ "makeHydroForRemix", "create-storage-for-remix_8h.html#adf5ed6f3b380a2a48eb7ae7ea80812a0", null ],
@@ -1570,7 +1570,7 @@ var namespaces_dup =
           [ "updatingWeeklyFinalHydroLevel", "common-hydro-levels_8cpp.html#a4274c3f8be2e2c89c0fc3fe07230f87a", null ],
           [ "ValidHours", "shave-peaks-by-remix-help_8h.html#a194416baeb9057cc4e1803e5b6f5a1cf", null ],
           [ "weekSubRange", "common-hydro-remix_8cpp.html#a21efa3f481f33c82fb5a5b136aa06ece", null ],
-          [ "error_msg_start", "storage-for-remix-no-levels_8h.html#a0642beb7c883e910fcdee6837f76530f", null ],
+          [ "error_msg_start_hydro_remix", "storage-for-remix-no-levels_8h.html#a156fe10e055010a39e0a838a2ddcf5f5", null ],
           [ "HOURS_IN_DAY", "common-hydro-remix_8cpp.html#a7fa42ae4b19a8ce22936ba65edd4e753", null ],
           [ "HOURS_IN_WEEK", "common-hydro-remix_8cpp.html#a54a71b51cb2eb3d8729d18458dfd1004", null ],
           [ "nbHoursInWeek", "post__process__commands_8cpp.html#ade1f5241a3e238698cafb0c5c17ea95a", null ],
@@ -2635,10 +2635,6 @@ var namespaces_dup =
       [ "solver_path", "examples_2conftest_8py.html#ac8a0b650cf676deaa4e6df67f7222e6d", null ],
       [ "tsgenerator_path", "run-study-tests_2antares__tools_2ts-generator_2conftest_8py.html#a807fc90332208d532d0caaad96b45df1", null ]
     ] ],
-    [ "Constants", null, [
-      [ "noiseAmplitude", "h2o__j__ajouter__bruit__au__cout_8cpp.html#a67f3b465faf9ff376de3071fa0f3b3cd", null ],
-      [ "seed", "h2o__j__ajouter__bruit__au__cout_8cpp.html#a391712d2ac248898c2b999817c3ac731", null ]
-    ] ],
     [ "create_checks", null, [
       [ "create_check_hydro_level", "create__checks_8py.html#a16cc70ab9aa97d6e3dba3c4acebf30a5", null ],
       [ "create_checks", "create__checks_8py.html#af8e561801895918f6bda330f84da49e1", null ],
@@ -2780,6 +2776,9 @@ var namespaces_dup =
       [ "run_antares_modeler", "modeler__steps_8py.html#a46943a258f11896089708a54ac5b0df2", null ],
       [ "run_modeler", "modeler__steps_8py.html#a9d99e3e1985a65e970317fcf0a7d30b2", null ]
     ] ],
+    [ "modified_inode", null, [
+      [ "UserData", "classmodified__inode_1_1UserData.html", "classmodified__inode_1_1UserData" ]
+    ] ],
     [ "OperatingSystem", null, [
       [ "FindAntaresLocalAppData", "appdata_8h.html#af4149dcd70b39c611b24064d32cfa6ac", null ],
       [ "FindAntaresLocalAppData", "appdata_8cpp.html#a46f401c7d546f8f708c21f06ad8accab", null ],
@@ -2800,11 +2799,6 @@ var namespaces_dup =
     ] ],
     [ "results_remover", null, [
       [ "results_remover", "classresults__remover_1_1results__remover.html", "classresults__remover_1_1results__remover" ]
-    ] ],
-    [ "ShortTermStorage", null, [
-      [ "PROPERTIES", "structShortTermStorage_1_1PROPERTIES.html", "structShortTermStorage_1_1PROPERTIES" ],
-      [ "RESULTS", "structShortTermStorage_1_1RESULTS.html", "structShortTermStorage_1_1RESULTS" ],
-      [ "AREA_INPUT", "sim__structure__probleme__economique_8h.html#a4936be9aaac657821119cba6300d55fd", null ]
     ] ],
     [ "sim_return_code", null, [
       [ "simulation_success", "classsim__return__code_1_1simulation__success.html", "classsim__return__code_1_1simulation__success" ]

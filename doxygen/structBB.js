@@ -4,7 +4,7 @@ var structBB =
     [ "InitializeConstraintBuilder", "structBB.html#af72187197c329155e7a55102647b400f", null ],
     [ "InitializeConstraintBuilderData", "structBB.html#a8d1dcfdb8382877b9b93ee81e9d00de8", null ],
     [ "InitializeShortTermStorageCumulativeConstraintData", "structBB.html#aa0baf92abd88afab02b8c73329b2be41", null ],
-    [ "InitializeShortTermStorageData", "structBB.html#a3ba6defb103145f000c6ec8cc06da580", null ],
+    [ "InitializeShortTermStorageData", "structBB.html#a932a98c0022eff723cb1076b11cd3459", null ],
     [ "set_correspondances_des_variables", "structBB.html#ae48b258cd7e869b999978682281d0c3e", null ],
     [ "addc1_withdrawal", "structBB.html#ad1329743a6530e3dbfabea5020c54b82", null ],
     [ "addc1_withdrawal_constraints", "structBB.html#ab8c3361cbb94758f22c13b6389450330", null ],
@@ -33,10 +33,10 @@ var structBB =
     [ "NumeroDeVariableStockFinal", "structBB.html#a4b3dcf205d498d5c318147305a7970d0", null ],
     [ "Pi", "structBB.html#a432d1945158f2796c2460cf1c385d2f9", null ],
     [ "Sens", "structBB.html#a6c5c3b8c0a706ef76e8bc13f9c3b3d17", null ],
-    [ "shortTermStorage", "structBB.html#a192573242b0f34cf91638ad794c66477", null ],
+    [ "shortTermStorage", "structBB.html#a5caa0c3a3a954c5c00fc715003dedb15", null ],
     [ "shorttermstoragecumulativeconstraintdata", "structBB.html#a572f4fcaad6c900d23da971f9a93b787", null ],
-    [ "storage1", "structBB.html#a2208e22dcad511eed0775bd650aae29b", null ],
-    [ "storage2", "structBB.html#acf00e8c38b47f3a1451228a022ed98a9", null ],
-    [ "storage3", "structBB.html#a44f02ab5e373bd6a68fbb85ac19fdf84", null ],
+    [ "storage1", "structBB.html#a887bfb8e4ad122044e21f0fbf4b27642", null ],
+    [ "storage2", "structBB.html#a2c0192d015d53dc7d636f97af3620e19", null ],
+    [ "storage3", "structBB.html#a3673881f6e747d0861d3a08cefe7655b", null ],
     [ "weekInTheYear", "structBB.html#aae733ddc9b449e6ecc44698589e7704a", null ]
 ];

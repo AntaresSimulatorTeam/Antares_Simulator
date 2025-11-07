@@ -13,7 +13,7 @@ var hierarchy =
       ] ],
       [ "HoursFieldVisitor", "classHoursFieldVisitor.html", [
         [ "HoursFieldBaseVisitor", "classHoursFieldBaseVisitor.html", [
-          [ "HoursCollectorVisitor", "classHoursCollectorVisitor.html", null ]
+          [ "Antares::Data::ShortTermStorage::HoursCollectorVisitor", "classAntares_1_1Data_1_1ShortTermStorage_1_1HoursCollectorVisitor.html", null ]
         ] ]
       ] ],
       [ "ScenarioBuilderVisitor", "classScenarioBuilderVisitor.html", [
@@ -1248,7 +1248,6 @@ var hierarchy =
     [ "Antares::Expressions::NodeRegistry", "classAntares_1_1Expressions_1_1NodeRegistry.html", null ],
     [ "Antares::Expressions::Visitors::NodeVisitsProvider< R, Args >", "structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html", null ],
     [ "Yuni::NonCopyable", null, [
-      [ "UserData", "classUserData.html", null ],
       [ "Antares::Data::Area", "classAntares_1_1Data_1_1Area.html", null ],
       [ "Antares::Data::AreaLink", "classAntares_1_1Data_1_1AreaLink.html", null ],
       [ "Antares::Data::AreaList", "classAntares_1_1Data_1_1AreaList.html", null ],
@@ -1262,7 +1261,8 @@ var hierarchy =
       [ "Antares::TSGenerator::XCast::XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", null ],
       [ "FSWalker::EventsRegistry", "classFSWalker_1_1EventsRegistry.html", null ],
       [ "FSWalker::Walker", "classFSWalker_1_1Walker.html", null ],
-      [ "UserData", "classUserData.html", null ]
+      [ "UserData", "classUserData.html", null ],
+      [ "modified_inode::UserData", "classmodified__inode_1_1UserData.html", null ]
     ] ],
     [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", null ],
     [ "NoObjectiveCreator", "structNoObjectiveCreator.html", null ],
@@ -1474,7 +1474,7 @@ var hierarchy =
     [ "PRODUCTION_THERMIQUE_OPTIMALE", "structPRODUCTION__THERMIQUE__OPTIMALE.html", null ],
     [ "Antares::Solver::Progression", "classAntares_1_1Solver_1_1Progression.html", null ],
     [ "Antares::Data::ShortTermStorage::Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", null ],
-    [ "ShortTermStorage::PROPERTIES", "structShortTermStorage_1_1PROPERTIES.html", null ],
+    [ "PROPERTIES", "structPROPERTIES.html", null ],
     [ "Antares::IniFile::Property", "classAntares_1_1IniFile_1_1Property.html", null ],
     [ "Antares::Window::Inspector::PSimulationMode", "structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html", null ],
     [ "Antares::Window::Inspector::PStudy1stJanuary", "structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html", null ],
@@ -1518,7 +1518,7 @@ var hierarchy =
     [ "Antares::Toolbox::Filter::ResultCaption< T >", "structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html", null ],
     [ "ResultMatrix", "classResultMatrix.html", null ],
     [ "Antares::Toolbox::Filter::ResultNewInstance< T >", "structAntares_1_1Toolbox_1_1Filter_1_1ResultNewInstance.html", null ],
-    [ "ShortTermStorage::RESULTS", "structShortTermStorage_1_1RESULTS.html", null ],
+    [ "RESULTS", "structRESULTS.html", null ],
     [ "results_remover.results_remover", "classresults__remover_1_1results__remover.html", null ],
     [ "RightT", null, [
       [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]

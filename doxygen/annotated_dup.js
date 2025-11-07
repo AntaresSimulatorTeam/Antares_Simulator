@@ -278,9 +278,10 @@ var annotated_dup =
           [ "STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster" ],
           [ "STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput" ],
           [ "ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
-          [ "CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener" ],
           [ "Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties" ],
           [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series" ],
+          [ "HoursCollectorVisitor", "classAntares_1_1Data_1_1ShortTermStorage_1_1HoursCollectorVisitor.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1HoursCollectorVisitor" ],
+          [ "CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener" ],
           [ "GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours" ]
         ] ],
         [ "Solar", null, [
@@ -1391,15 +1392,14 @@ var annotated_dup =
     [ "modeler_output_handler", null, [
       [ "modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", "classmodeler__output__handler_1_1modeler__output__handler" ]
     ] ],
+    [ "modified_inode", null, [
+      [ "UserData", "classmodified__inode_1_1UserData.html", "classmodified__inode_1_1UserData" ]
+    ] ],
     [ "output_compare", null, [
       [ "output_compare", "classoutput__compare_1_1output__compare.html", "classoutput__compare_1_1output__compare" ]
     ] ],
     [ "results_remover", null, [
       [ "results_remover", "classresults__remover_1_1results__remover.html", "classresults__remover_1_1results__remover" ]
-    ] ],
-    [ "ShortTermStorage", null, [
-      [ "PROPERTIES", "structShortTermStorage_1_1PROPERTIES.html", "structShortTermStorage_1_1PROPERTIES" ],
-      [ "RESULTS", "structShortTermStorage_1_1RESULTS.html", "structShortTermStorage_1_1RESULTS" ]
     ] ],
     [ "sim_return_code", null, [
       [ "simulation_success", "classsim__return__code_1_1simulation__success.html", "classsim__return__code_1_1simulation__success" ]
@@ -1584,7 +1584,6 @@ var annotated_dup =
     [ "global_JIT_manager", "classglobal__JIT__manager.html", "classglobal__JIT__manager" ],
     [ "Group1", "classGroup1.html", "classGroup1" ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html", "classHourlyCSRProblem" ],
-    [ "HoursCollectorVisitor", "classHoursCollectorVisitor.html", "classHoursCollectorVisitor" ],
     [ "HoursFieldBaseVisitor", "classHoursFieldBaseVisitor.html", "classHoursFieldBaseVisitor" ],
     [ "HoursFieldLexer", "classHoursFieldLexer.html", "classHoursFieldLexer" ],
     [ "HoursFieldParser", "classHoursFieldParser.html", "classHoursFieldParser" ],
@@ -1691,6 +1690,7 @@ var annotated_dup =
     [ "PRODUCTION_THERMIQUE", "structPRODUCTION__THERMIQUE.html", "structPRODUCTION__THERMIQUE" ],
     [ "PRODUCTION_THERMIQUE_OPTIMALE", "structPRODUCTION__THERMIQUE__OPTIMALE.html", "structPRODUCTION__THERMIQUE__OPTIMALE" ],
     [ "Progress", "classProgress.html", "classProgress" ],
+    [ "PROPERTIES", "structPROPERTIES.html", "structPROPERTIES" ],
     [ "PublicStudy", "classPublicStudy.html", "classPublicStudy" ],
     [ "QpFixture", "structQpFixture.html", "structQpFixture" ],
     [ "QuadraticProblemMatrix", "classQuadraticProblemMatrix.html", "classQuadraticProblemMatrix" ],
@@ -1702,6 +1702,7 @@ var annotated_dup =
     [ "RESERVE_JMOINS1", "structRESERVE__JMOINS1.html", "structRESERVE__JMOINS1" ],
     [ "RESULTATS_HORAIRES", "structRESULTATS__HORAIRES.html", "structRESULTATS__HORAIRES" ],
     [ "ResultMatrix", "classResultMatrix.html", "classResultMatrix" ],
+    [ "RESULTS", "structRESULTS.html", "structRESULTS" ],
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", "structSavingToStreamFixture" ],
     [ "ScenarioBuilderBaseVisitor", "classScenarioBuilderBaseVisitor.html", "classScenarioBuilderBaseVisitor" ],
     [ "ScenarioBuilderFixture", "structScenarioBuilderFixture.html", "structScenarioBuilderFixture" ],

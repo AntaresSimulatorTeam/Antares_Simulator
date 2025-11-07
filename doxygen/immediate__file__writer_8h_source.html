@@ -164,22 +164,21 @@ $(document).ready(function(){initNavTree('immediate__file__writer_8h_source.html
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html">ImmediateFileResultWriter</a>(<span class="keyword">const</span> std::filesystem::path&amp; folderOutput);</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html">ImmediateFileResultWriter</a>();</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">// Write to file immediately, creating directories if needed</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::string&amp; entryPath, Yuni::Clob&amp; entryContent) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                            std::string&amp; entryContent) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                          <span class="keyword">const</span> std::filesystem::path&amp; filePath) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629">flush</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span> verbose) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> std::filesystem::path pOutputFolder;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:34</div></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                            std::string&amp; entryContent) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                          <span class="keyword">const</span> std::filesystem::path&amp; filePath) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629">flush</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span> verbose) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> std::filesystem::path pOutputFolder;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1ImmediateFileResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html">Antares::Solver::ImmediateFileResultWriter</a></div><div class="ttdef"><b>Definition:</b> immediate_file_writer.h:33</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1ImmediateFileResultWriter_html_af331f4ce440c90a0b402f9dbd6c67629"><div class="ttname"><a href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629">Antares::Solver::ImmediateFileResultWriter::flush</a></div><div class="ttdeci">void flush() override</div><div class="ttdef"><b>Definition:</b> immediate_file_writer.cpp:104</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1ImmediateFileResultWriter_html_af331f4ce440c90a0b402f9dbd6c67629"><div class="ttname"><a href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629">Antares::Solver::ImmediateFileResultWriter::flush</a></div><div class="ttdeci">void flush() override</div><div class="ttdef"><b>Definition:</b> immediate_file_writer.cpp:93</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

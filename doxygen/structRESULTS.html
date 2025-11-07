@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: HoursCollectorVisitor Class Reference</title>
+<title>Antares Simulator: RESULTS Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classHoursCollectorVisitor.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structRESULTS.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,74 +124,34 @@ $(document).ready(function(){initNavTree('classHoursCollectorVisitor.html',''); 
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classHoursCollectorVisitor-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structRESULTS-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">HoursCollectorVisitor Class Reference</div>  </div>
+<div class="title">RESULTS Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for HoursCollectorVisitor:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classHoursCollectorVisitor.png" usemap="#HoursCollectorVisitor_map" alt=""/>
-  <map id="HoursCollectorVisitor_map" name="HoursCollectorVisitor_map">
-<area href="classHoursFieldBaseVisitor.html" alt="HoursFieldBaseVisitor" shape="rect" coords="0,112,220,136"/>
-<area href="classHoursFieldVisitor.html" alt="HoursFieldVisitor" shape="rect" coords="0,56,220,80"/>
-  </map>
-</div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a2967b8fde88bb5a3fb6489094b8d1ab3"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHoursCollectorVisitor.html#a2967b8fde88bb5a3fb6489094b8d1ab3">visitHoursField</a> (<a class="el" href="classHoursFieldParser_1_1HoursFieldContext.html">HoursFieldParser::HoursFieldContext</a> *ctx) override</td></tr>
-<tr class="separator:a2967b8fde88bb5a3fb6489094b8d1ab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f484bea069206295325f32362db57b4"><td class="memItemLeft" align="right" valign="top"><a id="a5f484bea069206295325f32362db57b4"></a>
-std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitGroup</b> (<a class="el" href="classHoursFieldParser_1_1GroupContext.html">HoursFieldParser::GroupContext</a> *ctx) override</td></tr>
-<tr class="separator:a5f484bea069206295325f32362db57b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classHoursFieldBaseVisitor"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classHoursFieldBaseVisitor')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classHoursFieldBaseVisitor.html">HoursFieldBaseVisitor</a></td></tr>
-<tr class="memitem:ace43d03e08fd13d98d8b55030d4af0f5 inherit pub_methods_classHoursFieldBaseVisitor"><td class="memItemLeft" align="right" valign="top"><a id="ace43d03e08fd13d98d8b55030d4af0f5"></a>
-virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitHour</b> (<a class="el" href="classHoursFieldParser_1_1HourContext.html">HoursFieldParser::HourContext</a> *ctx) override</td></tr>
-<tr class="separator:ace43d03e08fd13d98d8b55030d4af0f5 inherit pub_methods_classHoursFieldBaseVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a796f5bc416be58aa2f081a51c0c91b63"><td class="memItemLeft" align="right" valign="top"><a id="a796f5bc416be58aa2f081a51c0c91b63"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>level</b></td></tr>
+<tr class="separator:a796f5bc416be58aa2f081a51c0c91b63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3ce8d81be0e1d31a6f24fb36519a50a"><td class="memItemLeft" align="right" valign="top"><a id="aa3ce8d81be0e1d31a6f24fb36519a50a"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>injection</b></td></tr>
+<tr class="separator:aa3ce8d81be0e1d31a6f24fb36519a50a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a862576a9267051a18a283bccd2a944"><td class="memItemLeft" align="right" valign="top"><a id="a1a862576a9267051a18a283bccd2a944"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>withdrawal</b></td></tr>
+<tr class="separator:a1a862576a9267051a18a283bccd2a944"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2967b8fde88bb5a3fb6489094b8d1ab3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2967b8fde88bb5a3fb6489094b8d1ab3">&#9670;&nbsp;</a></span>visitHoursField()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::any HoursCollectorVisitor::visitHoursField </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classHoursFieldParser_1_1HoursFieldContext.html">HoursFieldParser::HoursFieldContext</a> *&#160;</td>
-          <td class="paramname"><em>context</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Visit parse trees produced by <a class="el" href="classHoursFieldParser.html">HoursFieldParser</a>. </p>
-
-<p>Reimplemented from <a class="el" href="classHoursFieldBaseVisitor.html#ad82fc4a0a45dc5c6000ed02ef7e462e7">HoursFieldBaseVisitor</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/libs/antares/study/include/antares/study/parts/short-term-storage/<a class="el" href="HoursCollectorVisitor_8h_source.html">HoursCollectorVisitor.h</a></li>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/solver/simulation/include/antares/solver/simulation/<a class="el" href="sim__structure__probleme__economique_8h_source.html">sim_structure_probleme_economique.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="classHoursCollectorVisitor.html">HoursCollectorVisitor</a></li>
+    <li class="navelem"><a class="el" href="structRESULTS.html">RESULTS</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

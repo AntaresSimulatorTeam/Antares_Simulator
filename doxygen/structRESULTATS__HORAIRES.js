@@ -6,7 +6,7 @@ var structRESULTATS__HORAIRES =
     [ "niveauxHoraires", "structRESULTATS__HORAIRES.html#ac6f788177bfcb83cf2d1d4095807ee8d", null ],
     [ "PompageHoraire", "structRESULTATS__HORAIRES.html#a77adaab0de7e898f18c4e6fd0c0eff69", null ],
     [ "ProductionThermique", "structRESULTATS__HORAIRES.html#a834357dc159acb513c449962c56bc73c", null ],
-    [ "ShortTermStorage", "structRESULTATS__HORAIRES.html#a952f27f24149787d23b6d02ee426c1dd", null ],
+    [ "ShortTermStorage", "structRESULTATS__HORAIRES.html#a10b12e6a5234d85ccb421b3663c5ce84", null ],
     [ "TurbinageHoraire", "structRESULTATS__HORAIRES.html#a33a058fe5a3b2156e1d013f668ac1bca", null ],
     [ "valeurH2oHoraire", "structRESULTATS__HORAIRES.html#a77b91a97bd3d30b7a7f53c24287243f9", null ],
     [ "ValeursHorairesDeDefaillanceNegative", "structRESULTATS__HORAIRES.html#a602ae9ed9349991cfc016fd12a28abcd", null ],
