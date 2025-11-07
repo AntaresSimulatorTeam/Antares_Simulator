@@ -206,7 +206,7 @@ LinearExpression LinearExpression::max(const LinearExpression& other)
     if (hasCoefs() || other.hasCoefs())
     {
         throw std::invalid_argument(
-          "A linear expression can't have max operator can not have coefficients.");
+          "max operator can not be applied to non-constant-type expression.");
     }
     LinearExpression out(*this);
     out.constant_ = std::max(other.constant_, constant_);

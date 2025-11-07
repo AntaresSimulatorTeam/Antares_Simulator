@@ -402,7 +402,11 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
 std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
 {
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
-
+    if (nodes.size() != 2)
+    {
+        throw std::invalid_argument("max operator expect at least 2 operands got "
+                                    + std::to_string(nodes.size()));
+    }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
 }
 
@@ -411,7 +415,8 @@ std::any ConvertorVisitor::handlePow(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() != 2)
     {
-        throw std::invalid_argument("pow operator expect only two expressions");
+        throw std::invalid_argument("pow operator expect exactly 2 operands got "
+                                    + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(
       registry_.create<FunctionNode>(FunctionNodeType::pow, nodes.at(0), nodes.at(1)));

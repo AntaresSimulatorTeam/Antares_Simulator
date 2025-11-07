@@ -306,12 +306,14 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleM
   const Nodes::FunctionNode* node)
 {
     const auto& operands = node->getOperands();
-    Antares::Optimization::TimeDependentLinearExpression ret(nbtimeSteps_);
-    for (auto* operand: operands)
+    // we know that max has at least two child
+    auto result(dispatch(operands.at(0)));
+    for (int i = 1; i < operands.size(); ++i)
     {
-        ret += dispatch(operand);
+        const auto* operand = operands.at(i);
+        result = result.max(dispatch(operand));
     }
-    return ret;
+    return result;
 }
 
 Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handlePow(

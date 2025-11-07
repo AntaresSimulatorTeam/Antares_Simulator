@@ -237,9 +237,12 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
 
 EvaluationResult EvalVisitor::handleMax(const Nodes::FunctionNode* node)
 {
-    EvaluationResult result(0.);
-    for (const auto* operand: node->getOperands())
+    const auto& operands = node->getOperands();
+    // we know that max has at least two child
+    auto result(dispatch(operands.at(0)));
+    for (int i = 1; i < operands.size(); ++i)
     {
+        const auto* operand = operands.at(i);
         result = result.applyOperation(dispatch(operand),
                                        [](const auto& a, const auto& b) { return std::max(a, b); });
     }
