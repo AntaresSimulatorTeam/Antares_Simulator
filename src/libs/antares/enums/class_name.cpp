@@ -33,7 +33,6 @@ std::string simpleClassName(const char* className)
              ? strClassName
              : strClassName.substr(index + 2); // +2 because "::" has length 2
 }
-}
 
 template<>
 std::string simpleClassName(const std::type_info& type)
