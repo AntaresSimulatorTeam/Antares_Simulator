@@ -49,7 +49,7 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
         {
             ProblemeLineairePartieFixe[i]
               .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi[pdt]]
-              += noiseGenerator() * Constants::noiseAmplitude;
+              += noiseGenerator() * Antares::Constants::noiseAmplitude;
         }
         ProblemeLineairePartieFixe[i]
           .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiPlus]
