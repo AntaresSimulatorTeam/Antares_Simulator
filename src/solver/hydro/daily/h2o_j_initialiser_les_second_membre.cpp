@@ -62,7 +62,8 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles,
         turbineMax += DonneesMensuelles->TurbineMax[Pdt];
     }
 
-    if (!std::clamp(DonneesMensuelles->TurbineDuMois, turbineMin, turbineMax))
+    const double rhs = std::clamp(DonneesMensuelles->TurbineDuMois, turbineMin, turbineMax);
+    if (rhs < turbineMin || rhs > turbineMax)
     {
         Antares::logs.warning() << "hydro daily heuristic for area " << areaName
                                 << " : target turbine (" << DonneesMensuelles->TurbineDuMois
@@ -70,8 +71,6 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles,
                                 << "])";
     }
 
-    SecondMembre[NumeroDeContrainteDEnergieMensuelle] = std::max(
-      std::min(DonneesMensuelles->TurbineDuMois, turbineMax),
-      turbineMin);
+    SecondMembre[NumeroDeContrainteDEnergieMensuelle] = rhs;
 }
 } // namespace DoneesOptimisationJournaliere
