@@ -1,6 +1,5 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
-#include <ranges>
 #include <set>
 #include <stdexcept>
 #include <vector>

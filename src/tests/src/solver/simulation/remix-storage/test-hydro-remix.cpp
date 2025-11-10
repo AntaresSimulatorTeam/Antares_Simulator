@@ -572,35 +572,35 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
 BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture<5>)
 {
     // 3 hydro units, same time horizon
-    HydroGen = {10., 20., 10., 20., 10.}; // Total = 70. Mean = 14.
-    HydroGen2 = {10., 20., 10., 20., 10.}; // Total = 70. Mean = 14.
+    HydroGen = {10., 20., 10., 20., 10.};       // Total = 70. Mean = 14.
+    HydroGen2 = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
     HydroGen3 = {100., 200., 100., 200., 100.}; // Total = 700. Mean = 140.
     // Initial HydroSum = {120., 240., 120., 240., 120.}
     // Total Mean = 168.0
- 
+
     // *** NEW CONSTRAINTS ***
     // 1. Set inflows to match the mean generation for each reservoir
     // This means if generation is flat, levels are flat.
-    std::ranges::fill(inflows, 14.); // Mean of HydroGen
-    std::ranges::fill(inflows2, 14.); // Mean of HydroGen2
+    std::ranges::fill(inflows, 14.);   // Mean of HydroGen
+    std::ranges::fill(inflows2, 14.);  // Mean of HydroGen2
     std::ranges::fill(inflows3, 140.); // Mean of HydroGen3
- 
+
     // 2. Set non-binding levels and capacities
     init_level = init_level2 = init_level3 = 1000.;
     capacity = capacity2 = capacity3 = 2000.;
- 
+
     // 3. Set driving signals
     std::ranges::fill(TotalGenNoHydro, 0.); // Flat
-    UnsupE.assign(HydroGen.size(), 100.); // Zero UnsupE -> signal to flatten
- 
+    UnsupE.assign(HydroGen.size(), 100.);   // Zero UnsupE -> signal to flatten
+
     callRemixStorageAlgorithmWith2or3storages(true);
- 
+
     // --- Check Results ---
- 
+
     // 1. Check that total hydro generation is perfectly flat
     std::vector<double> HydroSum(HydroGen.size());
     HydroSum = HydroGen + HydroGen2 + HydroGen3;
- 
+
     std::vector<double> expected_HydroSum = {168., 168., 168., 168., 168.};
     for (unsigned i = 0; i < HydroSum.size(); ++i)
     {
