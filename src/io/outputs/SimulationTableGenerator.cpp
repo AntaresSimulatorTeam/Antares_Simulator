@@ -94,6 +94,10 @@ void addVariableEntries(ISimulationTable& simulationTable,
     for (std::size_t varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
         const auto& modelVar = variables[varIndex];
+        if (modelVar.location() != Modeler::Config::Location::SUBPROBLEMS)
+        {
+            continue;
+        }
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
         const std::span componentVariables = optimEntityContainer.getComponentVariable(

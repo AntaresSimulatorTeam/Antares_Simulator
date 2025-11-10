@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <ExprVisitor.h>
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/TimeSumNode.h"
@@ -319,9 +321,15 @@ std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndex
 
 std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context)
 {
-    auto* time_shift = std::any_cast<Node*>(context->shift_expr()->accept(this));
-
-    return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, time_shift));
+    if (auto shift_maybe = context->shift_expr()) // [t+1], [t-1], etc.
+    {
+        Node* shift = std::any_cast<Node*>(shift_maybe->accept(this));
+        return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, shift));
+    }
+    else // [t]
+    {
+        return shifted_expr; // implicit conversion to std::any
+    }
 }
 
 std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)

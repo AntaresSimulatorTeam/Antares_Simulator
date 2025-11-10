@@ -184,7 +184,8 @@ bool Progression::saveToFile(const Yuni::String& filename, IResultWriter& writer
             }
         }
     }
-    writer.addEntryFromBuffer(filename.c_str(), buffer);
+    std::string content = buffer.c_str();
+    writer.addEntryFromBuffer(filename.c_str(), content);
     logs.info() << LOG_UI_PROGRESSION_MAP << filename;
     return true;
 }

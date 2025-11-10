@@ -1,7 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <string>
-#include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
