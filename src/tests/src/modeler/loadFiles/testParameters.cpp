@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(read_parameters)
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::ofstream paramStream(studyPath / "parameters.yml");
     paramStream << R"(
-        solver: sirius
+        solver: highs
         solver-logs: false
         solver-parameters: PRESOLVE 1
         no-output: true
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(read_parameters_out_of_order)
     std::ofstream paramStream(studyPath / "parameters.yml");
     paramStream << R"(
         solver-logs: false
-        solver: sirius
+        solver: highs
         solver-parameters: PRESOLVE 1
         no-output: true
     )";
