@@ -47,11 +47,9 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
         IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
         il++;
-        //        NombreDeTermes++;
     }
 
     Sens[NombreDeContraintes] = '=';
-    // NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
     NombreDeTermesDesLignes[NombreDeContraintes] = NbPdt;
 
     CorrespondanceDesContraintes.NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
