@@ -153,9 +153,9 @@ expression: sum_connections(dc_port.flow) = 0
 ### Dual operators
 
 In some cases, we need to access dual results of variables / constraints of the linear problem.
-For both case, there are a different unary operator : 
-- dual result of a variable of id **my_var** is accessed by **-reduced_cost(myVar)**
-- dual result of a constraint of if **my_constraint** is accessed by **dual(myConstraint)**
+Depending on the case, the dual unary operator is : 
+- dual result of a **variable** whose id is **my_var** is accessed by **-reduced_cost(myVar)**
+- dual result of a **constraint** whose if is **my_constraint** is accessed by **dual(myConstraint)**
 
 Note that dual results can only used within an expression whose context is an extra output. 
 
@@ -180,7 +180,7 @@ models:
 ### Power operator
 
 This unary operator **^** is used within an expression whose context is an extra output.
-It can apply only to a reference an existing variable.
+It can only apply to a reference to an existing variable.
 
 _Example :_ 
 
@@ -198,9 +198,9 @@ models:
 
 ### Max operator
 
-This binary operator **max(u, v)** is used inside an expression whose context is either **constraints** or **extra-output**.
-- in the context of a constraint, the 2 operands must be parameters or literals.
-- in the context of an output, there are no restriction on operands.
+This binary operator **max(u, v)** can only be used inside an expression whose context is either **constraints** or **extra-output**.
+- in the context of a **constraint** (or a **binding constraint**), the 2 operands must be parameters or literals.
+- in the context of an **extra output**, there are no restriction on operands.
 
 _Example :_
 
@@ -227,40 +227,41 @@ models:
 
 **Caution** : multiplying or dividing two references to variables is always forbidden.
 Variables can only be multiplied/divided by literals/parameters. 
+These restrictions are implicit in the following tables.
 
 ---
 
-|Context                      | [+-]  | [*/] | [<>=] |  Time | sum_connections |
+|Context of expression        | [+-]  | [*/] | [<>=] |  Time | sum_connections |
 |-----------------------------|-------|------|-------|-------|-----------------|
 |constraints                  |  x    |   x  |  x    |   x   |  x              |
 |binding-constraints          |  x    |   x  |  x    |   x   |  x              |
-|objective-contributions      |  o    |   x  |  o    |   o   |  o              |
+|objective-contributions      |  x    |   o  |  o    |   o   |  o              |
 |port-field-definitions       |  x    |   x  |  o    |   o   |  o              |
-|variable bounds              |  x    |   x  |  o    |   x   |  o              |
-|extra-output                 |  ?    |   ?  |  ?    |   ?   |  ?              |
+|variable bounds              |  x    |   x  |  o    |   o   |  o              |
+|extra-output                 |  x    |   x  |  o    |   o   |  o              |
 
 ---
 
-|Context                      | Scenario | Dual | Power | Max | sum |
+|Context of expression        | Scenario | Dual | Power | Max | sum |
 |-----------------------------|----------|------|-------|-----|-----|
-|constraints                  |    ?     |   o  |   ?   |  ?  |  ?  |
-|binding-constraints          |    ?     |   o  |   ?   |  ?  |  ?  |
-|objective-contributions      |    ?     |   o  |   ?   |  ?  |  ?  |
-|port-field-definitions       |    ?     |   o  |   ?   |  ?  |  ?  |
-|variable bounds              |    ?     |   o  |   ?   |  ?  |  ?  |
-|extra-output                 |    ?     |   o  |   ?   |  ?  |  ?  |
+|constraints                  |    ?     |   o  |   o   |  x  |  x  |
+|binding-constraints          |    ?     |   o  |   o   |  x  |  x  |
+|objective-contributions      |    ?     |   o  |   o   |  o  |  x  |
+|port-field-definitions       |    ?     |   o  |   o   |  o  |  x  |
+|variable bounds              |    ?     |   o  |   o   |  o  |  x  |
+|extra-output                 |    ?     |   x  |   x   |  x  |  x  |
 
 
 ### References to elements defined elsewhere
 
-|Context                      | variable  | parameter| Port |
+|Context of expression        | variable  | parameter| Port |
 |-----------------------------|-----------|----------|------|
 |constraints                  |  x        |   x      |  x   |
 |binding-constraints          |  x        |   x      |  x   |
-|objective-contributions      |  o        |   x      |  o   |
+|objective-contributions      |  x        |   x      |  o   |
 |port-field-definitions       |  x        |   x      |  o   |
-|variable bounds              |  0        |   x      |  o   |
-|extra-output                 |  ?        |   ?      |  ?   |
+|variable bounds              |  o        |   x      |  o   |
+|extra-output                 |  x        |   x      |  o   |
 
 
  
