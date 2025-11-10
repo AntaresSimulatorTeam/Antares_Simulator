@@ -5,7 +5,7 @@ add_boost_test(Enums
         Enum-test.cpp
         LIBS
         Antares::exception
-        Antares::Enum
+        Antares::enums
 )
 
 target_include_directories(Enums
