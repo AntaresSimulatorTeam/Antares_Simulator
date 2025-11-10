@@ -393,6 +393,36 @@ BOOST_FIXTURE_TEST_CASE(dual_reducedCost, MyDummyFixture)
                                         "extra outputs expressions";
                           });
 }
+BOOST_FIXTURE_TEST_CASE(maxNode, MyDummyFixture)
+{
+    Node* maxNode = create<FunctionNode>(FunctionNodeType::max,
+                                         create<ParameterNode>("constraint1"),
+                                         create<LiteralNode>(0));
+
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
+
+    BOOST_CHECK(linearityVisitor.dispatch(maxNode) == LinearStatus::CONSTANT);
+}
+
+BOOST_FIXTURE_TEST_CASE(minNode, MyDummyFixture)
+{
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
+
+    Node* minNode = create<FunctionNode>(FunctionNodeType::min,
+                                         create<VariableNode>("var1", 0),
+                                         create<LiteralNode>(0));
+    BOOST_CHECK(linearityVisitor.dispatch(minNode) == LinearStatus::LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(powNode, MyDummyFixture)
+{
+    LinearityVisitor linearityVisitor(optimEntityContainer, ctx, components.front());
+
+    Node* powNode = create<FunctionNode>(FunctionNodeType::pow,
+                                         create<VariableNode>("var1", 0),
+                                         create<LiteralNode>(1));
+    BOOST_CHECK(linearityVisitor.dispatch(powNode) == LinearStatus::LINEAR);
+}
 
 BOOST_FIXTURE_TEST_CASE(sum_node_cases, MyDummyFixture)
 {
