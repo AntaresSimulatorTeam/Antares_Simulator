@@ -62,15 +62,17 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles,
         turbineMax += DonneesMensuelles->TurbineMax[Pdt];
     }
 
-    const double rhs = std::clamp(DonneesMensuelles->TurbineDuMois, turbineMin, turbineMax);
-    if (rhs < turbineMin || rhs > turbineMax)
+    const double TurbineDuMois = DonneesMensuelles->TurbineDuMois;
+    if (TurbineDuMois < turbineMin || TurbineDuMois > turbineMax)
     {
         Antares::logs.warning() << "hydro daily heuristic for area " << areaName
                                 << " : target turbine (" << DonneesMensuelles->TurbineDuMois
                                 << ") outside of bounds ([" << turbineMin << " , " << turbineMax
-                                << "])";
+                                << "], value was clamped)";
     }
 
-    SecondMembre[NumeroDeContrainteDEnergieMensuelle] = rhs;
+    SecondMembre[NumeroDeContrainteDEnergieMensuelle] = std::clamp(TurbineDuMois,
+                                                                   turbineMin,
+                                                                   turbineMax);
 }
 } // namespace DoneesOptimisationJournaliere
