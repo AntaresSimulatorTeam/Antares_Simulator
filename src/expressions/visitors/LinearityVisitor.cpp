@@ -143,15 +143,6 @@ LinearStatus LinearityVisitor::variadicFunction(const Nodes::FunctionNode* node)
     return result;
 }
 
-LinearStatus LinearityVisitor::handleMax(const Nodes::FunctionNode* node)
-{
-    return variadicFunction(node);
-}
-
-LinearStatus LinearityVisitor::handleMin(const Nodes::FunctionNode* node)
-{
-    return variadicFunction(node);
-}
 
 LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
 {
@@ -208,12 +199,12 @@ LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return handleMax(node);
     case Nodes::FunctionNodeType::min:
-        return handleMin(node);
+        return variadicFunction(node);
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:
+        // TODO exception ?
         return LinearStatus::CONSTANT;
     }
 }
