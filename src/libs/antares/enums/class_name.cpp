@@ -29,8 +29,9 @@ std::string simpleClassName(const char* className)
     const std::string strClassName(className);
     std::size_t index = strClassName.rfind("::");
 
-    return (index == std::string::npos) ? strClassName
-                                        : strClassName.substr(index + 2); // +2 because "::" has length 2
+    return (index == std::string::npos)
+             ? strClassName
+             : strClassName.substr(index + 2); // +2 because "::" has length 2
 }
 }
 
