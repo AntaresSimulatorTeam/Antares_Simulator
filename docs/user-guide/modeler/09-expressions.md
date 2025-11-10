@@ -34,12 +34,11 @@ The following operators are allowed between two elements :
 - **<=**: less or equal to, only allowed for constraint definitions
 - **>=**: greater or equal to, only allowed for constraint definitions
 
-## Scalars in expressions
+## Literals in expressions
 
-You can use simple floating-point scalars anywhere. The character `.` represents the floating point.
+You can use simple floating-point literals anywhere. The character `.` represents the floating point.
 
-**Example:**
-
+_Example:_
 ~~~yaml
 expression: 3 * 67.43 - 5 / 3.14
 ~~~
@@ -54,7 +53,7 @@ These elements can be the following (we assume they are already defined elsewher
 You can use a parameter by using its ID. Note that if the parameter is time-dependent (resp. scenario-dependent), then
 it can be used only for variables or constraints that are time-dependent (resp. scenario-dependent), and that its values
 will be implicitly unfolded during the interpretation of the expression.  
-**Example:**
+_Example:_
 
 ~~~yaml
 expression: 3 * parameter_1 + 6.345 / parameter_2
@@ -66,14 +65,14 @@ You can use a variable by using its ID. Note that if the variable is time-depend
 it can be used only for constraints that are time-dependent (resp. scenario-dependent), and that its values
 will be implicitly unfolded during the interpretation of the expression.
   
-**Example:**
+_Example:_
 
 ~~~yaml
 expression: 3 * parameter_1 * variable_a + variable_b + 56.4 <= variable_4 * 439
 ~~~
 
 Also note that all expressions must be linear with respect to variables.  
-**Examples of prohibited expressions:**
+_Examples of prohibited expressions:_
 
 ~~~yaml
 (X) expression: variable_a * variable_b
@@ -90,7 +89,7 @@ will be implicitly unfolded during the interpretation of the expression. Unless,
 scenario)
 aggregators to aggregate it into a time-constant (resp. scenario-constant) value. 
  
-**Example:**
+_Example:_
 
 ~~~yaml
 expression: 45.4 * port_3.field_6 + 5.4 * variable_6 - 9
@@ -106,12 +105,12 @@ In expressions, apart from arithmetic operators, other operator can be found.
 
 For time-dependent parameters, variables, and port fields, you can use these time operators:
 
-- **[t]** suffix: this operator is implied, but can be used if you like to explicit your intent
-- **[N]** suffix: where N is any expression resolving to an integer (using only scalars and parameters), this selects
+- **[t]** (as a suffix) : this operator is implied (doesn't have to be specified), but can be used if you like to explicit your intent
+- **[N]** (as a suffix) : where N is any expression resolving to an integer (using only literals and parameters), this selects
   the value of the element at the N-th timestamp.
-- **[t+N]** suffix: where N is any expression resolving to an integer (using only scalars and parameters), this is a
+- **[t+N]** suffix: where N is any expression resolving to an integer (using only literals and parameters), this is a
   forward shift operator of N timestamps.
-- **[t-N]** suffix: where N is any expression resolving to an integer (using only scalars and parameters), this is a
+- **[t-N]** suffix: where N is any expression resolving to an integer (using only literals and parameters), this is a
   backward shift operator of N timestamps.
 - **sum(X)** aggregator: where X is the time-dependent operand, this operator sums the operand on the whole optimization
   horizon.
@@ -122,7 +121,7 @@ For time-dependent parameters, variables, and port fields, you can use these tim
     - **E** represents the last timestamp, either as an expression resolving to an integer, or a time-shift expression
       like the ones defined above
 
-**Examples:**
+_Examples:_
 
 ~~~yaml
 expression: a[t] + b[t + 5] * c[t - 3 - 65 * parameter_1] - sum(a)
@@ -145,7 +144,7 @@ You can aggregate incoming ports using the following operator :
 sum of values of this port field, on all incoming connections from other models.  
 Note that the resulting sum can be time-dependent and/or scenario-dependent, depending on the port definition.
 
-**Examples:**
+_Examples:_
 
 ~~~yaml
 expression: sum_connections(dc_port.flow) = 0
@@ -160,7 +159,7 @@ For both case, there are a different unary operator :
 
 Note that dual results can only used within an expression whose context is an extra output. 
 
-**Exemple** : 
+_Exemple_ : 
 
 ```yaml
 models:
@@ -183,7 +182,7 @@ models:
 This unary operator **^** is used within an expression whose context is an extra output.
 It can apply only to a reference an existing variable.
 
-**Example :** 
+_Example :_ 
 
 ```yaml
 models:
@@ -200,10 +199,10 @@ models:
 ### Max operator
 
 This binary operator **max(u, v)** is used inside an expression whose context is either **constraints** or **extra-output**.
-- in the context of a constraint, the 2 operands must be parameters or literals
+- in the context of a constraint, the 2 operands must be parameters or literals.
 - in the context of an output, there are no restriction on operands.
 
-**Example :**
+_Example :_
 
 ```yaml
 models:
@@ -226,8 +225,8 @@ models:
 
 ### Operators
 
-**Caution** : multiplying (*) or dividing (/) 2 (references to) variables is always forbidden.
-We only multiply/divide scalars, parameters, or vaiables to scalars/parameters. 
+**Caution** : multiplying or dividing two references to variables is always forbidden.
+Variables can only be multiplied/divided by literals/parameters. 
 
 ---
 
