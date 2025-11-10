@@ -31,11 +31,8 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "antares/antares/constants.h"
 #include "antares/solver/variable/economy/all.h"
 #include "antares/study/load-options.h"
-
-#include "../enums/include/antares/enums/Enum.hpp"
 
 using namespace Yuni;
 
