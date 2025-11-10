@@ -26,6 +26,8 @@
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/utils/utils.h"
 
+using namespace Antares::ModelerStudy;
+
 namespace Antares::Solver::LoadFiles
 {
 
@@ -38,10 +40,9 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     data.libraries = loadLibraries(studyPath);
     logs.info() << "Libraries loaded";
 
-    data.optimConfig = loadOptimConfig(studyPath);
+    loadOptimConfig(studyPath, data.libraries);
 
-    data.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
-      loadSystem(studyPath, data.libraries));
+    data.system = std::make_unique<SystemModel::System>(loadSystem(studyPath, data.libraries));
     logs.info() << "System loaded";
 
     data.dataSeries = loadDataSeries(studyPath);

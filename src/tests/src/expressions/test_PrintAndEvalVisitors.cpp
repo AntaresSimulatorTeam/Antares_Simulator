@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
     std::map<std::string, double> variables; // Not needed for this test
 
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    const auto model = createModelWithParameters(params);
+    auto model = createModelWithParameters(params);
     const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
       createComponent(model, "compo", system_parameters)};
     EvaluationContext context(&components.back(), &mockData, &emptyScenario);
@@ -1448,7 +1448,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     variables.push_back(variableBuilder("my_const_variable", TimeDependent::NO));
     variables.push_back(variableBuilder("my_non_const_variable", TimeDependent::YES));
 
-    const auto model = modelBuilder.withVariables(std::move(variables)).build();
+    auto model = modelBuilder.withVariables(std::move(variables)).build();
 
     ComponentBuilder component_builder;
     std::vector components = {component_builder.withModel(&model).withId("my_component").build()};
@@ -1477,6 +1477,12 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     EvalVisitor visitor(optimContainer, fillContext, components.back());
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
+
+    Node* reducedCost = create<ReducedCostNode>("my_const_variable",
+                                                0,
+                                                TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    eval = visitor.dispatch(reducedCost).valueAsDouble();
+    BOOST_CHECK_EQUAL(eval, 4.96);
 
     root = create<VariableNode>("my_const_variable", 0, TimeIndex::VARYING_IN_SCENARIO_ONLY);
     eval = visitor.dispatch(root).valueAsDouble();

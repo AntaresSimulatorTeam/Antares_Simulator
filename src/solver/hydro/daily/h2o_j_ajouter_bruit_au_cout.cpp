@@ -18,15 +18,10 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <antares/antares/constants.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
-
-namespace Constants
-{
-constexpr double noiseAmplitude = 1e-3;
-constexpr unsigned int seed = 0x79686a64; // "hydj" in hexa
-} // namespace Constants
 
 namespace DoneesOptimisationJournaliere
 {
@@ -37,7 +32,9 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
     auto& CorrespondanceDesVariables = ProblemeHydraulique.CorrespondanceDesVariables;
     auto NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
     Antares::MersenneTwister noiseGenerator;
-    noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
+    constexpr unsigned int costNoiseSeed = 0x79686a64; // "hydj" in hexa
+
+    noiseGenerator.reset(costNoiseSeed); // Arbitrary seed, hard-coded since we don't really want
     // the user to change it
 
     for (int i = 0; i < NombreDeProblemes; i++)
@@ -45,15 +42,15 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
         for (int j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
         {
             ProblemeLineairePartieFixe[i].CoutLineaire[j] += noiseGenerator()
-                                                             * Constants::noiseAmplitude;
+                                                             * Antares::Constants::noiseAmplitude;
         }
 
         ProblemeLineairePartieFixe[i]
           .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu]
-          += noiseGenerator() * Constants::noiseAmplitude;
+          += noiseGenerator() * Antares::Constants::noiseAmplitude;
         ProblemeLineairePartieFixe[i]
           .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
-          += noiseGenerator() * Constants::noiseAmplitude;
+          += noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 }
 } // namespace DoneesOptimisationJournaliere

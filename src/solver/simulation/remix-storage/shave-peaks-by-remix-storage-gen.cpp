@@ -9,7 +9,7 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
 
 constexpr unsigned maxNbLoops = 1000;
-const std::string error_msg_start = "Remix storage input : ";
+const std::string shave_peak_remix_storage_error_msg_start = "Remix storage input : ";
 
 namespace Antares::Solver::Simulation
 {
@@ -28,12 +28,14 @@ void checkInput(const std::vector<double>& Load,
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
-        throw std::invalid_argument(error_msg_start + "arrays of different sizes");
+        throw std::invalid_argument(shave_peak_remix_storage_error_msg_start
+                                    + "arrays of different sizes");
     }
 
     if (!Load.size())
     {
-        throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
+        throw std::invalid_argument(shave_peak_remix_storage_error_msg_start
+                                    + "all arrays of sizes 0");
     }
 }
 

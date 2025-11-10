@@ -45,7 +45,7 @@ std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
     return {id, {.id = id, .type = type, .value = value}};
 }
 
-Component createComponent(const Model& model, const std::string& id, unsigned index)
+Component createComponent(Model& model, const std::string& id, unsigned index)
 {
     ComponentBuilder component_builder;
     return component_builder.withId(id)
@@ -56,7 +56,7 @@ Component createComponent(const Model& model, const std::string& id, unsigned in
       .build();
 }
 
-Component createComponent(const Model& model,
+Component createComponent(Model& model,
                           const std::string& id,
                           std::map<std::string, ParameterTypeAndValue> parameter_values,
                           unsigned index)

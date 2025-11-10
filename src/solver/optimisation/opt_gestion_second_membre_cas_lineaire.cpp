@@ -27,7 +27,7 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, int, int);
 
 static void shortTermStorageLevelsRHS(
-  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  const std::vector<::AREA_INPUT>& shortTermStorageInput,
   int numberOfAreas,
   std::vector<double>& SecondMembre,
   const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
@@ -47,7 +47,7 @@ static void shortTermStorageLevelsRHS(
 }
 
 static void shortTermStorageCumulationRHS(
-  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  const std::vector<::AREA_INPUT>& shortTermStorageInput,
   int numberOfAreas,
   std::vector<double>& SecondMembre,
   const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondancesDesContraintesHebdomadaires,

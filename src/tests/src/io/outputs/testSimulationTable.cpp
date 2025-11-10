@@ -57,6 +57,7 @@ using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO;
+using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
 
 auto count_lines = [](std::string_view s)
@@ -576,11 +577,10 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         auto var1_node = variable("var1", 0);
         auto var4_node = variable("var4", 8954);
         auto three = literal(3);
-        auto ct1_node = nodes.create<Antares::Expressions::Nodes::LessThanOrEqualNode>(var1_node,
-                                                                                       three);
-        auto ct2_node = nodes.create<Antares::Expressions::Nodes::GreaterThanOrEqualNode>(
-          multiply(var1_node, var4_node),
-          three);
+        auto ct1_node = nodeRegistry.create<Nodes::LessThanOrEqualNode>(var1_node, three);
+        auto ct2_node = nodeRegistry.create<Nodes::GreaterThanOrEqualNode>(multiply(var1_node,
+                                                                                    var4_node),
+                                                                           three);
         std::vector<Test::Modeler::ConstraintData> constraintsData = {{"constraint1", ct1_node},
                                                                       {"constraint2", ct2_node}};
         createModel("model", {}, variablesData, constraintsData, nullptr);

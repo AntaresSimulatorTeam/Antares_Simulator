@@ -15,7 +15,7 @@ models:
       variables:
         - id: nb_units
           location: master
-        - id: pmax
+        - id: p_max
           location: master-and-subproblems
         # Variable generation has default settings, no need to make it appear here
       constraints:
@@ -31,7 +31,7 @@ models:
   - id: lib_example_13_2.generator_with_continuous_invest
     model-decomposition:
       variables:
-        - id: pmax
+        - id: p_max
           location: master-and-subproblems
         # Variable generation has default settings, no need to make it appear here
       objective-contributions:

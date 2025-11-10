@@ -21,7 +21,7 @@
 
 #include "antares/solver/optimisation/constraints/AreaBalance.h"
 
-static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+static void shortTermStorageBalance(const ::AREA_INPUT& shortTermStorageInput,
                                     ConstraintBuilder& constraintBuilder)
 {
     for (const auto& storage: shortTermStorageInput)

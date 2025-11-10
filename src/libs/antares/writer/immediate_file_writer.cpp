@@ -55,17 +55,6 @@ static bool prepareDirectoryHierarchy(const fs::path& root,
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
-                                                   Yuni::Clob& entryContent)
-{
-    fs::path output;
-    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
-    {
-        IO::fileSetContent(output.string(), entryContent);
-    }
-}
-
-// Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addEntryFromBuffer(const fs::path& entryPath,
                                                    std::string& entryContent)
 {
@@ -113,10 +102,6 @@ bool ImmediateFileResultWriter::needsTheJobQueue() const
 void ImmediateFileResultWriter::finalize(bool /*verbose*/)
 {
     // Do nothing
-}
-
-void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
-{
 }
 
 void NullResultWriter::addEntryFromBuffer(const fs::path&, std::string&)
