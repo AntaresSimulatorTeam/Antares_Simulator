@@ -20,11 +20,11 @@
 */
 #pragma once
 
-#include <cmath>
 #include <functional>
 #include <sstream>
 #include <variant>
 
+#include <antares/expressions/nodes/FunctionNode.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/modeler-optimisation-container/EvaluationContext.h"
