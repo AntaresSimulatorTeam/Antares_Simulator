@@ -1481,9 +1481,9 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 
-    Node* reducedCost = create<ReducedCostNode>("my_const_variable",
-                                                0,
-                                                TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    Node* reducedCost = create<FunctionNode>(
+      FunctionNodeType::reduced_cost,
+      create<VariableNode>("my_const_variable", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO));
     eval = visitor.dispatch(reducedCost).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 4.96);
 
