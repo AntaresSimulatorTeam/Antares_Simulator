@@ -89,7 +89,7 @@ void StorageForRemixWithLevels::checkLevels()
 {
     if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(levels_ >= -TOLERANCE))
     {
-        throw std::invalid_argument(error_msg_start
+        throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "levels computed from input don't respect reservoir bounds");
     }
 }
@@ -106,17 +106,18 @@ void StorageForRemixWithLevels::checkInput(size_t size)
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
-        throw std::invalid_argument(error_msg_start + "arrays of different sizes");
+        throw std::invalid_argument(error_msg_start_hydro_remix + "arrays of different sizes");
     }
 
     if (!size)
     {
-        throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
+        throw std::invalid_argument(error_msg_start_hydro_remix + "all arrays of sizes 0");
     }
 
     if (ruleCurveUp_ + TOLERANCE <= initLevel_)
     {
-        throw std::invalid_argument(error_msg_start + "initial level > reservoir capacity");
+        throw std::invalid_argument(error_msg_start_hydro_remix
+                                    + "initial level > reservoir capacity");
     }
 }
 

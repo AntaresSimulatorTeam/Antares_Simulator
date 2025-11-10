@@ -37,9 +37,8 @@ using namespace Antares::Data;
 
 constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
 
-static void importShortTermStorages(
-  const AreaList& areas,
-  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
+static void importShortTermStorages(const AreaList& areas,
+                                    std::vector<::AREA_INPUT>& ShortTermStorageOut)
 {
     int clusterGlobalIndex = 0;
     int constraintGlobalIndex = 0;
@@ -51,7 +50,7 @@ static void importShortTermStorages(
         int storageIndex = 0;
         for (const auto& st: area->shortTermStorage.storagesByIndex)
         {
-            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
+            PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
             toInsert.clusterGlobalIndex = clusterGlobalIndex;
 
             // capacities
@@ -133,7 +132,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.exportSolutions = study.parameters.include.exportSolutions;
-    problem.ExportStructure = study.parameters.include.exportStructure;
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 

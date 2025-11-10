@@ -21,6 +21,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_H__
 #define __ANTARES_LIBS_STUDY_PARTS_H__
 
+// Short-term storage
+#include "short-term-storage/container.h"
 // Load
 #include "load/container.h"
 
@@ -47,8 +49,5 @@
 #include "renewable/cluster.h"
 #include "renewable/container.h"
 #include "renewable/defines.h"
-
-// Short-term storage
-#include "short-term-storage/container.h"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_H__

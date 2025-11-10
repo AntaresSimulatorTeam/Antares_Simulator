@@ -210,10 +210,6 @@ public:
         return nullptr;
     }
 
-    void WriteLP(const std::string&) const override
-    {
-    }
-
     double infinity() const override
     {
         return std::numeric_limits<double>::infinity();
@@ -487,7 +483,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
 
     Antares::ModelerStudy::SystemModel::Component* addComponent(
       const std::string& id,
-      const Antares::ModelerStudy::SystemModel::Model& model,
+      Antares::ModelerStudy::SystemModel::Model& model,
       std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
         paramsAndValues)
     {

@@ -44,7 +44,7 @@ models:
           location: master
         - id: pmax_cluster
           location: master-and-subproblems
-      objectives:
+      objective-contributions:
         - id: invest_objective
           location: master
         - id: operational_objective
@@ -54,7 +54,7 @@ models:
       variables:
         - id: var1
           location: subproblems
-      objectives:
+      objective-contributions:
         - id: obj1
           location: master
 )";
@@ -98,7 +98,7 @@ models:
       variables:
         - id: single_var
           location: master
-      objectives:
+      objective-contributions:
         - id: single_obj
           location: subproblems
 )";
@@ -133,7 +133,7 @@ models:
   - id: model_no_vars
     model-decomposition:
       variables: []
-      objectives:
+      objective-contributions:
         - id: obj1
           location: master
 )";
@@ -155,7 +155,7 @@ models:
       variables:
         - id: var1
           location: master
-      objectives: []
+      objective-contributions: []
 )";
 
     Parser parser;
@@ -179,7 +179,7 @@ models:
           location: subproblems
         - id: var_both
           location: master-and-subproblems
-      objectives:
+      objective-contributions:
         - id: obj_master
           location: master
         - id: obj_sub
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(parse_missing_id_throws)
 models:
   - model-decomposition:
       variables: []
-      objectives: []
+      objective-contributions: []
 )";
 
     Parser parser;
@@ -246,7 +246,7 @@ models:
     model-decomposition:
       variables:
         - location: master
-      objectives: []
+      objective-contributions: []
 )";
 
     Parser parser;
@@ -261,7 +261,7 @@ models:
     model-decomposition:
       variables:
         - id: var1
-      objectives: []
+      objective-contributions: []
 )";
 
     Parser parser;
@@ -275,7 +275,7 @@ models:
   - id: model1
     model-decomposition:
       variables: []
-      objectives:
+      objective-contributions:
         - location: master
 )";
 
@@ -290,7 +290,7 @@ models:
   - id: model1
     model-decomposition:
       variables: []
-      objectives:
+      objective-contributions:
         - id: obj1
 )";
 
@@ -307,7 +307,7 @@ models:
       variables:
         - id: var1
           location: master
-      objectives: [
+      objective-contributions: [
 )";
 
     Parser parser;
@@ -333,7 +333,7 @@ models:
           location: master
         - id: v2
           location: subproblems
-      objectives:
+      objective-contributions:
         - id: o1
           location: master
   - id: model2
@@ -341,7 +341,7 @@ models:
       variables:
         - id: v3
           location: master-and-subproblems
-      objectives:
+      objective-contributions:
         - id: o2
           location: subproblems
         - id: o3
@@ -349,7 +349,7 @@ models:
   - id: model3
     model-decomposition:
       variables: []
-      objectives: []
+      objective-contributions: []
 )";
 
     Parser parser;

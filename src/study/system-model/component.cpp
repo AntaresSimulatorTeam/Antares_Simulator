@@ -151,7 +151,7 @@ ComponentBuilder& ComponentBuilder::withId(const std::string_view id)
  * \param model The model to set.
  * \return Reference to the ComponentBuilder object.
  */
-ComponentBuilder& ComponentBuilder::withModel(const Model* model)
+ComponentBuilder& ComponentBuilder::withModel(Model* model)
 {
     data_.model = model;
     return *this;

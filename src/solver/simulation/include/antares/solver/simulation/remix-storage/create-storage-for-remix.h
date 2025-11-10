@@ -1,7 +1,6 @@
 #pragma once
 
 #include "storage-for-remix-no-levels.h"
-#include "storage-for-remix-with-levels.h"
 
 namespace Antares::Solver::Simulation
 {

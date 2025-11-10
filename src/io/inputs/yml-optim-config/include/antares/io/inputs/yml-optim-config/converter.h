@@ -22,15 +22,12 @@
 #pragma once
 
 #include <antares/io/inputs/yml-optim-config/OptimConfig.h>
-#include <antares/modeler/optimConfig/optimConfig.h>
+#include "antares/study/system-model/library.h"
 
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
-class OptimConfigConverter
-{
-public:
-    static Modeler::Config::OptimConfig convert(const OptimConfig& ymlOptimConfig);
-};
+void updateLibrairies(const OptimConfig& ymlOptimConfig,
+                      std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig

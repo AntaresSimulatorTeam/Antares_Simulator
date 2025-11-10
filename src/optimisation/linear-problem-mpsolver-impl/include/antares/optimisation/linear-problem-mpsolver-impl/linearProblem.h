@@ -79,10 +79,11 @@ public:
     bool isMaximization() const override;
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
-    void WriteLP(const std::string& filename) const override;
 
     double infinity() const override;
     bool isLP() const override;
+
+    friend void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& path);
 
 protected:
     operations_research::MPSolver* MpSolver() const;

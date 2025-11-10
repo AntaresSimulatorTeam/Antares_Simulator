@@ -1,8 +1,7 @@
 
 OMESSAGE("Antares Core library")
-
-add_subdirectory(InfoCollection)
 add_subdirectory(additionalConstraintRhsExpression)
+add_subdirectory(InfoCollection)
 add_subdirectory(args)
 add_subdirectory(array)
 add_subdirectory(benchmarking)

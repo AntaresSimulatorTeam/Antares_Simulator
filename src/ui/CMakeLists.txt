@@ -15,7 +15,7 @@ if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TR
     SET(wxWidgets_LIBRARIES ${wxWidgets_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXPAT_LIBRARIES})
 	
 endif()
-
+set(CMAKE_UNITY_BUILD OFF)
 add_subdirectory(common)	#All UI libraries
 add_subdirectory(simulator)	#Simulator application
 add_subdirectory(action)    #Async action handler
