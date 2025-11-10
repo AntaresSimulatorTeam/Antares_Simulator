@@ -726,8 +726,6 @@ var namespaces_dup =
         [ "doWeHaveOnePositiveMaxDailyEnergy", "scratchpad_8cpp.html#a7a4274db1bda7528094a7dac6540c116", null ],
         [ "exportMPS", "UnfeasibleProblemBehavior_8hpp.html#aa554b9964ae6a4b6f097a865bb5aa2f8", null ],
         [ "firstKeyLetterIsValid", "parameters_8cpp.html#a022cd9dee8ab56db36a70aef2316a336", null ],
-        [ "getDisplayName", "UnfeasibleProblemBehavior_8hpp.html#a75e6d4711d9c9390cf11464fa9c723ba", null ],
-        [ "getIcon", "UnfeasibleProblemBehavior_8hpp.html#a391c0f44f537ad8a58d3fe7c65a4c819", null ],
         [ "getWaterValue", "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2container_8h.html#a8af1b2042609f238a85dad504ea3c018", null ],
         [ "getWeeklyModulation", "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2container_8h.html#ad5ef82f6426a6f1ec7d5a3af2088c4c2", null ],
         [ "GlobalTransmissionCapacitiesToString", "fwd_8cpp.html#a538c1999d83ccc1d1ecc2e48cec65380", null ],
