@@ -27,9 +27,10 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/expressions/visitors/TimeIndexVisitor.h"
+
 namespace
 {
 template<typename T>
@@ -332,7 +333,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 }
 
 void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constraint,
-                                          const std::string& constraint_id)
+                                          const std::string& constraint_id) const
 {
     auto* ct = optimEntityContainer_.Problem().addConstraint(linear_constraint.lb[0],
                                                              linear_constraint.ub[0],
@@ -349,7 +350,7 @@ void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constra
 
 void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                                   const std::string& constraint_id,
-                                                  const LinearProblemApi::FillContext& ctx)
+                                                  const LinearProblemApi::FillContext& ctx) const
 {
     auto& pb = optimEntityContainer_.Problem();
     const auto dims = getDimensions(ctx);
