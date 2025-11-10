@@ -26,11 +26,12 @@ namespace stdcxx
 
 std::string simpleClassName(const char* className)
 {
-    const std::string& strClassName = className;
-    std::size_t index = strClassName.find_last_of("::");
+    const std::string strClassName(className);
+    std::size_t index = strClassName.rfind("::");
 
     return (index == std::string::npos) ? strClassName
-                                        : strClassName.substr(index + 1, strClassName.size());
+                                        : strClassName.substr(index + 2); // +2 because "::" has length 2
+}
 }
 
 template<>
