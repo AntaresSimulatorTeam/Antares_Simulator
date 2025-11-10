@@ -36,7 +36,6 @@ namespace Antares::Optimisation
 {
 struct OptimComponent
 {
-    unsigned int index = 0;
     std::vector<unsigned> modelVariableGlobalIndices;
     std::vector<unsigned> modelConstraintsGlobalIndices;
     std::vector<TimeIndex> modelConstraintsTimeIndex;

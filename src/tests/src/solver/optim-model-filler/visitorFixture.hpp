@@ -69,7 +69,6 @@ struct VisitorFixture: Registry<Node>
     {
         optimContainer.addFromSystemComponents(components);
         auto& optimComponent = optimContainer.getOptimComponent(0);
-        optimComponent.index = 0;
         optimComponent.modelVariableGlobalIndices = {0, 1, 2};
         {
             optimContainer.addStartColumn();

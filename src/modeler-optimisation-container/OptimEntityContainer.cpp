@@ -65,8 +65,7 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
             }
         }
         optimComponents_.push_back(
-          {.index = component.Index(),
-           .modelVariableGlobalIndices = modelVariableGlobalIndices,
+          {.modelVariableGlobalIndices = modelVariableGlobalIndices,
            .evaluationContext = Optimisation::EvaluationContext(
              &component,
              data_,
