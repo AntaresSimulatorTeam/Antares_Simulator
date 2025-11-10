@@ -37,7 +37,7 @@ protected:
     const std::vector<double> pmin_;
 
     std::string name_;
-    const std::string error_msg_start = "Remix hydro input : ";
+    const std::string error_msg_start_hydro_remix = "Remix hydro input : ";
 };
 
 } // namespace Antares::Solver::Simulation
