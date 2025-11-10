@@ -133,7 +133,7 @@ LinearStatus LinearityVisitor::handleDual([[maybe_unused]] const Nodes::Function
     throw NodeTypeShouldBeInExtraOutput("dual");
 }
 
-LinearStatus LinearityVisitor::handleMax(const Nodes::FunctionNode* node)
+LinearStatus LinearityVisitor::variadicFunction(const Nodes::FunctionNode* node)
 {
     LinearStatus result(LinearStatus::CONSTANT);
     for (const auto* operand: node->getOperands())
@@ -141,6 +141,16 @@ LinearStatus LinearityVisitor::handleMax(const Nodes::FunctionNode* node)
         result &= dispatch(operand);
     }
     return result;
+}
+
+LinearStatus LinearityVisitor::handleMax(const Nodes::FunctionNode* node)
+{
+    return variadicFunction(node);
+}
+
+LinearStatus LinearityVisitor::handleMin(const Nodes::FunctionNode* node)
+{
+    return variadicFunction(node);
 }
 
 LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
@@ -199,6 +209,8 @@ LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
         return handleMax(node);
+    case Nodes::FunctionNodeType::min:
+        return handleMin(node);
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

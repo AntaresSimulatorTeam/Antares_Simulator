@@ -165,11 +165,6 @@ Optimisation::TimeIndex TimeIndexVisitor::handleDual(const Nodes::FunctionNode* 
     return timeIndex;
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::handleMax(const Nodes::FunctionNode* node)
-{
-    return processParentNode(node);
-}
-
 Optimisation::TimeIndex TimeIndexVisitor::handlePow(const Nodes::FunctionNode* node)
 {
     if (const auto* exponent = node->getOperands().at(1);
@@ -190,7 +185,8 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return handleMax(node);
+    case Nodes::FunctionNodeType::min:
+        return processParentNode(node);
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

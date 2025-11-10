@@ -330,7 +330,23 @@ private:
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult handleReducedCost(const Nodes::FunctionNode* node);
     EvaluationResult handleDual(const Nodes::FunctionNode* node);
+
+    template<class Op>
+    EvaluationResult variadicFunction(const Nodes::FunctionNode* node, Op op)
+    {
+        const auto& operands = node->getOperands();
+        // we know that this function (max, min) has at least two child
+        auto result(dispatch(operands.at(0)));
+        for (int i = 1; i < operands.size(); ++i)
+        {
+            const auto* operand = operands.at(i);
+            result = result.applyOperation(dispatch(operand), op);
+        }
+        return result;
+    }
+
     EvaluationResult handleMax(const Nodes::FunctionNode* node);
+    EvaluationResult handleMin(const Nodes::FunctionNode* node);
     EvaluationResult handlePow(const Nodes::FunctionNode* node);
     EvaluationResult visit(const Nodes::FunctionNode* node) override;
 };

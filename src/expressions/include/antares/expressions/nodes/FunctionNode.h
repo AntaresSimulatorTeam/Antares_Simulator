@@ -31,6 +31,7 @@ enum class FunctionNodeType
     reduced_cost,
     dual,
     max,
+    min,
     pow,
 };
 

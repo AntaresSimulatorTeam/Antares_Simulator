@@ -71,6 +71,7 @@ public:
 
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
     TimeDependentLinearExpression max(const TimeDependentLinearExpression& other) const;
+    TimeDependentLinearExpression min(const TimeDependentLinearExpression& other) const;
 
 private:
     void expandTo(std::size_t nbTimesteps);

@@ -212,6 +212,17 @@ LinearExpression LinearExpression::max(const LinearExpression& other)
     out.constant_ = std::max(other.constant_, constant_);
     return out;
 }
+LinearExpression LinearExpression::min(const LinearExpression& other)
+{
+    if (hasCoefs() || other.hasCoefs())
+    {
+        throw std::invalid_argument(
+          "min operator can not be applied to non-constant-type expression.");
+    }
+    LinearExpression out(*this);
+    out.constant_ = std::min(other.constant_, constant_);
+    return out;
+}
 
 LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
 {

@@ -146,9 +146,17 @@ std::string PrintVisitor::handleReducedCost(const Nodes::FunctionNode* node)
     return "reduced_cost(" + varIdNode->value() + ")";
 }
 
-std::string PrintVisitor::handleMax(const Nodes::FunctionNode* node)
+std::string PrintVisitor::variadicFunction(const Nodes::FunctionNode* node)
 {
-    std::string ret = "max(";
+    std::string ret;
+    if (node->size() >= 2)
+    {
+        ret = node->typeToString() + "(";
+    }
+    else
+    {
+        throw std::invalid_argument("variadic Function printing: node must have at least 2 child");
+    }
     const auto nodes = node->getOperands();
     for (size_t i = 0; i < nodes.size(); ++i)
     {
@@ -182,7 +190,8 @@ std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return handleMax(node);
+    case Nodes::FunctionNodeType::min:
+        return variadicFunction(node);
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

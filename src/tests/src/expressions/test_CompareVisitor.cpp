@@ -254,11 +254,11 @@ BOOST_FIXTURE_TEST_CASE(compare_pow, ComparisonFixture)
 {
     CompareVisitor compareVisitor;
     Node* pow1 = registry_.create<FunctionNode>(FunctionNodeType::pow,
-                                                        registry_.create<VariableNode>("var1", 0),
-                                                        registry_.create<LiteralNode>(2));
+                                                registry_.create<VariableNode>("var1", 0),
+                                                registry_.create<LiteralNode>(2));
     Node* pow2 = registry_.create<FunctionNode>(FunctionNodeType::pow,
-                                                        registry_.create<VariableNode>("var2", 1),
-                                                        registry_.create<LiteralNode>(1722));
+                                                registry_.create<VariableNode>("var2", 1),
+                                                registry_.create<LiteralNode>(1722));
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(pow1);
@@ -270,12 +270,12 @@ BOOST_FIXTURE_TEST_CASE(compare_max, ComparisonFixture)
 {
     CompareVisitor compareVisitor;
     Node* max1 = registry_.create<FunctionNode>(FunctionNodeType::max,
-                                                        registry_.create<VariableNode>("var1", 0),
-                                                        registry_.create<LiteralNode>(2));
+                                                registry_.create<VariableNode>("var1", 0),
+                                                registry_.create<LiteralNode>(2));
     Node* max2 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
-                                                        registry_.create<VariableNode>("var2", 1),
-                                                        registry_.create<LiteralNode>(1722),
-                                                        registry_.create<ParameterNode>("P"));
+                                                registry_.create<VariableNode>("var2", 1),
+                                                registry_.create<LiteralNode>(1722),
+                                                registry_.create<ParameterNode>("P"));
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(max1);

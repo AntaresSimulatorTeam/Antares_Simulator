@@ -221,6 +221,17 @@ TimeDependentLinearExpression TimeDependentLinearExpression::max(
     return out;
 }
 
+TimeDependentLinearExpression TimeDependentLinearExpression::min(
+  const TimeDependentLinearExpression& other) const
+{
+    TimeDependentLinearExpression out(*this);
+    for (std::size_t t = 0; t < size(); t++)
+    {
+        out[t] = out[t].min(other[t]);
+    }
+    return out;
+}
+
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {
     TimeDependentLinearExpression result = *this;

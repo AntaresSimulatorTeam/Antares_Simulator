@@ -316,6 +316,20 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleM
     return result;
 }
 
+Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleMin(
+  const Nodes::FunctionNode* node)
+{
+    const auto& operands = node->getOperands();
+    // we know that min has at least two child
+    auto result(dispatch(operands.at(0)));
+    for (int i = 1; i < operands.size(); ++i)
+    {
+        const auto* operand = operands.at(i);
+        result = result.min(dispatch(operand));
+    }
+    return result;
+}
+
 Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handlePow(
   const Nodes::FunctionNode* node)
 {
@@ -345,6 +359,8 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
         return handleMax(node);
+    case Nodes::FunctionNodeType::min:
+        return handleMin(node);
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

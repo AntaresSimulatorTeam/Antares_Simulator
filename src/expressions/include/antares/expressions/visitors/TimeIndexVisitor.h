@@ -60,7 +60,6 @@ private:
     Optimisation::TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
     Optimisation::TimeIndex handleReducedCost(const Nodes::FunctionNode* node);
     Optimisation::TimeIndex handleDual(const Nodes::FunctionNode* node);
-    Optimisation::TimeIndex handleMax(const Nodes::FunctionNode* node);
     Optimisation::TimeIndex handlePow(const Nodes::FunctionNode* node);
     Optimisation::TimeIndex visit(const Nodes::FunctionNode* node) override;
 

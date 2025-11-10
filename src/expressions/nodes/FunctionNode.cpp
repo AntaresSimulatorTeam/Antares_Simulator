@@ -33,6 +33,8 @@ std::string FunctionNodeTypeToString(FunctionNodeType type)
         return "dual";
     case FunctionNodeType::max:
         return "max";
+    case FunctionNodeType::min:
+        return "min";
     case FunctionNodeType::pow:
         return "pow";
     default:

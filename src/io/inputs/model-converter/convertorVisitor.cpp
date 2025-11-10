@@ -56,6 +56,7 @@ public:
     std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override;
     std::any visitTimeShift(ExprParser::TimeShiftContext* context) override;
     std::any handleMax(ExprParser::ArgListContext* context);
+    std::any handleMin(ExprParser::ArgListContext* arglist);
     std::any visitFunction(ExprParser::FunctionContext* context) override;
     std::any visitArgList(ExprParser::ArgListContext* context) override;
     std::any visitTimeSum(ExprParser::TimeSumContext* context) override;
@@ -476,6 +477,17 @@ std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
 }
 
+std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
+{
+    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+    if (nodes.size() != 2)
+    {
+        throw std::invalid_argument("min operator expect at least 2 operands got "
+                                    + std::to_string(nodes.size()));
+    }
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
+}
+
 std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
@@ -491,6 +503,10 @@ std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionCo
     else if (functionName == "max")
     {
         return handleMax(arglist);
+    }
+    else if (functionName == "min")
+    {
+        return handleMin(arglist);
     }
 
     throw std::invalid_argument("Invalid function: '" + functionName + "'");
