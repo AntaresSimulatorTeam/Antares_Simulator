@@ -4,7 +4,6 @@ add_boost_test(Enums
         SRC
         Enum-test.cpp
         LIBS
-        Antares::stdcxx
         Antares::exception
 )
 
