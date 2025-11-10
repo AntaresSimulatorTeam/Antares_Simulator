@@ -76,7 +76,7 @@ public:
         return objectives_;
     }
 
-    const std::vector<Constraint>& Constraints() const
+    std::vector<Constraint>& Constraints()
     {
         return constraints_;
     }

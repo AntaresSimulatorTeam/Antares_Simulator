@@ -34,6 +34,12 @@ struct Variable
     std::string location;
 };
 
+struct Constraint
+{
+    std::string id;
+    std::string location;
+};
+
 struct Objective
 {
     std::string id;
@@ -45,7 +51,7 @@ struct Model
     std::string id;
 
     std::vector<Variable> variables;
-
+    std::vector<Constraint> constraints;
     std::vector<Objective> objectives;
 };
 

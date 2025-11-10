@@ -53,6 +53,21 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
 };
 
 template<>
+struct convert<Antares::IO::Inputs::YmlOptimConfig::Constraint>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Variable& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+        rhs.id = node["id"].as<std::string>();
+        rhs.location = node["location"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
 struct convert<Antares::IO::Inputs::YmlOptimConfig::Objective>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Objective& rhs)

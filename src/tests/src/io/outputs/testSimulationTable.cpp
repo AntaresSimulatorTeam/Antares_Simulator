@@ -532,7 +532,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
                               MockLinearProblem* linearProblem,
                               const Component& compo)
     {
-        const auto* model = compo.getModel();
+        auto* model = compo.getModel();
 
         for (const auto& constraint: model->Constraints())
         {

@@ -102,6 +102,18 @@ SystemModel::Variable& findSystemVariable(const std::string& var_id, SystemModel
     return *sysVar;
 }
 
+SystemModel::Constraint& findSystemConstraint(const std::string& c_id, SystemModel::Model& sysModel)
+{
+    auto filter = [&c_id](const SystemModel::Constraint& c) { return c.Id() == c_id; };
+    auto& sysConstraints = sysModel.Constraints();
+    auto sysCons = std::ranges::find_if(sysConstraints, filter);
+    if (sysCons == sysConstraints.end())
+    {
+        throw std::runtime_error("No constraint found with this name: " + c_id);
+    }
+    return *sysCons;
+}
+
 SystemModel::Objective& findSystemObjective(const std::string& obj_id, SystemModel::Model& sysModel)
 {
     auto filter = [&obj_id](const SystemModel::Objective& obj) { return obj.Id() == obj_id; };
@@ -120,6 +132,12 @@ void updateSystemModel(SystemModel::Model& sysModel, const YmlOptimConfig::Model
     {
         auto& sysVariable = findSystemVariable(ymlVar.id, sysModel);
         sysVariable.setLocation(convertLocation(ymlVar.location));
+    }
+
+    for (const auto& ymlConstraint: ymlModel.constraints)
+    {
+        auto& sysConstraint = findSystemConstraint(ymlConstraint.id, sysModel);
+        sysConstraint.setLocation(convertLocation(ymlConstraint.location));
     }
 
     for (const auto& ymlObj: ymlModel.objectives)
