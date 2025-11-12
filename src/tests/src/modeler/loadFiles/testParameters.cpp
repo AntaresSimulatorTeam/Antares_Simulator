@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(read_parameters)
     paramStream.close();
 
     auto params = Antares::Solver::LoadFiles::loadParameters(studyPath);
-    BOOST_CHECK_EQUAL(params.solver, "sirius");
+    BOOST_CHECK_EQUAL(params.solver, "highs");
     BOOST_CHECK_EQUAL(params.solverLogs, false);
     BOOST_CHECK_EQUAL(params.solverParameters, "PRESOLVE 1");
     BOOST_CHECK_EQUAL(params.noOutput, true);
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(read_parameters_out_of_order)
     paramStream.close();
 
     auto params = Antares::Solver::LoadFiles::loadParameters(studyPath);
-    BOOST_CHECK_EQUAL(params.solver, "sirius");
+    BOOST_CHECK_EQUAL(params.solver, "highs");
     BOOST_CHECK_EQUAL(params.solverLogs, false);
     BOOST_CHECK_EQUAL(params.solverParameters, "PRESOLVE 1");
     BOOST_CHECK_EQUAL(params.noOutput, true);
