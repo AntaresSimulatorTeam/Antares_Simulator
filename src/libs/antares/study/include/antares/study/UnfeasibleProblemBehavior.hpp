@@ -33,6 +33,7 @@ enum class UnfeasibleProblemBehavior : unsigned char
     ERROR_MPS    /*! Stop simulation with MPS export */
 };
 
+#ifdef BUILD_UI
 /*!
  *  \brief Get icon from UnfeasibleProblemBehavior enum
  *
@@ -48,6 +49,7 @@ const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
  *  \return displayName
  */
 std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
+#endif
 
 /*!
  *  \brief Define if MPS must be exported in case of unfeasible problem

@@ -123,12 +123,6 @@ typedef struct
       ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 } PROBLEME_HYDRAULIQUE_ETENDU;
 
-namespace Antares::Constants
-{
-constexpr double noiseAmplitude = 1e-3;
-constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa
-} // namespace Antares::Constants
-
 class Hydro_problem_costs final
 {
 public:

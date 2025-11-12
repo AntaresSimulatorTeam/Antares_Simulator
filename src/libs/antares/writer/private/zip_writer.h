@@ -81,7 +81,6 @@ public:
               const std::filesystem::path& archivePath,
               Benchmarking::DurationCollector& duration_collector);
     virtual ~ZipWriter();
-    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::filesystem::path& entryPath,
                             std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,

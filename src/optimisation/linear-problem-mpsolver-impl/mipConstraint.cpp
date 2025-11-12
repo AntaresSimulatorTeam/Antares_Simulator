@@ -85,6 +85,11 @@ double OrtoolsMipConstraint::getCoefficient(const LinearProblemApi::IMipVariable
     return mpConstraint_->GetCoefficient(mpvar->getMpVar());
 }
 
+double OrtoolsMipConstraint::dual() const
+{
+    return mpConstraint_->dual_value();
+}
+
 const std::string& OrtoolsMipConstraint::getName() const
 {
     return mpConstraint_->name();

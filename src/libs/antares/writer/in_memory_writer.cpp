@@ -65,11 +65,6 @@ InMemoryWriter::InMemoryWriter(Benchmarking::DurationCollector& duration_collect
 
 InMemoryWriter::~InMemoryWriter() = default;
 
-void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
-{
-    addToMap(pEntries, entryPath, entryContent, pMapMutex, pDurationCollector);
-}
-
 void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent)
 {
     addToMap(pEntries, entryPath.string(), entryContent, pMapMutex, pDurationCollector);

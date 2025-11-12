@@ -21,13 +21,20 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <unit_test_utils.h>
-
-#include <boost/test/unit_test.hpp>
-
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/study/system-model/model.h"
 #include "antares/study/system-model/portType.h"
+
+// If we don't turn clang-format off here, some antlr4 header does not compile :
+// it collides with a #include <windows.h> somewhere in Yuni
+// clang-format off
+#include <unit_test_utils.h>
+// clang-format on
+#include <filesystem>
+#include <fstream>
+
+#include <boost/test/unit_test.hpp>
 
 using namespace Antares::ModelerStudy::SystemModel;
 
@@ -200,6 +207,62 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
                           std::invalid_argument,
                           checkMessage("Field \"secondField\" selected for area connections was "
                                        "not defined in PortType \"portTypeId\"."));
+}
+
+// NOTE The design should be improved. We shouldn't have to rely on files to test the "join" feature
+BOOST_AUTO_TEST_CASE(variable_decomposition)
+{
+    // Model
+    ModelBuilder model_builder;
+    model_builder.withId("model");
+    std::vector<Variable> variables;
+    variables.push_back({"x", {}, {}, ValueType::FLOAT, {}, {}});
+    variables.push_back({"y", {}, {}, ValueType::FLOAT, {}, {}});
+    variables.push_back({"z", {}, {}, ValueType::FLOAT, {}, {}});
+    model_builder.withVariables(std::move(variables));
+    auto model = model_builder.build();
+    std::vector<Model> models;
+    models.emplace_back(std::move(model));
+
+    // Library
+    LibraryBuilder library_builder;
+    Library lib = library_builder.withId("library").withModels(std::move(models)).build();
+    std::vector<Library> libraries{lib};
+
+    // optim-config's YAML
+    const auto folder = std::filesystem::temp_directory_path();
+    const auto input = folder / "input";
+
+    std::filesystem::create_directory(input);
+    const auto yamlPath = input / "optim-config.yml";
+    std::ofstream outfile(yamlPath, std::ofstream::trunc | std::ofstream::out);
+    outfile << R"(models:
+  - id: library.model
+    model-decomposition:
+      variables:
+        - id: x
+          location: master
+        - id: y
+          location: master-and-subproblems
+        - id: z
+          location: subproblems)";
+    outfile.flush();
+
+    Antares::Solver::LoadFiles::loadOptimConfig(folder, libraries);
+    const auto& modelVariables = libraries[0].Models()["model"].Variables();
+
+    using namespace Antares::Modeler::Config;
+    // x
+    BOOST_CHECK_EQUAL(modelVariables[0].Id(), "x");
+    BOOST_CHECK(modelVariables[0].location() == Location::MASTER);
+
+    // y
+    BOOST_CHECK_EQUAL(modelVariables[1].Id(), "y");
+    BOOST_CHECK(modelVariables[1].location() == Location::MASTER_AND_SUBPROBLEMS);
+
+    // z
+    BOOST_CHECK_EQUAL(modelVariables[2].Id(), "z");
+    BOOST_CHECK(modelVariables[2].location() == Location::SUBPROBLEMS);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -22,7 +22,6 @@
 #include <antares/study/parts/hydro/container.h>
 #include <antares/study/study.h>
 #include "antares/solver/simulation/common-eco-adq.h"
-#include "antares/solver/simulation/simulation.h"
 
 namespace Antares::Solver::Simulation
 {

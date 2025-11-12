@@ -41,7 +41,8 @@ void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* p
     }
     // TODO[FOM] "interco.txt"
     std::string filename = "interco-1-1.txt";
-    writer.addEntryFromBuffer(filename, Flot);
+    std::string content = Flot.c_str();
+    writer.addEntryFromBuffer(filename, content);
 }
 
 void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
@@ -54,7 +55,9 @@ void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
     {
         Flot.appendFormat("%s\n", name);
     }
-    writer.addEntryFromBuffer(filename, Flot);
+
+    std::string content = Flot.c_str();
+    writer.addEntryFromBuffer(filename, content);
 }
 
 void OPT_ExportStructures(PROBLEME_HEBDO* problemeHebdo, Antares::Solver::IResultWriter& writer)

@@ -1,3 +1,4 @@
+add_subdirectory(antares)
 add_subdirectory(concurrency)
 add_subdirectory(writer)
 add_subdirectory(study)
@@ -82,3 +83,12 @@ add_boost_test(test-utils
         LIBS
         Antares::utils
         yuni-static-core)
+
+add_boost_test(logs-accumulation
+        SRC
+	logs/logs-test.cpp
+        LIBS
+        yuni-static-core
+	Antares::logs
+	test_utils_unit
+)
