@@ -278,7 +278,7 @@ public:
     }
 
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* lookupVariable(
-      const std::string& name) const override
+      const std::string&) const override
     {
         return RandomVariable().get();
     }

@@ -406,7 +406,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     {
         nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     }
-    catch (NoParameterOrVariableWithThisName) // to print accurate message
+    catch (const NoParameterOrVariableWithThisName&) // to print accurate message
     {
         throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
     }

@@ -308,7 +308,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleM
     const auto& operands = node->getOperands();
     // we know that max has at least two child
     auto result(dispatch(operands.at(0)));
-    for (int i = 1; i < operands.size(); ++i)
+    for (std::size_t i = 1; i < operands.size(); ++i)
     {
         const auto* operand = operands.at(i);
         result = result.max(dispatch(operand));
@@ -322,7 +322,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleM
     const auto& operands = node->getOperands();
     // we know that min has at least two child
     auto result(dispatch(operands.at(0)));
-    for (int i = 1; i < operands.size(); ++i)
+    for (std::size_t i = 1; i < operands.size(); ++i)
     {
         const auto* operand = operands.at(i);
         result = result.min(dispatch(operand));

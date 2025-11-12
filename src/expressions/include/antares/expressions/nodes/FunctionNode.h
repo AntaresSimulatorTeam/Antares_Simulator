@@ -42,20 +42,21 @@ class FunctionNode final: public ParentNode
 public:
     template<typename... NodePtr>
     explicit FunctionNode(FunctionNodeType type, NodePtr... operands):
-        type_(type),
-        ParentNode(operands...)
+        ParentNode(operands...),
+        type_(type)
+
     {
     }
 
     explicit FunctionNode(FunctionNodeType type, const std::vector<Node*>& operands):
-        type_(type),
-        ParentNode(operands)
+        ParentNode(operands),
+        type_(type)
     {
     }
 
     explicit FunctionNode(FunctionNodeType type, const std::vector<Node*>&& operands):
-        type_(type),
-        ParentNode(std::move(operands))
+        ParentNode(std::move(operands)),
+        type_(type)
     {
     }
 
