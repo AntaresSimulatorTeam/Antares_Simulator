@@ -40,9 +40,22 @@ public:
     LinearExpression operator-() const;
     LinearExpression operator/(const LinearExpression& other) const;
     LinearExpression& operator*=(const LinearExpression& other);
-    LinearExpression max(const LinearExpression& other);
-    LinearExpression min(const LinearExpression& other);
     LinearExpression& operator^=(const LinearExpression& other);
+
+    template<class Op>
+    LinearExpression applyOperation(const LinearExpression& other, Op op) const
+    {
+        if (hasCoefs() || other.hasCoefs())
+        {
+            throw std::invalid_argument(
+              std::string("Operator '") + typeid(op).name()
+              + "' cannot be applied to expressions with coefficients (non-constant expressions).");
+        }
+        LinearExpression out(*this);
+        out.constant_ = op(other.constant_, constant_);
+        return out;
+    }
+
     void addVariable(int index, double value);
     double constant() const;
 

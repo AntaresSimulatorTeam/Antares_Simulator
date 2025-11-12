@@ -302,33 +302,7 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
       "A linear expression can't contain extra output operator dual.");
 }
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleMax(
-  const Nodes::FunctionNode* node)
-{
-    const auto& operands = node->getOperands();
-    // we know that max has at least two child
-    auto result(dispatch(operands.at(0)));
-    for (int i = 1; i < operands.size(); ++i)
-    {
-        const auto* operand = operands.at(i);
-        result = result.max(dispatch(operand));
-    }
-    return result;
-}
 
-Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleMin(
-  const Nodes::FunctionNode* node)
-{
-    const auto& operands = node->getOperands();
-    // we know that min has at least two child
-    auto result(dispatch(operands.at(0)));
-    for (int i = 1; i < operands.size(); ++i)
-    {
-        const auto* operand = operands.at(i);
-        result = result.min(dispatch(operand));
-    }
-    return result;
-}
 
 Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handlePow(
   const Nodes::FunctionNode* node)
@@ -358,9 +332,9 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return handleMax(node);
+        return variadicFunction(node, [](const auto& a, const auto& b) { return std::max(a, b); });
     case Nodes::FunctionNodeType::min:
-        return handleMin(node);
+        return variadicFunction(node, [](const auto& a, const auto& b) { return std::min(a, b); });
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

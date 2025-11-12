@@ -153,13 +153,7 @@ LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
     }
 
     LinearStatus base = dispatch(operands[0]);
-    LinearStatus exponent = dispatch(operands[1]);
 
-    // // If exponent is not constant, the result is non-linear
-    // if (exponent != LinearStatus::CONSTANT)
-    // {
-    //     return LinearStatus::NON_LINEAR;
-    // }
     // Check if exponent is constant in time and scenario
     TimeIndexVisitor timeVisitor(optimEntityContainer_, component_);
     auto exponentTimeIndex = timeVisitor.dispatch(operands[1]);

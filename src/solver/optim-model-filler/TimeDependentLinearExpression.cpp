@@ -210,27 +210,7 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
     return out;
 }
 
-TimeDependentLinearExpression TimeDependentLinearExpression::max(
-  const TimeDependentLinearExpression& other) const
-{
-    TimeDependentLinearExpression out(*this);
-    for (std::size_t t = 0; t < size(); t++)
-    {
-        out[t] = out[t].max(other[t]);
-    }
-    return out;
-}
 
-TimeDependentLinearExpression TimeDependentLinearExpression::min(
-  const TimeDependentLinearExpression& other) const
-{
-    TimeDependentLinearExpression out(*this);
-    for (std::size_t t = 0; t < size(); t++)
-    {
-        out[t] = out[t].min(other[t]);
-    }
-    return out;
-}
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {

@@ -112,8 +112,22 @@ public:
       const Nodes::FunctionNode* node);
     Antares::Optimization::TimeDependentLinearExpression handleDual(
       const Nodes::FunctionNode* node);
-    Optimization::TimeDependentLinearExpression handleMax(const Nodes::FunctionNode* node);
-    Optimization::TimeDependentLinearExpression handleMin(const Nodes::FunctionNode* node);
+
+    template<class Op>
+    Optimization::TimeDependentLinearExpression variadicFunction(const Nodes::FunctionNode* node,
+                                                                 Op op)
+    {
+        const auto& operands = node->getOperands();
+        // we know that min has at least two child
+        auto result(dispatch(operands.at(0)));
+        for (int i = 1; i < operands.size(); ++i)
+        {
+            const auto* operand = operands.at(i);
+            result = result.applyOperation(dispatch(operand), op);
+        }
+        return result;
+    }
+
     Optimization::TimeDependentLinearExpression handlePow(const Nodes::FunctionNode* node);
     Antares::Optimization::TimeDependentLinearExpression visit(const Nodes::FunctionNode* node);
 

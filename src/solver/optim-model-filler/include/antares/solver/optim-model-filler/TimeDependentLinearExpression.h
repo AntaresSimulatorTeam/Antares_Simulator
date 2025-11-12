@@ -70,8 +70,20 @@ public:
     TimeDependentLinearExpression operator-() const;
 
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
-    TimeDependentLinearExpression max(const TimeDependentLinearExpression& other) const;
-    TimeDependentLinearExpression min(const TimeDependentLinearExpression& other) const;
+
+    template<class Op>
+    TimeDependentLinearExpression& applyOperation(const TimeDependentLinearExpression& other, Op op)
+    {
+        if (other.size() > size())
+        {
+            expandTo(other.size());
+        }
+        for (std::size_t t = 0; t < size(); ++t)
+        {
+            v_[t] = v_[t].applyOperation(other[t], op);
+        }
+        return *this;
+    }
 
 private:
     void expandTo(std::size_t nbTimesteps);

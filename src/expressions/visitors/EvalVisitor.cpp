@@ -235,15 +235,6 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
     return EvaluationResult{constraintValues};
 }
 
-EvaluationResult EvalVisitor::handleMax(const Nodes::FunctionNode* node)
-{
-    return variadicFunction(node, [](const auto& a, const auto& b) { return std::max(a, b); });
-}
-
-EvaluationResult EvalVisitor::handleMin(const Nodes::FunctionNode* node)
-{
-    return variadicFunction(node, [](const auto& a, const auto& b) { return std::min(a, b); });
-}
 
 EvaluationResult EvalVisitor::handlePow(const Nodes::FunctionNode* node)
 {
@@ -263,9 +254,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return handleMax(node);
+        return variadicFunction(node, [](const auto& a, const auto& b) { return std::max(a, b); });
     case Nodes::FunctionNodeType::min:
-        return handleMin(node);
+        return variadicFunction(node, [](const auto& a, const auto& b) { return std::min(a, b); });
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:
