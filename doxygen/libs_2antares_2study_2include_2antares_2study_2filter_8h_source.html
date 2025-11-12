@@ -155,29 +155,42 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">enum</span> FilterFlag</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;antares/enums/Enum.hpp&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    filterNone = 0,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    filterHourly = 1,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    filterDaily = 2,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    filterWeekly = 4,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    filterMonthly = 8,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    filterAnnual = 16,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    filterAll = (uint)-1,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;};</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// Convert a date precision filter into a string (obtained by concatenating filter components)</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;std::string datePrecisionIntoString(uint datePrecisionFilter);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;uint stringIntoDatePrecision(<span class="keyword">const</span> AnyString&amp; <span class="keywordtype">string</span>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;uint addTimeIntervallToDatePrecisionFilter(<span class="keyword">const</span> uint index);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">enum</span> FilterFlag</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    filterNone = 0,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    filterHourly = 1,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    filterDaily = 2,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    filterWeekly = 4,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    filterMonthly = 8,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    filterAnnual = 16,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    filterAll = (uint)-1,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// Convert a date precision filter into a string (obtained by concatenating filter components)</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;std::string datePrecisionIntoString(uint datePrecisionFilter);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;uint stringIntoDatePrecision(<span class="keyword">const</span> AnyString&amp; <span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;uint addTimeIntervallToDatePrecisionFilter(<span class="keyword">const</span> uint index);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIB_STUDY_FILTER_H__</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">namespace </span>Enum</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> std::initializer_list&lt;std::string&gt;&amp; getNames&lt;FilterFlag&gt;()</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::initializer_list&lt;std::string&gt;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      il = {<span class="stringliteral">&quot;none&quot;</span>, <span class="stringliteral">&quot;hourly&quot;</span>, <span class="stringliteral">&quot;daily&quot;</span>, <span class="stringliteral">&quot;weekly&quot;</span>, <span class="stringliteral">&quot;monthly&quot;</span>, <span class="stringliteral">&quot;annual&quot;</span>, <span class="stringliteral">&quot;all&quot;</span>};</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> il;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;} <span class="comment">// namespace Enum</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIB_STUDY_FILTER_H__</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

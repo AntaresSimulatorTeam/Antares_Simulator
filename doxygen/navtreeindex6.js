@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix.html":[8,0,0,3,0,0,71],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix.html#a061f4bb2ee6445599639e7b6e23f4673":[8,0,0,3,0,0,71,1],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix.html#a0644bf30af7bac113216f439aa854038":[8,0,0,3,0,0,71,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix.html#a07847f9d0fc8b47e87a5af49e381c8a6":[8,0,0,3,0,0,71,11],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CorrelationMatrix.html#a0dcad65fe32f33216f89f33bcf2672b6":[8,0,0,3,0,0,71,10],
@@ -247,7 +249,5 @@ var NAVTREEINDEX6 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersUI.html#acc0888f9cfd84e1158fa15183b5bb3ce":[8,0,0,3,0,0,75,11],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersUI.html#ad3932c13cf707de6a7a955087b6ebc72":[8,0,0,3,0,0,75,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersUI.html#ad444fa2db4620a017baa8446540bccf3":[8,0,0,3,0,0,75,14],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html":[8,0,0,3,0,0,76],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#a0840f6919bf25d80357e1e26fb0bee65":[8,0,0,3,0,0,76,9],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#a1700094cab941a86c721ef590c79a30d":[8,0,0,3,0,0,76,13]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html":[8,0,0,3,0,0,76]
 };

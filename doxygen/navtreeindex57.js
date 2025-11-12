@@ -1,5 +1,12 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a6edcd045be655be6f24f6ca19a920c17":[8,0,0,19,5,4,35,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a8aa9f0ca24f11304ce8921a8ace69752":[8,0,0,19,5,4,35,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#adf804c5f778d5f24f893eaec18b84de8":[8,0,0,19,5,4,35,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html":[8,0,0,19,5,4,37],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a1dd8d79dfade7680606119dc4a8a77d2":[8,0,0,19,5,4,37,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a6242146d0172f6496f3d981271168e75":[8,0,0,19,5,4,37,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#a6b44a8759f01ee209b09cf5e7cb54721":[8,0,0,19,5,4,37,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#aa388adf10bea38d5a9ea2934ae42299e":[8,0,0,19,5,4,37,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroStorage.html#ad8828eab147d733abf1ab293a3ee1b24":[8,0,0,19,5,4,37,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardInflows.html":[8,0,0,19,5,4,39],
@@ -242,12 +249,5 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[8,0,0,19,5,4,131],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[8,0,0,19,5,4,131,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46304a93a63242acbe8a7c2d7af3bd59":[8,0,0,19,5,4,131,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46c9290483710daea47a6571ed804724":[8,0,0,19,5,4,131,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[8,0,0,19,5,4,131,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#ac46ef302975f5232a7a4892bde6c178f":[8,0,0,19,5,4,131,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[8,0,0,19,5,4,132,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html":[8,0,0,19,5,4,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[8,0,0,19,5,4,3],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[8,0,0,19,5,43],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91":[8,0,0,19,5,43,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46c9290483710daea47a6571ed804724":[8,0,0,19,5,4,131,0]
 };

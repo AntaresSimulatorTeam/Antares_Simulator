@@ -388,9 +388,31 @@ $(document).ready(function(){initNavTree('BindingConstraint_8h_source.html','');
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    }</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;};</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160; </div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;<span class="preprocessor">#include &quot;BindingConstraint.hxx&quot;</span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="keyword">namespace </span>Enum</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;{</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> std::initializer_list&lt;std::string&gt;&amp; getNames&lt;Antares::Data::BindingConstraint::Type&gt;()</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;{</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::initializer_list&lt;std::string&gt; il = {<span class="stringliteral">&quot;unknown&quot;</span>, <span class="stringliteral">&quot;hourly&quot;</span>, <span class="stringliteral">&quot;daily&quot;</span>, <span class="stringliteral">&quot;weekly&quot;</span>};</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    <span class="keywordflow">return</span> il;</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;}</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160; </div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> std::initializer_list&lt;std::string&gt;&amp;</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;getNames&lt;Antares::Data::BindingConstraint::Operator&gt;()</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;{</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::initializer_list&lt;std::string&gt; il = {<span class="stringliteral">&quot;unknown&quot;</span>,</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;                                                          <span class="stringliteral">&quot;equality&quot;</span>,</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;                                                          <span class="stringliteral">&quot;less&quot;</span>,</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;                                                          <span class="stringliteral">&quot;greater&quot;</span>,</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;                                                          <span class="stringliteral">&quot;both&quot;</span>};</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <span class="keywordflow">return</span> il;</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;}</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;} <span class="comment">// namespace Enum</span></div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160; </div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;<span class="preprocessor">#include &quot;BindingConstraint.hxx&quot;</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:58</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:51</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraintLoader_html"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraintLoader.html">Antares::Data::BindingConstraintLoader</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintLoader.h:41</div></div>

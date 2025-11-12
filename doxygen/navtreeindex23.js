@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html#a50bca3345e1b5dfc4251db81bd2b9007":[8,0,0,16,0,3,3],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html#a50e8fe846fddfaa6d7127ffc79e85e82":[8,0,0,16,0,3,7],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html#a7bce566daad810cec0385fab4cbd003d":[8,0,0,16,0,3,4],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html#a91debee93507934cf9e45cb7aa146092":[8,0,0,16,0,3,5],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html#a998af3f1222b12965c05d7d10856c6a3":[8,0,0,16,0,3,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX23 =
 "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html#a1552d7dd51bed56c633f4aeb2db3cb2b":[8,0,0,16,6,2],
 "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html#a5f5a0dba52b1d54fae9ad40dcf709808":[8,0,0,16,6,3],
 "classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html":[8,0,0,16,6,0],
-"classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html#a14e526d2ecdfde9ccd4a7bd8d04ce663":[8,0,0,16,6,0,0],
-"classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html":[8,0,0,16,6,1],
-"classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html#a552c5811d086888ae66604158ef01962":[8,0,0,16,6,1,0]
+"classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html#a14e526d2ecdfde9ccd4a7bd8d04ce663":[8,0,0,16,6,0,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX44 =
 {
+"classShortTermStorageConfig.html#afb1b10470f7ee5efb6d5ceb9d8ea7363":[8,0,270,2],
+"classShortTermStorageCostVariation.html":[8,0,271],
 "classShortTermStorageCostVariation.html#a45fc37762789c6557127145b4a3f450f":[8,0,271,4],
 "classShortTermStorageCostVariation.html#a59b9f3e3caebcde015101b4ac6815ecf":[8,0,271,3],
 "classShortTermStorageCostVariation.html#a78241e4e9a3d68fca817c8250f5a5945":[8,0,271,5],
@@ -222,7 +224,7 @@ var NAVTREEINDEX44 =
 "class__name_8cpp.html#aa177d84a39ad89060fa6c174bf415b5a":[7,0,39,1],
 "class__name_8h.html#a8476daf60987482d6dc7c79a05eaff08":[7,0,39,0],
 "class__name_8h.html#acca6ce0f062e2cdc1925de4d70bafe22":[7,0,39,3],
-"class__name_8h_source.html":[9,0,0,4,0,24,0,0,0,0],
+"class__name_8h_source.html":[9,0,0,4,0,8,0,0,0,0],
 "classaverageResults.html":[8,0,45],
 "classaverageResults.html#a07d7e1b1530d3abaa729a2a84fe90226":[8,0,45,1],
 "classaverageResults.html#a28aeba2a9b35f94238fca4a5c25db16c":[8,0,45,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX44 =
 "classcheck__general_1_1check__interface.html#a7233ca5e87c61ef817a009b4d35d3550":[8,0,3,0,0],
 "classcheck__general_1_1check__interface.html#ab749c996877141a0cf0ef3102ab1fc78":[8,0,3,0,1],
 "classcheck__general_1_1check__interface.html#af2d0bb8150eae865915bf30801b3e698":[8,0,3,0,3],
-"classcheck__general_1_1check__list.html":[8,0,3,1],
-"classcheck__general_1_1check__list.html#a28b3ae3e1abfc252a489ad089ad163fe":[8,0,3,1,3],
-"classcheck__general_1_1check__list.html#a5d854d2092144da6aa16920e73e81050":[8,0,3,1,4]
+"classcheck__general_1_1check__list.html":[8,0,3,1]
 };

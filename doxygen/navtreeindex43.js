@@ -1,5 +1,7 @@
 var NAVTREEINDEX43 =
 {
+"classOutput.html#ae40bd1cbb6bc8ad3bf89588447391ac6":[8,0,224,12],
+"classOutput.html#aef40ad9c2e00d5ceaff1687d8b58e644":[8,0,224,5],
 "classOutput.html#af07716dc7eeeae93b5733029b2bca3b7":[8,0,224,2],
 "classOutputRetriever.html":[8,0,225],
 "classOutputRetriever.html#a0f7399ff0538429f8e9686c9aed9190c":[8,0,225,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX43 =
 "classShortTermStorageConfig.html#aacbcba515c1960ee1eb3ad833ffd75a9":[8,0,270,9],
 "classShortTermStorageConfig.html#aafd95886379e5db106b85a987c9f8c8e":[8,0,270,6],
 "classShortTermStorageConfig.html#acd6595e4f4f0c1e668f490ad1ec1f214":[8,0,270,4],
-"classShortTermStorageConfig.html#aea64a040ca751b5fec3fa74ba2a2963d":[8,0,270,15],
-"classShortTermStorageConfig.html#afb1b10470f7ee5efb6d5ceb9d8ea7363":[8,0,270,2],
-"classShortTermStorageCostVariation.html":[8,0,271]
+"classShortTermStorageConfig.html#aea64a040ca751b5fec3fa74ba2a2963d":[8,0,270,15]
 };

@@ -357,7 +357,14 @@ var namespaces_dup =
           [ "enumList", "Enum_8hpp.html#aa62696136419ebeacca7afcc90e6bfee", null ],
           [ "fromString", "Enum_8hpp.html#a6e6d3ffeed659dab6186cf3d3b35a62c", null ],
           [ "getNames", "Enum_8hpp.html#ae5ef0bbd19c114ab929ed3f797a82173", null ],
+          [ "getNames< Antares::Data::BindingConstraint::Operator >", "BindingConstraint_8h.html#a7c9f4424ef1b1360b5c323e2ff214275", null ],
+          [ "getNames< Antares::Data::BindingConstraint::Type >", "BindingConstraint_8h.html#a354e0e9d76ee95a3eeac063661dec3df", null ],
+          [ "getNames< Antares::Data::ResultFormat >", "fwd_8cpp.html#a988ba7da1a056c3e1a2c4a0bcfd0455d", null ],
+          [ "getNames< FilterFlag >", "libs_2antares_2study_2include_2antares_2study_2filter_8h.html#a9456090c66ba22b280fb23a522702d68", null ],
           [ "getNames< MyEnum >", "Enum-test_8cpp.html#af86425379260397cf1c751ed19ac41c5", null ],
+          [ "getNames< RenewableGenerationModelling >", "fwd_8cpp.html#a39da34e0642f4474945ec3407ed3fc0a", null ],
+          [ "getNames< SheddingPolicy >", "fwd_8cpp.html#a984db362563b26985be397362f1b4a3c", null ],
+          [ "getNames< SimplexOptimization >", "fwd_8cpp.html#ad17d1bbf5c63c0a76d58517930e0a5e4", null ],
           [ "getNames< UnfeasibleProblemBehavior >", "UnfeasibleProblemBehavior_8cpp.html#a0625da50c5ffe4a077e6d2f7374c81dc", null ],
           [ "operator<<", "Enum-test_8cpp.html#a1c7c2c04cac019d9814d99a977efe917", null ],
           [ "toString", "Enum_8hpp.html#a5a614eed12a083caba8acac8bbcc17f2", null ]
@@ -2697,18 +2704,18 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "_1", "test-component-filler-to-master-pb_8cpp.html#af91d0de4f17023bab65ceb5833972938", null ],
-      [ "_2", "test-component-filler-to-master-pb_8cpp.html#a4ec7727df222021fc22c7045ac04730d", null ],
-      [ "_3", "test-component-filler-to-master-pb_8cpp.html#a0bed5d6060c58903fbc6c823f2d78fca", null ],
-      [ "_4", "test-component-filler-to-master-pb_8cpp.html#a226c76b0330b90549c22fce6bcd38803", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "check_runner", "fixtures_8py.html#a40228dc2652833ab5cc3c0d688ec0613", null ],
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "_1", "test-component-filler-to-master-pb_8cpp.html#af91d0de4f17023bab65ceb5833972938", null ],
+      [ "_2", "test-component-filler-to-master-pb_8cpp.html#a4ec7727df222021fc22c7045ac04730d", null ],
+      [ "_3", "test-component-filler-to-master-pb_8cpp.html#a0bed5d6060c58903fbc6c823f2d78fca", null ],
+      [ "_4", "test-component-filler-to-master-pb_8cpp.html#a226c76b0330b90549c22fce6bcd38803", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],

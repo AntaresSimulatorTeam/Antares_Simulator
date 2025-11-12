@@ -1,5 +1,12 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html":[8,0,0,5,41,2],
+"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a008c16b94a2babc00a511480a03f437b":[8,0,0,5,41,2,6],
+"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a263cd01c3656c44df0c72561ab0080a2":[8,0,0,5,41,2,1],
+"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a48b6687040a8d8304c2ad87647d1f255":[8,0,0,5,41,2,2],
+"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a526a4ac1db0e1f96c6934acad0acfcde":[8,0,0,5,41,2,4],
+"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a615ef35958bd3e8abd70238272e96a2c":[8,0,0,5,41,2,0],
+"structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#a7dac72b8db1434e647436c8bdb3c0bcd":[8,0,0,5,41,2,3],
 "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html#aba1602032f42d6b2ee0b09fa6b7f7097":[8,0,0,5,41,2,5],
 "structAntares_1_1Data_1_1Parameters_1_1UCMode.html":[8,0,0,5,41,3],
 "structAntares_1_1Data_1_1Parameters_1_1UCMode.html#a54ca3186d2fc07dcf60311e8bd250c3d":[8,0,0,5,41,3,0],
@@ -242,12 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1ScenarioGroupParser_1_1Line.html":[8,0,0,41,0],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html#a6c7b44ff33b68ee45d35bb2374ec2f4f":[8,0,0,41,0,2],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html#aa916761057fc5e3ee82ade8d4d354416":[8,0,0,41,0,0],
-"structAntares_1_1ScenarioGroupParser_1_1Line.html#adaedb692c41c436902463305dce21a0e":[8,0,0,41,0,1],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[8,0,0,19,24],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a34a1c1aaf9c2b92ee3e8984c22bcfd4a":[8,0,0,19,24,6],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a42c5937ebc93142c27f5b788d85909dd":[8,0,0,19,24,10],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a5f31e9cea5d21f1311176e1f173d7478":[8,0,0,19,24,7],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#aa14d6319a62d65c5b574bf07313dce49":[8,0,0,19,24,8],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#aab62cfda12c1f04e97368ff7e9ff4dd8":[8,0,0,19,24,9],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#ab2866cb47bf3bc1992d5caf64607e114":[8,0,0,19,24,1]
+"structAntares_1_1ScenarioGroupParser_1_1Line.html#adaedb692c41c436902463305dce21a0e":[8,0,0,41,0,1]
 };
