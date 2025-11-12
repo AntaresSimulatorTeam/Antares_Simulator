@@ -19,7 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <numeric>
 #include <ranges>
 #include <stdexcept>
 #include <variant>
@@ -374,17 +373,15 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
-    // For now we only handle constraints in subproblems
-    // TODO 6.3
-    if (targetLocation_ != Modeler::Config::Location::SUBPROBLEMS)
-    {
-        return;
-    }
+    // Skip the constraint in case of location mismatch
+    const auto locationFilter = std::views::filter(
+      [&](const auto& constraint)
+      { return AreLocationsCompatible(constraint.location(), targetLocation_); });
 
     ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
 
     const auto& contraints = component_.getModel()->Constraints();
-    for (const auto& constraint: contraints)
+    for (const auto& constraint: contraints | locationFilter)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
