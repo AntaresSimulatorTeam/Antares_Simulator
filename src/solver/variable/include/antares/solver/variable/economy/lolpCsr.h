@@ -50,8 +50,6 @@ struct LOLP_CSRTraits
     }
 };
 
-using VCardLOLP_CSR = VCardLOLP_Base<LOLP_CSRTraits>;
-
 template<class NextT = Container::EndOfList>
 using LOLP_CSR = LOLP_Base<LOLP_CSRTraits, NextT>;
 

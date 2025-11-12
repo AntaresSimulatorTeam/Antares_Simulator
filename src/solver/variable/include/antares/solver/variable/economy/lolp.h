@@ -44,8 +44,6 @@ struct LOLPTraits
     }
 };
 
-using VCardLOLP = VCardLOLP_Base<LOLPTraits>;
-
 template<class NextT = Container::EndOfList>
 using LOLP = LOLP_Base<LOLPTraits, NextT>;
 
