@@ -74,17 +74,6 @@ public:
                 optimComponent.modelConstraintsTimeIndex.at(index)};
     }
 
-    [[nodiscard]] TimeIndex getVariableTimeIndex(
-      const Antares::ModelerStudy::SystemModel::Component& component,
-      unsigned int index) const
-    {
-        auto* model = component.getModel();
-        auto& modelVar = model->Variables().at(index);
-        bool isVarTimeDep = modelVar.isTimeDependent();
-        bool isVarScenarioDep = modelVar.IsScenarioDependent();
-        return Optimisation::convertToTimeIndex(isVarTimeDep, isVarScenarioDep);
-    }
-
     LinearProblemApi::ILinearProblem& Problem()
     {
         return linearProblem_;

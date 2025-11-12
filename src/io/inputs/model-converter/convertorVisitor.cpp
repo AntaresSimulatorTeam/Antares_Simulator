@@ -75,9 +75,6 @@ public:
     std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
     std::any handleDual(ExprParser::ArgListContext* context);
     std::any handleReducedCost(ExprParser::ArgListContext* context);
-    template<class T>
-    std::any processPower(std::vector<T*> exprContexts,
-                          const std::function<std::string()>& toStringTreeCallBack);
     std::any visitPower(ExprParser::PowerContext* context) override;
     std::any visitRightPower(ExprParser::RightPowerContext* context) override;
     std::any visitShiftPower(ExprParser::ShiftPowerContext* context) override;
@@ -91,6 +88,9 @@ private:
     PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
     template<class T>
     std::any ProcessChildren(const std::vector<T*>& exprContexts);
+    template<class T>
+    std::any processPower(std::vector<T*> exprContexts,
+                          const std::function<std::string()>& toStringTreeCallBack);
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
@@ -469,7 +469,7 @@ std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* contex
 std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
 {
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
-    if (nodes.size() != 2)
+    if (nodes.size() < 2)
     {
         throw std::invalid_argument("max operator expect at least 2 operands got "
                                     + std::to_string(nodes.size()));
@@ -480,7 +480,7 @@ std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
 std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
 {
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
-    if (nodes.size() != 2)
+    if (nodes.size() < 2)
     {
         throw std::invalid_argument("min operator expect at least 2 operands got "
                                     + std::to_string(nodes.size()));
