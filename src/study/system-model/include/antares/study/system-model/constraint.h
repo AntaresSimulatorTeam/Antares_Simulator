@@ -34,11 +34,9 @@ class Constraint final
 {
 public:
     Constraint(std::string id,
-               Expression expression,
-               Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
+               Expression expression):
         id_(std::move(id)),
-        expression_(std::move(expression)),
-        location_(location)
+        expression_(std::move(expression))
     {
     }
 
