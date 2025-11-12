@@ -30,6 +30,7 @@
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/logs/logs.h"
 
 namespace
 {
@@ -413,23 +414,39 @@ std::optional<double> updateOffset(std::optional<double> objectiveOffset,
                                    std::string objectiveId,
                                    LinearProblemApi::ILinearProblem& pb)
 {
-    if (std::abs(offset) < 10e-6 && std::abs(offset - *objectiveOffset) < 10e-6)
+    if (std::abs(offset) < 10e-6)
     {
-        if (objectiveOffset.has_value() && std::abs(offset - *objectiveOffset) < 10e-6)
-        {
-            throw Error::RuntimeError(
-              fmt::format("Trying to set multiple objective offset for the same objective."
-                          "\n\tObjective: {}"
-                          "\n\tExisting offset: {}"
-                          "\n\tNew offset: {}",
-                          objectiveId,
-                          *objectiveOffset,
-                          offset));
-        }
+        logs.debug() << fmt::format("Ignoring near zero objective offset for objective: {}.\n"
+                                    "\tOld value: {}\n"
+                                    "\tIgnore value {}",
+                                    objectiveId,
+                                    objectiveOffset.value_or(0),
+                                    offset);
+        return objectiveOffset;
+    }
+    if (!objectiveOffset.has_value())
+    {
         pb.setObjectiveOffset(offset);
         return offset;
     }
-    return std::nullopt;
+    if (std::abs(offset - *objectiveOffset) > 10e-6)
+    {
+        throw Error::RuntimeError(
+          fmt::format("Trying to set multiple objective offset for the same objective."
+                      "\n\tObjective: {}"
+                      "\n\tExisting offset: {}"
+                      "\n\tNew offset: {}",
+                      objectiveId,
+                      *objectiveOffset,
+                      offset));
+    }
+    logs.debug() << fmt::format("Ignoring near zero objective offset for objective: {}.\n"
+                                "\tOld value: {}\n"
+                                "\tIgnore value {}",
+                                objectiveId,
+                                objectiveOffset.value_or(0),
+                                offset);
+    return objectiveOffset;
 }
 } // namespace
 
