@@ -414,22 +414,33 @@ std::optional<double> updateOffset(std::optional<double> objectiveOffset,
                                    std::string objectiveId,
                                    LinearProblemApi::ILinearProblem& pb)
 {
-    if (std::abs(offset) < 10e-6)
+    constexpr double eps = 1e-6; // tolérance numérique pour les comparaisons
+
+    if (!std::isfinite(offset))
     {
-        logs.debug() << fmt::format("Ignoring near zero objective offset for objective: {}.\n"
-                                    "\tOld value: {}\n"
-                                    "\tIgnore value {}",
+        throw Error::InvalidArgumentError(
+          fmt::format("Invalid objective offset (non-finite) for objective: {}. Value: {}",
+                      objectiveId,
+                      offset));
+    }
+
+    if (std::abs(offset) < eps)
+    {
+        logs.debug() << fmt::format("Ignoring near-zero objective offset for objective: "
+                                    "{}.\n\tCurrent value: {}\n\tIgnored value: {}",
                                     objectiveId,
                                     objectiveOffset.value_or(0),
                                     offset);
         return objectiveOffset;
     }
+
     if (!objectiveOffset.has_value())
     {
         pb.setObjectiveOffset(offset);
         return offset;
     }
-    if (std::abs(offset - *objectiveOffset) > 10e-6)
+
+    if (std::abs(offset - *objectiveOffset) > eps)
     {
         throw Error::RuntimeError(
           fmt::format("Trying to set multiple objective offset for the same objective."
@@ -440,9 +451,9 @@ std::optional<double> updateOffset(std::optional<double> objectiveOffset,
                       *objectiveOffset,
                       offset));
     }
-    logs.debug() << fmt::format("Ignoring near zero objective offset for objective: {}.\n"
-                                "\tOld value: {}\n"
-                                "\tIgnore value {}",
+
+    logs.debug() << fmt::format("Duplicate objective offset equals existing value for objective: "
+                                "{}.\n\tExisting: {}\n\tDuplicate: {}",
                                 objectiveId,
                                 objectiveOffset.value_or(0),
                                 offset);
