@@ -33,11 +33,6 @@ struct LOLPTraits
         return "LOLP";
     }
 
-    static std::string Unit()
-    {
-        return "%";
-    }
-
     static std::string Description()
     {
         return "LOLP";

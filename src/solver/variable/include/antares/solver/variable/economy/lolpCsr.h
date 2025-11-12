@@ -38,11 +38,6 @@ struct LOLP_CSRTraits
         return "LOLP CSR";
     }
 
-    static std::string Unit()
-    {
-        return "%";
-    }
-
     static std::string Description()
     {
         return "LOLP for CSR";
