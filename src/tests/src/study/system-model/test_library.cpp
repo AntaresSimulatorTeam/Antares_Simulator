@@ -265,4 +265,114 @@ BOOST_AUTO_TEST_CASE(variable_decomposition)
     BOOST_CHECK(modelVariables[2].location() == Location::SUBPROBLEMS);
 }
 
+BOOST_AUTO_TEST_CASE(constraint_decomposition)
+{
+    // Model
+    ModelBuilder model_builder;
+    model_builder.withId("model");
+    std::vector<Constraint> constraints;
+    constraints.push_back({"c1", {}});
+    constraints.push_back({"c2", {}});
+    constraints.push_back({"c3", {}});
+    model_builder.withConstraints(std::move(constraints));
+    auto model = model_builder.build();
+    std::vector<Model> models;
+    models.emplace_back(std::move(model));
+
+    // Library
+    LibraryBuilder library_builder;
+    Library lib = library_builder.withId("library").withModels(std::move(models)).build();
+    std::vector<Library> libraries{lib};
+
+    // optim-config's YAML
+    const auto folder = std::filesystem::temp_directory_path();
+    const auto input = folder / "input";
+
+    std::filesystem::create_directory(input);
+    const auto yamlPath = input / "optim-config.yml";
+    std::ofstream outfile(yamlPath, std::ofstream::trunc | std::ofstream::out);
+    outfile << R"(models:
+  - id: library.model
+    model-decomposition:
+      constraints:
+        - id: c1
+          location: master
+        - id: c2
+          location: master-and-subproblems
+        - id: c3
+          location: subproblems)";
+    outfile.flush();
+
+    Antares::Solver::LoadFiles::loadOptimConfig(folder, libraries);
+    const auto& modelConstraints = libraries[0].Models()["model"].Constraints();
+
+    using namespace Antares::Modeler::Config;
+    // c1
+    BOOST_CHECK_EQUAL(modelConstraints[0].Id(), "c1");
+    BOOST_CHECK(modelConstraints[0].location() == Location::MASTER);
+
+    // c2
+    BOOST_CHECK_EQUAL(modelConstraints[1].Id(), "c2");
+    BOOST_CHECK(modelConstraints[1].location() == Location::MASTER_AND_SUBPROBLEMS);
+
+    // c3
+    BOOST_CHECK_EQUAL(modelConstraints[2].Id(), "c3");
+    BOOST_CHECK(modelConstraints[2].location() == Location::SUBPROBLEMS);
+}
+
+BOOST_AUTO_TEST_CASE(objective_decomposition)
+{
+    // Model
+    ModelBuilder model_builder;
+    model_builder.withId("model");
+    std::vector<Objective> objectives;
+    objectives.push_back({"o1", {}});
+    objectives.push_back({"o2", {}});
+    objectives.push_back({"o3", {}});
+    model_builder.withObjectives(std::move(objectives));
+    auto model = model_builder.build();
+    std::vector<Model> models;
+    models.emplace_back(std::move(model));
+
+    // Library
+    LibraryBuilder library_builder;
+    Library lib = library_builder.withId("library").withModels(std::move(models)).build();
+    std::vector<Library> libraries{lib};
+
+    // optim-config's YAML
+    const auto folder = std::filesystem::temp_directory_path();
+    const auto input = folder / "input";
+
+    std::filesystem::create_directory(input);
+    const auto yamlPath = input / "optim-config.yml";
+    std::ofstream outfile(yamlPath, std::ofstream::trunc | std::ofstream::out);
+    outfile << R"(models:
+  - id: library.model
+    model-decomposition:
+      objectives:
+        - id: o1
+          location: master
+        - id: o2
+          location: master-and-subproblems
+        - id: o3
+          location: subproblems)";
+    outfile.flush();
+
+    Antares::Solver::LoadFiles::loadOptimConfig(folder, libraries);
+    const auto& modelObjectives = libraries[0].Models()["model"].Objectives();
+
+    using namespace Antares::Modeler::Config;
+    // o1
+    BOOST_CHECK_EQUAL(modelObjectives[0].Id(), "o1");
+    BOOST_CHECK(modelObjectives[0].location() == Location::MASTER);
+
+    // o2
+    BOOST_CHECK_EQUAL(modelObjectives[1].Id(), "o2");
+    BOOST_CHECK(modelObjectives[1].location() == Location::MASTER_AND_SUBPROBLEMS);
+
+    // o3
+    BOOST_CHECK_EQUAL(modelObjectives[2].Id(), "o3");
+    BOOST_CHECK(modelObjectives[2].location() == Location::SUBPROBLEMS);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
