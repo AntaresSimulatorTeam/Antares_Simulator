@@ -89,7 +89,6 @@ library:
           scenario-dependent: false
           time-dependent: false
       variables:
-        - id: master_only
         - id: p_max
           scenario-dependent: false
           time-dependent: false
