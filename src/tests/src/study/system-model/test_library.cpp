@@ -349,7 +349,7 @@ BOOST_AUTO_TEST_CASE(objective_decomposition)
     outfile << R"(models:
   - id: library.model
     model-decomposition:
-      objectives:
+      objective-contributions:
         - id: o1
           location: master
         - id: o2
