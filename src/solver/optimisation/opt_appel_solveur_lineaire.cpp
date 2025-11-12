@@ -19,7 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <chrono>
 #include <mutex>
 
 #include <antares/antares/fatal-error.h>
@@ -56,7 +55,6 @@ using Solver::Optimization::SingleOptimOptions;
 
 struct SimplexResult
 {
-    bool success = false;
     TIME_MEASURE timeMeasure;
     mpsWriterFactory mps_writer_factory;
     double objectiveValue;
@@ -86,7 +84,9 @@ static void fillModelerComponents(
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
-                                            modelerData->scenarioGroupRepository));
+                                            modelerData->scenarioGroupRepository,
+                                            Modeler::Config::Location::SUBPROBLEMS,
+                                            nullptr));
     }
 }
 
@@ -115,9 +115,6 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             globalLast,
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
-
-static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
-  LinearProblemDataImpl::LinearProblemData();
 
 // Returns a non-owning pointer
 MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
@@ -232,8 +229,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
-            return {.success = false,
-                    .timeMeasure = timeMeasure,
+            return {.timeMeasure = timeMeasure,
                     .mps_writer_factory = mps_writer_factory,
                     .objectiveValue = 0};
         }
@@ -259,10 +255,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             true);
     }
 
-    return {.success = true,
-            .timeMeasure = timeMeasure,
+    return {.timeMeasure = timeMeasure,
             .mps_writer_factory = mps_writer_factory,
-            .objectiveValue = solver != nullptr ? getObjectiveValue(solver) : 0};
+            .objectiveValue = getObjectiveValue(solver)};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,

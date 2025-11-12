@@ -11,7 +11,6 @@ add_boost_test(TestYmlModel
         testYmlSystem.cpp
         testSystemConverter.cpp
         test-system-with-connexions.cpp
-        testOptimConfigConverter.cpp
         LIBS
         Antares::exception
         Antares::expressions

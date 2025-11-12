@@ -24,7 +24,8 @@
 
 Hydro_problem_costs::Hydro_problem_costs(const Data::Parameters& parameters)
 {
-    noiseGenerator.reset(Constants::seed);
+    constexpr unsigned int noiseSeed = 0x79683264; // "hyd2" in hexa
+    noiseGenerator.reset(noiseSeed);
     end_days_levels = -1. / 32.;
     overflow = 32 * 68. + 1.;
     deviations = 1.;
