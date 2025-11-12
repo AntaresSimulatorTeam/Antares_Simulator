@@ -267,12 +267,12 @@ In following tables :
 
 |Context of expression        | variable  | parameter| Port |
 |-----------------------------|-----------|----------|------|
-|constraints                  |  yes      |   yes    |  yes |
+|constraints                  |  yes      |   yes    |  no  |
 |binding-constraints          |  yes      |   yes    |  yes |
 |objective-contributions      |  yes      |   yes    |  no  |
 |port-field-definitions       |  yes      |   yes    |  no  |
 |variable bounds              |  no       |   yes    |  no  |
-|extra-output                 |  yes      |   yes    |  no  |
+|extra-output                 |  yes      |   yes    |  yes |
 
 
  
