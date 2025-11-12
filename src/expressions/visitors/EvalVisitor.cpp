@@ -27,6 +27,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/ShiftVector.h"
+#include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
 namespace Antares::Expressions::Visitors
@@ -241,8 +242,9 @@ EvaluationResult EvalVisitor::handlePow(const Nodes::FunctionNode* node)
     const auto numbers = node->getOperands();
     auto base = dispatch(numbers.at(0));
     auto exponent = dispatch(numbers.at(1));
-    return base.applyOperation(exponent,
-                               [](const auto& a, const auto& b) { return std::pow(a, b); });
+    return applyOperation(base,
+                          exponent,
+                          [](const auto& a, const auto& b) { return std::pow(a, b); });
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
@@ -254,9 +256,13 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return variadicFunction(node, [](const auto& a, const auto& b) { return std::max(a, b); });
+        return variadicFunction(*this,
+                                node,
+                                [](const auto& a, const auto& b) { return std::max(a, b); });
     case Nodes::FunctionNodeType::min:
-        return variadicFunction(node, [](const auto& a, const auto& b) { return std::min(a, b); });
+        return variadicFunction(*this,
+                                node,
+                                [](const auto& a, const auto& b) { return std::min(a, b); });
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

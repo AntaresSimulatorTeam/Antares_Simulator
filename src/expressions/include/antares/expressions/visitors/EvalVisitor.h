@@ -90,12 +90,6 @@ public:
         return evaluateBinaryOperation(right, std::greater_equal<>());
     }
 
-    template<class Operation>
-    EvaluationResult applyOperation(const EvaluationResult& rhs, Operation op)
-    {
-        return evaluateBinaryOperation(rhs, op);
-    }
-
     struct SafeDivides
     {
         static constexpr double DEFAULT_THRESHOLD = 1e-16;
@@ -192,6 +186,11 @@ private:
     }
 
     static std::vector<double> shift(const std::vector<double>& values, int shiftValue);
+
+    template<class Operation>
+    friend EvaluationResult applyOperation(const EvaluationResult& lhs,
+                                           const EvaluationResult& rhs,
+                                           Operation op);
 };
 
 template<typename BinaryOp>
@@ -286,6 +285,14 @@ EvaluationResult EvaluationResult::evaluateUnaryOperation(Op op) const
                  value_));
 }
 
+template<class Operation>
+EvaluationResult applyOperation(const EvaluationResult& lhs,
+                                const EvaluationResult& rhs,
+                                Operation op)
+{
+    return lhs.evaluateBinaryOperation(rhs, op);
+}
+
 /**
  * @brief Represents a visitor for evaluating expressions within a given context.
  */
@@ -330,23 +337,6 @@ private:
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult handleReducedCost(const Nodes::FunctionNode* node);
     EvaluationResult handleDual(const Nodes::FunctionNode* node);
-
-    template<class Op>
-    EvaluationResult variadicFunction(const Nodes::FunctionNode* node, Op op)
-    {
-        const auto& operands = node->getOperands();
-        // we know that this function (max, min) has at least two child
-        auto result(dispatch(operands.at(0)));
-        for (std::size_t i = 1; i < operands.size(); ++i)
-        {
-            const auto* operand = operands.at(i);
-            result = result.applyOperation(dispatch(operand), op);
-        }
-        return result;
-    }
-
-    EvaluationResult handleMax(const Nodes::FunctionNode* node);
-    EvaluationResult handleMin(const Nodes::FunctionNode* node);
     EvaluationResult handlePow(const Nodes::FunctionNode* node);
     EvaluationResult visit(const Nodes::FunctionNode* node) override;
 };

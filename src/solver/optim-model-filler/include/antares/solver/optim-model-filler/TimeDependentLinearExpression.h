@@ -71,24 +71,32 @@ public:
 
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
 
-    template<class Op>
-    TimeDependentLinearExpression& applyOperation(const TimeDependentLinearExpression& other, Op op)
-    {
-        if (other.size() > size())
-        {
-            expandTo(other.size());
-        }
-        for (std::size_t t = 0; t < size(); ++t)
-        {
-            v_[t] = v_[t].applyOperation(other[t], op);
-        }
-        return *this;
-    }
 
 private:
     void expandTo(std::size_t nbTimesteps);
 
     std::vector<LinearExpression> v_;
+    template<class Op>
+    friend TimeDependentLinearExpression applyOperation(const TimeDependentLinearExpression& lhs,
+                                                        const TimeDependentLinearExpression& other,
+                                                        Op op);
 };
+
+template<class Op>
+TimeDependentLinearExpression applyOperation(const TimeDependentLinearExpression& lhs,
+                                             const TimeDependentLinearExpression& other,
+                                             Op op)
+{
+    auto out = lhs;
+    if (other.size() > lhs.size())
+    {
+        out.v_.resize(other.size(), out.v_[0]);
+    }
+    for (std::size_t t = 0; t < lhs.size(); ++t)
+    {
+        out.v_[t] = lhs.v_[t].applyOperation(other[t], op);
+    }
+    return out;
+}
 
 } // namespace Antares::Optimization

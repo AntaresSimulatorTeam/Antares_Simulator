@@ -27,6 +27,7 @@
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
@@ -332,9 +333,15 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return variadicFunction(node, [](const auto& a, const auto& b) { return std::max(a, b); });
+        return Visitors::variadicFunction(*this,
+                                          node,
+                                          [](const auto& a, const auto& b)
+                                          { return std::max(a, b); });
     case Nodes::FunctionNodeType::min:
-        return variadicFunction(node, [](const auto& a, const auto& b) { return std::min(a, b); });
+        return Visitors::variadicFunction(*this,
+                                          node,
+                                          [](const auto& a, const auto& b)
+                                          { return std::min(a, b); });
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

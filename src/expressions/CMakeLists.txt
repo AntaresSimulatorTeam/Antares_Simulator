@@ -60,6 +60,7 @@ set(SRC_Expressions
         include/antares/expressions/visitors/TimeIndexVisitor.h
         include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/InvalidNode.h
+        include/antares/expressions/visitors/VariadicNodeFunctionVisit.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h

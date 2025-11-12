@@ -304,4 +304,5 @@ public:
      */
     virtual R visit(const Nodes::FunctionNode*, Args... args) = 0;
 };
+
 } // namespace Antares::Expressions::Visitors

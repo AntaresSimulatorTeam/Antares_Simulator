@@ -29,6 +29,7 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/PrintVisitor.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -133,15 +134,6 @@ LinearStatus LinearityVisitor::handleDual([[maybe_unused]] const Nodes::Function
     throw NodeTypeShouldBeInExtraOutput("dual");
 }
 
-LinearStatus LinearityVisitor::variadicFunction(const Nodes::FunctionNode* node)
-{
-    LinearStatus result(LinearStatus::CONSTANT);
-    for (const auto* operand: node->getOperands())
-    {
-        result &= dispatch(operand);
-    }
-    return result;
-}
 
 LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
 {
@@ -193,7 +185,7 @@ LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
     case Nodes::FunctionNodeType::min:
-        return variadicFunction(node);
+        return variadicFunction(*this, node, [](const auto& a, const auto& b) { return a & b; });
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

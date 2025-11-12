@@ -60,7 +60,6 @@ private:
     LinearStatus visit(const Nodes::AllTimeSumNode* timeSumNode) override;
     LinearStatus handleReducedCost(const Nodes::FunctionNode* node);
     LinearStatus handleDual(const Nodes::FunctionNode* node);
-    LinearStatus variadicFunction(const Nodes::FunctionNode* node);
     LinearStatus handlePow(const Nodes::FunctionNode* node);
     LinearStatus visit(const Nodes::FunctionNode* node) override;
     const Optimisation::OptimEntityContainer& optimEntityContainer_;

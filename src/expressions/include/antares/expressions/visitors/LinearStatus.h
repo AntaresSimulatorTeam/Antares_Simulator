@@ -186,4 +186,10 @@ constexpr LinearStatus& operator&=(LinearStatus& a, LinearStatus b)
     a = a & b;
     return a;
 }
+
+template<class Operation>
+static LinearStatus applyOperation(const LinearStatus& lhs, const LinearStatus& rhs, Operation)
+{
+    return lhs & rhs;
+}
 } // namespace Antares::Expressions::Visitors
