@@ -232,21 +232,23 @@ models:
 
 ### Operators
 
-**Caution** : as already said, multiplying or dividing two references to variables is generally forbidden, except within an **extra-output** expression .
+**Caution** : as already said, non-linear multiplications or divisions are forbidden in expressions in general, except within an **extra-output** expressions.
 Apart from that case, variables can only be multiplied/divided by literals/parameters. 
 
-In following tables, **NV** means : can be applied on "non-variable" elements __ie__ all elements except variables
+In following tables : 
+- **L** means : only linear multiplication or division is allowed
+- **NL** means non linear multiplication or division is allowed
 
 ---
 
 |Context of expression        | [+-]  | [*/] | [<>=] |  Time | sum_connections |
 |-----------------------------|-------|------|-------|-------|-----------------|
-|constraints                  |  yes    |   yes  |  yes    |   yes   |  yes              |
-|binding-constraints          |  yes    |   yes  |  yes    |   yes   |  yes              |
-|objective-contributions      |  yes    |   no  |  no    |   no   |  no              |
-|port-field-definitions       |  yes    |   yes  |  no    |   no   |  no              |
-|variable bounds              |  yes    |   yes  |  no    |   no   |  no              |
-|extra-output                 |  yes    |   yes  |  no    |   no   |  no              |
+|constraints                  |  yes  |   L  |  yes  |  yes  |  yes              |
+|binding-constraints          |  yes  |   L  |  yes  |  yes  |  yes              |
+|objective-contributions      |  yes  |   L  |  no   |  no   |  no              |
+|port-field-definitions       |  yes  |   L  |  no   |  no   |  no              |
+|variable bounds              |  yes  |   L  |  no   |  no   |  no              |
+|extra-output                 |  yes  |   NL |  no   |  no   |  no              |
 
 ---
 
