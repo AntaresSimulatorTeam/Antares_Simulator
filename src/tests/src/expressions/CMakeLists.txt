@@ -16,4 +16,5 @@ add_boost_test(test-expressions
         expressions-iterators
         linear-problem-data-impl
         mock-modeler-objects
-        Antares::antares-study-system-model)
+        Antares::antares-study-system-model
+	test_utils_unit)

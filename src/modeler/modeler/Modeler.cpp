@@ -128,8 +128,7 @@ void Modeler::run() const
       [](const auto& component)
       {
           return std::ranges::any_of(component.getModel()->Variables(),
-                                     [](const auto& variable)
-                                     {
+                                     [](const auto& variable) {
                                          return variable.Type()
                                                 != ModelerStudy::SystemModel::ValueType::FLOAT;
                                      });
