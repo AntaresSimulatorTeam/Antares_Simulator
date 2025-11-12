@@ -371,28 +371,29 @@ BOOST_FIXTURE_TEST_CASE(dual_reducedCost, MyDummyFixture)
     Node* dual = create<FunctionNode>(FunctionNodeType::dual,
                                       create<ParameterNode>("constraint1"),
                                       create<LiteralNode>(0));
-    BOOST_CHECK_EXCEPTION(LinearityVisitor(optimEntityContainer, ctx, components.front())
-                            .dispatch(dual),
-                          NodeTypeShouldBeInExtraOutput,
-                          [](const NodeTypeShouldBeInExtraOutput& e)
-                          {
-                              return std::string(e.what())
-                                     == "This type of node: 'dual' should only be used in "
-                                        "extra outputs expressions";
-                          });
+    BOOST_CHECK_EXCEPTION(
+      LinearityVisitor(optimEntityContainer, ctx, components.front()).dispatch(dual),
+      NodeTypeShouldBeInExtraOutput,
+      [](const NodeTypeShouldBeInExtraOutput& e)
+      {
+          return std::string(e.what())
+                 == "This type of node: 'dual' should only be used in "
+                    "extra outputs expressions";
+      });
 
     Node* reducedCost = create<FunctionNode>(FunctionNodeType::reduced_cost,
                                              create<VariableNode>("var1", 0));
-    BOOST_CHECK_EXCEPTION(LinearityVisitor(optimEntityContainer, ctx, components.front())
-                            .dispatch(reducedCost),
-                          NodeTypeShouldBeInExtraOutput,
-                          [](const NodeTypeShouldBeInExtraOutput& e)
-                          {
-                              return std::string(e.what())
-                                     == "This type of node: 'reduced_cost' should only be used in "
-                                        "extra outputs expressions";
-                          });
+    BOOST_CHECK_EXCEPTION(
+      LinearityVisitor(optimEntityContainer, ctx, components.front()).dispatch(reducedCost),
+      NodeTypeShouldBeInExtraOutput,
+      [](const NodeTypeShouldBeInExtraOutput& e)
+      {
+          return std::string(e.what())
+                 == "This type of node: 'reduced_cost' should only be used in "
+                    "extra outputs expressions";
+      });
 }
+
 BOOST_FIXTURE_TEST_CASE(maxNode, MyDummyFixture)
 {
     Node* maxNode = create<FunctionNode>(FunctionNodeType::max,

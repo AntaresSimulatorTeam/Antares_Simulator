@@ -143,7 +143,6 @@ LinearStatus LinearityVisitor::variadicFunction(const Nodes::FunctionNode* node)
     return result;
 }
 
-
 LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
 {
     const auto& operands = node->getOperands();

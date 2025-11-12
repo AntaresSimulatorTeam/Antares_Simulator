@@ -284,8 +284,7 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
                                    sts.additionalConstraints.end(),
                                    0,
                                    [](size_t inner_constraint_count,
-                                      const auto& additionalConstraints)
-                                   {
+                                      const auto& additionalConstraints) {
                                        return inner_constraint_count
                                               + additionalConstraints->enabledConstraintsCount();
                                    });
