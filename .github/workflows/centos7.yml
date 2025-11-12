@@ -139,7 +139,7 @@ jobs:
         docker rm $container_id
 
     - name: Push artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: centos-targz
         path: archive/*.tar.gz
@@ -175,6 +175,7 @@ jobs:
     # Delete the old cache on hit to emulate a cache update. See
     # https://github.com/actions/cache/issues/342.
     - name: Delete old cache
+      continue-on-error: true
       env:
         GH_TOKEN: ${{ github.token }}
       if: steps.cache.outputs.cache-hit

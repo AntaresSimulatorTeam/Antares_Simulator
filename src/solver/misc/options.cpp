@@ -82,7 +82,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "comment-file",
                 "Specify the file to copy as comments of the simulation");
     // --force
-    parser->addFlag(settings.ignoreWarningsErrors, 'f', "force", "Ignore all warnings at loading");
+    parser->addFlag(settings.ignoreLoadingErrors, 'f', "force", "Ignore all errors at loading");
     // --no-output
     parser->addFlag(settings.noOutput,
                     ' ',
@@ -328,7 +328,7 @@ void Settings::reset()
     studyFolder.clear();
     simulationName.clear();
     commentFile.clear();
-    ignoreWarningsErrors = 0;
+    ignoreLoadingErrors = 0;
     tsGeneratorsOnly = false;
     noOutput = false;
     displayProgression = false;

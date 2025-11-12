@@ -14,6 +14,7 @@ set(TARGET_LIBS #No alias
 
         # solver_api
         study
+		scenario-builder-utils
         study-loader
         file-tree-study-loader
         antares-solver-simulation
@@ -51,7 +52,7 @@ set(TARGET_LIBS #No alias
         model_antares
         antares-solver-ts-generator
         shave-peaks-by-remix-storage-gen
-		storage-for-remix-list-sort
+        storage-for-remix-list-sort
 
         # lps : nothing
 
@@ -110,7 +111,7 @@ set(TARGET_LIBS #No alias
         modeler-simulation-table
         scenario-builder-antlr
         scenario-group-parser
-        modeler-optim-config
+        yml-optim-config
 )
 
 install(TARGETS ${TARGET_LIBS}

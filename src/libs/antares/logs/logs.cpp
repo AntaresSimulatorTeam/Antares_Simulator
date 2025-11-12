@@ -40,7 +40,7 @@ int LogCompatibility(const char format[], ...)
     return 1;
 }
 
-void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool printError)
+void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool printAsError)
 {
     ShortString64 error;
     ShortString64 warning;
@@ -68,40 +68,31 @@ void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool 
         break;
     }
 
-    if (printError)
+    auto logLambda = [&](auto&& stream)
     {
         if (errors and warnings)
         {
-            logs.error() << "Found " << error << " and " << warning << ": " << message;
+            stream << "Found " << error << " and " << warning << ": " << message;
         }
         else
         {
             if (errors)
             {
-                logs.error() << "Found " << error << ": " << message;
+                stream << "Found " << error << ": " << message;
             }
             if (warnings)
             {
-                logs.error() << "Found " << warning << ": " << message;
+                stream << "Found " << warning << ": " << message;
             }
         }
+    };
+
+    if (printAsError)
+    {
+        logLambda(logs.error());
     }
     else
     {
-        if (errors and warnings)
-        {
-            logs.info() << "Found " << error << " and " << warning << ": " << message;
-        }
-        else
-        {
-            if (errors)
-            {
-                logs.info() << "Found " << error << ": " << message;
-            }
-            if (warnings)
-            {
-                logs.info() << "Found " << warning << ": " << message;
-            }
-        }
+        logLambda(logs.info());
     }
 }

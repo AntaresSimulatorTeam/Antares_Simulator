@@ -75,9 +75,9 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
-static const SystemModel::Model& getModel(const std::vector<SystemModel::Library>& libraries,
-                                          const std::string& libraryId,
-                                          const std::string& modelId)
+static Model& getModel(const std::vector<Library>& libraries,
+                       const std::string& libraryId,
+                       const std::string& modelId)
 {
     auto lib = std::ranges::find_if(libraries,
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
@@ -95,15 +95,15 @@ static const SystemModel::Model& getModel(const std::vector<SystemModel::Library
     return search->second;
 }
 
-static SystemModel::Component createComponent(const YmlSystem::Component& c,
-                                              const std::vector<SystemModel::Library>& libraries,
-                                              unsigned int componentIndex)
+static Component createComponent(const YmlSystem::Component& c,
+                                 const std::vector<Library>& libraries,
+                                 unsigned int componentIndex)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
-    const SystemModel::Model& model = getModel(libraries, libraryId, modelId);
+    Model& model = getModel(libraries, libraryId, modelId);
 
-    SystemModel::ComponentBuilder component_builder;
+    ComponentBuilder component_builder;
 
     std::map<std::string, ParameterTypeAndValue> parameters;
     for (const auto& [id, time_dependent, scenario_dependent, value]: c.parameters)
@@ -125,13 +125,11 @@ static SystemModel::Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
-static Component& findComponent(const std::string& id,
-                                std::vector<SystemModel::Component>& components)
+static Component& findComponent(const std::string& id, std::vector<Component>& components)
 
 {
     const auto it = std::ranges::find_if(components,
-                                         [&id](const SystemModel::Component& c)
-                                         { return c.Id() == id; });
+                                         [&id](const Component& c) { return c.Id() == id; });
     if (it == components.end())
     {
         throw std::invalid_argument("Component with id '" + id + "' not found in system.");
@@ -139,8 +137,7 @@ static Component& findComponent(const std::string& id,
     return *it;
 }
 
-static const SystemModel::Port& findPort(const SystemModel::Component& component,
-                                         const std::string& portId)
+static const Port& findPort(const Component& component, const std::string& portId)
 {
     const auto& ports = component.getModel()->Ports();
     const auto& it = ports.find(portId);
@@ -166,7 +163,7 @@ static void CheckPortSelfConnection(const std::string& firstComponentId,
     }
 }
 
-static void CheckPortsType(const SystemModel::Port& firstPort, const SystemModel::Port& secondPort)
+static void CheckPortsType(const Port& firstPort, const Port& secondPort)
 {
     if (firstPort.Type() != secondPort.Type())
     {
@@ -177,27 +174,25 @@ static void CheckPortsType(const SystemModel::Port& firstPort, const SystemModel
     }
 }
 
-static SystemModel::FieldRole ExposeFieldRole(const std::string& portId,
-                                              const std::string& field,
-                                              const SystemModel::PortFieldMap& portFieldDefinitions)
+static FieldRole ExposeFieldRole(const std::string& portId,
+                                 const std::string& field,
+                                 const PortFieldMap& portFieldDefinitions)
 {
-    const auto& it = portFieldDefinitions.find(
-      SystemModel::PortFieldKey{.portId = portId, .fieldId = field});
+    const auto& it = portFieldDefinitions.find(PortFieldKey{.portId = portId, .fieldId = field});
     if (it == portFieldDefinitions.end())
     {
-        return SystemModel::FieldRole::Receiver;
+        return FieldRole::Receiver;
     }
-    return SystemModel::FieldRole::Sender;
+    return FieldRole::Sender;
 }
 
-static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> ResolveFieldsRole(
-  const SystemModel::Component& firstComponent,
-  const SystemModel::Port& firstPort,
-  const SystemModel::Component& secondComponent,
-  const SystemModel::Port& secondPort)
+static std::pair<PortFieldsRole, PortFieldsRole> ResolveFieldsRole(const Component& firstComponent,
+                                                                   const Port& firstPort,
+                                                                   const Component& secondComponent,
+                                                                   const Port& secondPort)
 {
-    SystemModel::PortFieldsRole firstPortFieldsRole;
-    SystemModel::PortFieldsRole secondPortFieldsRole;
+    PortFieldsRole firstPortFieldsRole;
+    PortFieldsRole secondPortFieldsRole;
 
     const auto& firstPortDefs = firstComponent.getModel()->PortFieldDefinitions();
     const auto& secondPortDefs = secondComponent.getModel()->PortFieldDefinitions();
@@ -243,7 +238,7 @@ static std::pair<SystemModel::PortFieldsRole, SystemModel::PortFieldsRole> Resol
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
 static void connectComponents(const YmlSystem::Connection& connection,
-                              std::vector<SystemModel::Component>& components)
+                              std::vector<Component>& components)
 {
     const auto& firstComponentId = connection.firstEntry.componentId;
     const auto& firstPortId = connection.firstEntry.portId;
@@ -282,15 +277,14 @@ static void connectComponents(const YmlSystem::Connection& connection,
  * established
  */
 static void connectAreas(const YmlSystem::AreaConnection& connection,
-                         std::vector<SystemModel::Component>& components)
+                         std::vector<Component>& components)
 {
     // TODO : check that area exists in legacy study? seems complicated here
     auto& component = findComponent(connection.componentId, components);
     component.addAreaConnection(connection.portId, connection.areaId);
 }
 
-SystemModel::System convert(const YmlSystem::System& ymlSystem,
-                            const std::vector<SystemModel::Library>& libraries)
+System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& libraries)
 {
     // Create components from system
     std::vector<Component> components;
@@ -326,7 +320,7 @@ SystemModel::System convert(const YmlSystem::System& ymlSystem,
     }
 
     // Build system from components and connections
-    SystemModel::SystemBuilder builder;
+    SystemBuilder builder;
     return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
 }
 

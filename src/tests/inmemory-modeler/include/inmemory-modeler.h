@@ -32,19 +32,19 @@
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 
+using namespace Antares::ModelerStudy::SystemModel;
+
 namespace Test::Modeler
 {
-auto build_context_parameter_with(
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const Antares::ModelerStudy::SystemModel::ParameterType& type = Antares::ModelerStudy::
-    SystemModel::ParameterType::CONSTANT)
-  -> std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>;
+  const ParameterType& type = ParameterType::CONSTANT);
 
 struct VariableData
 {
     std::string id;
-    Antares::ModelerStudy::SystemModel::ValueType type;
+    ValueType type;
     Antares::Expressions::Nodes::Node* lb;
     Antares::Expressions::Nodes::Node* ub;
     bool timeDependent = true;
@@ -59,10 +59,10 @@ struct ConstraintData
 
 struct LinearProblemBuildingFixture
 {
-    std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model> models;
-    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodes;
-    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
+    std::unordered_map<std::string, Model> models;
+    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodeRegistry;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
+    std::vector<Component> components;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
     Antares::Modeler::Data modelerData;
 
@@ -74,7 +74,7 @@ struct LinearProblemBuildingFixture
 
     void createModelWithSystemModelParameter(
       const std::string& modelId,
-      std::vector<Antares::ModelerStudy::SystemModel::Parameter>,
+      std::vector<Parameter>,
       const std::vector<VariableData>& variablesData,
       const std::vector<ConstraintData>& constraintsData,
       Antares::Expressions::Nodes::Node* objective = nullptr);
@@ -88,13 +88,10 @@ struct LinearProblemBuildingFixture
                                     Antares::Expressions::Nodes::Node* objective = nullptr,
                                     bool time_dependent = false);
 
-    void createComponent(
-      const std::string& modelId,
-      const std::string& componentId,
-      std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
-        parameterValues
-      = {},
-      std::string scenarioGroupId = "");
+    void createComponent(const std::string& modelId,
+                         const std::string& componentId,
+                         std::map<std::string, ParameterTypeAndValue> parameterValues = {},
+                         std::string scenarioGroupId = "");
 
     Antares::Expressions::Nodes::Node* literal(double value);
 
@@ -126,10 +123,9 @@ struct LinearProblemBuildingFixture
 
     Antares::Modeler::Data& getModelerData()
     {
-        Antares::ModelerStudy::SystemModel::SystemBuilder systemBuilder;
+        SystemBuilder systemBuilder;
         auto system = systemBuilder.withId("system").withComponents(std::move(components)).build();
-        modelerData.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
-          std::move(system));
+        modelerData.system = std::make_unique<System>(std::move(system));
         modelerData.dataSeries = std::make_unique<
           Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
         return modelerData;

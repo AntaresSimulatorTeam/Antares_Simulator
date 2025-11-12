@@ -240,6 +240,8 @@ def check_simulation_tables(context):
     ref_simulation_table2 = context.sih.get_optim2_simulation_table()
     if ref_simulation_table2:
         assert ref_simulation_table2 == context.soh.get_optim2_simulation_table(), "second simulation table does not match the reference"
+
+
 def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
 
@@ -371,3 +373,17 @@ def ckeck_log_exists(context, log):
         if log in log_line:
             return
     raise AssertionError(f"Log '{log}' is not reported in the logs")
+
+
+@then(
+    'in area "{area}", during year {year:d}, hourly value of "{var_name}" for hour {hour:d} is equal to {expected_value:d}')
+def check_hourly_variable_value(context, area, year, var_name, hour, expected_value):
+    actual_value = context.soh.get_hourly_value(area, year, var_name, hour)
+    assert expected_value == actual_value, \
+        f"Hourly value mismatch for {var_name}: expected {expected_value}, got {actual_value} (area={area}, year={year}, hour={hour})"
+
+
+@then('in area "{area}", year {year:d} and hour {hour:d}, near price cap is {value:d} hours')
+def check_near_price_cap(context, area, year, hour, value):
+    actual = context.soh.get_npcap_hours_for_hour(area, year, hour)
+    assert actual == value, f"Near price cap hours mismatch: expected {value}, got {actual}"

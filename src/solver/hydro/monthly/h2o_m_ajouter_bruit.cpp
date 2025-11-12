@@ -20,15 +20,10 @@
 */
 #include <vector>
 
+#include <antares/antares/constants.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
-
-namespace Constants
-{
-constexpr double noiseAmplitude = 1e-3;
-constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
-} // namespace Constants
 
 namespace DonneesOptimisationMensuelle
 {
@@ -43,7 +38,8 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     const auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
     Antares::MersenneTwister noiseGenerator;
-    noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
+    constexpr unsigned int noiseSeed = 0x79686d64; // "hydm" in hexa
+    noiseGenerator.reset(noiseSeed); // Arbitrary seed, hard-coded since we don't really want
     // the user to change it
     const std::vector<const std::vector<int>*> monthlyVariables = {
       &CorrespondanceDesVariables.NumeroDeVariableVolume,
@@ -58,18 +54,21 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
         for (int Var: *variable)
         {
             CoutLineaireBruite[Var] = CoutLineaire[Var]
-                                      + noiseGenerator() * Constants::noiseAmplitude;
+                                      + noiseGenerator() * Antares::Constants::noiseAmplitude;
         }
     }
     int Var = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
-    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+    CoutLineaireBruite[Var] = CoutLineaire[Var]
+                              + noiseGenerator() * Antares::Constants::noiseAmplitude;
 
     Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
-    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+    CoutLineaireBruite[Var] = CoutLineaire[Var]
+                              + noiseGenerator() * Antares::Constants::noiseAmplitude;
 
     for (int Var: CorrespondanceDesVariables.NumeroDeVariableOverflow)
     {
-        CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+        CoutLineaireBruite[Var] = CoutLineaire[Var]
+                                  + noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 }
 } // namespace DonneesOptimisationMensuelle

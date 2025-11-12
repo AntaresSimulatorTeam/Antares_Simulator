@@ -29,7 +29,7 @@ class Modeler final
 {
 public:
     Modeler(ILoader& loader, IWriter& writer);
-    void solve() const;
+    void run() const;
 
     class ModelerError: public std::runtime_error
     {

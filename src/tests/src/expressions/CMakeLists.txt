@@ -11,7 +11,6 @@ add_boost_test(test-expressions
         test_DeepWideTrees.cpp
         test_Iterators.cpp
         test_AstDOTStyleVisitor.cpp
-        UtilMocks.h
         LIBS
         expressions
         expressions-iterators

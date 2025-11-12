@@ -8,7 +8,12 @@ toc_depth: 2
 
 ### 9.3.2
 
-TBD
+#### Important notice
+
+* Changing the way some warning or errors are handled during loading
+    - Warnings that were previouly deemed fatal are now proper errors
+    - It is still possible to bypass those specific errors with the command line option `--force`
+    - Some of those warnings are kept as warning and now non-blocking. Mainly those related deprecated options or values
 
 ### 9.3.1
 

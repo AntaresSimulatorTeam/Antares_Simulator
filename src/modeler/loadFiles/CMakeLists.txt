@@ -9,6 +9,7 @@ set(SOURCES
         FileLoader.cpp
         readScenarioGroup.cpp
         readSystem.cpp
+        readOptimConfig.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
         include/antares/solver/modeler/loadFiles/Fileloader.h
@@ -24,7 +25,7 @@ target_include_directories(load-modeler-files
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-find_package(fmt  REQUIRED)
+find_package(fmt REQUIRED)
 # Link dependencies (if any)
 target_link_libraries(load-modeler-files
         PUBLIC
@@ -33,6 +34,7 @@ target_link_libraries(load-modeler-files
         Antares::linear-problem-data-impl
         PRIVATE
         Antares::io
+        Antares::yml-optim-config
         Antares::yml-system
         Antares::yml-model
         Antares::model-converter

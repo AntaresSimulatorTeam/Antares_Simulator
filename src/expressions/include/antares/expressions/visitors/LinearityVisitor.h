@@ -51,5 +51,7 @@ private:
     LinearStatus visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     LinearStatus visit(const Nodes::TimeSumNode* timeSumNode) override;
     LinearStatus visit(const Nodes::AllTimeSumNode* timeSumNode) override;
+    LinearStatus visit(const Nodes::ReducedCostNode* node) override;
+    LinearStatus visit(const Nodes::DualNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors
