@@ -55,6 +55,6 @@ inline typename std::enable_if<std::is_enum<E>::value, std::ostream&>::type oper
 
 } // namespace Antares::Data
 
-#include <antares/antares/Enum.hxx>
+#include <antares/enums/Enum.hxx>
 
 #endif // ANTARES_DATA_ENUM_HPP

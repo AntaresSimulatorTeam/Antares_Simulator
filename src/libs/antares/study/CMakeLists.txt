@@ -305,7 +305,6 @@ target_link_libraries(study
         yuni-static-core
         Antares::date #parameters
         Antares::inifile #parameters
-        Antares::stdcxx #enum.hxx
         Antares::utils #area.hxx
         Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
         Antares::correlation
@@ -323,6 +322,7 @@ target_link_libraries(study
         Antares::modeler-parameters
         Antares::modeler-lib
         Antares::scenario-builder-utils
+        Antares::enums
         PRIVATE
         Antares::exception
         fmt::fmt
