@@ -337,7 +337,7 @@ private:
         const auto& operands = node->getOperands();
         // we know that this function (max, min) has at least two child
         auto result(dispatch(operands.at(0)));
-        for (int i = 1; i < operands.size(); ++i)
+        for (std::size_t i = 1; i < operands.size(); ++i)
         {
             const auto* operand = operands.at(i);
             result = result.applyOperation(dispatch(operand), op);
