@@ -22,7 +22,6 @@
         "CMAKE_CXX_FLAGS": "-fclang-abi-compat=17",
         "CMAKE_INSTALL_PREFIX": "/tmp/deps/install_simulator_debug_docker",
         "CODE_COVERAGE": "OFF"
-        //"CMAKE_CXX_INCLUDE_WHAT_YOU_USE": "include-what-you-use"
       },
       "trace": {
         "redirect": "cmake_out.txt"
