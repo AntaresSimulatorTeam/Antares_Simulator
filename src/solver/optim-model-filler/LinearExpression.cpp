@@ -212,6 +212,7 @@ LinearExpression LinearExpression::max(const LinearExpression& other)
     out.constant_ = std::max(other.constant_, constant_);
     return out;
 }
+
 LinearExpression LinearExpression::min(const LinearExpression& other)
 {
     if (hasCoefs() || other.hasCoefs())
