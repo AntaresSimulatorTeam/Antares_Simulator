@@ -14,7 +14,6 @@ More specifically, they can be found in the following contexts inside a model :
 - in fields **lower-bound** and **upper-bound** of **variables**.
 - **extra-output**
 
-
 Many elements can be found in an expression. In the following sections, we give a list of these elements, but have in mind that all these elements cannot be used in any kind of expression.
 It depends on the context of the expression inside the model.
 For instance, if the expression is used to define the **lower-bound** of a **variable**, it cannot contain a reference to any **variable**.
@@ -28,8 +27,8 @@ The following operators are allowed between two elements :
 
 - **+**: addition
 - **-**: subtraction
-- __*__: multiplication (muliplying 2 variables is always forbidden)
-- **/**: division (dividing 2 variables is always forbidden)
+- __*__: multiplication
+- **/**: division
 - **=**: equality, only allowed for constraint definitions
 - **<=**: less or equal to, only allowed for constraint definitions
 - **>=**: greater or equal to, only allowed for constraint definitions
@@ -46,13 +45,14 @@ expression: 3 * 67.43 - 5 / 3.14
 ## References to elements defined elsewhere
 
 Expressions can contain references to elements defined elsewhere, either in the same model (as the expression), or outside the model (via ports).
-These elements can be the following (we assume they are already defined elsewhere) :
+These elements can be one of the following (we assume they are already defined elsewhere) :
 
 ### Parameters in expressions
 
-You can use a parameter by using its ID. Note that if the parameter is time-dependent (resp. scenario-dependent), then
+You can use a parameter by using its **id**. Note that if the parameter is time-dependent (resp. scenario-dependent), then
 it can be used only for variables or constraints that are time-dependent (resp. scenario-dependent), and that its values
 will be implicitly unfolded during the interpretation of the expression.  
+
 _Example:_
 
 ~~~yaml
@@ -61,7 +61,7 @@ expression: 3 * parameter_1 + 6.345 / parameter_2
 
 ### Variables in expressions
 
-You can use a variable by using its ID. Note that if the variable is time-dependent (resp. scenario-dependent), then
+You can use a variable by using its **id**. Note that if the variable is time-dependent (resp. scenario-dependent), then
 it can be used only for constraints that are time-dependent (resp. scenario-dependent), and that its values
 will be implicitly unfolded during the interpretation of the expression.
   
@@ -71,18 +71,25 @@ _Example:_
 expression: 3 * parameter_1 * variable_a + variable_b + 56.4 <= variable_4 * 439
 ~~~
 
-Also note that all expressions must be linear with respect to variables.  
-_Examples of prohibited expressions:_
+**Caution** :
+A **non linear mutiplication** is multiplying 2 variables.
+A **non linear division** is : the division right operand is a variable, whatever the lft operand.
+There is an important restriction about non linear multiplications or divisions. 
+They're only allowed in the context of **extra-output**.
+
+In general, expressions must be linear with respect to variables.
+There is an exception : **extra-output** expressions allow non linear multiplications or divisions.
+
+_Examples of prohibited expressions (case **extra-output** excepted):_
 
 ~~~yaml
 (X) expression: variable_a * variable_b
-
 (X) expression: 3 / variable_a
 ~~~
 
 ### Ports in expressions
 
-You can use a port field in the expression, using its ID composed by: **port_ID.field_ID**. Note that if the
+You can use a port field in the expression, using its **id** composed by: **port_ID.field_ID**. Note that if the
 port is time-dependent (resp. scenario-dependent), which is deduced from the variables defining it, then
 it can be used only for constraints that are time-dependent (resp. scenario-dependent), and that its values
 will be implicitly unfolded during the interpretation of the expression. Unless, of course, you use time (resp.
@@ -140,7 +147,7 @@ For scenario-dependent parameters, variables, and port fields, you can use this 
 
 You can aggregate incoming ports using the following operator :
 
-**sum_connections(port.field)** : where "port" is the port ID and "field" is the field ID, this operator computes the
+**sum_connections(port.field)** : where "port" is the port **id** and "field" is the field **id**, this operator computes the
 sum of values of this port field, on all incoming connections from other models.  
 Note that the resulting sum can be time-dependent and/or scenario-dependent, depending on the port definition.
 
@@ -225,43 +232,44 @@ models:
 
 ### Operators
 
-**Caution** : multiplying or dividing two references to variables is always forbidden.
-Variables can only be multiplied/divided by literals/parameters. 
-These restrictions are implicit in the following tables.
+**Caution** : as already said, multiplying or dividing two references to variables is generally forbidden, except within an **extra-output** expression .
+Apart from that case, variables can only be multiplied/divided by literals/parameters. 
+
+In following tables, **NV** means : can be applied on "non-variable" elements __ie__ all elements except variables
 
 ---
 
 |Context of expression        | [+-]  | [*/] | [<>=] |  Time | sum_connections |
 |-----------------------------|-------|------|-------|-------|-----------------|
-|constraints                  |  x    |   x  |  x    |   x   |  x              |
-|binding-constraints          |  x    |   x  |  x    |   x   |  x              |
-|objective-contributions      |  x    |   o  |  o    |   o   |  o              |
-|port-field-definitions       |  x    |   x  |  o    |   o   |  o              |
-|variable bounds              |  x    |   x  |  o    |   o   |  o              |
-|extra-output                 |  x    |   x  |  o    |   o   |  o              |
+|constraints                  |  yes    |   yes  |  yes    |   yes   |  yes              |
+|binding-constraints          |  yes    |   yes  |  yes    |   yes   |  yes              |
+|objective-contributions      |  yes    |   no  |  no    |   no   |  no              |
+|port-field-definitions       |  yes    |   yes  |  no    |   no   |  no              |
+|variable bounds              |  yes    |   yes  |  no    |   no   |  no              |
+|extra-output                 |  yes    |   yes  |  no    |   no   |  no              |
 
 ---
 
 |Context of expression        | Scenario | Dual | Power | Max | sum |
 |-----------------------------|----------|------|-------|-----|-----|
-|constraints                  |    ?     |   o  |   o   |  x  |  x  |
-|binding-constraints          |    ?     |   o  |   o   |  x  |  x  |
-|objective-contributions      |    ?     |   o  |   o   |  o  |  x  |
-|port-field-definitions       |    ?     |   o  |   o   |  o  |  x  |
-|variable bounds              |    ?     |   o  |   o   |  o  |  x  |
-|extra-output                 |    ?     |   x  |   x   |  x  |  x  |
+|constraints                  |    ?     |  no  |   no  | yes |  yes  |
+|binding-constraints          |    ?     |  no  |   no  | yes |  yes  |
+|objective-contributions      |    ?     |  no  |   no  | no  |  yes  |
+|port-field-definitions       |    ?     |  no  |   no  | no  |  yes  |
+|variable bounds              |    ?     |  no  |   no  | no  |  yes  |
+|extra-output                 |    ?     |  yes |   yes | yes |  yes  |
 
 
 ### References to elements defined elsewhere
 
 |Context of expression        | variable  | parameter| Port |
 |-----------------------------|-----------|----------|------|
-|constraints                  |  x        |   x      |  x   |
-|binding-constraints          |  x        |   x      |  x   |
-|objective-contributions      |  x        |   x      |  o   |
-|port-field-definitions       |  x        |   x      |  o   |
-|variable bounds              |  o        |   x      |  o   |
-|extra-output                 |  x        |   x      |  o   |
+|constraints                  |  yes      |   yes    |  yes |
+|binding-constraints          |  yes      |   yes    |  yes |
+|objective-contributions      |  yes      |   yes    |  no  |
+|port-field-definitions       |  yes      |   yes    |  no  |
+|variable bounds              |  no       |   yes    |  no  |
+|extra-output                 |  yes      |   yes    |  no  |
 
 
  
