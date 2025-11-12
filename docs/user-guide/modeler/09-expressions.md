@@ -186,7 +186,7 @@ models:
 
 ### Power operator
 
-This unary operator **^** is used within an expression whose context is an extra output.
+This binary operator **^** is used within an expression whose context is an extra output.
 It can only apply to a reference to an existing variable.
 
 _Example :_ 
@@ -203,7 +203,7 @@ models:
       expression: myVar^(2 + myParam)
 ```
 
-### Max operator
+### Max (or Min) operator
 
 This binary operator **max(u, v)** can only be used inside an expression whose context is either **constraints** or **extra-output**.
 - in the context of a **constraint** (or a **binding constraint**), the 2 operands must be parameters or literals.
@@ -238,28 +238,29 @@ Apart from that case, variables can only be multiplied/divided by literals/param
 In following tables : 
 - **L** means : only linear multiplication or division is allowed
 - **NL** means non linear multiplication or division is allowed
+- **NV** : the operator applies to non variable elements only.
 
 ---
 
 |Context of expression        | [+-]  | [*/] | [<>=] |  Time | sum_connections |
 |-----------------------------|-------|------|-------|-------|-----------------|
-|constraints                  |  yes  |   L  |  yes  |  yes  |  yes              |
-|binding-constraints          |  yes  |   L  |  yes  |  yes  |  yes              |
-|objective-contributions      |  yes  |   L  |  no   |  no   |  no              |
-|port-field-definitions       |  yes  |   L  |  no   |  no   |  no              |
-|variable bounds              |  yes  |   L  |  no   |  no   |  no              |
-|extra-output                 |  yes  |   NL |  no   |  no   |  no              |
+|constraints                  |  yes  |   L  |  yes  |  yes  |  no             |
+|binding-constraints          |  yes  |   L  |  yes  |  yes  |  yes            |
+|objective-contributions      |  yes  |   L  |  no   |  no   |  no             |
+|port-field-definitions       |  yes  |   L  |  no   |  no   |  no             |
+|variable bounds              |  yes  |   L  |  no   |  no   |  no             |
+|extra-output                 |  yes  |   NL |  no   |  no   |  no             |
 
 ---
 
-|Context of expression        | Scenario | Dual | Power | Max | sum |
-|-----------------------------|----------|------|-------|-----|-----|
-|constraints                  |    ?     |  no  |   no  | yes |  yes  |
-|binding-constraints          |    ?     |  no  |   no  | yes |  yes  |
-|objective-contributions      |    ?     |  no  |   no  | no  |  yes  |
-|port-field-definitions       |    ?     |  no  |   no  | no  |  yes  |
-|variable bounds              |    ?     |  no  |   no  | no  |  yes  |
-|extra-output                 |    ?     |  yes |   yes | yes |  yes  |
+|Context of expression        | Scenario | Dual | Power | Max/Min | sum |
+|-----------------------------|----------|------|-------|---------|-----|
+|constraints                  |    ?     |  no  |   NV  |    NV   | yes |
+|binding-constraints          |    ?     |  no  |   NV  |    NV   | yes |
+|objective-contributions      |    ?     |  no  |   NV  |    NV   | yes |
+|port-field-definitions       |    ?     |  no  |   NV  |    NV   | yes |
+|variable bounds              |    ?     |  no  |   NV  |    NV   | yes |
+|extra-output                 |    ?     |  yes |   yes |    yes  | yes |
 
 
 ### References to elements defined elsewhere
