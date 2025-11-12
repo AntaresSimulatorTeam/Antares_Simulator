@@ -76,8 +76,7 @@ public:
     std::any handleDual(ExprParser::ArgListContext* context);
     std::any handleReducedCost(ExprParser::ArgListContext* context);
     template<class T>
-    std::any processPower(std::vector<T*> exprContexts,
-                          const std::function<std::string()>& toStringTreeCallBack);
+    std::any processPower(std::vector<T*> exprContexts, antlr4::RuleContext* context);
     std::any visitPower(ExprParser::PowerContext* context) override;
     std::any visitRightPower(ExprParser::RightPowerContext* context) override;
     std::any visitShiftPower(ExprParser::ShiftPowerContext* context) override;
@@ -419,25 +418,25 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     return static_cast<Node*>(
       registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
 }
+
 template<class T>
-std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts,
-                                        const std::function<std::string()>& toStringTreeCallBack)
+std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts, antlr4::RuleContext* context)
 {
     if (exprContexts.size() != 2)
     {
         throw std::invalid_argument("power operator expect only two arguments got "
                                     + std::to_string(exprContexts.size()) + " in "
-                                    + toStringTreeCallBack());
+                                    + context->toStringTree(true));
     }
     if (exprContexts.at(0) == nullptr)
     {
         throw std::invalid_argument("bad power expression, the base is invalid in "
-                                    + toStringTreeCallBack());
+                                    + context->toStringTree(true));
     }
     if (exprContexts.at(1) == nullptr)
     {
         throw std::invalid_argument("bad power expression, the exponent is invalid in "
-                                    + toStringTreeCallBack());
+                                    + context->toStringTree(true));
     }
     const auto powerExpr = std::any_cast<std::vector<Node*>>(ProcessChildren(exprContexts));
     return static_cast<Node*>(
@@ -447,15 +446,13 @@ std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts,
 std::any ConvertorVisitor::visitPower(ExprParser::PowerContext* context)
 {
     auto exprContexts = context->expr();
-    auto toStringTreeCallBack = [&context]() { return context->toStringTree(true); };
-    return processPower(exprContexts, toStringTreeCallBack);
+    return processPower(exprContexts, context);
 }
 
 std::any ConvertorVisitor::visitRightPower(ExprParser::RightPowerContext* context)
 {
     auto exprContexts = context->right_expr();
-    auto toStringTreeCallBack = [&context]() { return context->toStringTree(true); };
-    return processPower(exprContexts, toStringTreeCallBack);
+    return processPower(exprContexts, context);
 }
 
 std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* context)
