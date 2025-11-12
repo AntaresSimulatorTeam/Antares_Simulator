@@ -15,6 +15,74 @@ toc_depth: 2
     - It is still possible to bypass those specific errors with the command line option `--force`
     - Some of those warnings are kept as warning and now non-blocking. Mainly those related deprecated options or values
 
+#### New features
+
+* Modeler 6.2: Investment optimisation (#3185, #3159, #3092)
+* Modeler 6.1: Several objectives (#3090)
+* Modeler 5.5: Add dual and reduced_cost operators (#3177)
+* Add ExportBehavior for structure files (#3210)
+* Add thread number in logs (#3138)
+
+#### Improvements
+
+* Use boost::iostreams::mapped_file_source to improve CSV loading performance (#3089)
+* Remove most ORTOOLS_* functions, use `std::unique_ptr` to handle `MPSolver` instance (#3155)
+* If delete cache fail continue (#3219)
+* Remove unused `OptimComponent::index` (#3218)
+* Wrap getDisplayName and getIcon inside BUILD_UI (#3216)
+* Clean stuff in and around optimEntityContainer (#3209)
+* Move `regenerateTimeSeries` to separate header/source (#3182)
+* On Windows : avoiding a compilation collision between antlr4 and Yuni (#3178)
+* [Sorties] Deduplicate code in lold vcards (#3143)
+* Remove #ifdef __cplusplus, __CPLUSPLUS, unused #define (#3171)
+* Simplify condition in FinalLevelValidator::skippingFinalLevelUse (#3170)
+* Remove std::enable_shared_from_this from ThermalCluster (#3167)
+* Remove study dependency in exception (#3164)
+* Move yearRandomNumbers to random.h/random.cpp (#3162)
+* Extract random number handling from templated class ISimulation (#3156)
+* Simplify Adequacy list chained template (#3131)
+* Simplify link chain template (#3142)
+* Simplify template chain economy sorties (area variables) (#3129)
+* Simplify SpatialAggregateAll chain template (#3127)
+* Remove unused "Hashable" class (#3115)
+
+#### Bugfixes
+
+* Fix inconsistent LOLD for districts (#3117)
+* [ANT-4049] Fix segfault caused by expression[t] (#3201)
+* [ANT-3989] Ascending compatibility (#3161)
+* Interprétation des valeurs d'usage [ANT-3894] (#3132)
+* Fix LolpCsr floor (#3168)
+* Fix LoldCsr spatial aggregate value (#3169)
+* [ANT-3883] No simulation table when no-output is given (#3137)
+* Fix memory leak in class SpatialAggregate (#3139)
+* Fix lolpCsr spatial aggregate (#3151)
+
+#### CI/CD
+
+* Bump actions/upload-artifact from 4 to 5 (#3189)
+* Update ccache properly (#3179)
+* Action to delete cache after merge (#3128)
+* Use branch name for cache key (#3140)
+
+#### Tests
+
+* [ANT-3760] NPCAP test cucumber (#3133)
+* [ANT-3989] Publish log-capture util to test_utils_unit (#3173)
+* [ANT-3989] Make parameters test in-memory using loadFromINI (#3172)
+* Restore "linear expression" tests (#3149)
+* Restore "testScenarioGroupRepo" test (#3147)
+* Fix test_readLinearExpressionVisitor unit test, fix missing DivisionNode, refactor fixture (#3120)
+* Add modeler test 10_4 for comparison operator (#3126)
+* Use simtest 9.3.1 (#3130)
+* Update simtest (#3184, #3180)
+* testing cmake unity build (#3191)
+
+#### Documentation
+
+* Update doc for objective contributions (#3158)
+* Update XPRESS doc regarding MILP problems (#3160)
+
 ### 9.3.1
 
 #### New features
@@ -1060,7 +1128,7 @@ toc_depth: 2
 * Give Oracle Linux 8 assets a proper name instead of "unknown" (#1438)
 * Don't build tools (study-updater, etc.) by default (#1442)
 
-#### Bugfixes
+#### Bugfixs
 
 * Fix error when writing files over 80Mb into a zip (#1488)
 * Fix memory leaks (#1468)
