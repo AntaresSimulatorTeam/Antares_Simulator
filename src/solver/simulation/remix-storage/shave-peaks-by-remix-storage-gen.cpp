@@ -8,7 +8,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include <antares/logs/logs.h>
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"

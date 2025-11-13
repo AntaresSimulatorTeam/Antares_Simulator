@@ -265,7 +265,7 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
-    - `true`: Output files in format remix-*year*-*week*.csv containing withdrawal for all storages. Format inside the file is *area* *storage* *hour* *withdrawal*
+    - `true`: Output files in format remix-*year*-*week*.csv containing withdrawal for all storages.  Each line of the file is associated to an hour and is formatted like this : *area*, *storage*, *hour*, *withdrawal*
     - `false`: Doesn't create the folder
 
 ---
