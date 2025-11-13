@@ -375,4 +375,88 @@ BOOST_AUTO_TEST_CASE(objective_decomposition)
     BOOST_CHECK(modelObjectives[2].location() == Location::SUBPROBLEMS);
 }
 
+BOOST_AUTO_TEST_CASE(modelDecompositionObjectDontExists)
+{
+    // Model
+    ModelBuilder model_builder;
+    model_builder.withId("model");
+    std::vector<Objective> objectives;
+    objectives.push_back({"o1", {}});
+    std::vector<Constraint> constraints;
+    constraints.push_back({"c1", {}});
+    std::vector<Variable> variables;
+    variables.push_back({"x", {}, {}, ValueType::FLOAT, {}, {}});
+    model_builder.withVariables(std::move(variables))
+      .withConstraints(std::move(constraints))
+      .withObjectives(std::move(objectives));
+
+    auto model = model_builder.build();
+    std::vector<Model> models;
+    models.emplace_back(std::move(model));
+
+    // Library
+    LibraryBuilder library_builder;
+    Library lib = library_builder.withId("library").withModels(std::move(models)).build();
+    std::vector<Library> libraries{lib};
+
+    // optim-config's YAML
+    const auto folder = std::filesystem::temp_directory_path();
+    const auto input = folder / "input";
+
+    // OBJECTIVE
+
+    std::filesystem::create_directory(input);
+    const auto yamlPath = input / "optim-config.yml";
+    std::ofstream outfile(yamlPath, std::ofstream::trunc | std::ofstream::out);
+    outfile << R"(models:
+  - id: library.model
+    model-decomposition:
+      objective-contributions:
+        - id: o2
+          location: subproblems)";
+    outfile.flush();
+    outfile.close();
+
+    using namespace Antares::Solver::LoadFiles;
+
+    BOOST_CHECK_EXCEPTION(loadOptimConfig(folder, libraries),
+                          ErrorLoadingYaml,
+                          checkMessage("No objective found with this name: o2"));
+
+    // VARIABLE
+
+    outfile.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
+    outfile << R"(models:
+  - id: library.model
+    model-decomposition:
+      variables:
+        - id: y
+          location: master)";
+    outfile.flush();
+    outfile.close();
+
+    using namespace Antares::Solver::LoadFiles;
+
+    BOOST_CHECK_EXCEPTION(loadOptimConfig(folder, libraries),
+                          ErrorLoadingYaml,
+                          checkMessage("No variable found with this name: y"));
+    // CONSTRAINT
+
+    outfile.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
+    outfile << R"(models:
+  - id: library.model
+    model-decomposition:
+      constraints:
+        - id: c2
+          location: master-and-subproblems)";
+    outfile.flush();
+    outfile.close();
+
+    using namespace Antares::Solver::LoadFiles;
+
+    BOOST_CHECK_EXCEPTION(loadOptimConfig(folder, libraries),
+                          ErrorLoadingYaml,
+                          checkMessage("No constraint found with this name: c2"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

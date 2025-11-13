@@ -30,6 +30,15 @@ using namespace Antares::ModelerStudy;
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
+class ModelObjectNotFound final: public std::runtime_error
+{
+public:
+    explicit ModelObjectNotFound(const std::string& type, const std::string& id):
+        runtime_error("No " + type + " found with this name: " + id)
+    {
+    }
+};
+
 Modeler::Config::Location convertLocation(const std::string& locationStr)
 {
     std::string locLower = locationStr;
@@ -97,7 +106,7 @@ SystemModel::Variable& findSystemVariable(const std::string& var_id, SystemModel
     auto sysVar = std::ranges::find_if(sysVariables, filter);
     if (sysVar == sysVariables.end())
     {
-        throw std::runtime_error("No variable found with this name: " + var_id);
+        throw ModelObjectNotFound("variable", var_id);
     }
     return *sysVar;
 }
@@ -109,7 +118,7 @@ SystemModel::Constraint& findSystemConstraint(const std::string& c_id, SystemMod
     auto sysCons = std::ranges::find_if(sysConstraints, filter);
     if (sysCons == sysConstraints.end())
     {
-        throw std::runtime_error("No constraint found with this name: " + c_id);
+        throw ModelObjectNotFound("constraint", c_id);
     }
     return *sysCons;
 }
@@ -121,7 +130,7 @@ SystemModel::Objective& findSystemObjective(const std::string& obj_id, SystemMod
     auto sysObj = std::ranges::find_if(sysObjectives, filter);
     if (sysObj == sysObjectives.end())
     {
-        throw std::runtime_error("No objective found with this name: " + obj_id);
+        throw ModelObjectNotFound("objective", obj_id);
     }
     return *sysObj;
 }
