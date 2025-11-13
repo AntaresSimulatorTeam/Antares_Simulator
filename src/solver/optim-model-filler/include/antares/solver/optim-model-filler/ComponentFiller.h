@@ -46,11 +46,25 @@ public:
     BendersDecomposition() = default;
     void setCurrentProblemId(std::string id);
     void collectConnectionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
-    void write(std::ostream& os) const;
+
+    const std::map<std::string, std::vector<ConnectionVariable>>& connections() const
+    {
+        return connectionVars_;
+    }
 
 private:
     std::map<std::string, std::vector<ConnectionVariable>> connectionVars_;
     std::string currentProblemId_ = "master";
+};
+
+class BendersDecompositionWriter
+{
+public:
+    BendersDecompositionWriter(const BendersDecomposition& bd);
+    void write(std::ostream& os) const;
+
+private:
+    const BendersDecomposition& bd_;
 };
 
 /**
