@@ -58,3 +58,19 @@ std::vector<Variable> TwoSubPbVarsCreator::Create(
     variables.emplace_back(std::move(var_2));
     return variables;
 }
+
+std::vector<Variable> SingleMixedVariable::Create(
+  Antares::Expressions::Registry<Node>& nodeRegistry)
+{
+    Variable var_1("var-1",
+                   createLiteral("low-bound", 0., nodeRegistry),
+                   createLiteral("up-bound", 1., nodeRegistry),
+                   ValueType::FLOAT,
+                   TimeDependent::NO,
+                   ScenarioDependent::NO,
+                   Config::Location::MASTER_AND_SUBPROBLEMS);
+
+    std::vector<Variable> variables;
+    variables.emplace_back(std::move(var_1));
+    return variables;
+}

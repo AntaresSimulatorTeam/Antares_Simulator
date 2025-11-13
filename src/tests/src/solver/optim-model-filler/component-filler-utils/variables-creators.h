@@ -17,3 +17,9 @@ struct TwoSubPbVarsCreator
     static std::vector<ModelerStudy::SystemModel::Variable> Create(
       Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& registry);
 };
+
+struct SingleMixedVariable
+{
+    static std::vector<ModelerStudy::SystemModel::Variable> Create(
+      Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& registry);
+};
