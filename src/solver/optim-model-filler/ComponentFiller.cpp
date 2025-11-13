@@ -270,7 +270,6 @@ Dimensions getDimensions(const Variable& var, const LinearProblemApi::FillContex
     return getDimensions(ctx);
 }
 
-
 void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
