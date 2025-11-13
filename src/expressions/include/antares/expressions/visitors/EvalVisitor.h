@@ -32,6 +32,8 @@
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 
+#include "VariadicNodeFunctionVisit.h"
+
 namespace Antares::Expressions::Visitors
 {
 
@@ -90,6 +92,9 @@ public:
         return evaluateBinaryOperation(right, std::greater_equal<>());
     }
 
+    size_t size() const;
+    double value(unsigned i) const;
+
     struct SafeDivides
     {
         static constexpr double DEFAULT_THRESHOLD = 1e-16;
@@ -122,7 +127,12 @@ public:
         return evaluateUnaryOperation(std::negate<>());
     }
 
-    [[nodiscard]] std::variant<double, std::vector<double>> value() const
+    // [[nodiscard]] std::variant<double, std::vector<double>> value() const
+    // {
+    //     return value_;
+    // }
+
+    [[nodiscard]] const std::variant<double, std::vector<double>>& value() const
     {
         return value_;
     }
@@ -171,12 +181,13 @@ public:
     EvaluationResult timeSum(int from, int to) const;
     EvaluationResult alltimeSum(int numberOfTimeStep) const;
 
+    template<typename Op>
+    EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
+
 private:
     std::variant<double, std::vector<double>> value_;
     explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
 
-    template<typename Op>
-    EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
     template<typename Op>
     EvaluationResult evaluateUnaryOperation(Op op) const;
 
@@ -286,11 +297,31 @@ EvaluationResult EvaluationResult::evaluateUnaryOperation(Op op) const
 }
 
 template<class Operation>
-EvaluationResult applyOperation(const EvaluationResult& lhs,
-                                const EvaluationResult& rhs,
-                                Operation op)
+EvaluationResult applyOperation(const std::vector<EvaluationResult>& in, Operation op)
 {
-    return lhs.evaluateBinaryOperation(rhs, op);
+    if (in.size() < 2)
+    {
+        throw std::invalid_argument("Expected at least two EvaluationResult");
+    }
+    const size_t size = getMaxSize(in);
+    std::vector<double> values(size);
+    std::vector<double> row(in.size());
+
+    for (size_t i = 0; i < size; ++i)
+    {
+        for (size_t j = 0; j < in.size(); ++j)
+        {
+            const auto& evalResult = in[j];
+            row[i] = evalResult.value(i);
+        }
+        values[i] = op(row);
+    }
+    if (size > 1)
+    {
+        return EvaluationResult(values);
+    }
+
+    return EvaluationResult(values.at(0));
 }
 
 /**

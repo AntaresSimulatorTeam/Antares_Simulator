@@ -21,22 +21,36 @@
 #pragma once
 
 #include <antares/expressions/nodes/FunctionNode.h>
+#include <antares/expressions/visitors/NodeVisitor.h>
 
 namespace Antares::Expressions::Visitors
 {
-template<class R, class Op>
-R applyOperation(const R& a, const R& b, Op op);
 
-template<class Visitor, class Op>
-auto variadicFunction(Visitor& visitor, const Nodes::FunctionNode* node, Op op)
+template<typename T>
+concept HasSizeMethod = requires(const T& t) {
+    { t.size() } -> std::convertible_to<std::size_t>;
+};
+
+template<HasSizeMethod T>
+std::size_t getMaxSize(const std::vector<T>& elements)
+{
+    std::size_t maxSize = 0;
+    for (const auto& element: elements)
+    {
+        maxSize = std::max(maxSize, element.size());
+    }
+    return maxSize;
+}
+
+template<class R>
+std::vector<R> variadicFunction(NodeVisitor<R>& visitor, const Nodes::FunctionNode* node)
 {
     const auto& operands = node->getOperands();
-    // we know that min has at least two child
-    auto result(visitor.dispatch(operands.at(0)));
-    for (int i = 1; i < operands.size(); ++i)
+    std::vector<R> result;
+    result.reserve(operands.size());
+    for (const auto* operand: operands)
     {
-        const auto* operand = operands.at(i);
-        result = applyOperation(result, visitor.dispatch(operand), op);
+        result.push_back(visitor.dispatch(operand));
     }
     return result;
 }

@@ -25,6 +25,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/expressions/visitors/VariadicNodeFunctionVisit.h>
 
 namespace Antares::Expressions::Visitors
 {
@@ -145,8 +146,8 @@ std::string PrintVisitor::handleReducedCost(const Nodes::FunctionNode* node)
     const auto* varIdNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
     return "reduced_cost(" + varIdNode->value() + ")";
 }
-
-std::string PrintVisitor::variadicFunction(const Nodes::FunctionNode* node)
+// TODO rename
+std::string PrintVisitor::ProcessOtherFunction(const Nodes::FunctionNode* node)
 {
     std::string ret;
     if (node->size() >= 2)
@@ -155,13 +156,14 @@ std::string PrintVisitor::variadicFunction(const Nodes::FunctionNode* node)
     }
     else
     {
-        throw std::invalid_argument("variadic Function printing: node must have at least 2 child");
+        throw std::invalid_argument(
+          "variadic Function printing: node must have at least 2 children");
     }
-    const auto nodes = node->getOperands();
-    for (size_t i = 0; i < nodes.size(); ++i)
+    const auto children = variadicFunction(*this, node);
+    for (size_t i = 0; i < children.size(); ++i)
     {
-        ret += dispatch(nodes[i]);
-        if (i != nodes.size() - 1)
+        ret += children[i];
+        if (i != children.size() - 1)
         {
             ret += ", ";
         }
@@ -191,7 +193,7 @@ std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
     case Nodes::FunctionNodeType::min:
-        return variadicFunction(node);
+        return ProcessOtherFunction(node);
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

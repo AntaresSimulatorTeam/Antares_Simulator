@@ -21,6 +21,8 @@
 #pragma once
 #include <span>
 
+#include <antares/expressions/visitors/VariadicNodeFunctionVisit.h>
+
 #include "LinearExpression.h"
 
 namespace Antares::Optimization
@@ -76,27 +78,27 @@ private:
     void expandTo(std::size_t nbTimesteps);
 
     std::vector<LinearExpression> v_;
-    template<class Op>
-    friend TimeDependentLinearExpression applyOperation(const TimeDependentLinearExpression& lhs,
-                                                        const TimeDependentLinearExpression& other,
-                                                        Op op);
 };
 
 template<class Op>
-TimeDependentLinearExpression applyOperation(const TimeDependentLinearExpression& lhs,
-                                             const TimeDependentLinearExpression& other,
+TimeDependentLinearExpression applyOperation(const std::vector<TimeDependentLinearExpression>& lhs,
                                              Op op)
 {
-    auto out = lhs;
-    if (other.size() > lhs.size())
+    const auto maxSize = Expressions::Visitors::getMaxSize(lhs);
+    std::vector<const LinearExpression*> row(lhs.size());
+    std::vector<double> constants(maxSize);
+
+    for (std::size_t t = 0; t < maxSize; ++t)
     {
-        out.v_.resize(other.size(), out.v_[0]);
+        for (int c = 0; c < lhs.size(); ++c)
+        {
+            const auto& e = lhs[c];
+            row[c] = &(e.size() < maxSize ? e[0] : e[t]);
+        }
+        constants[t] = applyOperation(row, op);
     }
-    for (std::size_t t = 0; t < lhs.size(); ++t)
-    {
-        out.v_[t] = lhs.v_[t].applyOperation(other[t], op);
-    }
-    return out;
+
+    return TimeDependentLinearExpression(constants);
 }
 
 } // namespace Antares::Optimization

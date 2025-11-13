@@ -315,7 +315,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleP
         // TODO
         throw Antares::Error::InvalidArgumentError("exponent must be constant");
     }
-    auto exponent = exponentExpr[0];
+    const auto& exponent = exponentExpr[0];
     for (auto& s: ret)
     {
         s ^= exponent;
@@ -333,15 +333,19 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return Visitors::variadicFunction(*this,
-                                          node,
-                                          [](const auto& a, const auto& b)
-                                          { return std::max(a, b); });
+    {
+        auto exprs(Visitors::variadicFunction(*this, node));
+        return applyOperation(exprs,
+                              [](const auto& elements)
+                              { return *std::max_element(elements.begin(), elements.end()); });
+    }
     case Nodes::FunctionNodeType::min:
-        return Visitors::variadicFunction(*this,
-                                          node,
-                                          [](const auto& a, const auto& b)
-                                          { return std::min(a, b); });
+    {
+        auto exprs(Visitors::variadicFunction(*this, node));
+        return applyOperation(exprs,
+                              [](const auto& elements)
+                              { return *std::min_element(elements.begin(), elements.end()); });
+    }
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:

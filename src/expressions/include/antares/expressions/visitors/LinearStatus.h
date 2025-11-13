@@ -176,20 +176,15 @@ constexpr LinearStatus operator-(LinearStatus a)
     return a;
 }
 
-constexpr LinearStatus operator&(LinearStatus a, LinearStatus b)
-{
-    return operator+(a, b);
-}
 
-constexpr LinearStatus& operator&=(LinearStatus& a, LinearStatus b)
+constexpr bool operator<(LinearStatus a, LinearStatus b)
 {
-    a = a & b;
-    return a;
+    return static_cast<char>(a) < static_cast<char>(b);
 }
 
 template<class Operation>
-static LinearStatus applyOperation(const LinearStatus& lhs, const LinearStatus& rhs, Operation)
+LinearStatus applyOperation(const std::vector<LinearStatus>& in, Operation op)
 {
-    return lhs & rhs;
+    return op(in);
 }
 } // namespace Antares::Expressions::Visitors

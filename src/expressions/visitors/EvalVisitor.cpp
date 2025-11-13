@@ -27,7 +27,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/ShiftVector.h"
-#include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
 namespace Antares::Expressions::Visitors
@@ -242,9 +241,9 @@ EvaluationResult EvalVisitor::handlePow(const Nodes::FunctionNode* node)
     const auto numbers = node->getOperands();
     auto base = dispatch(numbers.at(0));
     auto exponent = dispatch(numbers.at(1));
-    return applyOperation(base,
-                          exponent,
-                          [](const auto& a, const auto& b) { return std::pow(a, b); });
+    return base.evaluateBinaryOperation(exponent,
+                                        [](const auto& a, const auto& b)
+                                        { return std::pow(a, b); });
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
@@ -256,13 +255,13 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return variadicFunction(*this,
-                                node,
-                                [](const auto& a, const auto& b) { return std::max(a, b); });
+        return applyOperation(variadicFunction(*this, node),
+                              [](const auto& elements)
+                              { return *std::max_element(elements.begin(), elements.end()); });
     case Nodes::FunctionNodeType::min:
-        return variadicFunction(*this,
-                                node,
-                                [](const auto& a, const auto& b) { return std::min(a, b); });
+        return applyOperation(variadicFunction(*this, node),
+                              [](const auto& elements)
+                              { return *std::min_element(elements.begin(), elements.end()); });
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:
@@ -324,6 +323,25 @@ EvaluationResult::EvaluationResult(double value):
 EvaluationResult::EvaluationResult(const std::vector<double>& values):
     value_(values)
 {
+}
+
+size_t EvaluationResult::size() const
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        std::get<std::vector<double>>(value_).size();
+    }
+    return 1;
+}
+
+double EvaluationResult::value(unsigned i) const
+{
+    if (std::holds_alternative<std::vector<double>>(value_))
+    {
+        const auto& values = std::get<std::vector<double>>(value_);
+        return values.at(i);
+    }
+    return std::get<double>(value_);
 }
 
 EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double>>& value):
