@@ -60,34 +60,33 @@ struct InputFixture
                                  reservoirManagement);
     }
 
-    void callRemixStorageAlgorithm()
-    {
-        Load = TotalGenNoHydro + UnsupE + HydroGen;
-        storagesForRemix.clear();
-        storagesForRemix.push_back(
-          createHydroForRemix(HydroGen, levels, inflows, init_level, capacity));
-        shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
-    }
-
-    void callRemixStorageAlgorithmWith2or3storages(bool threeStorage = false)
+    void callRemixStorageAlgorithm(unsigned nbStorage = 1)
     {
         Load = TotalGenNoHydro + UnsupE + HydroGen + HydroGen2 + HydroGen3;
         storagesForRemix.clear();
         storagesForRemix.push_back(
           createHydroForRemix(HydroGen, levels, inflows, init_level, capacity));
-        auto storage2 = createHydroForRemix(HydroGen2, levels2, inflows2, init_level2, capacity2);
-        storagesForRemix.push_back(storage2);
+        shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
 
-        if (threeStorage)
+        if (nbStorage >= 2)
         {
-            auto storage3 = createHydroForRemix(HydroGen3,
-                                                levels3,
-                                                inflows3,
-                                                init_level3,
-                                                capacity3);
-            storagesForRemix.push_back(storage3);
-        }
+            auto storage2 = createHydroForRemix(HydroGen2,
+                                                levels2,
+                                                inflows2,
+                                                init_level2,
+                                                capacity2);
+            storagesForRemix.push_back(storage2);
 
+            if (nbStorage == 3)
+            {
+                auto storage3 = createHydroForRemix(HydroGen3,
+                                                    levels3,
+                                                    inflows3,
+                                                    init_level3,
+                                                    capacity3);
+                storagesForRemix.push_back(storage3);
+            }
+        }
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
     }
 
@@ -593,7 +592,7 @@ BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture<5>)
     std::ranges::fill(TotalGenNoHydro, 0.); // Flat
     UnsupE.assign(HydroGen.size(), 100.);   // Zero UnsupE -> signal to flatten
 
-    callRemixStorageAlgorithmWith2or3storages(true);
+    callRemixStorageAlgorithm(3);
 
     // --- Check Results ---
 
@@ -640,7 +639,7 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture<8>)
     // ------------------------------
     // Run Remix algorithm
     // ------------------------------
-    callRemixStorageAlgorithmWith2or3storages();
+    callRemixStorageAlgorithm(2);
 
     // ------------------------------
     // Compute flow balance after remix
