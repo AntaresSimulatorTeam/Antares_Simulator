@@ -2704,17 +2704,17 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a96bd3f6596d08eed53fc9e1e9b04edce", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a96b2bcdee7943db487485d6090c77398", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#acaa67b29fb23d5ad2f2c0c24dcbcc509", null ]
+    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "check_runner", "fixtures_8py.html#a40228dc2652833ab5cc3c0d688ec0613", null ],
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
-    ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a96bd3f6596d08eed53fc9e1e9b04edce", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a96b2bcdee7943db487485d6090c77398", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#acaa67b29fb23d5ad2f2c0c24dcbcc509", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],
@@ -2910,6 +2910,15 @@ var namespaces_dup =
     ] ],
     [ "study_run", null, [
       [ "study_run", "classstudy__run_1_1study__run.html", "classstudy__run_1_1study__run" ]
+    ] ],
+    [ "table_compare", null, [
+      [ "as_number", "table__compare_8py.html#a7d45ba21a6c9294bffa2683298b1b54f", null ],
+      [ "compare_rows", "table__compare_8py.html#ae42c5b0e4c4b4e9e0d29df937fcd5932", null ],
+      [ "diff_message", "table__compare_8py.html#a60d99424c2a5898b59270e4331fc4e91", null ],
+      [ "format_key", "table__compare_8py.html#af7691579aafcce3be6642b67f20dfffe", null ],
+      [ "index_rows", "table__compare_8py.html#a3472fec32aa3e277a42fbe69978d30a4", null ],
+      [ "key_of_row", "table__compare_8py.html#abddacda0696afaaf7e7eb084ef14d070", null ],
+      [ "parse_csv_lines", "table__compare_8py.html#acf9f786e21c0f46b1850e014c90b216d", null ]
     ] ],
     [ "Test", null, [
       [ "Modeler", null, [
