@@ -2712,10 +2712,9 @@ var namespaces_dup =
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
     ] ],
     [ "Fixtures", null, [
-      [ "_1", "test-component-filler-to-master-pb_8cpp.html#af91d0de4f17023bab65ceb5833972938", null ],
-      [ "_2", "test-component-filler-to-master-pb_8cpp.html#a4ec7727df222021fc22c7045ac04730d", null ],
-      [ "_3", "test-component-filler-to-master-pb_8cpp.html#a0bed5d6060c58903fbc6c823f2d78fca", null ],
-      [ "_4", "test-component-filler-to-master-pb_8cpp.html#a226c76b0330b90549c22fce6bcd38803", null ]
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a96bd3f6596d08eed53fc9e1e9b04edce", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a96b2bcdee7943db487485d6090c77398", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#acaa67b29fb23d5ad2f2c0c24dcbcc509", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],

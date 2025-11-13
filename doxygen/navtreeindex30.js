@@ -1,5 +1,8 @@
 var NAVTREEINDEX30 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a377cc41b1d876c4a47ef8edbe6041e66":[8,0,0,19,5,4,88,16],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a3d40aae1be82e52b1a5531937432353a":[8,0,0,19,5,4,88,13],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a3ff66c6d2089967c373f83f8e0c3b095":[8,0,0,19,5,4,88,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a435fcb4ec8beb0319d0ef1b63a84cc5b":[8,0,0,19,5,4,88,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a4c906922e85de78daeba43c5ee2ffc11":[8,0,0,19,5,4,88,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#a4e88526375c26a71723c3ee3f532b3f5":[8,0,0,19,5,4,88,11],
@@ -246,8 +249,5 @@ var NAVTREEINDEX30 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#ab49f3acb73f3023bf93801d673ed5fb9":[8,0,0,19,5,4,110,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#ac84b39bfddecd761e9394b6f48111153":[8,0,0,19,5,4,110,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#ad2ef7d82a6acd47a3adee8d83a588b4a":[8,0,0,19,5,4,110,6],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#af4ca698713a6f5f96aab632c591d2a90":[8,0,0,19,5,4,110,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html":[8,0,0,19,5,4,112],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a11f2a7882582613526dd2fb2b36c8f2c":[8,0,0,19,5,4,112,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a14b2c73689b17a530a3c3f742a29ac8d":[8,0,0,19,5,4,112,7]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#af4ca698713a6f5f96aab632c591d2a90":[8,0,0,19,5,4,110,13]
 };

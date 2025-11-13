@@ -1,5 +1,9 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHurdleCosts.html#aef1f6428c772a5fd4c6657cb740190d8":[8,0,0,19,5,4,53,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html":[8,0,0,19,5,4,35],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a2044367b36b3ee7485417d00b54c6180":[8,0,0,19,5,4,35,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a57c164aca14f4f4a2438a64de272da59":[8,0,0,19,5,4,35,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a6edcd045be655be6f24f6ca19a920c17":[8,0,0,19,5,4,35,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a8aa9f0ca24f11304ce8921a8ace69752":[8,0,0,19,5,4,35,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#adf804c5f778d5f24f893eaec18b84de8":[8,0,0,19,5,4,35,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#aa2a8d40a6443b8decac825f758ac9cf4":[8,0,0,19,5,4,129,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#aaf40e1a4f05f4c319c686be754e729d9":[8,0,0,19,5,4,129,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#aec7d731b73ee1b31e824448661db2744":[8,0,0,19,5,4,129,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#afe3a65ea3e7cf5fd858ae0d4e8ff1f07":[8,0,0,19,5,4,129,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[8,0,0,19,5,4,131],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[8,0,0,19,5,4,131,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46304a93a63242acbe8a7c2d7af3bd59":[8,0,0,19,5,4,131,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46c9290483710daea47a6571ed804724":[8,0,0,19,5,4,131,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#afe3a65ea3e7cf5fd858ae0d4e8ff1f07":[8,0,0,19,5,4,129,0]
 };

@@ -25,6 +25,7 @@ var namespaceAntares_1_1Optimisation =
     [ "AddVariableVisitor", "classAntares_1_1Optimisation_1_1AddVariableVisitor.html", "classAntares_1_1Optimisation_1_1AddVariableVisitor" ],
     [ "ConnectionVariable", "structAntares_1_1Optimisation_1_1ConnectionVariable.html", "structAntares_1_1Optimisation_1_1ConnectionVariable" ],
     [ "BendersDecomposition", "classAntares_1_1Optimisation_1_1BendersDecomposition.html", "classAntares_1_1Optimisation_1_1BendersDecomposition" ],
+    [ "BendersDecompositionWriter", "classAntares_1_1Optimisation_1_1BendersDecompositionWriter.html", "classAntares_1_1Optimisation_1_1BendersDecompositionWriter" ],
     [ "ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", "classAntares_1_1Optimisation_1_1ComponentFiller" ],
     [ "IntegerInterval", "structAntares_1_1Optimisation_1_1IntegerInterval.html", "structAntares_1_1Optimisation_1_1IntegerInterval" ],
     [ "Dimensions", "classAntares_1_1Optimisation_1_1Dimensions.html", "classAntares_1_1Optimisation_1_1Dimensions" ],

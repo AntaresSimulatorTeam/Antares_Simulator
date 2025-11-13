@@ -1,6 +1,7 @@
 var classFactoryFixture =
 [
     [ "FactoryFixture", "classFactoryFixture.html#a4e8532355ab07d5a668469d602585d86", null ],
+    [ "bendersDecomposition", "classFactoryFixture.html#a3515b2abdbab0b51affd194010e12e58", null ],
     [ "component", "classFactoryFixture.html#ab3422188572eb5f92cb11efa11a3e7b4", null ],
     [ "dummy_data", "classFactoryFixture.html#a0263f4ecb18d17892744a05a75a7a13b", null ],
     [ "linear_pb", "classFactoryFixture.html#a71f4d56d919cdd3b99c1a60ffb630549", null ],

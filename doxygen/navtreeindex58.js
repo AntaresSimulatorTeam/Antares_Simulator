@@ -1,5 +1,9 @@
 var NAVTREEINDEX58 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[8,0,0,19,5,4,131],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[8,0,0,19,5,4,131,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46304a93a63242acbe8a7c2d7af3bd59":[8,0,0,19,5,4,131,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a46c9290483710daea47a6571ed804724":[8,0,0,19,5,4,131,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[8,0,0,19,5,4,131,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#ac46ef302975f5232a7a4892bde6c178f":[8,0,0,19,5,4,131,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[8,0,0,19,5,4,132,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX58 =
 "structAntares_1_1Window_1_1Inspector_1_1PClusterSpinningColor.html":[8,0,0,25,1,49],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterStartupCost.html":[8,0,0,25,1,55],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterStartupCost.html#a4387cac1e187e78a3679deb5c0640226":[8,0,0,25,1,55,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html":[8,0,0,25,1,37],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html#a47a9dd7aaf691275d3389e030d63fe7e":[8,0,0,25,1,37,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html":[8,0,0,25,1,57],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html#a88f50e70afcbd7ff4164a3b17b227109":[8,0,0,25,1,57,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html":[8,0,0,25,1,46]
+"structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html":[8,0,0,25,1,37]
 };

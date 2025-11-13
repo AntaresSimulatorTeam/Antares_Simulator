@@ -1,5 +1,9 @@
 var NAVTREEINDEX54 =
 {
+"singleProblemGetterImpl_8h.html#a2b9ca4b32a64c5d8437d4c350a5785e3":[7,0,0,25,0,2],
+"singleProblemGetterImpl_8h.html#afe2acc563fb1a49f02e132fab30bfa79":[7,0,0,25,0,3],
+"singleProblemGetterImpl_8h_source.html":[9,0,0,0,1,2],
+"singleProblemGetter_8h_source.html":[9,0,0,0,0,0,0,1],
 "solarTSNumberData_8h_source.html":[9,0,0,4,0,25,0,0,0,8,15],
 "solar_2prepro_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,5,2],
 "solar_8h_source.html":[9,0,0,8,12,0,0,0,0,1,10],
@@ -245,9 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html":[8,0,0,5,41,1,0],
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#a0bfc876da19558211caf678e59e2e25f":[8,0,0,5,41,1,0,0],
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#a8c222973cbcc0bd3eaa35197509c5ecd":[8,0,0,5,41,1,0,3],
-"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#a98bdac6b1251906cf5107ff35c40dfb0":[8,0,0,5,41,1,0,2],
-"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#aebd3a697e1cebc9a99271b4a77501024":[8,0,0,5,41,1,0,1],
-"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html":[8,0,0,5,41,1,1],
-"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html#a72063860998e74981f5e2aced6ad025d":[8,0,0,5,41,1,1,1],
-"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html#ae4c7deb111522fdeaba9747157815a2c":[8,0,0,5,41,1,1,0]
+"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#a98bdac6b1251906cf5107ff35c40dfb0":[8,0,0,5,41,1,0,2]
 };

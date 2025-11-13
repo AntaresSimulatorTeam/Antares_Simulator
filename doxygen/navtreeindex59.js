@@ -1,5 +1,9 @@
 var NAVTREEINDEX59 =
 {
+"structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html#a47a9dd7aaf691275d3389e030d63fe7e":[8,0,0,25,1,37,0],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html":[8,0,0,25,1,57],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html#a88f50e70afcbd7ff4164a3b17b227109":[8,0,0,25,1,57,0],
+"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html":[8,0,0,25,1,46],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html#a46298b56335afe5b7ac7378d8060670c":[8,0,0,25,1,46,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityPlanned.html":[8,0,0,25,1,45],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityPlanned.html#a258a8917d84fcaba040bcbe02f24a322":[8,0,0,25,1,45,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX59 =
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#a0cbbe0ebe0b1a0e8b788e34585f2512f":[8,0,80,7],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#a141bf34d70d8ce1fe23033b43121304c":[8,0,80,4],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ac6b7a45f54c65a0b2dc0df567e9bed83":[8,0,80,0],
-"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ad425e36b62ba42367a4027e60488c2e8":[8,0,80,6],
-"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ae65ab890a83c22c63317641cc9d9b86b":[8,0,80,5],
-"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#af45632a6e506b396e03a8ed0d062dc76":[8,0,80,2],
-"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#aff53c62edba248fe08988c61ed6931e2":[8,0,80,1],
-"structCOUTS__DE__TRANSPORT.html":[8,0,85]
+"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ad425e36b62ba42367a4027e60488c2e8":[8,0,80,6]
 };

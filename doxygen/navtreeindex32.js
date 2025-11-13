@@ -1,5 +1,8 @@
 var NAVTREEINDEX32 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#a90d996922dab9d8a49843856c57cc546":[8,0,0,19,5,4,132,11],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#aa0ba0e49bf9bd0460d060e7f273b5af3":[8,0,0,19,5,4,132,6],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#aa86090f5af46c608d6f88347e57cada1":[8,0,0,19,5,4,132,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#acdf009678f827c59008caf3acb3a4c9b":[8,0,0,19,5,4,132,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#ad360523216a2a32df63634ff81138067":[8,0,0,19,5,4,132,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html#ad6210f0a9dd953e11bfc94e10d95f23c":[8,0,0,19,5,4,132,13],
@@ -246,8 +249,5 @@ var NAVTREEINDEX32 =
 "classAntares_1_1Solver_1_1Variable_1_1Results.html#addc14a524ae95be76adb5f79efd9871e":[8,0,0,19,5,45,3],
 "classAntares_1_1Solver_1_1Variable_1_1Results.html#afe9705ee210bcb73f409123c4a79c67f":[8,0,0,19,5,45,0],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html":[8,0,0,19,5,40],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a01fffc8172275ed391265371b7833db3":[8,0,0,19,5,40,7],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a02daaafaa47638d04affd297d90835b3":[8,0,0,19,5,40,41],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a12668eca2e142424613f577f1d665c10":[8,0,0,19,5,40,15],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a248485a3872f0af616b83e26f1ed4c58":[8,0,0,19,5,40,31]
+"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a01fffc8172275ed391265371b7833db3":[8,0,0,19,5,40,7]
 };

@@ -1,5 +1,8 @@
 var NAVTREEINDEX24 =
 {
+"classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html#a5f5a0dba52b1d54fae9ad40dcf709808":[8,0,0,16,6,3],
+"classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html":[8,0,0,16,6,0],
+"classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1AlreadyExists.html#a14e526d2ecdfde9ccd4a7bd8d04ce663":[8,0,0,16,6,0,0],
 "classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html":[8,0,0,16,6,1],
 "classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html#a552c5811d086888ae66604158ef01962":[8,0,0,16,6,1,0],
 "classAntares_1_1Optimisation_1_1VariableNames.html":[8,0,0,16,8],
@@ -246,8 +249,5 @@ var NAVTREEINDEX24 =
 "classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#a921bafe4a016050fd6687f1782d5c2dc":[8,0,0,18,2,1,3],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#aa38e21f9b0bf55c1d68f5bc28f8215db":[8,0,0,18,2,1,4],
 "classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#ab8957e3af9042cebe5d7a39cb36ccd84":[8,0,0,18,2,1,0],
-"classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#ac54593632a04089daf789991a91d665c":[8,0,0,18,2,1,1],
-"classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#ae9fd690ae9e900afba39a2f04bea37cc":[8,0,0,18,2,1,2],
-"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html":[8,0,0,18,2,4],
-"classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#a2e2cf8c5844547b85437b42337b8860f":[8,0,0,18,2,4,8]
+"classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#ac54593632a04089daf789991a91d665c":[8,0,0,18,2,1,1]
 };
