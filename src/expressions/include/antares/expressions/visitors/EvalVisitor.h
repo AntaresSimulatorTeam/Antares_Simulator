@@ -197,11 +197,6 @@ private:
     }
 
     static std::vector<double> shift(const std::vector<double>& values, int shiftValue);
-
-    template<class Operation>
-    friend EvaluationResult applyOperation(const EvaluationResult& lhs,
-                                           const EvaluationResult& rhs,
-                                           Operation op);
 };
 
 template<typename BinaryOp>
