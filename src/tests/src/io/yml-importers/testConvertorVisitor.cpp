@@ -455,6 +455,29 @@ BOOST_AUTO_TEST_CASE(dualExpression)
                             "dual called with unknown constraint 'abc' in model 'model0'"));
 }
 
+BOOST_AUTO_TEST_CASE(WrongDualExpression)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {{"constraintA", ""}},
+                          .binding_constraints = {{"constraintB", ""}},
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    // constraints
+    std::string expression = "dual(constraintA, e^(iπ) + 1 = 0)";
+    BOOST_CHECK_EXCEPTION(
+      converter.run(expression),
+      std::runtime_error,
+      checkMessage(
+        "dual operator expect only one constraint id got: constraintA, e^(iπ) + 1 = 0)"));
+}
+
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
 {
     YmlModel::Model model{
@@ -486,4 +509,26 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
                           std::runtime_error,
                           checkMessage(
                             "reduced_cost called with unknown variable 'abc' in model 'model0'"));
+}
+
+BOOST_AUTO_TEST_CASE(reducedCostExpressionTwoVariables)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "reduced_cost(varB, 2nd)";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          std::invalid_argument,
+                          checkMessage("reduced_cost operator expect only one variable id"));
 }

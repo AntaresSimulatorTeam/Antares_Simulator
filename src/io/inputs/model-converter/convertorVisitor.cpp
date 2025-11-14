@@ -366,7 +366,12 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
     const auto constraintId = context->expr();
     if (constraintId.size() != 1)
     {
-        throw std::invalid_argument("dual operator expect only one constraint id");
+        std::string params;
+        for (int param = 0; param < constraintId.size(); param++)
+        {
+            params += ' ' + constraintId.at(param)->getText() + ',';
+        }
+        throw std::invalid_argument("dual operator expect only one constraint id got:" + params);
     }
     const std::string constraint_id = constraintId.at(0)->getText();
     unsigned index = 0;
@@ -376,10 +381,10 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         {
             if (c.id == constraint_id)
             {
-                auto* constraintId = registry_.create<ParameterNode>(c.id);
+                auto* constraintIdNode = registry_.create<ParameterNode>(c.id);
                 auto* constraintIndex = registry_.create<LiteralNode>(index);
                 return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::dual,
-                                                                         constraintId,
+                                                                         constraintIdNode,
                                                                          constraintIndex));
             }
             ++index;
