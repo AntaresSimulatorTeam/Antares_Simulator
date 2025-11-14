@@ -88,6 +88,47 @@ BOOST_FIXTURE_TEST_CASE(visit_pow_two_literals, VisitorFixture<ReadLinearExpress
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_0, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0);
+    Node* eight = create<LiteralNode>(8);
+    Node* zero = create<LiteralNode>(0.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, zero); // (8*variable)^0
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK(linear_expression[0].hasCoefs());
+    BOOST_CHECK_EQUAL(linear_expression[0].begin()->second, 1); // 8^0
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_1, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0);
+    Node* eight = create<LiteralNode>(8);
+    Node* one = create<LiteralNode>(1.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, one); // (8*variable)^1
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK(linear_expression[0].hasCoefs());
+    BOOST_CHECK_EQUAL(linear_expression[0].begin()->second, 8);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple__non_linear_linear,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0);
+    Node* eight = create<LiteralNode>(8);
+    Node* six = create<LiteralNode>(6.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, six); // (8*variable)^6
+    BOOST_CHECK_THROW(visitor().dispatch(pow), std::invalid_argument);
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // 5 + param(3) = 8

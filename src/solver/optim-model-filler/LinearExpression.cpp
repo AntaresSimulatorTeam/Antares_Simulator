@@ -214,9 +214,15 @@ LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
         {
             for (auto& [idx, coef]: coefs_)
             {
-                coef = 1;
+                // TODO is this possible ?
+                if (coef != 0)
+                {
+                    coef = 1;
+                }
             }
-            constant_ = 1;
+
+            constant_ != 0 ? 1 : 0;
+            return *this;
         }
         if (other.constant() != 1)
         {
