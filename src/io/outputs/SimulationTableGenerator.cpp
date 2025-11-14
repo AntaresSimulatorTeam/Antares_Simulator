@@ -94,7 +94,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
     for (std::size_t varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
         const auto& modelVar = variables[varIndex];
-        if (modelVar.location() != Modeler::Config::Location::SUBPROBLEMS)
+        if (modelVar.location() == Modeler::Config::Location::MASTER)
         {
             continue;
         }
@@ -205,7 +205,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     unsigned constraintLocalIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
-        if (modelConstr.location() != Modeler::Config::Location::SUBPROBLEMS)
+        if (modelConstr.location() == Modeler::Config::Location::MASTER)
         {
             continue;
         }
