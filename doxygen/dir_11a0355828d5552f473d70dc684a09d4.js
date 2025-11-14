@@ -18,6 +18,7 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "lold_base.h", "lold__base_8h_source.html", null ],
     [ "loldCsr.h", "loldCsr_8h_source.html", null ],
     [ "lolp.h", "lolp_8h_source.html", null ],
+    [ "lolp_base.h", "lolp__base_8h_source.html", null ],
     [ "lolpCsr.h", "lolpCsr_8h_source.html", null ],
     [ "max-mrg-csr.h", "max-mrg-csr_8h_source.html", null ],
     [ "max-mrg-utils.h", "max-mrg-utils_8h_source.html", null ],
