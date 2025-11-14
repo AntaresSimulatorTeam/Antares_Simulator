@@ -364,14 +364,19 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
 std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 {
     const auto constraintId = context->expr();
-    if (constraintId.size() != 1)
+    if (constraintId.size() == 0)
     {
-        std::string params;
-        for (int param = 0; param < constraintId.size(); param++)
+        throw std::invalid_argument("dual operator expect only one constraint id got NONE");
+    }
+    std::string params(constraintId.at(0)->getText());
+
+    if (constraintId.size() != 1) // -> > 1
+    {
+        for (int param = 1; param < constraintId.size(); param++)
         {
-            params += ' ' + constraintId.at(param)->getText() + ',';
+            params += ", " + constraintId.at(param)->getText();
         }
-        throw std::invalid_argument("dual operator expect only one constraint id got:" + params);
+        throw std::invalid_argument("dual operator expect only one constraint id got: " + params);
     }
     const std::string constraint_id = constraintId.at(0)->getText();
     unsigned index = 0;

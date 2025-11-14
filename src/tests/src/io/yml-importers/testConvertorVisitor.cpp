@@ -470,12 +470,11 @@ BOOST_AUTO_TEST_CASE(WrongDualExpression)
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     // constraints
-    std::string expression = "dual(constraintA, e^(iπ) + 1 = 0)";
+    std::string expression = "dual(constraintA, e^(iPi) + 1 = 0)";
     BOOST_CHECK_EXCEPTION(
       converter.run(expression),
-      std::runtime_error,
-      checkMessage(
-        "dual operator expect only one constraint id got: constraintA, e^(iπ) + 1 = 0)"));
+      std::invalid_argument,
+      checkMessage("dual operator expect only one constraint id got: constraintA, e^(iPi)+1=0"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
