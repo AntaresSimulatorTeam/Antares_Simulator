@@ -37,10 +37,12 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     logs.info() << "Loading modeler files...";
     Modeler::Data data;
 
-    data.libraries = loadLibraries(studyPath);
+    const auto optimConfig = loadOptimConfig(studyPath);
+    logs.info() << "optim config is loaded";
+
+    data.libraries = loadLibraries(studyPath, optimConfig);
     logs.info() << "Libraries loaded";
 
-    loadOptimConfig(studyPath, data.libraries);
 
     data.system = std::make_unique<SystemModel::System>(loadSystem(studyPath, data.libraries));
     logs.info() << "System loaded";

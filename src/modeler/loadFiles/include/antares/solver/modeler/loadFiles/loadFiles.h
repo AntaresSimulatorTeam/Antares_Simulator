@@ -29,6 +29,7 @@
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
+#include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 
 namespace Antares::Solver::LoadFiles
 {
@@ -39,7 +40,8 @@ Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath);
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
 std::vector<ModelerStudy::SystemModel::Library> loadLibraries(
-  const std::filesystem::path& studyPath);
+const std::filesystem::path& studyPath,
+  const IO::Inputs::YmlOptimConfig::OptimConfig& optimConfig = {});
 
 ModelerStudy::SystemModel::System loadSystem(
   const std::filesystem::path& studyPath,
@@ -51,8 +53,7 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeri
 Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath);
 
-void loadOptimConfig(const std::filesystem::path& studyPath,
-                     std::vector<ModelerStudy::SystemModel::Library>& libraries);
+IO::Inputs::YmlOptimConfig::OptimConfig loadOptimConfig(const std::filesystem::path& studyPath);
 
 void handleYamlError(const YAML::Exception& e, const std::string& filename);
 

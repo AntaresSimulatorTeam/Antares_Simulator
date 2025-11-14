@@ -32,9 +32,9 @@ target_link_libraries(load-modeler-files
         Antares::antares-study-system-model
         Antares::linear-problem-api
         Antares::linear-problem-data-impl
+		Antares::yml-optim-config
         PRIVATE
         Antares::io
-        Antares::yml-optim-config
         Antares::yml-system
         Antares::yml-model
         Antares::model-converter

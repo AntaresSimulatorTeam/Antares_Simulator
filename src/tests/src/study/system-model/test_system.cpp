@@ -83,7 +83,7 @@ static Model createModelWith2PortsOneWayExchange()
                              .binding_constraints = {},
                              .objectives = {},
                              .extra_outputs = {}};
-    auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
+    auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel, {});
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.emplace_back(port1,
                                       port_field,
@@ -164,8 +164,8 @@ static Model createModelWith2Ports2WayExchange()
                              .binding_constraints = {},
                              .objectives = {},
                              .extra_outputs = {}};
-    auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel);
-    auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel);
+    auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel, {});
+    auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel, {});
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.emplace_back(port1,
                                       rice,

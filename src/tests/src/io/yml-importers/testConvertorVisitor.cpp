@@ -51,7 +51,7 @@ public:
 
     NodeRegistry run(const std::string& input)
     {
-        return ModelConverter::convertExpressionToNode(input, model_);
+        return ModelConverter::convertExpressionToNode(input, model_, {});
     }
 
 private:
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
-    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
+    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model, {}),
                           std::runtime_error,
                           expectedMessage);
 }
@@ -290,7 +290,7 @@ ExpressionToNodeConvertorEmptyModel createMediumExpression()
 std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& registry)
 {
     auto* param = registry.create<Nodes::ParameterNode>("param1");
-    auto* var = registry.create<Nodes::VariableNode>("varP", 89);
+    auto* var = registry.create<Nodes::VariableNode>("varP", Nodes::VariableIndices{89, 0, 0});
     auto* l3 = registry.create<Nodes::LiteralNode>(3);
     auto* l42 = registry.create<Nodes::LiteralNode>(42);
     auto* l1 = registry.create<Nodes::LiteralNode>(1);

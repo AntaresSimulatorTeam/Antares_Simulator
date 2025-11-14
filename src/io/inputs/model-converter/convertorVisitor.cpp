@@ -33,11 +33,33 @@ namespace Antares::IO::Inputs::ModelConverter
 
 using namespace Antares::Expressions::Nodes;
 
+Modeler::Config::Location convertLocation(const std::string& locationStr)
+{
+    std::string locLower = locationStr;
+    std::ranges::transform(locLower, locLower.begin(), ::tolower);
+    if (locLower == "master")
+    {
+        return Modeler::Config::Location::MASTER;
+    }
+    if (locLower == "master-and-subproblems")
+    {
+        return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+    if (locLower == "subproblems")
+    {
+        return Modeler::Config::Location::SUBPROBLEMS;
+    }
+    throw std::runtime_error("Unknown location: " + locationStr);
+}
+
 /// Visitor to convert ANTLR expressions to Antares::Expressions::Nodes
 class ConvertorVisitor final: public ExprVisitor
 {
 public:
-    ConvertorVisitor(Expressions::Registry<Node>& registry, const YmlModel::Model& model);
+    ConvertorVisitor(
+      Expressions::Registry<Node>& registry,
+      const YmlModel::Model& model,
+      const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables);
 
     std::any visit(antlr4::tree::ParseTree* tree) override;
 
@@ -76,6 +98,7 @@ public:
 private:
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
+    const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables_;
 
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
@@ -87,8 +110,10 @@ NoPortWithThisId::NoPortWithThisId(const std::string& name):
 {
 }
 
-Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model)
+Expressions::NodeRegistry convertExpressionToNode(
+  const std::string& exprStr,
+  const YmlModel::Model& model,
+  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
 {
     if (exprStr.empty())
     {
@@ -101,15 +126,18 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
 
     ExprParser::ExprContext* tree = parser.expr();
     Expressions::Registry<Node> registry;
-    ConvertorVisitor visitor(registry, model);
+    ConvertorVisitor visitor(registry, model, optimConfigVariables);
     auto root = std::any_cast<Node*>(visitor.visit(tree));
     return Expressions::NodeRegistry(root, std::move(registry));
 }
 
-ConvertorVisitor::ConvertorVisitor(Expressions::Registry<Node>& registry,
-                                   const YmlModel::Model& model):
+ConvertorVisitor::ConvertorVisitor(
+  Expressions::Registry<Node>& registry,
+  const YmlModel::Model& model,
+  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables):
     registry_(registry),
-    model_(model)
+    model_(model),
+    optimConfigVariables_(optimConfigVariables)
 {
 }
 

@@ -76,19 +76,18 @@ static void updateLibraries(const YmlOptimConfig::OptimConfig& obj,
     }
 }
 
-void loadOptimConfig(const fs::path& studyPath,
-                     std::vector<ModelerStudy::SystemModel::Library>& libraries)
+YmlOptimConfig::OptimConfig loadOptimConfig(const fs::path& studyPath)
 {
     const fs::path configPath = studyPath / "input" / "optim-config.yml";
     if (!std::filesystem::exists(configPath))
     {
         logs.info() << "Optim config file not found at " << configPath;
-        return;
+        return {};
     }
 
     std::string content = readOptimConfigFile(configPath);
-    const auto&& obj = parseOptimConfig(content, configPath);
-    updateLibraries(obj, libraries);
+    return parseOptimConfig(content, configPath);
+    // updateLibraries(obj, libraries);
 }
 
 } // namespace Antares::Solver::LoadFiles

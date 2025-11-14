@@ -30,25 +30,6 @@ using namespace Antares::ModelerStudy;
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 
-Modeler::Config::Location convertLocation(const std::string& locationStr)
-{
-    std::string locLower = locationStr;
-    std::ranges::transform(locLower, locLower.begin(), ::tolower);
-    if (locLower == "master")
-    {
-        return Modeler::Config::Location::MASTER;
-    }
-    if (locLower == "master-and-subproblems")
-    {
-        return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
-    }
-    if (locLower == "subproblems")
-    {
-        return Modeler::Config::Location::SUBPROBLEMS;
-    }
-    throw Error::RuntimeError("Unknown location: " + locationStr);
-}
-
 // gp : copied from readSystem.cpp, should be moved to a common utils file
 static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
@@ -114,29 +95,6 @@ SystemModel::Objective& findSystemObjective(const std::string& obj_id, SystemMod
     return *sysObj;
 }
 
-void updateSystemModel(SystemModel::Model& sysModel, const YmlOptimConfig::Model& ymlModel)
-{
-    for (const auto& ymlVar: ymlModel.variables)
-    {
-        auto& sysVariable = findSystemVariable(ymlVar.id, sysModel);
-        sysVariable.setLocation(convertLocation(ymlVar.location));
-    }
 
-    for (const auto& ymlObj: ymlModel.objectives)
-    {
-        auto& sysObjective = findSystemObjective(ymlObj.id, sysModel);
-        sysObjective.setLocation(convertLocation(ymlObj.location));
-    }
-}
-
-void updateLibrairies(const OptimConfig& ymlOptimConfig,
-                      std::vector<SystemModel::Library>& libraries)
-{
-    for (const auto& ymlModel: ymlOptimConfig)
-    {
-        auto& sysModel = findSystemModel(ymlModel, libraries);
-        updateSystemModel(sysModel, ymlModel);
-    }
-}
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig

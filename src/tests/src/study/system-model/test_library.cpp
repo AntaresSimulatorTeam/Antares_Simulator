@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(variable_decomposition)
           location: subproblems)";
     outfile.flush();
 
-    Antares::Solver::LoadFiles::loadOptimConfig(folder, libraries);
+    const auto optimConfig = Antares::Solver::LoadFiles::loadOptimConfig(folder);
     const auto& modelVariables = libraries[0].Models()["model"].Variables();
 
     using namespace Antares::Modeler::Config;

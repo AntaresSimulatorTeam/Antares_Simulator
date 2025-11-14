@@ -23,6 +23,7 @@
 #include <stdexcept>
 
 #include "antares/io/inputs/yml-model/Library.h"
+#include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 
 namespace Antares
 {
@@ -45,7 +46,8 @@ class Node;
 namespace Antares::IO::Inputs::ModelConverter
 {
 
-ModelerStudy::SystemModel::Library convert(const YmlModel::Library& library);
+ModelerStudy::SystemModel::Library convert(const YmlModel::Library& library,
+                                           const YmlOptimConfig::OptimConfig& optimConfig = {});
 
 // EXCEPTIONS
 class UnknownTypeException final: public std::runtime_error

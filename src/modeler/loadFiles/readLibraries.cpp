@@ -33,7 +33,9 @@ namespace Antares::Solver::LoadFiles
 {
 using namespace IO::Inputs;
 
-static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
+static ModelerStudy::SystemModel::Library loadSingleLibrary(
+  const fs::path& filePath,
+  const YmlOptimConfig::OptimConfig& optimConfig = {})
 {
     std::string libraryStr;
     try
@@ -61,7 +63,7 @@ static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& file
 
     try
     {
-        return ModelConverter::convert(libraryObj);
+        return ModelConverter::convert(libraryObj, optimConfig);
     }
     catch (const std::runtime_error& e)
     {
@@ -71,7 +73,9 @@ static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& file
     }
 }
 
-std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& studyPath)
+std::vector<ModelerStudy::SystemModel::Library> loadLibraries(
+  const fs::path& studyPath,
+  const YmlOptimConfig::OptimConfig& optimConfig)
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;
 
@@ -85,7 +89,7 @@ std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& st
             continue;
         }
 
-        libraries.push_back(loadSingleLibrary(entry.path()));
+        libraries.push_back(loadSingleLibrary(entry.path(), optimConfig));
         logs.info() << "Library loaded: " << libraries.back().Id();
     }
     return libraries;

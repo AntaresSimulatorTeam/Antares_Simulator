@@ -23,6 +23,12 @@
 
 #include <antares/expressions/NodeRegistry.h>
 #include "antares/io/inputs/yml-model/Library.h"
+#include "antares/study/system-model/optimConfig.h"
+
+namespace Antares::IO::Inputs::YmlOptimConfig
+{
+struct Variable;
+}
 
 namespace Antares::IO::Inputs::ModelConverter
 {
@@ -32,6 +38,42 @@ public:
     explicit NoPortWithThisId(const std::string& name);
 };
 
-Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model);
+Modeler::Config::Location convertLocation(const std::string& locationStr);
+
+template<class T>
+auto SearchEntity(const std::string id, std::vector<std::pair<T*, bool>>& values)
+{
+    return std::ranges::find_if(values,
+                                [&](const auto& optimConfigEntity)
+                                { return optimConfigEntity.first->id == id; });
+}
+
+template<class T>
+auto SearchEntity(const std::string id, const std::vector<std::pair<T*, bool>>& values)
+{
+    return std::ranges::find_if(values,
+                                [&](const auto& optimConfigEntity)
+                                { return optimConfigEntity.first->id == id; });
+}
+
+template<class T>
+Modeler::Config::Location updateLocation(std::string id, std::vector<std::pair<T*, bool>>& values)
+{
+    if (auto it = SearchEntity(id, values); it != values.end())
+    {
+        it->second = true;
+
+        return convertLocation(it->first->location);
+    }
+    else
+    {
+        it->second = false;
+        return Modeler::Config::Location::SUBPROBLEMS;
+    }
+}
+
+Expressions::NodeRegistry convertExpressionToNode(
+  const std::string& exprStr,
+  const YmlModel::Model& model,
+  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables);
 } // namespace Antares::IO::Inputs::ModelConverter

@@ -22,6 +22,7 @@ target_link_libraries(model-converter
         PRIVATE
         Antares::antares-study-system-model
         Antares::yml-model
+		Antares::yml-optim-config
         Antares::antlr-interface
         Antares::expressions
         Antares::expressions-iterators
