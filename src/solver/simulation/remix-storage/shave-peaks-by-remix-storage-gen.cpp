@@ -1,14 +1,10 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
-#include <fstream>
-#include <optional>
-#include <ranges>
 #include <set>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
 
-#include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
 
