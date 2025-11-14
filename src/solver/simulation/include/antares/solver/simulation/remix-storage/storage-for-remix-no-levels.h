@@ -22,7 +22,7 @@ public:
     const std::vector<double>& initWithdrawal() const override;
     std::vector<double>& withdrawal() override;
 
-    const std::string& name() const
+    const std::string& name() const override
     {
         return name_;
     }

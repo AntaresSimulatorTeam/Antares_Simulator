@@ -42,6 +42,7 @@ public:
     void update() override;
     const std::vector<double>& initWithdrawal() const override;
     std::vector<double>& withdrawal() override;
+    const std::string& name() const override;
 
     int id();
 
@@ -50,6 +51,7 @@ private:
 
     int id_ = 0;
     std::vector<double> dummy_;
+    std::string name_;
 };
 
 StorageMock::StorageMock(int id):
@@ -79,6 +81,11 @@ const std::vector<double>& StorageMock::initWithdrawal() const
 std::vector<double>& StorageMock::withdrawal()
 {
     return dummy_;
+}
+
+const std::string& StorageMock::name() const
+{
+    return name_;
 }
 
 void StorageMock::checkInput(size_t)
