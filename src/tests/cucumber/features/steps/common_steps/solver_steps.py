@@ -276,8 +276,8 @@ def check_simulation_tables(context):
     def _compare_rows(r_ref: dict, r_out: dict):
         diffs = {}
         # Compare common columns; also report missing columns
-        ref_cols = {k for k in r_ref.keys() if k}
-        out_cols = {k for k in r_out.keys() if k}
+        ref_cols = set(r_ref.keys())
+        out_cols = set(r_out.keys())
         common = ref_cols & out_cols
         for c in sorted(common):
             a_raw = r_ref[c] if r_ref[c] is not None else ""
@@ -295,8 +295,11 @@ def check_simulation_tables(context):
             else:
                 diffs[c] = (a_raw, b_raw)
         missing_in_out = sorted(ref_cols - out_cols)
+        missing_in_ref = sorted(out_cols - ref_cols)
         if missing_in_out:
             diffs["__missing_in_out__"] = missing_in_out
+        if missing_in_ref:
+            diffs["__missing_in_ref__"] = missing_in_ref
         return diffs
 
     def _format_key(key_tuple):
@@ -371,6 +374,8 @@ def check_simulation_tables(context):
                         for col, pair in diffs.items():
                             if col == "__missing_in_out__":
                                 msg_lines.append(f"      columns missing in output: {pair}")
+                            elif col == "__missing_in_ref__":
+                                msg_lines.append(f"      columns missing in reference: {pair}")
                             else:
                                 msg_lines.append(f"      {col}: ref='{pair[0]}' vs out='{pair[1]}'")
             # If different counts for the same key, report
