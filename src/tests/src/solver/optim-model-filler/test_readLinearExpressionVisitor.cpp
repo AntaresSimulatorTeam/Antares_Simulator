@@ -54,6 +54,38 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, VisitorFixture<ReadLinearExpressionVisito
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
+BOOST_FIXTURE_TEST_CASE(visit_max_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* max = create<FunctionNode>(FunctionNodeType::max, five, six);
+    auto linear_expression = visitor().dispatch(max);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 6.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_min_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* min = create<FunctionNode>(FunctionNodeType::min, five, six);
+    auto linear_expression = visitor().dispatch(min);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, five, six);
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), std::pow(5, 6));
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
@@ -62,6 +94,30 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpre
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 8.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit__max_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // 5 + param(3) = 8
+    Node* maxNode = create<FunctionNode>(FunctionNodeType::max,
+                                         create<LiteralNode>(5.),
+                                         create<ParameterNode>("param_3"));
+    auto linear_expression = visitor().dispatch(maxNode);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit__min_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // 5 + param(3) = 8
+    Node* minNode = create<FunctionNode>(FunctionNodeType::min,
+                                         create<LiteralNode>(5.),
+                                         create<ParameterNode>("param_3"));
+    auto linear_expression = visitor().dispatch(minNode);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 3.);
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
