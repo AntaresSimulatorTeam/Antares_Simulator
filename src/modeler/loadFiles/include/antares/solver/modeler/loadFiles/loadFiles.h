@@ -40,7 +40,7 @@ Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath);
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
 std::vector<ModelerStudy::SystemModel::Library> loadLibraries(
-const std::filesystem::path& studyPath,
+  const std::filesystem::path& studyPath,
   const IO::Inputs::YmlOptimConfig::OptimConfig& optimConfig = {});
 
 ModelerStudy::SystemModel::System loadSystem(

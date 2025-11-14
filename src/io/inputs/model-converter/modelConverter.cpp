@@ -270,8 +270,9 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
     return portFieldDefinitions;
 }
 
-static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constraint>& constraints,
-                                const IO::Inputs::YmlModel::Constraint& constraint,
+static void addSingleConstraint(
+  std::vector<ModelerStudy::SystemModel::Constraint>& constraints,
+  const IO::Inputs::YmlModel::Constraint& constraint,
   const IO::Inputs::YmlModel::Model& model,
   const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
 {
@@ -288,7 +289,7 @@ static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constrain
  * \return A vector of SystemModel::Constraint objects.
  */
 std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
-const IO::Inputs::YmlModel::Model& model,
+  const IO::Inputs::YmlModel::Model& model,
   const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
 {
     std::vector<ModelerStudy::SystemModel::Constraint> constraints;
@@ -338,7 +339,7 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
  * \return A vector of SystemModel::Expression objects.
  */
 std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
-const IO::Inputs::YmlModel::Model& model,
+  const IO::Inputs::YmlModel::Model& model,
   const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables,
   std::vector<std::pair<const YmlOptimConfig::Objective*, bool>>& optimConfigObjectives)
 {

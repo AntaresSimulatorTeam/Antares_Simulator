@@ -95,6 +95,4 @@ SystemModel::Objective& findSystemObjective(const std::string& obj_id, SystemMod
     return *sysObj;
 }
 
-
-
 } // namespace Antares::IO::Inputs::YmlOptimConfig
