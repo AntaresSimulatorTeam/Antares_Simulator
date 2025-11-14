@@ -18,6 +18,19 @@ const std::string shave_peak_remix_storage_error_msg_start = "Remix storage inpu
 namespace Antares::Solver::Simulation
 {
 
+void collectDebugInfos(IStorageForRemix* s, std::stringstream* debugStream)
+{
+    if (!debugStream)
+    {
+        return;
+    }
+    const auto& withdrawal = s->withdrawal();
+    for (unsigned h = 0; h < withdrawal.size(); ++h)
+    {
+        *debugStream << s->name() << " " << h << " " << withdrawal[h] << std::endl;
+    }
+}
+
 void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,
                 const std::vector<double>& Spillage,
@@ -69,15 +82,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         if (!exchange.isPossible())
         {
-            if (debugStream)
-            {
-                auto* s = (*cyclic_it).get();
-                auto& withdrawal = s->withdrawal();
-                for (unsigned h = 0; h < withdrawal.size(); ++h)
-                {
-                    *debugStream << s->name() << " " << h << " " << withdrawal[h] << std::endl;
-                }
-            }
+            collectDebugInfos((*cyclic_it).get(), debugStream);
             delete_current(cyclic_it);
         }
         else
