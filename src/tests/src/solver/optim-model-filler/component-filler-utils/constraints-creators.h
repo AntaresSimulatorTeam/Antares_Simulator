@@ -6,6 +6,12 @@
 
 using namespace Antares;
 
+struct NoConstraintCreator
+{
+    static std::vector<ModelerStudy::SystemModel::Constraint> Create(
+      Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>& registry);
+};
+
 struct TwoConstraintsCreator_OneSubPb_OneMaster
 {
     static std::vector<ModelerStudy::SystemModel::Constraint> Create(

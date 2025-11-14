@@ -26,3 +26,9 @@ std::vector<Constraint> TwoConstraintsCreator_OneSubPb_OneMaster::Create(
 
     return constraints;
 }
+
+std::vector<Constraint> NoConstraintCreator::Create(
+  Antares::Expressions::Registry<Node>&)
+{
+    return {};
+}

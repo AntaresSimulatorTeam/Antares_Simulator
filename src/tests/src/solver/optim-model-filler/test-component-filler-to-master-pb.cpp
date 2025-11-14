@@ -11,6 +11,7 @@
 #include "antares/study/system-model/model.h"
 #include "antares/study/system-model/variable.h"
 
+#include "component-filler-utils/constraints-creators.h"
 #include "component-filler-utils/objectives-creators.h"
 #include "component-filler-utils/variables-creators.h"
 
@@ -22,15 +23,16 @@ using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::Modeler::Config;
 
-template<class VariablesCreator, class ObjectivesCreator>
+template<class VariablesCreator, class ObjectivesCreator, class ConstraintsCreators>
 class FactoryFixture
 {
 public:
     FactoryFixture():
-        linear_pb(false, "sirius"),
-        optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo),
         variables(VariablesCreator::Create(nodeRegistry)),
-        objectives(ObjectivesCreator::Create(nodeRegistry))
+        objectives(ObjectivesCreator::Create(nodeRegistry)),
+        constraints(ConstraintsCreators::Create(nodeRegistry)),
+        linear_pb(false, "sirius"),
+        optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo)
     {
         createModel();
         createComponent();
@@ -42,6 +44,7 @@ public:
       nodeRegistry; // Storing AST Nodes (to destroy them at end of test)
     std::vector<Variable> variables;
     std::vector<Objective> objectives;
+    std::vector<Constraint> constraints;
     Model model;
     // We define a component under the form of a smart ptr because class Component default
     // constructor is forbidden, so we can't have : Component component;
@@ -85,10 +88,14 @@ private:
 namespace Fixtures
 {
 using VarOneSubOneMasterNoObjective = FactoryFixture<TwoVarsCreator_OneSubPb_OneMaster,
-                                                     NoObjectiveCreator>;
+                                                     NoObjectiveCreator,
+                                                     NoConstraintCreator>;
 using VarTwoSubObjeOneSubOneMaster = FactoryFixture<TwoSubPbVarsCreator,
-                                                    TwoObjsCreator_OneSubPb_OneMaster>;
-using SingleMixedVarNoObjective = FactoryFixture<SingleMixedVariable, NoObjectiveCreator>;
+                                                    TwoObjsCreator_OneSubPb_OneMaster,
+                                                    NoConstraintCreator>;
+using SingleMixedVarNoObjective = FactoryFixture<SingleMixedVariable,
+                                                 NoObjectiveCreator,
+                                                 NoConstraintCreator>;
 } // namespace Fixtures
 
 BOOST_AUTO_TEST_SUITE(add_variables_to_master_linear_problem)
