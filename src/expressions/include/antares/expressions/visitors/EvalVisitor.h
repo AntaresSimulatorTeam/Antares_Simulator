@@ -307,7 +307,7 @@ EvaluationResult applyOperation(const std::vector<EvaluationResult>& in, Operati
         for (size_t j = 0; j < in.size(); ++j)
         {
             const auto& evalResult = in[j];
-            row[i] = evalResult.value(i);
+            row[j] = evalResult.value(i);
         }
         values[i] = op(row);
     }

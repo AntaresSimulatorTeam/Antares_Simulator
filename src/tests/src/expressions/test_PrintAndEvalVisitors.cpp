@@ -771,16 +771,10 @@ struct TimeDependentParameterFixture
     unsigned hour_1 = 1;
 
     const ParameterType param_type = ParameterType::TIMESERIE;
-    Model model = createModelWithParameters(
-      {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    std::pair<std::string, ParameterTypeAndValue> param = build_context_parameter_with("my-param",
-                                                                                       value,
-                                                                                       param_type);
+    Model model;
     std::string compoName = "1245";
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
-      components.front());
+    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem,
                                                                &dummy_data,
@@ -789,8 +783,23 @@ struct TimeDependentParameterFixture
     std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> visitor;
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, hour_1, hour_0, hour_1, hour_1};
 
-    TimeDependentParameterFixture()
+    TimeDependentParameterFixture(
+      std::map<std::string, ParameterTypeAndValue> additionnalParams = {})
     {
+        std::vector<Parameter> params{
+          Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)};
+        for (const auto& [name, typeAndValue]: additionnalParams)
+        {
+            params.emplace_back(name,
+                                typeAndValue.type == ParameterType::TIMESERIE ? TimeDependent::YES
+                                                                              : TimeDependent::NO,
+                                ScenarioDependent::NO);
+        }
+
+        model = createModelWithParameters(params);
+        additionnalParams.emplace(build_context_parameter_with("my-param", value, param_type));
+        components.push_back(createComponent(model, compoName, additionnalParams));
+        scenarioGroupRepo = getscenarioGroupRepository(components.front());
         optimContainer.addFromSystemComponents(components);
         visitor = std::make_unique<EvalVisitor>(optimContainer, ctx, components.front());
     }
@@ -1273,23 +1282,54 @@ BOOST_FIXTURE_TEST_CASE(functionNode_min, MyDummyFixture)
     const auto printed = printVisitor.dispatch(min);
 
     BOOST_CHECK_EQUAL(printed, "min(22.000000, 8.000000)");
-    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(min).valueAsDouble(), num1);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(min).valueAsDouble(), num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(functionNode_min_timeDepdentParameter, TimeDependentParameterFixture)
+BOOST_AUTO_TEST_CASE(functionNode_min_timeDepdentParameter)
 {
-    dummy_data.addParams(std::make_pair<std::string, std::vector<double>>("Param2", {-400, 1568}));
+    TimeDependentParameterFixture fixture(
+      {build_context_parameter_with("Param2", "P2", ParameterType::TIMESERIE)});
+    fixture.dummy_data.addParams(
+      std::make_pair<std::string, std::vector<double>>("P2", {-400, 1568}));
     ParameterNode second("Param2", TimeIndex::VARYING_IN_TIME_ONLY);
-    auto min = FunctionNode(FunctionNodeType::min, &root, &second);
+    auto min = FunctionNode(FunctionNodeType::min, &fixture.root, &second);
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&min);
 
     BOOST_CHECK_EQUAL(printed, "min(my-param, Param2)");
-    const auto& values = visitor->dispatch(&min).valuesAsVector();
+    const auto& values = fixture.visitor->dispatch(&min).valuesAsVector();
     BOOST_CHECK_EQUAL(values.size(), 2 /*two timesteps*/);
     BOOST_CHECK_EQUAL(values[0], -400); // min(0, -400)
     BOOST_CHECK_EQUAL(values[1], 1);    // min(1, 1568)
+}
+
+BOOST_FIXTURE_TEST_CASE(functionNode_pow, MyDummyFixture)
+{
+    double num1 = 22.0, num2 = 2;
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow,
+                                     create<LiteralNode>(num1),
+                                     create<LiteralNode>(num2));
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(pow);
+
+    BOOST_CHECK_EQUAL(printed, "22.000000^(2.000000)");
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(pow).valueAsDouble(),
+                      std::pow(num1, num2));
+}
+
+BOOST_FIXTURE_TEST_CASE(functionNode_pow_timeDepdentParameter, TimeDependentParameterFixture)
+{
+    LiteralNode num2(2);
+    auto pow = FunctionNode(FunctionNodeType::pow, &root, &num2);
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(&pow);
+
+    BOOST_CHECK_EQUAL(printed, "my-param^(2.000000)");
+    BOOST_CHECK_EQUAL(visitor->dispatch(&pow).value(0), std::pow(0, 2));
+    BOOST_CHECK_EQUAL(visitor->dispatch(&pow).value(1), std::pow(1, 2));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_node, MyDummyFixture)
