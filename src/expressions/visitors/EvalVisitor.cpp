@@ -327,7 +327,7 @@ EvaluationResult::EvaluationResult(const std::vector<double>& values):
 
 size_t EvaluationResult::size() const
 {
-    if (std::holds_alternative<double>(value_))
+    if (std::holds_alternative<std::vector<double>>(value_))
     {
         std::get<std::vector<double>>(value_).size();
     }

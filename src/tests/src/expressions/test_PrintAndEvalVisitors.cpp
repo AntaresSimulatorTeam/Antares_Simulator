@@ -700,6 +700,10 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
                                  [[maybe_unused]] const unsigned scenario,
                                  unsigned hour) const override
     {
+        if (const auto [ok, value] = IsParameterRegistered(dataSetId, hour); ok)
+        {
+            return value;
+        }
         return hour; // for test
     }
 
@@ -708,6 +712,10 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
                                                   unsigned firstHour,
                                                   unsigned lastHour) const override
     {
+        if (const auto [ok, value] = IsParameterRegistered(dataSetId); ok)
+        {
+            return value;
+        }
         std::vector<double> data(lastHour - firstHour + 1);
         auto v = firstHour;
         for (int i = 0; i < data.size(); ++i)
@@ -717,33 +725,80 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
         }
         return data;
     }
+
+    MockLinearProblemData(const std::map<std::string, std::vector<double>>& parametersValues = {}):
+        parametersValues(parametersValues)
+    {
+    }
+
+    std::pair<bool, double> IsParameterRegistered(const std::string& name, unsigned hour) const
+    {
+        const auto it = std::ranges::find_if(parametersValues,
+                                             [&name](const auto& v) { return v.first == name; });
+        if (it != parametersValues.cend())
+        {
+            return std::make_pair(true, it->second[hour]);
+        }
+        return std::make_pair(false, 0.0);
+    }
+
+    std::pair<bool, std::vector<double>> IsParameterRegistered(const std::string& name) const
+    {
+        const auto it = std::ranges::find_if(parametersValues,
+                                             [&name](const auto& v) { return v.first == name; });
+        if (it != parametersValues.cend())
+        {
+            return std::make_pair(true, it->second);
+        }
+        return std::make_pair(false, std::vector<double>{0});
+    }
+
+    void addParams(std::pair<std::string, std::vector<double>> values)
+    {
+        parametersValues.emplace(values);
+    }
+
+    std::map<std::string, std::vector<double>> parametersValues = {};
 };
 
-BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, MyDummyFixture)
+struct TimeDependentParameterFixture
+
 {
-    ParameterNode root("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode root = ParameterNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
 
-    const auto param_type = ParameterType::TIMESERIE;
+    const ParameterType param_type = ParameterType::TIMESERIE;
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
-    const auto compoName = "1245";
+    std::pair<std::string, ParameterTypeAndValue> param = build_context_parameter_with("my-param",
+                                                                                       value,
+                                                                                       param_type);
+    std::string compoName = "1245";
     const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
       createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       components.front());
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
-    optimContainer.addFromSystemComponents(components);
-    EvalVisitor visitor(optimContainer,
-                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
-                        components.front());
+    MockLinearProblem linearProblem = MockLinearProblem(true);
+    OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem,
+                                                               &dummy_data,
+                                                               &scenarioGroupRepo);
 
-    const auto eval = visitor.dispatch(&root).valuesAsVector();
+    std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> visitor;
+    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, hour_1, hour_0, hour_1, hour_1};
+
+    TimeDependentParameterFixture()
+    {
+        optimContainer.addFromSystemComponents(components);
+        visitor = std::make_unique<EvalVisitor>(optimContainer, ctx, components.front());
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, TimeDependentParameterFixture)
+{
+    const auto eval = visitor->dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0);
     BOOST_CHECK_EQUAL(eval[1], hour_1);
@@ -1176,6 +1231,65 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, MyDummyFixture)
 
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)");
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(sub).valueAsDouble(), num1 - num2);
+}
+
+BOOST_FIXTURE_TEST_CASE(functionNode_max, MyDummyFixture)
+{
+    double num1 = 22.0, num2 = 8;
+    Node* max = create<FunctionNode>(FunctionNodeType::max,
+                                     create<LiteralNode>(num1),
+                                     create<LiteralNode>(num2));
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(max);
+
+    BOOST_CHECK_EQUAL(printed, "max(22.000000, 8.000000)");
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(max).valueAsDouble(), num1);
+}
+
+BOOST_FIXTURE_TEST_CASE(functionNode_max_timeDepdentParameter, TimeDependentParameterFixture)
+{
+    LiteralNode num1(22.0);
+    LiteralNode num2(8);
+    auto max = FunctionNode(FunctionNodeType::max, &num1, &num2, &root);
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(&max);
+
+    BOOST_CHECK_EQUAL(printed, "max(22.000000, 8.000000, my-param)");
+    const auto& values = visitor->dispatch(&max).valuesAsVector();
+    BOOST_CHECK_EQUAL(values.size(), 2 /*two timesteps*/);
+    BOOST_CHECK_EQUAL(values[0], 22.0);
+}
+
+BOOST_FIXTURE_TEST_CASE(functionNode_min, MyDummyFixture)
+{
+    double num1 = 22.0, num2 = 8;
+    Node* min = create<FunctionNode>(FunctionNodeType::min,
+                                     create<LiteralNode>(num1),
+                                     create<LiteralNode>(num2));
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(min);
+
+    BOOST_CHECK_EQUAL(printed, "min(22.000000, 8.000000)");
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(min).valueAsDouble(), num1);
+}
+
+BOOST_FIXTURE_TEST_CASE(functionNode_min_timeDepdentParameter, TimeDependentParameterFixture)
+{
+    dummy_data.addParams(std::make_pair<std::string, std::vector<double>>("Param2", {-400, 1568}));
+    ParameterNode second("Param2", TimeIndex::VARYING_IN_TIME_ONLY);
+    auto min = FunctionNode(FunctionNodeType::min, &root, &second);
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(&min);
+
+    BOOST_CHECK_EQUAL(printed, "min(my-param, Param2)");
+    const auto& values = visitor->dispatch(&min).valuesAsVector();
+    BOOST_CHECK_EQUAL(values.size(), 2 /*two timesteps*/);
+    BOOST_CHECK_EQUAL(values[0], -400); // min(0, -400)
+    BOOST_CHECK_EQUAL(values[1], 1);    // min(1, 1568)
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_node, MyDummyFixture)
