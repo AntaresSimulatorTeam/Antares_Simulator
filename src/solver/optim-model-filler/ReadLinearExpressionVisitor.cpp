@@ -303,8 +303,6 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
       "A linear expression can't contain extra output operator dual.");
 }
 
-
-
 Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handlePow(
   const Nodes::FunctionNode* node)
 {

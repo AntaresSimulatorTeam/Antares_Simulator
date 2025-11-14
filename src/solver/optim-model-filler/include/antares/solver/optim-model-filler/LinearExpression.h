@@ -52,6 +52,7 @@ public:
     std::size_t size() const;
 
     bool hasCoefs() const;
+
 private:
     std::vector<std::pair<int, double>> coefs_;
     double constant_ = 0.;

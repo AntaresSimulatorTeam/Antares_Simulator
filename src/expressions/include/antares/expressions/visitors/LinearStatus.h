@@ -177,7 +177,6 @@ constexpr LinearStatus operator-(LinearStatus a)
     return a;
 }
 
-
 constexpr bool operator<(LinearStatus a, LinearStatus b)
 {
     return static_cast<char>(a) < static_cast<char>(b);

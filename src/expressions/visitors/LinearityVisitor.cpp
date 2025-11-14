@@ -134,7 +134,6 @@ LinearStatus LinearityVisitor::handleDual([[maybe_unused]] const Nodes::Function
     throw NodeTypeShouldBeInExtraOutput("dual");
 }
 
-
 LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
 {
     const auto& operands = node->getOperands();

@@ -210,8 +210,6 @@ TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
     return out;
 }
 
-
-
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const
 {
     TimeDependentLinearExpression result = *this;

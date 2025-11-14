@@ -146,6 +146,7 @@ std::string PrintVisitor::handleReducedCost(const Nodes::FunctionNode* node)
     const auto* varIdNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
     return "reduced_cost(" + varIdNode->value() + ")";
 }
+
 // TODO rename
 std::string PrintVisitor::ProcessOtherFunction(const Nodes::FunctionNode* node)
 {

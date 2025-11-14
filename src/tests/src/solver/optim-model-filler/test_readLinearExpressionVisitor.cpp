@@ -54,6 +54,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, VisitorFixture<ReadLinearExpressionVisito
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
+
 BOOST_FIXTURE_TEST_CASE(visit_max_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
 {
     Node* five = create<LiteralNode>(5.);
