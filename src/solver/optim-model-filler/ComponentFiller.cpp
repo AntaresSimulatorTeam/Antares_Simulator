@@ -111,9 +111,14 @@ void BendersDecomposition::collectConnectionVariables(std::vector<std::string>&&
     }
 }
 
-void BendersDecomposition::write(std::ostream& os) const
+BendersDecompositionWriter::BendersDecompositionWriter(const BendersDecomposition& bd):
+    bd_(bd)
 {
-    for (const auto& [problemId, v]: connectionVars_)
+}
+
+void BendersDecompositionWriter::write(std::ostream& os) const
+{
+    for (const auto& [problemId, v]: bd_.connections())
     {
         for (const auto& [variableName, variableIndex]: v)
         {

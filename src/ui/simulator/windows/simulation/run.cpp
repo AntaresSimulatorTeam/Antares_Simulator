@@ -39,7 +39,7 @@
 #include <antares/config/config.h>
 #include <antares/solver/utils/ortools_utils.h>
 #include <antares/study/parameters.h>
-#include "antares/antares/Enum.hpp"
+#include "antares/enums/Enum.hpp"
 #include "antares/solver/utils/ortools_utils.h"
 
 #include "../../application/main/main.h"
