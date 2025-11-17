@@ -363,15 +363,16 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
 
 std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 {
-    const auto constraintId = context->expr();
-    if (constraintId.size() == 0)
+    if (!context)
     {
         throw std::invalid_argument("dual operator expect exactly one constraint id got nothing");
     }
-    std::string params(constraintId.at(0)->getText());
+    const auto constraintId = context->expr();
 
     if (constraintId.size() != 1) // -> > 1
     {
+        std::string params(constraintId.at(0)->getText());
+
         for (int param = 1; param < constraintId.size(); param++)
         {
             params += ", " + constraintId.at(param)->getText();
@@ -412,6 +413,23 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)
 {
+    if (!context)
+    {
+        throw std::invalid_argument(
+          "reduced_cost operator expect exactly one variable id got nothing");
+    }
+    const auto variableId = context->expr();
+    if (variableId.size() != 1) // -> > 1
+    {
+        std::string params(variableId.at(0)->getText());
+        for (int param = 1; param < variableId.size(); param++)
+        {
+            params += ", " + variableId.at(param)->getText();
+        }
+        throw std::invalid_argument("reduced_cost operator expect exactly one variable id got: "
+                                    + params);
+    }
+
     std::vector<Node*> nodes;
     try
     {
@@ -420,10 +438,6 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     catch (const NoParameterOrVariableWithThisName&) // to print accurate message
     {
         throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
-    }
-    if (nodes.size() != 1)
-    {
-        throw std::invalid_argument("reduced_cost operator expect only one variable id");
     }
 
     return static_cast<Node*>(

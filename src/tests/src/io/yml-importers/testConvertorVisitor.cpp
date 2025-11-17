@@ -548,8 +548,58 @@ BOOST_AUTO_TEST_CASE(reducedCostExpressionTwoVariables)
       .extra_outputs = {}};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
-    std::string expression = "reduced_cost(varB, 2nd)";
+    std::string expression = "reduced_cost(varB, 2)";
     BOOST_CHECK_EXCEPTION(converter.run(expression),
                           std::invalid_argument,
-                          checkMessage("reduced_cost operator expect only one variable id"));
+                          checkMessage(
+                            "reduced_cost operator expect exactly one variable id got: varB, 2"));
+}
+
+BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    // constraints
+    std::string expression = "reduced_cost()";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          std::invalid_argument,
+                          checkMessage(
+                            "reduced_cost operator expect exactly one variable id got nothing"));
+}
+
+BOOST_AUTO_TEST_CASE(ValidPowerExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varB^2";
+    auto expr = converter.run(expression);
+    auto* powerNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(powerNode->getOperands().at(0))->value(),
+                      "varB");
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::LiteralNode*>(powerNode->getOperands().at(1))->value(),
+                      2);
 }
