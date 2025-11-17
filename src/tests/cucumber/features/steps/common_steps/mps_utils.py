@@ -1,7 +1,13 @@
 import pulp
 
 def load_problem(path):
-    return pulp.LpProblem.fromMPS(path)[1]
+    """Normalize MPS line endings and load with PuLP"""
+    fixed_path = path + "_fixed.mps"
+    with open(path, "rb") as f:
+        data = f.read().replace(b"\r\n", b"\n").replace(b"\r", b"\n").replace(b"\t", b" ")
+    with open(fixed_path, "wb") as f:
+        f.write(data)
+    return pulp.LpProblem.fromMPS(fixed_path)[1]
 
 def get_objective_coeffs(model):
      return {v.name: coef for v, coef in model.objective.items()}
