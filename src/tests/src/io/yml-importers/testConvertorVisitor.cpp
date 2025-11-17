@@ -455,6 +455,28 @@ BOOST_AUTO_TEST_CASE(dualExpression)
                             "dual called with unknown constraint 'abc' in model 'model0'"));
 }
 
+BOOST_AUTO_TEST_CASE(EmptyDualExpression)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {{"constraintA", ""}},
+                          .binding_constraints = {{"constraintB", ""}},
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    // constraints
+    std::string expression = "dual()";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          std::invalid_argument,
+                          checkMessage(
+                            "dual operator expect exactly one constraint id got nothing"));
+}
+
 BOOST_AUTO_TEST_CASE(WrongDualExpression)
 {
     YmlModel::Model model{.id = "model0",
@@ -474,7 +496,7 @@ BOOST_AUTO_TEST_CASE(WrongDualExpression)
     BOOST_CHECK_EXCEPTION(
       converter.run(expression),
       std::invalid_argument,
-      checkMessage("dual operator expect only one constraint id got: constraintA, e^(iPi)+1=0"));
+      checkMessage("dual operator expect exactly one constraint id got: constraintA, e^(iPi)+1=0"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)

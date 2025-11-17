@@ -366,7 +366,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
     const auto constraintId = context->expr();
     if (constraintId.size() == 0)
     {
-        throw std::invalid_argument("dual operator expect only one constraint id got NONE");
+        throw std::invalid_argument("dual operator expect exactly one constraint id got nothing");
     }
     std::string params(constraintId.at(0)->getText());
 
@@ -376,7 +376,8 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         {
             params += ", " + constraintId.at(param)->getText();
         }
-        throw std::invalid_argument("dual operator expect only one constraint id got: " + params);
+        throw std::invalid_argument("dual operator expect exactly one constraint id got: "
+                                    + params);
     }
     const std::string constraint_id = constraintId.at(0)->getText();
     unsigned index = 0;
