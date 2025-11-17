@@ -1,0 +1,204 @@
+/*
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+#define WIN32_LEAN_AND_MEAN
+
+#include <boost/test/unit_test.hpp>
+
+#include "antares/exception/RuntimeError.hpp"
+#include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/study/system-model/component.h"
+#include "antares/study/system-model/parameter.h"
+#include "antares/study/system-model/timeAndScenarioType.h"
+
+#include "inmemory-modeler.h"
+#include "unit_test_utils.h"
+
+using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::Optimisation;
+using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Optimization;
+using namespace Antares::Expressions;
+using namespace Antares::Expressions::Nodes;
+using namespace Test::Modeler;
+using namespace std;
+
+BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_getObjectiveCoefficient_, LinearProblemBuildingFixture)
+
+BOOST_AUTO_TEST_CASE(one_var_with_objective)
+{
+    auto objective = variable("x", 0);
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentA.x"));
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x")), 1);
+}
+
+BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
+{
+    auto objective = variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY);
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
+    createComponent("model", "componentA", {});
+
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
+    for (unsigned i = 0; i < nb_var; i++)
+    {
+        const auto var_name = "componentA.x_s0_t" + to_string(i);
+        BOOST_CHECK_NO_THROW((void)pb->lookupVariable(var_name));
+        BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable(var_name)), 1);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)
+{
+    VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.), false, false};
+    VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.), false, false};
+    auto objective = multiply(variable("v2", 1), literal(37));
+
+    createModel("model", {}, {var1Data, var2Data}, {}, objective);
+    createComponent("model", "componentA", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentA.v1"));
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentA.v2"));
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.v1")), 0);
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.v2")), 37);
+}
+
+BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
+{
+    // -param(5)*param(5) * x
+    auto objective = multiply(negate(multiply(parameter("param"), parameter("param"))),
+                              variable("x", 0));
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_NO_THROW((void)pb->lookupVariable("componentA.x"));
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x")), -25);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_getObjectiveOffset_, LinearProblemBuildingFixture)
+
+BOOST_AUTO_TEST_CASE(one_var_no_offset)
+{
+    auto objective = variable("x", 0);
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(one_var_with_param_no_offset)
+{
+    auto objective = multiply(parameter("param"), variable("x", 0));
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+    buildLinearProblem();
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(one_var_with_offset)
+{
+    const auto objective = add(variable("x", 0), literal(10));
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(one_param_offset)
+{
+    auto objective = parameter("param");
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
+    buildLinearProblem();
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_constant_offset)
+{
+    auto objective = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10));
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
+    createComponent("model", "componentA", {});
+
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), nb_var * 10); // 10 timesteps each with offset 10
+}
+
+BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
+{
+    auto objective = add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_TIME_ONLY));
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"param", TimeDependent::YES, ScenarioDependent::NO}},
+      {{"x", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+      {},
+      objective);
+    createComponent("model",
+                    "componentA",
+                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIE)});
+
+    const vector<unsigned int> timeSteps{0, 1, 2};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(2), timeSteps.at(0), timeSteps.at(2), 0};
+    auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
+    // setting 3 hours (including h 1 and 2)
+    bounds_time_series->add({10., 11., 12.});
+    LinearProblemData data;
+    data.addDataSeries(std::move(bounds_time_series));
+
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    buildLinearProblem(ctx, data, scenarios);
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 33); // 10 + 11 + 12
+}
+
+BOOST_AUTO_TEST_SUITE_END()
