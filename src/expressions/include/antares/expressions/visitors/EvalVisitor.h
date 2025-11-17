@@ -47,6 +47,7 @@ class EvalVisitorNotImplemented: public std::invalid_argument
 public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
+
 static constexpr double DEFAULT_THRESHOLD = 1e-16;
 
 class EvaluationResult

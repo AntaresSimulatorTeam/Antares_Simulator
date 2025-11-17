@@ -625,6 +625,7 @@ BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
     std::string expression = "^";
     BOOST_CHECK_THROW(converter.run(expression), std::bad_any_cast);
 }
+
 BOOST_AUTO_TEST_CASE(WrongPowerExpression)
 {
     YmlModel::Model model{

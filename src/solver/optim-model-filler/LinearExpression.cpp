@@ -199,6 +199,7 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
     constant_ *= other.constant_;
     return *this;
 }
+
 static constexpr double EPS_TO_ZERO = 1e-16;
 
 LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
@@ -214,8 +215,7 @@ LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
         {
             bool isIdenticallyZero = (std::abs(constant_) < EPS_TO_ZERO)
                                      && std::ranges::all_of(coefs_,
-                                                            [](const auto& coef)
-                                                            {
+                                                            [](const auto& coef) {
                                                                 return std::abs(coef.second)
                                                                        < EPS_TO_ZERO;
                                                             });
