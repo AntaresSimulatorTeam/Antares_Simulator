@@ -215,7 +215,8 @@ LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
         {
             bool isIdenticallyZero = (std::abs(constant_) < EPS_TO_ZERO)
                                      && std::ranges::all_of(coefs_,
-                                                            [](const auto& coef) {
+                                                            [](const auto& coef)
+                                                            {
                                                                 return std::abs(coef.second)
                                                                        < EPS_TO_ZERO;
                                                             });
