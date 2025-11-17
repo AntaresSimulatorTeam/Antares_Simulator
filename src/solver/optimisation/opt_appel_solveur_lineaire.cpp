@@ -19,7 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <chrono>
 #include <mutex>
 
 #include <antares/antares/fatal-error.h>
@@ -116,9 +115,6 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             globalLast,
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
-
-static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
-  LinearProblemDataImpl::LinearProblemData();
 
 // Returns a non-owning pointer
 MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,

@@ -26,7 +26,7 @@
 #include <initializer_list>
 #include <string>
 
-#include <antares/antares/Enum.hpp>
+#include <antares/enums/Enum.hpp>
 
 namespace Antares::Data::Enum
 {
@@ -53,7 +53,7 @@ std::ostream& operator<<(std::ostream& os, MyEnum e)
 #include <boost/test/unit_test.hpp>
 
 #include <antares/exception/AssertionError.hpp>
-#include "antares/antares/Enum.hxx"
+#include "antares/enums/Enum.hxx"
 
 BOOST_AUTO_TEST_SUITE(EnumTest)
 
