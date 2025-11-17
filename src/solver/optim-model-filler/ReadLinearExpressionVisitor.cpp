@@ -310,7 +310,6 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleP
     auto exponentExpr = dispatch(node->getOperands().at(1));
     if (exponentExpr.size() != 1)
     {
-        // TODO
         throw Antares::Error::InvalidArgumentError("exponent must be constant");
     }
     const auto& exponent = exponentExpr[0];
@@ -347,8 +346,7 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
     default:
-        // TODO
-        throw std::runtime_error("");
+        throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
     }
 }
 

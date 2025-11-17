@@ -19,11 +19,10 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <algorithm>
-#include <cmath>
-#include <stdexcept>
+#include "antares/solver/optim-model-filler/LinearExpression.h"
 
-#include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
+#include <algorithm>
+#include <stdexcept>
 
 namespace
 {
@@ -200,6 +199,7 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
     constant_ *= other.constant_;
     return *this;
 }
+static constexpr double EPS_TO_ZERO = 1e-16;
 
 LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
 {
@@ -210,19 +210,21 @@ LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
 
     if (hasCoefs())
     {
-        if (other.constant() == 0)
+        if (std::abs(other.constant()) < EPS_TO_ZERO)
         {
-            bool isIdenticallyZero = (constant_ == 0)
-                                     && std::all_of(coefs_.begin(),
-                                                    coefs_.end(),
-                                                    [](const auto& coef)
-                                                    { return coef.second == 0; });
+            bool isIdenticallyZero = (std::abs(constant_) < EPS_TO_ZERO)
+                                     && std::ranges::all_of(coefs_,
+                                                            [](const auto& coef)
+                                                            {
+                                                                return std::abs(coef.second)
+                                                                       < EPS_TO_ZERO;
+                                                            });
 
             coefs_.clear();
             constant_ = isIdenticallyZero ? 0.0 : 1.0;
             return *this;
         }
-        if (other.constant() != 1)
+        if (std::abs(other.constant() - 1) < EPS_TO_ZERO)
         {
             throw std::invalid_argument("non-linear expression is not supported.");
         }
