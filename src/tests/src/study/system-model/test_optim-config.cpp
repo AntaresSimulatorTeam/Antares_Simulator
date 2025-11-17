@@ -71,7 +71,7 @@ struct DecompositionFixture
         inputFolder_ = studyFolder / "input";
         std::filesystem::create_directory(inputFolder_);
         std::filesystem::path yamlPath = inputFolder_ / "optim-config.yml";
-        
+
         std::ofstream outStream;
         outStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
         outStream << yaml_content;
@@ -117,7 +117,7 @@ BOOST_FIXTURE_TEST_CASE(variable_decomposition, DecompositionFixture)
               location: subproblems)";
 
     createOptimConfigFile(yamlContent);
-    
+
     // Act part : load the optim config
     loadOptimConfig(studyFolder, libraries);
 
@@ -204,7 +204,7 @@ BOOST_FIXTURE_TEST_CASE(objective_decomposition, DecompositionFixture)
     BOOST_CHECK(modelObjectives[2].location() == Location::SUBPROBLEMS);
 }
 
-BOOST_FIXTURE_TEST_CASE(objective_does_not_exist, DecompositionFixture)
+BOOST_FIXTURE_TEST_CASE(objective_does_not_exist_in_model___exception_raised, DecompositionFixture)
 {
     buildModel();
     buildLibraryWithModel();
@@ -223,7 +223,7 @@ BOOST_FIXTURE_TEST_CASE(objective_does_not_exist, DecompositionFixture)
                           checkMessage("No objective found with this name: o2"));
 }
 
-BOOST_FIXTURE_TEST_CASE(variable_does_not_exist, DecompositionFixture)
+BOOST_FIXTURE_TEST_CASE(variable_does_not_exist_in_model___exception_raised, DecompositionFixture)
 {
     buildModel();
     buildLibraryWithModel();
@@ -241,7 +241,7 @@ BOOST_FIXTURE_TEST_CASE(variable_does_not_exist, DecompositionFixture)
                           checkMessage("No variable found with this name: y"));
 }
 
-BOOST_FIXTURE_TEST_CASE(constraint_does_not_exist, DecompositionFixture)
+BOOST_FIXTURE_TEST_CASE(constraint_does_not_exist_in_model___exception_raised, DecompositionFixture)
 {
     buildModel();
     buildLibraryWithModel();
