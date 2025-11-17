@@ -1,7 +1,7 @@
 Feature: 13 - Investment problems
 
   @fast @run
-  Scenario: 13_1: XXX
+  Scenario: 13_1: Simple investment - variables & objective constributions
     Given the modeler study path is "modeler/13_1"
     When I run antares modeler
     Then the simulation succeeds

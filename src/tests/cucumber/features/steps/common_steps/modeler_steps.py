@@ -139,3 +139,11 @@ def parse_output_folder_from_logs(logs: bytes) -> str:
 @then(u'the master problem contains the following variables')
 def step_impl(context):
     pass
+
+@then(u'the subproblem contains the following variables')
+def step_impl(context):
+    pass
+
+@then(u'the structure file contains the following entries')
+def step_impl(context):
+    pass
