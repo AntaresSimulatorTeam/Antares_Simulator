@@ -120,8 +120,9 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_getObjectiveOffset_, LinearProblemBuildingFixture)
 
-BOOST_AUTO_TEST_CASE(one_var_no_offset)
+BOOST_AUTO_TEST_CASE(one_var_no_offset_expect_objective_offset_zero)
 {
+    // exp: ax + b, a = 1, b = 0
     auto objective = variable("x", 0);
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
@@ -131,8 +132,9 @@ BOOST_AUTO_TEST_CASE(one_var_no_offset)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(one_var_with_param_no_offset)
+BOOST_AUTO_TEST_CASE(one_var_with_param_no_offset_expect_objective_offset_zero)
 {
+    // exp: param * x, param = 5, no offset
     auto objective = multiply(parameter("param"), variable("x", 0));
     createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
@@ -140,8 +142,9 @@ BOOST_AUTO_TEST_CASE(one_var_with_param_no_offset)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(one_var_with_offset)
+BOOST_AUTO_TEST_CASE(one_var_with_constant_offset_offset_expect_objective_offset_ten)
 {
+    // exp: ax + b, a = 1, b = 10
     const auto objective = add(variable("x", 0), literal(10));
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {});
@@ -150,8 +153,9 @@ BOOST_AUTO_TEST_CASE(one_var_with_offset)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 10);
 }
 
-BOOST_AUTO_TEST_CASE(one_param_offset)
+BOOST_AUTO_TEST_CASE(one_param_offset_expect_objective_offset_five)
 {
+    // exp: x + param, param = 5
     auto objective = parameter("param");
     createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
@@ -159,8 +163,10 @@ BOOST_AUTO_TEST_CASE(one_param_offset)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 5);
 }
 
-BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_constant_offset)
+BOOST_AUTO_TEST_CASE(
+  one_time_dependent_var_ten_timesteps_with_constant_offset_ten_expected_objective_offset_ten_times_nb_timesteps)
 {
+    // exp: ax + b, a: [t0,...tn], b = 10
     auto objective = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10));
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
@@ -175,8 +181,10 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_constant_offset)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), nb_var * 10); // 10 timesteps each with offset 10
 }
 
-BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
+BOOST_AUTO_TEST_CASE(
+  one_var_with_time_dependent_offset_3_timesteps_expected_objective_offset_sum_of_param_values_at_time_steps)
 {
+    // exp: x + param(t), param = [10,11,12]
     auto objective = add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_TIME_ONLY));
     createModelWithSystemModelParameter(
       "model",
