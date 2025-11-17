@@ -73,11 +73,11 @@ struct DecompositionFixture
 
     void createOptimConfigFile(const std::string& yaml_content)
     {
-        std::ofstream optimConfigStream;
-        optimConfigStream.open(yamlPath_, std::ofstream::trunc | std::ofstream::out);
-        optimConfigStream << yaml_content;
-        optimConfigStream.flush();
-        optimConfigStream.close();
+        std::ofstream outStream;
+        outStream.open(yamlPath_, std::ofstream::trunc | std::ofstream::out);
+        outStream << yaml_content;
+        outStream.flush();
+        outStream.close();
     }
 
     ~DecompositionFixture()
