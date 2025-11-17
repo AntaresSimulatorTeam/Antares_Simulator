@@ -1,6 +1,6 @@
 Feature: 13 - Investment problems
 
-  @fast @run
+  @fast
   Scenario: 13_1: Simple investment - variables & objective constributions
     Given the modeler study path is "modeler/13_1"
     When I run antares modeler
