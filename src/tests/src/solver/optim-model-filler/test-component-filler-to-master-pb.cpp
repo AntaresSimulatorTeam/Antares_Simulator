@@ -66,7 +66,8 @@ private:
         ModelBuilder model_builder;
         model_builder.withId("my-model")
           .withVariables(std::move(variables))
-          .withObjectives(std::move(objectives));
+          .withObjectives(std::move(objectives))
+          .withConstraints(std::move(constraints));
 
         model = model_builder.build();
     }
@@ -96,6 +97,10 @@ using VarTwoSubObjeOneSubOneMaster = FactoryFixture<TwoSubPbVarsCreator,
 using SingleMixedVarNoObjective = FactoryFixture<SingleMixedVariable,
                                                  NoObjectiveCreator,
                                                  NoConstraintCreator>;
+
+using VarTwoSubNoObjConstrOneSubOneMaster = FactoryFixture<TwoSubPbVarsCreator,
+                                                           NoObjectiveCreator,
+                                                           TwoConstraintsCreator_OneSubPb_OneMaster>;
 } // namespace Fixtures
 
 BOOST_AUTO_TEST_SUITE(add_variables_to_master_linear_problem)
@@ -138,10 +143,6 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_var
     BOOST_REQUIRE(var);
     BOOST_CHECK(bendersDecomposition.connections().empty());
 }
-
-BOOST_AUTO_TEST_SUITE_END()
-
-BOOST_AUTO_TEST_SUITE(add_constraints_to_master_linear_problem)
 
 BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objectives,
                         Fixtures::VarTwoSubObjeOneSubOneMaster)
@@ -207,4 +208,35 @@ BOOST_FIXTURE_TEST_CASE(mixed_variable_listed_in_benders_decomposition,
     BOOST_CHECK_EQUAL(connection.indexInProblem, 0);
 }
 
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(add_constraints_to_master_linear_problem)
+
+BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_sub,
+                        Fixtures::VarTwoSubNoObjConstrOneSubOneMaster)
+{
+    ComponentFiller componentFiller(*component,
+                                    optimEntityContainer,
+                                    scenario_group_repo,
+                                    Location::SUBPROBLEMS,
+                                    &bendersDecomposition);
+
+    componentFiller.addVariables(time_scenario_ctx);
+    componentFiller.addConstraints(time_scenario_ctx);
+    BOOST_CHECK(linear_pb.getConstraints().size() == 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_master,
+                        Fixtures::VarTwoSubNoObjConstrOneSubOneMaster)
+{
+    ComponentFiller masterFiller(*component,
+                                    optimEntityContainer,
+                                    scenario_group_repo,
+                                    Location::MASTER,
+                                    &bendersDecomposition);
+
+    masterFiller.addVariables(time_scenario_ctx);
+    masterFiller.addConstraints(time_scenario_ctx);
+    BOOST_CHECK(linear_pb.getConstraints().size() == 1);
+}
 BOOST_AUTO_TEST_SUITE_END()
