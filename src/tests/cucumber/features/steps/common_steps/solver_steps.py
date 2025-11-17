@@ -15,6 +15,7 @@ from common_steps.solver_output_handler import solver_output_handler
 
 from features.steps.common_steps.assertions import assert_double_close
 from features.steps.common_steps.modeler_output_handler import modeler_output_handler
+from features.steps.common_steps.table_compare import *
 
 NB_HOURS_IN_WEEK = 168
 NB_DAYS_IN_WEEK = 7
@@ -120,7 +121,7 @@ def get_quadratic_solver(context) -> str:
 
 @then('the simulation takes less than {seconds:g} seconds')
 def check_simu_time(context, seconds):
-    assert context.soh.get_simu_time() <= seconds
+    assert context.soh.get_simu_time() <= seconds, f"Simulation time {context.soh.get_simu_time()} exceeds {seconds} seconds"
 
 
 @then('in area "{area}", during year {year:d}, loss of load lasts {lold_hours:d} hours')
@@ -236,10 +237,23 @@ def check_annual_results(context):
 
 @then("simulation tables match the references")
 def check_simulation_tables(context):
-    assert context.sih.get_optim1_simulation_table() == context.soh.get_optim1_simulation_table(), "first optimisation simulation table does not match the reference"
+    # Optimization 1
+    msg1 = diff_message(
+        name="Simulation table (optimization 1)",
+        ref_lines=context.sih.get_optim1_simulation_table(),
+        out_lines=context.soh.get_optim1_simulation_table(),
+    )
+    assert msg1 is None, msg1
+
+    # Optimization 2 (if any)
     ref_simulation_table2 = context.sih.get_optim2_simulation_table()
     if ref_simulation_table2:
-        assert ref_simulation_table2 == context.soh.get_optim2_simulation_table(), "second simulation table does not match the reference"
+        msg2 = diff_message(
+            name="Simulation table (optimization 2)",
+            ref_lines=ref_simulation_table2,
+            out_lines=context.soh.get_optim2_simulation_table(),
+        )
+        assert msg2 is None, msg2
 
 
 def should_check(row, key):
