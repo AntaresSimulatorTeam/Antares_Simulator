@@ -21,6 +21,8 @@
 #include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
+#include <any>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -602,4 +604,24 @@ BOOST_AUTO_TEST_CASE(ValidPowerExpression)
                       "varB");
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::LiteralNode*>(powerNode->getOperands().at(1))->value(),
                       2);
+}
+
+BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "^";
+    BOOST_CHECK_THROW(converter.run(expression), std::bad_any_cast);
 }
