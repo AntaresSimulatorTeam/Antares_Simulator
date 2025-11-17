@@ -46,28 +46,28 @@ struct DecompositionFixture
 {
     DecompositionFixture()
     {
-        // YAML setup
         studyFolder = std::filesystem::temp_directory_path();
-        inputFolder = studyFolder / "input";
-        std::filesystem::create_directory(inputFolder);
-        yamlPath = inputFolder / "optim-config.yml";
+        inputFolder_ = studyFolder / "input";
+        std::filesystem::create_directory(inputFolder_);
+        yamlPath = inputFolder_ / "optim-config.yml";
     }
 
     void buildModel()
     {
+        ModelBuilder model_builder;
         model_builder.withId("model")
           .withVariables(std::move(variables))
           .withConstraints(std::move(constraints))
           .withObjectives(std::move(objectives));
-        model = model_builder.build();
+        model_ = model_builder.build();
     }
 
     void buildLibraryWithModel()
     {
         std::vector<Model> models;
-        models.emplace_back(std::move(model));
+        models.emplace_back(std::move(model_));
         LibraryBuilder library_builder;
-        lib = library_builder.withId("library").withModels(std::move(models)).build();
+        Library lib = library_builder.withId("library").withModels(std::move(models)).build();
         libraries = {lib};
     }
 
@@ -83,19 +83,19 @@ struct DecompositionFixture
 
     ~DecompositionFixture()
     {
-        std::filesystem::remove_all(inputFolder);
+        std::filesystem::remove_all(inputFolder_);
     }
 
     std::filesystem::path studyFolder;
-    std::filesystem::path inputFolder;
     std::filesystem::path yamlPath;
-    Library lib;
     std::vector<Library> libraries;
-    Model model;
-    ModelBuilder model_builder;
     std::vector<Variable> variables;
     std::vector<Constraint> constraints;
     std::vector<Objective> objectives;
+
+private:
+    std::filesystem::path inputFolder_;
+    Model model_;
 };
 
 BOOST_FIXTURE_TEST_CASE(variable_decomposition, DecompositionFixture)
