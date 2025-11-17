@@ -128,36 +128,6 @@ std::any ConvertorVisitor::visit(antlr4::tree::ParseTree* tree)
     return tree->accept(this);
 }
 
-class NoParameterOrVariableWithThisName final: public std::runtime_error
-{
-public:
-    explicit NoParameterOrVariableWithThisName(const std::string& name):
-        runtime_error("No parameter or variable found for this identifier: " + name)
-    {
-    }
-};
-
-class NoVariableWithThisName final: public std::runtime_error
-{
-public:
-    explicit NoVariableWithThisName(const std::string& modelName, const std::string& varName):
-        runtime_error("reduced_cost called with unknown variable '" + varName + "' in model '"
-                      + modelName + "'")
-    {
-    }
-};
-
-class NoConstraintWithThisName final: public std::runtime_error
-{
-public:
-    explicit NoConstraintWithThisName(const std::string& modelName,
-                                      const std::string& constraintName):
-        runtime_error("dual called with unknown constraint '" + constraintName + "' in model '"
-                      + modelName + "'")
-    {
-    }
-};
-
 Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
 {
     for (const auto& param: model_.parameters)

@@ -625,3 +625,24 @@ BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
     std::string expression = "^";
     BOOST_CHECK_THROW(converter.run(expression), std::bad_any_cast);
 }
+BOOST_AUTO_TEST_CASE(WrongPowerExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varA^_";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          Antares::IO::Inputs::ModelConverter::NoParameterOrVariableWithThisName,
+                          checkMessage("No parameter or variable found for this identifier: _"));
+}
