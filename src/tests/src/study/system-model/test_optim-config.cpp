@@ -49,7 +49,7 @@ struct DecompositionFixture
         studyFolder = std::filesystem::temp_directory_path();
         inputFolder_ = studyFolder / "input";
         std::filesystem::create_directory(inputFolder_);
-        yamlPath = inputFolder_ / "optim-config.yml";
+        yamlPath_ = inputFolder_ / "optim-config.yml";
     }
 
     void buildModel()
@@ -74,11 +74,10 @@ struct DecompositionFixture
     void createOptimConfigFile(const std::string& yaml_content)
     {
         std::ofstream optimConfigStream;
-        optimConfigStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
+        optimConfigStream.open(yamlPath_, std::ofstream::trunc | std::ofstream::out);
         optimConfigStream << yaml_content;
         optimConfigStream.flush();
         optimConfigStream.close();
-
     }
 
     ~DecompositionFixture()
@@ -87,7 +86,6 @@ struct DecompositionFixture
     }
 
     std::filesystem::path studyFolder;
-    std::filesystem::path yamlPath;
     std::vector<Library> libraries;
     std::vector<Variable> variables;
     std::vector<Constraint> constraints;
@@ -95,6 +93,7 @@ struct DecompositionFixture
 
 private:
     std::filesystem::path inputFolder_;
+    std::filesystem::path yamlPath_;
     Model model_;
 };
 
