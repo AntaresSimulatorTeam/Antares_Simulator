@@ -40,6 +40,7 @@ target_link_libraries(solver_api
         Antares::study-loader
         antares-solver-simulation
         Boost::iostreams
+        Antares::enums
         PUBLIC
         Antares::optimization-options
         Antares::lps)
