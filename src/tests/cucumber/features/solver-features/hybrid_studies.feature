@@ -86,3 +86,11 @@ Feature: hybrid (simulator+modeler) studies
     When I run antares simulator
     Then the simulation fails
     And the message "Scenario-independent variables are not supported in hybrid studies" is reported in the logs
+
+  @fast @short
+  Scenario: Two studies with same structure should have the same objective offset value at each time step
+    Given the first study path is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_fixed_load"
+    And the second study path is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_flexible_load"
+    When I run antares simulator on both studies
+    Then both simulations succeed
+    And for each time step, the objective offset value of the first study is equal to the objective offset value of the second study
