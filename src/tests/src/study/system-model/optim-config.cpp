@@ -23,6 +23,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <string>
 
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/study/system-model/model.h"
@@ -46,10 +47,10 @@ struct DecompositionFixture
     DecompositionFixture()
     {
         // YAML setup
-        folder = std::filesystem::temp_directory_path();
-        input = folder / "input";
-        std::filesystem::create_directory(input);
-        yamlPath = input / "optim-config.yml";
+        studyFolder = std::filesystem::temp_directory_path();
+        inputFolder = studyFolder / "input";
+        std::filesystem::create_directory(inputFolder);
+        yamlPath = inputFolder / "optim-config.yml";
     }
 
     void buildModel()
@@ -59,18 +60,34 @@ struct DecompositionFixture
           .withConstraints(std::move(constraints))
           .withObjectives(std::move(objectives));
         model = model_builder.build();
+    }
+
+    void buildLibraryWithModel()
+    {
         std::vector<Model> models;
         models.emplace_back(std::move(model));
-        // Library
         LibraryBuilder library_builder;
         lib = library_builder.withId("library").withModels(std::move(models)).build();
         libraries = {lib};
-        // YAML
-        optimConfigStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
     }
 
-    std::filesystem::path folder;
-    std::filesystem::path input;
+    void createOptimConfigFile(const std::string& yaml_content)
+    {
+        std::ofstream optimConfigStream;
+        optimConfigStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
+        optimConfigStream << yaml_content;
+        optimConfigStream.flush();
+        optimConfigStream.close();
+
+    }
+
+    ~DecompositionFixture()
+    {
+        std::filesystem::remove_all(inputFolder);
+    }
+
+    std::filesystem::path studyFolder;
+    std::filesystem::path inputFolder;
     std::filesystem::path yamlPath;
     Library lib;
     std::vector<Library> libraries;
@@ -79,18 +96,19 @@ struct DecompositionFixture
     std::vector<Variable> variables;
     std::vector<Constraint> constraints;
     std::vector<Objective> objectives;
-    std::ofstream optimConfigStream;
 };
 
 BOOST_FIXTURE_TEST_CASE(variable_decomposition, DecompositionFixture)
 {
-    // Model with variables
+    // Arrange part : build a model, then a library, and create an optim config file
     variables.push_back({"x", {}, {}, ValueType::FLOAT, {}, {}});
     variables.push_back({"y", {}, {}, ValueType::FLOAT, {}, {}});
     variables.push_back({"z", {}, {}, ValueType::FLOAT, {}, {}});
-    buildModel();
 
-    optimConfigStream << R"(models:
+    buildModel();
+    buildLibraryWithModel();
+
+    std::string yamlContent = R"(models:
       - id: library.model
         model-decomposition:
           variables:
@@ -100,8 +118,13 @@ BOOST_FIXTURE_TEST_CASE(variable_decomposition, DecompositionFixture)
               location: master-and-subproblems
             - id: z
               location: subproblems)";
-    optimConfigStream.flush();
-    loadOptimConfig(folder, libraries);
+
+    createOptimConfigFile(yamlContent);
+    
+    // Act part : load the optim config
+    loadOptimConfig(studyFolder, libraries);
+
+    // Assert part
     const auto& modelVariables = libraries[0].Models()["model"].Variables();
 
     BOOST_CHECK_EQUAL(modelVariables[0].Id(), "x");
@@ -121,8 +144,9 @@ BOOST_FIXTURE_TEST_CASE(constraint_decomposition, DecompositionFixture)
     constraints.push_back({"c2", {}});
     constraints.push_back({"c3", {}});
     buildModel();
+    buildLibraryWithModel();
 
-    optimConfigStream << R"(models:
+    std::string yamlContent = R"(models:
       - id: library.model
         model-decomposition:
           constraints:
@@ -132,8 +156,11 @@ BOOST_FIXTURE_TEST_CASE(constraint_decomposition, DecompositionFixture)
               location: master-and-subproblems
             - id: c3
               location: subproblems)";
-    optimConfigStream.flush();
-    loadOptimConfig(folder, libraries);
+
+    createOptimConfigFile(yamlContent);
+
+    loadOptimConfig(studyFolder, libraries);
+
     const auto& modelConstraints = libraries[0].Models()["model"].Constraints();
 
     BOOST_CHECK_EQUAL(modelConstraints[0].Id(), "c1");
@@ -148,13 +175,13 @@ BOOST_FIXTURE_TEST_CASE(constraint_decomposition, DecompositionFixture)
 
 BOOST_FIXTURE_TEST_CASE(objective_decomposition, DecompositionFixture)
 {
-    // Model with objectives
     objectives.push_back({"o1", {}});
     objectives.push_back({"o2", {}});
     objectives.push_back({"o3", {}});
     buildModel();
+    buildLibraryWithModel();
 
-    optimConfigStream << R"(models:
+    std::string yamlContent = R"(models:
       - id: library.model
         model-decomposition:
           objective-contributions:
@@ -164,8 +191,10 @@ BOOST_FIXTURE_TEST_CASE(objective_decomposition, DecompositionFixture)
               location: master-and-subproblems
             - id: o3
               location: subproblems)";
-    optimConfigStream.flush();
-    loadOptimConfig(folder, libraries);
+
+    createOptimConfigFile(yamlContent);
+
+    loadOptimConfig(studyFolder, libraries);
     const auto& modelObjectives = libraries[0].Models()["model"].Objectives();
 
     BOOST_CHECK_EQUAL(modelObjectives[0].Id(), "o1");
@@ -178,45 +207,58 @@ BOOST_FIXTURE_TEST_CASE(objective_decomposition, DecompositionFixture)
     BOOST_CHECK(modelObjectives[2].location() == Location::SUBPROBLEMS);
 }
 
-BOOST_FIXTURE_TEST_CASE(modelDecompositionObjectDontExists, DecompositionFixture)
+BOOST_FIXTURE_TEST_CASE(objective_does_not_exist, DecompositionFixture)
 {
     buildModel();
-    // OBJECTIVE
-    optimConfigStream << R"(models:
+    buildLibraryWithModel();
+
+    std::string yamlContent = R"(models:
       - id: library.model
         model-decomposition:
           objective-contributions:
             - id: o2
               location: subproblems)";
-    optimConfigStream.flush();
-    optimConfigStream.close();
-    BOOST_CHECK_EXCEPTION(loadOptimConfig(folder, libraries),
+
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_EXCEPTION(loadOptimConfig(studyFolder, libraries),
                           ErrorLoadingYaml,
                           checkMessage("No objective found with this name: o2"));
-    // VARIABLE
-    optimConfigStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
-    optimConfigStream << R"(models:
+}
+
+BOOST_FIXTURE_TEST_CASE(variable_does_not_exist, DecompositionFixture)
+{
+    buildModel();
+    buildLibraryWithModel();
+
+    std::string yamlContent = R"(models:
       - id: library.model
         model-decomposition:
           variables:
             - id: y
               location: master)";
-    optimConfigStream.flush();
-    optimConfigStream.close();
-    BOOST_CHECK_EXCEPTION(loadOptimConfig(folder, libraries),
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_EXCEPTION(loadOptimConfig(studyFolder, libraries),
                           ErrorLoadingYaml,
                           checkMessage("No variable found with this name: y"));
-    // CONSTRAINT
-    optimConfigStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
-    optimConfigStream << R"(models:
+}
+
+BOOST_FIXTURE_TEST_CASE(constraint_does_not_exist, DecompositionFixture)
+{
+    buildModel();
+    buildLibraryWithModel();
+
+    std::string yamlContent = R"(models:
       - id: library.model
         model-decomposition:
           constraints:
             - id: c2
               location: master-and-subproblems)";
-    optimConfigStream.flush();
-    optimConfigStream.close();
-    BOOST_CHECK_EXCEPTION(loadOptimConfig(folder, libraries),
+
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_EXCEPTION(loadOptimConfig(studyFolder, libraries),
                           ErrorLoadingYaml,
                           checkMessage("No constraint found with this name: c2"));
 }
