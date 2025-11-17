@@ -161,12 +161,12 @@ LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
     }
     EvalVisitor evalVisitor(optimEntityContainer_, fillContext_, component_);
     auto exponentValue = evalVisitor.dispatch(operands[1]).valueAsDouble();
-    if (std::abs(exponentValue) < 1e-12)
+    if (std::abs(exponentValue) < DEFAULT_THRESHOLD)
     {
         return LinearStatus::CONSTANT;
     }
     // If base is linear and exponent is 1 the result is linear
-    if (base == LinearStatus::LINEAR && std::abs(exponentValue - 1) < 1e-12)
+    if (base == LinearStatus::LINEAR && std::abs(exponentValue - 1) < DEFAULT_THRESHOLD)
     {
         return LinearStatus::LINEAR;
     }

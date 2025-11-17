@@ -54,7 +54,7 @@ public:
     {
     }
 
-    explicit FunctionNode(FunctionNodeType type, const std::vector<Node*>&& operands):
+    explicit FunctionNode(FunctionNodeType type, std::vector<Node*>&& operands):
         ParentNode(std::move(operands)),
         type_(type)
     {

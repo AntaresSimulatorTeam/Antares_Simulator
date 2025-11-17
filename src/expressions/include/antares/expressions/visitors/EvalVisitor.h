@@ -24,7 +24,6 @@
 #include <sstream>
 #include <variant>
 
-#include <antares/expressions/nodes/FunctionNode.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/modeler-optimisation-container/EvaluationContext.h"
@@ -48,6 +47,7 @@ class EvalVisitorNotImplemented: public std::invalid_argument
 public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
+static constexpr double DEFAULT_THRESHOLD = 1e-16;
 
 class EvaluationResult
 {
@@ -97,8 +97,6 @@ public:
 
     struct SafeDivides
     {
-        static constexpr double DEFAULT_THRESHOLD = 1e-16;
-
         explicit SafeDivides(double threshold = DEFAULT_THRESHOLD):
             threshold_(threshold)
         {
