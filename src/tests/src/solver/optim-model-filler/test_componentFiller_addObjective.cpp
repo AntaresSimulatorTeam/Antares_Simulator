@@ -242,4 +242,40 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 35); // value for scenario_group ts number 3
 }
 
+BOOST_AUTO_TEST_CASE(
+  one_var_with_time_and_scenario_dependent_offset_expected_objective_offset_sum_for_all_time_and_scenarios)
+{
+    // exp: x + param(t,s), param varies by both time and scenario
+    auto objective = add(variable("x", 0),
+                         parameter("param", TimeIndex::VARYING_IN_TIME_AND_SCENARIO));
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"param", TimeDependent::YES, ScenarioDependent::YES}},
+      {{"x", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+      {},
+      objective);
+    createComponent("model",
+                    "componentA",
+                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIE)},
+                    "scenario_group");
+
+    FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
+    auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
+    // Add 2 different scenarios with different offset values across time
+    // Scenario 0: time series [10, 20, 30]
+    bounds_time_series->add({10., 20., 30.});
+    // Scenario 1: time series [15, 25, 35]
+    bounds_time_series->add({15., 25., 35.});
+    LinearProblemData data;
+    data.addDataSeries(std::move(bounds_time_series));
+
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    auto scenario0 = std::make_unique<Scenario>("scenario_group");
+    scenario0->setTimeSerieNumber(0, 2);
+    scenarios.push_back(std::move(scenario0));
+
+    buildLinearProblem(ctx, data, scenarios);
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 75);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
