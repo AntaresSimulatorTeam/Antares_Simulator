@@ -212,16 +212,14 @@ LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
     {
         if (other.constant() == 0)
         {
-            for (auto& [idx, coef]: coefs_)
-            {
-                // TODO is this possible ?
-                if (coef != 0)
-                {
-                    coef = 1;
-                }
-            }
+            bool isIdenticallyZero = (constant_ == 0)
+                                     && std::all_of(coefs_.begin(),
+                                                    coefs_.end(),
+                                                    [](const auto& coef)
+                                                    { return coef.second == 0; });
 
-            constant_ != 0 ? 1 : 0;
+            coefs_.clear();
+            constant_ = isIdenticallyZero ? 0.0 : 1.0;
             return *this;
         }
         if (other.constant() != 1)

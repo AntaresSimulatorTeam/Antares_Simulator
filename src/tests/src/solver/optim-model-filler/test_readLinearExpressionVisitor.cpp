@@ -97,10 +97,8 @@ BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_0, VisitorFixture<ReadLinearExpr
     Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, zero); // (8*variable)^0
     auto linear_expression = visitor().dispatch(pow);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
-    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0);
-    BOOST_CHECK_EQUAL(linear_expression[0].size(), 1);
-    BOOST_CHECK(linear_expression[0].hasCoefs());
-    BOOST_CHECK_EQUAL(linear_expression[0].begin()->second, 1); // 8^0
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_1, VisitorFixture<ReadLinearExpressionVisitor>)

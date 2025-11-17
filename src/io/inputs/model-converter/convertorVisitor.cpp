@@ -89,7 +89,7 @@ private:
     template<class T>
     std::any ProcessChildren(const std::vector<T*>& exprContexts);
     template<class T>
-    std::any processPower(std::vector<T*> exprContexts, antlr4::RuleContext* context);
+    std::any processPower(std::vector<T*> exprContexts);
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
@@ -415,24 +415,8 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
 }
 
 template<class T>
-std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts, antlr4::RuleContext* context)
+std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts)
 {
-    if (exprContexts.size() != 2)
-    {
-        throw std::invalid_argument("power operator expect only two arguments got "
-                                    + std::to_string(exprContexts.size()) + " in "
-                                    + context->toStringTree(true));
-    }
-    if (exprContexts.at(0) == nullptr)
-    {
-        throw std::invalid_argument("bad power expression, the base is invalid in "
-                                    + context->toStringTree(true));
-    }
-    if (exprContexts.at(1) == nullptr)
-    {
-        throw std::invalid_argument("bad power expression, the exponent is invalid in "
-                                    + context->toStringTree(true));
-    }
     const auto powerExpr = std::any_cast<std::vector<Node*>>(ProcessChildren(exprContexts));
     return static_cast<Node*>(
       registry_.create<FunctionNode>(FunctionNodeType::pow, powerExpr.at(0), powerExpr.at(1)));
@@ -441,13 +425,13 @@ std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts, antlr4::Ru
 std::any ConvertorVisitor::visitPower(ExprParser::PowerContext* context)
 {
     auto exprContexts = context->expr();
-    return processPower(exprContexts, context);
+    return processPower(exprContexts);
 }
 
 std::any ConvertorVisitor::visitRightPower(ExprParser::RightPowerContext* context)
 {
     auto exprContexts = context->right_expr();
-    return processPower(exprContexts, context);
+    return processPower(exprContexts);
 }
 
 std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* context)
