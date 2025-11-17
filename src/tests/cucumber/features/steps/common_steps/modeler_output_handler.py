@@ -25,8 +25,18 @@ class modeler_output_handler:
 
     @staticmethod
     def __read_problems(output_location):
-        master = read_if_exists(os.path.join(output_location, "master.mps"), mpu.load_problem)
-        subproblem = read_if_exists(os.path.join(output_location, "1-1.mps"), mpu.load_problem)
+        # MASTER
+        try:
+            master = read_if_exists(os.path.join(output_location, "master.mps"), mpu.load_problem)
+        except:
+            master = None
+
+        # SUBPROBLEM
+        try:
+            subproblem = read_if_exists(os.path.join(output_location, "1-1.mps"), mpu.load_problem)
+        except:
+            subproblem = None
+
         structure = read_if_exists(os.path.join(output_location, "structure.txt"), lambda x: open(x, 'r').readlines())
         return invest_problems(master, subproblem, structure)
 
