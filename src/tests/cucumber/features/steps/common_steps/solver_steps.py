@@ -539,6 +539,87 @@ def ckeck_log_exists(context, log):
     raise AssertionError(f"Log '{log}' is not reported in the logs")
 
 
+@given('the first study path is "{string}"')
+def first_study_path_is(context, string):
+    context.first_study_path = Path(context.config.userdata["resources-path"]) / Path(string.replace("/", os.sep))
+    assert context.first_study_path.exists(), f"First study path {context.first_study_path} does not exist"
+
+
+@given('the second study path is "{string}"')
+def second_study_path_is(context, string):
+    context.second_study_path = Path(context.config.userdata["resources-path"]) / Path(string.replace("/", os.sep))
+    assert context.second_study_path.exists(), f"Second study path {context.second_study_path} does not exist"
+
+
+@when('I run antares simulator on both studies')
+def run_antares_on_both_studies(context):
+    # Run first study
+    context.study_path = context.first_study_path
+    init_simulation(context)
+    context.named_mps_problems = False
+    context.parallel = False
+    run_simulation(context)
+
+    # Store first study results
+    context.first_return_code = context.return_code
+    context.first_logs_out = context.logs_out
+    context.first_logs_err = context.logs_err
+    context.first_output_path = context.output_path
+    context.first_soh = context.soh
+    context.first_moh = context.moh if hasattr(context, 'moh') else None
+
+    # Run second study
+    context.study_path = context.second_study_path
+    init_simulation(context)
+    context.named_mps_problems = False
+    context.parallel = False
+    run_simulation(context)
+
+    # Store second study results
+    context.second_return_code = context.return_code
+    context.second_logs_out = context.logs_out
+    context.second_logs_err = context.logs_err
+    context.second_output_path = context.output_path
+    context.second_soh = context.soh
+    context.second_moh = context.moh if hasattr(context, 'moh') else None
+
+
+@then('both simulations succeed')
+def both_simulations_succeed(context):
+    assert context.first_return_code == 0, f"First study failed with return code {context.first_return_code}: \nSTDOUT: \n{context.first_logs_out} \n STDERR: \n{context.first_logs_err}"
+    assert context.second_return_code == 0, f"Second study failed with return code {context.second_return_code}: \nSTDOUT: \n{context.second_logs_out} \n STDERR: \n{context.second_logs_err}"
+
+
+@then('for each time step, the objective value of the first study is equal to the objective value of the second study')
+def compare_objective_values_by_time_step(context):
+    # Check that both studies have modeler output handlers
+    assert context.first_moh is not None, "First study does not have modeler outputs (simulation_table)"
+    assert context.second_moh is not None, "Second study does not have modeler outputs (simulation_table)"
+
+    # Get objective values by block (time step) for both studies
+    first_objectives = context.first_moh.get_objective_values_by_block()
+    second_objectives = context.second_moh.get_objective_values_by_block()
+
+    # Check that both studies have the same blocks
+    first_blocks = set(first_objectives.keys())
+    second_blocks = set(second_objectives.keys())
+
+    assert first_blocks == second_blocks, f"Studies have different blocks. First: {sorted(first_blocks)}, Second: {sorted(second_blocks)}"
+
+    # Compare objective values for each block
+    mismatches = []
+    for block in sorted(first_blocks):
+        first_value = first_objectives[block]
+        second_value = second_objectives[block]
+        if not np.isclose(first_value, second_value, rtol=1e-9, atol=1e-9):
+            mismatches.append(
+                f"Block {block}: first={first_value}, second={second_value}, diff={abs(first_value - second_value)}")
+
+    if mismatches:
+        error_msg = f"Objective values differ between studies:\n" + "\n".join(mismatches)
+        raise AssertionError(error_msg)
+
+
 @then(
     'in area "{area}", during year {year:d}, hourly value of "{var_name}" for hour {hour:d} is equal to {expected_value:d}')
 def check_hourly_variable_value(context, area, year, var_name, hour, expected_value):
