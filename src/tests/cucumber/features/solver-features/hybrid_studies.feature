@@ -87,10 +87,10 @@ Feature: hybrid (simulator+modeler) studies
     Then the simulation fails
     And the message "Scenario-independent variables are not supported in hybrid studies" is reported in the logs
 
-  @fast @short @test
+  @fast @short
   Scenario: Two studies with same structure should have the same objective value at each time step
-    Given the first study path is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_fixed_load"
-    And the second study path is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_flexible_load"
-    When I run antares simulator on both studies
-    Then both simulations succeed
-    And for each time step, the objective value of the first study is equal to the objective value of the second study
+    Given the study path 1 is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_fixed_load"
+    And the study path 2 is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_flexible_load"
+    When I run antares simulator on all studies
+    Then all simulations succeed
+    And for each time step, all studies have the same objective value
