@@ -111,7 +111,7 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
-        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out))
+        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out), parse_output_folder_from_logs(context.logs_out))
 
     context.return_code = process.returncode
 
@@ -134,3 +134,8 @@ def parse_output_folder_from_logs(logs: bytes) -> str:
         if b'Output folder : ' in line:
             return line.split(b'Output folder : ')[1].decode('ascii')
     raise LookupError("Could not parse output folder in output logs")
+
+
+@then(u'the master problem contains the following variables')
+def step_impl(context):
+    pass
