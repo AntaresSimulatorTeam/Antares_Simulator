@@ -409,55 +409,14 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 
 namespace
 {
-std::optional<double> updateOffset(std::optional<double> objectiveOffset,
-                                   double offset,
-                                   std::string objectiveId,
-                                   LinearProblemApi::ILinearProblem& pb)
+/*
+ * Given objective ax + b, x being a time dependent variable and b a parameter. b is the offset.
+ * Problems are a_1*x_1+b + a_2*x_2+b + ... + a_n*x_n+b
+ * => offset = n*b
+ */
+double updateOffset(double initialValue, double offset)
 {
-    constexpr double eps = 1e-6; // tolérance numérique pour les comparaisons
-
-    if (!std::isfinite(offset))
-    {
-        throw Error::InvalidArgumentError(
-          fmt::format("Invalid objective offset (non-finite) for objective: {}. Value: {}",
-                      objectiveId,
-                      offset));
-    }
-
-    if (std::abs(offset) < eps)
-    {
-        logs.debug() << fmt::format("Ignoring near-zero objective offset for objective: "
-                                    "{}.\n\tCurrent value: {}\n\tIgnored value: {}",
-                                    objectiveId,
-                                    objectiveOffset.value_or(0),
-                                    offset);
-        return objectiveOffset;
-    }
-
-    if (!objectiveOffset.has_value())
-    {
-        pb.setObjectiveOffset(offset);
-        return offset;
-    }
-
-    if (std::abs(offset - *objectiveOffset) > eps)
-    {
-        throw Error::RuntimeError(
-          fmt::format("Trying to set multiple objective offset for the same objective."
-                      "\n\tObjective: {}"
-                      "\n\tExisting offset: {}"
-                      "\n\tNew offset: {}",
-                      objectiveId,
-                      *objectiveOffset,
-                      offset));
-    }
-
-    logs.debug() << fmt::format("Duplicate objective offset equals existing value for objective: "
-                                "{}.\n\tExisting: {}\n\tDuplicate: {}",
-                                objectiveId,
-                                objectiveOffset.value_or(0),
-                                offset);
-    return objectiveOffset;
+    return initialValue + offset;
 }
 } // namespace
 
@@ -478,7 +437,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
           objective.expression().RootNode());
 
         auto& pb = optimEntityContainer_.Problem();
-        std::optional<double> objectiveOffset;
+        double objectiveOffset = 0.0;
         for (const auto& expr: linearExpression)
         {
             for (const auto& [index, value]: expr)
@@ -486,8 +445,9 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
                 pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
                                            value);
             }
-            objectiveOffset = updateOffset(objectiveOffset, expr.constant(), objective.Id(), pb);
+            objectiveOffset = updateOffset(objectiveOffset, expr.constant());
         }
+        pb.setObjectiveOffset(objectiveOffset);
     }
 }
 

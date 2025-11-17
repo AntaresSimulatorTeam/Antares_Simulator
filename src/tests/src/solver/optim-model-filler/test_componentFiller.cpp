@@ -773,7 +773,7 @@ BOOST_AUTO_TEST_CASE(one_param_offset)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 5);
 }
 
-BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_offset)
+BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_constant_offset)
 {
     auto objective = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10));
 
@@ -786,12 +786,7 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_offset)
     const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
 
     BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
-    for (unsigned i = 0; i < nb_var; i++)
-    {
-        const auto var_name = "componentA.x_s0_t" + to_string(i);
-        BOOST_CHECK_NO_THROW((void)pb->lookupVariable(var_name));
-        BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 10);
-    }
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), nb_var * 10); // 10 timesteps each with offset 10
 }
 
 BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
@@ -816,16 +811,8 @@ BOOST_AUTO_TEST_CASE(one_var_with_time_dependent_offset)
     data.addDataSeries(std::move(bounds_time_series));
 
     std::vector<std::unique_ptr<IScenario>> scenarios;
-    try
-    {
-        buildLinearProblem(ctx, data, scenarios);
-    }
-    catch (const Antares::Error::RuntimeError& e)
-    {
-        BOOST_CHECK(std::string(e.what()).find(
-                      "Trying to set multiple objective offset for the same objective.")
-                    != std::string::npos);
-    }
+    buildLinearProblem(ctx, data, scenarios);
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 33); // 10 + 11 + 12
 }
 
 BOOST_AUTO_TEST_SUITE_END()
