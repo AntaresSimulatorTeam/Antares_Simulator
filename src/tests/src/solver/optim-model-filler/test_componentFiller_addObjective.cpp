@@ -278,4 +278,57 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 75);
 }
 
+BOOST_AUTO_TEST_CASE(var_and_param_both_varying_in_time_and_scenario_with_different_scenario_groups)
+{
+    // exp: x(t,s_x) + param(t,s_y)
+    // Variable x varies in time and scenario (uses scenarioX)
+    // Param varies in time and scenario (uses scenarioY)
+    auto objective = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_AND_SCENARIO),
+                         parameter("param", TimeIndex::VARYING_IN_TIME_AND_SCENARIO));
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"param", TimeDependent::YES, ScenarioDependent::YES}},
+      {{"x", ValueType::FLOAT, literal(-5), literal(100), true, true}},
+      {},
+      objective);
+    createComponent("model",
+                    "componentA",
+                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIE)},
+                    "scenarioX");
+
+    FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
+
+    // Time series for variable x (scenarioX group)
+    auto x_time_series = std::make_unique<TimeSeriesSet>("x", 3);
+    x_time_series->add({1., 2., 3.});    // time series 0
+    x_time_series->add({11., 22., 33.}); // time series 1
+
+    // Time series for parameter (scenarioY group)
+    auto param_time_series = std::make_unique<TimeSeriesSet>("param_ts", 3);
+    param_time_series->add({3., 6., 9.}); // time series 0
+
+    LinearProblemData data;
+    data.addDataSeries(std::move(x_time_series));
+    data.addDataSeries(std::move(param_time_series));
+
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    // Scenario for variable x: select second time series [11, 22, 33]
+    auto scenarioX = std::make_unique<Scenario>("scenarioX");
+    scenarioX->setTimeSerieNumber(0, 1); // Select time series 1
+    scenarios.push_back(std::move(scenarioX));
+
+    // Scenario for parameter: select first time series [3, 6, 9]
+    auto scenarioY = std::make_unique<Scenario>("scenarioY");
+    scenarioY->setTimeSerieNumber(0, 0); // Select time series 0
+    scenarios.push_back(std::move(scenarioY));
+
+    buildLinearProblem(ctx, data, scenarios);
+
+    // Variable x contributes: 11 + 22 + 33 = 66
+    // Parameter contributes: 3 + 6 + 9 = 18
+    // But only the parameter is in the objective offset (variable coefficients don't contribute to
+    // offset) Expected: 18 (only from parameter offset)
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 18);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
