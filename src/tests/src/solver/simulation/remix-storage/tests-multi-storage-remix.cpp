@@ -1,9 +1,7 @@
-#include <sstream>
 #define BOOST_TEST_MODULE multi storage remix
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <fstream>
 #include <unit_test_utils.h>
 #include <vector>
 
@@ -68,7 +66,7 @@ struct InputFixture
     {
     }
 
-    void runRemixStorageAlgorithm(std::string filename = "")
+    void runRemixStorageAlgorithm()
     {
         Load = TotaGenWithoutStorage + UnsupE + sts_1.withdrawal + sts_2.withdrawal;
 
@@ -76,14 +74,11 @@ struct InputFixture
         storagesForRemix.push_back(sts_1.createSTS(UnsupE, "sts1"));
         storagesForRemix.push_back(sts_2.createSTS(UnsupE, "sts2"));
 
-        std::stringstream debug;
         shavePeaksByRemixingStorageGen(Load,
                                        UnsupE,
                                        Spillage,
                                        DTG_MRG,
-                                       storagesForRemix , &debug);
-        std::ofstream outfile(filename);
-        outfile << debug.str();
+                                       storagesForRemix);
     }
 
     STS_holder<nb_hours> sts_1;
@@ -160,7 +155,7 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat, InputFixtu
     sts_2.capacity = 400.;
     sts_2.initLevel = 200.;
 
-    runRemixStorageAlgorithm("G_is_flat___H_increases___G_plus_H_gets_flat");
+    runRemixStorageAlgorithm();
 
     // G + H (= TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal) gets flat
     std::vector<double> expectedTotalWithdrawal = {30., 30., 30., 30., 30.};
@@ -189,7 +184,7 @@ BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, 
     sts_2.capacity = 400.;
     sts_2.initLevel = 200.;
 
-    runRemixStorageAlgorithm("same_test_as_above___we_just_raise_pmax___same_results");
+    runRemixStorageAlgorithm();
 
     // G + H (= TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal) gets flat
     std::vector<double> expectedTotalWithdrawal = {30., 30., 30., 30., 30.};
@@ -218,7 +213,7 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat, InputFixtu
     sts_2.capacity = 400.;
     sts_2.initLevel = 200.;
 
-    runRemixStorageAlgorithm("G_is_flat___H_decreases___G_plus_H_gets_flat");
+    runRemixStorageAlgorithm();
 
     // G + H (= TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal) gets flat
     std::vector<double> expectedTotalWithdrawal = {30., 30., 30., 30., 30.};
@@ -250,7 +245,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
     sts_2.capacity = 400.;
     sts_2.initLevel = 200.;
 
-    runRemixStorageAlgorithm("influence_of_pmax");
+    runRemixStorageAlgorithm();
 
     std::vector<double> expectedTotalWithdrawal = {0., 7.5, 27.5, 47.5, 67.5};
     std::vector<double> actualTotalWithdrawal = sts_1.withdrawal + sts_2.withdrawal;
@@ -266,7 +261,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
     std::ranges::fill(sts_2.pmax, 10.);
     sts_2.withdrawal = {10., 10., 10., 10., 10.}; // We have : withdrawal <= Pmax
 
-    runRemixStorageAlgorithm("influence_of_pmax_2");
+    runRemixStorageAlgorithm();
 
     std::vector<double> expectedWithdrawal_1 = {20., 20., 20., 20., 20.};
     std::vector<double> expectedWithdrawal_2 = {10., 10., 10., 10., 10.};
