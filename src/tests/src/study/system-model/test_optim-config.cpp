@@ -44,13 +44,7 @@ BOOST_AUTO_TEST_SUITE(optimConfigYaml)
 
 struct DecompositionFixture
 {
-    DecompositionFixture()
-    {
-        studyFolder = std::filesystem::temp_directory_path();
-        inputFolder_ = studyFolder / "input";
-        std::filesystem::create_directory(inputFolder_);
-        yamlPath_ = inputFolder_ / "optim-config.yml";
-    }
+    DecompositionFixture() = default;
 
     void buildModel()
     {
@@ -73,8 +67,13 @@ struct DecompositionFixture
 
     void createOptimConfigFile(const std::string& yaml_content)
     {
+        studyFolder = std::filesystem::temp_directory_path();
+        inputFolder_ = studyFolder / "input";
+        std::filesystem::create_directory(inputFolder_);
+        std::filesystem::path yamlPath = inputFolder_ / "optim-config.yml";
+        
         std::ofstream outStream;
-        outStream.open(yamlPath_, std::ofstream::trunc | std::ofstream::out);
+        outStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
         outStream << yaml_content;
         outStream.flush();
         outStream.close();
@@ -93,7 +92,6 @@ struct DecompositionFixture
 
 private:
     std::filesystem::path inputFolder_;
-    std::filesystem::path yamlPath_;
     Model model_;
 };
 
