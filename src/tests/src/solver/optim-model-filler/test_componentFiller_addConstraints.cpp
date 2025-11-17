@@ -399,4 +399,3 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
