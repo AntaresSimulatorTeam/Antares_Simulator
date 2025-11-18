@@ -37,6 +37,7 @@ void ApplWnd::resetDefaultStatusBarText()
     assert(wxIsMainThread() == true && "Must be ran from the main thread");
 #if defined(wxUSE_STATUSBAR)
     SetStatusText(wxString(wxT("  ")) << Antares::VersionToWxString() << " (GUI WILL BE DISCONTINUED IN 9.4)");
+    GetStatusBar()->SetBackgroundColour(wxColour("yellow"));
 #endif
 }
 
