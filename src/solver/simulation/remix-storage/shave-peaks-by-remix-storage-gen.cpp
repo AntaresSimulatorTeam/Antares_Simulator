@@ -14,16 +14,16 @@ const std::string shave_peak_remix_storage_error_msg_start = "Remix storage inpu
 namespace Antares::Solver::Simulation
 {
 
-void collectDebugInfos(IStorageForRemix* s, std::stringstream* debugStream)
+void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream* stream)
 {
-    if (!debugStream)
+    for (auto& storage : storagesForRemix)
     {
-        return;
-    }
-    const auto& withdrawal = s->withdrawal();
-    for (unsigned h = 0; h < withdrawal.size(); ++h)
-    {
-        *debugStream << s->name() << " " << h << " " << withdrawal[h] << std::endl;
+        unsigned hour = 0;
+        for (auto& withdrawal: storage->withdrawal())
+        {
+            *stream << storage->name() << " " << hour << " " << withdrawal << std::endl;
+            hour++;
+        }
     }
 }
 
@@ -56,8 +56,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    ListStorageForRemix listStorage,
-                                    std::stringstream* debugStream)
+                                    ListStorageForRemix listStorage)
 {
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;
@@ -78,7 +77,6 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
 
         if (!exchange.isPossible())
         {
-            collectDebugInfos((*cyclic_it).get(), debugStream);
             delete_current(cyclic_it);
         }
         else
