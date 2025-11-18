@@ -14,14 +14,14 @@ const std::string shave_peak_remix_storage_error_msg_start = "Remix storage inpu
 namespace Antares::Solver::Simulation
 {
 
-void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream* stream)
+void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream& stream)
 {
     for (auto& storage: storagesForRemix)
     {
         unsigned hour = 0;
         for (auto& withdrawal: storage->withdrawal())
         {
-            *stream << storage->name() << " " << hour << " " << withdrawal << std::endl;
+            stream << storage->name() << " " << hour << " " << withdrawal << std::endl;
             hour++;
         }
     }

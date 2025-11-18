@@ -423,7 +423,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                              listStorage);
               if (writer)
               {
-                  collectRemixDebugInfo(listStorage, &debugStream);
+                  collectRemixDebugInfo(listStorage, debugStream);
               }
           }
           catch (std::exception& e)

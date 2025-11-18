@@ -18,6 +18,6 @@ void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& DTG_MRG,
                 const ListStorageForRemix& storagesForRemix);
 
-void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream* stream);
+void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream& stream);
 
 } // namespace Antares::Solver::Simulation
