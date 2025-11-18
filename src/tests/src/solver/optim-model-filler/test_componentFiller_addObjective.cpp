@@ -159,7 +159,8 @@ BOOST_AUTO_TEST_CASE(one_param_offset_expect_objective_offset_five)
     auto objective = parameter("param");
     createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {build_context_parameter_with("param", "5")});
-    buildLinearProblem();
+    FillContext ctx{0, 10, 0, 10, 0};
+    buildLinearProblem(ctx);
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 5);
 }
 
@@ -367,6 +368,47 @@ BOOST_AUTO_TEST_CASE(two_expressions_one_with_time_varying_param_one_with_consta
     // Expression 2 offset: 20 + 20 + 20 = 60
     // Total offset: 6 + 60 = 66
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 66);
+}
+
+BOOST_AUTO_TEST_CASE(multiple_objectives_in_model)
+{
+    // Model with two objectives:
+    // Objective 1: x + 10
+    // Objective 2: x + param(t), param = [5, 10, 15]
+    // Expected offset over 3 time steps: (10+10+10) + (5+10+15) = 30 + 30 = 60
+
+    auto objective1 = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10));
+    auto objective2 = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY),
+                          parameter("param", TimeIndex::VARYING_IN_TIME_ONLY));
+
+    std::vector objectives = {objective1, objective2};
+
+    createModelWithMultipleObjectives(
+      "model",
+      {Parameter{"param", TimeDependent::YES, ScenarioDependent::NO}},
+      {{"x", ValueType::FLOAT, literal(-5), literal(100), true, false}},
+      {},
+      objectives);
+    createComponent("model",
+                    "componentA",
+                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIE)});
+
+    FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
+
+    // Time series for parameter: [5, 10, 15]
+    auto param_time_series = std::make_unique<TimeSeriesSet>("param_ts", 3);
+    param_time_series->add({5., 10., 15.});
+
+    LinearProblemData data;
+    data.addDataSeries(std::move(param_time_series));
+
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    buildLinearProblem(ctx, data, scenarios);
+
+    // Objective 1 offset: 10 + 10 + 10 = 30
+    // Objective 2 offset: 5 + 10 + 15 = 30
+    // Total offset: 30 + 30 = 60
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 60);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

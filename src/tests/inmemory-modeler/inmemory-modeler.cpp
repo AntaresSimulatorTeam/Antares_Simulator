@@ -198,6 +198,49 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
     models[modelId] = std::move(model);
 }
 
+void LinearProblemBuildingFixture::createModelWithMultipleObjectives(
+  const std::string& modelId,
+  std::vector<Parameter> parameters,
+  const std::vector<VariableData>& variablesData,
+  const std::vector<ConstraintData>& constraintsData,
+  std::vector<Nodes::Node*> objectiveNodes)
+{
+    std::vector<Variable> variables;
+    for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
+    {
+        variables.emplace_back(id,
+                               createExpression(lb, nodeRegistry),
+                               createExpression(ub, nodeRegistry),
+                               type,
+                               fromBool<TimeDependent>(timeDependent),
+                               fromBool<ScenarioDependent>(scenarioDependent));
+    }
+    std::vector<Constraint> constraints;
+    for (const auto& [id, expression]: constraintsData)
+    {
+        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+    }
+
+    std::vector<Objective> objectives;
+    int objIndex = 0;
+    for (auto* objectiveNode: objectiveNodes)
+    {
+        objectives.emplace_back("objective_" + std::to_string(objIndex),
+                                createExpression(objectiveNode, nodeRegistry));
+        objIndex++;
+    }
+
+    ModelBuilder model_builder;
+    model_builder.withId(modelId)
+      .withParameters(std::move(parameters))
+      .withVariables(std::move(variables))
+      .withConstraints(std::move(constraints))
+      .withObjectives(std::move(objectives));
+
+    auto model = model_builder.build();
+    models[modelId] = std::move(model);
+}
+
 void LinearProblemBuildingFixture::createModelWithOneFloatVar(
   const std::string& modelId,
   const std::vector<std::string>& parameterIds,

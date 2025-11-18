@@ -79,6 +79,13 @@ struct LinearProblemBuildingFixture
       const std::vector<ConstraintData>& constraintsData,
       Antares::Expressions::Nodes::Node* objective = nullptr);
 
+    void createModelWithMultipleObjectives(
+      const std::string& modelId,
+      std::vector<Parameter>,
+      const std::vector<VariableData>& variablesData,
+      const std::vector<ConstraintData>& constraintsData,
+      std::vector<Antares::Expressions::Nodes::Node*> objectives);
+
     void createModelWithOneFloatVar(const std::string& modelId,
                                     const std::vector<std::string>& parameterIds,
                                     const std::string& varId,
