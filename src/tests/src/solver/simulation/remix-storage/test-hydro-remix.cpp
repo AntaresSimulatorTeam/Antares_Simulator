@@ -17,11 +17,11 @@ using namespace Antares::Solver::Simulation;
 
 struct HydroStorageData
 {
-    HydroStorageData(size_t size)
+    HydroStorageData(size_t size) :
+    hydroGen(size, 0.),
+    levels(size, 0.),
+    inflows(size, 0.)
     {
-        hydroGen.assign(size, 0.);
-        levels.assign(size, 0.);
-        inflows.assign(size, 0.);
     }
 
     std::vector<double> hydroGen;
