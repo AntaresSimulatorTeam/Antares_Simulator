@@ -56,7 +56,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    ListStorageForRemix& listStorage,
+                                    ListStorageForRemix listStorage,
                                     std::stringstream* debugStream)
 {
     const std::vector<double> UnsupEinit = UnsupE;

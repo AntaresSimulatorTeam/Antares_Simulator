@@ -10,7 +10,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    ListStorageForRemix& storagesForRemix,
+                                    ListStorageForRemix storagesForRemix,
                                     std::stringstream* debug = nullptr);
 
 void checkInput(const std::vector<double>& Load,
@@ -18,5 +18,7 @@ void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& Spillage,
                 const std::vector<double>& DTG_MRG,
                 const ListStorageForRemix& storagesForRemix);
+
+void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream* debug);
 
 } // namespace Antares::Solver::Simulation

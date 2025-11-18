@@ -422,6 +422,10 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                              dtgMrg,
                                              listStorage,
                                              writer ? &debugStream : nullptr);
+              if (writer)
+              {
+                  
+              }
           }
           catch (std::exception& e)
           {
@@ -432,6 +436,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
               logs.warning(msg);
           }
       });
+
     if (writer)
     {
         std::string filename("remix-" + std::to_string(problem.year) + "-"

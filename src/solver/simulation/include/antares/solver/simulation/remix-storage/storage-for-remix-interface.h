@@ -23,6 +23,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 namespace Antares::Solver::Simulation
 {
