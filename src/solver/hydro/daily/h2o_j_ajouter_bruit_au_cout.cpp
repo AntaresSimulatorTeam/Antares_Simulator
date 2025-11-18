@@ -45,11 +45,17 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
                                                              * Antares::Constants::noiseAmplitude;
         }
 
+        for (int pdt = 0; pdt < donnesMensuelles.ProblemeHydraulique.NbJoursDUnProbleme[i]; pdt++)
+        {
+            ProblemeLineairePartieFixe[i]
+              .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi[pdt]]
+              += noiseGenerator() * Antares::Constants::noiseAmplitude;
+        }
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiPlus]
           += noiseGenerator() * Antares::Constants::noiseAmplitude;
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
+          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiMoins]
           += noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 }

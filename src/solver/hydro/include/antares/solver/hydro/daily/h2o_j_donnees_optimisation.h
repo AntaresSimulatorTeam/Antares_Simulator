@@ -97,17 +97,24 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
 /* Les correspondances fixes des contraintes */
 struct CORRESPONDANCE_DES_CONTRAINTES
 {
-    int NumeroDeContrainteDEnergieMensuelle{0};
-    std::vector<int> NumeroDeContrainteSurXi;
+    int NumeroDeContrainteDEnergieMensuelle{0};    /* Somme des turbines = somme des cibles */
+    std::vector<int> NumeroDeContrainteSurXi;      /* turbine[t] + xi[t] >= cible[t] */
+    std::vector<int> NumeroDeContrainteSurXiSym;   /* cible[t] + xi[t] >= turbine[t] */
+    std::vector<int> NumeroDeContrainteSurXiPlus;  /* turbine[t] + xi_plus >= cible[t] */
+    std::vector<int> NumeroDeContrainteSurXiMoins; /* cible[t] + xi_moins >= turbine[t] */
 };
 
 /* Les correspondances des variables */
 struct CORRESPONDANCE_DES_VARIABLES
 {
     std::vector<int> NumeroDeVariableTurbine; /* Turbines */
-    int NumeroDeLaVariableMu{0};              /* Variable de deversement (total sur la periode) */
-    int NumeroDeLaVariableXi{0}; /* Variable decrivant l'ecart max au turbine cible quand le turbine
-                             est inferieur au turbine cible */
+    // int NumeroDeLaVariableMu{0};              /* Variable de deversement (total sur la periode)
+    // */
+    std::vector<int> NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible quand
+                             le turbine est inferieur au turbine cible */
+
+    int NumeroDeLaVariableXiPlus{0};  /* Ecart global positif */
+    int NumeroDeLaVariableXiMoins{0}; /* Ecart global négatif */
 };
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */

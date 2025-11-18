@@ -287,7 +287,7 @@ void MainPanel::refreshFromStudy()
         }
         else
         {
-            pStudyCaption = wxStringFromUTF8(study.header.caption);
+            pStudyCaption = wxStringFromUTF8(study.header.caption) + " (GUI WILL BE DISCONTINUED IN 9.4)";
             mainFrm->title(pStudyCaption);
         }
 
