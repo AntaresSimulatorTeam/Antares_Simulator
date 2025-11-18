@@ -224,7 +224,7 @@ BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_sub,
 
     componentFiller.addVariables(time_scenario_ctx);
     componentFiller.addConstraints(time_scenario_ctx);
-    BOOST_CHECK(linear_pb.getConstraints().size() == 1);
+    BOOST_CHECK_EQUAL(linear_pb.getConstraints().size(), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_master,
@@ -238,6 +238,6 @@ BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_master,
 
     masterFiller.addVariables(time_scenario_ctx);
     masterFiller.addConstraints(time_scenario_ctx);
-    BOOST_CHECK(linear_pb.getConstraints().size() == 1);
+    BOOST_CHECK_EQUAL(linear_pb.getConstraints().size(), 1);
 }
 BOOST_AUTO_TEST_SUITE_END()
