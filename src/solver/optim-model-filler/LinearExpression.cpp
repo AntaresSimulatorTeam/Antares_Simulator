@@ -22,6 +22,7 @@
 #include "antares/solver/optim-model-filler/LinearExpression.h"
 
 #include <algorithm>
+#include <cmath>
 #include <stdexcept>
 
 namespace
