@@ -101,7 +101,7 @@ var NAVTREEINDEX1 =
 "NodesForwardDeclaration_8h_source.html":[9,0,0,2,1,0,0,1,14],
 "OneConstraintFiller_8h_source.html":[9,0,0,10,2,3,0,0,1],
 "OneVarFiller_8h_source.html":[9,0,0,10,2,3,0,0,2],
-"OptimConfig_8h.html#a132dca77c2465f4526050af121879ebb":[7,0,0,14,0,4,4],
+"OptimConfig_8h.html#a132dca77c2465f4526050af121879ebb":[7,0,0,14,0,4,6],
 "OptimConfig_8h_source.html":[9,0,0,3,1,3,0,0,0,0,0,1],
 "OptimEntityContainer_8h_source.html":[9,0,0,6,0,0,0,1],
 "OptimisationsSimulationTable_8h_source.html":[9,0,0,8,7,1,0,0,0,15],

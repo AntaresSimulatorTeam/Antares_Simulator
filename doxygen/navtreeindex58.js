@@ -1,5 +1,15 @@
 var NAVTREEINDEX58 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[8,0,0,19,5,4,131,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#ac46ef302975f5232a7a4892bde6c178f":[8,0,0,19,5,4,131,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[8,0,0,19,5,4,132,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html":[8,0,0,19,5,4,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[8,0,0,19,5,4,3],
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[8,0,0,19,5,43],
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91":[8,0,0,19,5,43,0],
+"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[8,0,0,19,5,47,0],
+"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[8,0,0,19,5,12,0],
+"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[8,0,0,19,5,14,0],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[8,0,0,19,5,32],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[8,0,0,19,5,33],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[8,0,0,19,5,34],
@@ -239,15 +249,5 @@ var NAVTREEINDEX58 =
 "structAntares_1_1Window_1_1Inspector_1_1PClusterUnitCount.html#a47a9dd7aaf691275d3389e030d63fe7e":[8,0,0,25,1,37,0],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html":[8,0,0,25,1,57],
 "structAntares_1_1Window_1_1Inspector_1_1PClusterVariableOMcost.html#a88f50e70afcbd7ff4164a3b17b227109":[8,0,0,25,1,57,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html":[8,0,0,25,1,46],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html#a46298b56335afe5b7ac7378d8060670c":[8,0,0,25,1,46,0],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityPlanned.html":[8,0,0,25,1,45],
-"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityPlanned.html#a258a8917d84fcaba040bcbe02f24a322":[8,0,0,25,1,45,0],
-"structAntares_1_1Window_1_1Inspector_1_1PConstraintComments.html":[8,0,0,25,1,67],
-"structAntares_1_1Window_1_1Inspector_1_1PConstraintComments.html#ae0420ef43f9d6d4a4b88147132adc0dc":[8,0,0,25,1,67,0],
-"structAntares_1_1Window_1_1Inspector_1_1PConstraintEnabled.html":[8,0,0,25,1,68],
-"structAntares_1_1Window_1_1Inspector_1_1PConstraintEnabled.html#aa210e8be4258ea96f717785044e4fafd":[8,0,0,25,1,68,0],
-"structAntares_1_1Window_1_1Inspector_1_1PConstraintName.html":[8,0,0,25,1,66],
-"structAntares_1_1Window_1_1Inspector_1_1PConstraintName.html#abf826f371fda47a171dcb61ee1b4edfc":[8,0,0,25,1,66,0],
-"structAntares_1_1Window_1_1Inspector_1_1PConstraintType.html":[8,0,0,25,1,69]
+"structAntares_1_1Window_1_1Inspector_1_1PClusterVolatilityForced.html":[8,0,0,25,1,46]
 };

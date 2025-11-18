@@ -519,7 +519,9 @@ var annotated_dup =
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser" ]
           ] ],
           [ "YmlOptimConfig", null, [
+            [ "ModelObjectNotFound", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ModelObjectNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ModelObjectNotFound" ],
             [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable" ],
+            [ "Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser" ]
@@ -1455,6 +1457,7 @@ var annotated_dup =
       [ "convert< Antares::IO::Inputs::YmlModel::PortType >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Library >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Variable >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlOptimConfig::Constraint >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Objective >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Model >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Parameter >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter_01_4.html", null ],
@@ -1542,6 +1545,7 @@ var annotated_dup =
     [ "CumulationConstraint", "structCumulationConstraint.html", "structCumulationConstraint" ],
     [ "CustomErrorListener", "classCustomErrorListener.html", null ],
     [ "DataFile", "classDataFile.html", "classDataFile" ],
+    [ "DecompositionFixture", "structDecompositionFixture.html", "structDecompositionFixture" ],
     [ "DefaultScenario", "classDefaultScenario.html", "classDefaultScenario" ],
     [ "DEMAND_FLEX_DOWN_POOL", "structDEMAND__FLEX__DOWN__POOL.html", "structDEMAND__FLEX__DOWN__POOL" ],
     [ "DEMAND_FLEX_UP_POOL", "structDEMAND__FLEX__UP__POOL.html", "structDEMAND__FLEX__UP__POOL" ],
@@ -1657,6 +1661,7 @@ var annotated_dup =
     [ "NbUnitsOutageLessThanNbUnitsStop", "classNbUnitsOutageLessThanNbUnitsStop.html", "classNbUnitsOutageLessThanNbUnitsStop" ],
     [ "NbUnitsOutageLessThanNbUnitsStopData", "structNbUnitsOutageLessThanNbUnitsStopData.html", "structNbUnitsOutageLessThanNbUnitsStopData" ],
     [ "NbUnitsOutageLessThanNbUnitsStopGroup", "classNbUnitsOutageLessThanNbUnitsStopGroup.html", "classNbUnitsOutageLessThanNbUnitsStopGroup" ],
+    [ "NoConstraintCreator", "structNoConstraintCreator.html", null ],
     [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", "structNonCopyableFunctionObject" ],
     [ "NoObjectiveCreator", "structNoObjectiveCreator.html", null ],
     [ "nullMPSwriter", "classnullMPSwriter.html", "classnullMPSwriter" ],
@@ -1768,6 +1773,7 @@ var annotated_dup =
     [ "TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE" ],
     [ "TSDimensions", "structTSDimensions.html", "structTSDimensions" ],
     [ "TSNumbersPredicate", "structTSNumbersPredicate.html", "structTSNumbersPredicate" ],
+    [ "TwoConstraintsCreator_OneSubPb_OneMaster", "structTwoConstraintsCreator__OneSubPb__OneMaster.html", null ],
     [ "TwoObjsCreator_OneSubPb_OneMaster", "structTwoObjsCreator__OneSubPb__OneMaster.html", null ],
     [ "TwoSubPbObjsCreator", "structTwoSubPbObjsCreator.html", null ],
     [ "TwoSubPbVarsCreator", "structTwoSubPbVarsCreator.html", null ],

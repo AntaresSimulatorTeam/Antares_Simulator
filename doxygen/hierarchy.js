@@ -178,6 +178,7 @@ var hierarchy =
     [ "CONSOMMATIONS_ABATTUES", "structCONSOMMATIONS__ABATTUES.html", null ],
     [ "Antares::Solver::ConstantDataFromAntares", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html", null ],
+    [ "Antares::IO::Inputs::YmlOptimConfig::Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Constraint", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint.html", null ],
     [ "TestingSimulationObserver::Constraint", "structTestingSimulationObserver_1_1Constraint.html", null ],
     [ "ConstraintBuilder", "classConstraintBuilder.html", null ],
@@ -255,6 +256,7 @@ var hierarchy =
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::PortType >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::ValueType >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1ValueType_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlModel::Variable >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable_01_4.html", null ],
+    [ "YAML::convert< Antares::IO::Inputs::YmlOptimConfig::Constraint >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlOptimConfig::Model >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlOptimConfig::Objective >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlOptimConfig::Variable >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable_01_4.html", null ],
@@ -323,6 +325,7 @@ var hierarchy =
     [ "Antares::Toolbox::Filter::Operator::DataType", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html", null ],
     [ "Antares::Date::DayInterval", "structAntares_1_1Date_1_1DayInterval.html", null ],
     [ "Antares::DebugData", "structAntares_1_1DebugData.html", null ],
+    [ "DecompositionFixture", "structDecompositionFixture.html", null ],
     [ "Yuni::Default", null, [
       [ "Antares::Solver::Variable::IVariable< Join< LeftT, RightT >, Yuni::Default, VCardJoin >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
@@ -556,7 +559,7 @@ var hierarchy =
     [ "ExpressionToNodeConvertorEmptyModel", "classExpressionToNodeConvertorEmptyModel.html", null ],
     [ "Antares::IO::Inputs::YmlModel::ExtraOutput", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput.html", null ],
     [ "Antares::ModelerStudy::SystemModel::ExtraOutput", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ExtraOutput.html", null ],
-    [ "FactoryFixture< VariablesCreator, ObjectivesCreator >", "classFactoryFixture.html", null ],
+    [ "FactoryFixture< VariablesCreator, ObjectivesCreator, ConstraintsCreators >", "classFactoryFixture.html", null ],
     [ "fake_buffer_factory< T, ReadWriteT >", "classfake__buffer__factory.html", null ],
     [ "Antares::UnitTests::fakeLogger", "classAntares_1_1UnitTests_1_1fakeLogger.html", null ],
     [ "std::false_type", null, [
@@ -1244,6 +1247,7 @@ var hierarchy =
       [ "Antares::Solver::Variable::R::AllYears::Raw< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html", null ]
     ] ],
     [ "Antares::Component::Datagrid::Renderer::NoCheck", "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NoCheck.html", null ],
+    [ "NoConstraintCreator", "structNoConstraintCreator.html", null ],
     [ "Antares::Graph::Node< NodeT >", "classAntares_1_1Graph_1_1Node.html", null ],
     [ "Antares::Expressions::NodeRegistry", "classAntares_1_1Expressions_1_1NodeRegistry.html", null ],
     [ "Antares::Expressions::Visitors::NodeVisitsProvider< R, Args >", "structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html", null ],
@@ -1580,6 +1584,7 @@ var hierarchy =
       [ "Antares::IO::Inputs::SystemConverter::ErrorWhileSplittingLibraryAndModel", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::LibraryNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1LibraryNotFound.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", null ],
+      [ "Antares::IO::Inputs::YmlOptimConfig::ModelObjectNotFound", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ModelObjectNotFound.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
       [ "Antares::Solver::LoadFiles::ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", null ],
       [ "Antares::Solver::Modeler::ModelerError", "classAntares_1_1Solver_1_1Modeler_1_1ModelerError.html", null ],
@@ -1950,6 +1955,7 @@ var hierarchy =
     ] ],
     [ "TSDimensions", "structTSDimensions.html", null ],
     [ "TSNumbersPredicate", "structTSNumbersPredicate.html", null ],
+    [ "TwoConstraintsCreator_OneSubPb_OneMaster", "structTwoConstraintsCreator__OneSubPb__OneMaster.html", null ],
     [ "TwoObjsCreator_OneSubPb_OneMaster", "structTwoObjsCreator__OneSubPb__OneMaster.html", null ],
     [ "TwoSubPbObjsCreator", "structTwoSubPbObjsCreator.html", null ],
     [ "TwoSubPbVarsCreator", "structTwoSubPbVarsCreator.html", null ],

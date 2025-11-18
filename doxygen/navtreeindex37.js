@@ -1,5 +1,9 @@
 var NAVTREEINDEX37 =
 {
+"classAntares_1_1Window_1_1Options_1_1MCPlaylist.html#ae4bfade1079a3d537592d1e7ed821320a0806edadcca4dda18ed777592cbf07d8":[8,0,0,25,2,7,0,0],
+"classAntares_1_1Window_1_1Options_1_1Optimization.html":[8,0,0,25,2,6],
+"classAntares_1_1Window_1_1Options_1_1Optimization.html#a0021998f0a5f879e2f834b0ae4344738":[8,0,0,25,2,6,1],
+"classAntares_1_1Window_1_1Options_1_1Optimization.html#a2bffe1a86c5b7f855d81c9b05c6663b3":[8,0,0,25,2,6,0],
 "classAntares_1_1Window_1_1Options_1_1SelectOutput.html":[8,0,0,25,2,8],
 "classAntares_1_1Window_1_1Options_1_1SelectOutput.html#a188e17730e8a5656c9a8a8701da118d3":[8,0,0,25,2,8,7],
 "classAntares_1_1Window_1_1Options_1_1SelectOutput.html#a23de18cbdd007a0f84c1e4de4adc10d6":[8,0,0,25,2,8,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX37 =
 "classAntares_1_1Window_1_1menuLinkButton.html":[8,0,0,25,35],
 "classAntares_1_1Window_1_1menuLinkButton.html#a14ede41add0565c87bff74605e03549a":[8,0,0,25,35,4],
 "classAntares_1_1Window_1_1menuLinkButton.html#a239d7b311e5ec541d0f1d945528e117b":[8,0,0,25,35,1],
-"classAntares_1_1Window_1_1menuLinkButton.html#a24f71db11ba689c6e5eb259ccd842bb1":[8,0,0,25,35,2],
-"classAntares_1_1Window_1_1menuLinkButton.html#a2dfc1cfdd251c860d22dee7b5e30b24e":[8,0,0,25,35,0],
-"classAntares_1_1Window_1_1menuLinkButton.html#a494155c771c2ebce9c0a5d56b0550194":[8,0,0,25,35,5],
-"classAntares_1_1Window_1_1menuLinkButton.html#a5111572b74628162ea2a73be6041c4bd":[8,0,0,25,35,8],
-"classAntares_1_1Window_1_1menuLinkButton.html#a5e871743dab8cb2e9a5a148bd40ca1ec":[8,0,0,25,35,3]
+"classAntares_1_1Window_1_1menuLinkButton.html#a24f71db11ba689c6e5eb259ccd842bb1":[8,0,0,25,35,2]
 };

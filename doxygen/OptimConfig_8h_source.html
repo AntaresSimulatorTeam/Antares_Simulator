@@ -163,26 +163,33 @@ $(document).ready(function(){initNavTree('OptimConfig_8h_source.html',''); initR
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    std::string location;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html">   37</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html">Objective</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html">   37</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html">Constraint</a></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::string id;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::string location;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html">   43</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html">Model</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html">   43</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html">Objective</a></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    std::string id;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::vector&lt;Variable&gt; variables;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    std::string location;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::vector&lt;Objective&gt; objectives;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">using</span> OptimConfig = std::vector&lt;Model&gt;;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;} <span class="comment">// namespace Antares::IO::Inputs::YmlOptimConfig</span></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html">Antares::IO::Inputs::YmlOptimConfig::Model</a></div><div class="ttdef"><b>Definition:</b> OptimConfig.h:44</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html">Antares::IO::Inputs::YmlOptimConfig::Objective</a></div><div class="ttdef"><b>Definition:</b> OptimConfig.h:38</div></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html">   49</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html">Model</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::string id;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::vector&lt;Variable&gt; variables;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::vector&lt;Constraint&gt; constraints;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::vector&lt;Objective&gt; objectives;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">using</span> OptimConfig = std::vector&lt;Model&gt;;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;} <span class="comment">// namespace Antares::IO::Inputs::YmlOptimConfig</span></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html">Antares::IO::Inputs::YmlOptimConfig::Constraint</a></div><div class="ttdef"><b>Definition:</b> OptimConfig.h:38</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html">Antares::IO::Inputs::YmlOptimConfig::Model</a></div><div class="ttdef"><b>Definition:</b> OptimConfig.h:50</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html">Antares::IO::Inputs::YmlOptimConfig::Objective</a></div><div class="ttdef"><b>Definition:</b> OptimConfig.h:44</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html">Antares::IO::Inputs::YmlOptimConfig::Variable</a></div><div class="ttdef"><b>Definition:</b> OptimConfig.h:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
