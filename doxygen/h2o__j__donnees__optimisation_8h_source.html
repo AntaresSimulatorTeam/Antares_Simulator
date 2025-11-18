@@ -226,39 +226,46 @@ $(document).ready(function(){initNavTree('h2o__j__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">/* Les correspondances fixes des contraintes */</span></div>
 <div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html">   98</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html">CORRESPONDANCE_DES_CONTRAINTES</a></div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;{</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">int</span> NumeroDeContrainteDEnergieMensuelle{0};</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteSurXi;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;};</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">/* Les correspondances des variables */</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">  105</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">CORRESPONDANCE_DES_VARIABLES</a></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;{</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    std::vector&lt;int&gt; NumeroDeVariableTurbine; <span class="comment">/* Turbines */</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">int</span> NumeroDeLaVariableMu{0};              <span class="comment">/* Variable de deversement (total sur la periode) */</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">int</span> NumeroDeLaVariableXi{0}; <span class="comment">/* Variable decrivant l&#39;ecart max au turbine cible quand le turbine</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">                             est inferieur au turbine cible */</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;};</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">/* Structure uniquement exploitee par l&#39;optimisation (donc a ne pas acceder depuis l&#39;exterieur) */</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">  114</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;{</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">int</span> NombreDeProblemes{0};</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    std::vector&lt;int&gt; NbJoursDUnProbleme;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    std::vector&lt;CORRESPONDANCE_DES_VARIABLES&gt; CorrespondanceDesVariables;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    std::vector&lt;CORRESPONDANCE_DES_CONTRAINTES&gt; CorrespondanceDesContraintes;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    std::vector&lt;PROBLEME_LINEAIRE_PARTIE_FIXE&gt; ProblemeLineairePartieFixe;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    std::vector&lt;PROBLEME_LINEAIRE_PARTIE_VARIABLE&gt; ProblemeLineairePartieVariable;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="comment">/* Il y en a 1 par reservoir. Un probleme couvre 1 mois */</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    std::vector&lt;PROBLEME_SPX_WRAPPER&gt; ProblemeSpx;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;};</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;} <span class="comment">// namespace DoneesOptimisationJournaliere</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">int</span> NumeroDeContrainteDEnergieMensuelle{0};    <span class="comment">/* Somme des turbines = somme des cibles */</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteSurXi;      <span class="comment">/* turbine[t] + xi[t] &gt;= cible[t] */</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteSurXiSym;   <span class="comment">/* cible[t] + xi[t] &gt;= turbine[t] */</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteSurXiPlus;  <span class="comment">/* turbine[t] + xi_plus &gt;= cible[t] */</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteSurXiMoins; <span class="comment">/* cible[t] + xi_moins &gt;= turbine[t] */</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;};</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">/* Les correspondances des variables */</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">  108</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">CORRESPONDANCE_DES_VARIABLES</a></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;{</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    std::vector&lt;int&gt; NumeroDeVariableTurbine; <span class="comment">/* Turbines */</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="comment">// int NumeroDeLaVariableMu{0};              /* Variable de deversement (total sur la periode)</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">// */</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    std::vector&lt;int&gt; NumeroDeLaVariableXi; <span class="comment">/* Variable decrivant l&#39;ecart max au turbine cible quand</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">                             le turbine est inferieur au turbine cible */</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">int</span> NumeroDeLaVariableXiPlus{0};  <span class="comment">/* Ecart global positif */</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">int</span> NumeroDeLaVariableXiMoins{0}; <span class="comment">/* Ecart global négatif */</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;};</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">/* Structure uniquement exploitee par l&#39;optimisation (donc a ne pas acceder depuis l&#39;exterieur) */</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">  121</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;{</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">int</span> NombreDeProblemes{0};</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    std::vector&lt;int&gt; NbJoursDUnProbleme;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    std::vector&lt;CORRESPONDANCE_DES_VARIABLES&gt; CorrespondanceDesVariables;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    std::vector&lt;CORRESPONDANCE_DES_CONTRAINTES&gt; CorrespondanceDesContraintes;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    std::vector&lt;PROBLEME_LINEAIRE_PARTIE_FIXE&gt; ProblemeLineairePartieFixe;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    std::vector&lt;PROBLEME_LINEAIRE_PARTIE_VARIABLE&gt; ProblemeLineairePartieVariable;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="comment">/* Il y en a 1 par reservoir. Un probleme couvre 1 mois */</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    std::vector&lt;PROBLEME_SPX_WRAPPER&gt; ProblemeSpx;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;};</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;} <span class="comment">// namespace DoneesOptimisationJournaliere</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html">DoneesOptimisationJournaliere::CORRESPONDANCE_DES_CONTRAINTES</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:99</div></div>
-<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">DoneesOptimisationJournaliere::CORRESPONDANCE_DES_VARIABLES</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:106</div></div>
-<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">DoneesOptimisationJournaliere::PROBLEME_HYDRAULIQUE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:115</div></div>
+<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">DoneesOptimisationJournaliere::CORRESPONDANCE_DES_VARIABLES</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:109</div></div>
+<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">DoneesOptimisationJournaliere::PROBLEME_HYDRAULIQUE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:122</div></div>
 <div class="ttc" id="astructDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">DoneesOptimisationJournaliere::PROBLEME_LINEAIRE_PARTIE_FIXE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:40</div></div>
 <div class="ttc" id="astructDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">DoneesOptimisationJournaliere::PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:63</div></div>
 </div><!-- fragment --></div><!-- contents -->
