@@ -412,19 +412,6 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
-namespace
-{
-/*
- * Given objective ax + b, x being a time dependent variable and b a parameter. b is the offset.
- * Problems are a_1*x_1+b + a_2*x_2+b + ... + a_n*x_n+b
- * => offset = n*b
- */
-double updateOffset(double initialValue, double offset)
-{
-    return initialValue + offset;
-}
-} // namespace
-
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
     auto* model = component_.getModel();
@@ -445,12 +432,11 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
         double objectiveOffset = 0.0;
         for (const auto& expr: linearExpression)
         {
-            for (const auto& [index, value]: expr)
+            for (const auto& [index, coef]: expr)
             {
-                pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
-                                           value);
+                pb.setObjectiveCoefficient(solverVariables[index].get(), coef);
             }
-            objectiveOffset = updateOffset(objectiveOffset, expr.constant());
+            objectiveOffset += expr.constant();
         }
         pb.setObjectiveOffset(objectiveOffset);
     }
