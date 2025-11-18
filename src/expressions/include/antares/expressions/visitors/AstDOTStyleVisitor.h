@@ -140,7 +140,6 @@ private:
 
     void makeLegend(std::ostream& os);
 
-
     /**
      * @brief Emits a node to the output stream.
      *
