@@ -424,12 +424,12 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
       { return AreLocationsCompatible(objective.location(), targetLocation_); });
 
     auto& pb = optimEntityContainer_.Problem();
+    double objectiveOffset = 0.0;
     for (const auto& objective: model->Objectives() | locationFilter)
     {
         const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());
 
-        double objectiveOffset = 0.0;
         for (const auto& expr: linearExpression)
         {
             for (const auto& [index, coef]: expr)
