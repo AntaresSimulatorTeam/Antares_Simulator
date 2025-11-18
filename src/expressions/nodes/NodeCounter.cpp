@@ -20,10 +20,16 @@
 */
 #include "antares/expressions/nodes/NodeCounter.h"
 
+#include <stdexcept>
+
 namespace Antares::Expressions::Nodes
 {
 unsigned int NodeCounter::getNodeID(const Nodes::Node* node)
 {
+    if (!node)
+    {
+        throw std::invalid_argument("cannot get node id from nullptr");
+    }
     if (nodeIds_.find(node) == nodeIds_.end())
     {
         nodeIds_[node] = ++nodeCount_;
@@ -53,6 +59,7 @@ bool NodeCounter::contains(const std::string& nodeName) const
 
 void NodeCounter::computeNumberNodesPerType()
 {
+    nbNodesPerType_.clear();
     for (const auto& [node, _]: nodeIds_)
     {
         ++nbNodesPerType_[node->name()];

@@ -55,6 +55,8 @@ public:
         return nodeCount_;
     }
 
+    bool contains(const std::string& nodeName) const;
+
 private:
     /**
      * @brief A map of nodes to their unique IDs.
@@ -77,6 +79,5 @@ private:
      */
     unsigned int nodeCount_ = 0;
 
-    bool contains(const std::string& nodeName) const;
 };
 } // namespace Antares::Expressions::Nodes
