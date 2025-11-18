@@ -17,10 +17,10 @@ using namespace Antares::Solver::Simulation;
 
 struct HydroStorageData
 {
-    HydroStorageData(size_t size) :
-    hydroGen(size, 0.),
-    levels(size, 0.),
-    inflows(size, 0.)
+    HydroStorageData(size_t size):
+        hydroGen(size, 0.),
+        levels(size, 0.),
+        inflows(size, 0.)
     {
     }
 
@@ -553,7 +553,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
 BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture<5>)
 {
     // 3 hydro units, same time horizon
-    s1.hydroGen = {10., 20., 10., 20., 10.};    // Total = 70. Mean = 14.
+    s1.hydroGen = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
     s2.hydroGen = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
     s3.hydroGen = {100., 200., 100., 200., 100.}; // Total = 700. Mean = 140.
     // Initial HydroSum = {120., 240., 120., 240., 120.}
@@ -562,7 +562,7 @@ BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture<5>)
     // *** NEW CONSTRAINTS ***
     // 1. Set s1.inflows to match the mean generation for each reservoir
     // This means if generation is flat, s1.levels are flat.
-    std::ranges::fill(s1.inflows, 14.);   // Mean of HydroGen
+    std::ranges::fill(s1.inflows, 14.);  // Mean of HydroGen
     std::ranges::fill(s2.inflows, 14.);  // Mean of HydroGen2
     std::ranges::fill(s3.inflows, 140.); // Mean of HydroGen3
 
