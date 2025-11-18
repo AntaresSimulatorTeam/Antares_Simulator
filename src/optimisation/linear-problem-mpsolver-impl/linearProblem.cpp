@@ -45,6 +45,7 @@ void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& pat
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
     mpSolver_ = MPSolverFactory(isMip, solverName);
+    solverName_ = solverName;
     objective_ = mpSolver_->MutableObjective();
     isLP_ = !isMip; // we don't care about pure integer prob
 }
@@ -185,11 +186,26 @@ double OrtoolsLinearProblem::getObjectiveCoefficient(
 
 void OrtoolsLinearProblem::setObjectiveOffset(double offset)
 {
-    objective_->SetOffset(offset);
+    /**
+     * SetOffset is not implemented in Sirius solver of ortools
+     *
+     **/
+    if (solverName_ == "sirius")
+    {
+        objectiveOffset_ = offset;
+    }
+    else
+    {
+        objective_->SetOffset(offset);
+    }
 }
 
 double OrtoolsLinearProblem::getObjectiveOffset() const
 {
+    if (solverName_ == "Sirius")
+    {
+        return objectiveOffset_;
+    }
     return objective_->offset();
 }
 
