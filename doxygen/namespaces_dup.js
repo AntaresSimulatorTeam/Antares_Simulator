@@ -2772,23 +2772,37 @@ var namespaces_dup =
       [ "skip_study", "look__for__studies_8py.html#a8fab7a88147d6a934d8b18955945f4f7", null ]
     ] ],
     [ "modeler_output_handler", null, [
-      [ "modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", "classmodeler__output__handler_1_1modeler__output__handler" ]
+      [ "invest_problems", "classmodeler__output__handler_1_1invest__problems.html", "classmodeler__output__handler_1_1invest__problems" ],
+      [ "modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", "classmodeler__output__handler_1_1modeler__output__handler" ],
+      [ "read_if_exists", "modeler__output__handler_8py.html#ae1c7529bb5c840c71052b0aa8e61921a", null ]
     ] ],
     [ "modeler_steps", null, [
       [ "build_antares_modeler_command", "modeler__steps_8py.html#a41ab8fa06f009156a60e170d983cb11e", null ],
+      [ "check_master_variables", "modeler__steps_8py.html#aa1f528fb6b4a05599be6b74ab77ba255", null ],
+      [ "check_structure", "modeler__steps_8py.html#a3f7c47f78cc7a017dbfccde4dbe427bd", null ],
+      [ "check_subproblem_variables", "modeler__steps_8py.html#aefd22498d025d6b84243866779ebb346", null ],
+      [ "check_variables", "modeler__steps_8py.html#a6a3ea5a0be821f5ba22fb765c5a4ea5f", null ],
       [ "get_value", "modeler__steps_8py.html#a109b1ad3dda0bf646d91b54fd231db86", null ],
       [ "modeler_obj_value", "modeler__steps_8py.html#af5e8a8caff7e09da270cd93877f5bbaa", null ],
       [ "modeler_obj_value", "modeler__steps_8py.html#a68ec571e892067af4f648b84600afd3a", null ],
       [ "modeler_output_values", "modeler__steps_8py.html#a46e51627eea404e8093f8f07addcc312", null ],
       [ "modeler_study_path_is", "modeler__steps_8py.html#a4b60789db78871ca85f1563bc7f0070b", null ],
-      [ "parse_output_folder_from_logs", "modeler__steps_8py.html#a62f8e382bb0f7b3ec9933dd1593b18c7", null ],
+      [ "parse_output_folder_from_logs", "modeler__steps_8py.html#aa20861b4b7d40db3245b78f9a82c75dc", null ],
       [ "parse_simulation_table_from_logs", "modeler__steps_8py.html#a4f06003109779a9894c3d22799a73f0a", null ],
+      [ "parse_structure", "modeler__steps_8py.html#a0815c3fcfca57b7fa239710b481bf026", null ],
       [ "read_int_range", "modeler__steps_8py.html#a76a36c51e375a6a7aa0f6ed0b352b904", null ],
       [ "run_antares_modeler", "modeler__steps_8py.html#a46943a258f11896089708a54ac5b0df2", null ],
       [ "run_modeler", "modeler__steps_8py.html#a9d99e3e1985a65e970317fcf0a7d30b2", null ]
     ] ],
     [ "modified_inode", null, [
       [ "UserData", "classmodified__inode_1_1UserData.html", "classmodified__inode_1_1UserData" ]
+    ] ],
+    [ "mps_utils", null, [
+      [ "extract_variables", "mps__utils_8py.html#afe5b3b74e45a7e1fc32ba6e781e5dd13", null ],
+      [ "get_constraint_bounds", "mps__utils_8py.html#a3f7d0a1908874a68cebdc0ccfc1d929f", null ],
+      [ "get_constraint_matrix", "mps__utils_8py.html#a97f4c2a5289656f432f5d11592fa282b", null ],
+      [ "get_objective_coeffs", "mps__utils_8py.html#a49c1b5c25ce891812129fdb23caee006", null ],
+      [ "load_problem", "mps__utils_8py.html#a4f7dd88ab7c03ba510f8d1fa9c9c872b", null ]
     ] ],
     [ "OperatingSystem", null, [
       [ "FindAntaresLocalAppData", "appdata_8h.html#af4149dcd70b39c611b24064d32cfa6ac", null ],

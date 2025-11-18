@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: modeler_output_handler.modeler_output_handler Class Reference</title>
+<title>Antares Simulator: modeler_output_handler.invest_problems Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classmodeler__output__handler_1_1modeler__output__handler.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classmodeler__output__handler_1_1invest__problems.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -126,32 +126,29 @@ $(document).ready(function(){initNavTree('classmodeler__output__handler_1_1model
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="classmodeler__output__handler_1_1modeler__output__handler-members.html">List of all members</a>  </div>
+<a href="classmodeler__output__handler_1_1invest__problems-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">modeler_output_handler.modeler_output_handler Class Reference</div>  </div>
+<div class="title">modeler_output_handler.invest_problems Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a985a70001fe921e0320a8d7e886d3e93"><td class="memItemLeft" align="right" valign="top"><a id="a985a70001fe921e0320a8d7e886d3e93"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, simulation_table_location, output_location=None)</td></tr>
-<tr class="separator:a985a70001fe921e0320a8d7e886d3e93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a065f28347f2e68a520968a1114d803c0"><td class="memItemLeft" align="right" valign="top"><a id="a065f28347f2e68a520968a1114d803c0"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>get_simulation_table_entry</b> (self, str component, str output, int block, int timestep, int scenario)</td></tr>
-<tr class="separator:a065f28347f2e68a520968a1114d803c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43e3e72a925504936495e04da3f29c3e"><td class="memItemLeft" align="right" valign="top"><a id="a43e3e72a925504936495e04da3f29c3e"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>get_objective_value</b> (self)</td></tr>
-<tr class="separator:a43e3e72a925504936495e04da3f29c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68827debe331af3af18372c0da7d942f"><td class="memItemLeft" align="right" valign="top"><a id="a68827debe331af3af18372c0da7d942f"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, master, subproblem, structure)</td></tr>
+<tr class="separator:a68827debe331af3af18372c0da7d942f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:af59107f79284eea116bc5f9e22018912"><td class="memItemLeft" align="right" valign="top"><a id="af59107f79284eea116bc5f9e22018912"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>simulation_table</b></td></tr>
-<tr class="separator:af59107f79284eea116bc5f9e22018912"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa21692c4d0e9a68d64eb2d03abe8fd0f"><td class="memItemLeft" align="right" valign="top"><a id="aa21692c4d0e9a68d64eb2d03abe8fd0f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>problems</b></td></tr>
-<tr class="separator:aa21692c4d0e9a68d64eb2d03abe8fd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45eb871ed6f59b9d7cb6fb5ecf000b16"><td class="memItemLeft" align="right" valign="top"><a id="a45eb871ed6f59b9d7cb6fb5ecf000b16"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>master</b></td></tr>
+<tr class="separator:a45eb871ed6f59b9d7cb6fb5ecf000b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefab5a9cba1ab05b0d33be6cfa457f42"><td class="memItemLeft" align="right" valign="top"><a id="aefab5a9cba1ab05b0d33be6cfa457f42"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>subproblem</b></td></tr>
+<tr class="separator:aefab5a9cba1ab05b0d33be6cfa457f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7af30b47415921c1113a7718c8423f6"><td class="memItemLeft" align="right" valign="top"><a id="ac7af30b47415921c1113a7718c8423f6"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>structure</b></td></tr>
+<tr class="separator:ac7af30b47415921c1113a7718c8423f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/tests/cucumber/features/steps/common_steps/modeler_output_handler.py</li>
@@ -161,7 +158,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>modeler_output_handler</b></li><li class="navelem"><a class="el" href="classmodeler__output__handler_1_1modeler__output__handler.html">modeler_output_handler</a></li>
+    <li class="navelem"><b>modeler_output_handler</b></li><li class="navelem"><a class="el" href="classmodeler__output__handler_1_1invest__problems.html">invest_problems</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
