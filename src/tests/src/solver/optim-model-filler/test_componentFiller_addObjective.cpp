@@ -331,4 +331,42 @@ BOOST_AUTO_TEST_CASE(var_and_param_both_varying_in_time_and_scenario_with_differ
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 18);
 }
 
+BOOST_AUTO_TEST_CASE(two_expressions_one_with_time_varying_param_one_with_constant_offset)
+{
+    // Expression 1: x + param(t), param = [1, 2, 3]
+    // Expression 2: x + 20
+    // Expected offset over 3 time steps: (1+2+3) + (20+20+20) = 6 + 60 = 66
+    auto expr1 = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY),
+                     parameter("param", TimeIndex::VARYING_IN_TIME_ONLY));
+    auto expr2 = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(20));
+    auto objective = add(expr1, expr2);
+
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"param", TimeDependent::YES, ScenarioDependent::NO}},
+      {{"x", ValueType::FLOAT, literal(-5), literal(100), true, false}},
+      {},
+      objective);
+    createComponent("model",
+                    "componentA",
+                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIE)});
+
+    FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
+
+    // Time series for parameter: [1, 2, 3]
+    auto param_time_series = std::make_unique<TimeSeriesSet>("param_ts", 3);
+    param_time_series->add({1., 2., 3.});
+
+    LinearProblemData data;
+    data.addDataSeries(std::move(param_time_series));
+
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    buildLinearProblem(ctx, data, scenarios);
+
+    // Expression 1 offset: 1 + 2 + 3 = 6
+    // Expression 2 offset: 20 + 20 + 20 = 60
+    // Total offset: 6 + 60 = 66
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 66);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
