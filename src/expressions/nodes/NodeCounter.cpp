@@ -20,6 +20,7 @@
 */
 #include "antares/expressions/nodes/NodeCounter.h"
 
+#include <ranges>
 #include <stdexcept>
 
 namespace Antares::Expressions::Nodes
