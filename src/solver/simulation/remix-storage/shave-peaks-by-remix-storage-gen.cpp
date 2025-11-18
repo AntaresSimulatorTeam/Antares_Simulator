@@ -16,7 +16,7 @@ namespace Antares::Solver::Simulation
 
 void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream* stream)
 {
-    for (auto& storage : storagesForRemix)
+    for (auto& storage: storagesForRemix)
     {
         unsigned hour = 0;
         for (auto& withdrawal: storage->withdrawal())
