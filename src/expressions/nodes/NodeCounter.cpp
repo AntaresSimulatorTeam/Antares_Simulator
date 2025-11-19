@@ -84,8 +84,9 @@ void NodeCounter::computeNumberNodesPerType()
             nbNodesPerType_.try_emplace(node->name(),
                                         NodeInfo{.count = 1,
                                                  .type = std::type_index(typeid(node))});
+            continue;
         }
-        ++it->second.count;
+        ++(it->second.count);
     }
 }
 
