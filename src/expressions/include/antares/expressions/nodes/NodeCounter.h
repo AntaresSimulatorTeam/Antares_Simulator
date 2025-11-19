@@ -20,18 +20,28 @@
 */
 #pragma once
 #include <map>
+#include <memory>
+#include <typeindex>
+#include <unordered_set>
 
 #include "Node.h"
 
 namespace Antares::Expressions::Nodes
 {
+struct NodeInfo
+{
+    unsigned int count;
+    std::type_index type;
+};
 
 class NodeCounter
 {
 public:
     NodeCounter() = default;
+    NodeCounter(const std::vector<std::unique_ptr<Nodes::Node>>& nodes);
     void computeNumberNodesPerType();
 
+    void insertNode(const Nodes::Node* node);
     /**
      * @brief Retrieves a unique ID for a given node.
      *
@@ -45,7 +55,7 @@ public:
     void reset();
     bool empty() const;
 
-    const std::map<std::string, unsigned int>& nbNodesPerType() const
+    const std::map<std::string, NodeInfo>& nbNodesPerType() const
     {
         return nbNodesPerType_;
     }
@@ -56,6 +66,19 @@ public:
     }
 
     bool contains(const std::string& nodeName) const;
+
+    template<typename NodeType>
+    bool contains() const
+    {
+        return std::ranges::find_if(nbNodesPerType_,
+                                    [&](const std::pair<std::string, NodeInfo>& nodeInfos)
+                                    {
+                                        return nodeInfos.second.type
+                                                 == std::type_index(typeid(NodeType))
+                                               && nodeInfos.second.count != 0;
+                                    })
+               != nbNodesPerType_.end();
+    }
 
 private:
     /**
@@ -70,8 +93,8 @@ private:
      *
      * This map is used to keep track of assigned IDs for each node in the AST.
      */
-    std::map<std::string, unsigned int> nbNodesPerType_;
 
+    std::map<std::string, NodeInfo> nbNodesPerType_;
     /**
      * @brief Counter for generating unique node IDs.
      *

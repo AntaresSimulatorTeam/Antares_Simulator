@@ -24,6 +24,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
+#include "antares/expressions/nodes/NodeCounter.h"
 #include "antares/expressions/nodes/TimeSumNode.h"
 
 #include "ExprLexer.h"
@@ -38,7 +39,9 @@ using namespace Antares::Expressions::Nodes;
 class ConvertorVisitor final: public ExprVisitor
 {
 public:
-    ConvertorVisitor(Expressions::Registry<Node>& registry, const YmlModel::Model& model);
+    ConvertorVisitor(Expressions::Registry<Node>& registry,
+                     const YmlModel::Model& model,
+                     const ForbiddenNodes& forbiddenNodes);
 
     std::any visit(antlr4::tree::ParseTree* tree) override;
 
@@ -82,6 +85,8 @@ public:
 private:
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
+    const ForbiddenNodes& forbiddenNodes_;
+    // NodeCounter nodeCounter_;
 
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
@@ -98,7 +103,8 @@ NoPortWithThisId::NoPortWithThisId(const std::string& name):
 }
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model)
+                                                  const YmlModel::Model& model,
+                                                  const ForbiddenNodes& forbiddenNodes)
 {
     if (exprStr.empty())
     {
@@ -111,15 +117,17 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
 
     ExprParser::ExprContext* tree = parser.expr();
     Expressions::Registry<Node> registry;
-    ConvertorVisitor visitor(registry, model);
+    ConvertorVisitor visitor(registry, model, forbiddenNodes);
     auto root = std::any_cast<Node*>(visitor.visit(tree));
     return Expressions::NodeRegistry(root, std::move(registry));
 }
 
 ConvertorVisitor::ConvertorVisitor(Expressions::Registry<Node>& registry,
-                                   const YmlModel::Model& model):
+                                   const YmlModel::Model& model,
+                                   const ForbiddenNodes& forbiddenNodes):
     registry_(registry),
-    model_(model)
+    model_(model),
+    forbiddenNodes_(forbiddenNodes)
 {
 }
 

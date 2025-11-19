@@ -35,6 +35,8 @@
 // it collides with a #include <windows.h> somewhere in Yuni
 // clang-format off
 #include <unit_test_utils.h>
+
+#include "antares/io/inputs/model-converter/ForbiddenNodes.h"
 // clang-format on
 
 using namespace Antares::Expressions;
@@ -50,10 +52,12 @@ public:
 
     // Empty model
     ExpressionToNodeConvertorEmptyModel() = default;
+    // TODO update this rules
+    ModelConverter::ForbiddenNodes dummy = ModelConverter::ForbiddenNodes();
 
     NodeRegistry run(const std::string& input)
     {
-        return ModelConverter::convertExpressionToNode(input, model_);
+        return ModelConverter::convertExpressionToNode(input, model_, dummy);
     }
 
 private:
@@ -130,7 +134,9 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
-    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
+    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression,
+                                                                  model,
+                                                                  ModelConverter::ForbiddenNodes()),
                           std::runtime_error,
                           expectedMessage);
 }

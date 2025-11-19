@@ -22,8 +22,9 @@
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
 #include <antares/expressions/iterators/pre-order.h>
-#include <antares/expressions/nodes/PortFieldNode.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/expressions/expression.h"
+#include "antares/io/inputs/model-converter/ForbiddenNodes.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -31,6 +32,7 @@
 #include "antares/study/system-model/port.h"
 #include "antares/study/system-model/portType.h"
 #include "antares/study/system-model/variable.h"
+using namespace Antares::Expressions::Nodes;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
@@ -149,6 +151,8 @@ ModelerStudy::SystemModel::ValueType convertType(IO::Inputs::YmlModel::ValueType
     }
 }
 
+static ForbiddenNodes nothingIsForbidden;
+
 /**
  * \brief Converts variables from YmlModel::Model to SystemModel::Variable.
  *
@@ -164,9 +168,9 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
     for (const auto& variable: model.variables)
     {
         SM::Expression lb(variable.lower_bound,
-                          convertExpressionToNode(variable.lower_bound, model));
+                          convertExpressionToNode(variable.lower_bound, model, nothingIsForbidden));
         SM::Expression ub(variable.upper_bound,
-                          convertExpressionToNode(variable.upper_bound, model));
+                          convertExpressionToNode(variable.upper_bound, model, nothingIsForbidden));
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
@@ -237,7 +241,9 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
             throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
         }
 
-        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
+        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition,
+                                                    model,
+                                                    nothingIsForbidden);
 
         using namespace Antares::Expressions::Nodes;
         AST preorder(nodeRegistry.node);
@@ -258,12 +264,29 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
     }
     return portFieldDefinitions;
 }
+static ForbiddenNodes makeForbiddenInConstraintAndObjective()
+{
+    ForbiddenNodes forbidden;
+
+    // constraint and objective should not contain dual or reduced_cost
+    forbidden.addForbiddenTypes<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
+    // max and min should not contain VariableNode, PortFieldNode and PortFieldSumNode
+    forbidden.addForbiddenTypeFor<FunctionNodeType::max, VariableNode>();
+    forbidden.addForbiddenTypeFor<FunctionNodeType::min, VariableNode>();
+    forbidden.addForbiddenTypeFor<FunctionNodeType::max, PortFieldNode>();
+    forbidden.addForbiddenTypeFor<FunctionNodeType::min, PortFieldNode>();
+    forbidden.addForbiddenTypeFor<FunctionNodeType::max, PortFieldSumNode>();
+    forbidden.addForbiddenTypeFor<FunctionNodeType::min, PortFieldSumNode>();
+    return forbidden;
+}
 
 static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constraint>& constraints,
                                 const IO::Inputs::YmlModel::Constraint& constraint,
                                 const IO::Inputs::YmlModel::Model& model)
 {
-    auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
+    auto nodeRegistry = convertExpressionToNode(constraint.expression,
+                                                model,
+                                                makeForbiddenInConstraintAndObjective());
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
                                                                    std::move(nodeRegistry)});
@@ -307,7 +330,9 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
 
     for (const auto& extraOutput: model.extra_outputs)
     {
-        auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
+        auto nodeRegistry = convertExpressionToNode(extraOutput.expression,
+                                                    model,
+                                                    nothingIsForbidden);
         extraOutputs.emplace_back(extraOutput.id,
                                   ModelerStudy::SystemModel::Expression{extraOutput.expression,
                                                                         std::move(nodeRegistry)});
@@ -328,7 +353,9 @@ std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
     objectives.reserve(model.objectives.size());
     for (const auto& objective: model.objectives)
     {
-        auto nodeRegistry = convertExpressionToNode(objective.expression, model);
+        auto nodeRegistry = convertExpressionToNode(objective.expression,
+                                                    model,
+                                                    makeForbiddenInConstraintAndObjective());
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
                                                                       std::move(nodeRegistry)});

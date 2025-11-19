@@ -29,7 +29,6 @@
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
-using namespace Antares::Expressions::Visitors;
 
 class MockNode: public Nodes::Node
 {
@@ -159,7 +158,7 @@ BOOST_AUTO_TEST_CASE(test_computeNumberNodesPerType_single_node_type)
 
     const auto& nbNodes = counter.nbNodesPerType();
     BOOST_TEST(nbNodes.size() == 1);
-    BOOST_TEST(nbNodes.at("SameType") == 3);
+    BOOST_TEST(nbNodes.at("SameType").count == 3);
     BOOST_TEST(counter.empty() == false);
 }
 
@@ -182,9 +181,9 @@ BOOST_AUTO_TEST_CASE(test_computeNumberNodesPerType_multiple_node_types)
 
     const auto& nbNodes = counter.nbNodesPerType();
     BOOST_TEST(nbNodes.size() == 3);
-    BOOST_TEST(nbNodes.at("TypeA") == 2);
-    BOOST_TEST(nbNodes.at("TypeB") == 2);
-    BOOST_TEST(nbNodes.at("TypeC") == 1);
+    BOOST_TEST(nbNodes.at("TypeA").count == 2);
+    BOOST_TEST(nbNodes.at("TypeB").count == 2);
+    BOOST_TEST(nbNodes.at("TypeC").count == 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_computeNumberNodesPerType_empty)
@@ -211,8 +210,8 @@ BOOST_AUTO_TEST_CASE(test_computeNumberNodesPerType_multiple_calls)
     counter.computeNumberNodesPerType();
     const auto& nbNodes1 = counter.nbNodesPerType();
     BOOST_TEST(nbNodes1.size() == 2);
-    BOOST_TEST(nbNodes1.at("TypeA") == 1);
-    BOOST_TEST(nbNodes1.at("TypeB") == 1);
+    BOOST_TEST(nbNodes1.at("TypeA").count == 1);
+    BOOST_TEST(nbNodes1.at("TypeB").count == 1);
 
     // Add more nodes and call again
     MockNode node3("TypeA");
@@ -223,8 +222,8 @@ BOOST_AUTO_TEST_CASE(test_computeNumberNodesPerType_multiple_calls)
     counter.computeNumberNodesPerType();
     const auto& nbNodes2 = counter.nbNodesPerType();
     BOOST_TEST(nbNodes2.size() == 2);
-    BOOST_TEST(nbNodes2.at("TypeA") == 3); // Should accumulate
-    BOOST_TEST(nbNodes2.at("TypeB") == 1);
+    BOOST_TEST(nbNodes2.at("TypeA").count == 3); // Should accumulate
+    BOOST_TEST(nbNodes2.at("TypeB").count == 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_nodeCount)
@@ -290,7 +289,7 @@ BOOST_AUTO_TEST_CASE(test_nbNodesPerType_const_accessor)
     // Test que l'accesseur retourne bien une référence const
     const auto& nbNodes = counter.nbNodesPerType();
     BOOST_TEST(nbNodes.size() == 1);
-    BOOST_TEST(nbNodes.at("TestNode") == 1);
+    BOOST_TEST(nbNodes.at("TestNode").count == 1);
 
     // Vérifier que c'est bien const (ne peut pas être modifié)
     static_assert(std::is_const_v<std::remove_reference_t<decltype(nbNodes)>>,

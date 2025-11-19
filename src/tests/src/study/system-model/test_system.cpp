@@ -32,6 +32,8 @@
 // clang-format on
 #include <boost/test/unit_test.hpp>
 
+#include "antares/io/inputs/model-converter/ForbiddenNodes.h"
+
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs::ModelConverter;
 using namespace Antares::IO::Inputs;
@@ -83,7 +85,7 @@ static Model createModelWith2PortsOneWayExchange()
                              .binding_constraints = {},
                              .objectives = {},
                              .extra_outputs = {}};
-    auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
+    auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel, ForbiddenNodes());
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.emplace_back(port1,
                                       port_field,
@@ -164,8 +166,9 @@ static Model createModelWith2Ports2WayExchange()
                              .binding_constraints = {},
                              .objectives = {},
                              .extra_outputs = {}};
-    auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel);
-    auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel);
+    ForbiddenNodes rules;
+    auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel, rules);
+    auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel, rules);
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.emplace_back(port1,
                                       rice,

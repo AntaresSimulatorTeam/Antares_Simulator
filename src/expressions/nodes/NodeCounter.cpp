@@ -25,16 +25,21 @@
 
 namespace Antares::Expressions::Nodes
 {
-unsigned int NodeCounter::getNodeID(const Nodes::Node* node)
+void NodeCounter::insertNode(const Nodes::Node* node)
 {
     if (!node)
     {
         throw std::invalid_argument("cannot get node id from nullptr");
     }
-    if (nodeIds_.find(node) == nodeIds_.end())
+    if (!nodeIds_.contains(node))
     {
         nodeIds_[node] = ++nodeCount_;
     }
+}
+
+unsigned int NodeCounter::getNodeID(const Nodes::Node* node)
+{
+    insertNode(node);
     return nodeIds_[node];
 }
 
@@ -53,9 +58,17 @@ bool NodeCounter::empty() const
 bool NodeCounter::contains(const std::string& nodeName) const
 {
     return std::ranges::find_if(nbNodesPerType_,
-                                [&nodeName](const std::pair<std::string, unsigned int> value)
-                                { return value.first == nodeName && value.second != 0; })
+                                [&nodeName](const std::pair<std::string, NodeInfo>& value)
+                                { return value.first == nodeName && value.second.count != 0; })
            != nbNodesPerType_.end();
+}
+
+NodeCounter::NodeCounter(const std::vector<std::unique_ptr<Nodes::Node>>& nodes)
+{
+    for (const auto& node: nodes)
+    {
+        insertNode(node.get());
+    }
 }
 
 void NodeCounter::computeNumberNodesPerType()
@@ -63,7 +76,16 @@ void NodeCounter::computeNumberNodesPerType()
     nbNodesPerType_.clear();
     for (const auto& [node, _]: nodeIds_)
     {
-        ++nbNodesPerType_[node->name()];
+        auto it = std::ranges::find_if(nbNodesPerType_,
+                                       [&node](const std::pair<std::string, NodeInfo>& nodeInfos)
+                                       { return nodeInfos.first == node->name(); });
+        if (it == nbNodesPerType_.end())
+        {
+            nbNodesPerType_.try_emplace(node->name(),
+                                        NodeInfo{.count = 1,
+                                                 .type = std::type_index(typeid(node))});
+        }
+        ++it->second.count;
     }
 }
 

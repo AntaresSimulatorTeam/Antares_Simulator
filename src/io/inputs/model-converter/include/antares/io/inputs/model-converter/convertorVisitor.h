@@ -26,6 +26,8 @@
 
 namespace Antares::IO::Inputs::ModelConverter
 {
+class ForbiddenNodes;
+
 class NoPortWithThisId final: public std::runtime_error
 {
 public:
@@ -63,5 +65,6 @@ public:
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model);
+                                                  const YmlModel::Model& model,
+                                                  const ForbiddenNodes& forbiddenNodes);
 } // namespace Antares::IO::Inputs::ModelConverter

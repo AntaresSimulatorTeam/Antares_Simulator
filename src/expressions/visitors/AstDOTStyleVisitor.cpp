@@ -69,12 +69,12 @@ void AstDOTStyleVisitor::makeLegend(std::ostream& os)
     }
 
     const auto& nbNodesPerType = nodeCounter_.nbNodesPerType();
-    ProcessElementLegend(nbNodesPerType.begin()->first, nbNodesPerType.begin()->second, os);
+    ProcessElementLegend(nbNodesPerType.begin()->first, nbNodesPerType.begin()->second.count, os);
     for (auto it = std::next(nbNodesPerType.begin()); it != nbNodesPerType.end(); ++it)
     {
         auto prev_it = std::prev(it);
         AddFiliation(os, prev_it->first, it->first);
-        ProcessElementLegend(it->first, it->second, os);
+        ProcessElementLegend(it->first, it->second.count, os);
     }
     os << "}\n";
 }

@@ -47,6 +47,11 @@ public:
           registry_.back().get()); //  Return the pointer to the newly created object
     }
 
+    [[nodiscard]] const std::vector<std::unique_ptr<Base>>& nodes() const
+    {
+        return registry_;
+    }
+
 private:
     std::vector<std::unique_ptr<Base>>
       registry_; //  Registry to manage dynamically allocated objects
