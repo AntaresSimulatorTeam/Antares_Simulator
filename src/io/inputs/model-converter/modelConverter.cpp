@@ -24,7 +24,6 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/expressions/expression.h"
-#include "antares/io/inputs/model-converter/ForbiddenNodes.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -264,19 +263,25 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
     }
     return portFieldDefinitions;
 }
-static ForbiddenNodes makeForbiddenInConstraintAndObjective()
-{
-    ForbiddenNodes forbidden;
 
-    // constraint and objective should not contain dual or reduced_cost
-    forbidden.addForbiddenTypes<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-    // max and min should not contain VariableNode, PortFieldNode and PortFieldSumNode
-    forbidden.addForbiddenTypeFor<FunctionNodeType::max, VariableNode>();
-    forbidden.addForbiddenTypeFor<FunctionNodeType::min, VariableNode>();
-    forbidden.addForbiddenTypeFor<FunctionNodeType::max, PortFieldNode>();
-    forbidden.addForbiddenTypeFor<FunctionNodeType::min, PortFieldNode>();
-    forbidden.addForbiddenTypeFor<FunctionNodeType::max, PortFieldSumNode>();
-    forbidden.addForbiddenTypeFor<FunctionNodeType::min, PortFieldSumNode>();
+ForbiddenNodes makeForbiddenInConstraintAndObjective()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        // constraint and objective should not contain dual or reduced_cost
+        f.addGlobalForbidden<FunctionNodeType::reduced_cost>();
+        f.addGlobalForbidden<FunctionNodeType::dual>();
+        // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max and min
+        f.addForbiddenFor<FunctionNodeType::max, VariableNode>();
+        f.addForbiddenFor<FunctionNodeType::min, VariableNode>();
+        f.addForbiddenFor<FunctionNodeType::max, PortFieldNode>();
+        f.addForbiddenFor<FunctionNodeType::min, PortFieldNode>();
+        f.addForbiddenFor<FunctionNodeType::max, PortFieldSumNode>();
+        f.addForbiddenFor<FunctionNodeType::min, PortFieldSumNode>();
+        return f;
+    }();
     return forbidden;
 }
 

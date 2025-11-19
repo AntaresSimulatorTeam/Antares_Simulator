@@ -63,6 +63,15 @@ public:
     {
     }
 };
+class BadContextComposition final: public std::invalid_argument
+{
+public:
+    explicit BadContextComposition(const std::string& parentName, const std::string& childName):
+        invalid_argument("'" + parentName + "' is not allowed to contain '" + childName
+                         + "' in this context")
+    {
+    }
+};
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
                                                   const YmlModel::Model& model,

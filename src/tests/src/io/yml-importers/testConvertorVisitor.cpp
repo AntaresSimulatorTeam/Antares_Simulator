@@ -52,12 +52,11 @@ public:
 
     // Empty model
     ExpressionToNodeConvertorEmptyModel() = default;
-    // TODO update this rules
-    ModelConverter::ForbiddenNodes dummy = ModelConverter::ForbiddenNodes();
 
-    NodeRegistry run(const std::string& input)
+    NodeRegistry run(const std::string& input,
+                     const ModelConverter::ForbiddenNodes& rules = ModelConverter::ForbiddenNodes())
     {
-        return ModelConverter::convertExpressionToNode(input, model_, dummy);
+        return ModelConverter::convertExpressionToNode(input, model_, rules);
     }
 
 private:
@@ -441,7 +440,7 @@ BOOST_AUTO_TEST_CASE(dualExpression)
     // constraints
     std::string expression = "dual(constraintA)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode");
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::dual");
     auto dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dualNode->typeToString(), "dual");
 
@@ -525,7 +524,7 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
 
     std::string expression = "reduced_cost(varB)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode");
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::reduced_cost");
     auto reducedCostNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(reducedCostNode->typeToString(), "reduced_cost");
     const auto* variableNode = dynamic_cast<Nodes::VariableNode*>(
@@ -755,4 +754,50 @@ BOOST_AUTO_TEST_CASE(MinOperatorWrongNumberOfParameter)
     BOOST_CHECK_EXCEPTION(converter.run(expression),
                           std::invalid_argument,
                           checkMessage("min operator expect at least 2 operands got 1"));
+}
+
+BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "min(varB, reduced_cost(varB))";
+    BOOST_CHECK_EXCEPTION(
+      converter.run(expression, ModelConverter::makeForbiddenInConstraintAndObjective()),
+      ModelConverter::BadContextComposition,
+      checkMessage("'min' is not allowed to contain 'VariableNode' in this context"));
+}
+
+BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "max(reduced_cost(varB), pmin, varA)";
+    BOOST_CHECK_EXCEPTION(
+      converter.run(expression, ModelConverter::makeForbiddenInConstraintAndObjective()),
+      ModelConverter::BadContextComposition,
+      checkMessage("'max' is not allowed to contain 'FunctionNode::reduced_cost' in this context"));
 }

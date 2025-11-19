@@ -23,6 +23,7 @@
 #include <functional>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/io/inputs/model-converter/ForbiddenNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/NodeCounter.h"
 #include "antares/expressions/nodes/TimeSumNode.h"
@@ -95,6 +96,11 @@ private:
     std::any ProcessChildren(const std::vector<T*>& exprContexts);
     template<class T>
     std::any processPower(std::vector<T*> exprContexts);
+    template<class T>
+    void CheckForbiddenNodes(const std::string& parentName, const std::vector<Node*>& nodes) const;
+
+    template<FunctionNodeType T>
+    void CheckForbiddenNodes(const std::string& parentName, const std::vector<Node*>& nodes) const;
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
@@ -417,7 +423,11 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     {
         throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
     }
-
+    if (!dynamic_cast<VariableNode*>(nodes[0]))
+    {
+        throw std::invalid_argument("reduced_cost operator expect exactly one variable id got: "
+                                    + nodes[0]->name());
+    }
     return static_cast<Node*>(
       registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
 }
@@ -450,6 +460,32 @@ std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* contex
       registry_.create<FunctionNode>(FunctionNodeType::pow, base, exponent));
 }
 
+template<typename T>
+void ConvertorVisitor::CheckForbiddenNodes(const std::string& parentName,
+                                           const std::vector<Node*>& nodes) const
+{
+    for (const auto& child: nodes)
+    {
+        if (forbiddenNodes_.isForbiddenFor<T>(*child))
+        {
+            throw BadContextComposition(parentName, child->name());
+        }
+    }
+}
+
+template<FunctionNodeType T>
+void ConvertorVisitor::CheckForbiddenNodes(const std::string& parentName,
+                                           const std::vector<Node*>& nodes) const
+{
+    for (const auto* child: nodes)
+    {
+        if (forbiddenNodes_.isForbiddenFor<T>(*child))
+        {
+            throw BadContextComposition(parentName, child->name());
+        }
+    }
+}
+
 std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
 {
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
@@ -458,6 +494,7 @@ std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
         throw std::invalid_argument("max operator expect at least 2 operands got "
                                     + std::to_string(nodes.size()));
     }
+    CheckForbiddenNodes<FunctionNodeType::max>("max", nodes);
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
 }
 
@@ -469,6 +506,7 @@ std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
         throw std::invalid_argument("min operator expect at least 2 operands got "
                                     + std::to_string(nodes.size()));
     }
+    CheckForbiddenNodes<FunctionNodeType::min>("min", nodes);
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
 }
 

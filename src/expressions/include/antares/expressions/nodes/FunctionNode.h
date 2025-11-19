@@ -62,7 +62,7 @@ public:
 
     std::string name() const override
     {
-        return "FunctionNode";
+        return "FunctionNode::" + FunctionNodeTypeToString(type_);
     }
 
     FunctionNodeType type() const

@@ -24,6 +24,8 @@
 
 #include "antares/io/inputs/yml-model/Library.h"
 
+#include "ForbiddenNodes.h"
+
 namespace Antares
 {
 namespace ModelerStudy::SystemModel
@@ -101,5 +103,7 @@ class PortInDefinition final: public std::runtime_error
 public:
     explicit PortInDefinition(const std::string& portId, const std::string& portInDefId);
 };
+
+ForbiddenNodes makeForbiddenInConstraintAndObjective();
 
 } // namespace Antares::IO::Inputs::ModelConverter
