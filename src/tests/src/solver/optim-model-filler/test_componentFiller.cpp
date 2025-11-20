@@ -509,8 +509,8 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_parameters_and_max_operator)
     buildLinearProblem(ctx, data, scenarios);
     const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 3
 
-    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
-    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+    BOOST_CHECK_EQUAL(pb->variableCount(), 3);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 3);
 
     for (const auto t: timeSteps)
     {
