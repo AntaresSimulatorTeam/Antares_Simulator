@@ -12,4 +12,5 @@
 06-heuristics.md
 07-standard-library.md
 08-command-line.md
+09-expressions.md
 ```
