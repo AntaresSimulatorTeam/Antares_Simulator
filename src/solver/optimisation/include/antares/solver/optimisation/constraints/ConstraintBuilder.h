@@ -20,10 +20,6 @@
 */
 #pragma once
 
-#include <utility>
-
-#include <antares/logs/logs.h>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "../opt_fonctions.h"
@@ -308,7 +304,7 @@ struct ShortTermStorageData
 {
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 
-    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
+    const std::vector<::AREA_INPUT>& ShortTermStorage;
 };
 
 struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData

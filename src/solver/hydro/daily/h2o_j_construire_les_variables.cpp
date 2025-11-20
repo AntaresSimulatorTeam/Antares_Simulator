@@ -46,20 +46,29 @@ void H2O_j_ConstruireLesVariables(
         Var++;
     }
 
-    CorrespondanceDesVariables.NumeroDeLaVariableMu = Var;
+    // is there any reason why this loop is separate from the previous one? (equivalent solution?)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
+        CorrespondanceDesVariables.NumeroDeLaVariableXi[Pdt] = Var;
+        Xmin[Var] = 0.0;
+        Xmax[Var] = LINFINI;
+        TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
+        Var++;
+    }
+
+    // --- Variables globales xi_plus et xi_moins ---
+    CorrespondanceDesVariables.NumeroDeLaVariableXiPlus = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
     AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
     Var++;
 
-    CorrespondanceDesVariables.NumeroDeLaVariableXi = Var;
+    CorrespondanceDesVariables.NumeroDeLaVariableXiMoins = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
     AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
-    Var++;
-
-    return;
 }
 } // namespace DoneesOptimisationJournaliere

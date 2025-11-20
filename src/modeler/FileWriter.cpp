@@ -34,21 +34,22 @@
 
 namespace Antares::Modeler
 {
-void FileWriter::init(bool setOutput, const std::string& simulationId)
+void FileWriter::init(const std::string& simulationId)
 {
-    output = setOutput;
     outputPath_ = studyPath_ / "output";
     simulationId_ = simulationId;
-    if (output)
+    logs.info() << "Output folder : " << outputPath_;
+    if (!std::filesystem::is_directory(outputPath_)
+        && !std::filesystem::create_directory(outputPath_))
     {
-        logs.info() << "Output folder : " << outputPath_;
-        if (!std::filesystem::is_directory(outputPath_)
-            && !std::filesystem::create_directory(outputPath_))
-        {
-            throw Solver::Modeler::ModelerError(
-              "Failed to create output directory. Exiting simulation.");
-        }
+        throw Solver::Modeler::ModelerError(
+          "Failed to create output directory. Exiting simulation.");
     }
+}
+
+const std::filesystem::path& FileWriter::outputPath() const
+{
+    return outputPath_;
 }
 
 void FileWriter::writeSimulationTable(
@@ -58,20 +59,17 @@ void FileWriter::writeSimulationTable(
   const Optimisation::OptimEntityContainer& variableContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
-    if (output)
-    {
-        SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
-        IO::FillSimulationTable(simulationTable,
-                                linearProblem,
-                                solution.getObjectiveValue(),
-                                modelerData,
-                                variableContainer,
-                                fillContext,
-                                0,
-                                IO::TimeConversionMode::SingleBlock);
-        simulationTable.writeHeader();
-        simulationTable.write();
-    }
+    SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
+    IO::FillSimulationTable(simulationTable,
+                            linearProblem,
+                            solution.getObjectiveValue(),
+                            modelerData,
+                            variableContainer,
+                            fillContext,
+                            0,
+                            IO::TimeConversionMode::SingleBlock);
+    simulationTable.writeHeader();
+    simulationTable.write();
 }
 
 FileWriter::FileWriter(std::filesystem::path path):
@@ -79,14 +77,4 @@ FileWriter::FileWriter(std::filesystem::path path):
 {
 }
 
-void FileWriter::writeProblem(
-  const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
-{
-    if (output)
-    {
-        logs.info() << "Writing problem.lp...";
-        const auto lp_path = outputPath_ / "problem.lp";
-        problem.WriteLP(lp_path.string());
-    }
-}
 } // namespace Antares::Modeler

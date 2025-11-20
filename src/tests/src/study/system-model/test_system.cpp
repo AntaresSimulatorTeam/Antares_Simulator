@@ -21,8 +21,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
-
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/system.h"
@@ -32,6 +30,7 @@
 // clang-format off
 #include <unit_test_utils.h>
 // clang-format on
+#include <boost/test/unit_test.hpp>
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs::ModelConverter;
@@ -115,7 +114,7 @@ BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
     BOOST_CHECK(compo2 != compos.cend());
 }
 
-Component buildComponent(const std::string& id, const Model& model)
+Component buildComponent(const std::string& id, Model& model)
 {
     ComponentBuilder component_builder;
     auto component = component_builder.withId(id)

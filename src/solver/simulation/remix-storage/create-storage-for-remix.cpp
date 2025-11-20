@@ -1,5 +1,7 @@
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 
+#include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
+
 namespace Antares::Solver::Simulation
 {
 

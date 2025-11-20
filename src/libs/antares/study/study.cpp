@@ -446,7 +446,8 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
                 }
             }
             areas.each([&buffer](const Data::Area& area) { buffer << area.name << "\r\n"; });
-            resultWriter.addEntryFromBuffer(path.c_str(), buffer);
+            std::string content = buffer.c_str();
+            resultWriter.addEntryFromBuffer(path.c_str(), content);
         }
 
         // Write all available links as a reminder
@@ -454,7 +455,8 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
             path.clear() << "about-the-study" << SEP << "links.txt";
             Yuni::Clob buffer;
             areas.saveLinkListToBuffer(buffer);
-            resultWriter.addEntryFromBuffer(path.c_str(), buffer);
+            std::string content = buffer.c_str();
+            resultWriter.addEntryFromBuffer(path.c_str(), content);
         }
     }
 }

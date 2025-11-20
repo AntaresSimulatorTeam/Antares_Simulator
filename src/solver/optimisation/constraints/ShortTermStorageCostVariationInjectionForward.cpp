@@ -44,7 +44,7 @@ int& ShortTermStorageCostVariationInjectionForward::ShortTermStorageCostVariatio
 }
 
 bool ShortTermStorageCostVariationInjectionForward::IsConstraintEnabled(
-  const ShortTermStorage::PROPERTIES& properties)
+  const PROPERTIES& properties)
 {
     return properties.penalizeVariationInjection;
 }

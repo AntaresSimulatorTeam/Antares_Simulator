@@ -431,8 +431,10 @@ jobs:
     # Delete the old cache on hit to emulate a cache update. See
     # https://github.com/actions/cache/issues/342.
     - name: Delete old cache
+      continue-on-error: true
       env:
         GH_TOKEN: ${{ github.token }}
+        GH_DEBUG: api gh cache delete
       if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
       # Using `--repo` makes it so that this step doesn't require checking out the
       # repo first.

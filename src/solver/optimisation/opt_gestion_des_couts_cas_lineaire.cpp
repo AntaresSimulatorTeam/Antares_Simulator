@@ -30,14 +30,13 @@ constexpr double LEVEL_COST = -1.e-6;
 
 void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int, const int);
 
-static void shortTermStorageCost(
-  int weekInTheYear,
-  int PremierPdtDeLIntervalle,
-  int DernierPdtDeLIntervalle,
-  int NombreDePays,
-  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
-  VariableManagement::VariableManager& variableManager,
-  std::vector<double>& linearCost)
+static void shortTermStorageCost(int weekInTheYear,
+                                 int PremierPdtDeLIntervalle,
+                                 int DernierPdtDeLIntervalle,
+                                 int NombreDePays,
+                                 const std::vector<::AREA_INPUT>& shortTermStorageInput,
+                                 VariableManagement::VariableManager& variableManager,
+                                 std::vector<double>& linearCost)
 {
     const int weekFirstHour = weekInTheYear * 168;
     for (int pays = 0; pays < NombreDePays; ++pays)

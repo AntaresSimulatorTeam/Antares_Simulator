@@ -53,7 +53,7 @@ class ComponentData final
 {
 public:
     std::string id;
-    const Model* model = nullptr;
+    Model* model = nullptr;
     std::map<std::string, ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
     unsigned index = 0;
@@ -81,7 +81,7 @@ public:
         return data_.id;
     }
 
-    const Model* getModel() const
+    Model* getModel() const
     {
         return data_.model;
     }
@@ -138,7 +138,7 @@ class ComponentBuilder final
 {
 public:
     ComponentBuilder& withId(std::string_view id);
-    ComponentBuilder& withModel(const Model* model);
+    ComponentBuilder& withModel(Model* model);
     ComponentBuilder& withIndex(unsigned int index);
     ComponentBuilder& withParameterValues(
       std::map<std::string, ParameterTypeAndValue> parameter_values);

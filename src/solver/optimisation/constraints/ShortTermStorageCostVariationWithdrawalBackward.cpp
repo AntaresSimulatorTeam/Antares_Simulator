@@ -43,7 +43,7 @@ int& ShortTermStorageCostVariationWithdrawalBackward::TargetConstraintIndex(int 
 }
 
 bool ShortTermStorageCostVariationWithdrawalBackward::IsConstraintEnabled(
-  const ShortTermStorage::PROPERTIES& properties)
+  const PROPERTIES& properties)
 {
     return properties.penalizeVariationWithdrawal;
 }
