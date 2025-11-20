@@ -26,7 +26,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/exception/RuntimeError.hpp"
-#include "antares/expressions/nodes/Node.h"
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/library.h"

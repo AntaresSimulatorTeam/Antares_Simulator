@@ -321,7 +321,7 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
     // var1 <= 3
     auto var_node = variable("var1", 0);
     auto three = literal(3);
-    auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
+    auto ct_node = nodeRegistry.create<LessThanOrEqualNode>(var_node, three);
 
     createModel("model",
                 {},
@@ -347,7 +347,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     // var1 <= 3
     auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
-    auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
+    auto ct_node = nodeRegistry.create<LessThanOrEqualNode>(var_node, three);
 
     createModel("model",
                 {},
@@ -403,9 +403,9 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
     // 5 - var1 <= 3
     auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
-    auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
-                                                                                   var_node),
-                                                     three);
+    auto ct_node = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<SubtractionNode>(literal(5), var_node),
+      three);
 
     createModelWithSystemModelParameter(
       "model",
@@ -459,9 +459,9 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
 {
     auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
-    auto ct_node = nodes.create<LessThanOrEqualNode>(nodes.create<SubtractionNode>(literal(5),
-                                                                                   var_node),
-                                                     three);
+    auto ct_node = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<SubtractionNode>(literal(5), var_node),
+      three);
 
     createModelWithSystemModelParameter(
       "model",
@@ -532,8 +532,8 @@ BOOST_AUTO_TEST_CASE(ct_one_var_with_coef_pb_contains_the_ct)
     auto three = literal(3);
     auto coef_node_left = multiply(three, var_node);
     auto coef_node_right = multiply(var_node, five);
-    auto sum_node_right = nodes.create<SumNode>(coef_node_right, five);
-    auto ct_node = nodes.create<GreaterThanOrEqualNode>(coef_node_left, sum_node_right);
+    auto sum_node_right = nodeRegistry.create<SumNode>(coef_node_right, five);
+    auto ct_node = nodeRegistry.create<GreaterThanOrEqualNode>(coef_node_left, sum_node_right);
 
     createModelWithOneFloatVar("model",
                                {},
@@ -573,17 +573,17 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
     auto param1 = parameter("param1");
     auto v2 = variable("v2", 1);
     auto param2 = parameter("param2");
-    auto sum_node_left = nodes.create<SumNode>(multiply(v1, param1),
-                                               multiply(literal(8), v2),
-                                               literal(5),
-                                               negate(param2));
+    auto sum_node_left = nodeRegistry.create<SumNode>(multiply(v1, param1),
+                                                      multiply(literal(8), v2),
+                                                      literal(5),
+                                                      negate(param2));
     auto param3 = parameter("param3");
     auto param4 = parameter("param4");
-    auto sum_node_right = nodes.create<SumNode>(multiply(v1, literal(7)),
-                                                multiply(param3, v2),
-                                                literal(89),
-                                                multiply(literal(5), param4));
-    auto ct_node = nodes.create<EqualNode>(sum_node_left, sum_node_right);
+    auto sum_node_right = nodeRegistry.create<SumNode>(multiply(v1, literal(7)),
+                                                       multiply(param3, v2),
+                                                       literal(89),
+                                                       multiply(literal(5), param4));
+    auto ct_node = nodeRegistry.create<EqualNode>(sum_node_left, sum_node_right);
 
     createModel("my_new_model", params, {var1Data, var2Data}, {{"constraint1", ct_node}});
     createComponent("my_new_model",
@@ -624,11 +624,13 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
     auto three = literal(3);
     auto two_1 = literal(2);
     auto v2 = variable("v2", 1);
-    auto ct1_node = nodes.create<LessThanOrEqualNode>(
-      nodes.create<SubtractionNode>(multiply(three, v1), two_1),
+    auto ct1_node = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<SubtractionNode>(multiply(three, v1), two_1),
       v2);
     auto two_2 = literal(2);
-    auto ct2_node = nodes.create<LessThanOrEqualNode>(v2, nodes.create<DivisionNode>(v1, two_2));
+    auto ct2_node = nodeRegistry.create<LessThanOrEqualNode>(
+      v2,
+      nodeRegistry.create<DivisionNode>(v1, two_2));
 
     createModel("my_new_model", {}, {var1Data, var2Data}, {{"ct1", ct1_node}, {"ct2", ct2_node}});
     createComponent("my_new_model", "my_component", {});

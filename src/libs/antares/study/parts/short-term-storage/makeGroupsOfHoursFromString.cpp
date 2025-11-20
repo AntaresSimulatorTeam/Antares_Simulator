@@ -18,32 +18,68 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
-
-#include <boost/algorithm/string.hpp>
-
-#include "antares/study/parts/short-term-storage/HoursCollectorVisitor.h"
+// this is needed to avoid macro redefinition conflicts on Windows
+#ifdef _WIN32
+#pragma push_macro("ERROR")
+#undef ERROR
+#endif
+#include <HoursFieldBaseVisitor.h>
+//
+#include <BaseErrorListener.h>
 
 #include "HoursFieldLexer.h"
-
+//
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
+#ifdef _WIN32
+#pragma pop_macro("ERROR")
+#endif
 namespace Antares::Data::ShortTermStorage
 {
 
-void CustomErrorListener::syntaxError(antlr4::Recognizer*,
-                                      antlr4::Token* offendingSymbol,
-                                      size_t line,
-                                      size_t charPositionInLine,
-                                      const std::string& msg,
-                                      [[maybe_unused]] std::exception_ptr e)
+class HoursCollectorVisitor: public HoursFieldBaseVisitor
 {
-    std::ostringstream os;
-    os << "Syntax error at line " << line << ":" << charPositionInLine << " - " << msg << std::endl;
-    if (offendingSymbol)
+public:
+    std::any visitHoursField(HoursFieldParser::HoursFieldContext* ctx) override
     {
-        os << "Offending symbol: " << offendingSymbol->getText() << std::endl;
+        std::vector<std::set<int>> result;
+        for (auto groupCtx: ctx->group())
+        {
+            result.push_back(std::any_cast<std::set<int>>(visit(groupCtx)));
+        }
+        return result;
     }
-    throw ShortTermStorageAdditionalConstraintsError(os.str());
-}
+
+    std::any visitGroup(HoursFieldParser::GroupContext* ctx) override
+    {
+        std::set<int> hours;
+        for (auto hourCtx: ctx->hour())
+        {
+            hours.insert(std::stoi(hourCtx->getText()));
+        }
+        return hours;
+    }
+};
+
+class CustomErrorListener final: public antlr4::BaseErrorListener
+{
+public:
+    void syntaxError(antlr4::Recognizer* recognizer,
+                     antlr4::Token* offendingSymbol,
+                     size_t line,
+                     size_t charPositionInLine,
+                     const std::string& msg,
+                     std::exception_ptr e) override
+    {
+        std::ostringstream os;
+        os << "Syntax error at line " << line << ":" << charPositionInLine << " - " << msg
+           << std::endl;
+        if (offendingSymbol)
+        {
+            os << "Offending symbol: " << offendingSymbol->getText() << std::endl;
+        }
+        throw ShortTermStorageAdditionalConstraintsError(os.str());
+    }
+};
 
 class GroupsHours final
 {

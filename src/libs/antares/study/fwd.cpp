@@ -23,6 +23,8 @@
 
 #include <algorithm>
 
+#include <antares/writer/result_format.h>
+
 using namespace Yuni;
 
 namespace Antares::Data
@@ -514,5 +516,41 @@ std::string styleToString(const StyleType& style)
         return "plain";
     }
 }
+
+namespace Enum
+{
+template<>
+const std::initializer_list<std::string>& getNames<SheddingPolicy>()
+{
+    static const std::initializer_list<std::string> il = {"shave peaks",
+                                                          "accurate shave peaks",
+                                                          "minimize duration",
+                                                          "unknown"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<RenewableGenerationModelling>()
+{
+    static const std::initializer_list<std::string> il = {"aggregated", "clusters", "unknown"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<Antares::Data::ResultFormat>()
+{
+    static const std::initializer_list<std::string> il = {"legacyFilesDirectories",
+                                                          "zipArchive",
+                                                          "inMemory"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<SimplexOptimization>()
+{
+    static const std::initializer_list<std::string> il = {"unknown", "day", "week"};
+    return il;
+}
+} // namespace Enum
 
 } // namespace Antares::Data

@@ -37,7 +37,6 @@ public:
     using MapType = std::map<std::string, std::string, std::less<>>;
     explicit InMemoryWriter(Benchmarking::DurationCollector& duration_collector);
     virtual ~InMemoryWriter();
-    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::filesystem::path& entryPath,
                             std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,

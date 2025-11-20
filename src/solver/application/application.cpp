@@ -386,6 +386,12 @@ void Application::prepare(int argc, const char* argv[])
 
     // Set solver options from command line
     pStudy->parameters.optOptions.initializeWith(options.solverOptions);
+
+    using namespace Antares::Solver::Optimization;
+    // TODO
+    pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
+                                                     ? ExportBehavior::Once
+                                                     : ExportBehavior::Never;
 }
 
 void Application::onLogMessage(int level, const std::string& message)

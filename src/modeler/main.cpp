@@ -58,7 +58,7 @@ int main(int argc, const char** argv)
         LoadFiles::FileLoader loader(studyPath);
         Antares::Modeler::FileWriter writer(studyPath);
         Antares::Solver::Modeler modeler(loader, writer);
-        modeler.solve();
+        modeler.run();
     }
     catch (const Antares::Solver::Modeler::ModelerError& e)
     {

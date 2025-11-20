@@ -40,7 +40,7 @@ void ShortTermStorageCostVariationWithdrawalForward::add(unsigned int pdt, unsig
 }
 
 bool ShortTermStorageCostVariationWithdrawalForward::IsConstraintEnabled(
-  const ShortTermStorage::PROPERTIES& properties)
+  const PROPERTIES& properties)
 {
     return properties.penalizeVariationWithdrawal;
 }

@@ -94,6 +94,10 @@ void addVariableEntries(ISimulationTable& simulationTable,
     for (std::size_t varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
         const auto& modelVar = variables[varIndex];
+        if (modelVar.location() != Modeler::Config::Location::SUBPROBLEMS)
+        {
+            continue;
+        }
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
         const std::span componentVariables = optimEntityContainer.getComponentVariable(
@@ -201,6 +205,10 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     unsigned constraintLocalIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
+        if (modelConstr.location() != Modeler::Config::Location::SUBPROBLEMS)
+        {
+            continue;
+        }
         const auto& constraintId = modelConstr.Id();
 
         const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(

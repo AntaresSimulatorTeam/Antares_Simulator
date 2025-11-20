@@ -292,28 +292,27 @@ std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firs
     return {v.begin() + firstHourOfWeek, v.begin() + firstHourOfWeek + HOURS_IN_WEEK};
 }
 
-std::vector<double> extractSTSpmax(const ShortTermStorage::PROPERTIES& sts_properties,
-                                   const unsigned firstHourOfWeek)
+std::vector<double> extractSTSpmax(const PROPERTIES& sts_properties, const unsigned firstHourOfWeek)
 {
     auto subrange = weekSubRange(sts_properties.series->maxWithdrawalModulation, firstHourOfWeek);
     return subrange * sts_properties.withdrawalEfficiency;
 }
 
-std::vector<double> extractSTSlowRuleCurve(const ShortTermStorage::PROPERTIES& sts_properties,
+std::vector<double> extractSTSlowRuleCurve(const PROPERTIES& sts_properties,
                                            const unsigned firstHourOfWeek)
 {
     auto subrange = weekSubRange(sts_properties.series->lowerRuleCurve, firstHourOfWeek);
     return subrange * sts_properties.reservoirCapacity;
 }
 
-std::vector<double> extractSTSupRuleCurve(const ShortTermStorage::PROPERTIES& sts_properties,
+std::vector<double> extractSTSupRuleCurve(const PROPERTIES& sts_properties,
                                           const unsigned firstHourOfWeek)
 {
     auto subrange = weekSubRange(sts_properties.series->upperRuleCurve, firstHourOfWeek);
     return subrange * sts_properties.reservoirCapacity;
 }
 
-std::vector<double> extractSTSinflows(const ShortTermStorage::PROPERTIES& sts_properties,
+std::vector<double> extractSTSinflows(const PROPERTIES& sts_properties,
                                       const unsigned firstHourOfWeek,
                                       const unsigned year)
 {

@@ -22,15 +22,13 @@
 #define __ANTARES_LIBS_STUDY_FWD_H__
 
 #include <bit>
-#include <cmath>
-#include <concepts>
 #include <map>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
-#include "antares/antares/antares.h"
 #include "antares/antares/constants.h"
+#include "antares/enums/Enum.hpp"
 
 namespace Antares
 {
@@ -495,7 +493,6 @@ enum class mpsExportStatus : int
 
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
 mpsExportStatus stringToMPSexportStatus(const AnyString& value);
-
 } // namespace Data
 } // namespace Antares
 
