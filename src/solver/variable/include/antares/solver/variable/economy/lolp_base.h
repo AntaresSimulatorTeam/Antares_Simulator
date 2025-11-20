@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include "economy_base.h"
-
 namespace Antares::Solver::Variable::Economy
 {
 
@@ -39,7 +37,7 @@ struct LOLP_Base_Traits
 
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateOr;
 
-    static double value()
+    static double value(const State&)
     {
         return 100.;
     }
