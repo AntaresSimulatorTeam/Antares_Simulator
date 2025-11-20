@@ -4,6 +4,7 @@
 
 #include <unit_test_utils.h>
 #include <vector>
+#include <numeric>
 
 #include <boost/test/unit_test.hpp>
 
@@ -133,10 +134,10 @@ BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_al
 }
 
 // Using direcly InputFixture<n, m> in fixture test cases does not compile on Win MSVC.
-// So we're forced to use typedefs instead. 
+// So we're forced to use typedefs instead.
 using InputFixture_5_2 = InputFixture<5, 2>;
 using InputFixture_5_3 = InputFixture<5, 3>;
-
+using InputFixture_8_2 = InputFixture<8, 2>;
 
 // ================================================
 // Note :
@@ -165,7 +166,8 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat, InputFixtu
 
     // G + H (= TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal) gets flat
     std::vector<double> expectedTotalWithdrawal = {30., 30., 30., 30., 30.};
-    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal + STS_holders[1].withdrawal;
+    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal
+                                                + STS_holders[1].withdrawal;
     BOOST_CHECK(actualTotalWithdrawal == expectedTotalWithdrawal);
 
     // UnsupE such as TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal gets flat
@@ -194,7 +196,8 @@ BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, 
 
     // G + H (= TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal) gets flat
     std::vector<double> expectedTotalWithdrawal = {30., 30., 30., 30., 30.};
-    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal + STS_holders[1].withdrawal;
+    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal
+                                                + STS_holders[1].withdrawal;
     BOOST_CHECK(actualTotalWithdrawal == expectedTotalWithdrawal);
 
     // UnsupE such as TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal gets flat
@@ -223,7 +226,8 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat, InputFixtu
 
     // G + H (= TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal) gets flat
     std::vector<double> expectedTotalWithdrawal = {30., 30., 30., 30., 30.};
-    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal + STS_holders[1].withdrawal;
+    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal
+                                                + STS_holders[1].withdrawal;
     BOOST_CHECK(actualTotalWithdrawal == expectedTotalWithdrawal);
 
     // UnsupE such as TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal gets flat
@@ -254,7 +258,8 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture_5_2, *boost::unit_test::
     runRemixStorageAlgorithm();
 
     std::vector<double> expectedTotalWithdrawal = {0., 7.5, 27.5, 47.5, 67.5};
-    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal + STS_holders[1].withdrawal;
+    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal
+                                                + STS_holders[1].withdrawal;
     BOOST_TEST(actualTotalWithdrawal == expectedTotalWithdrawal, boost::test_tools::per_element());
 
     // 2. But withdrawal_1 and widrawal_2 is limited by pmax_1 and pmax_2. So Algo does nothing
@@ -276,4 +281,107 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture_5_2, *boost::unit_test::
 
     std::vector<double> expectedUnsupE = {50., 50., 50., 50., 50.};
     BOOST_CHECK(UnsupE == expectedUnsupE);
+}
+
+BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture_5_3)
+{
+    STS_holders[0].withdrawal = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
+    STS_holders[1].withdrawal = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
+    STS_holders[2].withdrawal = {100., 200., 100., 200., 100.}; // Total = 700. Mean = 140.
+
+    // Initial generation sum = {120., 240., 120., 240., 120.}
+    // Total Mean = 168.0
+
+    // 1. Set inflows to match the mean generation for each storage
+    // This means if generation is flat, levels are flat.
+    std::ranges::fill(STS_holders[0].inflows, 14.);
+    std::ranges::fill(STS_holders[1].inflows, 14.);
+    std::ranges::fill(STS_holders[2].inflows, 140.);
+
+    // 2. Set non-binding levels and capacities
+    STS_holders[0].initLevel = STS_holders[1].initLevel = STS_holders[2].initLevel = 1000.;
+    STS_holders[0].capacity = STS_holders[1].capacity = STS_holders[2].capacity = 2000.;
+
+    // 3. Set driving signals
+    std::ranges::fill(TotaGenWithoutStorage, 0.);          // Flat
+    UnsupE.assign(STS_holders[0].withdrawal.size(), 100.); // Zero UnsupE -> signal to flatten
+
+    runRemixStorageAlgorithm();
+
+    // --- Check Results ---
+
+    // 1. Check that total hydro generation is perfectly flat
+    std::vector<double> sumGeneration = STS_holders[0].withdrawal + STS_holders[1].withdrawal
+                                        + STS_holders[2].withdrawal;
+
+    std::vector<double> expected_sumGeneration = {168., 168., 168., 168., 168.};
+    for (unsigned i = 0; i < sumGeneration.size(); ++i)
+    {
+        BOOST_CHECK_CLOSE(sumGeneration[i], expected_sumGeneration[i], 1e-3);
+    }
+}
+
+
+BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture_8_2)
+{
+    // ------------------------------
+    // SETUP: Two reservoirs with distinct s1.inflows and generations
+    // ------------------------------
+    STS_holders[0].withdrawal = {10., 15., 20., 15., 10., 5., 10., 15.};
+    STS_holders[1].withdrawal = {5., 10., 15., 10., 5., 0., 5., 10.};
+
+    STS_holders[0].inflows = {12., 18., 20., 18., 12., 8., 12., 18.};
+    STS_holders[1].inflows = {6., 12., 16., 12., 6., 2., 6., 12.};
+
+    STS_holders[0].initLevel = 100.;
+    STS_holders[1].initLevel = 50.;
+
+    STS_holders[0].capacity = 500.;
+    STS_holders[1].capacity = 300.;
+
+    UnsupE.assign(STS_holders[0].withdrawal.size(), 0.); // Not relevant for flow conservation
+
+    // ------------------------------
+    // Record pre-call total s1.inflows, generations, and init s1.levels
+    // ------------------------------
+    double total_inflow_before = std::accumulate(STS_holders[0].inflows.begin(), STS_holders[0].inflows.end(), 0.0)
+                                 + std::accumulate(STS_holders[1].inflows.begin(), STS_holders[1].inflows.end(), 0.0);
+
+    double total_gen_before = std::accumulate(STS_holders[0].withdrawal.begin(), STS_holders[0].withdrawal.end(), 0.0)
+                              + std::accumulate(STS_holders[1].withdrawal.begin(), STS_holders[1].withdrawal.end(), 0.0);
+
+    double total_init_level = STS_holders[0].initLevel + STS_holders[1].initLevel;
+
+    // ------------------------------
+    // Run Remix algorithm
+    // ------------------------------
+    runRemixStorageAlgorithm();
+
+    // ------------------------------
+    // Compute flow balance after remix
+    // ------------------------------
+    double total_inflow_after = std::accumulate(STS_holders[0].inflows.begin(), STS_holders[0].inflows.end(), 0.0)
+                                + std::accumulate(STS_holders[1].inflows.begin(), STS_holders[1].inflows.end(), 0.0);
+
+    double total_gen_after = std::accumulate(STS_holders[0].withdrawal.begin(), STS_holders[0].withdrawal.end(), 0.0)
+                             + std::accumulate(STS_holders[1].withdrawal.begin(), STS_holders[1].withdrawal.end(), 0.0);
+
+    double total_final_level = STS_holders[0].levels.back() + STS_holders[1].levels.back();
+
+    // ------------------------------
+    // Check flow conservation
+    // ------------------------------
+
+    // 1. Check that total s1.inflows were not modified
+    BOOST_TEST(std::abs(total_inflow_after - total_inflow_before) < 1e-3);
+
+    // 2. Check that total generation was conserved (remixing just *shifts* energy)
+    BOOST_TEST(std::abs(total_gen_after - total_gen_before) < 1e-3);
+
+    // 3. Check the main flow balance equation:
+    // (Total Inflow - Total Generation) must equal (Change in Storage)
+    double imbalance = std::abs((total_inflow_after - total_gen_after)
+                                - (total_final_level - total_init_level));
+
+    BOOST_TEST(imbalance < 1e-3); // Flow perfectly conserved within tolerance
 }
