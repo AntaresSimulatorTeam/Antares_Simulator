@@ -74,11 +74,7 @@ struct InputFixture
         storagesForRemix.push_back(sts_1.createSTS(UnsupE, "sts1"));
         storagesForRemix.push_back(sts_2.createSTS(UnsupE, "sts2"));
 
-        shavePeaksByRemixingStorageGen(Load,
-                                       UnsupE,
-                                       Spillage,
-                                       DTG_MRG,
-                                       storagesForRemix);
+        shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
     }
 
     STS_holder<nb_hours> sts_1;

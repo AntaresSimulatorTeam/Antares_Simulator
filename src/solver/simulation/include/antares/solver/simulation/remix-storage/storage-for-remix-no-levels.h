@@ -22,11 +22,6 @@ public:
     const std::vector<double>& initWithdrawal() const override;
     std::vector<double>& withdrawal() override;
 
-    const std::string& name() const override
-    {
-        return name_;
-    }
-
 protected:
     void checkInput(size_t size) override;
 
@@ -35,8 +30,6 @@ protected:
     std::vector<double>& unsupE_;
     const std::vector<double> pmax_;
     const std::vector<double> pmin_;
-
-    std::string name_;
     const std::string error_msg_start_hydro_remix = "Remix hydro input : ";
 };
 

@@ -12,12 +12,12 @@ StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal
                                                  const std::vector<double> Pmax,
                                                  const std::vector<double> Pmin,
                                                  const std::string& name):
+    IStorageForRemix(name),
     withdrawal_(withdrawal),
     initWithdrawal_(withdrawal),
     unsupE_(unsupE),
     pmax_(Pmax),
-    pmin_(Pmin),
-    name_(name)
+    pmin_(Pmin)
 {
     checkInput(unsupE_.size());
 }
