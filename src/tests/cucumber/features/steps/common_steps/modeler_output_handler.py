@@ -2,11 +2,43 @@
 
 import pandas as pd
 import numpy as np
+import common_steps.mps_utils as mpu
+import os
+
+def read_if_exists(path, readfunc):
+    if (os.path.exists(path)):
+        return readfunc(path)
+    else:
+        return None
+
+class invest_problems:
+    def __init__(self, master, subproblem, structure):
+        self.master = master
+        self.subproblem = subproblem
+        self.structure = structure
 
 class modeler_output_handler:
-
-    def __init__(self, simulation_table_location):
+    def __init__(self, simulation_table_location, output_location=None):
         self.simulation_table = modeler_output_handler.__read_simulation_table(simulation_table_location)
+        if output_location:
+            self.problems = modeler_output_handler.__read_problems(output_location)
+
+    @staticmethod
+    def __read_problems(output_location):
+        # MASTER
+        try:
+            master = read_if_exists(os.path.join(output_location, "master.mps"), mpu.load_problem)
+        except:
+            master = None
+
+        # SUBPROBLEM
+        try:
+            subproblem = read_if_exists(os.path.join(output_location, "1-1.mps"), mpu.load_problem)
+        except:
+            subproblem = None
+
+        structure = read_if_exists(os.path.join(output_location, "structure.txt"), lambda x: open(x, 'r').readlines())
+        return invest_problems(master, subproblem, structure)
 
     @staticmethod
     def __read_simulation_table(absolute_path) -> pd.DataFrame:

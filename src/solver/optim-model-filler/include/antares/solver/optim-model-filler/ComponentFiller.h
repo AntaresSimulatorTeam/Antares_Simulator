@@ -106,5 +106,13 @@ private:
     const ScenarioGroupRepository& scenarioGroupRepository_;
     const Modeler::Config::Location targetLocation_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
+
+    // Filter to keep only items compatible with the target location
+    auto locationFilter()
+    {
+        return std::views::filter(
+          [this](const auto& item)
+          { return AreLocationsCompatible(item.location(), targetLocation_); });
+    }
 };
 } // namespace Antares::Optimisation

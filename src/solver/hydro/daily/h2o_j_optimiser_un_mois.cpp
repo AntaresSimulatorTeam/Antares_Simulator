@@ -24,7 +24,7 @@
 
 namespace DoneesOptimisationJournaliere
 {
-void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
+void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles, const std::string& areaName)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
@@ -45,10 +45,9 @@ void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
 
     DonneesMensuelles->ResultatsValides = NON;
 
-    H2O_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme);
+    H2O_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme, areaName);
     H2O_J_InitialiserLesBornesdesVariables(DonneesMensuelles, NumeroDeProbleme);
     H2O_J_ResoudreLeProblemeLineaire(DonneesMensuelles, NumeroDeProbleme);
-    H2O_J_LisserLesSurTurbines(DonneesMensuelles, NumeroDeProbleme);
 
     return;
 }

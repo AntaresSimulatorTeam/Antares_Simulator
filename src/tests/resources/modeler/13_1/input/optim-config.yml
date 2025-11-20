@@ -15,8 +15,6 @@ models:
       variables:
         - id: p_max
           location: master-and-subproblems
-        - id: master_only
-          location: master
 
         # Variable generation has default settings, no need to make it appear here
       objective-contributions:

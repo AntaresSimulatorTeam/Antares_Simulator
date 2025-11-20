@@ -21,6 +21,7 @@
 #pragma once
 
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 #include <antares/expressions/expression.h>
@@ -76,7 +77,7 @@ public:
         return objectives_;
     }
 
-    const std::vector<Constraint>& Constraints() const
+    std::vector<Constraint>& Constraints()
     {
         return constraints_;
     }

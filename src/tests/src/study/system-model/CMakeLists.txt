@@ -5,6 +5,7 @@ add_boost_test(test-system-model
   test_component.cpp
   test_system.cpp
   test_library.cpp
+  test_optim-config.cpp
   LIBS
   Antares::antlr-interface
   Antares::exception
