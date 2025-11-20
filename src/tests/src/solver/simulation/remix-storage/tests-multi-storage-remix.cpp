@@ -4,7 +4,6 @@
 
 #include <unit_test_utils.h>
 #include <vector>
-#include <numeric>
 
 #include <boost/test/unit_test.hpp>
 
@@ -289,7 +288,7 @@ BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture_5_3
     STS_holders[1].withdrawal = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
     STS_holders[2].withdrawal = {100., 200., 100., 200., 100.}; // Total = 700. Mean = 140.
 
-    // Initial generation sum = {120., 240., 120., 240., 120.}
+    // So we have an initial generation sum = {120., 240., 120., 240., 120.}
     // Total Mean = 168.0
 
     // 1. Set inflows to match the mean generation for each storage
@@ -344,12 +343,8 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture_8_2)
     // ------------------------------
     // Record pre-call total s1.inflows, generations, and init s1.levels
     // ------------------------------
-    double total_inflow_before = std::accumulate(STS_holders[0].inflows.begin(), STS_holders[0].inflows.end(), 0.0)
-                                 + std::accumulate(STS_holders[1].inflows.begin(), STS_holders[1].inflows.end(), 0.0);
-
-    double total_gen_before = std::accumulate(STS_holders[0].withdrawal.begin(), STS_holders[0].withdrawal.end(), 0.0)
-                              + std::accumulate(STS_holders[1].withdrawal.begin(), STS_holders[1].withdrawal.end(), 0.0);
-
+    double total_inflow_before = sum(STS_holders[0].inflows + STS_holders[1].inflows);
+    double total_gen_before = sum(STS_holders[0].withdrawal + STS_holders[1].withdrawal);
     double total_init_level = STS_holders[0].initLevel + STS_holders[1].initLevel;
 
     // ------------------------------
@@ -360,12 +355,8 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture_8_2)
     // ------------------------------
     // Compute flow balance after remix
     // ------------------------------
-    double total_inflow_after = std::accumulate(STS_holders[0].inflows.begin(), STS_holders[0].inflows.end(), 0.0)
-                                + std::accumulate(STS_holders[1].inflows.begin(), STS_holders[1].inflows.end(), 0.0);
-
-    double total_gen_after = std::accumulate(STS_holders[0].withdrawal.begin(), STS_holders[0].withdrawal.end(), 0.0)
-                             + std::accumulate(STS_holders[1].withdrawal.begin(), STS_holders[1].withdrawal.end(), 0.0);
-
+    double total_inflow_after = sum(STS_holders[0].inflows + STS_holders[1].inflows);
+    double total_gen_after = sum(STS_holders[0].withdrawal + STS_holders[1].withdrawal);
     double total_final_level = STS_holders[0].levels.back() + STS_holders[1].levels.back();
 
     // ------------------------------
