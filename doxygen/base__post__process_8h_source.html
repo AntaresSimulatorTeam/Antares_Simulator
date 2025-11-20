@@ -204,23 +204,25 @@ $(document).ready(function(){initNavTree('base__post__process_8h_source.html',''
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                                                            uint numSpace,</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                                                            <a class="code" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a>&amp; areas,</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                                                            <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Parameters.html">Data::Parameters</a>&amp; params,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                                                            <a class="code" href="classAntares_1_1Date_1_1Calendar.html">Calendar</a>&amp; calendar);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">void</span> runAll(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html">optRuntimeData</a>&amp; opt_runtime_data);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Member functions</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html">interfacePostProcessList</a>(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo, uint numSpace);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// Data mambers</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* <span class="keyword">const</span> problemeHebdo_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace_;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    std::vector&lt;std::unique_ptr&lt;basePostProcessCommand&gt;&gt; post_process_list;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                                                            <a class="code" href="classAntares_1_1Date_1_1Calendar.html">Calendar</a>&amp; calendar,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                                                            <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; resultWriter);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">void</span> runAll(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html">optRuntimeData</a>&amp; opt_runtime_data);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// Member functions</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html">interfacePostProcessList</a>(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo, uint numSpace);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// Data mambers</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* <span class="keyword">const</span> problemeHebdo_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace_;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    std::vector&lt;std::unique_ptr&lt;basePostProcessCommand&gt;&gt; post_process_list;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;};</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition:</b> area.h:365</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition:</b> parameters.h:51</div></div>
 <div class="ttc" id="aclassAntares_1_1Date_1_1Calendar_html"><div class="ttname"><a href="classAntares_1_1Date_1_1Calendar.html">Antares::Date::Calendar</a></div><div class="ttdef"><b>Definition:</b> date.h:180</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand.html">Antares::Solver::Simulation::basePostProcessCommand</a></div><div class="ttdef"><b>Definition:</b> base_post_process.h:51</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html">Antares::Solver::Simulation::interfacePostProcessList</a></div><div class="ttdef"><b>Definition:</b> base_post_process.h:65</div></div>
 <div class="ttc" id="astructAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams_html"><div class="ttname"><a href="structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html">Antares::Data::AdequacyPatch::AdqPatchParams</a></div><div class="ttdef"><b>Definition:</b> adq-patch-params.h:114</div></div>

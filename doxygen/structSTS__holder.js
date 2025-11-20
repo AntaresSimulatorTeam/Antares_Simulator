@@ -1,7 +1,7 @@
 var structSTS__holder =
 [
     [ "STS_holder", "structSTS__holder.html#a27ad5920645b602475cddbc9da88c569", null ],
-    [ "createSTS", "structSTS__holder.html#a9c0031bd08f2b04687de18c0bf37356c", null ],
+    [ "createSTS", "structSTS__holder.html#a494ce0238aa57b02e48eeae4b87b5f4b", null ],
     [ "capacity", "structSTS__holder.html#a0efb729a75c6868f4131019839ac965e", null ],
     [ "inflows", "structSTS__holder.html#aec3d8765ae08024faadc3cc09e3d74b0", null ],
     [ "initLevel", "structSTS__holder.html#aaa685ff4485aa326df412e0eade807e6", null ],
