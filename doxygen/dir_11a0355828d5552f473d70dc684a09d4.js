@@ -9,6 +9,7 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "dispatchableGeneration.h", "dispatchableGeneration_8h_source.html", null ],
     [ "domesticUnsuppliedEnergy.h", "domesticUnsuppliedEnergy_8h_source.html", null ],
     [ "dtgMarginAfterCsr.h", "dtgMarginAfterCsr_8h_source.html", null ],
+    [ "economy_base.h", "economy__base_8h_source.html", null ],
     [ "hydroCost.h", "hydroCost_8h_source.html", null ],
     [ "hydrostorage.h", "hydrostorage_8h_source.html", null ],
     [ "inflow.h", "inflow_8h_source.html", null ],

@@ -155,7 +155,7 @@ $(document).ready(function(){initNavTree('lolp_8h_source.html',''); initResizabl
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Economy</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLPTraits.html">   29</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLPTraits.html">LOLPTraits</a></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLPTraits.html">   29</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLPTraits.html">LOLPTraits</a>: <span class="keyword">public</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base__Traits.html">LOLP_Base_Traits</a></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">static</span> std::string Caption()</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    {</div>
@@ -173,16 +173,20 @@ $(document).ready(function(){initNavTree('lolp_8h_source.html',''); initResizabl
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base.html">LOLP</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base.html">LOLP_Base&lt;LOLPTraits, NextT&gt;</a>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">using</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base.html">VCardLOLP</a> = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base.html">VCard_Base&lt;LOLPTraits&gt;</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html">LOLP</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html">Economy_Base&lt;LOLPTraits, NextT&gt;</a>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SOLVER_VARIABLE_ECONOMY_LOLP_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base.html">Antares::Solver::Variable::Economy::LOLP_Base</a></div><div class="ttdoc">Base class for LOLP and LOLP_CSR variables.</div><div class="ttdef"><b>Definition:</b> lolp_base.h:101</div></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SOLVER_VARIABLE_ECONOMY_LOLP_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html">Antares::Solver::Variable::Economy::Economy_Base</a></div><div class="ttdoc">Base class for economy variables like LOLP and LOLD.</div><div class="ttdef"><b>Definition:</b> economy_base.h:100</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:71</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html_a99786f5083293932efe8934c74c0e1d7"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html#a99786f5083293932efe8934c74c0e1d7">Antares::Solver::Variable::State::hourInTheWeek</a></div><div class="ttdeci">unsigned int hourInTheWeek</div><div class="ttdoc">Current hour in the week (zero-based)</div><div class="ttdef"><b>Definition:</b> state.h:150</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLPTraits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLPTraits.html">Antares::Solver::Variable::Economy::LOLPTraits</a></div><div class="ttdef"><b>Definition:</b> lolp.h:30</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base__Traits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base__Traits.html">Antares::Solver::Variable::Economy::LOLP_Base_Traits</a></div><div class="ttdef"><b>Definition:</b> lolp_base.h:30</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base.html">Antares::Solver::Variable::Economy::VCard_Base</a></div><div class="ttdef"><b>Definition:</b> economy_base.h:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
