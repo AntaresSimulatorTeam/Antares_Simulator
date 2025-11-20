@@ -33,11 +33,10 @@ namespace Antares::Optimisation
 {
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-
+  const Optimisation::OptimEntityContainer& optimEntityContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const Component& component,
-  const Optimisation::OptimEntityContainer& optimEntityContainer):
-    linear_expression_visitor_(optimEntityContainer, component, fillContext)
+  const Component& component):
+    linear_expression_visitor_(optimEntityContainer, fillContext, component)
 {
 }
 
@@ -159,6 +158,16 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const TimeSumNode*)
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
+{
+    throw IllegalNodeException();
+}
+
+LinearConstraint ReadLinearConstraintVisitor::visit(const ReducedCostNode*)
+{
+    throw IllegalNodeException();
+}
+
+LinearConstraint ReadLinearConstraintVisitor::visit(const DualNode*)
 {
     throw IllegalNodeException();
 }

@@ -100,6 +100,7 @@ jobs:
       run: sudo apt-get install -y ccache
 
     - name: Restore ccache cache
+      id: cache
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.ccache
@@ -138,7 +139,7 @@ jobs:
         docker rm $container_id
 
     - name: Push artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: centos-targz
         path: archive/*.tar.gz
@@ -171,9 +172,20 @@ jobs:
     - name: Display ccache statistics
       run: ccache -s
 
+    # Delete the old cache on hit to emulate a cache update. See
+    # https://github.com/actions/cache/issues/342.
+    - name: Delete old cache
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ github.token }}
+      if: steps.cache.outputs.cache-hit
+      # Using `--repo` makes it so that this step doesn't require checking out the
+      # repo first.
+      run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
+
     - name: Save ccache cache
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.ccache
-        key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
+        key: ${{ steps.cache.outputs.cache-primary-key }}
 

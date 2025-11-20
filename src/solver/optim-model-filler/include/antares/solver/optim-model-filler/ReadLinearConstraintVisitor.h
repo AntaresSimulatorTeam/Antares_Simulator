@@ -58,9 +58,9 @@ class ReadLinearConstraintVisitor final: public Expressions::Visitors::NodeVisit
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
+      const Optimisation::OptimEntityContainer& optimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const ModelerStudy::SystemModel::Component& component,
-      const Optimisation::OptimEntityContainer& variableContainer);
+      const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
@@ -82,6 +82,8 @@ private:
     LinearConstraint visit(const Expressions::Nodes::TimeIndexNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::TimeSumNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::AllTimeSumNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::ReducedCostNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::DualNode* node) override;
 
     ReadLinearExpressionVisitor linear_expression_visitor_;
 };

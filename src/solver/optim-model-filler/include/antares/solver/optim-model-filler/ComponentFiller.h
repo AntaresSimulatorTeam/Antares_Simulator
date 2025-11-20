@@ -23,25 +23,49 @@
 
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
+#include <antares/study/system-model/variable.h>
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
-namespace Antares::ModelerStudy::SystemModel
-{
-class Component;
-class Variable;
-} // namespace Antares::ModelerStudy::SystemModel
-
-namespace Antares::Expressions::Visitors
-{
-class EvalVisitor;
-}
-
 namespace Antares::Optimisation
 {
-class ScenarioGroupRepository;
+
+// Represents a variable shared by master and subproblems
+struct ConnectionVariable
+{
+    std::string name;
+    unsigned indexInProblem;
+};
+
+class BendersDecomposition
+{
+public:
+    BendersDecomposition() = default;
+    void setCurrentProblemId(std::string id);
+    void collectConnectionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
+
+    const std::map<std::string, std::vector<ConnectionVariable>>& connections() const
+    {
+        return connectionVars_;
+    }
+
+private:
+    std::map<std::string, std::vector<ConnectionVariable>> connectionVars_;
+    std::string currentProblemId_ = "master";
+};
+
+class BendersDecompositionWriter
+{
+public:
+    BendersDecompositionWriter(const BendersDecomposition& bd);
+    void write(std::ostream& os) const;
+
+private:
+    const BendersDecomposition& bd_;
+};
 
 /**
  * Component filler
@@ -55,10 +79,11 @@ public:
 
     ComponentFiller(ComponentFiller& other) = delete;
 
-    /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              OptimEntityContainer& optimEntityContainer,
-                             const ScenarioGroupRepository& scenarioGroupRepository);
+                             const ScenarioGroupRepository& scenarioGroupRepository,
+                             Modeler::Config::Location targetLocation,
+                             BendersDecomposition* bendersDecomposition = nullptr);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
@@ -79,49 +104,15 @@ private:
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
-};
+    const Modeler::Config::Location targetLocation_;
+    BendersDecomposition* bendersDecomposition_ = nullptr;
 
-class VariablesBulkAddition
-{
-public:
-    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          OptimEntityContainer& optimEntityContainer);
-
-    void addVariable(const std::string& compoId,
-                     const std::string& variableId,
-                     double lb,
-                     double ub,
-                     bool integer,
-                     const Optimisation::Dimensions& dim) const;
-
-    void addVariable(const std::string& compoId,
-                     const std::string& variableId,
-                     const std::vector<double>& lb,
-                     double ub,
-                     bool integer,
-                     const Optimisation::Dimensions& dim) const;
-
-    void addVariable(const std::string& compoId,
-                     const std::string& variableId,
-                     double lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Optimisation::Dimensions& dim) const;
-
-    void addVariable(const std::string& compoId,
-                     const std::string& variableId,
-                     const std::vector<double>& lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Optimisation::Dimensions& dim) const;
-
-    class BoundsSizeMismatch: public std::invalid_argument
+    // Filter to keep only items compatible with the target location
+    auto locationFilter()
     {
-        using std::invalid_argument::invalid_argument;
-    };
-
-private:
-    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    OptimEntityContainer& optimEntityContainer_;
+        return std::views::filter(
+          [this](const auto& item)
+          { return AreLocationsCompatible(item.location(), targetLocation_); });
+    }
 };
 } // namespace Antares::Optimisation

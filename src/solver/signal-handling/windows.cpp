@@ -22,8 +22,7 @@
 
 #include <windows.h>
 
-#include "../application.h"
-#include "common.h"
+#include "antares/signal-handling/common.h"
 
 BOOL WINAPI ConsoleHandler(DWORD dwType)
 {
@@ -36,6 +35,7 @@ BOOL WINAPI ConsoleHandler(DWORD dwType)
         signalCtrl_term(0);
         break;
     default:
+        break;
     }
     return TRUE;
 }

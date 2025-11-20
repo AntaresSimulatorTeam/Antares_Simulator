@@ -165,7 +165,8 @@ static void ExportGridInfosAreas(const Data::Study& study,
         std::filesystem::path path = originalOutput;
         path /= "grid";
         path /= filename;
-        writer.addEntryFromBuffer(path.string(), buffer);
+        std::string bufferToStr = buffer.c_str();
+        writer.addEntryFromBuffer(path.string(), bufferToStr);
     };
 
     add("areas.txt", std::move(out));
@@ -803,7 +804,8 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     }
 
     // mc-ind & mc-all
-    pResultWriter.addEntryFromBuffer(data.filename.c_str(), data.fileBuffer);
+    std::string bufferStr = data.fileBuffer.c_str();
+    pResultWriter.addEntryFromBuffer(data.filename.c_str(), bufferStr);
 }
 
 void SurveyResults::exportGridInfos()

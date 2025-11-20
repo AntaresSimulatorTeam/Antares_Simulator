@@ -52,8 +52,8 @@ public:
      */
     explicit ReadLinearExpressionVisitor(
       const OptimEntityContainer& optimEntityContainer,
-      const Antares::ModelerStudy::SystemModel::Component& component,
-      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext);
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+      const Antares::ModelerStudy::SystemModel::Component& component);
 
     Antares::Optimization::TimeDependentLinearExpression visitMergeDuplicates(
       const Nodes::Node* node);
@@ -108,6 +108,10 @@ public:
       const Nodes::TimeSumNode* node) override;
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::AllTimeSumNode* node) override;
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::ReducedCostNode* node) override;
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::DualNode* node) override;
 
 private:
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;

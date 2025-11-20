@@ -125,6 +125,18 @@ LinearExpression& LinearExpression::operator-=(const LinearExpression& other)
     return *this;
 }
 
+LinearExpression LinearExpression::operator/(const LinearExpression& other) const
+{
+    if (other.hasCoefs())
+    {
+        throw std::invalid_argument("A linear expression can't have a variable as a dividend.");
+    }
+    double inv = 1.0 / other.constant();
+    LinearExpression out(*this);
+    out *= inv;
+    return out;
+}
+
 LinearExpression LinearExpression::operator-() const
 {
     LinearExpression ret;
@@ -163,7 +175,7 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
     {
         // Multiplying two symbolic expressions would give quadratic terms,
         // which this representation cannot hold.
-        throw std::runtime_error("Quadratic term detected");
+        throw std::invalid_argument("A linear expression can't have quadratic terms.");
     }
 
     else if (hasCoefs() && !other.hasCoefs())

@@ -169,8 +169,6 @@ struct CONTRAINTES_COUPLANTES
     std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
 };
 
-namespace ShortTermStorage
-{
 struct PROPERTIES
 {
     double reservoirCapacity;
@@ -192,7 +190,7 @@ struct PROPERTIES
     std::string name;
 };
 
-using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
+using AREA_INPUT = std::vector<PROPERTIES>; // index is local
 
 struct RESULTS
 {
@@ -201,7 +199,6 @@ struct RESULTS
     std::vector<double> injection;  // MWh
     std::vector<double> withdrawal; // MWh
 };
-} // namespace ShortTermStorage
 
 struct DEMAND_MARKET_POOL
 {
@@ -375,7 +372,7 @@ struct RESULTATS_HORAIRES
     std::vector<double> CoutsMarginauxHorairesCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
-    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
+    std::vector<::RESULTS> ShortTermStorage;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -410,7 +407,6 @@ struct PROBLEME_HEBDO
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
     bool OptimisationAvecVariablesEntieres = false;
     uint32_t NombreDePays = 0;
@@ -446,7 +442,7 @@ struct PROBLEME_HEBDO
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     uint32_t NumberOfShortTermStorages = 0;
-    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
+    std::vector<::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
@@ -465,7 +461,6 @@ struct PROBLEME_HEBDO
 
     Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
-    bool ExportStructure = false;
     bool NamedProblems = false;
     bool exportSolutions = false;
 

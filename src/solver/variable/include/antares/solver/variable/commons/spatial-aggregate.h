@@ -18,8 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#ifndef __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
-#define __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
+#pragma once
 
 #include "antares/solver/variable/variable.h"
 
@@ -506,5 +505,3 @@ struct SpatialAggregateAll<Last>
 };
 
 } // namespace Antares::Solver::Variable::Common
-
-#endif // __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__

@@ -24,6 +24,7 @@
 
 #include <antares/expressions/expression.h>
 
+#include "optimConfig.h"
 #include "timeAndScenarioType.h"
 #include "valueType.h"
 
@@ -39,13 +40,15 @@ public:
              Expression upper_bound,
              ValueType type,
              TimeDependent timeDependent,
-             ScenarioDependent scenarioDependent):
+             ScenarioDependent scenarioDependent,
+             Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
         id_(std::move(id)),
         type_(type),
         lowerBound_(std::move(lower_bound)),
         upperBound_(std::move(upper_bound)),
         timeDependent_(timeDependent),
-        scenarioDependent_(scenarioDependent)
+        scenarioDependent_(scenarioDependent),
+        location_(location)
     {
     }
 
@@ -79,6 +82,16 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
+    void setLocation(Modeler::Config::Location loc)
+    {
+        location_ = loc;
+    }
+
+    [[nodiscard]] Modeler::Config::Location location() const
+    {
+        return location_;
+    }
+
 private:
     std::string id_;
     ValueType type_;
@@ -86,6 +99,7 @@ private:
     Expression upperBound_;
     TimeDependent timeDependent_ = TimeDependent::YES;
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;
+    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

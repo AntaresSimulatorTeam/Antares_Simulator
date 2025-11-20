@@ -17,12 +17,15 @@ target_include_directories(checks
 )
 
 target_link_libraries(checks
+        PUBLIC
+        Antares::exception
         PRIVATE
         logs
         yuni-static-core
         exception
         Antares::study # cpp -> area
         antares-core
+        Antares::enums
 )
 
 install(DIRECTORY include/antares

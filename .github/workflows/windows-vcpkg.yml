@@ -74,6 +74,7 @@ jobs:
 
 
     - name: Restore ccache cache
+      id: cache
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.ccache_windows
@@ -153,7 +154,7 @@ jobs:
 
     - name: Upload .zip
       if: ${{ success() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{env.ZIP_ARCHIVE_NAME}}
         path: _build/${{env.ZIP_ARCHIVE_NAME}}
@@ -206,7 +207,7 @@ jobs:
 
     - name: Upload build on failure
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: MPS-diff
         path: ${{ github.workspace }}/src/tests/mps
@@ -386,13 +387,13 @@ jobs:
 
     - name: Upload NSIS log on failure
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: NSISError.log
         path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: Installer upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: installer
         path: _build/${{env.NSIS_NAME}}
@@ -426,9 +427,21 @@ jobs:
     - name: Display ccache statistics
       run: ccache -s
 
+    # Delete the old cache on hit to emulate a cache update. See
+    # https://github.com/actions/cache/issues/342.
+    - name: Delete old cache
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_DEBUG: api gh cache delete
+      if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
+      # Using `--repo` makes it so that this step doesn't require checking out the
+      # repo first.
+      run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
+
     - name: Save ccache cache
       if: ${{ !cancelled() }}
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.ccache_windows
-        key: ${{ env.os }}-${{ github.ref_name }}
+        key: ${{ steps.cache.outputs.cache-primary-key }}

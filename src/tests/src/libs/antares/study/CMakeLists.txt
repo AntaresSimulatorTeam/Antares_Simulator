@@ -22,5 +22,6 @@ add_boost_test(test-study
 add_boost_test(test-duplicates
   SRC test_duplicates.cpp
   LIBS
+  test_utils_unit
   Antares::study
   Antares::exception)

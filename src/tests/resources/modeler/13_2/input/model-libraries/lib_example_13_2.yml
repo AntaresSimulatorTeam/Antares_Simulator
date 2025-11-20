@@ -1,0 +1,163 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+library:
+  id: lib_example_13_2
+  description: Library for test cases with investment
+
+  port-types:
+    - id: flow
+      description: A port which transfers power flow
+      fields:
+        - id: flow
+
+  models:
+    - id: area
+      parameters:
+        - id: spillage_cost
+        - id: ens_cost
+      variables:
+        - id: spillage
+          lower-bound: 0
+          upper-bound: 1000000
+          variable-type: continuous
+        - id: unsupplied_energy
+          lower-bound: 0
+          upper-bound: 1000000
+          variable-type: continuous
+      ports:
+        - id: balance_port
+          type: flow
+      binding-constraints:
+        - id: balance
+          expression: sum_connections(balance_port.flow) = spillage - unsupplied_energy
+      objective-contributions: 
+        - id: operational_objective
+          expression: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)
+
+    - id: load
+      parameters:
+        - id: load
+          time-dependent: true
+          scenario-dependent: true
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: -load
+
+    - id: generator
+      parameters:
+        - id: p_max
+          scenario-dependent: false
+          time-dependent: false
+        - id: cost
+          scenario-dependent: false
+          time-dependent: false
+      variables:
+        - id: generation
+          lower-bound: 0
+          upper-bound: p_max
+          variable-type: continuous
+      constraints:
+        - id: max_generation
+          expression: generation <= p_max
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+      objective-contributions: 
+        - id: operational_objective
+          expression:  sum(cost * generation)
+    
+    - id: generator_with_continuous_invest
+      parameters:
+        - id: op_cost
+          scenario-dependent: false
+          time-dependent: false
+        - id: invest_cost
+          scenario-dependent: false
+          time-dependent: false
+      variables:
+        - id: p_max
+          scenario-dependent: false
+          time-dependent: false
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+        - id: generation
+          lower-bound: 0
+          variable-type: continuous
+      constraints:
+        - id: max_generation
+          expression: generation <= p_max
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+      objective-contributions: 
+        - id: operational_objective
+          expression:  sum(op_cost * generation)
+        - id: invest_objective
+          expression: invest_cost * p_max
+
+    - id: generator_with_discrete_invest
+      parameters:
+        - id: op_cost
+          scenario-dependent: false
+          time-dependent: false
+        - id: invest_cost
+          scenario-dependent: false
+          time-dependent: false
+        - id: p_max_per_unit
+          scenario-dependent: false
+          time-dependent: false
+      variables:
+        - id: p_max
+          scenario-dependent: false
+          time-dependent: false
+          lower-bound: 0
+          variable-type: continuous
+        - id: generation
+          lower-bound: 0
+          variable-type: continuous
+        - id: nb_units
+          scenario-dependent: false
+          time-dependent: false
+          lower-bound: 0
+          upper-bound: 10
+          variable-type: integer
+      constraints:
+        - id: max_generation
+          expression: generation <= p_max
+        - id: p_max_nb_units_relation
+          expression: p_max = p_max_per_unit * nb_units
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+      objective-contributions: 
+        - id: operational_objective
+          expression:  sum(op_cost * generation)
+        - id: invest_objective
+          expression: invest_cost * p_max
+      

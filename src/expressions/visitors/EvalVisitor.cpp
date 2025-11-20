@@ -22,10 +22,10 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 
 #include <numeric>
+#include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
@@ -204,6 +204,57 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
     const EvaluationResult expression = dispatch(node->child());
     return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
+{
+    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, node->index());
+
+    if (timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || timeIndex == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    {
+        const auto componentConstraints = optimContainer_.getComponentConstraint(
+          component_,
+          node->index(),
+          1 /* single timestep*/);
+        return EvaluationResult(componentConstraints.first[0]->dual());
+    }
+    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+    const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
+    std::vector<double> constraintValues(nbTimeStep, 0.0);
+    const auto componentConstraints = optimContainer_.getComponentConstraint(component_,
+                                                                             node->index(),
+                                                                             nbTimeStep);
+    for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
+    {
+        constraintValues[constraintInd] = componentConstraints.first[constraintInd]->dual();
+    }
+
+    return EvaluationResult{constraintValues};
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
+{
+    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    {
+        const std::span componentVariables = optimContainer_.getComponentVariable(
+          component_,
+          node->index(),
+          1 /* single timestep*/);
+        return EvaluationResult(componentVariables[0]->reducedCost());
+    }
+    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+    const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
+    std::vector<double> varValues(nbTimeStep, 0.0);
+    const std::span componentVariables = optimContainer_.getComponentVariable(component_,
+                                                                              node->index(),
+                                                                              nbTimeStep);
+    for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
+    {
+        varValues[varInd] = componentVariables[varInd]->reducedCost();
+    }
+    return EvaluationResult{varValues};
 }
 
 std::string EvalVisitor::name() const

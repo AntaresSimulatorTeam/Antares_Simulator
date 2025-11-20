@@ -45,6 +45,8 @@ set(SRC_Expressions
         include/antares/expressions/nodes/UnaryNode.h
         include/antares/expressions/nodes/VariableNode.h
         include/antares/expressions/nodes/TimeIndexNode.h
+        include/antares/expressions/nodes/ReducedCostNode.h
+        include/antares/expressions/nodes/DualNode.h
 
 
         include/antares/expressions/visitors/CloneVisitor.h
@@ -81,13 +83,20 @@ target_link_libraries(expressions
         PUBLIC
         Boost::headers
         Antares::logs
+        fmt::fmt
         #TODO i need LinearProblemData
         linear-problem-api
+        Antares::optim-model-filler
         Antares::modeler-optimisation-container
+        Antares::optim-model-filler
         PRIVATE
         Antares::antares-study-system-model
         Antares::exception
 )
+
+if (MSVC)
+    target_compile_options(expressions PRIVATE /utf-8)
+endif ()
 
 
 add_library(expressions-iterators
@@ -101,4 +110,3 @@ target_link_libraries(expressions-iterators PRIVATE expressions)
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
-

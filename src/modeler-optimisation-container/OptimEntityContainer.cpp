@@ -23,6 +23,8 @@
 
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
+using namespace Antares::ModelerStudy::SystemModel;
+
 namespace Antares::Optimisation
 {
 
@@ -35,34 +37,46 @@ OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& lin
 {
 }
 
-void OptimEntityContainer::addFromSystemComponent(
-  const Antares::ModelerStudy::SystemModel::Component& component)
+void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>& components,
+                                                   Modeler::Config::Location targetLocation)
 {
-    const auto* model = component.getModel();
-    const auto& variables = model->Variables();
-    std::vector<unsigned int> modelVariableGlobalIndices;
-    modelVariableGlobalIndices.resize(variables.size());
-
-    for (std::size_t variableLocalIndex = 0; variableLocalIndex < variables.size();
-         ++variableLocalIndex)
+    optimComponents_.clear();
+    optimComponents_.reserve(components.size());
+    unsigned variableGlobalIndex = 0;
+    for (const auto& component: components)
     {
-        modelVariableGlobalIndices[variableLocalIndex] = variableGlobalIndex_; // used in
-        // ReadlinearExpressionVisitor
-        ++variableGlobalIndex_;
+        auto* model = component.getModel();
+        const auto& variables = model->Variables();
+        std::vector<unsigned int> modelVariableGlobalIndices;
+
+        modelVariableGlobalIndices.reserve(variables.size());
+        for (const auto& variable: variables)
+        {
+            if (AreLocationsCompatible(variable.location(), targetLocation))
+            {
+                modelVariableGlobalIndices.push_back(variableGlobalIndex);
+                ++variableGlobalIndex;
+            }
+            else
+            {
+                // We add dummy data to avoid "holes" in modelVariableGlobalIndices
+                // but these are not to be used
+                modelVariableGlobalIndices.push_back(-1);
+            }
+        }
+        optimComponents_.push_back(
+          {.modelVariableGlobalIndices = modelVariableGlobalIndices,
+           .evaluationContext = Optimisation::EvaluationContext(
+             &component,
+             data_,
+             &scenarioGroupRepository_->scenario(component.getScenarioGroupId()))});
     }
-    optimComponents_.push_back(
-      {.index = component.Index(),
-       .modelVariableGlobalIndices = modelVariableGlobalIndices,
-       .evaluationContext = Optimisation::EvaluationContext(&component,
-                                                            data_,
-                                                            &scenarioGroupRepository_->scenario(
-                                                              component.getScenarioGroupId()))});
 }
 
-void OptimEntityContainer::registerConstraint(const ModelerStudy::SystemModel::Component& component,
+void OptimEntityContainer::registerConstraint(const Component& component,
                                               const TimeIndex& timeIndex)
 {
-    const auto gLobalIndex = ConstraintGLobalIndex();
+    unsigned gLobalIndex = constraintGLobalIndex();
     auto& optimComponent = getOptimComponent(component.Index());
     optimComponent.modelConstraintsGlobalIndices.push_back(gLobalIndex);
     optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);

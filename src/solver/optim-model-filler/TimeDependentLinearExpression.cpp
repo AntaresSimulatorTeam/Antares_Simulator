@@ -188,12 +188,26 @@ TimeDependentLinearExpression& TimeDependentLinearExpression::operator*=(
     {
         expandTo(other.size());
     }
-    int t = 0;
     for (std::size_t t = 0; t < size(); t++)
     {
         this->operator[](t) *= other[t];
     }
     return *this;
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::operator/(
+  const TimeDependentLinearExpression& other) const
+{
+    TimeDependentLinearExpression out(*this);
+    if (other.size() > out.size())
+    {
+        out.expandTo(other.size());
+    }
+    for (std::size_t t = 0; t < size(); t++)
+    {
+        out[t] = out[t] / other[t];
+    }
+    return out;
 }
 
 TimeDependentLinearExpression TimeDependentLinearExpression::operator-() const

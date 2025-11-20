@@ -28,7 +28,6 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/TimeIndexVisitor.h"
 #include "antares/logs/logs.h"
-#include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/modeler/data.h"
@@ -95,6 +94,10 @@ void addVariableEntries(ISimulationTable& simulationTable,
     for (std::size_t varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
         const auto& modelVar = variables[varIndex];
+        if (modelVar.location() != Modeler::Config::Location::SUBPROBLEMS)
+        {
+            continue;
+        }
         bool scenDep = modelVar.IsScenarioDependent();
         bool timeDep = modelVar.isTimeDependent();
         const std::span componentVariables = optimEntityContainer.getComponentVariable(
@@ -202,6 +205,10 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     unsigned constraintLocalIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
+        if (modelConstr.location() != Modeler::Config::Location::SUBPROBLEMS)
+        {
+            continue;
+        }
         const auto& constraintId = modelConstr.Id();
 
         const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(
@@ -391,8 +398,6 @@ void FillSimulationTable(ISimulationTable& simulationTable,
 
     for (const auto& component: modelerData.system->Components())
     {
-        EmptyScenario emptyScenario;
-
         addVariableEntries(simulationTable,
                            linearProblem,
                            fillContext,

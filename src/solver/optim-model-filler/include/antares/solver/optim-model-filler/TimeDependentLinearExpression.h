@@ -69,6 +69,8 @@ public:
 
     TimeDependentLinearExpression operator-() const;
 
+    TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
+
 private:
     void expandTo(std::size_t nbTimesteps);
 
