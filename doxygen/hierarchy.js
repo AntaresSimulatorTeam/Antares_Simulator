@@ -603,6 +603,7 @@ var hierarchy =
     [ "Antares::HydroManagement", "classAntares_1_1HydroManagement.html", null ],
     [ "Antares::Data::HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", null ],
     [ "HydroPowerData", "structHydroPowerData.html", null ],
+    [ "HydroStorageData", "structHydroStorageData.html", null ],
     [ "Antares::Solver::Variable::Economy::HydroTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html", null ],
     [ "I_MPS_writer", "classI__MPS__writer.html", [
       [ "fullOrToolsMPSwriter", "classfullOrToolsMPSwriter.html", null ],

@@ -134,12 +134,12 @@ $(document).ready(function(){initNavTree('structInputFixture.html',''); initResi
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aeb3d7f53766e66fa2589dd8cf5a9f611"><td class="memItemLeft" align="right" valign="top"><a id="aeb3d7f53766e66fa2589dd8cf5a9f611"></a>
-std::shared_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">IStorageForRemix</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>createHydroForRemix</b> ()</td></tr>
-<tr class="separator:aeb3d7f53766e66fa2589dd8cf5a9f611"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d38ab0339c07608b629648c816543a6"><td class="memItemLeft" align="right" valign="top"><a id="a7d38ab0339c07608b629648c816543a6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>callRemixStorageAlgorithm</b> ()</td></tr>
-<tr class="separator:a7d38ab0339c07608b629648c816543a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1ec227f86dce037446d98e863d8ec4b"><td class="memItemLeft" align="right" valign="top"><a id="ae1ec227f86dce037446d98e863d8ec4b"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">IStorageForRemix</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>createHydroForRemix</b> (<a class="el" href="structHydroStorageData.html">HydroStorageData</a> &amp;storageData)</td></tr>
+<tr class="separator:ae1ec227f86dce037446d98e863d8ec4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5596b4d3574af1ec0b0b65f6edcfbb52"><td class="memItemLeft" align="right" valign="top"><a id="a5596b4d3574af1ec0b0b65f6edcfbb52"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>callRemixStorageAlgorithm</b> (unsigned nbStorage=1)</td></tr>
+<tr class="separator:a5596b4d3574af1ec0b0b65f6edcfbb52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6d240297fc763a64fe907a6d4bc0e1f"><td class="memItemLeft" align="right" valign="top"><a id="aa6d240297fc763a64fe907a6d4bc0e1f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>runRemixStorageAlgorithm</b> ()</td></tr>
 <tr class="separator:aa6d240297fc763a64fe907a6d4bc0e1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,24 +152,15 @@ std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:a1b3edd114b4c478f63a031cf6f66ba1f"><td class="memItemLeft" align="right" valign="top"><a id="a1b3edd114b4c478f63a031cf6f66ba1f"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Load</b></td></tr>
 <tr class="separator:a1b3edd114b4c478f63a031cf6f66ba1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d7d3198a27dfb92880b143948f1eb43"><td class="memItemLeft" align="right" valign="top"><a id="a5d7d3198a27dfb92880b143948f1eb43"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>HydroGen</b></td></tr>
-<tr class="separator:a5d7d3198a27dfb92880b143948f1eb43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60276585acf36a8f8e4817962e489310"><td class="memItemLeft" align="right" valign="top"><a id="a60276585acf36a8f8e4817962e489310"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>UnsupE</b></td></tr>
 <tr class="separator:a60276585acf36a8f8e4817962e489310"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c55961c4d22d3b02ee9878efce43d90"><td class="memItemLeft" align="right" valign="top"><a id="a5c55961c4d22d3b02ee9878efce43d90"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>levels</b></td></tr>
-<tr class="separator:a5c55961c4d22d3b02ee9878efce43d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7e762eeef60cce51097c8ba5cf9f245"><td class="memItemLeft" align="right" valign="top"><a id="ae7e762eeef60cce51097c8ba5cf9f245"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pmax</b></td></tr>
 <tr class="separator:ae7e762eeef60cce51097c8ba5cf9f245"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05a859d5c130bf59acdf696507449b81"><td class="memItemLeft" align="right" valign="top"><a id="a05a859d5c130bf59acdf696507449b81"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pmin</b></td></tr>
 <tr class="separator:a05a859d5c130bf59acdf696507449b81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e92840f834d5bd9c2711405a6a50fb6"><td class="memItemLeft" align="right" valign="top"><a id="a7e92840f834d5bd9c2711405a6a50fb6"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>inflows</b></td></tr>
-<tr class="separator:a7e92840f834d5bd9c2711405a6a50fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bebb37829463ebe6492cb011a6e020b"><td class="memItemLeft" align="right" valign="top"><a id="a3bebb37829463ebe6492cb011a6e020b"></a>
 std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ovf</b></td></tr>
 <tr class="separator:a3bebb37829463ebe6492cb011a6e020b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,12 +176,6 @@ std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:a025545a7d039703a71432d3eef6628ee"><td class="memItemLeft" align="right" valign="top"><a id="a025545a7d039703a71432d3eef6628ee"></a>
 ListStorageForRemix&#160;</td><td class="memItemRight" valign="bottom"><b>storagesForRemix</b></td></tr>
 <tr class="separator:a025545a7d039703a71432d3eef6628ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76dc53f910c40839aadde7c0f66c11c2"><td class="memItemLeft" align="right" valign="top"><a id="a76dc53f910c40839aadde7c0f66c11c2"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>init_level</b> = 0.</td></tr>
-<tr class="separator:a76dc53f910c40839aadde7c0f66c11c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3056d3004bb5db484e4f63aff1860846"><td class="memItemLeft" align="right" valign="top"><a id="a3056d3004bb5db484e4f63aff1860846"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>capacity</b> = std::numeric_limits&lt;double&gt;::max()</td></tr>
-<tr class="separator:a3056d3004bb5db484e4f63aff1860846"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50f7925048d49711b2f5c71d6662815f"><td class="memItemLeft" align="right" valign="top"><a id="a50f7925048d49711b2f5c71d6662815f"></a>
 const double&#160;</td><td class="memItemRight" valign="bottom"><b>pumpEff</b> = 1.</td></tr>
 <tr class="separator:a50f7925048d49711b2f5c71d6662815f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,6 +185,15 @@ const bool&#160;</td><td class="memItemRight" valign="bottom"><b>reservoirManage
 <tr class="memitem:abaed082adf445cd14421c4d2be58aef6"><td class="memItemLeft" align="right" valign="top"><a id="abaed082adf445cd14421c4d2be58aef6"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>err_msg</b></td></tr>
 <tr class="separator:abaed082adf445cd14421c4d2be58aef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4875b840c3427361215632dcb3998f8b"><td class="memItemLeft" align="right" valign="top"><a id="a4875b840c3427361215632dcb3998f8b"></a>
+<a class="el" href="structHydroStorageData.html">HydroStorageData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>s1</b></td></tr>
+<tr class="separator:a4875b840c3427361215632dcb3998f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf8f78f0928f1c7e5f00a283a9362afc"><td class="memItemLeft" align="right" valign="top"><a id="acf8f78f0928f1c7e5f00a283a9362afc"></a>
+<a class="el" href="structHydroStorageData.html">HydroStorageData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>s2</b></td></tr>
+<tr class="separator:acf8f78f0928f1c7e5f00a283a9362afc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1a260dcbd9fe8bbe2534044c679f3b9"><td class="memItemLeft" align="right" valign="top"><a id="aa1a260dcbd9fe8bbe2534044c679f3b9"></a>
+<a class="el" href="structHydroStorageData.html">HydroStorageData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>s3</b></td></tr>
+<tr class="separator:aa1a260dcbd9fe8bbe2534044c679f3b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeecd80dd8d9919b74e8cd7ae21658886"><td class="memItemLeft" align="right" valign="top"><a id="aeecd80dd8d9919b74e8cd7ae21658886"></a>
 <a class="el" href="structSTS__holder.html">STS_holder</a>&lt; nb_hours &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sts_1</b></td></tr>
 <tr class="separator:aeecd80dd8d9919b74e8cd7ae21658886"><td class="memSeparator" colspan="2">&#160;</td></tr>
