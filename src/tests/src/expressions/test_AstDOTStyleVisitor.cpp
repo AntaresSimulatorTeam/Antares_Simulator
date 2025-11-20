@@ -22,6 +22,8 @@
 #include <sstream>
 #define WIN32_LEAN_AND_MEAN
 
+#include <fstream>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/Registry.hxx>
@@ -91,19 +93,12 @@ public:
         Node* div = registry_.create<DivisionNode>(parameterNode3, lit3);
         Node* timeSumNode = registry_.create<TimeSumNode>(from, to, div);
 
-        Node* dual = registry_.create<DualNode>("constraint", 0);
-        Node* reducedCost = registry_.create<ReducedCostNode>(
-          "variable",
-          0,
-          Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+        Node* dual = registry_.create<FunctionNode>(FunctionNodeType::dual,
+                                                    registry_.create<ParameterNode>("constraint"),
+                                                    registry_.create<LiteralNode>(0));
 
-        return registry_.create<SumNode>(gt,
-                                         timeIndexNode,
-                                         timeShiftNode,
-                                         timeSumNode,
-                                         alltimeSimNode,
-                                         dual,
-                                         reducedCost);
+        return registry_
+          .create<SumNode>(gt, timeIndexNode, timeShiftNode, timeSumNode, alltimeSimNode, dual);
     }
 
     static std::string expectedDotContent()
@@ -258,10 +253,12 @@ node[style = filled]
   32 -> 34;
   34 [label="365.000000", shape="box", style="filled, solid", color="lightgray"];
   1 -> 35;
-  35 [label="Dual(constraint)", shape="box", style="filled, solid", color="gold"];
-  1 -> 36;
-  36 [label="Reduced_cost(variable)", shape="box", style="filled, solid", color="gold"];
-label="AST Diagram(Total nodes : 36)"
+  35 [label="dual", shape="hexagon", style="filled, solid", color="aqua"];
+  35 -> 36;
+  36 [label="Param(constraint)", shape="box", style="filled, solid", color="wheat"];
+  35 -> 37;
+  37 [label="0.000000", shape="box", style="filled, solid", color="lightgray"];
+label="AST Diagram(Total nodes : 37)"
 labelloc = "t"
 subgraph cluster_legend {
 label = "Legend";
@@ -273,29 +270,27 @@ node [shape=plaintext];
 legend_AllTimeSumNode [ label =" AllTimeSumNode: 1"]
 legend_AllTimeSumNode -> legend_DivisionNode [style=invis];
 legend_DivisionNode [ label =" DivisionNode: 2"]
-legend_DivisionNode -> legend_DualNode [style=invis];
-legend_DualNode [ label =" DualNode: 1"]
-legend_DualNode -> legend_EqualNode [style=invis];
+legend_DivisionNode -> legend_EqualNode [style=invis];
 legend_EqualNode [ label =" EqualNode: 1"]
-legend_EqualNode -> legend_GreaterThanOrEqualNode [style=invis];
+legend_EqualNode -> legend_FunctionNode [style=invis];
+legend_FunctionNode [ label =" FunctionNode: 1"]
+legend_FunctionNode -> legend_GreaterThanOrEqualNode [style=invis];
 legend_GreaterThanOrEqualNode [ label =" GreaterThanOrEqualNode: 1"]
 legend_GreaterThanOrEqualNode -> legend_LessThanOrEqualNode [style=invis];
 legend_LessThanOrEqualNode [ label =" LessThanOrEqualNode: 1"]
 legend_LessThanOrEqualNode -> legend_LiteralNode [style=invis];
-legend_LiteralNode [ label =" LiteralNode: 8"]
+legend_LiteralNode [ label =" LiteralNode: 9"]
 legend_LiteralNode -> legend_MultiplicationNode [style=invis];
 legend_MultiplicationNode [ label =" MultiplicationNode: 2"]
 legend_MultiplicationNode -> legend_NegationNode [style=invis];
 legend_NegationNode [ label =" NegationNode: 1"]
 legend_NegationNode -> legend_ParameterNode [style=invis];
-legend_ParameterNode [ label =" ParameterNode: 7"]
+legend_ParameterNode [ label =" ParameterNode: 8"]
 legend_ParameterNode -> legend_PortFieldNode [style=invis];
 legend_PortFieldNode [ label =" PortFieldNode: 1"]
 legend_PortFieldNode -> legend_PortFieldSumNode [style=invis];
 legend_PortFieldSumNode [ label =" PortFieldSumNode: 1"]
-legend_PortFieldSumNode -> legend_ReducedCostNode [style=invis];
-legend_ReducedCostNode [ label =" ReducedCostNode: 1"]
-legend_ReducedCostNode -> legend_SubtractionNode [style=invis];
+legend_PortFieldSumNode -> legend_SubtractionNode [style=invis];
 legend_SubtractionNode [ label =" SubtractionNode: 1"]
 legend_SubtractionNode -> legend_SumNode [style=invis];
 legend_SumNode [ label =" SumNode: 3"]
@@ -335,7 +330,6 @@ BOOST_FIXTURE_TEST_CASE(
 
     AstDOTStyleVisitor astGraphVisitor;
     astGraphVisitor(dotContentStream, makeBiggerExpression());
-
     BOOST_CHECK_EQUAL(dotContentStream.str(), expectedForBiggerDotContent());
 }
 

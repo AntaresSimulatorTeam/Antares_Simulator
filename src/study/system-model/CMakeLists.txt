@@ -22,7 +22,7 @@ set(SRC_model
         include/antares/study/system-model/timeAndScenarioType.h
         include/antares/study/system-model/connection.h
         include/antares/study/system-model/objective.h
-		include/antares/study/system-model/optimConfig.h
+        include/antares/study/system-model/optimConfig.h
 )
 
 source_group("SystemModel" FILES ${SRC_model})

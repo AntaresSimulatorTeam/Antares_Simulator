@@ -32,6 +32,36 @@ public:
     explicit NoPortWithThisId(const std::string& name);
 };
 
+class NoParameterOrVariableWithThisName final: public std::runtime_error
+{
+public:
+    explicit NoParameterOrVariableWithThisName(const std::string& name):
+        runtime_error("No parameter or variable found for this identifier: " + name)
+    {
+    }
+};
+
+class NoVariableWithThisName final: public std::runtime_error
+{
+public:
+    explicit NoVariableWithThisName(const std::string& modelName, const std::string& varName):
+        runtime_error("reduced_cost called with unknown variable '" + varName + "' in model '"
+                      + modelName + "'")
+    {
+    }
+};
+
+class NoConstraintWithThisName final: public std::runtime_error
+{
+public:
+    explicit NoConstraintWithThisName(const std::string& modelName,
+                                      const std::string& constraintName):
+        runtime_error("dual called with unknown constraint '" + constraintName + "' in model '"
+                      + modelName + "'")
+    {
+    }
+};
+
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
                                                   const YmlModel::Model& model);
 } // namespace Antares::IO::Inputs::ModelConverter

@@ -23,13 +23,14 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/TimeIndexVisitor.h>
+#include "antares/expressions/visitors/PrintVisitor.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Antares::Expressions::Visitors
 {
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
+Optimisation::TimeIndex TimeIndexVisitor::processParentNode(const Nodes::ParentNode* node)
 {
     const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
@@ -37,6 +38,11 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
                            Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
                            [this](Optimisation::TimeIndex sum, Nodes::Node* operand)
                            { return sum | dispatch(operand); });
+}
+
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
+{
+    return processParentNode(node);
 }
 
 Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
@@ -145,15 +151,48 @@ Optimisation::TimeIndex TimeIndexVisitor::visit(
     return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::ReducedCostNode* node)
+Optimisation::TimeIndex TimeIndexVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    return node->timeIndex();
+    const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
+    return varNode->timeIndex();
 }
 
-Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::DualNode* node)
+Optimisation::TimeIndex TimeIndexVisitor::handleDual(const Nodes::FunctionNode* node)
 {
-    const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_, node->index());
+    const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
+    unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
+    const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_, cstrIndex);
     return timeIndex;
+}
+
+Optimisation::TimeIndex TimeIndexVisitor::handlePow(const Nodes::FunctionNode* node)
+{
+    if (const auto* exponent = node->getOperands().at(1);
+        dispatch(exponent) != Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    {
+        PrintVisitor visitor;
+        throw std::runtime_error("This exponent must be constant in :" + visitor.dispatch(node));
+    }
+    return dispatch(node->getOperands().at(0));
+}
+
+Optimisation::TimeIndex TimeIndexVisitor::visit(const Nodes::FunctionNode* node)
+{
+    switch (node->type())
+    {
+    case Nodes::FunctionNodeType::reduced_cost:
+        return handleReducedCost(node);
+    case Nodes::FunctionNodeType::dual:
+        return handleDual(node);
+    case Nodes::FunctionNodeType::max:
+    case Nodes::FunctionNodeType::min:
+        return processParentNode(node);
+    case Nodes::FunctionNodeType::pow:
+        return handlePow(node);
+    default:
+        // TODO
+        return Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    }
 }
 
 TimeIndexVisitor::TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,

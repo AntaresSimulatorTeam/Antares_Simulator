@@ -31,16 +31,11 @@
 namespace Antares::Solver::Variable::Economy
 {
 
-struct LOLD_CSRTraits
+struct LOLD_CSRTraits: public LOLD_Base_Traits
 {
     static std::string Caption()
     {
         return "LOLD CSR";
-    }
-
-    static std::string Unit()
-    {
-        return "Hours";
     }
 
     static std::string Description()
@@ -55,9 +50,9 @@ struct LOLD_CSRTraits
     }
 };
 
-using VCardLOLD_CSR = VCardLOLD_Base<LOLD_CSRTraits>;
+using VCardLOLD_CSR = VCard_Base<LOLD_CSRTraits>;
 
 template<class NextT = Container::EndOfList>
-using LOLD_CSR = LOLD_Base<LOLD_CSRTraits, NextT>;
+using LOLD_CSR = Economy_Base<LOLD_CSRTraits, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy

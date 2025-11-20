@@ -21,8 +21,8 @@
 #pragma once
 #include <antares/expressions/nodes/AllTimeSumNode.h>
 #include <antares/expressions/nodes/DivisionNode.h>
-#include <antares/expressions/nodes/DualNode.h>
 #include <antares/expressions/nodes/EqualNode.h>
+#include <antares/expressions/nodes/FunctionNode.h>
 #include <antares/expressions/nodes/GreaterThanOrEqualNode.h>
 #include <antares/expressions/nodes/Leaf.h>
 #include <antares/expressions/nodes/LessThanOrEqualNode.h>
@@ -32,7 +32,6 @@
 #include <antares/expressions/nodes/ParameterNode.h>
 #include <antares/expressions/nodes/PortFieldNode.h>
 #include <antares/expressions/nodes/PortFieldSumNode.h>
-#include <antares/expressions/nodes/ReducedCostNode.h>
 #include <antares/expressions/nodes/SubtractionNode.h>
 #include <antares/expressions/nodes/SumNode.h>
 #include <antares/expressions/nodes/TimeIndexNode.h>

@@ -20,6 +20,7 @@
  */
 #pragma once
 
+#include <stdexcept>
 #include <utility>
 #include <vector>
 
@@ -40,6 +41,8 @@ public:
     LinearExpression operator-() const;
     LinearExpression operator/(const LinearExpression& other) const;
     LinearExpression& operator*=(const LinearExpression& other);
+    LinearExpression& operator^=(const LinearExpression& other);
+
     void addVariable(int index, double value);
     double constant() const;
 
@@ -49,10 +52,30 @@ public:
     const std::pair<int, double>& operator[](std::size_t) const;
     std::size_t size() const;
 
-private:
     bool hasCoefs() const;
+
+private:
     std::vector<std::pair<int, double>> coefs_;
     double constant_ = 0.;
 };
+
+template<class Op>
+double applyOperation(const std::vector<const LinearExpression*>& expressions, Op op)
+{
+    std::vector<double> constants(expressions.size(), 0);
+    for (int i = 0; i < expressions.size(); ++i)
+    {
+        const auto& expression = expressions[i];
+        if (expression->hasCoefs())
+        {
+            throw std::invalid_argument(std::string("Operator '") + typeid(op).name()
+                                        + "' cannot be applied to expressions with "
+                                          "coefficients (non-constant expressions).");
+        }
+        constants[i] = expression->constant();
+    }
+
+    return op(constants);
+}
 
 } // namespace Antares::Optimization

@@ -21,6 +21,8 @@
 #include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
+#include <any>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -433,22 +435,70 @@ BOOST_AUTO_TEST_CASE(dualExpression)
     // constraints
     std::string expression = "dual(constraintA)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
-    auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
-    BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode");
+    auto dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dualNode->typeToString(), "dual");
+
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(dualNode->getOperands().at(0))->value(),
+                      "constraintA");
 
     // binding constraints
     expression = "dual(constraintB)";
     expr = converter.run(expression);
-    dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
-    BOOST_CHECK_EQUAL(dualNode->value(), "constraintB");
-    BOOST_CHECK_EQUAL(dualNode->index(), 1);
+    dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(dualNode->getOperands().at(0))->value(),
+                      "constraintB");
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::LiteralNode*>(dualNode->getOperands().at(1))->value(), 1);
 
     std::string badExpression = "dual(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
                           std::runtime_error,
                           checkMessage(
-                            "Model doesn't contain this constraint in dual function: abc"));
+                            "dual called with unknown constraint 'abc' in model 'model0'"));
+}
+
+BOOST_AUTO_TEST_CASE(EmptyDualExpression)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {{"constraintA", ""}},
+                          .binding_constraints = {{"constraintB", ""}},
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    // constraints
+    std::string expression = "dual()";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          std::invalid_argument,
+                          checkMessage(
+                            "dual operator expect exactly one constraint id got nothing"));
+}
+
+BOOST_AUTO_TEST_CASE(WrongDualExpression)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {{"constraintA", ""}},
+                          .binding_constraints = {{"constraintB", ""}},
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    // constraints
+    std::string expression = "dual(constraintA, e^(iPi) + 1 = 0)";
+    BOOST_CHECK_EXCEPTION(
+      converter.run(expression),
+      std::invalid_argument,
+      checkMessage("dual operator expect exactly one constraint id got: constraintA, e^(iPi)+1=0"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
@@ -469,14 +519,234 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
 
     std::string expression = "reduced_cost(varB)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
-    auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
-    BOOST_CHECK_EQUAL(reducedCostNode->value(), "varB");
-    BOOST_CHECK_EQUAL(reducedCostNode->index(), 1);
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode");
+    auto reducedCostNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(reducedCostNode->typeToString(), "reduced_cost");
+    const auto* variableNode = dynamic_cast<Nodes::VariableNode*>(
+      reducedCostNode->getOperands().at(0));
+    BOOST_CHECK_EQUAL(variableNode->value(), "varB");
+    BOOST_CHECK_EQUAL(variableNode->Index(), 1);
 
     std::string badExpression = "reduced_cost(abc)";
     BOOST_CHECK_EXCEPTION(converter.run(badExpression),
                           std::runtime_error,
                           checkMessage(
-                            "Model doesn't contain this variable in reduced_cost function: abc"));
+                            "reduced_cost called with unknown variable 'abc' in model 'model0'"));
+}
+
+BOOST_AUTO_TEST_CASE(reducedCostExpressionTwoVariables)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "reduced_cost(varB, 2)";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          std::invalid_argument,
+                          checkMessage(
+                            "reduced_cost operator expect exactly one variable id got: varB, 2"));
+}
+
+BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    // constraints
+    std::string expression = "reduced_cost()";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          std::invalid_argument,
+                          checkMessage(
+                            "reduced_cost operator expect exactly one variable id got nothing"));
+}
+
+BOOST_AUTO_TEST_CASE(ValidPowerExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varB^2";
+    auto expr = converter.run(expression);
+    auto* powerNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(powerNode->getOperands().at(0))->value(),
+                      "varB");
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::LiteralNode*>(powerNode->getOperands().at(1))->value(),
+                      2);
+}
+
+BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "^";
+    BOOST_CHECK_THROW(converter.run(expression), std::bad_any_cast);
+}
+
+BOOST_AUTO_TEST_CASE(WrongPowerExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varA^_";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          Antares::IO::Inputs::ModelConverter::NoParameterOrVariableWithThisName,
+                          checkMessage("No parameter or variable found for this identifier: _"));
+}
+
+BOOST_AUTO_TEST_CASE(ValidMinExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "min(varB, 2, pmin)";
+    auto expr = converter.run(expression);
+    auto* minNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(minNode->getOperands().at(0))->value(),
+                      "varB");
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::LiteralNode*>(minNode->getOperands().at(1))->value(), 2);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(minNode->getOperands().at(2))->value(),
+                      "pmin");
+}
+
+BOOST_AUTO_TEST_CASE(ValidMaxExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "min(varB, 2, pmin, varA, varB^pmin)";
+    auto expr = converter.run(expression);
+    auto* maxNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(maxNode->getOperands().at(0))->value(),
+                      "varB");
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::LiteralNode*>(maxNode->getOperands().at(1))->value(), 2);
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(maxNode->getOperands().at(2))->value(),
+                      "pmin");
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(maxNode->getOperands().at(3))->value(),
+                      "varA");
+    auto* node5 = dynamic_cast<Nodes::FunctionNode*>(maxNode->getOperands().at(4));
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(node5->getOperands().at(0))->value(),
+                      "varB");
+    BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(node5->getOperands().at(1))->value(),
+                      "pmin");
+}
+
+BOOST_AUTO_TEST_CASE(MaxOperatorWrongNumberOfParameter)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "max(varB)";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          std::invalid_argument,
+                          checkMessage("max operator expect at least 2 operands got 1"));
+}
+
+BOOST_AUTO_TEST_CASE(MinOperatorWrongNumberOfParameter)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "min(varB)";
+    BOOST_CHECK_EXCEPTION(converter.run(expression),
+                          std::invalid_argument,
+                          checkMessage("min operator expect at least 2 operands got 1"));
 }

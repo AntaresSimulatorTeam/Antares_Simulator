@@ -54,4 +54,16 @@ constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
                                   | static_cast<unsigned int>(right));
 }
 
+// to silent warning, convert bool to unsigned int
+static constexpr unsigned int convertBool(bool in)
+{
+    return in ? 1 : 0;
+}
+
+constexpr Optimisation::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
+{
+    return static_cast<TimeIndex>((convertBool(scenariodependent) << 1)
+                                  | convertBool(timedependent));
+}
+
 } // namespace Antares::Optimisation

@@ -28,7 +28,8 @@ struct STS_holder
         upRuleCurve.assign(nb_hours, capacity);
     }
 
-    std::shared_ptr<IStorageForRemix> createSTS(std::vector<double>& unsupE)
+    std::shared_ptr<IStorageForRemix> createSTS(std::vector<double>& unsupE,
+                                                const std::string& name)
     {
         return makeSTSforRemix(withdrawal,
                                unsupE,
@@ -40,7 +41,8 @@ struct STS_holder
                                upRuleCurve,
                                initLevel,
                                withdrawalEff,
-                               injectionEff);
+                               injectionEff,
+                               name);
     }
 
     std::vector<double> withdrawal, injection, levels, pmax, inflows, ovf;
@@ -74,9 +76,12 @@ struct InputFixture
         }
 
         storagesForRemix.clear();
+        unsigned i = 0;
         for (auto& sts: STS_holders)
         {
-            storagesForRemix.push_back(sts.createSTS(UnsupE));
+            std::string name = "sts-" + std::to_string(i);
+            storagesForRemix.push_back(sts.createSTS(UnsupE, name));
+            i++;
         }
 
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
@@ -92,7 +97,7 @@ struct InputFixture
 BOOST_FIXTURE_TEST_CASE(default_input_in_STS_setup_does_not_raise_exception, STS_holder<5>)
 {
     std::vector<double> unsupE(5, 0.);
-    BOOST_CHECK_NO_THROW(createSTS(unsupE));
+    BOOST_CHECK_NO_THROW(createSTS(unsupE, "sts1"));
 }
 
 BOOST_AUTO_TEST_CASE(creating_an_STS_with_unsup_having_a_wrong_size_leads_to_exception)
@@ -100,7 +105,7 @@ BOOST_AUTO_TEST_CASE(creating_an_STS_with_unsup_having_a_wrong_size_leads_to_exc
     std::vector<double> unsupE(5, 0.);
     STS_holder<4> sts_holder;
     std::string err_msg = "Remix hydro input : arrays of different sizes";
-    BOOST_CHECK_EXCEPTION(sts_holder.createSTS(unsupE),
+    BOOST_CHECK_EXCEPTION(sts_holder.createSTS(unsupE, "sts1"),
                           std::invalid_argument,
                           checkMessage(err_msg));
 }
@@ -115,12 +120,12 @@ BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_al
     // Creating sts_1 for 5 hours
     std::vector<double> unsupE_1(5, 0.);
     STS_holder<5> sts_holder_1;
-    auto sts_1 = sts_holder_1.createSTS(unsupE_1);
+    auto sts_1 = sts_holder_1.createSTS(unsupE_1, "sts1");
 
     // Creating sts_2 for 3 hours
     std::vector<double> unsupE_2(3, 0.);
     STS_holder<3> sts_holder_2;
-    auto sts_2 = sts_holder_2.createSTS(unsupE_2);
+    auto sts_2 = sts_holder_2.createSTS(unsupE_2, "sts2");
 
     ListStorageForRemix storagesForRemix;
     storagesForRemix.push_back(sts_1);

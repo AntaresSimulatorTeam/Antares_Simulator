@@ -259,3 +259,148 @@ BOOST_AUTO_TEST_CASE(time_dep_rotate_twice)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE(OperatorCaretTestSuite)
+
+BOOST_AUTO_TEST_CASE(ExponentZeroWithCoefficients)
+{
+    LinearExpression nonConstantExpr({{1, 2.0}, {2, 1.0}}, 3.0);
+    LinearExpression exponent(0.0); // exposant = 0
+
+    LinearExpression original = nonConstantExpr;
+
+    nonConstantExpr ^= exponent;
+
+    BOOST_CHECK(!nonConstantExpr.hasCoefs());
+    BOOST_CHECK_EQUAL(nonConstantExpr.constant(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(ExponentOneWithCoefficients)
+{
+    LinearExpression nonConstantExpr({{1, 2.0}, {2, 1.0}}, 3.0);
+    LinearExpression exponent(1.0);
+    LinearExpression original = nonConstantExpr;
+
+    nonConstantExpr ^= exponent;
+
+    // Avec exposant = 1, l'expression ne devrait pas changer structurellement
+    BOOST_CHECK(nonConstantExpr.hasCoefs());
+    BOOST_CHECK_EQUAL(nonConstantExpr.constant(), original.constant());
+    BOOST_CHECK_EQUAL(original.size(), nonConstantExpr.size());
+    for (auto i = 0; i < original.size(); ++i)
+    {
+        BOOST_CHECK_EQUAL(original[i].first, nonConstantExpr[i].first);
+        BOOST_CHECK_EQUAL(original[i].second, nonConstantExpr[i].second);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(NonConstantExponentThrows)
+{
+    LinearExpression constantExpr(4.0);
+    LinearExpression nonConstantExponent({{1, 1.0}}, 0.0); // exposant avec coefficients
+
+    BOOST_CHECK_THROW(constantExpr ^= nonConstantExponent, std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(ConstantExpressionWithNonUnitExponent)
+{
+    LinearExpression constantExpr(3.0);
+    LinearExpression exponent(2.0); // exposant = 2
+    constantExpr ^= exponent;
+    BOOST_CHECK_EQUAL(constantExpr.constant(), 3 * 3 /*3^2*/);
+}
+
+BOOST_AUTO_TEST_CASE(ConstantExpressionWithExponentOne)
+{
+    LinearExpression constantExpr(5.0);
+    LinearExpression exponent(1.0);
+
+    constantExpr ^= exponent;
+
+    // 5^1 = 5, ne devrait pas changer
+    BOOST_CHECK_EQUAL(constantExpr.constant(), 5.0);
+    BOOST_CHECK(!constantExpr.hasCoefs());
+}
+
+BOOST_AUTO_TEST_CASE(ZeroCoefficientsWithExponentZero)
+{
+    LinearExpression zeroCoefExpr({{1, 0.0}, {2, 0.0}}, 5.0);
+    LinearExpression exponent(0.0);
+
+    zeroCoefExpr ^= exponent;
+
+    BOOST_CHECK(!zeroCoefExpr.hasCoefs());
+}
+
+BOOST_AUTO_TEST_CASE(ConstantExpressionWithExponentZero)
+{
+    LinearExpression constantExpr(7.0);
+    LinearExpression exponent(0.0);
+
+    constantExpr ^= exponent;
+
+    // 7^0 = 1
+    BOOST_CHECK_EQUAL(constantExpr.constant(), 1.0);
+    BOOST_CHECK(!constantExpr.hasCoefs());
+}
+
+BOOST_AUTO_TEST_CASE(ZeroConstantWithExponentZero)
+{
+    LinearExpression zeroConstant(0.0);
+    LinearExpression exponent(0.0);
+
+    zeroConstant ^= exponent;
+
+    // 0^0 = 1 (convention mathématique utilisée dans l'implémentation)
+    BOOST_CHECK_EQUAL(zeroConstant.constant(), 1.0);
+}
+
+BOOST_AUTO_TEST_CASE(DecimalExponentThrowsForNonConstant)
+{
+    LinearExpression nonConstantExpr({{1, 1.0}}, 2.0);
+    LinearExpression exponent(1.5); // exposant décimal
+
+    BOOST_CHECK_THROW(nonConstantExpr ^= exponent, std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(NonLinearExponentThrows)
+{
+    LinearExpression nonConstantExpr({{1, 2.0}, {2, 1.0}}, 3.0);
+    LinearExpression exponent(2.0); // exposant différent de 1
+
+    // Doit lancer une exception car cela créerait des termes non linéaires
+    BOOST_CHECK_THROW(nonConstantExpr ^= exponent, std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(ExpressionWithOnlyCoefficientsExponentZero)
+{
+    LinearExpression onlyCoefficients({{1, 1.0}, {2, 2.0}}, 0.0);
+    LinearExpression exponent(0.0);
+
+    onlyCoefficients ^= exponent;
+
+    BOOST_CHECK(!onlyCoefficients.hasCoefs());
+    BOOST_CHECK(onlyCoefficients.constant() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(ExpressionWithOnlyCoefficientsExponentOne)
+{
+    LinearExpression onlyCoefficients({{1, 1.0}, {2, 2.0}}, 0.0);
+    LinearExpression exponent(1.0);
+
+    onlyCoefficients ^= exponent;
+    // Ne devrait pas changer avec exposant = 1
+    BOOST_CHECK(onlyCoefficients.hasCoefs());
+    BOOST_CHECK_EQUAL(onlyCoefficients.constant(), 0.0);
+}
+
+BOOST_AUTO_TEST_CASE(MixedZeroAndNonZeroCoefficientsExponentZero)
+{
+    LinearExpression mixedExpr({{1, 0.0}, {2, 1.0}}, 2.0);
+    LinearExpression exponent(0.0);
+
+    mixedExpr ^= exponent;
+
+    BOOST_CHECK(!mixedExpr.hasCoefs());
+}
+
+BOOST_AUTO_TEST_SUITE_END()

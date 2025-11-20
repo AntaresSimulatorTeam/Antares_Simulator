@@ -43,13 +43,15 @@ public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                              AreaList& areas,
                              const Data::Parameters& params,
-                             unsigned int numSpace);
+                             unsigned int numSpace,
+                             IResultWriter& resultWriter);
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
     unsigned int numSpace_ = 0;
     const Data::Parameters& params_;
+    IResultWriter& resultWriter_;
 };
 
 class UpdateMrgPriceAfterCSRcmd final: public basePostProcessCommand
