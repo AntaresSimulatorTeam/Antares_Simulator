@@ -325,7 +325,6 @@ BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture_5_3
     }
 }
 
-
 BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture_8_2)
 {
     // ------------------------------
