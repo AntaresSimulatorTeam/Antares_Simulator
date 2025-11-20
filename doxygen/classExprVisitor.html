@@ -186,12 +186,6 @@ virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitMuld
 <tr class="memitem:aa5140f60cc76dcb6c0de68e08bc8f01c"><td class="memItemLeft" align="right" valign="top"><a id="aa5140f60cc76dcb6c0de68e08bc8f01c"></a>
 virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitTimeSum</b> (<a class="el" href="classExprParser_1_1TimeSumContext.html">ExprParser::TimeSumContext</a> *context)=0</td></tr>
 <tr class="separator:aa5140f60cc76dcb6c0de68e08bc8f01c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0b8405bf6ad47a587ebb54261ca76bd"><td class="memItemLeft" align="right" valign="top"><a id="aa0b8405bf6ad47a587ebb54261ca76bd"></a>
-virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitReducedCost</b> (<a class="el" href="classExprParser_1_1ReducedCostContext.html">ExprParser::ReducedCostContext</a> *context)=0</td></tr>
-<tr class="separator:aa0b8405bf6ad47a587ebb54261ca76bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64aa28b1b3778aa62a10a0ad358b63d2"><td class="memItemLeft" align="right" valign="top"><a id="a64aa28b1b3778aa62a10a0ad358b63d2"></a>
-virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitDual</b> (<a class="el" href="classExprParser_1_1DualContext.html">ExprParser::DualContext</a> *context)=0</td></tr>
-<tr class="separator:a64aa28b1b3778aa62a10a0ad358b63d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3daddfb4685a1fd3d670b5e29edc99f5"><td class="memItemLeft" align="right" valign="top"><a id="a3daddfb4685a1fd3d670b5e29edc99f5"></a>
 virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitTimeIndex</b> (<a class="el" href="classExprParser_1_1TimeIndexContext.html">ExprParser::TimeIndexContext</a> *context)=0</td></tr>
 <tr class="separator:a3daddfb4685a1fd3d670b5e29edc99f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,6 +195,12 @@ virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitTime
 <tr class="memitem:a2a5320b978463f9e4d115c4c98eed9a5"><td class="memItemLeft" align="right" valign="top"><a id="a2a5320b978463f9e4d115c4c98eed9a5"></a>
 virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitFunction</b> (<a class="el" href="classExprParser_1_1FunctionContext.html">ExprParser::FunctionContext</a> *context)=0</td></tr>
 <tr class="separator:a2a5320b978463f9e4d115c4c98eed9a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4d398f99bb51469a6a27823f70724aa"><td class="memItemLeft" align="right" valign="top"><a id="ad4d398f99bb51469a6a27823f70724aa"></a>
+virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitPower</b> (<a class="el" href="classExprParser_1_1PowerContext.html">ExprParser::PowerContext</a> *context)=0</td></tr>
+<tr class="separator:ad4d398f99bb51469a6a27823f70724aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af66a01121f9539eaca6c3b02802a65c9"><td class="memItemLeft" align="right" valign="top"><a id="af66a01121f9539eaca6c3b02802a65c9"></a>
+virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitArgList</b> (<a class="el" href="classExprParser_1_1ArgListContext.html">ExprParser::ArgListContext</a> *context)=0</td></tr>
+<tr class="separator:af66a01121f9539eaca6c3b02802a65c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3316b55a00d6ad053e9c5270c70301a"><td class="memItemLeft" align="right" valign="top"><a id="aa3316b55a00d6ad053e9c5270c70301a"></a>
 virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitNumber</b> (<a class="el" href="classExprParser_1_1NumberContext.html">ExprParser::NumberContext</a> *context)=0</td></tr>
 <tr class="separator:aa3316b55a00d6ad053e9c5270c70301a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -222,6 +222,9 @@ virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitShif
 <tr class="memitem:a5e8a652f9ceb099d4ae8737b58151b03"><td class="memItemLeft" align="right" valign="top"><a id="a5e8a652f9ceb099d4ae8737b58151b03"></a>
 virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitShiftAddsub</b> (<a class="el" href="classExprParser_1_1ShiftAddsubContext.html">ExprParser::ShiftAddsubContext</a> *context)=0</td></tr>
 <tr class="separator:a5e8a652f9ceb099d4ae8737b58151b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a3fad108b7ee7bf56c333285bcc78af"><td class="memItemLeft" align="right" valign="top"><a id="a3a3fad108b7ee7bf56c333285bcc78af"></a>
+virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitShiftPower</b> (<a class="el" href="classExprParser_1_1ShiftPowerContext.html">ExprParser::ShiftPowerContext</a> *context)=0</td></tr>
+<tr class="separator:a3a3fad108b7ee7bf56c333285bcc78af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4bd0c3e4ead8582240ac0acc1a26f0e"><td class="memItemLeft" align="right" valign="top"><a id="ae4bd0c3e4ead8582240ac0acc1a26f0e"></a>
 virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitRightExpression</b> (<a class="el" href="classExprParser_1_1RightExpressionContext.html">ExprParser::RightExpressionContext</a> *context)=0</td></tr>
 <tr class="separator:ae4bd0c3e4ead8582240ac0acc1a26f0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,6 +234,9 @@ virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitRigh
 <tr class="memitem:affa0043ae56e07f86b7223ad9423e8ed"><td class="memItemLeft" align="right" valign="top"><a id="affa0043ae56e07f86b7223ad9423e8ed"></a>
 virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitRightAtom</b> (<a class="el" href="classExprParser_1_1RightAtomContext.html">ExprParser::RightAtomContext</a> *context)=0</td></tr>
 <tr class="separator:affa0043ae56e07f86b7223ad9423e8ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2c0d399e28a9896978afdc394e252e8"><td class="memItemLeft" align="right" valign="top"><a id="af2c0d399e28a9896978afdc394e252e8"></a>
+virtual std::any&#160;</td><td class="memItemRight" valign="bottom"><b>visitRightPower</b> (<a class="el" href="classExprParser_1_1RightPowerContext.html">ExprParser::RightPowerContext</a> *context)=0</td></tr>
+<tr class="separator:af2c0d399e28a9896978afdc394e252e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class defines an abstract visitor for a parse tree produced by <a class="el" href="classExprParser.html">ExprParser</a>. </p>

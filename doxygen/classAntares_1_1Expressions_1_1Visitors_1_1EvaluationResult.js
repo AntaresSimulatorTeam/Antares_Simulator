@@ -6,6 +6,7 @@ var classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult =
     [ "EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aa16e7bc2542a2262c79abe9b67cdd9ea", null ],
     [ "EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a72d6614909093cab385e2d6f2c73f2d8", null ],
     [ "alltimeSum", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a5ecbfa28369edec7e3595356666fa0b0", null ],
+    [ "evaluateBinaryOperation", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a79dc705acc09f05f7bdea74a285a2fdc", null ],
     [ "getValueInVector", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#ac0f90eed5d71970ebfa054ffd4eaaba3", null ],
     [ "operator*", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a023a72a3c86d86361a1d980516f74f9b", null ],
     [ "operator+", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aa785e5f15bdddcd4a1a5115cf99b25e0", null ],
@@ -17,9 +18,11 @@ var classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult =
     [ "operator==", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a2183e0b45e223ad9126308bd20c000b8", null ],
     [ "operator>=", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a244013ab300671a80819f14be2a9d41f", null ],
     [ "operator[]", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a4aabe2271191698cccd9ae0a4edad1b8", null ],
+    [ "size", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aaac5d004b571ecc7f8a24cacf769c4a0", null ],
     [ "timeShift", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a67542fc3bd8a010d7460a46259d9a1db", null ],
     [ "timeSum", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aaf37ecb945f8e86cfcf0c4e2c2c91623", null ],
-    [ "value", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a747568ce581e057aa723514ff2edddac", null ],
+    [ "value", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aa489586042bf9d04176ce1d9ee5a5de2", null ],
+    [ "value", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#ac07ea84b33f403f0566145ab3b5d65e6", null ],
     [ "valueAsDouble", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#adba70bd301a4112f1a6c0d4ff392101a", null ],
     [ "valuesAsVector", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#ac7cf4776a080e1dd712663233597e237", null ]
 ];

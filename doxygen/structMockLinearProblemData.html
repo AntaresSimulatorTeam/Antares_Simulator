@@ -150,6 +150,18 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> ([[mayb
 <tr class="memitem:a7bcbf2377c723b3d73218a500404d17c"><td class="memItemLeft" align="right" valign="top"><a id="a7bcbf2377c723b3d73218a500404d17c"></a>
 std::span&lt; const double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned timeSeriesNumber, unsigned firstHour, unsigned lastHour) const override</td></tr>
 <tr class="separator:a7bcbf2377c723b3d73218a500404d17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf445989115f0f76b81017886a678749"><td class="memItemLeft" align="right" valign="top"><a id="abf445989115f0f76b81017886a678749"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MockLinearProblemData</b> (const std::map&lt; std::string, std::vector&lt; double &gt;&gt; &amp;parametersValues={})</td></tr>
+<tr class="separator:abf445989115f0f76b81017886a678749"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a447caf2b3dd2ee13a4f31ce0e069dbb9"><td class="memItemLeft" align="right" valign="top"><a id="a447caf2b3dd2ee13a4f31ce0e069dbb9"></a>
+std::pair&lt; bool, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>IsParameterRegistered</b> (const std::string &amp;name, unsigned hour) const</td></tr>
+<tr class="separator:a447caf2b3dd2ee13a4f31ce0e069dbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01aba26de2cd197747daa0eead4ebca5"><td class="memItemLeft" align="right" valign="top"><a id="a01aba26de2cd197747daa0eead4ebca5"></a>
+std::pair&lt; bool, std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>IsParameterRegistered</b> (const std::string &amp;name) const</td></tr>
+<tr class="separator:a01aba26de2cd197747daa0eead4ebca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac076745592d0c42aab410026d0fa3c3e"><td class="memItemLeft" align="right" valign="top"><a id="ac076745592d0c42aab410026d0fa3c3e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addParams</b> (std::pair&lt; std::string, std::vector&lt; double &gt;&gt; values)</td></tr>
+<tr class="separator:ac076745592d0c42aab410026d0fa3c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7856971bf8e1c5693dd3e1b61522471b"><td class="memItemLeft" align="right" valign="top"><a id="a7856971bf8e1c5693dd3e1b61522471b"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> ([[maybe_unused]] const std::string &amp;dataSetId, [[maybe_unused]] unsigned scenario, unsigned hour) const override</td></tr>
 <tr class="separator:a7856971bf8e1c5693dd3e1b61522471b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,6 +175,9 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a2a2b34197a60c98f3b256b5fc208754e"><td class="memItemLeft" align="right" valign="top"><a id="a2a2b34197a60c98f3b256b5fc208754e"></a>
+std::map&lt; std::string, std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parametersValues</b> = {}</td></tr>
+<tr class="separator:a2a2b34197a60c98f3b256b5fc208754e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63350ea43c8987d172b7cc2550169cb5"><td class="memItemLeft" align="right" valign="top"><a id="a63350ea43c8987d172b7cc2550169cb5"></a>
 const std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>v_</b> {0., 1., 2., 3., 4., 5.}</td></tr>
 <tr class="separator:a63350ea43c8987d172b7cc2550169cb5"><td class="memSeparator" colspan="2">&#160;</td></tr>

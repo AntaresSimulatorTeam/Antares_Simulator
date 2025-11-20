@@ -41,6 +41,7 @@ var namespaceAntares_1_1Optimisation =
     ] ],
     [ "buildVariableName", "namespaceAntares_1_1Optimisation.html#a3285d2e9ba0b174de3a9ec497ff79dc5", null ],
     [ "checkTimeSteps", "namespaceAntares_1_1Optimisation.html#a156d5abad9c6bc2cf8dfb5919a160ad4", null ],
+    [ "convertToTimeIndex", "namespaceAntares_1_1Optimisation.html#aebe6096cec959e6e9b0a4343daf77c04", null ],
     [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a48c69d82095c9d4b7ac778aad53b0afa", null ],
     [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a4f35767787ea7ad2c4ffa35bbb2254bb", null ],
     [ "operator-", "namespaceAntares_1_1Optimisation.html#a75b8a5eaeb2eedac8d8be9501ea647a6", null ],

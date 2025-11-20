@@ -9,6 +9,7 @@ var classAntares_1_1Optimization_1_1LinearExpression =
     [ "begin", "classAntares_1_1Optimization_1_1LinearExpression.html#a33d263872cf8e7b4c1e556789b0a3dcd", null ],
     [ "constant", "classAntares_1_1Optimization_1_1LinearExpression.html#a001af0a89872effba90f21cb78613f67", null ],
     [ "end", "classAntares_1_1Optimization_1_1LinearExpression.html#a6690fab36052219d64b00479ed16e2f0", null ],
+    [ "hasCoefs", "classAntares_1_1Optimization_1_1LinearExpression.html#a011bd434ab7a74fa9e871e055bb02975", null ],
     [ "mergeDuplicateCoefficients", "classAntares_1_1Optimization_1_1LinearExpression.html#a9e0c509e2159f6c9646ee30ad0b4a667", null ],
     [ "operator*=", "classAntares_1_1Optimization_1_1LinearExpression.html#ac552f9f81fab0ae9ebd0207ea964b573", null ],
     [ "operator*=", "classAntares_1_1Optimization_1_1LinearExpression.html#aaaa16e91425bcf118587d40f7a71e02d", null ],
@@ -17,5 +18,6 @@ var classAntares_1_1Optimization_1_1LinearExpression =
     [ "operator-=", "classAntares_1_1Optimization_1_1LinearExpression.html#af72ff2d45f0b393c7a0730db8a6779d2", null ],
     [ "operator/", "classAntares_1_1Optimization_1_1LinearExpression.html#a11a4d9233621b309b2c8fdb618970b04", null ],
     [ "operator[]", "classAntares_1_1Optimization_1_1LinearExpression.html#a4ca0e53c482d7282e2f1cab05dd470a8", null ],
+    [ "operator^=", "classAntares_1_1Optimization_1_1LinearExpression.html#a87d6759f4a447a5a7843882030f26fe8", null ],
     [ "size", "classAntares_1_1Optimization_1_1LinearExpression.html#a8c21d5d2c3be0143604b1e67db38f7c2", null ]
 ];

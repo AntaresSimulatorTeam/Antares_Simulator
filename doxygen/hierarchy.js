@@ -145,8 +145,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -953,9 +953,7 @@ var hierarchy =
           [ "Antares::Expressions::Nodes::LiteralNode", "classAntares_1_1Expressions_1_1Nodes_1_1LiteralNode.html", null ]
         ] ],
         [ "Antares::Expressions::Nodes::Leaf< std::string >", "classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html", [
-          [ "Antares::Expressions::Nodes::DualNode", "classAntares_1_1Expressions_1_1Nodes_1_1DualNode.html", null ],
           [ "Antares::Expressions::Nodes::ParameterNode", "classAntares_1_1Expressions_1_1Nodes_1_1ParameterNode.html", null ],
-          [ "Antares::Expressions::Nodes::ReducedCostNode", "classAntares_1_1Expressions_1_1Nodes_1_1ReducedCostNode.html", null ],
           [ "Antares::Expressions::Nodes::VariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html", null ]
         ] ],
         [ "Antares::Expressions::Nodes::Leaf< T >", "classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html", null ],
@@ -972,6 +970,7 @@ var hierarchy =
             [ "Antares::Expressions::Nodes::TimeIndexNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode.html", null ],
             [ "Antares::Expressions::Nodes::TimeShiftNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode.html", null ]
           ] ],
+          [ "Antares::Expressions::Nodes::FunctionNode", "classAntares_1_1Expressions_1_1Nodes_1_1FunctionNode.html", null ],
           [ "Antares::Expressions::Nodes::SumNode", "classAntares_1_1Expressions_1_1Nodes_1_1SumNode.html", null ],
           [ "Antares::Expressions::Nodes::TimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeSumNode.html", null ],
           [ "Antares::Expressions::Nodes::UnaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1UnaryNode.html", [
@@ -1336,6 +1335,7 @@ var hierarchy =
       [ "ScenarioBuilderParser", "classScenarioBuilderParser.html", null ]
     ] ],
     [ "antlr4::ParserRuleContext", null, [
+      [ "ExprParser::ArgListContext", "classExprParser_1_1ArgListContext.html", null ],
       [ "ExprParser::AtomContext", "classExprParser_1_1AtomContext.html", [
         [ "ExprParser::IdentifierContext", "classExprParser_1_1IdentifierContext.html", null ],
         [ "ExprParser::NumberContext", "classExprParser_1_1NumberContext.html", null ]
@@ -1344,14 +1344,13 @@ var hierarchy =
         [ "ExprParser::AddsubContext", "classExprParser_1_1AddsubContext.html", null ],
         [ "ExprParser::AllTimeSumContext", "classExprParser_1_1AllTimeSumContext.html", null ],
         [ "ExprParser::ComparisonContext", "classExprParser_1_1ComparisonContext.html", null ],
-        [ "ExprParser::DualContext", "classExprParser_1_1DualContext.html", null ],
         [ "ExprParser::ExpressionContext", "classExprParser_1_1ExpressionContext.html", null ],
         [ "ExprParser::FunctionContext", "classExprParser_1_1FunctionContext.html", null ],
         [ "ExprParser::MuldivContext", "classExprParser_1_1MuldivContext.html", null ],
         [ "ExprParser::NegationContext", "classExprParser_1_1NegationContext.html", null ],
         [ "ExprParser::PortFieldContext", "classExprParser_1_1PortFieldContext.html", null ],
         [ "ExprParser::PortFieldSumContext", "classExprParser_1_1PortFieldSumContext.html", null ],
-        [ "ExprParser::ReducedCostContext", "classExprParser_1_1ReducedCostContext.html", null ],
+        [ "ExprParser::PowerContext", "classExprParser_1_1PowerContext.html", null ],
         [ "ExprParser::TimeIndexContext", "classExprParser_1_1TimeIndexContext.html", null ],
         [ "ExprParser::TimeIndexExprContext", "classExprParser_1_1TimeIndexExprContext.html", null ],
         [ "ExprParser::TimeShiftContext", "classExprParser_1_1TimeShiftContext.html", null ],
@@ -1364,12 +1363,14 @@ var hierarchy =
       [ "ExprParser::Right_exprContext", "classExprParser_1_1Right__exprContext.html", [
         [ "ExprParser::RightAtomContext", "classExprParser_1_1RightAtomContext.html", null ],
         [ "ExprParser::RightExpressionContext", "classExprParser_1_1RightExpressionContext.html", null ],
-        [ "ExprParser::RightMuldivContext", "classExprParser_1_1RightMuldivContext.html", null ]
+        [ "ExprParser::RightMuldivContext", "classExprParser_1_1RightMuldivContext.html", null ],
+        [ "ExprParser::RightPowerContext", "classExprParser_1_1RightPowerContext.html", null ]
       ] ],
       [ "ExprParser::ShiftContext", "classExprParser_1_1ShiftContext.html", null ],
       [ "ExprParser::Shift_exprContext", "classExprParser_1_1Shift__exprContext.html", [
         [ "ExprParser::ShiftAddsubContext", "classExprParser_1_1ShiftAddsubContext.html", null ],
         [ "ExprParser::ShiftMuldivContext", "classExprParser_1_1ShiftMuldivContext.html", null ],
+        [ "ExprParser::ShiftPowerContext", "classExprParser_1_1ShiftPowerContext.html", null ],
         [ "ExprParser::SignedAtomContext", "classExprParser_1_1SignedAtomContext.html", null ],
         [ "ExprParser::SignedExpressionContext", "classExprParser_1_1SignedExpressionContext.html", null ]
       ] ],
@@ -1877,6 +1878,7 @@ var hierarchy =
     [ "Antares::IO::TimeBlock", "structAntares_1_1IO_1_1TimeBlock.html", null ],
     [ "Antares::Data::TimeDependantHydroManagementData", "structAntares_1_1Data_1_1TimeDependantHydroManagementData.html", null ],
     [ "Antares::Optimization::TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html", null ],
+    [ "TimeDependentParameterFixture", "structTimeDependentParameterFixture.html", null ],
     [ "Antares::Utils::TimeMeasurement", "classAntares_1_1Utils_1_1TimeMeasurement.html", null ],
     [ "Benchmarking::Timer", "classBenchmarking_1_1Timer.html", null ],
     [ "Yuni::Thread::Timer", null, [

@@ -170,15 +170,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a244013ab300671a80819f14be2a9d41f"><td class="memItemLeft" align="right" valign="top"><a id="a244013ab300671a80819f14be2a9d41f"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;=</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a> &amp;right) const</td></tr>
 <tr class="separator:a244013ab300671a80819f14be2a9d41f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaac5d004b571ecc7f8a24cacf769c4a0"><td class="memItemLeft" align="right" valign="top"><a id="aaac5d004b571ecc7f8a24cacf769c4a0"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
+<tr class="separator:aaac5d004b571ecc7f8a24cacf769c4a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac07ea84b33f403f0566145ab3b5d65e6"><td class="memItemLeft" align="right" valign="top"><a id="ac07ea84b33f403f0566145ab3b5d65e6"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>value</b> (unsigned i) const</td></tr>
+<tr class="separator:ac07ea84b33f403f0566145ab3b5d65e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29633ec9125f5b20d9996e17d6cadf42"><td class="memItemLeft" align="right" valign="top"><a id="a29633ec9125f5b20d9996e17d6cadf42"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator/</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a> &amp;right) const</td></tr>
 <tr class="separator:a29633ec9125f5b20d9996e17d6cadf42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcfa9fa00f860e14bfc4f6ce214dfeea"><td class="memItemLeft" align="right" valign="top"><a id="adcfa9fa00f860e14bfc4f6ce214dfeea"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> () const</td></tr>
 <tr class="separator:adcfa9fa00f860e14bfc4f6ce214dfeea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a747568ce581e057aa723514ff2edddac"><td class="memItemLeft" align="right" valign="top"><a id="a747568ce581e057aa723514ff2edddac"></a>
-std::variant&lt; double, std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>value</b> () const</td></tr>
-<tr class="separator:a747568ce581e057aa723514ff2edddac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa489586042bf9d04176ce1d9ee5a5de2"><td class="memItemLeft" align="right" valign="top"><a id="aa489586042bf9d04176ce1d9ee5a5de2"></a>
+const std::variant&lt; double, std::vector&lt; double &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>value</b> () const</td></tr>
+<tr class="separator:aa489586042bf9d04176ce1d9ee5a5de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adba70bd301a4112f1a6c0d4ff392101a"><td class="memItemLeft" align="right" valign="top"><a id="adba70bd301a4112f1a6c0d4ff392101a"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>valueAsDouble</b> () const</td></tr>
 <tr class="separator:adba70bd301a4112f1a6c0d4ff392101a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,6 +206,10 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>getValueInVector</b
 <tr class="memitem:a5ecbfa28369edec7e3595356666fa0b0"><td class="memItemLeft" align="right" valign="top"><a id="a5ecbfa28369edec7e3595356666fa0b0"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>alltimeSum</b> (int numberOfTimeStep) const</td></tr>
 <tr class="separator:a5ecbfa28369edec7e3595356666fa0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79dc705acc09f05f7bdea74a285a2fdc"><td class="memTemplParams" colspan="2"><a id="a79dc705acc09f05f7bdea74a285a2fdc"></a>
+template&lt;typename Op &gt; </td></tr>
+<tr class="memitem:a79dc705acc09f05f7bdea74a285a2fdc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>evaluateBinaryOperation</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a> &amp;right, Op op) const</td></tr>
+<tr class="separator:a79dc705acc09f05f7bdea74a285a2fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/expressions/include/antares/expressions/visitors/<a class="el" href="EvalVisitor_8h_source.html">EvalVisitor.h</a></li>

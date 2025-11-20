@@ -172,7 +172,19 @@ $(document).ready(function(){initNavTree('TimeIndex_8h_source.html',''); initRes
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                                  | <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(right));</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;} <span class="comment">// namespace Antares::Optimisation</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// to silent warning, convert bool to unsigned int</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">static</span> constexpr <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> convertBool(<span class="keywordtype">bool</span> in)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> in ? 1 : 0;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;constexpr <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Optimisation::TimeIndex</a> convertToTimeIndex(<span class="keywordtype">bool</span> timedependent, <span class="keywordtype">bool</span> scenariodependent)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a><span class="keyword">&gt;</span>((convertBool(scenariodependent) &lt;&lt; 1)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                                  | convertBool(timedependent));</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;} <span class="comment">// namespace Antares::Optimisation</span></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:9</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a4f756d9a72af3d0a7f2c41ee8b7782e0"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Antares::Optimisation::TimeIndex</a></div><div class="ttdeci">TimeIndex</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> TimeIndex.h:29</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html_aaa8ef259fea24e6b7402d5a380d08154"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#aaa8ef259fea24e6b7402d5a380d08154">Antares::Optimisation::operator|</a></div><div class="ttdeci">constexpr TimeIndex operator|(const TimeIndex &amp;left, const TimeIndex &amp;right)</div><div class="ttdoc">Combines two TimeIndex values.</div><div class="ttdef"><b>Definition:</b> TimeIndex.h:44</div></div>

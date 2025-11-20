@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/expressions/include/antares/expressions/nodes/ReducedCostNode.h Source File</title>
+<title>Antares Simulator: src/expressions/include/antares/expressions/visitors/VariadicNodeFunctionVisit.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('ReducedCostNode_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('VariadicNodeFunctionVisit_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('ReducedCostNode_8h_source.html',''); i
 
 <div class="header">
   <div class="headertitle">
-<div class="title">ReducedCostNode.h</div>  </div>
+<div class="title">VariadicNodeFunctionVisit.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -149,56 +149,47 @@ $(document).ready(function(){initNavTree('ReducedCostNode_8h_source.html',''); i
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;antares/expressions/nodes/Leaf.h&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;antares/modeler-optimisation-container/TimeIndex.h&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>Antares::Expressions::Nodes</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classAntares_1_1Expressions_1_1Nodes_1_1ReducedCostNode.html">   34</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1ReducedCostNode.html">ReducedCostNode</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html">Leaf</a>&lt;std::string&gt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1ReducedCostNode.html">ReducedCostNode</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html#ae7f95a27cd911878c219af08f6666ed9">value</a>,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> index,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                             <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Optimisation::TimeIndex</a> time_index = <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Optimisation::TimeIndex</a>::</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                               VARYING_IN_TIME_AND_SCENARIO):</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html">Leaf&lt;std::string&gt;</a>(<a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html#ae7f95a27cd911878c219af08f6666ed9">value</a>),</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        index_(index),</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        time_index_(time_index)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::string name()<span class="keyword"> const override</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;ReducedCostNode&quot;</span>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">unsigned</span> index()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">return</span> index_;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Optimisation::TimeIndex</a> timeIndex()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordflow">return</span> time_index_;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">unsigned</span> index_;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Optimisation::TimeIndex</a> time_index_;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;};</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;} <span class="comment">// namespace Antares::Expressions::Nodes</span></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1Leaf_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html">Antares::Expressions::Nodes::Leaf</a></div><div class="ttdoc">Represents a leaf node in a syntax tree.</div><div class="ttdef"><b>Definition:</b> Leaf.h:34</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1Leaf_html_ae7f95a27cd911878c219af08f6666ed9"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html#ae7f95a27cd911878c219af08f6666ed9">Antares::Expressions::Nodes::Leaf&lt; std::string &gt;::value</a></div><div class="ttdeci">std::string value() const</div><div class="ttdoc">Retrieves the value stored in the leaf node.</div><div class="ttdef"><b>Definition:</b> Leaf.h:51</div></div>
-<div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1ReducedCostNode_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1ReducedCostNode.html">Antares::Expressions::Nodes::ReducedCostNode</a></div><div class="ttdoc">Represents a reduced cost node in a syntax tree, storing a variable name.</div><div class="ttdef"><b>Definition:</b> ReducedCostNode.h:35</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a4f756d9a72af3d0a7f2c41ee8b7782e0"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Antares::Optimisation::TimeIndex</a></div><div class="ttdeci">TimeIndex</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> TimeIndex.h:29</div></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;antares/expressions/nodes/FunctionNode.h&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;antares/expressions/visitors/NodeVisitor.h&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>Antares::Expressions::Visitors</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;concept HasSizeMethod = requires(<span class="keyword">const</span> T&amp; t) {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    { t.size() } -&gt; std::convertible_to&lt;std::size_t&gt;;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">template</span>&lt;HasSizeMethod T&gt;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;std::size_t getMaxSize(<span class="keyword">const</span> std::vector&lt;T&gt;&amp; elements)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    std::size_t maxSize = 0;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; element: elements)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        maxSize = std::max(maxSize, element.size());</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">return</span> maxSize;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> R&gt;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;std::vector&lt;R&gt; variadicFunction(NodeVisitor&lt;R&gt;&amp; visitor, <span class="keyword">const</span> Nodes::FunctionNode* node)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; operands = node-&gt;getOperands();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::vector&lt;R&gt; result;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    result.reserve(operands.size());</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>* operand: operands)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        result.push_back(visitor.dispatch(operand));</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;} <span class="comment">// namespace Antares::Expressions::Visitors</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a46804c238c82b8f14fa9386c13825af.html">expressions</a></li><li class="navelem"><a class="el" href="dir_432673341fda9fdda342856bdfa291ab.html">include</a></li><li class="navelem"><a class="el" href="dir_2029e7711f29bb6b96dc5870729a8848.html">antares</a></li><li class="navelem"><a class="el" href="dir_19ff128a63cbd20da0e3cb306cc82c00.html">expressions</a></li><li class="navelem"><a class="el" href="dir_75cb52c67590822925fc99be5c7920e3.html">nodes</a></li><li class="navelem"><b>ReducedCostNode.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_a46804c238c82b8f14fa9386c13825af.html">expressions</a></li><li class="navelem"><a class="el" href="dir_432673341fda9fdda342856bdfa291ab.html">include</a></li><li class="navelem"><a class="el" href="dir_2029e7711f29bb6b96dc5870729a8848.html">antares</a></li><li class="navelem"><a class="el" href="dir_19ff128a63cbd20da0e3cb306cc82c00.html">expressions</a></li><li class="navelem"><a class="el" href="dir_da561f49584e8b544d49113b783d491a.html">visitors</a></li><li class="navelem"><b>VariadicNodeFunctionVisit.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
