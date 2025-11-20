@@ -186,8 +186,11 @@ models:
 
 ### Power operator
 
-This binary operator **^** is used within an expression whose context is an extra output.
-It can only apply to a reference to an existing variable.
+This binary operator **^** is used within any expression, but with following restrictions.
+In the context of a linear problem construction (any context but **extra-output**), its operands
+can only be literals or parameters.
+
+Within an **extra-output expression**, references to variables are allowed. 
 
 _Example :_ 
 
@@ -203,11 +206,17 @@ models:
       expression: myVar^(2 + myParam)
 ```
 
-### Max (or Min) operator
+### max (or min) operator
 
-This binary operator **max(u, v)** can only be used inside an expression whose context is either **constraints** or **extra-output**.
-- in the context of a **constraint** (or a **binding constraint**), the 2 operands must be parameters or literals.
-- in the context of an **extra output**, there are no restriction on operands.
+This n-ary operator **max(u, v, ...)** can be used within any expression, with following restrictions.
+
+In the context of a linear problem construction (any context but **extra-output**), its operands 
+can only be literals or parameters.
+
+Within an **extra-output expression**, references to variables are allowed. 
+
+
+Furthermore, operands of min/max can only be literals or parameters.
 
 _Example :_
 
@@ -227,6 +236,13 @@ models:
       expression: max(x, a*b)
 ```
 
+Nothing forbids to also have : 
+
+```yaml
+max(2, 3) * x + min(3,4) * y # in objective
+max(2, 3) * x + min(3, 4) * y <= 42 # in a constraint
+```
+
 
 ## Cases where elements can be used in expressions
 
@@ -238,7 +254,7 @@ Apart from that case, variables can only be multiplied/divided by literals/param
 In following tables : 
 - **L** means : only linear multiplication or division is allowed
 - **NL** means non linear multiplication or division is allowed
-- **NV** : the operator applies to non variable elements only.
+- **NV** : the operator applies to non-variable elements only (that is literals and parameters).
 
 ---
 
