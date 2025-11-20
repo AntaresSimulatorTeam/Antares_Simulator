@@ -21,7 +21,6 @@
 
 #include <cassert>
 #include <cmath>
-#include <fstream>
 #include <sstream>
 #include <string>
 
@@ -33,7 +32,6 @@
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
-#include "antares/study/simulation.h"
 
 #define EPSILON 1e-6
 
@@ -416,11 +414,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           try
           {
               checkInput(load, unsupE, spillage, dtgMrg, listStorage);
-              shavePeaksByRemixingStorageGen(load,
-                                             unsupE,
-                                             spillage,
-                                             dtgMrg,
-                                             listStorage);
+              shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage);
               if (writer)
               {
                   collectRemixDebugInfo(listStorage, debugStream);
