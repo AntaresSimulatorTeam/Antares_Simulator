@@ -403,7 +403,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 dayMonth++;
             }
 
-            H2O_J_OptimiserUnMois(&problem);
+            H2O_J_OptimiserUnMois(&problem, area.id);
             switch (problem.ResultatsValides)
             {
             case OUI:

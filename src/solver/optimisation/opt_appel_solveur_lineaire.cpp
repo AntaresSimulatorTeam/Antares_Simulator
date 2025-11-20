@@ -19,7 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <chrono>
 #include <mutex>
 
 #include <antares/antares/fatal-error.h>
@@ -117,9 +116,6 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
-static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
-  LinearProblemDataImpl::LinearProblemData();
-
 // Returns a non-owning pointer
 MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
                              FillContext& fillCtx,
@@ -155,8 +151,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
 
     measure.tick();
 
-    logs.info();
-    logs.info() << "Modeler build took " << measure.toStringInSeconds();
+    logs.debug() << "Modeler build took " << measure.toStringInSeconds();
 
     return ortoolsProblem.getMpSolver();
 }
@@ -217,7 +212,10 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
 
     measure.tick();
-    logs.info() << "Solved in " << measure.toStringInSeconds();
+    logs.info() << fmt::format("Problem {}-{} solved in {}",
+                               problemeHebdo->weekInTheYear,
+                               problemeHebdo->year,
+                               measure.toStringInSeconds());
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 

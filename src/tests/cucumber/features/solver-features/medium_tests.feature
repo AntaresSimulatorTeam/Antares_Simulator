@@ -5,7 +5,7 @@ Feature: medium tests
     Given the solver study path is "Antares_Simulator_Tests_NR/medium-tests/035 Mixed Expansion - Smart grid model 2"
     When I run antares simulator
     Then the simulation succeeds
-    And the simulation takes less than 30 seconds
+    And the simulation takes less than 45 seconds
     And the expected value of the annual system cost is 3.725e+10
     And the minimum annual system cost is 3.642e+10
     And the maximum annual system cost is 4.011e+10

@@ -69,6 +69,9 @@ library:
           lower-bound: 0
           upper-bound: p_max
           variable-type: continuous
+      constraints:
+        - id: max_generation
+          expression: generation <= p_max
       ports:
         - id: balance_port
           type: flow
@@ -89,7 +92,6 @@ library:
           scenario-dependent: false
           time-dependent: false
       variables:
-        - id: master_only
         - id: p_max
           scenario-dependent: false
           time-dependent: false

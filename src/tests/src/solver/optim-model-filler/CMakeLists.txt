@@ -5,7 +5,9 @@ set(SRC_UTILS_FOR_COMPONENT_FILLER_TESTS
 				component-filler-utils/variables-creators.h
 				component-filler-utils/variables-creators.cpp
 				component-filler-utils/objectives-creators.h
-				component-filler-utils/objectives-creators.cpp)
+				component-filler-utils/objectives-creators.cpp
+				component-filler-utils/constraints-creators.h
+				component-filler-utils/constraints-creators.cpp)
 
 add_boost_test(unit-tests-for-component-filler
         SRC

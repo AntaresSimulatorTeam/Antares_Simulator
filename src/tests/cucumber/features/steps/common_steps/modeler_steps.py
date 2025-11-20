@@ -25,6 +25,7 @@ import subprocess
 from behave import *
 from common_steps.assertions import *
 from common_steps.modeler_output_handler import modeler_output_handler
+import common_steps.mps_utils as mpu
 
 
 @given('the modeler study path is "{string}"')
@@ -111,7 +112,7 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
-        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out))
+        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out), parse_output_folder_from_logs(context.logs_out))
 
     context.return_code = process.returncode
 
@@ -129,8 +130,79 @@ def build_antares_modeler_command(context):
     return command
 
 
-def parse_output_folder_from_logs(logs: bytes) -> str:
+def parse_output_folder_from_logs(logs: str) -> str:
     for line in logs.splitlines():
-        if b'Output folder : ' in line:
-            return line.split(b'Output folder : ')[1].decode('ascii')
+        if 'Output folder : ' in line:
+            return line.split('Output folder : ')[1]
     raise LookupError("Could not parse output folder in output logs")
+
+
+def check_variables(context, model):
+    actual = mpu.extract_variables(model)
+
+    # context.table is the Gherkin table passed in the feature
+    expected = [row.as_dict() for row in context.table]
+
+    # convert types
+    for row in expected:
+        row['xmin'] = None if row['xmin'] in ("None", "") else float(row['xmin'])
+        row['xmax'] = None if row['xmax'] in ("None", "") else float(row['xmax'])
+        row['cost'] = float(row['cost'])
+
+    # simple comparison
+    for e in expected:
+        match = next((a for a in actual if a['name'] == e['name']), None)
+        assert match is not None, f"Variable {e['name']} not found in model"
+        assert match['xmin'] == e['xmin'], f"{e['name']} xmin mismatch: {match['xmin']} != {e['xmin']}"
+        assert match['xmax'] == e['xmax'], f"{e['name']} xmax mismatch: {match['xmax']} != {e['xmax']}"
+        assert match['cost'] == e['cost'], f"{e['name']} cost mismatch: {match['cost']} != {e['cost']}"
+
+
+@then(u'the master problem contains the following variables')
+def check_master_variables(context):
+    assert(context.moh.problems != None and context.moh.problems.master != None)
+    check_variables(context, context.moh.problems.master)
+
+@then(u'the subproblem contains the following variables')
+def check_subproblem_variables(context):
+    assert(context.moh.problems != None and context.moh.problems.subproblem != None)
+    model = context.moh.problems.subproblem
+    check_variables(context, context.moh.problems.subproblem)
+
+
+def parse_structure(content):
+    entries = []
+    for line in content:
+        line = line.strip()
+        if not line:
+            continue  # skip blank lines
+        parts = line.split()
+        if len(parts) != 3:
+            raise ValueError(f"Invalid structure entry: {line}")
+        problem, variable, index = parts
+        entries.append({
+            "problem": problem,
+            "variable": variable,
+            "index": int(index),
+        })
+    return entries
+
+@then(u'the structure file contains the following entries')
+def check_structure(context):
+    structure = context.moh.problems.structure
+    assert structure is not None
+    actual = parse_structure(structure)
+    expected = [row.as_dict() for row in context.table]
+    # convert index to int
+    for row in expected:
+        row["index"] = int(row["index"])
+
+    # Convert both lists to sets of tuples for easy comparison
+    actual_set = {(a["problem"], a["variable"], a["index"]) for a in actual}
+    expected_set = {(e["problem"], e["variable"], e["index"]) for e in expected}
+
+    missing = expected_set - actual_set
+    extra = actual_set - expected_set
+
+    assert not missing, f"Missing entries: {missing}"
+    assert not extra,   f"Unexpected entries: {extra}"

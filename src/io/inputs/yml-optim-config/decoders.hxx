@@ -53,6 +53,21 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
 };
 
 template<>
+struct convert<Antares::IO::Inputs::YmlOptimConfig::Constraint>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Constraint& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+        rhs.id = node["id"].as<std::string>();
+        rhs.location = node["location"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
 struct convert<Antares::IO::Inputs::YmlOptimConfig::Objective>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Objective& rhs)
@@ -78,6 +93,10 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
         rhs.variables = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>(
           modelDecompositionNode["variables"]);
+
+        rhs.constraints = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::Constraint>>(
+          modelDecompositionNode["constraints"]);
 
         rhs.objectives = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>(

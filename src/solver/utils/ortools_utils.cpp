@@ -25,7 +25,7 @@
 
 #include <boost/algorithm/string/join.hpp>
 
-#include <antares/antares/Enum.hpp>
+#include <antares/enums/Enum.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>

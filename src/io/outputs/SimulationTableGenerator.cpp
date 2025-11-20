@@ -205,6 +205,10 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     unsigned constraintLocalIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
+        if (modelConstr.location() != Modeler::Config::Location::SUBPROBLEMS)
+        {
+            continue;
+        }
         const auto& constraintId = modelConstr.Id();
 
         const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(

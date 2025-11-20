@@ -21,11 +21,10 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 
 #include <antares/expressions/expression.h>
 
-#include "parameter.h"
+#include "optimConfig.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -50,9 +49,20 @@ public:
         return expression_;
     }
 
+    void setLocation(Modeler::Config::Location loc)
+    {
+        location_ = loc;
+    }
+
+    [[nodiscard]] Modeler::Config::Location location() const
+    {
+        return location_;
+    }
+
 private:
     std::string id_;
     Expression expression_;
+    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel
