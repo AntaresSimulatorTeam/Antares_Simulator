@@ -52,7 +52,7 @@ struct STS_holder
     const double injectionEff = 1.;
 };
 
-template<unsigned int nb_hours>
+template<unsigned nb_hours, unsigned nb_storage>
 struct InputFixture
 {
     InputFixture():
@@ -126,13 +126,19 @@ BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_al
                           checkMessage(err_msg));
 }
 
+// Using direcly InputFixture<n, m> in fixture test cases does not compile on Win MSVC.
+// So we're forced to use typedefs instead. 
+using InputFixture_5_2 = InputFixture<5, 2>;
+using InputFixture_5_3 = InputFixture<5, 3>;
+
+
 // ================================================
 // Note :
 //  G : Total generation without storage
 //  H : Total storage production (or withdrawal)
 // ================================================
 
-BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat, InputFixture<5>)
+BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat, InputFixture_5_2)
 {
     std::ranges::fill(TotaGenWithoutStorage, 100.);
     UnsupE = {80., 60., 40., 20., 0.};
@@ -161,7 +167,7 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat, InputFixtu
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, InputFixture<5>)
+BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, InputFixture_5_2)
 {
     std::ranges::fill(TotaGenWithoutStorage, 100.);
     UnsupE = {80., 60., 40., 20., 0.};
@@ -190,7 +196,7 @@ BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, 
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat, InputFixture<5>)
+BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat, InputFixture_5_2)
 {
     std::ranges::fill(TotaGenWithoutStorage, 100.);
     UnsupE = {0., 20., 40., 60., 80.};
@@ -219,7 +225,7 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat, InputFixtu
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::tolerance(0.01))
+BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture_5_2, *boost::unit_test::tolerance(0.01))
 {
     TotaGenWithoutStorage = {100., 80., 60., 40., 20.}; // Decreases
     UnsupE = {50., 50., 50., 50., 50.};
