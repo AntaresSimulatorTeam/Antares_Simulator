@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -60,43 +60,4 @@ double OrtoolsMipSolution::getObjectiveValue() const
 {
     return ::getObjectiveValue(mpSolver_);
 }
-
-double OrtoolsMipSolution::getOptimalValue(const LinearProblemApi::IMipVariable* var) const
-{
-    if (!var)
-    {
-        return 0;
-    }
-
-    try
-    {
-        return solution_.at(var->getName());
-    }
-    catch (const std::out_of_range& ex)
-    {
-        logs.warning() << ex.what();
-        logs.warning() << "Solution not found for variable: " << var->getName();
-    }
-    return 0;
-}
-
-std::vector<double> OrtoolsMipSolution::getOptimalValues(
-  const std::vector<LinearProblemApi::IMipVariable*>& vars) const
-{
-    std::vector<double> solution;
-    solution.reserve(vars.size());
-
-    for (const auto* var: vars)
-    {
-        solution.push_back(getOptimalValue(var));
-    }
-
-    return solution;
-}
-
-const std::map<std::string, double>& OrtoolsMipSolution::getOptimalValues() const
-{
-    return solution_;
-}
-
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

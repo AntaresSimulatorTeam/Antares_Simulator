@@ -1,37 +1,35 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_TOOLBOX_COMPONENT_MAPNOTEBOOK_H__
 #define __ANTARES_TOOLBOX_COMPONENT_MAPNOTEBOOK_H__
 
 #include "notebook.h"
 #include <wx/textctrl.h>
 #include <antares/logs/logs.h>
-namespace Antares
-{
-namespace Component
+namespace Antares::Component
 {
 /*!
 ** \brief MapNotebook
 */
-class MapNotebook : public Notebook, public Yuni::IEventObserver<MapNotebook>
+class MapNotebook: public Notebook, public Yuni::IEventObserver<MapNotebook>
 {
     friend class MapTabs;
 
@@ -43,6 +41,7 @@ public:
     ** \param parent The parent window
     */
     MapNotebook(wxWindow* parent, Notebook::Orientation orientation = orLeft);
+
     ~MapNotebook()
     {
         destroyBoundEvents();
@@ -55,23 +54,25 @@ public:
     bool remove(Page* page);
 
 public:
-    class TabTextCtrl : public wxTextCtrl
+    class TabTextCtrl: public wxTextCtrl
     {
     public:
-        TabTextCtrl(Tabs* parent, wxWindowID id, Page* pageToRename) :
-         wxTextCtrl((wxWindow*)parent,
-                    id,
-                    pageToRename->caption(),
-                    wxPoint(pageToRename->pBoundingBox.x, pageToRename->pBoundingBox.y),
-                    pageToRename->pBoundingBox.GetSize(),
-                    wxTE_PROCESS_ENTER),
-         pPage(pageToRename),
-         pNotebook(&(parent->pNotebook))
+        TabTextCtrl(Tabs* parent, wxWindowID id, Page* pageToRename):
+            wxTextCtrl((wxWindow*)parent,
+                       id,
+                       pageToRename->caption(),
+                       wxPoint(pageToRename->pBoundingBox.x, pageToRename->pBoundingBox.y),
+                       pageToRename->pBoundingBox.GetSize(),
+                       wxTE_PROCESS_ENTER),
+            pPage(pageToRename),
+            pNotebook(&(parent->pNotebook))
         {
             SelectAll();
-        };
+        }
+
         ~TabTextCtrl() = default;
         void OnTextEnter(wxCommandEvent& evt);
+
         void SetPage(Page* p)
         {
             if (p != nullptr)
@@ -84,7 +85,9 @@ public:
                 Show();
             }
             else
+            {
                 Hide();
+            }
         }
 
     private:
@@ -93,7 +96,7 @@ public:
     };
 
 public:
-    class MapTabs : public Notebook::Tabs
+    class MapTabs: public Notebook::Tabs
     {
         friend class MapNotebook;
 
@@ -107,6 +110,7 @@ public:
                 btnRight,
                 btnNone
             };
+
             tabButton(std::string imagePath,
                       MapTabs* parentFrame,
                       BtnType t = btnNone,
@@ -189,6 +193,5 @@ public:
 
 }; // class MapNotebook
 
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component
 #endif

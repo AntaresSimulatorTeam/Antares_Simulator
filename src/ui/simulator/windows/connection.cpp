@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "connection.h"
 #include "../toolbox/create.h"
@@ -29,9 +29,7 @@
 using namespace Yuni;
 using namespace Antares::MemoryUtils;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 void linkParametersGrid::add(wxBoxSizer* sizer,
                              wxWindow* parent,
@@ -39,7 +37,8 @@ void linkParametersGrid::add(wxBoxSizer* sizer,
                              Toolbox::InputSelector::Connections* notifier)
 {
     auto* connParam = new_check_allocation<Component::Datagrid::Renderer::connectionParameters>(
-      intercoWindow, notifier);
+      intercoWindow,
+      notifier);
     auto* component = new_check_allocation<Component::Datagrid::Component>(parent, connParam);
     sizer->Add(component, 1, wxALL | wxEXPAND | wxFIXED_MINSIZE);
 }
@@ -57,30 +56,37 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
     Component::Datagrid::Component* gridDirect = nullptr;
     Component::Datagrid::Component* gridIndirect = nullptr;
     // Grid for direct NTC
-    auto* connectionDirect
-      = new_check_allocation<Component::Datagrid::Renderer::connectionNTCdirect>(intercoWindow,
-                                                                                 notifier);
-    gridDirect = new_check_allocation<Component::Datagrid::Component>(
-      parent, connectionDirect, wxT("Direct"));
+    auto* connectionDirect = new_check_allocation<
+      Component::Datagrid::Renderer::connectionNTCdirect>(intercoWindow, notifier);
+    gridDirect = new_check_allocation<Component::Datagrid::Component>(parent,
+                                                                      connectionDirect,
+                                                                      wxT("Direct"));
 
-    sizer->Add(
-      gridDirect, gridSizeProportion, wxALL | wxEXPAND | wxFIXED_MINSIZE, borderSizeAroundGrid);
+    sizer->Add(gridDirect,
+               gridSizeProportion,
+               wxALL | wxEXPAND | wxFIXED_MINSIZE,
+               borderSizeAroundGrid);
 
     // Vertical separator
-    sizer->Add(new_check_allocation<wxStaticLine>(
-                 parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
+    sizer->Add(new_check_allocation<wxStaticLine>(parent,
+                                                  wxID_ANY,
+                                                  wxDefaultPosition,
+                                                  wxDefaultSize,
+                                                  wxLI_VERTICAL),
                0,
                wxALL | wxEXPAND);
 
     // Grid for indirect NTC
-    auto* connectionIndirect
-      = new_check_allocation<Component::Datagrid::Renderer::connectionNTCindirect>(intercoWindow,
-                                                                                   notifier);
-    gridIndirect = new_check_allocation<Component::Datagrid::Component>(
-      parent, connectionIndirect, wxT("Indirect"));
+    auto* connectionIndirect = new_check_allocation<
+      Component::Datagrid::Renderer::connectionNTCindirect>(intercoWindow, notifier);
+    gridIndirect = new_check_allocation<Component::Datagrid::Component>(parent,
+                                                                        connectionIndirect,
+                                                                        wxT("Indirect"));
 
-    sizer->Add(
-      gridIndirect, gridSizeProportion, wxALL | wxEXPAND | wxFIXED_MINSIZE, borderSizeAroundGrid);
+    sizer->Add(gridIndirect,
+               gridSizeProportion,
+               wxALL | wxEXPAND | wxFIXED_MINSIZE,
+               borderSizeAroundGrid);
 
     // Synchronize the scroll bars of the two grids
     gridDirect->setOtherGrid(gridIndirect);
@@ -89,8 +95,8 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
 
 Interconnection::Interconnection(wxWindow* parent,
                                  Toolbox::InputSelector::Connections* notifier,
-                                 linkGrid* link_grid) :
- wxScrolledWindow(parent)
+                                 linkGrid* link_grid):
+    wxScrolledWindow(parent)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
     SetSizer(mainsizer);
@@ -119,8 +125,8 @@ Interconnection::Interconnection(wxWindow* parent,
     captionButton_ = new_check_allocation<captionButton>(pLinkData, sizer_flex_grid);
 
     // Hurdle costs button
-    hurdleCostsUsageButton_
-      = new_check_allocation<hurdleCostsUsageButton>(pLinkData, sizer_flex_grid);
+    hurdleCostsUsageButton_ = new_check_allocation<hurdleCostsUsageButton>(pLinkData,
+                                                                           sizer_flex_grid);
 
     // Link transmission capacities usage button
     ntcUsageButton_ = new_check_allocation<ntcUsageButton>(pLinkData, sizer_flex_grid);
@@ -132,8 +138,8 @@ Interconnection::Interconnection(wxWindow* parent,
     loopFlowUsageButton_ = new_check_allocation<loopFlowUsageButton>(pLinkData, sizer_flex_grid);
 
     // Phase Shifter usage button
-    phaseShifterUsageButton_
-      = new_check_allocation<phaseShifterUsageButton>(pLinkData, sizer_flex_grid);
+    phaseShifterUsageButton_ = new_check_allocation<phaseShifterUsageButton>(pLinkData,
+                                                                             sizer_flex_grid);
 
     sizer_vertical->AddSpacer(4);
 
@@ -152,7 +158,9 @@ Interconnection::Interconnection(wxWindow* parent,
     mainsizer->Layout();
 
     if (notifier)
+    {
         notifier->onConnectionChanged.connect(this, &Interconnection::onConnectionChanged);
+    }
     // inspector
     OnStudyLinkChanged.connect(this, &Interconnection::onStudyLinkChanged);
 }
@@ -166,14 +174,18 @@ Interconnection::~Interconnection()
 void Interconnection::onConnectionChanged(Data::AreaLink* link)
 {
     if (checkLinkView(link))
+    {
         updateLinkView(link);
+    }
 }
 
 bool Interconnection::checkLinkView(Data::AreaLink* link)
 {
     auto* sizer = GetSizer();
     if (not sizer)
+    {
         return false;
+    }
 
     if (captionButton_->hasNoButton() || hurdleCostsUsageButton_->hasNoButton()
         || ntcUsageButton_->hasNoButton())
@@ -187,7 +199,9 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     if (not link)
     {
         if (not pLink) // already well set - avoid useless refresh
+        {
             return false;
+        }
         captionButton_->setCaption(wxEmptyString);
         pLink = nullptr;
         sizer->Hide(pLinkData);
@@ -206,7 +220,9 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
 
     auto* sizer = GetSizer();
     if (not sizer)
+    {
         return;
+    }
 
     pLink = link;
     sizer->Show(pLinkData);
@@ -230,7 +246,9 @@ void Interconnection::finalizeView()
 {
     auto* sizer = GetSizer();
     if (not sizer)
+    {
         return;
+    }
 
     sizer->Layout();
     this->FitInside(); // ask the sizer about the needed size
@@ -240,8 +258,9 @@ void Interconnection::finalizeView()
 void Interconnection::onStudyLinkChanged(Data::AreaLink* link)
 {
     if (link == pLink && link)
+    {
         onConnectionChanged(pLink);
+    }
 }
 
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window

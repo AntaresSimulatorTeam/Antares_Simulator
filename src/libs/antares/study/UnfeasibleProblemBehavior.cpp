@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -23,30 +23,10 @@
 #include <string>
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-#include "antares/antares/Enum.hpp"
+#include "antares/enums/Enum.hpp"
 
 namespace Antares::Data
 {
-const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
-{
-    switch (unfeasibleProblemBehavior)
-    {
-    case UnfeasibleProblemBehavior::WARNING_DRY:
-        return "images/16x16/light_green.png";
-    case UnfeasibleProblemBehavior::WARNING_MPS:
-        return "images/16x16/light_green.png";
-    case UnfeasibleProblemBehavior::ERROR_DRY:
-        return "images/16x16/light_orange.png";
-    case UnfeasibleProblemBehavior::ERROR_MPS:
-        return "images/16x16/light_orange.png";
-    default:
-        throw std::runtime_error(
-          "Invalid UnfeasibleProblemBehavior "
-          + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
-        return "";
-    }
-}
-
 bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
     switch (unfeasibleProblemBehavior)
@@ -83,6 +63,27 @@ bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     }
 }
 
+#ifdef BUILD_UI
+const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
+{
+    switch (unfeasibleProblemBehavior)
+    {
+    case UnfeasibleProblemBehavior::WARNING_DRY:
+        return "images/16x16/light_green.png";
+    case UnfeasibleProblemBehavior::WARNING_MPS:
+        return "images/16x16/light_green.png";
+    case UnfeasibleProblemBehavior::ERROR_DRY:
+        return "images/16x16/light_orange.png";
+    case UnfeasibleProblemBehavior::ERROR_MPS:
+        return "images/16x16/light_orange.png";
+    default:
+        throw std::runtime_error(
+          "Invalid UnfeasibleProblemBehavior "
+          + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
+        return "";
+    }
+}
+
 std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
     switch (unfeasibleProblemBehavior)
@@ -102,6 +103,7 @@ std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBeh
         return "";
     }
 }
+#endif
 
 namespace Enum
 {

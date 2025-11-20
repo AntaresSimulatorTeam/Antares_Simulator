@@ -14,6 +14,8 @@ from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
 
 from features.steps.common_steps.assertions import assert_double_close
+from features.steps.common_steps.modeler_output_handler import modeler_output_handler
+from features.steps.common_steps.table_compare import *
 
 NB_HOURS_IN_WEEK = 168
 NB_DAYS_IN_WEEK = 7
@@ -119,7 +121,7 @@ def get_quadratic_solver(context) -> str:
 
 @then('the simulation takes less than {seconds:g} seconds')
 def check_simu_time(context, seconds):
-    assert context.soh.get_simu_time() <= seconds
+    assert context.soh.get_simu_time() <= seconds, f"Simulation time {context.soh.get_simu_time()} exceeds {seconds} seconds"
 
 
 @then('in area "{area}", during year {year:d}, loss of load lasts {lold_hours:d} hours')
@@ -233,6 +235,27 @@ def check_annual_results(context):
             check_unsupplied_energy_value(context, area, year, float(row["unsupplied energy"]))
 
 
+@then("simulation tables match the references")
+def check_simulation_tables(context):
+    # Optimization 1
+    msg1 = diff_message(
+        name="Simulation table (optimization 1)",
+        ref_lines=context.sih.get_optim1_simulation_table(),
+        out_lines=context.soh.get_optim1_simulation_table(),
+    )
+    assert msg1 is None, msg1
+
+    # Optimization 2 (if any)
+    ref_simulation_table2 = context.sih.get_optim2_simulation_table()
+    if ref_simulation_table2:
+        msg2 = diff_message(
+            name="Simulation table (optimization 2)",
+            ref_lines=ref_simulation_table2,
+            out_lines=context.soh.get_optim2_simulation_table(),
+        )
+        assert msg2 is None, msg2
+
+
 def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
 
@@ -240,7 +263,7 @@ def should_check(row, key):
 def run_simulation(context):
     command = build_antares_solver_command(context)
     print(f"Running command: {command}")
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     if out:
         context.logs_out = out.decode("utf-8")
@@ -253,6 +276,10 @@ def run_simulation(context):
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
     context.soh = solver_output_handler(context.output_path, context.mode)
+    # for hybrid studies:
+    simulation_table = Path(context.output_path) / "simulation_table--optim-nb-1.csv"
+    if simulation_table.exists():
+        context.moh = modeler_output_handler(simulation_table)
 
 
 def init_simulation(context):
@@ -352,3 +379,25 @@ def check_no_mingen_column_for_cluster(context, area, year, cluster):
 def check_thermal_cluster_min_gen_for_hour(context, area, cluster_name, hour, year, expected_value):
     actual_value = context.soh.min_gen_for_thermal_cluster_at_hour(area, year, hour, cluster_name)
     assert_double_close(expected_value, actual_value, 0.001)
+
+
+@step('the message "{log}" is reported in the logs')
+def ckeck_log_exists(context, log):
+    for log_line in context.logs_err.splitlines():
+        if log in log_line:
+            return
+    raise AssertionError(f"Log '{log}' is not reported in the logs")
+
+
+@then(
+    'in area "{area}", during year {year:d}, hourly value of "{var_name}" for hour {hour:d} is equal to {expected_value:d}')
+def check_hourly_variable_value(context, area, year, var_name, hour, expected_value):
+    actual_value = context.soh.get_hourly_value(area, year, var_name, hour)
+    assert expected_value == actual_value, \
+        f"Hourly value mismatch for {var_name}: expected {expected_value}, got {actual_value} (area={area}, year={year}, hour={hour})"
+
+
+@then('in area "{area}", year {year:d} and hour {hour:d}, near price cap is {value:d} hours')
+def check_near_price_cap(context, area, year, hour, value):
+    actual = context.soh.get_npcap_hours_for_hour(area, year, hour)
+    assert actual == value, f"Near price cap hours mismatch: expected {value}, got {actual}"

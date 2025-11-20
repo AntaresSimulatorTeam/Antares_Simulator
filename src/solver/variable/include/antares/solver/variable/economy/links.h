@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -52,6 +52,8 @@ typedef FlowLinear             // Flow linear
           <>>>>>>>>>
     VariablePerLink;
 
+// Make Links a template alias to be used in Common::ComposeAll
+template<class>
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 
 } // namespace Antares::Solver::Variable::Economy

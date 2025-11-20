@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -214,6 +214,12 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                     Xmin[varCostVariationWithdrawal] = 0.;
                 }
                 storageIndex++;
+                if (storage.allowOverflow)
+                {
+                    int var = variableManager.ShortTermStorageOverflow(clusterGlobalIndex, pdtJour);
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                }
             }
         }
     }

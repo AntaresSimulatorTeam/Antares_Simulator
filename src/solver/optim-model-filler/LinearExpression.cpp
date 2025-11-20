@@ -20,95 +20,189 @@
  */
 
 #include <algorithm>
-#include <functional>
 #include <stdexcept>
 
-#include <antares/solver/optim-model-filler/LinearExpression.h>
+#include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
+
+namespace
+{
+void mergeDuplicates(std::vector<std::pair<int, double>>& v)
+{
+    // Most constraints have 1 or 2 terms, so we handle them here without sort & loops
+    switch (v.size())
+    {
+    case 0:
+    case 1:
+        return;
+    case 2:
+        if (v[0].first != v[1].first)
+        {
+            return;
+        }
+        break;
+    }
+    // Step 1: sort by first
+    std::sort(v.begin(), v.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
+
+    // Step 2: merge duplicates
+    size_t write = 0;
+    for (size_t read = 1; read < v.size(); ++read)
+    {
+        if (v[read].first == v[write].first)
+        {
+            v[write].second += v[read].second; // accumulate
+        }
+        else
+        {
+            ++write;
+            v[write] = v[read]; // move next unique element forward
+        }
+    }
+
+    // Step 3: erase leftover duplicates
+    v.erase(v.begin() + write + 1, v.end());
+}
+} // namespace
 
 namespace Antares::Optimization
 {
-/**
- * Element-wise multiplication of a map by a scale.
- * For every key: final_value = scale * initial_value
- * @param map The [string, double] map to scale
- * @param scale The scale
- * @return The scaled map
- */
-FullKeyMap scale_map(const FullKeyMap& map, double scale)
+LinearExpression::LinearExpression() = default;
+
+LinearExpression::LinearExpression(double constant):
+    constant_(constant)
 {
-    FullKeyMap result;
-    for (auto [key, value]: map)
+}
+
+LinearExpression::LinearExpression(const std::vector<std::pair<int, double>>& coefs,
+                                   double constant):
+    coefs_(coefs),
+    constant_(constant)
+{
+}
+
+const std::pair<int, double>& LinearExpression::operator[](std::size_t n) const
+{
+    return coefs_[n];
+}
+
+std::size_t LinearExpression::size() const
+{
+    return coefs_.size();
+}
+
+void LinearExpression::mergeDuplicateCoefficients()
+{
+    mergeDuplicates(coefs_);
+}
+
+LinearExpression& LinearExpression::operator*=(double factor)
+{
+    for (auto& [index, coef]: coefs_)
     {
-        result[key] = scale * value;
+        coef *= factor;
     }
-    return result;
-}
+    constant_ *= factor;
 
-LinearExpression::LinearExpression(double offset, FullKeyMap coef_per_var):
-    offset_(offset),
-    coef_per_var_(std::move(coef_per_var))
-{
-}
-
-LinearExpression LinearExpression::operator+(const LinearExpression& other) const
-{
-    auto result(*this);
-    result += other;
-    return result;
-}
-
-const FullKeyMap& LinearExpression::coefPerVar() const
-{
-    return coef_per_var_;
+    return *this;
 }
 
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
-    this->offset_ += other.offset_;
-    add_maps(coef_per_var_, other.coef_per_var_);
+    coefs_.reserve(coefs_.size() + other.coefs_.size());
+    coefs_.insert(coefs_.end(), other.coefs_.begin(), other.coefs_.end());
+    constant_ += other.constant_;
     return *this;
 }
 
-LinearExpression LinearExpression::operator-(const LinearExpression& other) const
+LinearExpression& LinearExpression::operator-=(const LinearExpression& other)
 {
-    auto result(*this);
-    result += -other;
-    return result;
-}
-
-LinearExpression LinearExpression::operator*(const LinearExpression& other) const
-{
-    if (coef_per_var_.empty())
+    coefs_.reserve(coefs_.size() + other.coefs_.size());
+    for (const auto& [index, coef]: other.coefs_)
     {
-        return {offset_ * other.offset_, scale_map(other.coef_per_var_, offset_)};
+        coefs_.emplace_back(index, -coef);
     }
-    else if (other.coef_per_var_.empty())
-    {
-        return {offset_ * other.offset_, scale_map(coef_per_var_, other.offset_)};
-    }
-    else
-    {
-        throw std::invalid_argument("A linear expression can't have quadratic terms.");
-    }
+    constant_ -= other.constant_;
+    return *this;
 }
 
 LinearExpression LinearExpression::operator/(const LinearExpression& other) const
 {
-    if (!other.coef_per_var_.empty())
+    if (other.hasCoefs())
     {
         throw std::invalid_argument("A linear expression can't have a variable as a dividend.");
     }
-    return LinearExpression(offset_ / other.offset_, scale_map(coef_per_var_, 1 / other.offset_));
+    double inv = 1.0 / other.constant();
+    LinearExpression out(*this);
+    out *= inv;
+    return out;
 }
 
 LinearExpression LinearExpression::operator-() const
 {
-    return {-offset_, scale_map(coef_per_var_, -1)};
+    LinearExpression ret;
+    ret.coefs_.reserve(coefs_.size());
+    for (const auto& [index, coef]: coefs_)
+    {
+        ret.coefs_.emplace_back(index, -coef);
+    }
+    ret.constant_ = -constant_;
+    return ret;
 }
 
-double LinearExpression::offset() const
+double LinearExpression::constant() const
 {
-    return offset_;
+    return constant_;
+}
+
+LinearExpression::const_iterator LinearExpression::begin() const
+{
+    return coefs_.begin();
+}
+
+LinearExpression::const_iterator LinearExpression::end() const
+{
+    return coefs_.end();
+}
+
+void LinearExpression::addVariable(int index, double value)
+{
+    coefs_.emplace_back(index, value);
+}
+
+LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
+{
+    if (hasCoefs() && other.hasCoefs())
+    {
+        // Multiplying two symbolic expressions would give quadratic terms,
+        // which this representation cannot hold.
+        throw std::invalid_argument("A linear expression can't have quadratic terms.");
+    }
+
+    else if (hasCoefs() && !other.hasCoefs())
+    {
+        // linear * constant
+        for (auto& [idx, coef]: coefs_)
+        {
+            coef *= other.constant_;
+        }
+    }
+    else if (!hasCoefs() && other.hasCoefs())
+    {
+        // constant * linear
+        coefs_ = other.coefs_;
+        for (auto& [idx, coef]: coefs_)
+        {
+            coef *= constant_; // use this->constant as multiplier
+        }
+    }
+    // Also if (!hasCoefs() && !other.hasCoefs())
+    constant_ *= other.constant_;
+    return *this;
+}
+
+bool LinearExpression::hasCoefs() const
+{
+    return !coefs_.empty();
 }
 
 } // namespace Antares::Optimization

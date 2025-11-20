@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "advanced.h"
 #include <wx/sizer.h>
@@ -34,11 +34,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Options
+namespace Antares::Window::Options
 {
 Yuni::Event<void(bool)> OnRenewableGenerationModellingChanged;
 
@@ -58,18 +54,20 @@ static void Title(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool mar
     sizer->AddSpacer(5);
 }
 
-AdvancedParameters::AdvancedParameters(wxWindow* parent) :
- wxDialog(parent,
-          wxID_ANY,
-          wxT("Advanced parameters"),
-          wxDefaultPosition,
-          wxDefaultSize,
-          wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN)
+AdvancedParameters::AdvancedParameters(wxWindow* parent):
+    wxDialog(parent,
+             wxID_ANY,
+             wxT("Advanced parameters"),
+             wxDefaultPosition,
+             wxDefaultSize,
+             wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN)
 {
     assert(parent);
 
     for (uint i = 0; i != (uint)Data::seedMax; ++i)
+    {
         pEditSeeds[i] = nullptr;
+    }
 
     // Title of the Form
     SetLabel(wxT("Advanced parameters"));
@@ -166,8 +164,9 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
     // Hydro heuristic policy
     {
         label = Component::CreateLabel(this, wxT("Hydro heuristic policy"));
-        button
-          = new Component::Button(this, wxT("accommodate rule curves"), "images/16x16/tag.png");
+        button = new Component::Button(this,
+                                       wxT("accommodate rule curves"),
+                                       "images/16x16/tag.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);
         onPopup.bind(this, &AdvancedParameters::onHydroHeuristicPolicy);
@@ -272,8 +271,10 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
     pnlSizerBtns->Add(button, 0, wxALL | wxEXPAND);
 
     pnlSizerBtns->AddStretchSpacer();
-    wxButton* pBtnCancel = Antares::Component::CreateButton(
-      panel, wxT("  Close  "), this, &AdvancedParameters::onClose);
+    wxButton* pBtnCancel = Antares::Component::CreateButton(panel,
+                                                            wxT("  Close  "),
+                                                            this,
+                                                            &AdvancedParameters::onClose);
     pBtnCancel->SetDefault();
     pnlSizerBtns->Add(pBtnCancel, 0, wxALL | wxEXPAND);
     pnlSizerBtns->Add(25, 5);
@@ -282,8 +283,11 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
     sizer->Add(panel, 0, wxALL | wxEXPAND);
 
     // refresh
-    Connect(
-      GetId(), wxEVT_MOTION, wxMouseEventHandler(AdvancedParameters::onInternalMotion), nullptr, this);
+    Connect(GetId(),
+            wxEVT_MOTION,
+            wxMouseEventHandler(AdvancedParameters::onInternalMotion),
+            nullptr,
+            this);
 
     refresh();
     SetSizer(sizer);
@@ -306,7 +310,9 @@ void AdvancedParameters::onClose(void*)
 void AdvancedParameters::onResetToDefault(void*)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
 
     Window::Message message(this,
                             wxT("Advanced parameters"),
@@ -347,14 +353,18 @@ void AdvancedParameters::onInternalMotion(wxMouseEvent&)
 void AdvancedParameters::refresh()
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     // The current study
     auto& study = *GetCurrentStudy();
 
     for (uint seed = 0; seed != (uint)Data::seedMax; ++seed)
     {
         if (pEditSeeds[seed])
+        {
             pEditSeeds[seed]->SetValue(wxString() << study.parameters.seed[seed]);
+        }
     }
 
     // accuracy
@@ -414,7 +424,9 @@ wxTextCtrl* AdvancedParameters::insertEdit(wxWindow* parent,
 void AdvancedParameters::onEditSeedTSDraws(wxCommandEvent& evt)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     int id = evt.GetId();
@@ -474,7 +486,9 @@ void AdvancedParameters::onNumericQuality(Component::Button&,
 void AdvancedParameters::onSelectNumericQualityStandard(wxCommandEvent&)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     uint old = study.parameters.timeSeriesAccuracyOnCorrelation;
@@ -489,7 +503,9 @@ void AdvancedParameters::onSelectNumericQualityStandard(wxCommandEvent&)
 void AdvancedParameters::onSelectNumericQualityHigh(wxCommandEvent&)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     uint old = study.parameters.timeSeriesAccuracyOnCorrelation;
@@ -529,7 +545,9 @@ void AdvancedParameters::onHydroHeuristicPolicy(Component::Button&, wxMenu& menu
 void AdvancedParameters::onSelectAccomodateRuleCurves(wxCommandEvent& /* evt */)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (study.parameters.hydroHeuristicPolicy.hhPolicy != Data::hhpAccommodateRuleCurves)
@@ -539,10 +557,13 @@ void AdvancedParameters::onSelectAccomodateRuleCurves(wxCommandEvent& /* evt */)
         refresh();
     }
 }
+
 void AdvancedParameters::onSelectMaximizeGeneration(wxCommandEvent& /* evt */)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (study.parameters.hydroHeuristicPolicy.hhPolicy != Data::hhpMaximizeGeneration)
@@ -583,7 +604,9 @@ void AdvancedParameters::onSelectHPHeuristic(wxCommandEvent& /* evt */)
 {
     auto& study = *GetCurrentStudy();
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
 
     if (study.parameters.hydroPricing.hpMode != Data::hpHeuristic)
     {
@@ -596,7 +619,9 @@ void AdvancedParameters::onSelectHPHeuristic(wxCommandEvent& /* evt */)
 void AdvancedParameters::onSelectHPMixedIntegerLinearProblem(wxCommandEvent& /* evt */)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (study.parameters.hydroPricing.hpMode != Data::hpMILP)
@@ -645,7 +670,9 @@ void AdvancedParameters::onPowerFluctuations(Component::Button&, wxMenu& menu, v
 void AdvancedParameters::onSelectMinimizeRamping(wxCommandEvent&)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (study.parameters.power.fluctuations != Data::lssMinimizeRamping)
@@ -659,7 +686,9 @@ void AdvancedParameters::onSelectMinimizeRamping(wxCommandEvent&)
 void AdvancedParameters::onSelectMinimizeExcursions(wxCommandEvent&)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (study.parameters.power.fluctuations != Data::lssMinimizeExcursions)
@@ -673,7 +702,9 @@ void AdvancedParameters::onSelectMinimizeExcursions(wxCommandEvent&)
 void AdvancedParameters::onSelectFreeModulations(wxCommandEvent&)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (study.parameters.power.fluctuations != Data::lssFreeModulations)
@@ -712,7 +743,9 @@ void AdvancedParameters::onSelectSHPShavePeaks(wxCommandEvent&)
 {
     auto& study = *GetCurrentStudy();
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
 
     if (study.parameters.shedding.policy != Data::shpShavePeaks)
     {
@@ -725,7 +758,9 @@ void AdvancedParameters::onSelectSHPShavePeaks(wxCommandEvent&)
 void AdvancedParameters::onSelectSHPMinimizeDuration(wxCommandEvent&)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (study.parameters.shedding.policy != Data::shpMinimizeDuration)
@@ -774,7 +809,9 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
 void AdvancedParameters::onSelectUCMode(Antares::Data::UnitCommitmentMode mode)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto study = GetCurrentStudy();
 
     if (study->parameters.unitCommitment.ucMode != mode)
@@ -835,12 +872,12 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     text.clear();
     text = wxStringFromUTF8(NumberOfCoresModeToCString(Data::ncHigh)); // High
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(
-      it->GetId(),
-      wxEVT_COMMAND_MENU_SELECTED,
-      wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncHigh>),
-      nullptr,
-      this);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(
+                   AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncHigh>),
+                 nullptr,
+                 this);
 
     text.clear();
     text = wxStringFromUTF8(NumberOfCoresModeToCString(Data::ncMax)); // Max
@@ -855,7 +892,9 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
 void AdvancedParameters::onSelectNumberOfCoresLevel(Data::NumberOfCoresMode ncMode)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto study = GetCurrentStudy();
 
     if (study->parameters.nbCores.ncMode != ncMode)
@@ -901,7 +940,9 @@ void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMe
 void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& /* evt */)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (!study.parameters.renewableGeneration.isAggregated())
@@ -916,7 +957,9 @@ void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& /* evt */)
 void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& /* evt */)
 {
     if (not CurrentStudyIsValid())
+    {
         return;
+    }
     auto& study = *GetCurrentStudy();
 
     if (!study.parameters.renewableGeneration.isClusters())
@@ -928,6 +971,4 @@ void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& /* evt */)
     }
 }
 
-} // namespace Options
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Options

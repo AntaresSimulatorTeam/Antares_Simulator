@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -26,15 +26,12 @@
 
 #include <antares/solver/utils/basis_status.h>
 
-namespace operations_research
-{
-class MPSolver;
-}
+#include "ortools/linear_solver/linear_solver.h"
 
 /*--------------------------------------------------------------------------------------*/
 
 /* Le probleme a resoudre */
-class PROBLEME_ANTARES_A_RESOUDRE
+class PROBLEME_ANTARES_A_RESOUDRE final
 {
 public:
     /* La matrice des contraintes */
@@ -92,7 +89,7 @@ public:
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    std::vector<operations_research::MPSolver*> ProblemesSpx;
+    std::vector<std::unique_ptr<operations_research::MPSolver>> ProblemesSpx;
 
     std::vector<int>
       PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */

@@ -95,29 +95,40 @@ models:
   - id: proportional_cost
     time-dependent: false
     scenario-dependent: true
+
   variables:
   - id: is_on
     variable-type: boolean
     lower-bound: 0
     upper-bound: 1
+    time-dependent: true
+    scenario-dependent: true
   - id: active_power
     variable-type: continuous
     lower-bound: 0
     upper-bound: max_active_power_setpoint
+
   constraints:
   - id: respect_min_p
     expression: active_power >= is_on * min_active_power_setpoint
-  objective: active_power * proportional_cost
+
+  objective-contributions:
+  - id: objective
+    expression: active_power * proportional_cost
+
   ports:
   - id: injection
     type: dc_port
+
   port-field-definitions:
   - port: injection
     field: flow
     definition: active_power
+
   extra-outputs:
   - id: total_cost_in_millions
     expression: sum(active_power * proportional_cost) / 1000000
+
 - id: node
   description: A balance node with injections (productions and loads)
   ports:
@@ -135,10 +146,10 @@ models:
   the [system file](#system-file).
     - **id**: an ID for the parameter. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
-    - **time-dependent**: `true` or `false`, indicates whether the parameter depends on time or is constant across the
-      whole simulation horizon.
-    - **scenario-dependent**: `true` or `false`, indicates whether the parameter changes depending on the simulated
-      scenario, or is the same for all scenarios.
+    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the parameter depends on time or is constant 
+      across the whole simulation horizon. Defaults to `true`.
+    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the 
+      simulated scenario, or is the same for all scenarios. Defaults to `true`.
 - **variables** _(optional)_: a collection of optimization variables that are defined for this model
     - **id**: an ID for the variable. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
@@ -149,6 +160,10 @@ models:
     - **upper-bound** _(optional)_: an [expression](#expressions) representing the upper bound of the variable. The
       expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to +inf for continuous and integer types, or 1 for binary.
+    - **time-dependent** _(optional)_: `true` or `false`, indicates whether the variable depends on time or is constant 
+      across the whole simulation horizon. Defaults to `true`.
+    - **scenario-dependent** _(optional)_: `true` or `false`, indicates whether the parameter changes depending on the 
+      simulated scenario, or is the same for all scenarios. Defaults to `true`.
 - **constraints** _(optional)_: a collection of "internal" optimization constraints set by the model
     - **id**: an ID for the constraint. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
@@ -163,9 +178,12 @@ models:
       respect [these rules](#rules-for-ids).
     - **expression**: an [expression](#expressions) representing the constraint. Can use scalars, parameters, internal
       variables, ports, and time, scenario, and port operators.
-- **objective** _(optional)_: an [expression](#expressions) representing the (additive) participation of the model to
-  the optimization objective.
-  Note that **minimization** is implied. The expression can use scalars, parameters and variables of the model.
+- **objective-contributions** _(optional)_: an collection of contributions to the objective function
+    - **id**: an ID for the objective contribution. Must be unique inside the scope of the model, and
+      respect [these rules](#rules-for-ids).
+    - **expression**: an [expression](#expressions) representing the (additive) participation of the model to
+      the optimization objective.
+      Note that **minimization** is implied. The expression can use scalars, parameters and variables of the model.
 - **ports** _(optional)_: a collection of ports exposed by the model, either as input or output
     - **id**: an ID for the port. Must be unique in the scope of the model, and respect [these rules](#rules-for-ids).
     - **type**: the type of the port. Must refer to the ID of a port type defined in the [port types](#port-types)

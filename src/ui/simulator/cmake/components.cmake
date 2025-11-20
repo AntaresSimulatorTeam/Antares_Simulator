@@ -100,7 +100,6 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS
 )
 source_group("Datagrid\\Renderer" FILES ${SRC_TOOLBOX_COM_DBGRID_RENDERERS})
 
-SET(SRC_SCENARIO_BUILDER_UTILS ${CMAKE_SOURCE_DIR}/libs/antares/study/scenario-builder/scBuilderUtils.cpp)
 
 SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_MATRIX
         # Matrix
@@ -213,7 +212,6 @@ add_library(antares-ui-components
         ${SRC_TOOLBOX_COM_WIPPANEL}
         # Datagrid
         ${SRC_TOOLBOX_COM_DBGRID_RENDERERS}
-        ${SRC_SCENARIO_BUILDER_UTILS}
         ${SRC_TOOLBOX_COM_DBGRID_RENDERERS_MATRIX}
         ${SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS}
         ${SRC_TOOLBOX_COM_DBGRID_RENDERERS_LINKS}
@@ -238,5 +236,6 @@ target_link_libraries(antares-ui-components
         Antares::resources
         Antares::locator
         antares-solver-constraints-builder
+        Antares::scenario-builder-utils
 )
 

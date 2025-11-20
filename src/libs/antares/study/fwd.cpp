@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -22,6 +22,8 @@
 #include "antares/study/fwd.h"
 
 #include <algorithm>
+
+#include <antares/writer/result_format.h>
 
 using namespace Yuni;
 
@@ -514,5 +516,41 @@ std::string styleToString(const StyleType& style)
         return "plain";
     }
 }
+
+namespace Enum
+{
+template<>
+const std::initializer_list<std::string>& getNames<SheddingPolicy>()
+{
+    static const std::initializer_list<std::string> il = {"shave peaks",
+                                                          "accurate shave peaks",
+                                                          "minimize duration",
+                                                          "unknown"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<RenewableGenerationModelling>()
+{
+    static const std::initializer_list<std::string> il = {"aggregated", "clusters", "unknown"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<Antares::Data::ResultFormat>()
+{
+    static const std::initializer_list<std::string> il = {"legacyFilesDirectories",
+                                                          "zipArchive",
+                                                          "inMemory"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<SimplexOptimization>()
+{
+    static const std::initializer_list<std::string> il = {"unknown", "day", "week"};
+    return il;
+}
+} // namespace Enum
 
 } // namespace Antares::Data

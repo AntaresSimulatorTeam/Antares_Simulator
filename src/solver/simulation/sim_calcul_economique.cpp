@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -37,31 +37,40 @@ using namespace Antares::Data;
 
 constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
 
-static void importShortTermStorages(
-  const AreaList& areas,
-  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
+static void importShortTermStorages(const AreaList& areas,
+                                    std::vector<::AREA_INPUT>& ShortTermStorageOut)
 {
     int clusterGlobalIndex = 0;
     int constraintGlobalIndex = 0;
+
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
-        ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
+        const auto* area = areas[areaIndex];
+        ShortTermStorageOut[areaIndex].resize(area->shortTermStorage.count());
         int storageIndex = 0;
-        for (const auto& st: areas[areaIndex]->shortTermStorage.storagesByIndex)
+        for (const auto& st: area->shortTermStorage.storagesByIndex)
         {
-            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
+            PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
             toInsert.clusterGlobalIndex = clusterGlobalIndex;
 
-            // Properties
+            // capacities
             toInsert.reservoirCapacity = st.properties.reservoirCapacity.value();
             toInsert.injectionEfficiency = st.properties.injectionEfficiency;
             toInsert.withdrawalEfficiency = st.properties.withdrawalEfficiency;
             toInsert.injectionNominalCapacity = st.properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
+            // initial level
             toInsert.initialLevel = st.properties.initialLevel;
             toInsert.initialLevelOptim = st.properties.initialLevelOptim;
+
+            // optional penalization
             toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
+            // optional overflow
+            toInsert.allowOverflow = st.properties.allowOverflow;
+            toInsert.overflowCost = area->thermal.spilledEnergyCost
+                                    + area->hydro.overflowSpilledCostDifference;
+
             toInsert.name = st.properties.name;
             for (const auto& constraint: st.additionalConstraints)
             {
@@ -94,9 +103,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     auto& parameters = study.parameters;
 
     // For hybrid studies
-    problem.modelerSystem = study.getModelerSystem();
-    problem.linear_problem_data_ = study.getModelerData();
-    problem.scenarioGroupRepository = study.getScenarioGroupRepository();
+    problem.modelerData = study.getModelerData();
 
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
 
@@ -107,9 +114,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
           study.areas,
           study.runtime.areaLink);
     }
-
-    problem.WaterValueAccurate = (study.parameters.hydroPricing.hpMode
-                                  == Antares::Data::HydroPricingMode::hpMILP);
 
     SIM_AllocationProblemeHebdo(study, problem, NombreDePasDeTemps);
 
@@ -128,7 +132,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.exportSolutions = study.parameters.include.exportSolutions;
-    problem.ExportStructure = study.parameters.include.exportStructure;
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
@@ -208,7 +211,8 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
         problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = false;
-        if (problem.WaterValueAccurate && area.hydro.useWaterValue)
+        if (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP
+            && area.hydro.useWaterValue)
         {
             problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = true;
             problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = true;
@@ -351,6 +355,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     const size_t pasDeTempsSizeDouble = problem.NombreDePasDeTemps * sizeof(double);
 
     const uint weekFirstDay = study.calendar.hours[PasDeTempsDebut].dayYear;
+    const unsigned weekLastDay = weekFirstDay + 6;
 
     for (int opt = 0; opt < 7; opt++)
     {
@@ -452,7 +457,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular
                   = getWaterValue(nivInit * 100 / area.hydro.reservoirCapacity,
                                   area.hydro.waterValues,
-                                  weekFirstDay);
+                                  weekLastDay);
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable)
@@ -502,9 +507,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 for (uint layerindex = 0; layerindex < 100; layerindex++)
                 {
                     problem.CaracteristiquesHydrauliques[k].WaterLayerValues[layerindex]
-                      = 0.5
-                        * (area.hydro.waterValues[layerindex][weekFirstDay + 7]
-                           + area.hydro.waterValues[layerindex + 1][weekFirstDay + 7]);
+                      = area.hydro.waterValues[layerindex][weekLastDay];
                 }
             }
         }

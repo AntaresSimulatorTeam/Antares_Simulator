@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -135,16 +135,6 @@ bool CompareVisitor::visit(const Nodes::PortFieldSumNode* node, const Nodes::Nod
     return compareEqualOperator(node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::ComponentVariableNode* node, const Nodes::Node* other)
-{
-    return compareEqualOperator(node, other);
-}
-
-bool CompareVisitor::visit(const Nodes::ComponentParameterNode* node, const Nodes::Node* other)
-{
-    return compareEqualOperator(node, other);
-}
-
 bool CompareVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode, const Nodes::Node* other)
 {
     return compareParentNode(*this, timeShiftNode, other);
@@ -163,6 +153,16 @@ bool CompareVisitor::visit(const Nodes::TimeSumNode* timeSumNode, const Nodes::N
 bool CompareVisitor::visit(const Nodes::AllTimeSumNode* alltimeSumNode, const Nodes::Node* other)
 {
     return compareParentNode(*this, alltimeSumNode, other);
+}
+
+bool CompareVisitor::visit(const Nodes::ReducedCostNode* node, const Nodes::Node* other)
+{
+    return compareGetValue(node, other);
+}
+
+bool CompareVisitor::visit(const Nodes::DualNode* node, const Nodes::Node* other)
+{
+    return compareGetValue(node, other);
 }
 
 std::string CompareVisitor::name() const

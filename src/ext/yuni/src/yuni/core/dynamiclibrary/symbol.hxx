@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,19 +12,20 @@
 #pragma once
 #include "symbol.h"
 
-namespace Yuni
+namespace Yuni::DynamicLibrary
 {
-namespace DynamicLibrary
-{
-inline Symbol::Symbol() : pPtr(NULL)
-{
-}
-
-inline Symbol::Symbol(Symbol::Handle p) : pPtr(p)
+inline Symbol::Symbol():
+    pPtr(NULL)
 {
 }
 
-inline Symbol::Symbol(const Symbol& copy) : pPtr(copy.pPtr)
+inline Symbol::Symbol(Symbol::Handle p):
+    pPtr(p)
+{
+}
+
+inline Symbol::Symbol(const Symbol& copy):
+    pPtr(copy.pPtr)
 {
 }
 
@@ -54,5 +56,4 @@ inline Symbol::Handle Symbol::ptr() const
     return pPtr;
 }
 
-} // namespace DynamicLibrary
-} // namespace Yuni
+} // namespace Yuni::DynamicLibrary

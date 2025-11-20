@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -54,8 +54,8 @@ void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
     {
         dailyColumn[day] = std::accumulate(hourlyColumn + day * HOURS_PER_DAY,
                                            hourlyColumn + day * HOURS_PER_DAY + HOURS_PER_DAY,
-                                           0)
-                           / 24.;
+                                           0.)
+                           / 24;
     }
 }
 

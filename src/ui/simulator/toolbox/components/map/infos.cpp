@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "infos.h"
 #include "../../components/captionpanel.h"
@@ -35,9 +35,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Map
+namespace Antares::Map
 {
 BEGIN_EVENT_TABLE(PanelInfos, wxPanel)
 EVT_COLOURPICKER_CHANGED(idChangeColor, PanelInfos::onChangeColor)
@@ -64,8 +62,10 @@ wxBoxSizer* PanelInfos::createColorPicker(const wxColour& color)
     return sizer;
 }
 
-PanelInfos::PanelInfos(wxWindow* parent) :
- wxPanel(parent, wxID_ANY), pItemList(), pColorPicker(nullptr)
+PanelInfos::PanelInfos(wxWindow* parent):
+    wxPanel(parent, wxID_ANY),
+    pItemList(),
+    pColorPicker(nullptr)
 {
     SetSize(200, 50);
     ItemList emptyList;
@@ -79,7 +79,9 @@ PanelInfos::~PanelInfos()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void PanelInfos::onChangeOrientation(wxCommandEvent& evt)
@@ -90,8 +92,10 @@ void PanelInfos::onChangeOrientation(wxCommandEvent& evt)
         for (ItemList::iterator i = pItemList.begin(); i != end; ++i)
         {
             if ((*i)->type() == Item::tyConnection)
+            {
                 (dynamic_cast<Connection*>(*i))
                   ->direction((evt.IsChecked() ? Connection::dirDirect : Connection::dirIndirect));
+            }
         }
         GetParent()->Refresh();
     }
@@ -111,7 +115,9 @@ void PanelInfos::onChangeAreaName(wxCommandEvent& evt)
         for (ItemList::iterator i = pItemList.begin(); i != end; ++i)
         {
             if ((*i)->type() == Item::tyNode)
+            {
                 (dynamic_cast<Node*>(*i))->caption(newValue);
+            }
         }
         GetParent()->Refresh();
     }
@@ -123,7 +129,9 @@ void PanelInfos::onChangeColor(wxColourPickerEvent& evt)
     for (ItemList::iterator i = pItemList.begin(); i != end; ++i)
     {
         if ((*i)->type() == Item::tyNode)
+        {
             (dynamic_cast<Node*>(*i))->color(evt.GetColour());
+        }
     }
     GetParent()->Refresh();
 }
@@ -180,22 +188,30 @@ wxCheckBoxState PanelInfos::findConnectionOrientation(const ItemList& list) cons
                 case Connection::dirDirect:
                 {
                     if (state == -1)
+                    {
                         state = 1;
+                    }
                     else
                     {
                         if (state == 0)
+                        {
                             return wxCHK_UNDETERMINED;
+                        }
                     }
                     break;
                 }
                 case Connection::dirIndirect:
                 {
                     if (state == -1)
+                    {
                         state = 0;
+                    }
                     else
                     {
                         if (state == 1)
+                        {
                             return wxCHK_UNDETERMINED;
+                        }
                     }
                     break;
                 }
@@ -218,7 +234,9 @@ wxColour PanelInfos::findCommonColour(const ItemList& list) const
         {
             const wxColour c = (dynamic_cast<Node*>(*i))->color();
             if (ret.IsOk() && c != ret)
+            {
                 return wxColour(0, 0, 0);
+            }
             ret = c;
         }
     }
@@ -228,12 +246,16 @@ wxColour PanelInfos::findCommonColour(const ItemList& list) const
 bool PanelInfos::listIsEquals(const ItemList& list) const
 {
     if (list.size() != pItemList.size())
+    {
         return false;
+    }
     const uint m = (uint)list.size();
     for (uint i = 0; i != m; ++i)
     {
         if (list[i] != pItemList[i])
+        {
             return false;
+        }
     }
     return true;
 }
@@ -241,7 +263,9 @@ bool PanelInfos::listIsEquals(const ItemList& list) const
 void PanelInfos::layoutAddTitle(const wxString& title)
 {
     if (GetSizer())
+    {
         GetSizer()->Add(new Antares::Component::CaptionPanel(this, title), 0, wxALL | wxEXPAND);
+    }
 }
 
 void PanelInfos::layoutNoSelection()
@@ -251,11 +275,14 @@ void PanelInfos::layoutNoSelection()
     // A spacer
     GetSizer()->AddStretchSpacer();
     // A label to indicate to the user there is nothing to do here
-    GetSizer()->Add(
-      new wxStaticText(
-        this, wxID_ANY, wxT("No selection"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE),
-      0,
-      wxALL | wxEXPAND);
+    GetSizer()->Add(new wxStaticText(this,
+                                     wxID_ANY,
+                                     wxT("No selection"),
+                                     wxDefaultPosition,
+                                     wxDefaultSize,
+                                     wxALIGN_CENTRE),
+                    0,
+                    wxALL | wxEXPAND);
     // Another spacer
     GetSizer()->AddStretchSpacer();
 }
@@ -292,10 +319,10 @@ void PanelInfos::layoutPropertiesForNodes(const int nodeCount)
     gridSizer->Add(new wxStaticText(this, wxID_ANY, wxT("Color ")),
                    0,
                    wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-    gridSizer->Add(
-      createColorPicker((nodeCount == 1) ? pItemList[0]->color() : findCommonColour(pItemList)),
-      0,
-      wxALL | wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+    gridSizer->Add(createColorPicker((nodeCount == 1) ? pItemList[0]->color()
+                                                      : findCommonColour(pItemList)),
+                   0,
+                   wxALL | wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
     // Updating the sizers
     gridSizer->AddGrowableCol(1, 1);
@@ -358,14 +385,18 @@ void PanelInfos::layoutFiltersForConnections(const int connectionCount)
 void PanelInfos::refresh(PanelInfos::ItemList& newList, const bool force)
 {
     if (!force && listIsEquals(newList)) // Nothing to do
+    {
         return;
+    }
 
     pColorPicker = nullptr;
     // Make a copy of the list
     pItemList = newList;
     // Recreate the sizer
     if (GetSizer())
+    {
         GetSizer()->Clear(true);
+    }
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer, true);
 
@@ -381,22 +412,31 @@ void PanelInfos::refresh(PanelInfos::ItemList& newList, const bool force)
         countItemSpecies(newList, nodeCount, connectionCount);
 
         if (nodeCount)
+        {
             layoutPropertiesForNodes(nodeCount);
+        }
 
         if (connectionCount)
+        {
             layoutPropertiesForConnections(connectionCount);
+        }
 
         if (nodeCount)
+        {
             layoutFiltersForNodes(nodeCount);
+        }
 
         if (connectionCount)
+        {
             layoutFiltersForConnections(connectionCount);
+        }
     }
     sizer->Fit(this);
     sizer->Layout();
     if (GetParent() && GetParent()->GetSizer())
+    {
         GetParent()->GetSizer()->Layout();
+    }
 }
 
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map

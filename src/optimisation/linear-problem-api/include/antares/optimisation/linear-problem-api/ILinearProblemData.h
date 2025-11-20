@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <span>
 #include <string>
 #include <vector>
 
@@ -30,7 +31,7 @@ namespace Antares::Optimisation::LinearProblemApi
 /** \brief Context for filling linear problem data.
  * Contains temporal information
  */
-class FillContext
+class FillContext final
 {
 public:
     FillContext(unsigned localFirstTimeStep,
@@ -117,6 +118,11 @@ public:
     [[nodiscard]] virtual double getData(const std::string& dataSetId,
                                          unsigned timeSeriesNumber,
                                          unsigned hour) const
+      = 0;
+    [[nodiscard]] virtual std::span<const double> getData(const std::string& dataSetId,
+                                                          unsigned timeSeriesNumber,
+                                                          unsigned firstHour,
+                                                          unsigned lastHour) const
       = 0;
 };
 

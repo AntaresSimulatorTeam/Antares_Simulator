@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -24,7 +24,7 @@
 
 namespace DoneesOptimisationJournaliere
 {
-void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
+void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles, const std::string& areaName)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
@@ -45,10 +45,9 @@ void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles)
 
     DonneesMensuelles->ResultatsValides = NON;
 
-    H2O_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme);
+    H2O_J_InitialiserLeSecondMembre(DonneesMensuelles, NumeroDeProbleme, areaName);
     H2O_J_InitialiserLesBornesdesVariables(DonneesMensuelles, NumeroDeProbleme);
     H2O_J_ResoudreLeProblemeLineaire(DonneesMensuelles, NumeroDeProbleme);
-    H2O_J_LisserLesSurTurbines(DonneesMensuelles, NumeroDeProbleme);
 
     return;
 }

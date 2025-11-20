@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -20,8 +20,8 @@
 */
 #pragma once
 #include <antares/expressions/nodes/AllTimeSumNode.h>
-#include <antares/expressions/nodes/ComponentNode.h>
 #include <antares/expressions/nodes/DivisionNode.h>
+#include <antares/expressions/nodes/DualNode.h>
 #include <antares/expressions/nodes/EqualNode.h>
 #include <antares/expressions/nodes/GreaterThanOrEqualNode.h>
 #include <antares/expressions/nodes/Leaf.h>
@@ -32,6 +32,7 @@
 #include <antares/expressions/nodes/ParameterNode.h>
 #include <antares/expressions/nodes/PortFieldNode.h>
 #include <antares/expressions/nodes/PortFieldSumNode.h>
+#include <antares/expressions/nodes/ReducedCostNode.h>
 #include <antares/expressions/nodes/SubtractionNode.h>
 #include <antares/expressions/nodes/SumNode.h>
 #include <antares/expressions/nodes/TimeIndexNode.h>

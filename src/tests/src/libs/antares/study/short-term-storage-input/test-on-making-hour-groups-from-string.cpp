@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -21,11 +21,11 @@
 #define BOOST_TEST_MODULE "making groups of hours from a string"
 
 #define WIN32_LEAN_AND_MEAN
-
+//
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
+//
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
-
-#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
 using namespace Antares::Data::ShortTermStorage;
 

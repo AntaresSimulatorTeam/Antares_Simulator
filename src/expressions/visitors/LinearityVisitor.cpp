@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -24,6 +24,7 @@
 #include <numeric>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/InvalidNode.h>
 #include <antares/expressions/visitors/LinearStatus.h>
 
 namespace Antares::Expressions::Visitors
@@ -99,16 +100,6 @@ LinearStatus LinearityVisitor::visit(const Nodes::PortFieldSumNode*)
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentVariableNode*)
-{
-    return LinearStatus::LINEAR;
-}
-
-LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentParameterNode*)
-{
-    return LinearStatus::CONSTANT;
-}
-
 LinearStatus LinearityVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
     return dispatch(timeShiftNode->left());
@@ -127,6 +118,16 @@ LinearStatus LinearityVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
 LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
     return LinearStatus::CONSTANT;
+}
+
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ReducedCostNode*)
+{
+    throw NodeTypeShouldBeInExtraOutput("reduced_cost");
+}
+
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::DualNode*)
+{
+    throw NodeTypeShouldBeInExtraOutput("dual");
 }
 
 std::string LinearityVisitor::name() const

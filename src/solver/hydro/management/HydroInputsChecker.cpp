@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -30,7 +30,6 @@
 
 namespace Antares
 {
-
 HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
     areas_(study.areas),
     parameters_(study.parameters),
@@ -216,7 +215,6 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
           double finalLevel = scenarioFinalHydroLevels_.entry[area.index][year];
 
           Antares::Solver::FinalLevelValidator validator(area.hydro,
-                                                         area.index,
                                                          area.name,
                                                          initialLevel,
                                                          finalLevel,
@@ -241,5 +239,4 @@ void HydroInputsChecker::CheckForErrors() const
 {
     errorCollector_.CheckForErrors();
 }
-
 } // namespace Antares

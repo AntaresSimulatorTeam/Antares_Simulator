@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -35,7 +35,7 @@ namespace Antares::Solver
  * This class is a custom exception class that is thrown when an error occurs during the translation
  * of a weekly problem.
  */
-class WeeklyProblemTranslationException: public std::runtime_error
+class WeeklyProblemTranslationException final: public std::runtime_error
 {
 public:
     explicit WeeklyProblemTranslationException(const std::string& string) noexcept;
@@ -47,7 +47,7 @@ public:
  *
  * This class is responsible for translating a weekly problem to a linear programming problem.
  */
-class HebdoProblemToLpsTranslator
+class HebdoProblemToLpsTranslator final
 {
 public:
     /**

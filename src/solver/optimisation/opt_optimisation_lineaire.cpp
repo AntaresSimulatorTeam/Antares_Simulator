@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -19,10 +19,13 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <functional>
 #include <mutex>
 
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
+#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -31,12 +34,32 @@
 #include "antares/solver/utils/filename.h"
 
 using namespace Antares::Solver;
+using Antares::Solver::Optimization::ExportBehavior;
 using Antares::Solver::Optimization::OptimizationOptions;
-
-std::once_flag export_once;
 
 namespace
 {
+// TODO move
+void callIfExport(ExportBehavior exportBehavior, const std::function<void(void)>& function)
+{
+    switch (exportBehavior)
+    {
+    case ExportBehavior::Never:
+        break;
+    case ExportBehavior::Once:
+    {
+        static std::once_flag once;
+        std::call_once(once, function);
+        break;
+    }
+    case ExportBehavior::Always:
+        function();
+        break;
+    default:
+        throw std::invalid_argument("Invalid ExportBehavior");
+    }
+}
+
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
                                    const int optimizationNumber)
@@ -63,7 +86,8 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     logs.info() << "Solver Criterion File: `" << filename << "'";
 
     buffer.appendFormat("* Optimal criterion value :   %11.10e\n", optimalSolutionCost);
-    writer.addEntryFromBuffer(filename, buffer);
+    std::string bufferStr = buffer.c_str();
+    writer.addEntryFromBuffer(filename, bufferStr);
 }
 
 void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
@@ -79,7 +103,8 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
     {
         buffer.appendFormat("%s\t%11.10e\n", pb.NomDesVariables[s(var)].c_str(), pb.X[s(var)]);
     }
-    writer.addEntryFromBuffer(filename, buffer);
+    std::string bufferStr = buffer.c_str();
+    writer.addEntryFromBuffer(filename, bufferStr);
     buffer.clear();
 
     filename = createMarginalCostFilename(optPeriodStringGenerator, optimizationNumber);
@@ -89,7 +114,8 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
                             pb.NomDesContraintes[s(cont)].c_str(),
                             pb.CoutsMarginauxDesContraintes[s(cont)]);
     }
-    writer.addEntryFromBuffer(filename, buffer);
+    bufferStr = buffer.c_str();
+    writer.addEntryFromBuffer(filename, bufferStr);
     buffer.clear();
 
     filename = createReducedCostFilename(optPeriodStringGenerator, optimizationNumber);
@@ -99,7 +125,8 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
                             pb.NomDesVariables[s(var)].c_str(),
                             pb.CoutsReduits[s(var)]);
     }
-    writer.addEntryFromBuffer(filename, buffer);
+    std::string content = buffer.c_str();
+    writer.addEntryFromBuffer(filename, content);
 }
 
 namespace
@@ -120,7 +147,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
-                           Solver::Simulation::ISimulationObserver& simulationObserver)
+                           Solver::Simulation::ISimulationObserver& simulationObserver,
+                           ISimulationTable* simulationTable)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -166,7 +194,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                                  numeroDeLIntervalle,
                                  optimizationNumber,
                                  *optPeriodStringGenerator,
-                                 writer))
+                                 writer,
+                                 simulationTable))
         {
             return false;
         }
@@ -235,7 +264,8 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver& simulationObserver)
+                              Solver::Simulation::ISimulationObserver& simulationObserver,
+                              OptimisationsSimulationTable* simulationTables)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -262,18 +292,17 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),
                    problemeHebdo->ProblemeAResoudre->NombreDeVariables,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-    if (problemeHebdo->ExportStructure)
-    {
-        std::call_once(export_once,
-                       [&problemeHebdo, &writer]()
-                       { OPT_ExportStructures(problemeHebdo, writer); });
-    }
 
+    callIfExport(options.exportBehavior, [&] { OPT_ExportStructures(problemeHebdo, writer); });
+    auto* firstOptimSimulationTable = simulationTables
+                                        ? simulationTables->firstOptimSimulationTable()
+                                        : nullptr;
     bool ret = runWeeklyOptimization(options.firstOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
-                                     simulationObserver);
+                                     simulationObserver,
+                                     firstOptimSimulationTable);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -282,11 +311,15 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
+        auto* secondOptimSimulationTable = simulationTables
+                                             ? simulationTables->secondOptimSimulationTable()
+                                             : nullptr;
         return runWeeklyOptimization(options.secondOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      DEUXIEME_OPTIMISATION,
-                                     simulationObserver);
+                                     simulationObserver,
+                                     secondOptimSimulationTable);
     }
     return ret;
 }

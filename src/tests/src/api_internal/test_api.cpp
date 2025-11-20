@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -32,7 +32,7 @@
 #include "API.h"
 #include "in-memory-study.h"
 
-class InMemoryStudyLoader: public IStudyLoader
+class InMemoryStudyLoader final: public IStudyLoader
 {
 public:
     explicit InMemoryStudyLoader(bool success = true):
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_linear_solver)
     opt.firstOptimOptions.solverName = "this-solver-does-not-exist";
 
     auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader, {}, opt); };
-    BOOST_CHECK_EXCEPTION(shouldThrow(),
+    BOOST_CHECK_EXCEPTION((void)shouldThrow(),
                           std::invalid_argument,
                           checkMessage("Solver this-solver-does-not-exist is not supported by "
                                        "Antares or does not support LP problems."));

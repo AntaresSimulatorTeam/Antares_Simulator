@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -21,22 +21,16 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 
 #include <antares/expressions/expression.h>
 
-#include "parameter.h"
-
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-}
+#include "optimConfig.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
 
 /// A constraint linking variables and parameters of a model together
-class Constraint
+class Constraint final
 {
 public:
     Constraint(std::string id, Expression expression):
@@ -55,9 +49,20 @@ public:
         return expression_;
     }
 
+    void setLocation(Modeler::Config::Location loc)
+    {
+        location_ = loc;
+    }
+
+    [[nodiscard]] Modeler::Config::Location location() const
+    {
+        return location_;
+    }
+
 private:
     std::string id_;
     Expression expression_;
+    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

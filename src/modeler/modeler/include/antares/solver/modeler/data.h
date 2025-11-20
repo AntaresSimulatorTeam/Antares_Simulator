@@ -20,21 +20,27 @@
 
 #include <vector>
 
+#include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
-#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
-#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 
 namespace Antares::Modeler
 {
+
+enum class ResolutionMode : unsigned
+{
+    BENDERS_DECOMPOSITION = 0,
+    SEQUENTIAL_SUBPROBLEMS = 1
+};
 
 struct Data
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     std::unique_ptr<ModelerStudy::SystemModel::System> system;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
-    Optimisation::ScenarioGroupRepository scenario_group_repository;
+    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
 };
 
 } // namespace Antares::Modeler

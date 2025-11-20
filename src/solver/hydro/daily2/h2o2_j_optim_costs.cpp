@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -24,7 +24,8 @@
 
 Hydro_problem_costs::Hydro_problem_costs(const Data::Parameters& parameters)
 {
-    noiseGenerator.reset(Constants::seed);
+    constexpr unsigned int noiseSeed = 0x79683264; // "hyd2" in hexa
+    noiseGenerator.reset(noiseSeed);
     end_days_levels = -1. / 32.;
     overflow = 32 * 68. + 1.;
     deviations = 1.;

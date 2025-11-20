@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -81,7 +81,9 @@ Nodes::Node* CloneVisitor::visit(const Nodes::NegationNode* negationNode)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::VariableNode* variableNode)
 {
-    return registry_.create<Nodes::VariableNode>(variableNode->value(), variableNode->timeIndex());
+    return registry_.create<Nodes::VariableNode>(variableNode->value(),
+                                                 variableNode->Index(),
+                                                 variableNode->timeIndex());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ParameterNode* parameterNode)
@@ -106,20 +108,6 @@ Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldSumNode* portfieldSumNode
                                                      portfieldSumNode->getFieldName());
 }
 
-Nodes::Node* CloneVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)
-{
-    return registry_.create<Nodes::ComponentVariableNode>(
-      component_variable_node->getComponentId(),
-      component_variable_node->getComponentName());
-}
-
-Nodes::Node* CloneVisitor::visit(const Nodes::ComponentParameterNode* component_parameter_node)
-{
-    return registry_.create<Nodes::ComponentParameterNode>(
-      component_parameter_node->getComponentId(),
-      component_parameter_node->getComponentName());
-}
-
 Nodes::Node* CloneVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     return registry_.create<Nodes::TimeShiftNode>(dispatch(node->left()), node->right());
@@ -140,6 +128,16 @@ Nodes::Node* CloneVisitor::visit(const Nodes::TimeSumNode* node)
 Nodes::Node* CloneVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
     return registry_.create<Nodes::AllTimeSumNode>(dispatch(node->child()));
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::ReducedCostNode* node)
+{
+    return registry_.create<Nodes::ReducedCostNode>(node->value(), node->index());
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::DualNode* node)
+{
+    return registry_.create<Nodes::DualNode>(node->value(), node->index());
 }
 
 std::string CloneVisitor::name() const

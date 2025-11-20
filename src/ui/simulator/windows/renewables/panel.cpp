@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "panel.h"
 #include "../../toolbox/components/datagrid/component.h"
@@ -33,19 +33,15 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Window::Renewable
 {
-namespace Window
-{
-namespace Renewable
-{
-Panel::Panel(Component::Notebook* parent) :
- Component::Panel(parent),
- pageRenewableCommon(nullptr),
- pNotebookCluster(nullptr),
- pAreaForCommonData(nullptr),
- pAreaSelector(nullptr),
- pStudyRevisionIncrement((uint64_t)-1)
+Panel::Panel(Component::Notebook* parent):
+    Component::Panel(parent),
+    pageRenewableCommon(nullptr),
+    pNotebookCluster(nullptr),
+    pAreaForCommonData(nullptr),
+    pAreaSelector(nullptr),
+    pStudyRevisionIncrement((uint64_t)-1)
 {
     // A sizer for our panel
     wxSizer* mainsizer = new wxBoxSizer(wxVERTICAL);
@@ -82,30 +78,34 @@ Panel::Panel(Component::Notebook* parent) :
     // Renewable cluster list
     {
         // The window splitter
-        pSplitter = new wxSplitterWindow(
-          page.first, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
+        pSplitter = new wxSplitterWindow(page.first,
+                                         wxID_ANY,
+                                         wxDefaultPosition,
+                                         wxDefaultSize,
+                                         wxSP_NOBORDER);
         pageRenewableClusterList = page.first->add(pSplitter, wxT("Renewable cluster list"));
         pSplitter->SetSashGravity(0.5);
 
         // Input selector for renewable clusters
-        Toolbox::InputSelector::RenewableCluster* tag
-          = new Toolbox::InputSelector::RenewableCluster(pSplitter, page.second);
+        Toolbox::InputSelector::RenewableCluster* tag = new Toolbox::InputSelector::
+          RenewableCluster(pSplitter, page.second);
 
         // Informations about the current renewable cluster
-        Component::Notebook* subbook
-          = new Component::Notebook(pSplitter, Component::Notebook::orTop);
+        Component::Notebook* subbook = new Component::Notebook(pSplitter,
+                                                               Component::Notebook::orTop);
         pNotebookCluster = subbook;
         subbook->caption(wxT("Renewable cluster"));
         subbook->theme(Component::Notebook::themeLight);
 
         // Common properties of the current thermal cluster
-        pageRenewableCommon
-          = subbook->add(new Window::Renewable::CommonProperties(subbook, tag), wxT("Common"));
+        pageRenewableCommon = subbook->add(new Window::Renewable::CommonProperties(subbook, tag),
+                                           wxT("Common"));
 
         // Time Series
         pageRenewableTimeSeries = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesRenewableCluster(subbook, tag)),
+            subbook,
+            new Component::Datagrid::Renderer::TimeSeriesRenewableCluster(subbook, tag)),
           wxT("Time-Series"));
 
         // Split the view
@@ -162,7 +162,9 @@ void Panel::onClusterChanged(Data::RenewableCluster* cluster)
 void Panel::onAreaChangedForData(Data::Area* area)
 {
     if (area != pAreaForCommonData)
+    {
         pAreaForCommonData = area;
+    }
 }
 
 void Panel::internalOnStudyLoaded()
@@ -187,6 +189,4 @@ void Panel::onStudyLoaded()
     Dispatcher::GUI::Post(callback, 50);
 }
 
-} // namespace Renewable
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Renewable

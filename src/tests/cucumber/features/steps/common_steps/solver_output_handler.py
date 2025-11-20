@@ -12,6 +12,7 @@ class result_type(Enum):
     DETAILS = "details"
     DETAILS_STS = "details-STstorage"
 
+
 class solver_output_handler:
 
     def __init__(self, study_output_path, mode):
@@ -42,6 +43,18 @@ class solver_output_handler:
         execution_info.read(os.path.join(self.study_output_path, "execution_info.ini"))
         return float(execution_info['durations_ms']['total']) / 1000
 
+    def get_optim1_simulation_table(self):
+        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-1.csv"))
+        assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
+        return open(absolute_path, 'r').readlines()
+
+    def get_optim2_simulation_table(self):
+        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-2.csv"))
+        if absolute_path.exists():
+            return open(absolute_path, 'r').readlines()
+        else:
+            return None
+
     def __read_csv(self, file_name) -> pd.DataFrame:
         ignore_rows = [0, 1, 2, 3, 6]
         absolute_path = Path(os.path.join(self.study_output_path, file_name.replace("/", os.sep)))
@@ -68,7 +81,8 @@ class solver_output_handler:
 
     def __get_values_hourly_for_specific_week(self, area: str, year: int, week: int):
         df = self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
-        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
+        return df[(df['hourly']['Unnamed: 1_level_1'] > (week - 1) * 168) & (
+                df['hourly']['Unnamed: 1_level_1'] <= week * 168)]
 
     def __get_values_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
         df = self.__get_values_hourly(area, year)
@@ -137,3 +151,12 @@ class solver_output_handler:
 
     def get_non_proportional_cost(self, area: str, year: int) -> float:
         return self.__get_values_hourly(area, year)["NP COST"]["Euro"].sum()
+
+    def get_npcap_hours(self, area: str, year: int) -> int:
+        # Return total NPCAP HOURS over hourly results
+        return int(self.__get_values_hourly(area, year)["NPCAP HOURS"]["Hours"].sum())
+
+    def get_npcap_hours_for_hour(self, area: str, year: int, hour: int) -> int:
+        # Return NPCAP HOURS indicator at a specific hour (0-based index)
+        df = self.__get_values_hourly(area, year)
+        return int(df["NPCAP HOURS"]["Hours"].iloc[hour])

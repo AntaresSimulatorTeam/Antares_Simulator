@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -44,7 +44,8 @@ struct LibraryObjects
                            .port_field_definitions = {},
                            .constraints = {{"constraint1", "cost"}},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
 
     YmlSystem::Parser parser;
     YmlModel::Library library;
@@ -59,6 +60,12 @@ struct LibraryObjects
 
     ~LibraryObjects() = default;
 };
+
+auto getComponent(const std::vector<SystemModel::Component>& components, const std::string& id)
+{
+    return std::ranges::find_if(components,
+                                [&id](const auto& component) { return component.Id() == id; });
+}
 
 BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
 {
@@ -82,10 +89,12 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
 
     auto systemModel = SystemConverter::convert(systemObj, libraries);
 
-    BOOST_CHECK_EQUAL(systemModel.Components().size(), 1);
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getModel()->Id(), "node");
-    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("N").getParameterValue("cost")), 30);
+    const auto& components = systemModel.Components();
+    BOOST_CHECK_EQUAL(components.size(), 1);
+    const auto compoN = getComponent(components, "N");
+    BOOST_CHECK(compoN != components.cend());
+    BOOST_CHECK_EQUAL(compoN->getModel()->Id(), "node");
+    BOOST_CHECK_EQUAL(std::stod(getComponent(components, "N")->getParameterValue("cost")), 30);
 }
 
 BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
@@ -198,7 +207,9 @@ static const auto libraryYaml_1 = R"(
                 - port: injection_port
                   field: port_name
                   definition: generation
-              objective: cost * generation
+              objective:
+                - id: objective
+                - expression: cost * generation
 
             - id: node
               description: A basic balancing node model
@@ -233,7 +244,7 @@ static const auto libraryYaml_2 = R"(
                   definition: -demand
     )"s;
 
-static const auto systemYaml = R"(
+static const auto systemYml = R"(
         system:
           id: system1
           description: basic description
@@ -276,20 +287,24 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
     libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_1)));
     libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_2)));
 
-    YmlSystem::System systemObj = parserSystem.parse(systemYaml);
+    YmlSystem::System systemObj = parserSystem.parse(systemYml);
     auto systemModel = SystemConverter::convert(systemObj, libraries);
 
-    BOOST_CHECK_EQUAL(systemModel.Components().size(), 3);
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getModel()->Id(), "node");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getScenarioGroupId(), "group-234");
+    const auto& components = systemModel.Components();
+    BOOST_CHECK_EQUAL(components.size(), 3);
+    const auto compoN = getComponent(components, "N");
+    BOOST_CHECK_EQUAL(compoN->Id(), "N");
+    BOOST_CHECK_EQUAL(compoN->getModel()->Id(), "node");
+    BOOST_CHECK_EQUAL(compoN->getScenarioGroupId(), "group-234");
 
-    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getModel()->Id(), "generator");
-    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("G").getParameterValue("cost")), 30);
-    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("G").getParameterValue("p_max")), 100);
+    const auto compoG = getComponent(components, "G");
+    BOOST_CHECK_EQUAL(compoG->getModel()->Id(), "generator");
+    BOOST_CHECK_EQUAL(std::stod(compoG->getParameterValue("cost")), 30);
+    BOOST_CHECK_EQUAL(std::stod(compoG->getParameterValue("p_max")), 100);
 
-    BOOST_CHECK_EQUAL(systemModel.Components().at("D").getModel()->Id(), "demand");
-    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("D").getParameterValue("demand")), 100);
+    const auto compoD = getComponent(components, "D");
+    BOOST_CHECK_EQUAL(compoD->getModel()->Id(), "demand");
+    BOOST_CHECK_EQUAL(std::stod(compoD->getParameterValue("demand")), 100);
 }
 
 constexpr size_t componentsPos = 10;
@@ -326,7 +341,7 @@ struct PrepareYaml
     YmlSystem::Parser parserSystem;
     std::vector<SystemModel::Library> libraries;
 
-    std::string system = systemYaml;
+    std::string system = systemYml;
 
     PrepareYaml()
     {
@@ -374,14 +389,13 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
     auto systemModel = SystemConverter::convert(systemObj, libraries);
 
     auto& components = systemModel.Components();
+    const auto component_N = getComponent(components, "N");
+    const auto component_G = getComponent(components, "G");
+    const auto component_D = getComponent(components, "D");
 
-    auto& component_N = components.at("N");
-    auto& component_G = components.at("G");
-    auto& component_D = components.at("D");
-
-    auto connections_to_N = component_N.componentConnectionsViaPort(port_id);
-    auto connections_to_G = component_G.componentConnectionsViaPort(port_id);
-    auto connections_to_D = component_D.componentConnectionsViaPort(port_id);
+    auto connections_to_N = component_N->componentConnectionsViaPort(port_id);
+    auto connections_to_G = component_G->componentConnectionsViaPort(port_id);
+    auto connections_to_D = component_D->componentConnectionsViaPort(port_id);
 
     BOOST_CHECK(connections_to_N.size() == 1);
     BOOST_CHECK(connections_to_G.size() == 0);

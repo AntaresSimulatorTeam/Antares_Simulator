@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -24,7 +24,6 @@
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
-#include "../../../../../../yml-model/include/antares/io/inputs/yml-model/parser.h"
 #include "parser.h"
 
 namespace Antares::IO::Inputs::SystemConverter

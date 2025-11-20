@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -19,19 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-#include "spx_constantes_externes.h"
-
-#ifdef __cplusplus
-}
-#endif
-
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
+
+#include "spx_constantes_externes.h"
 
 namespace DonneesOptimisationMensuelle
 {

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -47,11 +47,11 @@ private:
     std::string visit(const Nodes::LiteralNode* node) override;
     std::string visit(const Nodes::PortFieldNode* node) override;
     std::string visit(const Nodes::PortFieldSumNode* node) override;
-    std::string visit(const Nodes::ComponentVariableNode* node) override;
-    std::string visit(const Nodes::ComponentParameterNode* node) override;
     std::string visit(const Nodes::TimeShiftNode* node) override;
     std::string visit(const Nodes::TimeIndexNode* node) override;
     std::string visit(const Nodes::TimeSumNode* node) override;
     std::string visit(const Nodes::AllTimeSumNode* node) override;
+    std::string visit(const Nodes::ReducedCostNode* node) override;
+    std::string visit(const Nodes::DualNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

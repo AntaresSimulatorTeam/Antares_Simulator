@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -8,41 +9,48 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../../yuni.h"
 #include "waitingroom.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace QueueService
+#include "../../yuni.h"
+
+namespace Yuni::Private::QueueService
 {
 WaitingRoom::~WaitingRoom()
 {
     // locking all mutex to prevent some race conditions
     // (with clear() for example)
     for (uint i = 0; i != (uint)priorityCount; ++i)
+    {
         pMutexes[i].lock();
+    }
     for (uint i = 0; i != (uint)priorityCount; ++i)
+    {
         pMutexes[i].unlock();
+    }
 }
 
 void WaitingRoom::clear()
 {
     // we should lock all lists before anything
     for (uint i = 0; i != (uint)priorityCount; ++i)
+    {
         pMutexes[i].lock();
+    }
 
     // reset the total number of job _before_ unlocking
     pJobCount = 0; // may notify listeners that there is nothing to do
 
     // clear
     for (uint i = 0; i != (uint)priorityCount; ++i)
+    {
         pJobs[i].clear();
+    }
 
     // unlock all
     for (uint i = 0; i != (uint)priorityCount; ++i)
+    {
         pMutexes[i].unlock();
+    }
 }
 
 void WaitingRoom::add(const Yuni::Job::IJob::Ptr& job, Yuni::Job::Priority priority)
@@ -87,6 +95,4 @@ bool WaitingRoom::pop(Yuni::Job::IJob::Ptr& out)
            or (pop(out, Yuni::Job::priorityLow));
 }
 
-} // namespace QueueService
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::QueueService

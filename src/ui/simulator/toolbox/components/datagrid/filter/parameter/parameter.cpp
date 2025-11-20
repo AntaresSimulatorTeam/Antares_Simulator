@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "parameter.h"
 #include <antares/date/date.h>
@@ -29,28 +29,24 @@
 #include "wx-wrapper.h"
 #include <antares/logs/logs.h>
 
-namespace Antares
+namespace Antares::Toolbox::Filter::Operator
 {
-namespace Toolbox
-{
-namespace Filter
-{
-namespace Operator
-{
-Parameter::Parameter(AOperator& parent) :
- pOperator(parent), dataType(DataType::dtNone), pSizer(nullptr)
+Parameter::Parameter(AOperator& parent):
+    pOperator(parent),
+    dataType(DataType::dtNone),
+    pSizer(nullptr)
 {
 }
 
-Parameter::Parameter(const Parameter& copy) :
- wxEvtHandler(),
- pOperator(copy.pOperator),
- caption(copy.caption),
- postCaption(copy.postCaption),
- dataType(copy.dataType),
- defaultValues(copy.defaultValues),
- value(copy.value),
- pSizer(nullptr)
+Parameter::Parameter(const Parameter& copy):
+    wxEvtHandler(),
+    pOperator(copy.pOperator),
+    caption(copy.caption),
+    postCaption(copy.postCaption),
+    dataType(copy.dataType),
+    defaultValues(copy.defaultValues),
+    value(copy.value),
+    pSizer(nullptr)
 {
 }
 
@@ -76,8 +72,11 @@ wxSizer* Parameter::sizer(wxWindow* parent)
 
         // Adding the caption
         if (!caption.IsEmpty())
-            pSizer->Add(
-              new wxStaticText(parent, wxID_ANY, caption), 0, wxALIGN_CENTER_VERTICAL | wxALL);
+        {
+            pSizer->Add(new wxStaticText(parent, wxID_ANY, caption),
+                        0,
+                        wxALIGN_CENTER_VERTICAL | wxALL);
+        }
 
         // Creating controls according the real type
         switch (dataType)
@@ -87,9 +86,13 @@ wxSizer* Parameter::sizer(wxWindow* parent)
             wxChoice* ch = new wxChoice(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 22));
             uint max = (uint)defaultValues.size();
             for (uint i = 0; i < max; ++i)
+            {
                 ch->Insert(defaultValues[i], i);
+            }
             if (max)
+            {
                 ch->SetSelection(0);
+            }
             pSizer->Add(ch, 0, wxALL | wxEXPAND);
 
             ch->Connect(ch->GetId(),
@@ -132,8 +135,11 @@ wxSizer* Parameter::sizer(wxWindow* parent)
 
         // Post caption
         if (!postCaption.IsEmpty())
-            pSizer->Add(
-              new wxStaticText(parent, wxID_ANY, postCaption), 0, wxALIGN_CENTER_VERTICAL | wxALL);
+        {
+            pSizer->Add(new wxStaticText(parent, wxID_ANY, postCaption),
+                        0,
+                        wxALIGN_CENTER_VERTICAL | wxALL);
+        }
 
         // Relayout
         pSizer->Layout();
@@ -157,7 +163,9 @@ Parameter& Parameter::presetWeekDay()
     postCaption.clear();
     dataType = DataType::dtList;
     for (int i = 0; i != 7; ++i)
+    {
         defaultValues.push_back(wxStringFromUTF8(Date::WeekdayToString(i)));
+    }
     return *this;
 }
 
@@ -213,7 +221,4 @@ void Parameter::refreshAttachedGrid()
     pOperator.refreshAttachedGrid();
 }
 
-} // namespace Operator
-} // namespace Filter
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Filter::Operator

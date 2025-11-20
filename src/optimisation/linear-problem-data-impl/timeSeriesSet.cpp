@@ -35,7 +35,26 @@ TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
 {
 }
 
+TimeSeriesSet::TimeSeriesSet(std::string name, std::vector<std::vector<double>>&& tsSet):
+    IDataSeries::IDataSeries(name),
+    tsSet_(std::move(tsSet))
+{
+    if (!tsSet_.empty())
+    {
+        height_ = tsSet_[0].size();
+    }
+}
+
 void TimeSeriesSet::add(const std::vector<double>& ts)
+{
+    if (ts.size() != height_)
+    {
+        throw AddTSofWrongSize(name(), ts.size(), height_);
+    }
+    tsSet_.push_back(std::move(ts));
+}
+
+void TimeSeriesSet::add(std::vector<double>&& ts)
 {
     if (ts.size() != height_)
     {
@@ -67,6 +86,35 @@ double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNu
         throw HourTooBig(name(), hour);
     }
     return tsSet_[tsIndex][hour];
+}
+
+[[nodiscard]] std::span<const double> TimeSeriesSet::getData(
+  LinearProblemApi::IScenario::TimeSeriesNumber tsNumber,
+  unsigned firstHour,
+  unsigned lastHour) const
+{
+    if (tsNumber == 0)
+    {
+        throw Antares::Error::RuntimeError(
+          "Trying to get data set at rank 0. Data sets are indexed starting at 1.");
+    }
+
+    if (tsSet_.empty())
+    {
+        throw Empty(name());
+    }
+    auto tsIndex = tsNumber - 1;
+    if (tsIndex > tsSet_.size() - 1)
+    {
+        throw RankTooBig(name(), tsNumber, tsSet_.size());
+    }
+
+    if (lastHour > height_ - 1)
+    {
+        throw HourTooBig(name(), lastHour);
+    }
+    auto& tsSet = tsSet_[tsIndex];
+    return std::span(tsSet.begin() + firstHour, tsSet.begin() + lastHour + 1);
 }
 
 } // namespace Antares::Optimisation::LinearProblemDataImpl

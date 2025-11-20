@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -22,6 +22,7 @@
 #include <ortools/linear_solver/linear_solver.h>
 
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
+#include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -61,6 +62,16 @@ const operations_research::MPVariable* OrtoolsMipVariable::getMpVar() const
     return mpVar_;
 }
 
+LinearProblemApi::MipBasisStatus OrtoolsMipVariable::getMipBasisStatus() const
+{
+    return convertOrtoolsBasisStatus(mpVar_->basis_status());
+}
+
+double OrtoolsMipVariable::solutionValue() const
+{
+    return mpVar_->solution_value();
+}
+
 const std::string& OrtoolsMipVariable::getName() const
 {
     return mpVar_->name();
@@ -69,6 +80,11 @@ const std::string& OrtoolsMipVariable::getName() const
 bool OrtoolsMipVariable::isInteger() const
 {
     return mpVar_->integer();
+}
+
+double OrtoolsMipVariable::reducedCost() const
+{
+    return mpVar_->reduced_cost();
 }
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -21,12 +21,12 @@
 
 #pragma once
 
-#include <antares/expressions/visitors/EvaluationContext.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/solver/optim-model-filler/FullKey.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
+#include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
 /**
@@ -35,50 +35,90 @@
  * coefficients of variables)
  * Comparison Nodes are not allowed
  */
-namespace Antares::Optimization
+
+using namespace Antares::Expressions;
+
+namespace Antares::Optimisation
 {
 
-class ReadLinearExpressionVisitor
-    : public Expressions::Visitors::NodeVisitor<TimeDependentLinearExpression>
+class ReadLinearExpressionVisitor: public Expressions::Visitors::NodeVisitor<
+                                     Antares::Optimization::TimeDependentLinearExpression>
 {
 public:
+    /**
+     * @brief Constructs a clone visitor with the specified registry for creating new nodes.
+     *
+     * @param registry The registry used for creating new nodes.
+     */
     explicit ReadLinearExpressionVisitor(
-      Expressions::Visitors::EvaluationContext evalContext,
-      Optimisation::LinearProblemApi::FillContext fillContext,
+      const OptimEntityContainer& optimEntityContainer,
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
       const Antares::ModelerStudy::SystemModel::Component& component);
 
-    ReadLinearExpressionVisitor() = delete;
+    Antares::Optimization::TimeDependentLinearExpression visitMergeDuplicates(
+      const Nodes::Node* node);
+
     std::string name() const override;
 
-private:
-    TimeDependentLinearExpression visit(const Expressions::Nodes::SumNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::SubtractionNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::MultiplicationNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::DivisionNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::EqualNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::LessThanOrEqualNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::GreaterThanOrEqualNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::NegationNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::VariableNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::ParameterNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::LiteralNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::PortFieldNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::PortFieldSumNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::ComponentVariableNode* node) override;
-    TimeDependentLinearExpression visit(
-      const Expressions::Nodes::ComponentParameterNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::TimeShiftNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::TimeIndexNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::TimeSumNode* node) override;
-    TimeDependentLinearExpression visit(const Expressions::Nodes::AllTimeSumNode* node) override;
+    Antares::Optimization::TimeDependentLinearExpression visit(const Nodes::SumNode* node) override;
 
-    Optimisation::LinearProblemApi::FillContext fillContext_;
-    const Expressions::Visitors::EvaluationContext evalContext_;
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::SubtractionNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::MultiplicationNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::DivisionNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::EqualNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::LessThanOrEqualNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::GreaterThanOrEqualNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::NegationNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::VariableNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::ParameterNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::LiteralNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::PortFieldNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::PortFieldSumNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::TimeShiftNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::TimeIndexNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::TimeSumNode* node) override;
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::AllTimeSumNode* node) override;
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::ReducedCostNode* node) override;
+    Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::DualNode* node) override;
+
+private:
+    const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Antares::ModelerStudy::SystemModel::Component& component_;
-    Expressions::Visitors::EvalVisitor evalVisitor_;
+    const Antares::Optimisation::EvaluationContext& evalContext_;
+    const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
+    Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
+    const int nbtimeSteps_;
 };
-} // namespace Antares::Optimization
+} // namespace Antares::Optimisation

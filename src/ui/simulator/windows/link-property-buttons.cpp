@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <wx/textdlg.h>
 
@@ -29,9 +29,7 @@
 
 using namespace Antares::MemoryUtils;
 
-namespace Antares
-{
-namespace Window
+namespace Antares::Window
 {
 // ==================================
 // Abstract menu link button
@@ -71,11 +69,12 @@ void menuLinkButton::broadCastChangeOutside() const
 // =========================
 // NTC usage button
 // =========================
-ntcUsageButton::ntcUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid) :
- menuLinkButton()
+ntcUsageButton::ntcUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid):
+    menuLinkButton()
 {
-    setButton(new_check_allocation<Component::Button>(
-      parent, wxT("Transmission capacities"), "images/16x16/light_green.png"));
+    setButton(new_check_allocation<Component::Button>(parent,
+                                                      wxT("Transmission capacities"),
+                                                      "images/16x16/light_green.png"));
     getButton()->menu(true);
     bindButtonToPopupMenu();
 
@@ -121,16 +120,22 @@ void ntcUsageButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to null"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Set to null"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(ntcUsageButton::onSelectSetToNull),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to infinite"), "images/16x16/infinity.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Set to infinite"),
+                          "images/16x16/infinity.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(ntcUsageButton::onSelectSetToInfinite),
@@ -141,7 +146,9 @@ void ntcUsageButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
 void ntcUsageButton::onSelectUseNTC(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
     getCurrentLink()->transmissionCapacities = Data::LocalTransmissionCapacities::enabled;
     broadCastChange();
 }
@@ -149,7 +156,9 @@ void ntcUsageButton::onSelectUseNTC(wxCommandEvent&)
 void ntcUsageButton::onSelectSetToNull(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
     getCurrentLink()->transmissionCapacities = Data::LocalTransmissionCapacities::null;
     broadCastChange();
 }
@@ -157,7 +166,9 @@ void ntcUsageButton::onSelectSetToNull(wxCommandEvent&)
 void ntcUsageButton::onSelectSetToInfinite(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
     getCurrentLink()->transmissionCapacities = Data::LocalTransmissionCapacities::infinite;
     broadCastChange();
 }
@@ -165,13 +176,14 @@ void ntcUsageButton::onSelectSetToInfinite(wxCommandEvent&)
 // ============================
 // Hurdle costs usage button
 // ============================
-hurdleCostsUsageButton::hurdleCostsUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid) :
- menuLinkButton()
+hurdleCostsUsageButton::hurdleCostsUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid):
+    menuLinkButton()
 {
     wxStaticText* label = Component::CreateLabel(parent, wxT("Local values"), false, true);
 
-    setButton(new_check_allocation<Component::Button>(
-      parent, wxT("local values"), "images/16x16/light_green.png"));
+    setButton(new_check_allocation<Component::Button>(parent,
+                                                      wxT("local values"),
+                                                      "images/16x16/light_green.png"));
     getButton()->menu(true);
     bindButtonToPopupMenu();
 
@@ -199,16 +211,22 @@ void hurdleCostsUsageButton::onPopupMenu(Component::Button&, wxMenu& menu, void*
 {
     const wxMenuItem* it;
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Use hurdles costs"), "images/16x16/light_green.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Use hurdles costs"),
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(hurdleCostsUsageButton::onSelectUse),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Ignore"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Ignore"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(hurdleCostsUsageButton::onSelectIgnore),
@@ -219,7 +237,9 @@ void hurdleCostsUsageButton::onPopupMenu(Component::Button&, wxMenu& menu, void*
 void hurdleCostsUsageButton::onSelectUse(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
 
     getCurrentLink()->useHurdlesCost = true;
     broadCastChange();
@@ -228,7 +248,9 @@ void hurdleCostsUsageButton::onSelectUse(wxCommandEvent&)
 void hurdleCostsUsageButton::onSelectIgnore(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
 
     getCurrentLink()->useHurdlesCost = false;
     broadCastChange();
@@ -237,11 +259,12 @@ void hurdleCostsUsageButton::onSelectIgnore(wxCommandEvent&)
 // =========================
 // Asset type button
 // =========================
-assetTypeButton::assetTypeButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid) :
- menuLinkButton()
+assetTypeButton::assetTypeButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid):
+    menuLinkButton()
 {
-    setButton(new_check_allocation<Component::Button>(
-      parent, wxT("Asset type"), "images/16x16/light_green.png"));
+    setButton(new_check_allocation<Component::Button>(parent,
+                                                      wxT("Asset type"),
+                                                      "images/16x16/light_green.png"));
     getButton()->menu(true);
     bindButtonToPopupMenu();
 
@@ -284,40 +307,55 @@ void assetTypeButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
 {
     const wxMenuItem* it;
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to AC"), "images/16x16/light_green.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Set to AC"),
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(assetTypeButton::onSelectAC),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to DC"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Set to DC"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(assetTypeButton::onSelectDC),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to Gas"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Set to Gas"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(assetTypeButton::onSelectGas),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to Virt"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Set to Virt"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(assetTypeButton::onSelectVirt),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Set to other"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Set to other"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(assetTypeButton::onSelectOther),
@@ -328,7 +366,9 @@ void assetTypeButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
 void assetTypeButton::onSelectAC(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
 
     getCurrentLink()->assetType = Data::atAC;
     broadCastChange();
@@ -343,7 +383,9 @@ void assetTypeButton::onSelectAC(wxCommandEvent&)
 void assetTypeButton::onSelectDC(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
 
     getCurrentLink()->assetType = Data::atDC;
     broadCastChange();
@@ -358,7 +400,9 @@ void assetTypeButton::onSelectDC(wxCommandEvent&)
 void assetTypeButton::onSelectGas(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
 
     getCurrentLink()->assetType = Data::atGas;
     broadCastChange();
@@ -373,7 +417,9 @@ void assetTypeButton::onSelectGas(wxCommandEvent&)
 void assetTypeButton::onSelectVirt(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
 
     getCurrentLink()->assetType = Data::atVirt;
     broadCastChange();
@@ -388,7 +434,9 @@ void assetTypeButton::onSelectVirt(wxCommandEvent&)
 void assetTypeButton::onSelectOther(wxCommandEvent&)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
 
     getCurrentLink()->assetType = Data::atOther;
     broadCastChange();
@@ -405,12 +453,14 @@ void assetTypeButton::onSelectOther(wxCommandEvent&)
 // =========================
 using namespace Yuni;
 
-captionButton::captionButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid) :
- menuLinkButton(), sizer_flex_grid_(sizer_flex_grid)
+captionButton::captionButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid):
+    menuLinkButton(),
+    sizer_flex_grid_(sizer_flex_grid)
 {
     // Link caption
-    setButton(new_check_allocation<Component::Button>(
-      parent, wxT("local values"), "images/16x16/link.png"));
+    setButton(new_check_allocation<Component::Button>(parent,
+                                                      wxT("local values"),
+                                                      "images/16x16/link.png"));
     getButton()->menu(true);
     getButton()->bold(true);
     bindButtonToPopupMenu();
@@ -418,24 +468,31 @@ captionButton::captionButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
 
     // Alias caption
     caption_label_ = Component::CreateLabel(parent, wxT("Caption"), false, true);
-    alias_button_ = new_check_allocation<Component::Button>(
-      parent, wxT(""), "images/16x16/document.png", this, &captionButton::onButtonEditCaption);
+    alias_button_ = new_check_allocation<Component::Button>(parent,
+                                                            wxT(""),
+                                                            "images/16x16/document.png",
+                                                            this,
+                                                            &captionButton::onButtonEditCaption);
     local_horizontal_sizer_ = new wxBoxSizer(wxHORIZONTAL);
     caption_text_ = Component::CreateLabel(parent, wxEmptyString);
     sizer_flex_grid_->Add(caption_label_, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
     local_horizontal_sizer_->Add(alias_button_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
     local_horizontal_sizer_->AddSpacer(2);
     local_horizontal_sizer_->Add(caption_text_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-    sizer_flex_grid_->Add(
-      local_horizontal_sizer_, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    sizer_flex_grid_->Add(local_horizontal_sizer_,
+                          0,
+                          wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 }
 
 void captionButton::onPopupMenu(Component::Button&, wxMenu& menu, void*)
 {
     const wxMenuItem* it;
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("Edit caption"), "images/16x16/document.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Edit caption"),
+                          "images/16x16/document.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(captionButton::onEditCaption),
@@ -451,7 +508,9 @@ void captionButton::onEditCaption(wxCommandEvent&)
 void captionButton::onButtonEditCaption(void*)
 {
     if (!getCurrentLink())
+    {
         return;
+    }
 
     wxTextEntryDialog dialog(this,
                              wxT("Please enter the new link's caption :"),
@@ -494,8 +553,9 @@ void captionButton::update(Data::AreaLink* link)
 // =========================
 loopFlowUsageButton::loopFlowUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
 {
-    setButton(new_check_allocation<Component::Button>(
-      parent, wxT("loop flow"), "images/16x16/light_green.png"));
+    setButton(new_check_allocation<Component::Button>(parent,
+                                                      wxT("loop flow"),
+                                                      "images/16x16/light_green.png"));
     sizer_flex_grid->Add(getButton(), 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 }
 
@@ -518,8 +578,9 @@ void loopFlowUsageButton::update(Data::AreaLink* link)
 // ============================
 phaseShifterUsageButton::phaseShifterUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid)
 {
-    setButton(new_check_allocation<Component::Button>(
-      parent, wxT("phase shifter"), "images/16x16/light_green.png"));
+    setButton(new_check_allocation<Component::Button>(parent,
+                                                      wxT("phase shifter"),
+                                                      "images/16x16/light_green.png"));
     sizer_flex_grid->Add(getButton(), 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 }
 
@@ -537,5 +598,4 @@ void phaseShifterUsageButton::update(Data::AreaLink* link)
     }
 }
 
-} // End namespace Window
-} // End namespace Antares
+} // namespace Antares::Window

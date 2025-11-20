@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,17 +10,21 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <optional>
+#include <string>
+
 #include "../null.h"
 
-namespace Yuni
+namespace Yuni::Logs
 {
-namespace Logs
-{
+std::optional<int>& threadNumber();
+
 template<class LeftType = NullDecorator>
-class YUNI_DECL ApplicationName : public LeftType
+class YUNI_DECL ApplicationName: public LeftType
 {
 public:
-    ApplicationName() : pAppName("noname")
+    ApplicationName():
+        pAppName("noname")
     {
     }
 
@@ -40,6 +45,7 @@ public:
     {
         pAppName = s;
     }
+
     //@}
 
     template<class Handler, class VerbosityType, class O>
@@ -48,6 +54,12 @@ public:
         // Write the verbosity to the output
         out.put('[');
         out.write(pAppName.c_str(), pAppName.size());
+        if (const std::optional<int>& tnum = threadNumber(); tnum.has_value())
+        {
+            out.put('-');
+            const std::string tnumString = std::to_string(*tnum);
+            out.write(tnumString.c_str(), tnumString.size());
+        }
         out.put(']');
         // Transmit the message to the next handler
         LeftType::template internalDecoratorAddPrefix<Handler, VerbosityType, O>(out, s);
@@ -59,5 +71,4 @@ private:
 
 }; // class ApplicationName
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs

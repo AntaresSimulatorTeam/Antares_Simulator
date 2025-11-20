@@ -18,6 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#pragma once
 
 #include <stdexcept>
 #include <string>
@@ -31,15 +32,21 @@ class TimeSeriesSet: public IDataSeries
 {
 public:
     explicit TimeSeriesSet(std::string name, unsigned height);
+    explicit TimeSeriesSet(std::string name, std::vector<std::vector<double>>&& tsSet);
     void add(const std::vector<double>& ts);
+    void add(std::vector<double>&& ts);
     double getData(unsigned tsNumber, unsigned hour) const override;
+    [[nodiscard]] std::span<const double> getData(
+      LinearProblemApi::IScenario::TimeSeriesNumber tsNumber,
+      unsigned firstHour,
+      unsigned lastHour) const override;
 
 private:
     unsigned height_ = 0;
     std::vector<std::vector<double>> tsSet_;
 
 public:
-    class AddTSofWrongSize: public std::invalid_argument
+    class AddTSofWrongSize final: public std::invalid_argument
     {
     public:
         explicit AddTSofWrongSize(const std::string& name,
@@ -47,19 +54,19 @@ public:
                                   const unsigned& height);
     };
 
-    class Empty: public std::invalid_argument
+    class Empty final: public std::invalid_argument
     {
     public:
         explicit Empty(const std::string& name);
     };
 
-    class RankTooBig: public std::invalid_argument
+    class RankTooBig final: public std::invalid_argument
     {
     public:
         explicit RankTooBig(const std::string& name, unsigned rank, unsigned tsSetSize);
     };
 
-    class HourTooBig: public std::invalid_argument
+    class HourTooBig final: public std::invalid_argument
     {
     public:
         explicit HourTooBig(const std::string& name, unsigned hour);

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,14 +10,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include <stdlib.h>
 #include <ctype.h>
+#include <stdlib.h>
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 /*!
 ** \brief Generic implementation
@@ -78,6 +75,7 @@ class Into<Yuni::CString<ChunkSizeT, ExpandableT>> final
 {
 public:
     typedef Yuni::CString<ChunkSizeT, ExpandableT> TargetType;
+
     enum
     {
         valid = 1
@@ -105,6 +103,7 @@ class Into<std::basic_string<CharT, TraitsT, AllocT>> final
 {
 public:
     typedef std::basic_string<CharT, TraitsT, AllocT> TargetType;
+
     enum
     {
         valid = 1
@@ -248,7 +247,9 @@ public:
 
                 char buffer[5] = {0, 0, 0, 0, 0};
                 for (uint i = 0; i != count; ++i)
+                {
                     buffer[i] = static_cast<char>(::tolower(s[i]));
+                }
                 return (!::strcmp("true", buffer) or !::strcmp("on", buffer)
                         or !::strcmp("yes", buffer));
             }
@@ -403,6 +404,7 @@ public:
     {
         valid = 1
     };
+
     enum
     {
         bufferSize = 256u
@@ -431,7 +433,9 @@ public:
                 cstr = buffer;
             }
             else
+            {
                 cstr = s.c_str();
+            }
 
 #ifdef YUNI_OS_MSVC
             // Visual Studio does not support strtof
@@ -468,7 +472,9 @@ public:
                 cstr = buffer;
             }
             else
+            {
                 cstr = s.c_str();
+            }
 
 #ifdef YUNI_OS_MSVC
             // Visual Studio does not support strtof
@@ -492,6 +498,7 @@ public:
     {
         valid = 1
     };
+
     enum
     {
         bufferSize = 256u
@@ -520,7 +527,9 @@ public:
                 cstr = buffer;
             }
             else
+            {
                 cstr = s.c_str();
+            }
 
             out = static_cast<double>(::strtod(cstr, &pend));
             return (NULL != pend and '\0' == *pend);
@@ -552,7 +561,9 @@ public:
                 cstr = buffer;
             }
             else
+            {
                 cstr = s.c_str();
+            }
 
             return static_cast<double>(::strtod(cstr, &pend));
         }
@@ -593,6 +604,4 @@ public:
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString

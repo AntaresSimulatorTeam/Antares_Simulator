@@ -85,7 +85,7 @@ struct VCardOverallCostCsr
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef std::vector<IntermediateValues> IntermediateValuesType;
 
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
+    using IntermediateValuesTypeForSpatialAg = std::unique_ptr<IntermediateValuesBaseType[]>;
 
 }; // class VCard
 
@@ -196,12 +196,7 @@ public:
           (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]
            * state.area->thermal.unsuppliedEnergyCost)
           + (state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-             * state.area->thermal.spilledEnergyCost)
-          // Current hydro storage and pumping generation costs
-          + (state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek]
-             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - state.area->hydro.pumpingEfficiency
-                    * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
+             * state.area->thermal.spilledEnergyCost);
 
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
           += costForSpilledOrUnsuppliedEnergyCSR;

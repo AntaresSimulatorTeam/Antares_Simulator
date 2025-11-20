@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #ifndef __SOLVER_SIMULATION_ECO_STRUCTS_H__
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
@@ -25,7 +25,6 @@
 #include <memory>
 #include <vector>
 
-#include "antares/solver/optim-model-filler/scenarioGroupRepo.h"
 #include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -73,6 +72,7 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> LevelVariable;
         std::vector<int> CostVariationInjection;
         std::vector<int> CostVariationWithdrawal;
+        std::vector<int> OverflowVariable;
     } SIM_ShortTermStorage;
 };
 
@@ -169,8 +169,6 @@ struct CONTRAINTES_COUPLANTES
     std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
 };
 
-namespace ShortTermStorage
-{
 struct PROPERTIES
 {
     double reservoirCapacity;
@@ -182,6 +180,8 @@ struct PROPERTIES
     bool initialLevelOptim;
     bool penalizeVariationWithdrawal;
     bool penalizeVariationInjection;
+    bool allowOverflow{false};
+    double overflowCost{0.0};
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
     std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>
@@ -190,7 +190,7 @@ struct PROPERTIES
     std::string name;
 };
 
-using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
+using AREA_INPUT = std::vector<PROPERTIES>; // index is local
 
 struct RESULTS
 {
@@ -199,7 +199,6 @@ struct RESULTS
     std::vector<double> injection;  // MWh
     std::vector<double> withdrawal; // MWh
 };
-} // namespace ShortTermStorage
 
 struct DEMAND_MARKET_POOL
 {
@@ -373,7 +372,7 @@ struct RESULTATS_HORAIRES
     std::vector<double> CoutsMarginauxHorairesCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
-    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
+    std::vector<::RESULTS> ShortTermStorage;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -408,7 +407,6 @@ struct PROBLEME_HEBDO
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
     bool OptimisationAvecVariablesEntieres = false;
     uint32_t NombreDePays = 0;
@@ -444,16 +442,13 @@ struct PROBLEME_HEBDO
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     uint32_t NumberOfShortTermStorages = 0;
-    // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
-    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
+    std::vector<::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
 
-    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or
-                                                    // OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
     uint32_t NombreDeContraintesCouplantes = 0;
@@ -466,7 +461,6 @@ struct PROBLEME_HEBDO
 
     Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
-    bool ExportStructure = false;
     bool NamedProblems = false;
     bool exportSolutions = false;
 
@@ -608,8 +602,6 @@ public:
       ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
-    const ModelerStudy::SystemModel::System* modelerSystem;                   // for hybrid studies
-    Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
-    Antares::Optimisation::ScenarioGroupRepository* scenarioGroupRepository;  // for hybrid studies
+    Modeler::Data* modelerData = nullptr;
 };
 #endif

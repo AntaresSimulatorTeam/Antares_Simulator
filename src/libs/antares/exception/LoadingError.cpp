@@ -1,30 +1,28 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include "antares/exception/LoadingError.hpp"
 
 #include <sstream>
 
-namespace Antares
-{
-namespace Error
+namespace Antares::Error
 {
 StudyFolderDoesNotExist::StudyFolderDoesNotExist(const std::string& folder):
     LoadingError(std::string("Study folder ") + folder + " does not exist.")
@@ -36,11 +34,6 @@ StudyFolderContainsNonASCIIchars::StudyFolderContainsNonASCIIchars(const std::st
 {
 }
 
-ReadingStudy::ReadingStudy():
-    LoadingError("Got a fatal error reading the study.")
-{
-}
-
 NoAreas::NoAreas():
     LoadingError("No area found. A valid study contains contains at least one.")
 {
@@ -48,6 +41,11 @@ NoAreas::NoAreas():
 
 Duplicates::Duplicates():
     LoadingError("One or more duplicates found.")
+{
+}
+
+Duplicates::Duplicates(const std::string& message):
+    LoadingError(message)
 {
 }
 
@@ -152,56 +150,9 @@ IncompatibleOptRangeUCMode::IncompatibleOptRangeUCMode():
 {
 }
 
-IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
-  const Antares::Data::AreaName& name):
-    LoadingError(
-      std::string("Area ") + name.c_str()
-      + " : simplex daily optimization and use heuristic target == no are not compatible")
-{
-}
-
-std::string InvalidParametersForThermalClusters::buildMessage(
-  const std::map<int, Yuni::String>& clusterNames) const
-{
-    const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
-                                   "modulation for the following clusters : ");
-    std::string clusters;
-    for (const auto& it: clusterNames)
-    {
-        clusters += it.second.c_str();
-        clusters += ";";
-    }
-    if (!clusters.empty())
-    {
-        clusters.pop_back(); // Remove final semicolon
-    }
-    return startMessage + clusters;
-}
-
-InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
-  const std::map<int, Yuni::String>& clusterNames):
-    LoadingError(buildMessage(clusterNames))
-{
-}
-
-CommandLineArguments::CommandLineArguments(uint errors):
+CommandLineArguments::CommandLineArguments(unsigned int errors):
     LoadingError("Invalid command-line arguments provided : " + std::to_string(errors)
                  + " error(s) found")
-{
-}
-
-IncompatibleSimulationModeForAdqPatch::IncompatibleSimulationModeForAdqPatch():
-    LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
-{
-}
-
-NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode():
-    LoadingError("Minimum one area must be inside adequacy patch mode when using adequacy patch")
-{
-}
-
-IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR():
-    LoadingError("Incompatible options include.hurdleCost and curtailmentSharing.includeHurdleCost")
 {
 }
 
@@ -222,5 +173,4 @@ IncompatibleFuelCostColumns::IncompatibleFuelCostColumns():
 {
 }
 
-} // namespace Error
-} // namespace Antares
+} // namespace Antares::Error

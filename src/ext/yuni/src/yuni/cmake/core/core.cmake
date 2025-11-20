@@ -76,11 +76,6 @@ endif()
 add_library(yuni-static-core STATIC
 		yuni.h
 
-		core/any/any.cpp
-		core/any/any.h
-		core/any/any.hxx
-		core/any/any.private.h
-		core/any.h
 		core/atomic/bool.h
 		core/atomic/int.h
 		core/atomic/int.hxx
@@ -139,15 +134,12 @@ add_library(yuni-static-core STATIC
 		core/getopt/parser.h
 		core/getopt/parser.hxx
 		core/getopt.h
-		core/hash
-		core/hash/table/table.h
-		core/hash/table/table.hxx
-		core/hash/table.h
 		core/iterator/iterator.h
 		core/iterator/iterator.hxx
 		core/iterator.h
 		core/logs/buffer.h
 		core/logs/decorators/applicationname.h
+		core/logs/decorators/threadNumber.cpp
 		core/logs/decorators/message.h
 		core/logs/decorators/time.cpp
 		core/logs/decorators/time.h
@@ -223,7 +215,6 @@ add_library(yuni-static-core STATIC
 		core/preprocessor/windows.h
 		core/process/program/program.cpp
 		core/process/program/program.h
-		core/process/program/program.hxx
 		core/process/program/process-info.h
 		core/process/program/process-info.hxx
 		core/process/program/windows.inc.hpp

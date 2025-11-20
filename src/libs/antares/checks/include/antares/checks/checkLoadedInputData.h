@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <antares/study/version.h>
+#include "antares/exception/LoadingError.hpp"
 #include "antares/study/fwd.h"
 
 namespace Antares::Check
@@ -39,4 +40,18 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas);
 
+class IncompatibleDailyOptHeuristicForArea final: public Error::LoadingError
+{
+public:
+    explicit IncompatibleDailyOptHeuristicForArea(const Antares::Data::AreaName& name);
+};
+
+class InvalidParametersForThermalClusters final: public Error::LoadingError
+{
+public:
+    explicit InvalidParametersForThermalClusters(const std::map<int, std::string>& clusterNames);
+
+private:
+    std::string buildMessage(const std::map<int, std::string>& clusterNames) const;
+};
 } // namespace Antares::Check

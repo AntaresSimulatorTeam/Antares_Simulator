@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include <iostream>
+
 #include <string>
 #include <vector>
 
@@ -93,6 +93,12 @@ struct ExtraOutput
     std::string expression;
 };
 
+struct Objective
+{
+    std::string id;
+    std::string expression;
+};
+
 struct Model
 {
     std::string id;
@@ -103,7 +109,7 @@ struct Model
     std::vector<PortFieldDefinition> port_field_definitions;
     std::vector<Constraint> constraints;
     std::vector<Constraint> binding_constraints;
-    std::string objective;
+    std::vector<Objective> objectives;
     std::vector<ExtraOutput> extra_outputs;
 };
 

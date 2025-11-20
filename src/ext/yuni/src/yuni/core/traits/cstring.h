@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include "../../yuni.h"
 #include "../static/remove.h"
 
-namespace Yuni
-{
-namespace Extension
+namespace Yuni::Extension
 {
 /*!
 ** \brief Extension: Convert any type into a mere C-String
@@ -38,12 +37,9 @@ public:
     }
 };
 
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension
 
-namespace Yuni
-{
-namespace Traits
+namespace Yuni::Traits
 {
 /*!
 ** \brief Traits: C-String (const char*) representation of an arbitrary contrainer
@@ -58,6 +54,7 @@ public:
     typedef typename Static::Remove::Const<U>::Type Type;
     //! Extension
     typedef Extension::IntoCString<Type> ExtensionType;
+
     enum
     {
         //! A non-zero value if the specialization is valid
@@ -87,7 +84,6 @@ public:
 
 }; // class CString<U>
 
-} // namespace Traits
-} // namespace Yuni
+} // namespace Yuni::Traits
 
 #include "extension/into-cstring.h"

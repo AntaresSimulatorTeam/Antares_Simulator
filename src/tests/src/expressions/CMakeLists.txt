@@ -3,9 +3,8 @@ add_boost_test(test-expressions
         SRC
         test_main.cpp
         test_nodes.cpp
-        test_PrintAndEvalNodes.cpp
+        test_PrintAndEvalVisitors.cpp
         test_TimeIndexVisitor.cpp
-        test_SubstitutionVisitor.cpp
         test_LinearVisitor.cpp
         test_CompareVisitor.cpp
         test_CloneVisitor.cpp
@@ -16,4 +15,5 @@ add_boost_test(test-expressions
         expressions
         expressions-iterators
         linear-problem-data-impl
+        mock-modeler-objects
         Antares::antares-study-system-model)

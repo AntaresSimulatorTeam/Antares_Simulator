@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "../../../yuni.h"
 
-namespace Yuni
-{
-namespace System
+namespace Yuni::System
 {
 /*!
 ** \brief API for dealing with the attributes of characters written to the console screen buffer
@@ -84,7 +83,6 @@ YUNI_DECL bool IsStdoutTTY();
 YUNI_DECL bool IsStderrTTY();
 
 } // namespace Console
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System
 
 #include "console.hxx"

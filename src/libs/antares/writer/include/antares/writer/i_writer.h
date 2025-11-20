@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -25,8 +25,6 @@
 #include <stdexcept>
 #include <string>
 
-#include <yuni/core/string.h>
-
 namespace Antares::Solver
 {
 
@@ -34,7 +32,7 @@ class IResultWriter
 {
 public:
     using Ptr = std::shared_ptr<IResultWriter>;
-    virtual void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) = 0;
+
     virtual void addEntryFromBuffer(const std::filesystem::path& entryPath,
                                     std::string& entryContent)
       = 0;
@@ -53,7 +51,6 @@ public:
 
 class NullResultWriter: public Solver::IResultWriter
 {
-    void addEntryFromBuffer(const std::string&, Yuni::Clob&) override;
     void addEntryFromBuffer(const std::filesystem::path&, std::string&) override;
     void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override;
     void flush() override;

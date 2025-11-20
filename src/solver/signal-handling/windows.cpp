@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -22,8 +22,7 @@
 
 #include <windows.h>
 
-#include "../application.h"
-#include "common.h"
+#include "antares/signal-handling/common.h"
 
 BOOL WINAPI ConsoleHandler(DWORD dwType)
 {
@@ -36,6 +35,7 @@ BOOL WINAPI ConsoleHandler(DWORD dwType)
         signalCtrl_term(0);
         break;
     default:
+        break;
     }
     return TRUE;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -38,63 +38,63 @@ public:
 protected:
     virtual void buildConstraint(int index) = 0;
 
-    virtual bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) = 0;
+    virtual bool IsConstraintEnabled(const PROPERTIES& properties) = 0;
 
     virtual int& TargetConstraintIndex(int pdt, int index) = 0;
 
     void addStorageConstraint(const std::string& constraintName, int pdt, int pays);
 };
 
-class ShortTermStorageCostVariationInjectionBackward: ShortTermStorageCostVariation
+class ShortTermStorageCostVariationInjectionBackward final: ShortTermStorageCostVariation
 {
 public:
     using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
     void add(unsigned int pdt, unsigned int pays) override;
 
-    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    bool IsConstraintEnabled(const PROPERTIES& properties) override;
 
     int& TargetConstraintIndex(int pdt, int index) override;
 
     void buildConstraint(int index) override;
 };
 
-class ShortTermStorageCostVariationInjectionForward: ShortTermStorageCostVariation
+class ShortTermStorageCostVariationInjectionForward final: ShortTermStorageCostVariation
 {
 public:
     using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
     void add(unsigned int pdt, unsigned int pays) override;
 
-    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    bool IsConstraintEnabled(const PROPERTIES& properties) override;
 
     int& TargetConstraintIndex(int pdt, int index) override;
 
     void buildConstraint(int index) override;
 };
 
-class ShortTermStorageCostVariationWithdrawalBackward: ShortTermStorageCostVariation
+class ShortTermStorageCostVariationWithdrawalBackward final: ShortTermStorageCostVariation
 {
 public:
     using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
     void add(unsigned int pdt, unsigned int pays) override;
 
-    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    bool IsConstraintEnabled(const PROPERTIES& properties) override;
 
     int& TargetConstraintIndex(int pdt, int index) override;
 
     void buildConstraint(int index) override;
 };
 
-class ShortTermStorageCostVariationWithdrawalForward: ShortTermStorageCostVariation
+class ShortTermStorageCostVariationWithdrawalForward final: ShortTermStorageCostVariation
 {
 public:
     using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
     void add(unsigned int pdt, unsigned int pays) override;
 
-    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    bool IsConstraintEnabled(const PROPERTIES& properties) override;
 
     int& TargetConstraintIndex(int pdt, int index) override;
 

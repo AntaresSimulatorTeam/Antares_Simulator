@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -23,6 +23,7 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/io/outputs/ISimulationTable.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -34,7 +35,8 @@ Adequacy::Adequacy(Data::Study& study,
                    Simulation::ISimulationObserver& simulationObserver):
     study(study),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
 {
 }
 
@@ -61,6 +63,25 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
+OptimisationsSimulationTable& Adequacy::getSimulationTable(uint numSpace)
+{
+    if (numSpace >= simulationTables_.size())
+    {
+        throw std::out_of_range("Error: there is no simulation table for numSpace: "
+                                + std::to_string(numSpace));
+    }
+    return simulationTables_[numSpace];
+}
+
+std::string Adequacy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
+}
+
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
 bool Adequacy::simulationBegin()
 {
@@ -74,11 +95,6 @@ bool Adequacy::simulationBegin()
                                             nbHoursInAWeek,
                                             numSpace);
         }
-    }
-
-    for (auto& pb: pProblemesHebdo)
-    {
-        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -202,15 +218,21 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                OPT_OptimisationHebdomadaire(study.parameters.optOptions,
-                                             &currentProblem,
-                                             resultWriter,
-                                             simulationObserver_.get());
+                auto* currentSimTable = simulationTables_.empty() ? nullptr
+                                                                  : &simulationTables_[numSpace];
+                OPT_OptimisationHebdomadaireLineaire(study.parameters.optOptions,
+                                                     &currentProblem,
+                                                     resultWriter,
+                                                     simulationObserver_.get(),
+                                                     currentSimTable);
+                if (currentSimTable)
+                {
+                    currentSimTable->write();
+                }
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
-                                      study.parameters.shedding.policy,
-                                      study.parameters.simplexOptimizationRange,
+                                      study.parameters,
                                       numSpace,
                                       hourInTheYear);
             }
@@ -386,36 +408,4 @@ void Adequacy::simulationEnd()
     }
 }
 
-void Adequacy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
-{
-    for (uint i = 0; i < study.areas.size(); ++i)
-    {
-        auto& area = *study.areas[i];
-        auto& scratchpad = scratchmap.at(&area);
-
-        std::ranges::fill(scratchpad.mustrunSum, 0);
-        std::ranges::fill(scratchpad.originalMustrunSum, 0);
-
-        auto& mrs = scratchpad.mustrunSum;
-        auto& adq = scratchpad.originalMustrunSum;
-
-        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-            {
-                mrs[h] += availableProduction[h];
-            }
-
-            if (cluster->mustrunOrigin)
-            {
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                {
-                    adq[h] += 2 * availableProduction[h]; // Why do we add the available production
-                                                          // twice ?
-                }
-            }
-        }
-    }
-}
 } // namespace Antares::Solver::Simulation

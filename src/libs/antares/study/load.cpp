@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -18,10 +18,10 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <fstream>
+#include <fmt/format.h>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
-#include "antares/study/scenario-builder/sets.h"
+#include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
@@ -227,7 +227,12 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = Solver::LoadFiles::loadAll(folder);
+        modelerInput_ = std::make_unique<Modeler::Data>(Solver::LoadFiles::loadAll(folder));
+        checkModelerDataCompatibility();
+    }
+    catch (const Error::LoadingError& e)
+    {
+        logs.error() << "Error while loading modeler components: " << e.what();
     }
     catch (const std::exception& e)
     {
@@ -238,6 +243,30 @@ void Study::loadModelerComponents()
     if (fs::exists(folder / "parameters.yml"))
     {
         logs.warning() << "parameters.yml ignored, use command line to set solver parameters";
+    }
+}
+
+/**
+ * Checks that the modeler data is compatible with the solver for hybrid studies.
+ * Currently, unsupported cases in the solver are :
+ * - variables that are not scenario dependent
+ */
+void Study::checkModelerDataCompatibility() const
+{
+    for (auto& component: modelerInput_->system->Components())
+    {
+        for (auto& variable: component.getModel()->Variables())
+        {
+            if (!variable.IsScenarioDependent())
+            {
+                throw Error::LoadingError(fmt::format(
+                  "Scenario-independent variables are not supported in hybrid studies. "
+                  "Please review variable \"{}\" in model \"{}\" (used in component \"{}\").",
+                  variable.Id(),
+                  component.getModel()->Id(),
+                  component.Id()));
+            }
+        }
     }
 }
 

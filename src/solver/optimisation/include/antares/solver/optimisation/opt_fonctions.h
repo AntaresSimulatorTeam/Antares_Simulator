@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -34,11 +34,17 @@
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
+class ISimulationTable;
+class OptimisationsSimulationTable;
+void OPT_OptimisationHebdomadaireLineaire(
+  const OptimizationOptions& options,
+  PROBLEME_HEBDO* pProblemeHebdo,
+  Solver::IResultWriter& writer,
+  Solver::Simulation::ISimulationObserver& simulationObserver,
+  OptimisationsSimulationTable* simulationTables);
+void OPT_OptimisationHebdomadaireQuadratique(const OptimizationOptions& options,
+                                             PROBLEME_HEBDO* pProblemeHebdo);
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
-                                  PROBLEME_HEBDO* pProblemeHebdo,
-                                  Solver::IResultWriter& writer,
-                                  Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
@@ -55,7 +61,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,
-                                      Solver::Simulation::ISimulationObserver& simulationObserver);
+                                      Solver::Simulation::ISimulationObserver& simulationObserver,
+                                      OptimisationsSimulationTable* simulationTables);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 
 /*!
@@ -68,13 +75,14 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          int,
                          const int,
                          const OptPeriodStringGenerator&,
-                         Antares::Solver::IResultWriter& writer);
-void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
+                         Antares::Solver::IResultWriter& writer,
+                         ISimulationTable* simulationTable);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver& simulationObserver);
+                              Solver::Simulation::ISimulationObserver& simulationObserver,
+                              OptimisationsSimulationTable* simulationTables);
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 /*------------------------------*/
 

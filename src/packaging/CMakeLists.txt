@@ -14,6 +14,7 @@ set(TARGET_LIBS #No alias
 
         # solver_api
         study
+		scenario-builder-utils
         study-loader
         file-tree-study-loader
         antares-solver-simulation
@@ -22,7 +23,6 @@ set(TARGET_LIBS #No alias
         array
         date
         inifile
-        stdcxx
         StudyUtils
         utils
         correlation
@@ -51,6 +51,7 @@ set(TARGET_LIBS #No alias
         model_antares
         antares-solver-ts-generator
         shave-peaks-by-remix-storage-gen
+        storage-for-remix-list-sort
 
         # lps : nothing
 
@@ -96,6 +97,7 @@ set(TARGET_LIBS #No alias
         antlr-interface
         antares-study-system-model
         load-modeler-files
+        modeler-optimisation-container
         expressions
         optim-model-filler
         yml-system
@@ -105,8 +107,11 @@ set(TARGET_LIBS #No alias
         data-series-csv-importer
         expressions-iterators
         additional-constraint-rhs-antlr-interface
+        modeler-simulation-table
         scenario-builder-antlr
         scenario-group-parser
+        yml-optim-config
+        enums
 )
 
 install(TARGETS ${TARGET_LIBS}

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -59,8 +59,11 @@ const unsigned int HOURS_PER_YEAR = 8760;
 
 namespace Antares::Constants
 {
-extern const std::array<unsigned int, MONTHS_PER_YEAR> daysPerMonth;
-extern const unsigned int nbHoursInAWeek;
+constexpr std::array<unsigned int, MONTHS_PER_YEAR>
+  daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+constexpr unsigned int nbHoursInAWeek = 168;
+constexpr double noiseAmplitude = 1e-3;
+
 } // namespace Antares::Constants
 
 enum AntaresConstants

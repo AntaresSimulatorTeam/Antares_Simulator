@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -131,6 +131,16 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                     variableNamer.ShortTermStorageCostVariationWithdrawal(NombreDeVariables,
                                                                           storage.name);
                     ++NombreDeVariables;
+                }
+                // 6. Overflow
+                if (storage.allowOverflow)
+                {
+                    variableManager.ShortTermStorageOverflow(clusterGlobalIndex, pdt)
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_INFERIEUREMENT;
+                    variableNamer.ShortTermStorageOverflow(NombreDeVariables, storage.name);
+                    NombreDeVariables++;
                 }
             }
 

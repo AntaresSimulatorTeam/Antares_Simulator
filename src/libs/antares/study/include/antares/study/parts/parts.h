@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -21,6 +21,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_H__
 #define __ANTARES_LIBS_STUDY_PARTS_H__
 
+// Short-term storage
+#include "short-term-storage/container.h"
 // Load
 #include "load/container.h"
 
@@ -47,8 +49,5 @@
 #include "renewable/cluster.h"
 #include "renewable/container.h"
 #include "renewable/defines.h"
-
-// Short-term storage
-#include "short-term-storage/container.h"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_H__

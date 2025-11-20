@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -25,7 +25,7 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
-System::System(const std::string_view id, std::unordered_map<std::string, Component>&& components):
+System::System(const std::string_view id, std::vector<Component>&& components):
     id_(id),
     components_(std::move(components))
 {
@@ -58,8 +58,7 @@ SystemBuilder& SystemBuilder::withId(std::string_view id)
  * \param components A vector of components to set.
  * \return Reference to the SystemBuilder object.
  */
-SystemBuilder& SystemBuilder::withComponents(
-  std::unordered_map<std::string, Component>&& components)
+SystemBuilder& SystemBuilder::withComponents(std::vector<Component>&& components)
 {
     components_ = std::move(components);
     return *this;

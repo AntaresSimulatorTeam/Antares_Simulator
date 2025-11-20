@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -23,11 +24,7 @@
 //! The maximum length for a long name of an option
 #define YUNI_GETOPT_LONGNAME_MAX_LENGTH 256
 
-namespace Yuni
-{
-namespace Private
-{
-namespace GetOptImpl
+namespace Yuni::Private::GetOptImpl
 {
 class Context final
 {
@@ -284,13 +281,9 @@ GetOpt::ReturnCode Context::operator()(int argc, const char* argv[])
     return (0 == pParser.pErrors) ? ReturnCode::ok : ReturnCode::error;
 }
 
-} // namespace GetOptImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::GetOptImpl
 
-namespace Yuni
-{
-namespace GetOpt
+namespace Yuni::GetOpt
 {
 static const char* ExtractFilenameOnly(const char* argv)
 {
@@ -458,5 +451,4 @@ void Parser::appendOption(IOption* option, char shortname)
     }
 }
 
-} // namespace GetOpt
-} // namespace Yuni
+} // namespace Yuni::GetOpt

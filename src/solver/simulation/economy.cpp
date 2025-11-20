@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -39,7 +39,8 @@ Economy::Economy(Data::Study& study,
     study(study),
     preproOnly(false),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    simulationObserver_(simulationObserver),
+    simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
 {
 }
 
@@ -65,6 +66,25 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
+OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
+{
+    if (numSpace >= simulationTables_.size())
+    {
+        throw std::out_of_range("Error: there is no simulation table for numSpace: "
+                                + std::to_string(numSpace));
+    }
+    return simulationTables_[numSpace];
+}
+
+std::string Economy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
+}
+
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
@@ -79,27 +99,22 @@ bool Economy::simulationBegin()
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
-
+            auto* simulationsTables = simulationTables_.empty() ? nullptr
+                                                                : &simulationTables_[numSpace];
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter,
-                                            simulationObserver_.get());
+                                            simulationObserver_.get(),
+                                            simulationsTables);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
               &pProblemesHebdo[numSpace],
               numSpace,
               study.areas,
-              study.parameters.shedding.policy,
-              study.parameters.simplexOptimizationRange,
-              study.calendar,
-              study.parameters.optOptions);
+              study.parameters,
+              study.calendar);
         }
-    }
-
-    for (auto& pb: pProblemesHebdo)
-    {
-        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -150,11 +165,14 @@ bool Economy::year(Progression::Task& progression,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-
+        auto* currentSimTable = simulationTables_.empty() ? nullptr : &simulationTables_[numSpace];
         try
         {
             weeklyOptProblems_[numSpace].solve();
-
+            if (currentSimTable)
+            {
+                currentSimTable->write();
+            }
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
@@ -254,27 +272,6 @@ void Economy::simulationEnd()
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
-    }
-}
-
-void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
-{
-    for (uint i = 0; i < study.areas.size(); ++i)
-    {
-        auto& area = *study.areas[i];
-        auto& scratchpad = scratchmap.at(&area);
-
-        std::ranges::fill(scratchpad.mustrunSum, 0);
-
-        auto& mrs = scratchpad.mustrunSum;
-        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-            {
-                mrs[h] += availableProduction[h];
-            }
-        }
     }
 }
 

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -34,9 +34,6 @@ class LessThanOrEqualNode;
 class GreaterThanOrEqualNode;
 class NegationNode;
 class LiteralNode;
-class ComponentNode;
-class ComponentVariableNode;
-class ComponentParameterNode;
 class ParameterNode;
 class VariableNode;
 class PortFieldNode;
@@ -46,4 +43,6 @@ class TimeIndexNode;
 class TimeSumNode;
 class ParentNode;
 class AllTimeSumNode;
+class ReducedCostNode;
+class DualNode;
 } // namespace Antares::Expressions::Nodes

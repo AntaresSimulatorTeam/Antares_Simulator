@@ -1,4 +1,5 @@
 add_subdirectory(inputs)
+add_subdirectory(outputs)
 set(HEADERS
         include/antares/io/statistics.h
         include/antares/io/file.h

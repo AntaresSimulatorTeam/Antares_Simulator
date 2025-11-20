@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,23 +12,18 @@
 #pragma once
 #include "loop.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Core
-{
-namespace EventLoop
+namespace Yuni::Private::Core::EventLoop
 {
 template<class EventLoopT>
-class Thread final : public Yuni::Thread::IThread
+class Thread final: public Yuni::Thread::IThread
 {
 public:
     //! The type of the calling event loop
     typedef EventLoopT EventLoopType;
 
 public:
-    Thread(EventLoopType& loop) : pEventLoop(loop)
+    Thread(EventLoopType& loop):
+        pEventLoop(loop)
     {
     }
 
@@ -73,20 +69,16 @@ private:
 
 }; // class Thread<>
 
-} // namespace EventLoop
-} // namespace Core
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Core::EventLoop
 
-namespace Yuni
-{
-namespace Core
-{
-namespace EventLoop
+namespace Yuni::Core::EventLoop
 {
 template<class ParentT, template<class> class FlowT, template<class> class StatsT, bool DetachedT>
-inline IEventLoop<ParentT, FlowT, StatsT, DetachedT>::IEventLoop() :
- pHasRequests(), pRequests(nullptr), pIsRunning(false), pThread(nullptr)
+inline IEventLoop<ParentT, FlowT, StatsT, DetachedT>::IEventLoop():
+    pHasRequests(),
+    pRequests(nullptr),
+    pIsRunning(false),
+    pThread(nullptr)
 {
     // Note: Visual Studio does not like `this` in the initialization section
     // Broadcast the pointer of the event loop to the policies
@@ -94,7 +86,9 @@ inline IEventLoop<ParentT, FlowT, StatsT, DetachedT>::IEventLoop() :
 
     // Initialize the thread if in detached mode
     if (detached)
+    {
         pThread = new ThreadType(*this);
+    }
 }
 
 template<class ParentT, template<class> class FlowT, template<class> class StatsT, bool DetachedT>
@@ -107,7 +101,9 @@ IEventLoop<ParentT, FlowT, StatsT, DetachedT>::~IEventLoop()
     {
         // Destroying the thread
         if (detached)
+        {
             delete pThread;
+        }
         pThread = NULL; // for code safety
         // Destroying the request list
         delete pRequests;
@@ -124,7 +120,9 @@ void IEventLoop<ParentT, FlowT, StatsT, DetachedT>::start()
         typename ThreadingPolicy::MutexLocker locker(*this);
         // Aborting if the event loop is already running
         if (pIsRunning)
+        {
             return;
+        }
         // Flow
         if (FlowPolicy::onStart())
         {
@@ -134,7 +132,9 @@ void IEventLoop<ParentT, FlowT, StatsT, DetachedT>::start()
 
         // Initializing the request list
         if (NULL == pRequests)
+        {
             pRequests = new RequestListType();
+        }
     }
 
     if (detached)
@@ -160,14 +160,18 @@ void IEventLoop<ParentT, FlowT, StatsT, DetachedT>::gracefulStop()
     typename ThreadingPolicy::MutexLocker locker(*this);
     // Aborting if the event loop is already stopped
     if (not pIsRunning or not FlowPolicy::onStop())
+    {
         return;
+    }
 
     // Posting a request that will fail (return false) in order to stop
     // the event loop.
     // The object is still locked and we directly inject the request into
     // the request list.
     if (NULL == pRequests)
+    {
         pRequests = new RequestListType();
+    }
 
     pRequests->push_back(RequestStop);
 
@@ -183,14 +187,18 @@ void IEventLoop<ParentT, FlowT, StatsT, DetachedT>::stop(uint timeout)
         typename ThreadingPolicy::MutexLocker locker(*this);
         // Aborting if the event loop is already stopped
         if (not pIsRunning or not FlowPolicy::onStop())
+        {
             return;
+        }
 
         // Posting a request that will fail (return false) in order to stop
         // the event loop.
         // The object is still locked and we directly inject the request into
         // the request list.
         if (NULL == pRequests)
+        {
             pRequests = new RequestListType();
+        }
 
         pRequests->push_back(RequestStop);
 
@@ -217,7 +225,9 @@ void IEventLoop<ParentT, FlowT, StatsT, DetachedT>::stop(uint timeout)
             {
                 typename ThreadingPolicy::MutexLocker locker(*this);
                 if (not pIsRunning)
+                {
                     break;
+                }
             }
 
             // Sleeping a bit...
@@ -242,10 +252,14 @@ void IEventLoop<ParentT, FlowT, StatsT, DetachedT>::dispatch(
         typename ThreadingPolicy::MutexLocker locker(*this);
         // Initializing pRequests allows for dispatching a request before calling start()
         if (not pRequests)
+        {
             pRequests = new RequestListType();
+        }
         // Flow
         if (not FlowPolicy::onRequestPosted(request))
+        {
             return;
+        }
         // Inserting the new request
         pRequests->push_back(request);
         // Statistics
@@ -266,7 +280,9 @@ void IEventLoop<ParentT, FlowT, StatsT, DetachedT>::runInfiniteLoopWL()
     {
         // Run the cycle
         if (not FlowPolicy::onNewCycle() or not runCycleWL())
+        {
             break;
+        }
     }
 
     // Statistics
@@ -318,7 +334,9 @@ bool IEventLoop<ParentT, FlowT, StatsT, DetachedT>::performAllRequestsWL()
         // This method may sometimes be called even if there is no request
         // in the list.
         if (pRequests->empty())
+        {
             return true;
+        }
 
         // We will take the ownership on the list, and will create a new one
         // to release the mutex as soon as possible and to process the requests
@@ -374,8 +392,8 @@ inline void IEventLoop<ParentT, FlowT, StatsT, DetachedT>::suspend(uint timeout)
 
 template<class ParentT, template<class> class FlowT, template<class> class StatsT, bool DetachedT>
 inline IEventLoop<ParentT, FlowT, StatsT, DetachedT>&
-  IEventLoop<ParentT, FlowT, StatsT, DetachedT>::operator+=(
-    const typename IEventLoop<ParentT, FlowT, StatsT, DetachedT>::RequestType& request)
+IEventLoop<ParentT, FlowT, StatsT, DetachedT>::operator+=(
+  const typename IEventLoop<ParentT, FlowT, StatsT, DetachedT>::RequestType& request)
 {
     dispatch(request);
     return *this;
@@ -383,13 +401,11 @@ inline IEventLoop<ParentT, FlowT, StatsT, DetachedT>&
 
 template<class ParentT, template<class> class FlowT, template<class> class StatsT, bool DetachedT>
 inline IEventLoop<ParentT, FlowT, StatsT, DetachedT>&
-  IEventLoop<ParentT, FlowT, StatsT, DetachedT>::operator<<(
-    const typename IEventLoop<ParentT, FlowT, StatsT, DetachedT>::RequestType& request)
+IEventLoop<ParentT, FlowT, StatsT, DetachedT>::operator<<(
+  const typename IEventLoop<ParentT, FlowT, StatsT, DetachedT>::RequestType& request)
 {
     dispatch(request);
     return *this;
 }
 
-} // namespace EventLoop
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::EventLoop

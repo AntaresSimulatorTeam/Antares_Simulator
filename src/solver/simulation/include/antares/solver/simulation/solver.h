@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -35,9 +35,10 @@
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
 
+class OptimisationsSimulationTable;
+
 namespace Antares::Solver::Simulation
 {
-
 template<class Impl>
 class yearJob;
 
@@ -85,37 +86,6 @@ public:
 
 private:
     /*!
-    ** \brief Regenerate time-series if required for a given year
-    */
-    void regenerateTimeSeries();
-    /*!
-    ** \brief Builds sets of parallel years
-    **
-    ** \return The max number of years in a set of parallel years (to be executed or not)
-    */
-    uint buildSetsOfParallelYears(uint firstYear,
-                                  uint endYear,
-                                  std::vector<setOfParallelYears>& setsOfParallelYears);
-
-    /*!
-    ** \brief Allocate storage for random numbers of parallel years
-    **
-    ** \param	randomParallelYears	... to be finished ...
-    */
-    void allocateMemoryForRandomNumbers(randomNumbers& randomForParallelYears);
-
-    /*!
-    ** \brief Computes random numbers for each years of a list
-    **
-    ** \param	randomForYears	Storage for random numbers for years in the list
-    ** \param	years			List of years
-    */
-    void computeRandomNumbers(randomNumbers& randomForYears,
-                              unsigned years,
-                              std::map<unsigned int, bool>& isYearPerformed,
-                              MersenneTwister& randomHydro);
-
-    /*!
     ** \brief Computes statistics on annual (system and solution) costs, to be printed in output
     *into separate files
     **
@@ -148,6 +118,9 @@ private:
     // Collecting durations inside the simulation
     Benchmarking::DurationCollector& pDurationCollector;
 
+    std::map<uint, std::pair<std::string, std::string>> yearSimulationBuffers_;
+    std::mutex buffersMutex_;
+
 public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
@@ -155,6 +128,10 @@ public:
     Antares::Solver::IResultWriter& pResultWriter;
 
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
+    void storeYearBuffers(uint year, std::string&& firstBuffer, std::string&& secondBuffer);
+    void aggregateAndWriteSimulationTables();
+
+    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 

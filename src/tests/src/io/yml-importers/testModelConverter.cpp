@@ -1,4 +1,4 @@
-/* * Copyright 2007-2024, RTE (https://www.rte-france.com)
+/* * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -26,7 +26,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/exception/RuntimeError.hpp"
-#include "antares/expressions/nodes/Node.h"
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/library.h"
@@ -113,7 +112,7 @@ BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
 }
 
 // Test library with models
-BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
+BOOST_FIXTURE_TEST_CASE(model_with_one_objective_properly_translated, Fixture)
 {
     YmlModel::Model model1{.id = "model1",
                            .description = "description",
@@ -123,12 +122,13 @@ BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
                            .port_field_definitions = {},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objective = "param1"};
+                           .objectives = {{"objective-id", "param1"}},
+                           .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 1);
     BOOST_CHECK_EQUAL(lib.Models().at("model1").Id(), "model1");
-    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objective().Value(), "param1");
+    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objectives()[0].expression().Value(), "param1");
 }
 
 // Test library with models and parameters
@@ -142,7 +142,8 @@ BOOST_FIXTURE_TEST_CASE(model_parameters_properly_translated, Fixture)
                            .port_field_definitions{},
                            .constraints{},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -170,21 +171,25 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "var1"};
+      .objectives = {{"objective-id", "var1"}},
+      .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
-    BOOST_REQUIRE_EQUAL(model.Variables().size(), 2);
-    auto& variable1 = model.Variables().at("var1");
-    auto& variable2 = model.Variables().at("var2");
-    BOOST_CHECK_EQUAL(variable1.Id(), "var1");
-    BOOST_CHECK_EQUAL(variable1.LowerBound().Value(), "7");
-    BOOST_CHECK_EQUAL(variable1.UpperBound().Value(), "pmax");
-    BOOST_CHECK_EQUAL(variable1.Type(), SystemModel::ValueType::BOOL);
-    BOOST_CHECK_EQUAL(variable2.Id(), "var2");
-    BOOST_CHECK_EQUAL(variable2.LowerBound().Value(), "99999999.9999999");
-    BOOST_CHECK_EQUAL(variable2.UpperBound().Value(), "var1");
-    BOOST_CHECK_EQUAL(variable2.Type(), SystemModel::ValueType::INTEGER);
+    const auto& vars = model.Variables();
+    BOOST_REQUIRE_EQUAL(vars.size(), 2);
+    const auto variable1 = std::ranges::find_if(vars,
+                                                [](const auto& v) { return v.Id() == "var1"; });
+    const auto variable2 = std::ranges::find_if(vars,
+                                                [](const auto& v) { return v.Id() == "var2"; });
+    BOOST_CHECK(variable1 != vars.cend());
+    BOOST_CHECK_EQUAL(variable1->LowerBound().Value(), "7");
+    BOOST_CHECK_EQUAL(variable1->UpperBound().Value(), "pmax");
+    BOOST_CHECK_EQUAL(variable1->Type(), SystemModel::ValueType::BOOL);
+    BOOST_CHECK(variable2 != vars.cend());
+    BOOST_CHECK_EQUAL(variable2->LowerBound().Value(), "99999999.9999999");
+    BOOST_CHECK_EQUAL(variable2->UpperBound().Value(), "var1");
+    BOOST_CHECK_EQUAL(variable2->Type(), SystemModel::ValueType::INTEGER);
 }
 
 // wrong variable ValueType
@@ -199,7 +204,8 @@ BOOST_FIXTURE_TEST_CASE(wrong_value_type, Fixture)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = ""};
+      .objectives = {},
+      .extra_outputs = {}};
     library.models = {model1};
     BOOST_CHECK_THROW(ModelConverter::convert(library), std::runtime_error);
 }
@@ -218,7 +224,8 @@ BOOST_FIXTURE_TEST_CASE(model_ports_properly_translated, Fixture)
                            .port_field_definitions = {},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     [[maybe_unused]] auto& model = lib.Models().at("model1");
@@ -258,7 +265,8 @@ BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objective = ""};
+                          .objectives = {},
+                          .extra_outputs = {}};
     library.models = {model};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
                           ModelConverter::PortTypeNotFound,
@@ -279,14 +287,15 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
                            .constraints = {{"constraint1", "expression1"},
                                            {"constraint2", "expression2"}},
                            .binding_constraints = {{"constraint3", "expression3"}},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
     BOOST_REQUIRE_EQUAL(model.Constraints().size(), 3);
-    auto& constraint1 = model.Constraints().at("constraint1");
-    auto& constraint2 = model.Constraints().at("constraint2");
-    auto& constraint3 = model.Constraints().at("constraint3");
+    auto& constraint1 = model.Constraints().at(0);
+    auto& constraint2 = model.Constraints().at(1);
+    auto& constraint3 = model.Constraints().at(2);
     BOOST_CHECK_EQUAL(constraint1.Id(), "constraint1");
     BOOST_CHECK_EQUAL(constraint1.expression().Value(), "expression1");
     BOOST_CHECK_EQUAL(constraint2.Id(), "constraint2");
@@ -313,7 +322,8 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = ""};
+      .objectives = {},
+      .extra_outputs = {}};
     YmlModel::Model model2{
       .id = "model2",
       .description = "description",
@@ -324,7 +334,8 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = ""};
+      .objectives = {},
+      .extra_outputs = {}};
     library.models = {model1, model2};
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 2);
@@ -350,7 +361,8 @@ BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixtur
                            .port_field_definitions = {{"port1", "field1", "param1"}},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -396,7 +408,8 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                            .port_field_definitions = {{"port2", "field1", "param1"}},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
     library.models = {model1};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
                           ModelConverter::PortNotFoundForDefinition,
@@ -410,7 +423,8 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                            .port_field_definitions = {{"port2", "field2", "param2"}},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
     library.models = {model2};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
                           ModelConverter::FieldNotFoundForDefinition,
@@ -425,7 +439,8 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                                                       {"port4", "field1", "port3.field1"}},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
     library.models = {model3};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
                           ModelConverter::PortInDefinition,
@@ -444,7 +459,7 @@ BOOST_FIXTURE_TEST_CASE(model_extra_outputs_properly_translated, Fixture)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "",
+      .objectives = {},
       .extra_outputs = {{"output1", "5 * param1"}, {"output2", "param1 / var1 * 95.4"}}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);

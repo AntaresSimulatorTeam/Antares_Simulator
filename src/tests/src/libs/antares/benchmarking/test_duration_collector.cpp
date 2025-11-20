@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -61,18 +61,6 @@ BOOST_AUTO_TEST_CASE(exceptionHandling)
     auto IShouldThrowAnInt = [&d]() { d("test1") << [] { throw int(2); }; };
 
     BOOST_CHECK_THROW(IShouldThrowAnInt(), int);
-}
-
-BOOST_AUTO_TEST_CASE(addDuration)
-{
-    Benchmarking::DurationCollector d;
-    Benchmarking::Timer t;
-
-    std::this_thread::sleep_for(100ms);
-    t.stop();
-    d.addDuration("test1", t.get_duration());
-
-    BOOST_CHECK_CLOSE((double)d.getTime("test1"), 100., threshold);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // DurationCollector

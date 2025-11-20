@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef ANTARES_WINDOWS_INSPECTOR_ACCUMULATOR_HXX__
 #define ANTARES_WINDOWS_INSPECTOR_ACCUMULATOR_HXX__
 
@@ -25,11 +25,7 @@
 #include <array>
 #include "constants.h"
 
-namespace Antares
-{
-namespace Window
-{
-namespace Inspector
+namespace Antares::Window::Inspector
 {
 struct Unique
 {
@@ -104,8 +100,10 @@ public:
             const auto end = list.cend();
             ++i;
             for (; i != end; ++i)
+            {
                 property->GetGrid()->SetPropertyTextColour(property->GetBaseName(),
                                                            PredicateT::TextColor(*i));
+            }
         }
     }
 
@@ -163,17 +161,22 @@ struct PAreaColor
             color[1] = c[1];
             color[2] = c[2];
         }
+
         int color[3];
+
         bool operator==(const Color& rhs) const
         {
             return rhs.color[0] == color[0] && rhs.color[1] == color[1] && rhs.color[2] == color[2];
         }
     };
+
     using Type = Color;
+
     static Type Value(const Data::Area* area)
     {
         return Color(area->ui->color);
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxString() << wxT("(") << v.color[0] << wxT(',') << v.color[1] << wxT(',')
@@ -184,10 +187,12 @@ struct PAreaColor
 struct PSimulationMode
 {
     using Type = Data::SimulationMode;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return (!(!study) ? study->parameters.mode : Data::SimulationMode::Economy);
     }
+
     static wxString ConvertToString(const Type v)
     {
         switch (v)
@@ -208,18 +213,24 @@ struct PSimulationMode
 struct PStudyBuildingMode
 {
     using Type = uint;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         if (!(!study))
         {
             auto& parameters = study->parameters;
             if (parameters.derated)
+            {
                 return 2;
+            }
             if (parameters.useCustomScenario)
+            {
                 return 1;
+            }
         }
         return 0;
     }
+
     static wxString ConvertToString(const Type v)
     {
         switch (v)
@@ -238,14 +249,18 @@ struct PStudyBuildingMode
 struct PStudyCalendarMonth
 {
     using Type = uint;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !study ? 0 : (uint)study->parameters.firstMonthInYear;
     }
+
     static wxString ConvertToString(const Type v)
     {
         if (v < 12)
+        {
             return calendarMonths[v];
+        }
         return wxT("invalid");
     }
 };
@@ -253,10 +268,12 @@ struct PStudyCalendarMonth
 struct PStudyLeapYear
 {
     using Type = bool;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !study ? false : study->parameters.leapYear;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("true") : wxT("false");
@@ -266,14 +283,18 @@ struct PStudyLeapYear
 struct PStudyCalendarWeek
 {
     using Type = uint;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !study ? (uint)Antares::monday : (uint)study->parameters.firstWeekday;
     }
+
     static wxString ConvertToString(const Type v)
     {
         if (v < 7)
+        {
             return calendarWeeks[v];
+        }
         return wxT("invalid");
     }
 };
@@ -281,10 +302,12 @@ struct PStudyCalendarWeek
 struct PStudyPlaylist
 {
     using Type = bool;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.userPlaylist : false;
     }
+
     static wxString ConvertToString(const Type v)
     {
         switch (v)
@@ -301,10 +324,12 @@ struct PStudyPlaylist
 struct PStudyYearByYear
 {
     using Type = bool;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.yearByYear : false;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -314,10 +339,12 @@ struct PStudyYearByYear
 struct PStudySynthesis
 {
     using Type = bool;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.synthesis : false;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -327,10 +354,12 @@ struct PStudySynthesis
 struct PStudyGeographicTrimming
 {
     using Type = bool;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.geographicTrimming : false;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (!v) ? wxT("None") : wxT("Custom");
@@ -340,10 +369,12 @@ struct PStudyGeographicTrimming
 struct PStudyThematicTrimming
 {
     using Type = bool;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.thematicTrimming : false;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (!v) ? wxT("None") : wxT("Custom");
@@ -353,10 +384,12 @@ struct PStudyThematicTrimming
 struct PStudyMCScenarios
 {
     using Type = bool;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.storeTimeseriesNumbers : false;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -366,10 +399,12 @@ struct PStudyMCScenarios
 struct PStudyCalBegin
 {
     using Type = wxString;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return wxString() << ((!(!study) ? study->parameters.simulationDays.first : 0) + 1);
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v;
@@ -379,10 +414,12 @@ struct PStudyCalBegin
 struct PStudyCalEnd
 {
     using Type = uint;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.simulationDays.end : 8760;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxString() << v;
@@ -392,10 +429,12 @@ struct PStudyCalEnd
 struct PStudyYears
 {
     using Type = uint;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.nbYears : 1;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxString() << v;
@@ -405,10 +444,12 @@ struct PStudyYears
 struct PStudyHorizon
 {
     using Type = String;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.horizon : Type();
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxStringFromUTF8(v);
@@ -418,10 +459,12 @@ struct PStudyHorizon
 struct PStudy1stJanuary
 {
     using Type = Antares::DayOfTheWeek;
+
     static Type Value(const Data::Study::Ptr& study)
     {
         return !study ? Antares::monday : study->parameters.dayOfThe1stJanuary;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxStringFromUTF8(Antares::Date::DayOfTheWeekToString(v));
@@ -432,13 +475,19 @@ template<bool Orientation>
 struct PLinkArea
 {
     using Type = wxString;
+
     static Type Value(const Data::AreaLink* link)
     {
         if (Orientation)
+        {
             return wxStringFromUTF8(link->from->name);
+        }
         else
+        {
             return wxStringFromUTF8(link->with->name);
+        }
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v;
@@ -448,10 +497,12 @@ struct PLinkArea
 struct PLinkHurdlesCost
 {
     using Type = bool;
+
     static Type Value(const Data::AreaLink* link)
     {
         return link->useHurdlesCost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -461,10 +512,12 @@ struct PLinkHurdlesCost
 struct PLinkPhaseShift
 {
     using Type = bool;
+
     static Type Value(const Data::AreaLink* link)
     {
         return link->usePST;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -474,10 +527,12 @@ struct PLinkPhaseShift
 struct PLinkLoopFlow
 {
     using Type = bool;
+
     static Type Value(const Data::AreaLink* link)
     {
         return link->useLoopFlow;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -487,10 +542,12 @@ struct PLinkLoopFlow
 struct PLinkDisplayComments
 {
     using Type = bool;
+
     static Type Value(const Data::AreaLink* link)
     {
         return link->displayComments;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -500,10 +557,12 @@ struct PLinkDisplayComments
 struct PLinkComments
 {
     using Type = wxString;
+
     static Type Value(const Data::AreaLink* link)
     {
         return wxStringFromUTF8(link->comments);
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v;
@@ -513,10 +572,12 @@ struct PLinkComments
 struct PLinkStyle
 {
     using Type = int;
+
     static Type Value(const Data::AreaLink* link)
     {
         return link->style;
     }
+
     static wxString ConvertToString(const Type v)
     {
         wxString ret;
@@ -545,10 +606,12 @@ struct PLinkStyle
 struct PLinkWidth
 {
     using Type = int;
+
     static Type Value(const Data::AreaLink* link)
     {
         return Math::MinMax(link->linkWidth, 1, 6);
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -565,17 +628,22 @@ struct PLinkColor
             color[1] = c[1];
             color[2] = c[2];
         }
+
         int color[3];
+
         bool operator==(const Color& rhs) const
         {
             return rhs.color[0] == color[0] && rhs.color[1] == color[1] && rhs.color[2] == color[2];
         }
     };
+
     using Type = Color;
+
     static Type Value(const Data::AreaLink* link)
     {
         return Color(link->color);
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxString() << wxT("(") << v.color[0] << wxT(',') << v.color[1] << wxT(',')
@@ -586,10 +654,12 @@ struct PLinkColor
 struct PAreaUnsuppliedEnergyCost
 {
     using Type = double;
+
     static Type Value(const Data::Area* area)
     {
         return area->thermal.unsuppliedEnergyCost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -599,10 +669,12 @@ struct PAreaUnsuppliedEnergyCost
 struct PAdequacyPatchMode
 {
     using Type = Data::AdequacyPatch::AdequacyPatchMode;
+
     static Type Value(const Data::Area* area)
     {
         return area->adequacyPatchMode;
     }
+
     static wxString ConvertToString(const Type v)
     {
         switch (v)
@@ -622,10 +694,12 @@ template<enum Data::AreaNodalOptimization O>
 struct PAreaResortStatus
 {
     using Type = bool;
+
     static Type Value(const Data::Area* area)
     {
         return (0 != (area->nodalOptimization & O));
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (v) ? wxT("True") : wxT("False");
@@ -636,13 +710,19 @@ template<bool SynthesisT, enum Data::FilterFlag F>
 struct PAreaFiltering
 {
     using Type = bool;
+
     static Type Value(const Data::Area* area)
     {
         if (SynthesisT)
+        {
             return (0 != (area->filterSynthesis & F));
+        }
         else
+        {
             return (0 != (area->filterYearByYear & F));
+        }
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (v) ? wxT("True") : wxT("False");
@@ -653,13 +733,19 @@ template<bool SynthesisT, enum Data::FilterFlag F>
 struct PLinkFiltering
 {
     using Type = bool;
+
     static Type Value(const Data::AreaLink* link)
     {
         if (SynthesisT)
+        {
             return (0 != (link->filterSynthesis & F));
+        }
         else
+        {
             return (0 != (link->filterYearByYear & F));
+        }
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (v) ? wxT("True") : wxT("False");
@@ -669,10 +755,12 @@ struct PLinkFiltering
 struct PAreaSpilledEnergyCost
 {
     using Type = double;
+
     static Type Value(const Data::Area* area)
     {
         return area->thermal.spilledEnergyCost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -685,10 +773,12 @@ struct PAreaSpilledEnergyCost
 struct PClusterEnabled
 {
     using Type = bool;
+
     static Type Value(const Data::Cluster* cluster)
     {
         return cluster->enabled;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -698,10 +788,12 @@ struct PClusterEnabled
 struct PClusterUnitCount
 {
     using Type = uint;
+
     static Type Value(const Data::Cluster* cluster)
     {
         return cluster->unitCount;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxString() << v;
@@ -711,10 +803,12 @@ struct PClusterUnitCount
 struct PClusterNomCapacity
 {
     using Type = double;
+
     static Type Value(const Data::Cluster* cluster)
     {
         return cluster->nominalCapacity;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -724,10 +818,12 @@ struct PClusterNomCapacity
 struct PClusterInstalled
 {
     using Type = double;
+
     static Type Value(const Data::Cluster* cluster)
     {
         return cluster->nominalCapacity * cluster->unitCount;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -737,10 +833,12 @@ struct PClusterInstalled
 struct PClusterGroup
 {
     using Type = wxString;
+
     static Type Value(const Data::Cluster* cluster)
     {
         return wxStringFromUTF8(cluster->getGroup());
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v;
@@ -750,10 +848,12 @@ struct PClusterGroup
 struct PClusterArea
 {
     using Type = wxString;
+
     static Type Value(const Data::Cluster* cluster)
     {
         return wxStringFromUTF8(cluster->parentArea->name);
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v;
@@ -768,10 +868,14 @@ struct PClusterNomCapacityColor
     static wxColor TextColor(Data::ThermalCluster* cluster)
     {
         if (not cluster->checkMinStablePower())
+        {
             return wxColor(255, 0, 0);
+        }
 
         if (cluster->minStablePower > cluster->nominalCapacity * (1 - cluster->spinning / 100.))
+        {
             return wxColor(255, 0, 0);
+        }
 
         return wxColour(86, 98, 115);
     }
@@ -785,10 +889,12 @@ struct PClusterNomCapacityColor
 struct PClusterMustRun
 {
     using Type = bool;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->mustrun;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -798,10 +904,12 @@ struct PClusterMustRun
 struct PClusterCO2
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->emissions.factors[Antares::Data::Pollutant::CO2];
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -811,10 +919,12 @@ struct PClusterCO2
 struct PClusterVolatilityPlanned
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->plannedVolatility;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -824,10 +934,12 @@ struct PClusterVolatilityPlanned
 struct PClusterVolatilityForced
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->forcedVolatility;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -837,10 +949,12 @@ struct PClusterVolatilityForced
 struct PClusterSpinning
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->spinning;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -850,10 +964,12 @@ struct PClusterSpinning
 struct PClusterEfficiency
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->fuelEfficiency;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -865,10 +981,14 @@ struct PClusterSpinningColor
     static wxColor TextColor(Data::ThermalCluster* cluster)
     {
         if (not cluster->checkMinStablePower())
+        {
             return wxColor(255, 0, 0);
+        }
 
         if (cluster->minStablePower > cluster->nominalCapacity * (1 - cluster->spinning / 100.))
+        {
             return wxColor(255, 0, 0);
+        }
 
         return wxColour(86, 98, 115);
     }
@@ -882,10 +1002,12 @@ struct PClusterSpinningColor
 struct PClusterReference
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->marketBidCost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -895,10 +1017,12 @@ struct PClusterReference
 struct PClusterRandomSpread
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->spreadCost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -908,10 +1032,12 @@ struct PClusterRandomSpread
 struct PClusterCostGeneration
 {
     using Type = uint;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return (uint)cluster->costgeneration;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (v < costgenerationCount) ? costgeneration[v] : nullptr;
@@ -921,10 +1047,12 @@ struct PClusterCostGeneration
 struct PClusterMarginalCost
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->marginalCost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -936,7 +1064,9 @@ struct PClusterMarginalCostEnable
     static bool Enable(Data::ThermalCluster* cluster)
     {
         if (cluster->costgeneration == Data::useCostTimeseries)
+        {
             return false;
+        }
 
         return true;
     }
@@ -945,10 +1075,12 @@ struct PClusterMarginalCostEnable
 struct PClusterStartupCost
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->startupCost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -958,10 +1090,12 @@ struct PClusterStartupCost
 struct PClusterFixedCost
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->fixedCost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -971,10 +1105,12 @@ struct PClusterFixedCost
 struct PClusterVariableOMcost
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->variableomcost;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -984,10 +1120,12 @@ struct PClusterVariableOMcost
 struct PClusterMinStablePower
 {
     using Type = double;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->minStablePower;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
@@ -999,10 +1137,14 @@ struct PClusterMinStablePowerColor
     static wxColor TextColor(Data::ThermalCluster* cluster)
     {
         if (not cluster->checkMinStablePower())
+        {
             return wxColor(255, 0, 0);
+        }
 
         if (cluster->minStablePower > cluster->nominalCapacity * (1 - cluster->spinning / 100.))
+        {
             return wxColor(255, 0, 0);
+        }
 
         return wxColour(86, 98, 115);
     }
@@ -1016,10 +1158,12 @@ struct PClusterMinStablePowerColor
 struct PClusterMinUpTime
 {
     using Type = uint;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->minUpTime;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxString() << v;
@@ -1029,10 +1173,12 @@ struct PClusterMinUpTime
 struct PClusterMinDownTime
 {
     using Type = uint;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->minDownTime;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxString() << v;
@@ -1042,10 +1188,12 @@ struct PClusterMinDownTime
 struct PClusterLawForced
 {
     using Type = uint;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return (uint)cluster->forcedLaw;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (v < LawCount) ? Laws[v] : nullptr;
@@ -1055,10 +1203,12 @@ struct PClusterLawForced
 struct PClusterLawPlanned
 {
     using Type = uint;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->plannedLaw;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (v < LawCount) ? Laws[v] : nullptr;
@@ -1068,10 +1218,12 @@ struct PClusterLawPlanned
 struct PClusterDoGenerateTS
 {
     using Type = uint;
+
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return (uint)cluster->tsGenBehavior;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (v < localGenTSCount) ? localGenTS[v] : nullptr;
@@ -1081,10 +1233,12 @@ struct PClusterDoGenerateTS
 struct PRnClusterTSMode
 {
     using Type = uint;
+
     static Type Value(const Data::RenewableCluster* cluster)
     {
         return cluster->tsMode;
     }
+
     static wxString ConvertToString(const Type v)
     {
         return (v < renewableTSModeCount) ? renewableTSMode[v] : nullptr;
@@ -1097,10 +1251,12 @@ struct PRnClusterTSMode
 struct PConstraintName
 {
     using Type = wxString;
+
     static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return wxStringFromUTF8(constraint->name());
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v;
@@ -1110,10 +1266,12 @@ struct PConstraintName
 struct PConstraintComments
 {
     using Type = wxString;
+
     static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return wxStringFromUTF8(constraint->comments());
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v;
@@ -1123,10 +1281,12 @@ struct PConstraintComments
 struct PConstraintEnabled
 {
     using Type = bool;
+
     static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return constraint->enabled();
     }
+
     static wxString ConvertToString(const Type v)
     {
         return v ? wxT("True") : wxT("False");
@@ -1136,17 +1296,17 @@ struct PConstraintEnabled
 struct PConstraintType
 {
     using Type = Data::BindingConstraint::Type;
+
     static Type Value(const std::shared_ptr<Data::BindingConstraint> constraint)
     {
         return constraint->type();
     }
+
     static wxString ConvertToString(const Type v)
     {
         return wxStringFromUTF8(Data::BindingConstraint::TypeToCString(v));
     }
 };
-} // namespace Inspector
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Inspector
 
 #endif // ANTARES_WINDOWS_INSPECTOR_ACCUMULATOR_HXX__

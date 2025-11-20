@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -23,109 +23,96 @@
 
 #include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
-#include "antares/expressions/visitors/EvaluationContext.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include <antares/study/system-model/variable.h>
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
-namespace Antares::ModelerStudy::SystemModel
-{
-class Component;
-class Variable;
-} // namespace Antares::ModelerStudy::SystemModel
-
-namespace Antares::Expressions::Visitors
-{
-class EvalVisitor;
-}
-
 namespace Antares::Optimisation
 {
-class ScenarioGroupRepository;
+
+// Represents a variable shared by master and subproblems
+struct ConnectionVariable
+{
+    std::string name;
+    unsigned indexInProblem;
+};
+
+class BendersDecomposition
+{
+public:
+    BendersDecomposition() = default;
+    void setCurrentProblemId(std::string id);
+    void collectConnectionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
+
+    const std::map<std::string, std::vector<ConnectionVariable>>& connections() const
+    {
+        return connectionVars_;
+    }
+
+private:
+    std::map<std::string, std::vector<ConnectionVariable>> connectionVars_;
+    std::string currentProblemId_ = "master";
+};
+
+class BendersDecompositionWriter
+{
+public:
+    BendersDecompositionWriter(const BendersDecomposition& bd);
+    void write(std::ostream& os) const;
+
+private:
+    const BendersDecomposition& bd_;
+};
 
 /**
  * Component filler
  * Implements LinearProblemFiller interface.
  * Fills a LinearProblem with variables, constraints, and objective coefficients of a Component
  */
-class ComponentFiller: public Optimisation::LinearProblemApi::LinearProblemFiller
+class ComponentFiller: public LinearProblemApi::LinearProblemFiller
 {
 public:
     ComponentFiller() = delete;
 
     ComponentFiller(ComponentFiller& other) = delete;
 
-    /// Create a ComponentFiller for a Component
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             Optimization::VariableDictionary& variableDictionary,
-                             const ScenarioGroupRepository& scenarioGroupRepository);
+                             OptimEntityContainer& optimEntityContainer,
+                             const ScenarioGroupRepository& scenarioGroupRepository,
+                             Modeler::Config::Location targetLocation,
+                             BendersDecomposition* bendersDecomposition = nullptr);
 
-    void addVariables(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    void addConstraints(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                        Optimisation::LinearProblemApi::ILinearProblemData& data,
-                        Optimisation::LinearProblemApi::FillContext& ctx) override;
-
-    void addObjective(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                      Optimisation::LinearProblemApi::ILinearProblemData& data,
-                      Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
-    void addStaticConstraint(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                             const Optimization::LinearConstraint& linear_constraint,
-                             const std::string& constraint_id) const;
+    void addStaticConstraint(const Optimisation::LinearConstraint& linear_constraint,
+                             const std::string& constraint_id);
 
-    void addTimeDependentConstraints(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
-      const std::vector<Optimization::LinearConstraint>& linear_constraints,
-      const std::string& constraint_id) const;
+    void addTimeDependentConstraints(const Optimisation::LinearConstraint& linear_constraints,
+                                     const std::string& constraint_id,
+                                     const Optimisation::LinearProblemApi::FillContext& ctx);
 
-    bool IsThisConstraintTimeDependent(const Expressions::Nodes::Node* node);
+    TimeIndex getConstraintTimeIndex(const Expressions::Nodes::Node* node,
+                                     const ModelerStudy::SystemModel::Component& component) const;
 
     const ModelerStudy::SystemModel::Component& component_;
-    Optimization::VariableDictionary& variableDictionary_;
+    OptimEntityContainer& optimEntityContainer_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
-};
+    const Modeler::Config::Location targetLocation_;
+    BendersDecomposition* bendersDecomposition_ = nullptr;
 
-class VariablesBulkAddition
-{
-public:
-    VariablesBulkAddition(Optimisation::LinearProblemApi::ILinearProblem& linear_problem,
-                          Optimization::VariableDictionary& variableDictionary);
-
-    void addVariable(double lb,
-                     double ub,
-                     bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey&) const;
-
-    void addVariable(const std::vector<double>& lb,
-                     double ub,
-                     bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey&) const;
-
-    void addVariable(double lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey&) const;
-
-    void addVariable(const std::vector<double>& lb,
-                     const std::vector<double>& ub,
-                     bool integer,
-                     const Optimization::Dimensions& dim,
-                     const Optimization::PartialKey&) const;
-
-    class BoundsSizeMismatch: public std::invalid_argument
+    // Filter to keep only items compatible with the target location
+    auto locationFilter()
     {
-        using std::invalid_argument::invalid_argument;
-    };
-
-private:
-    Optimisation::LinearProblemApi::ILinearProblem& linear_problem_;
-    Optimization::VariableDictionary& variableDictionary;
+        return std::views::filter(
+          [this](const auto& item)
+          { return AreLocationsCompatible(item.location(), targetLocation_); });
+    }
 };
 } // namespace Antares::Optimisation

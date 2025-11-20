@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -57,7 +57,7 @@ Node* ComparisonFixture::createComplexExpression()
     Node* simple = createSimpleExpression(42.);
     Node* neg = registry_.create<NegationNode>(simple);
     Node* mult = registry_.create<MultiplicationNode>(simple, neg);
-    Node* comp = registry_.create<ComponentParameterNode>("hello", "world");
+    Node* comp = registry_.create<ParameterNode>("hello");
     Node* div = registry_.create<DivisionNode>(mult, comp);
     Node* div2 = registry_.create<DivisionNode>(div, simple);
     Node* add = registry_.create<SumNode>(div, div2, neg);
@@ -67,8 +67,7 @@ Node* ComparisonFixture::createComplexExpression()
     Node* pfsum = registry_.create<PortFieldSumNode>("port", "sum");
     Node* equalNode = registry_.create<EqualNode>(pf, pfsum);
     Node* lessThan = registry_.create<LessThanOrEqualNode>(equalNode, pfsum);
-    Node* compVar = registry_.create<ComponentVariableNode>("compo", "var");
-    Node* addf = registry_.create<SumNode>(equalNode, lessThan, cmp, compVar);
+    Node* addf = registry_.create<SumNode>(equalNode, lessThan, cmp);
     return addf;
 }
 
@@ -218,4 +217,29 @@ BOOST_FIXTURE_TEST_CASE(compare_TimeShift, ComparisonFixture)
     const auto clone = clone_visitor.dispatch(expr1);
     BOOST_CHECK(compareVisitor.dispatch(expr1, clone));
 }
+
+BOOST_FIXTURE_TEST_CASE(compare_dual, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* dual1 = registry_.create<DualNode>("constraint1", 0);
+    Node* dual2 = registry_.create<DualNode>("constraint2", 1);
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(dual1);
+    BOOST_CHECK(compareVisitor.dispatch(dual1, clone));
+    BOOST_CHECK(!compareVisitor.dispatch(dual1, dual2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_reducedCost, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* reducedCost1 = registry_.create<ReducedCostNode>("var1", 0);
+    Node* reducedCost2 = registry_.create<ReducedCostNode>("var2", 1);
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(reducedCost1);
+    BOOST_CHECK(compareVisitor.dispatch(reducedCost1, clone));
+    BOOST_CHECK(!compareVisitor.dispatch(reducedCost1, reducedCost2));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

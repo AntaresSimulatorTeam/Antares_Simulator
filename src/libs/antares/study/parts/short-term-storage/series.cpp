@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -164,7 +164,7 @@ void Series::fillDefaultSeriesIfEmpty()
 
     fillIfEmpty(costInjection, 0.0);
     fillIfEmpty(costWithdrawal, 0.0);
-    fillIfEmpty(costLevel, 0.0);
+    fillIfEmpty(costLevel, -1.e-6);
 
     fillIfEmpty(costVariationInjection, 0.0);
 

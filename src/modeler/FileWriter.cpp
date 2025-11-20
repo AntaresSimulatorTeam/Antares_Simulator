@@ -25,40 +25,51 @@
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
+#include <antares/solver/optim-model-filler/Dimensions.h>
+#include <antares/study/system-model/component.h>
+#include "antares/io/outputs/SimulationTableCsvFile.h"
+#include "antares/io/outputs/SimulationTableGenerator.h"
 
 #include "modeler/include/antares/solver/modeler/Modeler.h"
 
 namespace Antares::Modeler
 {
-void FileWriter::init(bool setOutput)
+void FileWriter::init(const std::string& simulationId)
 {
-    output = setOutput;
     outputPath_ = studyPath_ / "output";
-    if (output)
+    simulationId_ = simulationId;
+    logs.info() << "Output folder : " << outputPath_;
+    if (!std::filesystem::is_directory(outputPath_)
+        && !std::filesystem::create_directory(outputPath_))
     {
-        logs.info() << "Output folder : " << outputPath_;
-        if (!std::filesystem::is_directory(outputPath_)
-            && !std::filesystem::create_directory(outputPath_))
-        {
-            throw Antares::Solver::Modeler::ModelerError(
-              "Failed to create output directory. Exiting simulation.");
-        }
+        throw Solver::Modeler::ModelerError(
+          "Failed to create output directory. Exiting simulation.");
     }
 }
 
-void FileWriter::writeSolution(const Optimisation::LinearProblemApi::IMipSolution& solution)
+const std::filesystem::path& FileWriter::outputPath() const
 {
-    if (output)
-    {
-        logs.info() << "Writing objective & variable values...";
-        std::ofstream sol_out(outputPath_ / "solution.csv");
-        sol_out << std::setprecision(15) << "objective " << solution.getObjectiveValue()
-                << std::endl;
-        for (const auto& [name, value]: solution.getOptimalValues())
-        {
-            sol_out << name << " " << value << std::endl;
-        }
-    }
+    return outputPath_;
+}
+
+void FileWriter::writeSimulationTable(
+  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+  const Optimisation::LinearProblemApi::IMipSolution& solution,
+  const Data& modelerData,
+  const Optimisation::OptimEntityContainer& variableContainer,
+  const Optimisation::LinearProblemApi::FillContext& fillContext) const
+{
+    SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
+    IO::FillSimulationTable(simulationTable,
+                            linearProblem,
+                            solution.getObjectiveValue(),
+                            modelerData,
+                            variableContainer,
+                            fillContext,
+                            0,
+                            IO::TimeConversionMode::SingleBlock);
+    simulationTable.writeHeader();
+    simulationTable.write();
 }
 
 FileWriter::FileWriter(std::filesystem::path path):
@@ -66,14 +77,4 @@ FileWriter::FileWriter(std::filesystem::path path):
 {
 }
 
-void FileWriter::writeProblem(
-  const Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem& problem)
-{
-    if (output)
-    {
-        logs.info() << "Writing problem.lp...";
-        const auto lp_path = outputPath_ / "problem.lp";
-        problem.WriteLP(lp_path.string());
-    }
-}
 } // namespace Antares::Modeler

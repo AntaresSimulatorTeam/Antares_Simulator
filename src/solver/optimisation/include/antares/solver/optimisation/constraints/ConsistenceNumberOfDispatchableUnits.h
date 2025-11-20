@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -25,7 +25,7 @@
 /*!
  * represent 'Consistence Number Of Dispatchable Units Constraint' type
  */
-class ConsistenceNumberOfDispatchableUnits: private ConstraintFactory
+class ConsistenceNumberOfDispatchableUnits final: private ConstraintFactory
 {
 public:
     ConsistenceNumberOfDispatchableUnits(ConstraintBuilder& builder, StartUpCostsData& data):

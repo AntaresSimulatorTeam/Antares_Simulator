@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #include "filename-manipulation.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 template<class StringT>
 static inline void NormalizeImpl(StringT& out, const AnyString& input, bool replaceSlashes)
@@ -77,7 +76,9 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
     for (; i < input.size(); ++i)
     {
         if (input[i] == '/' or input[i] == '\\')
+        {
             ++slashes;
+        }
     }
 
     // Initializing the output, and reserving the memory to avoid as much as possible calls to
@@ -105,7 +106,9 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
         {
             // We have an Unix-style path
             if (input[0] == '/' or input[0] == '\\')
+            {
                 isAbsolute = true;
+            }
         }
     }
 
@@ -131,6 +134,7 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
         uint cursor;
         uint length;
     };
+
     Stack* stack = new Stack[slashes + 1]; // Ex: path/to/somewhere/on/my/hdd
     // Index on the stack
     uint count = 0;
@@ -163,7 +167,9 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
                     if (isAbsolute)
                     {
                         if (count)
+                        {
                             --count;
+                        }
                     }
                     else
                     {
@@ -173,10 +179,13 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
                             --realFolderCount;
                         }
                         else
+                        {
                             stack[count++](cursor, 3);
+                        }
                     }
                     break;
                 }
+                [[fallthrough]];
                 // * break *
                 // we have a real folder, so `break` _must_ not
                 // be used here.
@@ -201,14 +210,20 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
             if (isAbsolute)
             {
                 if (count)
+                {
                     --count;
+                }
             }
             else
             {
                 if (realFolderCount)
+                {
                     --count;
+                }
                 else
+                {
                     stack[count++](cursor, 2);
+                }
             }
 
             cursor = input.size();
@@ -219,7 +234,9 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
     if (count)
     {
         for (uint j = 0; j != count; ++j)
+        {
             out.append(input.c_str() + stack[j].cursor, stack[j].length);
+        }
     }
 
     // Releasing the memory
@@ -230,11 +247,15 @@ static inline void NormalizeImpl(StringT& out, const AnyString& input, bool repl
     if (cursor < input.size())
     {
         if (!(input.size() - cursor == 1 and input[cursor] == '.'))
+        {
             out.append(input.c_str() + cursor, input.size() - cursor);
+        }
     }
     // Removing the trailing slash
     if (out.size() > 3)
+    {
         out.removeTrailingSlash();
+    }
 
     if (replaceSlashes)
     {
@@ -263,7 +284,9 @@ bool IsAbsolute(const AnyString& filename)
         // UNIX Style
         char c = filename[0];
         if (c == '/' or c == '\\')
+        {
             return true;
+        }
 
         // Windows Style
         if (filename.size() >= 2 and filename[1] == ':')
@@ -271,11 +294,15 @@ bool IsAbsolute(const AnyString& filename)
             if (String::IsAlpha(c))
             {
                 if (filename.size() == 2)
+                {
                     return true;
+                }
                 // obviously strictly greater than 2 (see >= 2 before)
                 char d = filename[2];
                 if (d == '\\' or d == '/')
+                {
                     return true;
+                }
             }
         }
     }
@@ -283,15 +310,21 @@ bool IsAbsolute(const AnyString& filename)
 }
 
 template<class StringT>
-static inline void parent_path_impl_static(StringT& out, const AnyString& path, bool systemDependant)
+static inline void parent_path_impl_static(StringT& out,
+                                           const AnyString& path,
+                                           bool systemDependant)
 {
     AnyString::size_type pos = (systemDependant)
                                  ? path.find_last_of(IO::Constant<char>::Separator)
                                  : path.find_last_of(IO::Constant<char>::AllSeparators);
     if (AnyString::npos == pos)
+    {
         out.clear();
+    }
     else
+    {
         out.assign(path, pos);
+    }
 }
 
 void parent_path(String& out, const AnyString& path, bool systemDependant)
@@ -311,9 +344,13 @@ static inline void ExtractFileNameImpl(StringT& out, const AnyString& path, bool
                                  ? path.find_last_of(IO::Constant<char>::Separator)
                                  : path.find_last_of(IO::Constant<char>::AllSeparators);
     if (AnyString::npos == pos)
+    {
         out.clear();
+    }
     else
+    {
         out.assign(path.c_str() + pos + 1);
+    }
 }
 
 void ExtractFileName(String& out, const AnyString& path, bool systemDependant)
@@ -327,70 +364,6 @@ void ExtractFileName(Clob& out, const AnyString& path, bool systemDependant)
 }
 
 template<class StringT>
-static inline void ExtractFilePathAndNameImpl(StringT& path,
-                                              StringT& name,
-                                              const AnyString& filename,
-                                              bool systemDependant)
-{
-    AnyString::size_type pos = (systemDependant)
-                                 ? filename.find_last_of(IO::Constant<char>::Separator)
-                                 : filename.find_last_of(IO::Constant<char>::AllSeparators);
-
-    if (AnyString::npos == pos)
-    {
-        path.clear();
-        name.clear();
-    }
-    else
-    {
-        path.assign(filename, pos);
-        name.assign(filename.c_str() + pos + 1);
-    }
-}
-
-void ExtractFilePathAndName(String& path,
-                            String& name,
-                            const AnyString& filename,
-                            bool systemDependant)
-{
-    ExtractFilePathAndNameImpl(path, name, filename, systemDependant);
-}
-
-void ExtractFilePathAndName(Clob& path, Clob& name, const AnyString& filename, bool systemDependant)
-{
-    ExtractFilePathAndNameImpl(path, name, filename, systemDependant);
-}
-
-template<class StringT>
-static inline void ExtractAbsoluteFilePathImpl(StringT& out,
-                                               const AnyString& path,
-                                               bool systemDependant)
-{
-    String tmp;
-    if (IsAbsolute(path))
-    {
-        parent_path(tmp, path, systemDependant);
-    }
-    else
-    {
-        String absolute;
-        MakeAbsolute(absolute, path);
-        parent_path(tmp, absolute, systemDependant);
-    }
-    Normalize(out, tmp);
-}
-
-void ExtractAbsoluteFilePath(String& out, const AnyString& path, bool systemDependant)
-{
-    ExtractAbsoluteFilePathImpl(out, path, systemDependant);
-}
-
-void ExtractAbsoluteFilePath(Clob& out, const AnyString& path, bool systemDependant)
-{
-    ExtractAbsoluteFilePathImpl(out, path, systemDependant);
-}
-
-template<class StringT>
 static inline void CanonicalizeImpl(StringT& out, const AnyString& in, const AnyString& rootpath)
 {
     if (IsAbsolute(in))
@@ -401,9 +374,13 @@ static inline void CanonicalizeImpl(StringT& out, const AnyString& in, const Any
     {
         String tmp;
         if (rootpath.empty())
+        {
             MakeAbsolute(tmp, in);
+        }
         else
+        {
             MakeAbsolute(tmp, in, rootpath);
+        }
         Normalize(out, tmp);
     }
 }
@@ -418,5 +395,4 @@ void Canonicalize(Clob& out, const AnyString& in, const AnyString& rootpath)
     CanonicalizeImpl(out, in, rootpath);
 }
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

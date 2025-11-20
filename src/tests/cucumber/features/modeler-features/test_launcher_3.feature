@@ -6,10 +6,10 @@ Feature: 3 - Simple end-to-end tests to test temporal expression management : Ti
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 840
-    And the optimal values of the variables are
-      | component | variable | timestep | value |
-      | node1     | gen1_p   | 0-1      | 80    |
-      | node1     | gen2_p   | 0-1      | 20    |
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | node1     | gen1_p | 1-2      | 80    |
+      | node1     | gen2_p | 1-2      | 20    |
 
 
   @fast
@@ -18,14 +18,14 @@ Feature: 3 - Simple end-to-end tests to test temporal expression management : Ti
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 672.5
-    And the optimal values of the variables are
-      | component | variable | timestep | value |
-      | node1     | gen1_p   | 0        | 50    |
-      | node1     | gen2_p   | 0        | 50    |
-      | node1     | gen1_p   | 1        | 75    |
-      | node1     | gen2_p   | 1        | 25    |
-      | node1     | gen1_p   | 2        | 80    |
-      | node1     | gen2_p   | 2        | 20    |
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | node1     | gen1_p | 1        | 50    |
+      | node1     | gen2_p | 1        | 50    |
+      | node1     | gen1_p | 2        | 75    |
+      | node1     | gen2_p | 2        | 25    |
+      | node1     | gen1_p | 3        | 80    |
+      | node1     | gen2_p | 3        | 20    |
 
 #TODO test input contains illegal expression, to be updated
   @fast
@@ -34,8 +34,8 @@ Feature: 3 - Simple end-to-end tests to test temporal expression management : Ti
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 840
-    And the optimal values of the variables are
-      | component | variable | timestep | value |
-      | node1     | gen1_p   | 0-1      | 80    |
-      | node1     | gen2_p   | 0-1      | 20    |
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | node1     | gen1_p | 1-2      | 80    |
+      | node1     | gen2_p | 1-2      | 20    |
 

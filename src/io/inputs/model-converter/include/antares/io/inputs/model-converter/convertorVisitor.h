@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -20,8 +20,6 @@
  */
 
 #pragma once
-
-#include <ExprVisitor.h>
 
 #include <antares/expressions/NodeRegistry.h>
 #include "antares/io/inputs/yml-model/Library.h"

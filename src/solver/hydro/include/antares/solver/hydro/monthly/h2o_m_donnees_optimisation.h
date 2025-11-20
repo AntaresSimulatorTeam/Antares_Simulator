@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -24,16 +24,7 @@
 
 #include <antares/solver/hydro/probleme_spx_wrapper.h>
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
-
 #include "spx_definition_arguments.h"
-
-#ifdef __CPLUSPLUS
-}
-#endif
 
 #define LINFINI 1.e+80
 

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -403,7 +403,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 dayMonth++;
             }
 
-            H2O_J_OptimiserUnMois(&problem);
+            H2O_J_OptimiserUnMois(&problem, area.id);
             switch (problem.ResultatsValides)
             {
             case OUI:

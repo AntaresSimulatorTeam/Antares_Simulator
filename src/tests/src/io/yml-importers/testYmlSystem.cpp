@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -23,13 +23,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/io/inputs/yml-system/converter.h>
 #include <antares/io/inputs/yml-system/parser.h>
-#include <antares/study/system-model/system.h>
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
-using namespace Antares::ModelerStudy;
 
 BOOST_AUTO_TEST_CASE(empty_system)
 {

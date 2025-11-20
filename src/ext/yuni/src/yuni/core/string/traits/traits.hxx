@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,20 +12,21 @@
 #pragma once
 #include "traits.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace CStringImpl
+namespace Yuni::Private::CStringImpl
 {
 template<uint ChunkSizeT, bool ExpandableT>
-inline Data<ChunkSizeT, ExpandableT>::Data() : size(), capacity(), data(NULL)
+inline Data<ChunkSizeT, ExpandableT>::Data():
+    size(),
+    capacity(),
+    data(NULL)
 {
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-Data<ChunkSizeT, ExpandableT>::Data(const Data<ChunkSizeT, ExpandableT>& rhs) :
- size(rhs.size), capacity(rhs.size), data(NULL)
+Data<ChunkSizeT, ExpandableT>::Data(const Data<ChunkSizeT, ExpandableT>& rhs):
+    size(rhs.size),
+    capacity(rhs.size),
+    data(NULL)
 {
     if (size)
     {
@@ -37,7 +39,9 @@ Data<ChunkSizeT, ExpandableT>::Data(const Data<ChunkSizeT, ExpandableT>& rhs) :
                         rhs.data,
                         sizeof(C) * size);
             if (static_cast<uint>(zeroTerminated))
+            {
                 (const_cast<char*>(data))[size] = C();
+            }
         }
         else
         {
@@ -49,8 +53,10 @@ Data<ChunkSizeT, ExpandableT>::Data(const Data<ChunkSizeT, ExpandableT>& rhs) :
 
 #ifdef YUNI_HAS_CPP_MOVE
 template<uint ChunkSizeT, bool ExpandableT>
-inline Data<ChunkSizeT, ExpandableT>::Data(Data&& rhs) :
- size(rhs.size), capacity(rhs.size), data(rhs.data)
+inline Data<ChunkSizeT, ExpandableT>::Data(Data&& rhs):
+    size(rhs.size),
+    capacity(rhs.size),
+    data(rhs.data)
 {
     rhs.size = 0;
     rhs.capacity = 0;
@@ -65,7 +71,9 @@ inline Data<ChunkSizeT, ExpandableT>::~Data()
     // The string is a string adapter only if the chunk size if null
     // When the string is an adapter, the variable is const
     if (chunkSize != 0)
+    {
         ::free(const_cast<void*>(static_cast<const void*>(data)));
+    }
 }
 
 #ifdef YUNI_HAS_CPP_MOVE
@@ -76,7 +84,9 @@ inline Data<ChunkSizeT, ExpandableT>& Data<ChunkSizeT, ExpandableT>::operator=(D
     // The string is a string adapter only if the chunk size if null
     // When the string is an adapter, the variable is const
     if (chunkSize != 0)
+    {
         ::free(const_cast<void*>(static_cast<const void*>(data)));
+    }
 
     size = rhs.size;
     capacity = rhs.capacity;
@@ -115,7 +125,9 @@ inline void Data<ChunkSizeT, ExpandableT>::clear()
         }
     }
     else
+    {
         size = 0;
+    }
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
@@ -158,7 +170,9 @@ inline void Data<ChunkSizeT, ExpandableT>::insert(Size offset,
     size += len;
     // zero-terminated
     if (static_cast<uint>(zeroTerminated))
+    {
         (const_cast<char*>(data))[size] = C();
+    }
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
@@ -171,14 +185,18 @@ inline void Data<ChunkSizeT, ExpandableT>::put(const C rhs)
     // New size
     ++size;
     if (static_cast<uint>(zeroTerminated))
+    {
         (const_cast<char*>(data))[size] = C();
+    }
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
 void Data<ChunkSizeT, ExpandableT>::reserve(Size mincapacity)
 {
     if (adapter)
+    {
         return;
+    }
     mincapacity += static_cast<uint>(zeroTerminated);
     if (static_cast<uint>(capacity) < mincapacity)
     {
@@ -193,16 +211,20 @@ void Data<ChunkSizeT, ExpandableT>::reserve(Size mincapacity)
         } while (newcapacity < mincapacity);
 
         // Realloc the internal buffer
-        C* newdata
-          = reinterpret_cast<C*>(::realloc(const_cast<char*>(data), (sizeof(C) * newcapacity)));
+        C* newdata = reinterpret_cast<C*>(
+          ::realloc(const_cast<char*>(data), (sizeof(C) * newcapacity)));
         // The returned value can be NULL
         if (!newdata)
+        {
             throw "Yuni::CString: Impossible to realloc";
+        }
         {
             data = newdata;
             capacity = newcapacity;
             if (static_cast<uint>(zeroTerminated))
+            {
                 (const_cast<char*>(data))[size] = C();
+            }
         }
     }
 }
@@ -231,18 +253,24 @@ typename Data<ChunkSizeT, false>::Size Data<ChunkSizeT, false>::assignWithoutChe
         // New size
         size = static_cast<uint>(capacity);
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[static_cast<uint>(capacity)] = C();
+        }
         return static_cast<uint>(capacity);
     }
     // else
     {
         // Raw copy
-        YUNI_MEMCPY(
-          const_cast<char*>(data), static_cast<uint>(capacity), block, sizeof(C) * blockSize);
+        YUNI_MEMCPY(const_cast<char*>(data),
+                    static_cast<uint>(capacity),
+                    block,
+                    sizeof(C) * blockSize);
         // New size
         size = blockSize;
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[size] = C();
+        }
         return blockSize;
     }
 }
@@ -265,25 +293,35 @@ typename Data<ChunkSizeT, false>::Size Data<ChunkSizeT, false>::appendWithoutChe
         blockSize = static_cast<uint>(capacity) - size;
         // The performance are a bit better if we interupt the process sooner
         if (!blockSize)
+        {
             return 0;
+        }
         // Raw copy
-        YUNI_MEMCPY(
-          data + size * sizeof(C), static_cast<uint>(capacity), block, sizeof(C) * blockSize);
+        YUNI_MEMCPY(data + size * sizeof(C),
+                    static_cast<uint>(capacity),
+                    block,
+                    sizeof(C) * blockSize);
         // New size
         size = static_cast<uint>(capacity);
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[static_cast<uint>(capacity)] = C();
+        }
         return blockSize;
     }
     // else
     {
         // Raw copy
-        YUNI_MEMCPY(
-          data + size * sizeof(C), static_cast<uint>(capacity), block, sizeof(C) * blockSize);
+        YUNI_MEMCPY(data + size * sizeof(C),
+                    static_cast<uint>(capacity),
+                    block,
+                    sizeof(C) * blockSize);
         // New size
         size += blockSize;
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[size] = C();
+        }
         return blockSize;
     }
 }
@@ -295,7 +333,9 @@ inline typename Data<ChunkSizeT, false>::Size Data<ChunkSizeT, false>::assignWit
     data[0] = c;
     size = 1;
     if (static_cast<uint>(zeroTerminated))
+    {
         (const_cast<char*>(data))[1] = C();
+    }
     return 1;
 }
 
@@ -303,12 +343,16 @@ template<uint ChunkSizeT>
 typename Data<ChunkSizeT, false>::Size Data<ChunkSizeT, false>::appendWithoutChecking(const C c)
 {
     if (YUNI_UNLIKELY(size == static_cast<uint>(capacity)))
+    {
         return 0;
+    }
 
     data[size] = c;
     ++size;
     if (static_cast<uint>(zeroTerminated))
+    {
         (const_cast<char*>(data))[size] = C();
+    }
     return 1;
 }
 
@@ -323,10 +367,10 @@ void Data<ChunkSizeT, false>::put(const C rhs)
         // New size
         ++size;
         if (static_cast<uint>(zeroTerminated))
+        {
             (const_cast<char*>(data))[size] = C();
+        }
     }
 }
 
-} // namespace CStringImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::CStringImpl

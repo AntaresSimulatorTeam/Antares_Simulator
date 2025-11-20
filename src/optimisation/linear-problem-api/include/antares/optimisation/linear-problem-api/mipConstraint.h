@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -26,12 +26,14 @@
 namespace Antares::Optimisation::LinearProblemApi
 {
 
-class IMipConstraint: public IHasBounds, public IHasName
+class IMipConstraint: public IHasBounds, public IHasName, public IHasStatus
 {
 public:
     virtual void setCoefficient(IMipVariable* var, double coefficient) = 0;
 
     virtual double getCoefficient(const LinearProblemApi::IMipVariable* var) const = 0;
+
+    virtual double dual() const = 0;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

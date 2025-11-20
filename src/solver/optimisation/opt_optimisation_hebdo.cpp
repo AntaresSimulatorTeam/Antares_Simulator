@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -22,6 +22,8 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/ISimulationTable.h"
+#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -33,36 +35,35 @@ using Solver::Optimization::SingleOptimOptions;
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
                                       PROBLEME_HEBDO*,
                                       Solver::IResultWriter&,
-                                      Solver::Simulation::ISimulationObserver&);
+                                      Solver::Simulation::ISimulationObserver&,
+                                      OptimisationsSimulationTable* simulationTables);
 bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions&, PROBLEME_HEBDO*);
-void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
-                                  PROBLEME_HEBDO* pProblemeHebdo,
-                                  Solver::IResultWriter& writer,
-                                  Solver::Simulation::ISimulationObserver& simulationObserver)
+void OPT_OptimisationHebdomadaireLineaire(
+  const OptimizationOptions& options,
+  PROBLEME_HEBDO* pProblemeHebdo,
+  Solver::IResultWriter& writer,
+  Solver::Simulation::ISimulationObserver& simulationObserver,
+  OptimisationsSimulationTable* simulationTables)
 {
-    if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
+    if (!OPT_PilotageOptimisationLineaire(options,
+                                          pProblemeHebdo,
+                                          writer,
+                                          simulationObserver,
+                                          simulationTables))
     {
-        if (!OPT_PilotageOptimisationLineaire(options, pProblemeHebdo, writer, simulationObserver))
-        {
-            logs.error() << "Linear optimization failed";
-            throw UnfeasibleProblemError("Linear optimization failed");
-        }
+        logs.error() << "Linear optimization failed";
+        throw UnfeasibleProblemError("Linear optimization failed");
     }
-    else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
+}
+
+void OPT_OptimisationHebdomadaireQuadratique(const OptimizationOptions& options,
+                                             PROBLEME_HEBDO* pProblemeHebdo)
+
+{
+    if (!OPT_PilotageOptimisationQuadratique(options.quadraticOptimOptions, pProblemeHebdo))
     {
-        OPT_LiberationProblemesSimplexe(pProblemeHebdo);
-        if (!OPT_PilotageOptimisationQuadratique(options.quadraticOptimOptions, pProblemeHebdo))
-        {
-            logs.error() << "Quadratic optimization failed";
-            throw UnfeasibleProblemError("Quadratic optimization failed");
-        }
-    }
-    else
-    {
-        throw FatalError(
-          "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
-          "non initialise");
+        logs.error() << "Quadratic optimization failed";
+        throw UnfeasibleProblemError("Quadratic optimization failed");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -30,6 +30,7 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/report.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
@@ -340,7 +341,7 @@ struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
     }
 };
 
-struct NullWriterExtension: Solver::NullResultWriter
+struct NullWriterExtension final: Solver::NullResultWriter
 {
     // hack to read variables and constraints names
     void addEntryFromFile(const std::filesystem::path& entryPath,
@@ -398,18 +399,40 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
       &probleme->CoutsMarginauxDesContraintes[0],
       &probleme->CoutsMarginauxDesContraintes[1]};
 
-    probleme->ProblemesSpx.resize(1, nullptr);
+    probleme->ProblemesSpx.resize(1);
 
     // Solver export options
     problemeHebdo.ExportMPS = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS;
     problemeHebdo.exportMPSOnError = true;
-    problemeHebdo.modelerSystem = nullptr;
+    problemeHebdo.modelerData = nullptr;
     problemeHebdo.NamedProblems = false;
 }
 
 // Shared setup for feasible and infeasible tests
 
 } // namespace
+
+class EmptySimulationTable final: public ISimulationTable
+{
+public:
+    void addEntry(const SimulationTableEntry& entry) override
+    {
+    }
+
+    void clear() override
+    {
+    }
+
+    std::string buffer() const override
+    {
+        return "";
+    }
+
+    /// Write the table to the given file path, using the concrete export format
+    void write() override
+    {
+    }
+};
 
 /**
  * These two tests verify the behavior of OPT_AppelDuSimplexe regarding
@@ -444,13 +467,15 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
+    EmptySimulationTable simulationTableCsv;
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
                                             0, // NumIntervalle
                                             1, // optimizationNumber
                                             generator,
-                                            writer);
+                                            writer,
+                                            &simulationTableCsv);
 
     const auto expectedMps = R"(* Number of variables:   1
 * Number of constraints: 2
@@ -504,13 +529,15 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
+    EmptySimulationTable simulationTableCsv;
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
                                             0, // NumIntervalle
                                             1, // optimizationNumber
                                             generator,
-                                            writer);
+                                            writer,
+                                            &simulationTableCsv);
     const auto expectedMps = R"(* Number of variables:   1
 * Number of constraints: 2
 NAME          Pb Solve

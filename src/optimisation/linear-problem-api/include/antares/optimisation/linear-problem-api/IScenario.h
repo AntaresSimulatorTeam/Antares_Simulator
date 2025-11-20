@@ -61,7 +61,7 @@ private:
  * Provide a default implementation of IScenario that returns 0 for any year for a group named
  * "empty"
  */
-class EmptyScenario: public IScenario
+class EmptyScenario final: public IScenario
 {
 public:
     EmptyScenario():

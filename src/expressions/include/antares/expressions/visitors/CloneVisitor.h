@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -52,12 +52,12 @@ public:
     Nodes::Node* visit(const Nodes::LiteralNode* node) override;
     Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
     Nodes::Node* visit(const Nodes::PortFieldSumNode* node) override;
-    Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
-    Nodes::Node* visit(const Nodes::ComponentParameterNode* node) override;
     Nodes::Node* visit(const Nodes::TimeShiftNode* node) override;
     Nodes::Node* visit(const Nodes::TimeIndexNode* node) override;
     Nodes::Node* visit(const Nodes::TimeSumNode* node) override;
     Nodes::Node* visit(const Nodes::AllTimeSumNode* node) override;
+    Nodes::Node* visit(const Nodes::ReducedCostNode* node) override;
+    Nodes::Node* visit(const Nodes::DualNode* node) override;
 
 private:
     Registry<Nodes::Node>& registry_;

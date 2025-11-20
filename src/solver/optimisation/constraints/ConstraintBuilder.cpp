@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -123,6 +123,16 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
                                                             int delta)
 {
     AddVariable(variableManager_.ShortTermStorageLevel(index, hourInWeek_, offset, delta), coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageOverflow(unsigned int index,
+                                                               double coeff,
+                                                               int offset,
+                                                               int delta)
+{
+    AddVariable(variableManager_.ShortTermStorageOverflow(index, hourInWeek_, offset, delta),
+                coeff);
     return *this;
 }
 

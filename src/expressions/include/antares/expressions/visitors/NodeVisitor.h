@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -112,12 +112,12 @@ public:
           Nodes::LiteralNode,
           Nodes::PortFieldNode,
           Nodes::PortFieldSumNode,
-          Nodes::ComponentVariableNode,
-          Nodes::ComponentParameterNode,
           Nodes::TimeShiftNode,
           Nodes::TimeIndexNode,
           Nodes::TimeSumNode,
-          Nodes::AllTimeSumNode>();
+          Nodes::AllTimeSumNode,
+          Nodes::ReducedCostNode,
+          Nodes::DualNode>();
 
         try
         {
@@ -258,25 +258,6 @@ public:
     virtual R visit(const Nodes::PortFieldSumNode*, Args... args) = 0;
 
     /**
-     * @brief Visits a ComponentVariableNode.
-     *
-     * @param node A pointer to the ComponentVariableNode to be visited.
-     * @param args Additional arguments to be passed to the visitor's methods.
-     *
-     * @return The result of processing the ComponentVariableNode.
-     */
-    virtual R visit(const Nodes::ComponentVariableNode*, Args... args) = 0;
-
-    /**
-     * @brief Visits a ComponentParameterNode.
-     *
-     * @param node A pointer to the ComponentParameterNode to be visited.
-     * @param args Additional arguments to be passed to the visitor's methods.
-     *
-     * @return The result of processing the ComponentParameterNode.
-     */
-    virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
-    /**
      * @brief Visits a TimeShiftNode.
      *
      * @param node A pointer to the TimeShiftNode to be visited.
@@ -313,5 +294,23 @@ public:
      * @return The result of processing the AllTimeSumNode.
      */
     virtual R visit(const Nodes::AllTimeSumNode*, Args... args) = 0;
+    /**
+     * @brief Visits a ReducedCostNode.
+     *
+     * @param node A pointer to the ReducedCostNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the ReducedCostNode.
+     */
+    virtual R visit(const Nodes::ReducedCostNode*, Args... args) = 0;
+    /**
+     * @brief Visits a DualNode.
+     *
+     * @param node A pointer to the DualNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the DualNode.
+     */
+    virtual R visit(const Nodes::DualNode*, Args... args) = 0;
 };
 } // namespace Antares::Expressions::Visitors

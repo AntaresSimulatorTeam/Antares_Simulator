@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -18,6 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
@@ -27,6 +28,12 @@
 #include "antares/expressions/visitors/CompareVisitor.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/io/inputs/yml-model/Library.h"
+
+// If we don't turn clang-format off here, some antlr4 header does not compile :
+// it collides with a #include <windows.h> somewhere in Yuni
+// clang-format off
+#include <unit_test_utils.h>
+// clang-format on
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
@@ -82,7 +89,8 @@ BOOST_AUTO_TEST_CASE(identifier)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     {
@@ -116,7 +124,8 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
@@ -135,6 +144,25 @@ BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertorEmptyModel)
     const auto& operands = nodeSum->getOperands();
     BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
+}
+
+BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel)
+{
+    /*
+      Desired behavior
+      "1+2+3" -> SumNode(1,2,3)
+    */
+
+    const std::string expression = "1 + 2 + 3";
+    auto expr = run(expression);
+
+    auto* nodeSum = dynamic_cast<Nodes::SumNode*>(expr.node);
+    BOOST_REQUIRE(nodeSum);
+    const auto& operands = nodeSum->getOperands();
+    BOOST_REQUIRE_EQUAL(operands.size(), 3);
+    BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
+    BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
+    BOOST_CHECK_EQUAL(toLiteral(operands[2])->value(), 3);
 }
 
 BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertorEmptyModel)
@@ -203,7 +231,8 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objective = "objectives"};
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "port1.field1";
@@ -225,7 +254,8 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objective = "objectives"};
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
 
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "sum_connections(port1.field1)";
@@ -251,7 +281,8 @@ ExpressionToNodeConvertorEmptyModel createMediumExpression()
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objective = "objectives"};
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
 
     return {std::move(model)};
 }
@@ -259,7 +290,7 @@ ExpressionToNodeConvertorEmptyModel createMediumExpression()
 std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& registry)
 {
     auto* param = registry.create<Nodes::ParameterNode>("param1");
-    auto* var = registry.create<Nodes::VariableNode>("varP");
+    auto* var = registry.create<Nodes::VariableNode>("varP", 89);
     auto* l3 = registry.create<Nodes::LiteralNode>(3);
     auto* l42 = registry.create<Nodes::LiteralNode>(42);
     auto* l1 = registry.create<Nodes::LiteralNode>(1);
@@ -268,9 +299,8 @@ std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& 
     auto* sub = registry.create<Nodes::SubtractionNode>(l4, l1);
     auto* mult = registry.create<Nodes::MultiplicationNode>(l12, sub);
     auto* sum1 = registry.create<Nodes::SumNode>(mult, param);
-    auto* sum2 = registry.create<Nodes::SumNode>(l42, l3);
-    auto* sum3 = registry.create<Nodes::SumNode>(sum2, var);
-    auto* neg = registry.create<Nodes::NegationNode>(sum3);
+    auto* sum2 = registry.create<Nodes::SumNode>(l42, l3, var);
+    auto* neg = registry.create<Nodes::NegationNode>(sum2);
     auto* div = registry.create<Nodes::DivisionNode>(sum1, neg);
     return {"(12 * (4 - 1) + param1) / -(42 + 3 + varP)", div};
 }
@@ -384,4 +414,69 @@ BOOST_AUTO_TEST_CASE(AlltimeSumExpression)
 
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
+}
+
+BOOST_AUTO_TEST_CASE(dualExpression)
+{
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {{"constraintA", ""}},
+                          .binding_constraints = {{"constraintB", ""}},
+                          .objectives = {{"objective-id", ""}},
+                          .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    // constraints
+    std::string expression = "dual(constraintA)";
+    auto expr = converter.run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "DualNode");
+    auto dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dualNode->value(), "constraintA");
+
+    // binding constraints
+    expression = "dual(constraintB)";
+    expr = converter.run(expression);
+    dualNode = dynamic_cast<Nodes::DualNode*>(expr.node);
+    BOOST_CHECK_EQUAL(dualNode->value(), "constraintB");
+    BOOST_CHECK_EQUAL(dualNode->index(), 1);
+
+    std::string badExpression = "dual(abc)";
+    BOOST_CHECK_EXCEPTION(converter.run(badExpression),
+                          std::runtime_error,
+                          checkMessage(
+                            "Model doesn't contain this constraint in dual function: abc"));
+}
+
+BOOST_AUTO_TEST_CASE(reducedCostExpression)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "reduced_cost(varB)";
+    auto expr = converter.run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "ReducedCostNode");
+    auto reducedCostNode = dynamic_cast<Nodes::ReducedCostNode*>(expr.node);
+    BOOST_CHECK_EQUAL(reducedCostNode->value(), "varB");
+    BOOST_CHECK_EQUAL(reducedCostNode->index(), 1);
+
+    std::string badExpression = "reduced_cost(abc)";
+    BOOST_CHECK_EXCEPTION(converter.run(badExpression),
+                          std::runtime_error,
+                          checkMessage(
+                            "Model doesn't contain this variable in reduced_cost function: abc"));
 }

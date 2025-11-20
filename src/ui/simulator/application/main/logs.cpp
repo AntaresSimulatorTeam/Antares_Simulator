@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include <ui/common/wx-wrapper.h>
 #include "../main.h"
 #include "../../windows/studylogs.h"
@@ -32,9 +32,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Forms
+namespace Antares::Forms
 {
 namespace
 {
@@ -52,10 +50,11 @@ std::mutex logMutex;
 
 std::atomic<int> logUpdateCount;
 
-class LogFlusherTimer final : public wxTimer
+class LogFlusherTimer final: public wxTimer
 {
 public:
-    LogFlusherTimer() : wxTimer()
+    LogFlusherTimer():
+        wxTimer()
     {
     }
 
@@ -93,30 +92,47 @@ public:
             for (uint i = 0; i != waitingLogEntry.size(); ++i)
             {
                 if (waitingLogEntry[i]->warning)
+                {
                     ++w;
+                }
                 else
+                {
                     ++e;
+                }
             }
             if (w)
             {
                 if (w == 1)
+                {
                     msg << wxT("1 warning");
+                }
                 else
+                {
                     msg << w << wxT(" warnings");
+                }
                 if (e)
+                {
                     msg << wxT(", ");
+                }
             }
             if (e)
             {
                 if (e == 1)
+                {
                     msg << wxT("1 error");
+                }
                 else
+                {
                     msg << e << wxT(" errors");
+                }
             }
         }
 
-        auto* message = new Window::Message(
-          &mainFrm, wxT("Log"), wxT("Log Report"), msg, "images/misc/warning.png");
+        auto* message = new Window::Message(&mainFrm,
+                                            wxT("Log"),
+                                            wxT("Log Report"),
+                                            msg,
+                                            "images/misc/warning.png");
         message->add(Window::Message::btnContinue, true);
 
         // We should display a list of all errors, only if more than one
@@ -133,12 +149,18 @@ public:
                 wxStringToString(info->entry, text);
                 l = (uint)(30 + text.size() * 6.2) /*px*/;
                 if (l > w)
+                {
                     w = l;
+                }
 
                 if (info->warning)
+                {
                     message->appendWarning(text);
+                }
                 else
+                {
                     message->appendError(text);
+                }
 
                 delete info;
             }
@@ -180,7 +202,9 @@ void ApplWnd::destroyLogs()
 void ApplWnd::showStudyLogs()
 {
     if (!pWndLogs)
+    {
         pWndLogs = new Window::StudyLogs(this);
+    }
     pWndLogs->Show();
     pWndLogs->Raise();
 }
@@ -188,7 +212,9 @@ void ApplWnd::showStudyLogs()
 void ApplWnd::refreshStudyLogs()
 {
     if (pWndLogs)
+    {
         pWndLogs->refreshListOfAllAvailableLogs();
+    }
 }
 
 void ApplWnd::destroyLogsViewer()
@@ -257,7 +283,9 @@ void ApplWnd::onLogMessageDeferred(int level, const std::string& message)
 void ApplWnd::onLogMessage(wxCommandEvent&)
 {
     if (pLogFlusherTimer)
+    {
         pLogFlusherTimer->Start(300, wxTIMER_ONE_SHOT);
+    }
 }
 
 void ApplWnd::endUpdateLogs() const
@@ -270,5 +298,4 @@ void ApplWnd::beginUpdateLogs() const
     ++logUpdateCount;
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -31,13 +31,12 @@
 
 namespace Antares::Solver
 {
-class InMemoryWriter: public IResultWriter
+class InMemoryWriter final: public IResultWriter
 {
 public:
     using MapType = std::map<std::string, std::string, std::less<>>;
     explicit InMemoryWriter(Benchmarking::DurationCollector& duration_collector);
     virtual ~InMemoryWriter();
-    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::filesystem::path& entryPath,
                             std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,

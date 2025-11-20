@@ -1,46 +1,42 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "addtools.h"
 #include "../tools/connectioncreator.h"
 #include "../tools/remover.h"
 
-namespace Antares
-{
-namespace Map
-{
-namespace Private
+namespace Antares::Map::Private
 {
 AddingToolsHelper::AddingToolsHelper(Manager& manager,
                                      Tool::List& list,
                                      const int selectedCount,
                                      const int connectionSelectedCount,
                                      const wxPoint& top,
-                                     const wxPoint& bottom) :
- pManager(manager),
- pList(list),
- pSelectedCount(selectedCount),
- pConnectionsSelectedCount(connectionSelectedCount),
- pTop(top),
- pBottom(bottom)
+                                     const wxPoint& bottom):
+    pManager(manager),
+    pList(list),
+    pSelectedCount(selectedCount),
+    pConnectionsSelectedCount(connectionSelectedCount),
+    pTop(top),
+    pBottom(bottom)
 {
 }
 
@@ -53,9 +49,13 @@ Tool::Tool* AddingToolsHelper::operator()()
     Tool::Tool* t = createCommonTools(haveRealNodes, haveConnections);
 
     if (haveRealNodes)
+    {
         createToolsForRealNodes();
+    }
     if (haveConnections)
+    {
         createToolsForConnections();
+    }
     return t;
 }
 
@@ -75,15 +75,21 @@ Tool::Tool* AddingToolsHelper::createCommonTools(const bool haveRealNodes,
     // To delete selected items
     Tool::Remover* t = createToolToTheBottom<Tool::Remover>();
     if (haveRealNodes && haveConnections)
+    {
         t->icon("images/16x16/cancel.png");
+    }
     else
     {
         if (haveRealNodes)
+        {
             t->icon("images/16x16/zone_minus.png");
+        }
         else
         {
             if (haveConnections)
+            {
                 t->icon("images/16x16/interco_minus.png");
+            }
         }
     }
 
@@ -91,6 +97,4 @@ Tool::Tool* AddingToolsHelper::createCommonTools(const bool haveRealNodes,
     return t;
 }
 
-} // namespace Private
-} // namespace Map
-} // namespace Antares
+} // namespace Antares::Map::Private

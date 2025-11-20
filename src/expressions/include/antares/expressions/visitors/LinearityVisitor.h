@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -47,11 +47,11 @@ private:
     LinearStatus visit(const Nodes::LiteralNode* lit) override;
     LinearStatus visit(const Nodes::PortFieldNode* port_field_node) override;
     LinearStatus visit(const Nodes::PortFieldSumNode* port_field_node) override;
-    LinearStatus visit(const Nodes::ComponentVariableNode* component_variable_node) override;
-    LinearStatus visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
     LinearStatus visit(const Nodes::TimeShiftNode* timeShiftNode) override;
     LinearStatus visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     LinearStatus visit(const Nodes::TimeSumNode* timeSumNode) override;
     LinearStatus visit(const Nodes::AllTimeSumNode* timeSumNode) override;
+    LinearStatus visit(const Nodes::ReducedCostNode* node) override;
+    LinearStatus visit(const Nodes::DualNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

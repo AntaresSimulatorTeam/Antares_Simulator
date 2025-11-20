@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -94,9 +95,7 @@
     typedef char invokeStaticAssert_##ID[StaticAssert_##ID::Assert_##ID]
 #endif
 
-namespace Yuni
-{
-namespace Static
+namespace Yuni::Static
 {
 template<int N>
 struct Assert final
@@ -116,5 +115,4 @@ struct Assert<false> final
     };
 }; // Error
 
-} // namespace Static
-} // namespace Yuni
+} // namespace Yuni::Static

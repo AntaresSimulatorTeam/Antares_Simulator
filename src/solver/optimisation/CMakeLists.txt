@@ -25,7 +25,6 @@ set(RTESOLVER_OPT
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
         opt_appel_solveur_lineaire.cpp
-        opt_liberation_problemes_simplexe.cpp
         opt_restaurer_les_donnees.cpp
         opt_gestion_des_couts_cas_quadratique.cpp
         opt_gestion_des_couts_cas_quadratique.cpp
@@ -182,6 +181,8 @@ set(RTESOLVER_OPT
         LegacyFiller.cpp
         include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
         ComponentToAreaConnectionFiller.cpp
+        include/antares/solver/optimisation/OptimisationsSimulationTable.h
+        OptimisationsSimulationTable.cpp
 )
 
 
@@ -215,6 +216,7 @@ target_link_libraries(model_antares
         # modeler
         Antares::optim-model-filler
         Antares::antares-study-system-model
+        Antares::modeler-simulation-table
         Boost::headers
 )
 

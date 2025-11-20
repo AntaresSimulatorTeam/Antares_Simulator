@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -31,11 +31,7 @@
 using namespace Yuni;
 using namespace Antares::Action;
 
-namespace Antares
-{
-namespace Private
-{
-namespace Window
+namespace Antares::Private::Window
 {
 enum
 {
@@ -57,14 +53,14 @@ ActionPanel* ActionPanel::SelectedItem = nullptr;
 ActionPanel::ActionPanel(wxWindow* parent,
                          ActionPanel* parentPanel,
                          const Context::Ptr& context,
-                         const IAction::Ptr& action) :
- Antares::Component::Panel(parent),
- pParent(parentPanel),
- pContext(context),
- pAction(action),
- pCollapsed(true),
- pPopupMenu(nullptr),
- pTotalChildrenCount(1)
+                         const IAction::Ptr& action):
+    Antares::Component::Panel(parent),
+    pParent(parentPanel),
+    pContext(context),
+    pAction(action),
+    pCollapsed(true),
+    pPopupMenu(nullptr),
+    pTotalChildrenCount(1)
 {
     assert(!(!pAction));
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Required by both GTK and Windows
@@ -91,10 +87,11 @@ ActionPanel::ActionPanel(wxWindow* parent,
     pStateColor[stReady].Set((unsigned char)Math::MinMax<int>(pLineColor.Red() - 70, 0, 255),
                              (unsigned char)Math::MinMax<int>(pLineColor.Green(), 0, 255),
                              (unsigned char)Math::MinMax<int>(pLineColor.Blue() - 70, 0, 255));
-    pStateColor[stNothingToDo].Set(
-      (unsigned char)Math::MinMax<int>(pLineColor.Red() - 30, 0, 255),
-      (unsigned char)Math::MinMax<int>(pLineColor.Green(), 0, 255),
-      (unsigned char)Math::MinMax<int>(pLineColor.Blue() - 30, 0, 255));
+    pStateColor[stNothingToDo].Set((unsigned char)Math::MinMax<int>(pLineColor.Red() - 30, 0, 255),
+                                   (unsigned char)Math::MinMax<int>(pLineColor.Green(), 0, 255),
+                                   (unsigned char)Math::MinMax<int>(pLineColor.Blue() - 30,
+                                                                    0,
+                                                                    255));
 
     pStateColor[stConflict].Set(255, 0, 0);
 
@@ -195,7 +192,9 @@ void ActionPanel::relayoutAllParents()
 void ActionPanel::expand()
 {
     if (!pCollapsed)
+    {
         return;
+    }
 
     pCollapsed = false;
     // Alias to the current sizer
@@ -218,7 +217,9 @@ void ActionPanel::expand()
     for (auto i = pAction->begin(); i != end; ++i)
     {
         if (!(*i).visible())
+        {
             continue;
+        }
         ActionPanel* panel = new ActionPanel(this, this, pContext, Action::IAction::Ptr(&(*i)));
         sizer->Add(panel, 0, wxALL | wxEXPAND);
         panel->SetMinSize(wxSize(wxSIZE_AUTO_WIDTH, itemHeight));
@@ -240,13 +241,17 @@ void ActionPanel::computeTotalChildrenCount()
 {
     pTotalChildrenCount = 1;
     for (uint i = 0; i != pChildren.size(); ++i)
+    {
         pTotalChildrenCount += pChildren[i]->pTotalChildrenCount;
+    }
 }
 
 void ActionPanel::collapse()
 {
     if (pCollapsed)
+    {
         return;
+    }
     pCollapsed = true;
     wxSizer* sizer = GetSizer();
     sizer->Clear(true);
@@ -313,12 +318,16 @@ void ActionPanel::onDraw(wxPaintEvent&)
     // The DC
     wxAutoBufferedPaintDC dc(this);
     if (!dc.IsOk())
+    {
         return;
+    }
     // Shifts the device origin so we don't have to worry
     // about the current scroll position ourselves
     PrepareDC(dc);
     if (!dc.IsOk())
+    {
         return;
+    }
 
     dc.SetFont(font);
 
@@ -362,13 +371,19 @@ void ActionPanel::onDraw(wxPaintEvent&)
     // Caption
     {
         if (pBold)
+        {
             dc.SetFont(fontBold);
+        }
 
         const wxSize size = dc.GetTextExtent(pText);
         if (!pDisabled)
+        {
             dc.SetTextForeground(wxColour(20, 20, 20));
+        }
         else
+        {
             dc.SetTextForeground(pLineColor);
+        }
         dc.DrawText(pText,
                     stateLength + gutterLength + pDepthSpace + 23,
                     (rect.height >> 1) - (size.GetHeight() >> 1));
@@ -402,8 +417,10 @@ void ActionPanel::onDraw(wxPaintEvent&)
             dc.SetPen(wxPen(wxColour(245, 245, 255), 1, wxPENSTYLE_SOLID));
             dc.SetBrush(wxBrush(wxColour(245, 245, 255), wxBRUSHSTYLE_SOLID));
         }
-        dc.DrawRectangle(
-          stateLength + gutterLength + captionLength - 7, 0, rect.width, rect.height - 1);
+        dc.DrawRectangle(stateLength + gutterLength + captionLength - 7,
+                         0,
+                         rect.width,
+                         rect.height - 1);
 
         dc.SetPen(wxPen(pBackgroundColor, 1, wxPENSTYLE_DOT));
         dc.DrawLine(gutterLength + stateLength + captionLength,
@@ -416,9 +433,13 @@ void ActionPanel::onDraw(wxPaintEvent&)
             dc.SetFont(fontComments);
             const wxSize size = dc.GetTextExtent(pComments);
             if (!pDisabled)
+            {
                 dc.SetTextForeground(wxColour(50, 50, 50));
+            }
             else
+            {
                 dc.SetTextForeground(pLineColor);
+            }
             dc.DrawText(pComments,
                         stateLength + gutterLength + captionLength + 10,
                         (rect.height >> 1) - (size.GetHeight() >> 1));
@@ -505,9 +526,13 @@ void ActionPanel::onMouseDownCollapseExpand()
 
     Yuni::Bind<void()> bind;
     if (pCollapsed)
+    {
         bind.bind(this, &ActionPanel::expand);
+    }
     else
+    {
         bind.bind(this, &ActionPanel::collapse);
+    }
     Antares::Dispatcher::GUI::Post(bind);
 }
 
@@ -516,14 +541,18 @@ void ActionPanel::onMouseDownBehaviorSelect(wxWindow* obj)
     using namespace ::Antares::Action;
 
     if (!obj)
+    {
         return;
+    }
     if (!pPopupMenu)
     {
         pPopupMenu = new wxMenu();
         wxMenuItem* item;
 
-        item = Menu::CreateItem(
-          pPopupMenu, wxID_ANY, wxString() << pText << wxT("   "), "images/16x16/empty.png");
+        item = Menu::CreateItem(pPopupMenu,
+                                wxID_ANY,
+                                wxString() << pText << wxT("   "),
+                                "images/16x16/empty.png");
         item->Enable(false);
         pPopupMenu->AppendSeparator();
 
@@ -597,7 +626,9 @@ void ActionPanel::prepareAll(bool force)
         do
         {
             if (!object->pParent)
+            {
                 break;
+            }
             object = object->pParent;
         } while (true);
         object->prepareAll(true);
@@ -606,7 +637,9 @@ void ActionPanel::prepareAll(bool force)
     {
         pAction->prepare(*pContext);
         for (uint i = 0; i != pChildren.size(); ++i)
+        {
             pChildren[i]->prepareAll(true);
+        }
         update();
         Antares::Dispatcher::GUI::Refresh(this);
     }
@@ -647,6 +680,4 @@ void ActionPanel::SetFocus()
     // Do nothing, better than doing whatever you don't want
 }
 
-} // namespace Window
-} // namespace Private
-} // namespace Antares
+} // namespace Antares::Private::Window

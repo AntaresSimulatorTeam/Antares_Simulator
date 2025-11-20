@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -24,16 +24,19 @@
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+class OptimisationsSimulationTable;
+
 namespace Antares::Solver::Optimization
 {
 
-class WeeklyOptimization
+class WeeklyOptimization final
 {
 public:
     WeeklyOptimization(const OptimizationOptions& options,
                        PROBLEME_HEBDO* problemeHebdo,
                        IResultWriter& writer,
-                       Simulation::ISimulationObserver& simulationObserver);
+                       Simulation::ISimulationObserver& simulationObserver,
+                       OptimisationsSimulationTable* simulationTables);
     ~WeeklyOptimization() = default;
     void solve();
 
@@ -42,5 +45,6 @@ private:
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     IResultWriter& writer_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
+    OptimisationsSimulationTable* simulationTables_ = nullptr;
 };
 } // namespace Antares::Solver::Optimization

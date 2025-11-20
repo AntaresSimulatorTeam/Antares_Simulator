@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -132,12 +132,12 @@ private:
     void visit(const Nodes::LiteralNode* node, std::ostream& os) override;
     void visit(const Nodes::PortFieldNode* node, std::ostream& os) override;
     void visit(const Nodes::PortFieldSumNode* node, std::ostream& os) override;
-    void visit(const Nodes::ComponentVariableNode* node, std::ostream& os) override;
-    void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeShiftNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeIndexNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeSumNode* node, std::ostream& os) override;
     void visit(const Nodes::AllTimeSumNode* node, std::ostream& os) override;
+    void visit(const Nodes::ReducedCostNode* node, std::ostream& os) override;
+    void visit(const Nodes::DualNode* node, std::ostream& os) override;
 
     void computeNumberNodesPerType();
     void makeLegend(std::ostream& os);

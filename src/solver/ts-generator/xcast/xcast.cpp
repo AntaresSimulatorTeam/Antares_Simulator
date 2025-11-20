@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -21,6 +21,7 @@
 
 #include "antares/solver/ts-generator/xcast/xcast.h"
 
+#include <fmt/format.h>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -52,6 +53,11 @@ XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer)
 {
 }
 
+std::string mcyear(uint year)
+{
+    return fmt::format("mc-{}", year);
+}
+
 template<class PredicateT>
 void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, PredicateT& predicate)
 {
@@ -68,7 +74,7 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
                     << " time-series into the output (year:" << year << ')';
 
         fs::path output = "ts-generator";
-        output /= fs::path(predicate.timeSeriesName()) / std::string("mc-" + year);
+        output /= fs::path(predicate.timeSeriesName()) / mcyear(year);
 
         study.areas.each(
           [this, &progression, &predicate, &output](Data::Area& area)

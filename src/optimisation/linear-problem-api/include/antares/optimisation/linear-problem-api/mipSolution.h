@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -49,14 +49,6 @@ public:
     virtual ~IMipSolution() = default;
 
     [[nodiscard]] virtual MipStatus getStatus() const = 0;
-
     [[nodiscard]] virtual double getObjectiveValue() const = 0;
-
-    [[nodiscard]] virtual double getOptimalValue(const IMipVariable* var) const = 0;
-
-    [[nodiscard]] virtual std::vector<double>
-    getOptimalValues(const std::vector<IMipVariable*>& vars) const = 0;
-
-    [[nodiscard]] virtual const std::map<std::string, double>& getOptimalValues() const = 0;
 };
 } // namespace Antares::Optimisation::LinearProblemApi

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "operator.list.h"
 #include "operator/all.h"
@@ -25,15 +25,10 @@
 #include "wx-wrapper.h"
 #include <antares/date/date.h>
 
-namespace Antares
+namespace Antares::Toolbox::Filter::Operator
 {
-namespace Toolbox
-{
-namespace Filter
-{
-namespace Operator
-{
-List::List(AFilterBase* parent) : pParentFilter(parent)
+List::List(AFilterBase* parent):
+    pParentFilter(parent)
 {
 }
 
@@ -51,7 +46,9 @@ void List::addStdArithmetic(bool withModulo)
     pItems.push_back(new Operator::GreaterThan(pParentFilter));
     pItems.push_back(new Operator::GreaterThanOrEqualsTo(pParentFilter));
     if (withModulo)
+    {
         pItems.push_back(new Operator::Modulo(pParentFilter));
+    }
 }
 
 template<class T>
@@ -61,7 +58,9 @@ static inline T* WeekDayOp(AFilterBase* parent)
     Parameter& p = t->parameters[0];
     p.dataType = DataType::dtList;
     for (int i = 0; i < 7; ++i)
+    {
         p.defaultValues.push_back(wxStringFromUTF8(Date::WeekdayToString(i)));
+    }
     return t;
 }
 
@@ -74,7 +73,9 @@ void List::addStdWeekday(bool withModulo)
     pItems.push_back(WeekDayOp<Operator::GreaterThan>(pParentFilter));
     pItems.push_back(WeekDayOp<Operator::GreaterThanOrEqualsTo>(pParentFilter));
     if (withModulo)
+    {
         pItems.push_back(WeekDayOp<Operator::Modulo>(pParentFilter));
+    }
 }
 
 template<class T>
@@ -84,7 +85,9 @@ static inline T* MonthOp(AFilterBase* parent)
     Parameter& p = t->parameters[0];
     p.dataType = DataType::dtList;
     for (int i = 0; i < 12; ++i)
+    {
         p.defaultValues.push_back(wxStringFromUTF8(Date::MonthToString(i)));
+    }
     return t;
 }
 
@@ -97,7 +100,9 @@ void List::addStdMonth(bool withModulo)
     pItems.push_back(MonthOp<Operator::GreaterThan>(pParentFilter));
     pItems.push_back(MonthOp<Operator::GreaterThanOrEqualsTo>(pParentFilter));
     if (withModulo)
+    {
         pItems.push_back(MonthOp<Operator::Modulo>(pParentFilter));
+    }
 }
 
 bool List::add(const wxString& name)
@@ -160,14 +165,13 @@ void List::clear()
         // Delete all operators
         auto end = pItems.end();
         for (auto i = pItems.begin(); i != end; ++i)
+        {
             delete *i;
+        }
         // Clear the back-end container
         OperatorList empty; // swap idiom
         pItems.swap(empty);
     }
 }
 
-} // namespace Operator
-} // namespace Filter
-} // namespace Toolbox
-} // namespace Antares
+} // namespace Antares::Toolbox::Filter::Operator

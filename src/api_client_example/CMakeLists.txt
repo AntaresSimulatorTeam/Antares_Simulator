@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(fmt REQUIRED)
+find_package(Boost REQUIRED COMPONENTS iostreams)
 
 
 add_subdirectory(src)

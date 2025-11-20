@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -107,6 +107,7 @@ struct BB
 
         for (auto i = 0; i < nombreDePasDeTempsPourUneOptimisation; i++)
         {
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
             CorrespondanceVarNativesVarOptim[i].SIM_ShortTermStorage = {
               .InjectionVariable = {0, 1, 4},
@@ -138,27 +139,28 @@ struct BB
     std::shared_ptr<AdditionalConstraints> addc2_injection;
     std::shared_ptr<AdditionalConstraints> addc3_netting;
 
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-    ::ShortTermStorage::PROPERTIES storage1 = {.additionalConstraints = {addc1_withdrawal},
-                                               .clusterGlobalIndex = 0,
-                                               .name = "cluster_1"};
-    ::ShortTermStorage::PROPERTIES storage2 = {.additionalConstraints = {addc2_injection},
-                                               .clusterGlobalIndex = 1,
-                                               .name = "cluster_2"};
-    ::ShortTermStorage::PROPERTIES storage3 = {.injectionEfficiency = 45,
-                                               .withdrawalEfficiency = 2025,
-                                               .additionalConstraints = {addc3_netting},
-                                               .clusterGlobalIndex = 2,
-                                               .name = "cluster_3"};
+    PROPERTIES storage1 = {.additionalConstraints = {addc1_withdrawal},
+                           .clusterGlobalIndex = 0,
+                           .name = "cluster_1"};
+    PROPERTIES storage2 = {.additionalConstraints = {addc2_injection},
+                           .clusterGlobalIndex = 1,
+                           .name = "cluster_2"};
+    PROPERTIES storage3 = {.injectionEfficiency = 45,
+                           .withdrawalEfficiency = 2025,
+                           .additionalConstraints = {addc3_netting},
+                           .clusterGlobalIndex = 2,
+                           .name = "cluster_3"};
 #pragma GCC diagnostic pop
 
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
-    std::vector<::ShortTermStorage::AREA_INPUT> shortTermStorage = InitializeShortTermStorageData();
+    std::vector<::AREA_INPUT> shortTermStorage = InitializeShortTermStorageData();
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires{
       {},
       std::vector<int>(20, 0)};
 
-    std::vector<ShortTermStorage::AREA_INPUT> InitializeShortTermStorageData()
+    std::vector<::AREA_INPUT> InitializeShortTermStorageData()
     {
         return {{storage1}, {storage2}, {storage3}};
     }
@@ -168,9 +170,12 @@ struct BB
 
     ShortTermStorageCumulativeConstraintData InitializeShortTermStorageCumulativeConstraintData()
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-braces"
         return {CorrespondanceCntNativesCntOptim,
                 shortTermStorage,
                 CorrespondanceCntNativesCntOptimHebdomadaires};
+#pragma GCC diagnostic pop
     }
 
     ConstraintBuilderData constraint_builder_data = InitializeConstraintBuilderData();
@@ -427,6 +432,7 @@ void SetupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
         corresp.ShortTermStorageLevelConstraint.resize(numberOfAreas, 0);
     }
     problemeHebdo.NumeroDeContrainteEnergieHydraulique.resize(numberOfAreas, -1);
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     problemeHebdo.CaracteristiquesHydrauliques.resize(numberOfAreas,
                                                       {.TurbinageEntreBornes = false,
@@ -489,7 +495,7 @@ void initialize_additional_constraints_rhs(AdditionalConstraints& additionalCons
 ExpectedResult SetupSingleStorageOneArea(PROBLEME_HEBDO& problemeHebdo)
 {
     // Setup a single storage in one area
-    ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
+    ::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(1);
 
     auto additionalConstraint = std::make_shared<AdditionalConstraints>(
@@ -539,7 +545,7 @@ BOOST_AUTO_TEST_CASE(TestSingleStorageOneArea)
 std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& problemeHebdo)
 {
     // Area 0 setup
-    ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
+    ::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(1);
     auto additionalConstraint0 = std::make_shared<AdditionalConstraints>(
       "name",
@@ -564,7 +570,7 @@ std::vector<ExpectedResult> SetupMultipleStoragesDifferentAreas(PROBLEME_HEBDO& 
     storage0_area0.additionalConstraints.push_back(additionalConstraint0);
 
     // Area 1 setup
-    ShortTermStorage::AREA_INPUT& area1 = problemeHebdo.ShortTermStorage[1];
+    ::AREA_INPUT& area1 = problemeHebdo.ShortTermStorage[1];
     area1.resize(1);
     auto additionalConstraint1 = std::make_shared<Data::ShortTermStorage::AdditionalConstraints>(
       "name",
@@ -646,7 +652,7 @@ BOOST_AUTO_TEST_CASE(TestMultipleStoragesDifferentAreas)
 std::vector<ExpectedResult> SetupMultipleStoragesSameArea(PROBLEME_HEBDO& problemeHebdo)
 {
     // Setup two storage units in the same area
-    ShortTermStorage::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
+    ::AREA_INPUT& area0 = problemeHebdo.ShortTermStorage[0];
     area0.resize(2);
 
     // First storage

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -36,7 +36,8 @@ void ApplWnd::resetDefaultStatusBarText()
 {
     assert(wxIsMainThread() == true && "Must be ran from the main thread");
 #if defined(wxUSE_STATUSBAR)
-    SetStatusText(wxString(wxT("  ")) << Antares::VersionToWxString());
+    SetStatusText(wxString(wxT("  ")) << Antares::VersionToWxString() << " (GUI WILL BE DISCONTINUED IN 9.4)");
+    GetStatusBar()->SetBackgroundColour(wxColour("yellow"));
 #endif
 }
 

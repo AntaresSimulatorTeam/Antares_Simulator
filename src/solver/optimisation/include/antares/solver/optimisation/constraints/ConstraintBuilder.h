@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -20,10 +20,6 @@
 */
 #pragma once
 
-#include <utility>
-
-#include <antares/logs/logs.h>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "../opt_fonctions.h"
@@ -31,7 +27,7 @@
 #include "../variables/VariableManagement.h"
 
 // TODO God struct should be decomposed
-class ConstraintBuilderData
+class ConstraintBuilderData final
 {
 public:
     std::vector<double>& Pi;
@@ -66,7 +62,7 @@ ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constr
 finally the build() method gather all variables and put them into the matrix
 \endverbatim
 */
-class ConstraintBuilder
+class ConstraintBuilder final
 {
 public:
     ConstraintBuilder() = delete;
@@ -127,6 +123,12 @@ public:
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageOverflow(unsigned int index,
+                                                double coeff,
+                                                int offset = 0,
+                                                int delta = 0);
+
     ConstraintBuilder& ShortTermCostVariationInjection(unsigned int index,
                                                        double coeff,
                                                        int offset = 0,
@@ -158,7 +160,7 @@ public:
 
     //@}
 
-    class ConstraintBuilderInvalidOperator: public std::runtime_error
+    class ConstraintBuilderInvalidOperator final: public std::runtime_error
     {
     public:
         using std::runtime_error::runtime_error;
@@ -274,7 +276,7 @@ inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
     }
 }
 
-class BindingConstraintData
+class BindingConstraintData final
 {
 public:
     const char& TypeDeContrainteCouplante;
@@ -302,7 +304,7 @@ struct ShortTermStorageData
 {
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 
-    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
+    const std::vector<::AREA_INPUT>& ShortTermStorage;
 };
 
 struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData

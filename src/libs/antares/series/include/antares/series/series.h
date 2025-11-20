@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -38,7 +38,7 @@ namespace Antares::Data
  */
 class TimeSeries;
 
-class TimeSeriesNumbers
+class TimeSeriesNumbers final
 {
 public:
     void registerSeries(const TimeSeries* s, std::string label);
@@ -61,7 +61,7 @@ private:
     std::map<std::string, const TimeSeries*> series;
 };
 
-class TimeSeries
+class TimeSeries final
 {
 public:
     using TS = Matrix<double>;

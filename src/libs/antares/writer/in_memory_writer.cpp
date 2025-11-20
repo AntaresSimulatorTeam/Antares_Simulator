@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -50,16 +50,11 @@ void addToMap(InMemoryWriter::MapType& entries,
 {
     std::string entryPathSanitized = entryPath;
     std::replace(entryPathSanitized.begin(), entryPathSanitized.end(), '\\', '/');
+    std::unique_lock lock(mutex, std::defer_lock);
+    duration_collector("in_memory_wait") << [&lock] { lock.lock(); };
 
-    Benchmarking::Timer timer_wait;
-    std::lock_guard lock(mutex);
-    timer_wait.stop();
-    duration_collector.addDuration("in_memory_wait", timer_wait.get_duration());
-
-    Benchmarking::Timer timer_insert;
-    entries.insert({entryPathSanitized, content});
-    timer_insert.stop();
-    duration_collector.addDuration("in_memory_insert", timer_insert.get_duration());
+    duration_collector("in_memory_insert")
+      << [&] { entries.insert({entryPathSanitized, content}); };
 }
 } // namespace
 
@@ -69,11 +64,6 @@ InMemoryWriter::InMemoryWriter(Benchmarking::DurationCollector& duration_collect
 }
 
 InMemoryWriter::~InMemoryWriter() = default;
-
-void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
-{
-    addToMap(pEntries, entryPath, entryContent, pMapMutex, pDurationCollector);
-}
 
 void InMemoryWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent)
 {

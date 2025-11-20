@@ -23,29 +23,28 @@
 #include <string>
 #include <vector>
 
-#include "antares/expressions/visitors/EvaluationContext.h"
-#include "antares/expressions/visitors/TimeIndex.h"
+#include "antares/modeler-optimisation-container/EvaluationContext.h"
+#include "antares/modeler-optimisation-container/TimeIndex.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
-#include "antares/solver/optim-model-filler/VariableDictionary.h"
+#include "antares/solver/modeler/data.h"
+#include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 
-#include "inmemory-modeler.h"
+using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Test::Modeler
 {
-auto build_context_parameter_with(
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const Antares::Expressions::Visitors::ParameterType& type = Antares::Expressions::Visitors::
-    ParameterType::CONSTANT)
-  -> std::pair<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue>;
+  const ParameterType& type = ParameterType::CONSTANT);
 
 struct VariableData
 {
     std::string id;
-    Antares::ModelerStudy::SystemModel::ValueType type;
+    ValueType type;
     Antares::Expressions::Nodes::Node* lb;
     Antares::Expressions::Nodes::Node* ub;
     bool timeDependent = true;
@@ -60,11 +59,12 @@ struct ConstraintData
 
 struct LinearProblemBuildingFixture
 {
-    std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model> models;
-    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodes;
-    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
+    std::unordered_map<std::string, Model> models;
+    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodeRegistry;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
+    std::vector<Component> components;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
+    Antares::Modeler::Data modelerData;
 
     void createModel(const std::string& modelId,
                      const std::vector<std::string>& parameterIds,
@@ -74,7 +74,7 @@ struct LinearProblemBuildingFixture
 
     void createModelWithSystemModelParameter(
       const std::string& modelId,
-      std::vector<Antares::ModelerStudy::SystemModel::Parameter>,
+      std::vector<Parameter>,
       const std::vector<VariableData>& variablesData,
       const std::vector<ConstraintData>& constraintsData,
       Antares::Expressions::Nodes::Node* objective = nullptr);
@@ -88,24 +88,23 @@ struct LinearProblemBuildingFixture
                                     Antares::Expressions::Nodes::Node* objective = nullptr,
                                     bool time_dependent = false);
 
-    void createComponent(
-      const std::string& modelId,
-      const std::string& componentId,
-      std::map<std::string, Antares::Expressions::Visitors::ParameterTypeAndValue> parameterValues
-      = {},
-      std::string scenarioGroupId = "");
+    void createComponent(const std::string& modelId,
+                         const std::string& componentId,
+                         std::map<std::string, ParameterTypeAndValue> parameterValues = {},
+                         std::string scenarioGroupId = "");
 
     Antares::Expressions::Nodes::Node* literal(double value);
 
     Antares::Expressions::Nodes::Node* parameter(
       const std::string& paramId,
-      const Antares::Expressions::Visitors::TimeIndex& timeIndex = Antares::Expressions::Visitors::
-        TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
+        CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* variable(
       const std::string& varId,
-      const Antares::Expressions::Visitors::TimeIndex& timeIndex = Antares::Expressions::Visitors::
-        TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+      unsigned int index,
+      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
+        CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
                                                 Antares::Expressions::Nodes::Node* node2);
@@ -121,5 +120,18 @@ struct LinearProblemBuildingFixture
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx);
 
     void buildLinearProblem();
+
+    Antares::Modeler::Data& getModelerData()
+    {
+        SystemBuilder systemBuilder;
+        auto system = systemBuilder.withId("system").withComponents(std::move(components)).build();
+        modelerData.system = std::make_unique<System>(std::move(system));
+        modelerData.dataSeries = std::make_unique<
+          Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
+        return modelerData;
+    }
+
+private:
+    int componentIndex_ = 0;
 };
 } // namespace Test::Modeler

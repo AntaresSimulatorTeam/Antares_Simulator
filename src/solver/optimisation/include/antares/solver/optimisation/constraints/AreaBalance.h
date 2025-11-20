@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -29,14 +29,14 @@ struct AreaBalanceData
     const std::vector<int>& IndexDebutIntercoExtremite;
     const std::vector<int>& IndexSuivantIntercoExtremite;
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
-    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
+    const std::vector<::AREA_INPUT>& ShortTermStorage;
 };
 
 /*!
  * represent 'Area Balance' constraint type
  */
 
-class AreaBalance: public ConstraintFactory
+class AreaBalance final: public ConstraintFactory
 {
 public:
     AreaBalance(ConstraintBuilder& builder, AreaBalanceData& data):

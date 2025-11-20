@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -187,6 +187,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
                                                                             0);
         variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal.assign(shortTermStorageCount,
                                                                              0);
+
+        variablesMapping.SIM_ShortTermStorage.OverflowVariable.assign(shortTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays.assign(nbPays,
                                                                                            0);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -27,7 +27,6 @@
 
 #include <antares/solver/modeler/data.h>
 #include <antares/solver/modeler/parameters/modelerParameters.h>
-#include <antares/solver/optim-model-filler/scenarioGroupRepo.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
@@ -52,10 +51,13 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeri
 Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath);
 
-void handleYamlError(const YAML::Exception& e, const std::string& context);
+void loadOptimConfig(const std::filesystem::path& studyPath,
+                     std::vector<ModelerStudy::SystemModel::Library>& libraries);
+
+void handleYamlError(const YAML::Exception& e, const std::string& filename);
 
 /// Generic error class for all loading errors to catch in the main
-class ErrorLoadingYaml: public std::runtime_error
+class ErrorLoadingYaml final: public std::runtime_error
 {
 public:
     explicit ErrorLoadingYaml(const std::string& s):

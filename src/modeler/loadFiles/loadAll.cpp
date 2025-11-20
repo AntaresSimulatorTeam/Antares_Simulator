@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -24,27 +24,34 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/data.h>
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
+#include "antares/utils/utils.h"
+
+using namespace Antares::ModelerStudy;
 
 namespace Antares::Solver::LoadFiles
 {
+
 Modeler::Data loadAll(const std::filesystem::path& studyPath)
 {
+    Antares::Utils::TimeMeasurement measure;
     logs.info() << "Loading modeler files...";
     Modeler::Data data;
 
     data.libraries = loadLibraries(studyPath);
     logs.info() << "Libraries loaded";
 
-    data.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
-      loadSystem(studyPath, data.libraries));
+    loadOptimConfig(studyPath, data.libraries);
+
+    data.system = std::make_unique<SystemModel::System>(loadSystem(studyPath, data.libraries));
     logs.info() << "System loaded";
 
     data.dataSeries = loadDataSeries(studyPath);
     logs.info() << "Timeseries loaded";
 
-    data.scenario_group_repository = loadScenarioGroupRepository(studyPath);
+    data.scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
+    measure.tick();
     logs.info() << "Scenario groups loaded";
-
+    logs.info() << "Modeler loaded in " << measure.toStringInSeconds();
     return data;
 }
 

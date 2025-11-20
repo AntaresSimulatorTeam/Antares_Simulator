@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -35,19 +35,21 @@
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
 #include "antares/config/config.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 #include "antares/solver/simulation/simulation-run.h"
 #include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
-
 using namespace Antares::Check;
 
 namespace fs = std::filesystem;
 
 namespace
 {
+const char totalTimeKey[] = "total";
+
 void printSolvers()
 {
     std::cout << "Available linear solvers: " << toString(availableLinearSolversList())
@@ -98,8 +100,25 @@ bool Application::handleOptions(const Data::StudyLoadOptions& options)
     return true;
 }
 
+void Application::LogMessageStack(std::vector<std::pair<LogType, std::string>>& stack)
+{
+    for (const auto& [level, message]: stack)
+    {
+        switch (level)
+        {
+        case Application::LogType::Error:
+            logs.error() << message;
+            break;
+        case Application::LogType::Warning:
+            logs.warning() << message;
+            break;
+        }
+    }
+}
+
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
+    logs.callback.connect(this, &Application::onLogMessage);
     auto& study = *pStudy;
 
     // Name of the simulation
@@ -185,22 +204,25 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Errors
-    if (pErrorCount || pWarningCount)
+    if (pErrorCount > 0)
     {
-        if (pErrorCount || !pSettings.ignoreWarningsErrors)
+        if (!pSettings.ignoreLoadingErrors)
         {
             // The loading of the study produces warnings and/or errors
             // As the option '--force' is not given, we can not continue
             LogDisplayErrorInfos(pErrorCount, pWarningCount, "The simulation must stop.");
+            LogMessageStack(messagesStack);
             throw FatalError("The simulation must stop.");
         }
         else
         {
             LogDisplayErrorInfos(
-              0,
+              pErrorCount,
               pWarningCount,
               "As requested, the warnings can be ignored and the simulation will continue",
               false /* not an error */);
+            logs.info() << "However here is the list of errors:";
+            LogMessageStack(messagesStack);
             // Actually importing the log file is useless here.
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
@@ -252,8 +274,6 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
     WriteCommandLineIntoLogs(pArgc, pArgv);
 
     logs.info() << "  :: log filename: " << logs.logfile();
-
-    logs.callback.connect(this, &Application::onLogMessage);
 
     pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
 
@@ -366,18 +386,26 @@ void Application::prepare(int argc, const char* argv[])
 
     // Set solver options from command line
     pStudy->parameters.optOptions.initializeWith(options.solverOptions);
+
+    using namespace Antares::Solver::Optimization;
+    // TODO
+    pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
+                                                     ? ExportBehavior::Once
+                                                     : ExportBehavior::Never;
 }
 
-void Application::onLogMessage(int level, const std::string& /*message*/)
+void Application::onLogMessage(int level, const std::string& message)
 {
     switch (level)
     {
     case Yuni::Logs::Verbosity::Warning::level:
         ++pWarningCount;
+        messagesStack.emplace_back(LogType::Warning, message);
         break;
     case Yuni::Logs::Verbosity::Error::level:
     case Yuni::Logs::Verbosity::Fatal::level:
         ++pErrorCount;
+        messagesStack.emplace_back(LogType::Error, message);
         break;
     default:
         break;
@@ -399,11 +427,14 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    pOptimizationInfo = simulationRun(*pStudy,
-                                      pSettings,
-                                      pDurationCollector,
-                                      *resultWriter,
-                                      observer);
+    pDurationCollector(totalTimeKey) << [&]
+    {
+        pOptimizationInfo = simulationRun(*pStudy,
+                                          pSettings,
+                                          pDurationCollector,
+                                          *resultWriter,
+                                          observer);
+    };
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
@@ -481,10 +512,19 @@ void Application::writeExectutionInfo()
         return;
     }
 
-    pTotalTimer.stop();
-    pDurationCollector.addDuration("total", pTotalTimer.get_duration());
-
-    logTotalTime(pTotalTimer.get_duration());
+    logTotalTime(pDurationCollector.getTime(totalTimeKey));
+    if (pErrorCount == 0 && pWarningCount > 0)
+    {
+        logs.warning()
+          << "Simulation completed but there were some warnings during loading. Here is the list:";
+        LogMessageStack(messagesStack);
+    }
+    if (pErrorCount > 0)
+    {
+        logs.error()
+          << "Simulation completed but there were some errors during loading. Here is the list:";
+        LogMessageStack(messagesStack);
+    }
 
     // If no writer is available, we can't write
     if (!resultWriter)

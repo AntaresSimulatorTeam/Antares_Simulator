@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -17,11 +18,7 @@
 #define YUNI_PRIVATE_MEMBUF_SPTRINF(BUFFER, SIZE, F, V) ::snprintf(BUFFER, SIZE, F, V)
 #endif
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT, class C>
 class Assign final
@@ -74,7 +71,9 @@ public:
                     buffer));
             }
             else
+            {
                 s.assignWithoutChecking("0x0", 3);
+            }
 #else
             typename CStringT::Type buffer[32];
             // On Windows, it may return a negative value
@@ -86,7 +85,9 @@ public:
                     buffer));
             }
             else
+            {
                 s.assignWithoutChecking("0x0", 3);
+            }
 #endif
         }
     }
@@ -101,11 +102,14 @@ public:
     {
         if (rhs)
         {
-            s.assignWithoutChecking(
-              rhs, Yuni::Traits::Length<char*, typename CStringT::Size>::Value(rhs));
+            s.assignWithoutChecking(rhs,
+                                    Yuni::Traits::Length<char*, typename CStringT::Size>::Value(
+                                      rhs));
         }
         else
+        {
             s.clear();
+        }
     }
 };
 
@@ -115,6 +119,7 @@ class Assign<CStringT, char[N]> final
 {
 public:
     typedef char C;
+
     static void Perform(CStringT& s, const C rhs[N])
     {
         if (N > 0)
@@ -124,7 +129,9 @@ public:
             s.assignWithoutChecking(rhs, N - ((rhs[N - 1] == C()) ? 1 : 0));
         }
         else
+        {
             s.clear();
+        }
     }
 };
 
@@ -158,14 +165,16 @@ public:
     static void Perform(CStringT& s, const bool rhs)
     {
         if (rhs)
+        {
             s.assignWithoutChecking("true", 4);
+        }
         else
+        {
             s.assignWithoutChecking("false", 5);
+        }
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
 
 #undef YUNI_PRIVATE_MEMBUF_SPTRINF

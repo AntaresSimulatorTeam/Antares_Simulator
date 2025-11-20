@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -22,6 +22,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <limits>
 
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"
@@ -36,7 +37,7 @@ using namespace Antares::Data::ScenarioBuilder;
 void initializeStudy(Data::Study* study);
 void configureLinkCapacities(AreaLink* link);
 
-class TimeSeriesConfigurer
+class TimeSeriesConfigurer final
 {
 public:
     TimeSeriesConfigurer() = default;
@@ -59,7 +60,7 @@ private:
     Matrix<>* ts_ = nullptr;
 };
 
-class ThermalClusterConfig
+class ThermalClusterConfig final
 {
 public:
     ThermalClusterConfig() = delete;
@@ -75,7 +76,7 @@ private:
     TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 
-class ShortTermStorageAddConstraintConfig
+class ShortTermStorageAddConstraintConfig final
 {
 public:
     ShortTermStorageAddConstraintConfig() = delete;
@@ -127,7 +128,7 @@ private:
     std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints> constraint;
 };
 
-class ShortTermStorageConfig
+class ShortTermStorageConfig final
 
 {
 public:
@@ -143,6 +144,8 @@ public:
     ShortTermStorageConfig& setGroupName(const std::string& groupName);
     ShortTermStorageConfig& setName(const std::string& name);
     ShortTermStorageConfig& setPenalizeVariationWithdrawal(bool penalizeVariationWithdrawal);
+    ShortTermStorageConfig& setAllowOverflow(bool allowOverflow);
+
     ShortTermStorageConfig& setPenalizeVariationInjection(bool penalizeVariationInjection);
     ShortTermStorageConfig& setEnabled(bool enabled);
 
@@ -166,7 +169,7 @@ void addScratchpadToEachArea(Data::Study& study);
 // -------------------------------
 // Simulation results retrieval
 // -------------------------------
-class averageResults
+class averageResults final
 {
 public:
     averageResults(Variable::R::AllYears::AverageData& averageResults):
@@ -208,7 +211,7 @@ private:
     Variable::R::AllYears::AverageData& averageResults_;
 };
 
-class OutputRetriever
+class OutputRetriever final
 {
 public:
     OutputRetriever(ISimulation<Economy>& simulation):
@@ -264,7 +267,7 @@ typename Variable::Storage<VCard>::ResultsType* OutputRetriever::retrieveResults
     return result;
 }
 
-class ScenarioBuilderRule
+class ScenarioBuilderRule final
 {
 public:
     ScenarioBuilderRule(Data::Study& study);
@@ -298,7 +301,7 @@ private:
 // Simulation handler
 // =====================
 
-class TestingSimulationObserver: public Solver::Simulation::ISimulationObserver
+class TestingSimulationObserver final: public Solver::Simulation::ISimulationObserver
 {
 public:
     struct Variable
@@ -333,7 +336,7 @@ public:
                             std::string_view name) override;
 };
 
-class SimulationHandler
+class SimulationHandler final
 {
 public:
     SimulationHandler(Data::Study& study):

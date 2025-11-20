@@ -1,40 +1,34 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "thermal.areasummary.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 ThermalClusterSummarySingleArea::ThermalClusterSummarySingleArea(
   wxWindow* control,
-  Toolbox::InputSelector::Area* notifier) :
- CommonClusterSummarySingleArea(control, notifier)
+  Toolbox::InputSelector::Area* notifier):
+    CommonClusterSummarySingleArea(control, notifier)
 {
 }
 
@@ -45,7 +39,9 @@ ThermalClusterSummarySingleArea::~ThermalClusterSummarySingleArea()
 wxString ThermalClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
     if (pArea)
+    {
         return wxStringFromUTF8(pArea->thermal.list[rowIndx]->name());
+    }
     return wxEmptyString;
 }
 
@@ -79,7 +75,9 @@ wxString ThermalClusterSummarySingleArea::cellValue(int x, int y) const
                                       ? pArea->thermal.list[y].get()
                                       : nullptr;
     if (!cluster->enabled)
+    {
         return wxEmptyString;
+    }
     switch (x)
     {
     case 0:
@@ -122,7 +120,9 @@ double ThermalClusterSummarySingleArea::cellNumericValue(int x, int y) const
                                       ? pArea->thermal.list[y].get()
                                       : nullptr;
     if (!cluster->enabled)
+    {
         return 0.;
+    }
     switch (x)
     {
     case 0:
@@ -182,7 +182,8 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
             return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
         case 2:
             return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(
-              cluster->unitCount, v);
+              cluster->unitCount,
+              v);
         case 3:
             return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
         case 4:
@@ -191,14 +192,18 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
             return Update<double, NoCheck, RefeshInspector>(cluster->minStablePower, v);
         case 6:
             return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(
-              cluster->minUpTime, v);
+              cluster->minUpTime,
+              v);
         case 7:
             return Update<uint, CheckMinUpDownTime, RefeshInspectorAndMarkAsModified>(
-              cluster->minDownTime, v);
+              cluster->minDownTime,
+              v);
         case 8:
             return Update<double, NoCheck, RefeshInspector>(cluster->spinning, v);
         case 9:
-            return Update<double, NoCheck, RefeshInspector>(cluster->emissions.factors[Antares::Data::Pollutant::CO2], v);
+            return Update<double, NoCheck, RefeshInspector>(
+              cluster->emissions.factors[Antares::Data::Pollutant::CO2],
+              v);
         case 10:
             return Update<double, NoCheck, RefeshInspector>(cluster->marginalCost, v);
         case 11:
@@ -214,7 +219,4 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
     return false;
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+} // namespace Antares::Component::Datagrid::Renderer

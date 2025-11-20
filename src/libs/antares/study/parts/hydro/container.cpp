@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -543,7 +543,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
 
     // Add all alpha values for each area
     areas.each(
-      [&allSections, &buffer, &folder, &hydroPmax, &ret](const Data::Area& area)
+      [&allSections, &buffer, &folder, &hydroPmax, &ret](Data::Area& area)
       {
           allSections.s->add(area.id, area.hydro.interDailyBreakdown);
           allSections.smod->add(area.id, area.hydro.intraDailyModulation);
@@ -601,9 +601,24 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
           }
           else
           {
+              // we convert hourly TS into daily by averaging
+              Matrix<> genMaxP = area.hydro.series->getDailyMaxGenPowerFromHourlyTS();
+              Matrix<> pumpMaxP = area.hydro.series->getDailyMaxPumpPowerFromHourlyTS();
+
+              area.hydro.dailyMaxPumpAndGen.reset(4, DAYS_PER_YEAR);
+              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::genMaxP,
+                                                          genMaxP[0]);
+              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::genMaxE,
+                                                          area.hydro.dailyNbHoursAtGenPmax[0]);
+              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::pumpMaxP,
+                                                          pumpMaxP[0]);
+              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::pumpMaxE,
+                                                          area.hydro.dailyNbHoursAtPumpPmax[0]);
               buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
                              << area.id << ".txt";
               ret = area.hydro.dailyMaxPumpAndGen.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+
+              area.hydro.series->buildHourlyMaxPowerFromDailyTS(genMaxP[0], pumpMaxP[0]);
           }
 
           // credit modulations
@@ -784,26 +799,48 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
                      const Matrix<double>& waterValues,
                      const uint day)
 {
-    assert((level >= 0. && level <= 100.) && "getWaterValue function : invalid level");
-    double levelUp = ceil(level);
-    double levelDown = floor(level);
-
-    if ((int)(levelUp) == (int)(levelDown))
+    if (level < 0. - 1e-6 || level > 100. + 1e-6)
     {
-        return waterValues[(int)(levelUp)][day];
+        logs.error() << "Invalid level for water values: " << level;
     }
-    return waterValues[(int)(levelUp)][day] * (level - levelDown)
-           + waterValues[(int)(levelDown)][day] * (levelUp - level);
+    int levelDown = floor(level);
+
+    // if level has value like -0.000001 because of numerical precision problems and we ceil it
+    if (levelDown < 0)
+    {
+        levelDown = 0;
+    }
+
+    // special case, we don't want to use the last layer
+    if (levelDown >= 100)
+    {
+        levelDown = 99;
+    }
+    return waterValues[levelDown][day];
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
                            Matrix<double, double>& creditMod,
                            int modType)
 {
-    assert((level >= 0. && level <= 100.) && "getWeeklyModulation function : invalid level");
+    if (level < 0. - 1e-6 || level > 100. + 1e-6)
+    {
+        logs.error() << "Invalid level for weekly modulation: " << level;
+    }
     double valueToReturn = 1.;
     double levelUp = ceil(level);
     double levelDown = floor(level);
+
+    // if level has value like 100.0000001 because of numerical precision problems and we ceil it
+    if (levelDown < 0)
+    {
+        levelDown = 0;
+    }
+    if (levelUp > 100)
+    {
+        levelUp = 100;
+    }
+
     if ((int)(levelUp) == (int)(levelDown))
     {
         valueToReturn = creditMod[(int)(levelUp)][modType];

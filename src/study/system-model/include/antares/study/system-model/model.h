@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -21,13 +21,14 @@
 #pragma once
 
 #include <map>
-#include <unordered_set>
+#include <unordered_map>
 #include <vector>
 
 #include <antares/expressions/expression.h>
 
 #include "constraint.h"
 #include "extraOutput.h"
+#include "objective.h"
 #include "parameter.h"
 #include "port.h"
 #include "portFieldDefinition.h"
@@ -42,7 +43,7 @@ struct PortFieldKey
     auto operator<=>(const PortFieldKey&) const = default;
 };
 
-class PortFieldKeyHash
+class PortFieldKeyHash final
 {
 public:
     std::size_t operator()(const PortFieldKey& input) const;
@@ -55,7 +56,7 @@ using PortFieldMap = std::unordered_map<PortFieldKey, PortFieldDefinition, PortF
  * A model defines the behaviour of those components.
  */
 // TODO: add unit tests for this class
-class Model
+class Model final
 {
 public:
     Model() = default;
@@ -71,12 +72,12 @@ public:
         return id_;
     }
 
-    const Expression& Objective() const
+    std::vector<Objective>& Objectives()
     {
-        return objective_;
+        return objectives_;
     }
 
-    const std::map<std::string, Constraint>& Constraints() const
+    std::vector<Constraint>& Constraints()
     {
         return constraints_;
     }
@@ -86,9 +87,8 @@ public:
         return parameters_;
     }
 
-    const std::map<std::string, Variable>& Variables() const
+    std::vector<Variable>& Variables()
     {
-        // TODO : convert to vector?
         return variables_;
     }
 
@@ -110,19 +110,19 @@ public:
 private:
     friend class ModelBuilder;
     std::string id_;
-    Expression objective_;
 
     std::map<std::string, Parameter> parameters_;
-    std::map<std::string, Variable> variables_;
-    std::map<std::string, Constraint> constraints_;
+    std::vector<Variable> variables_;
+    std::vector<Constraint> constraints_;
     std::map<std::string, Port> ports_;
     std::map<std::string, ExtraOutput> extraOutputs_;
+    std::vector<Objective> objectives_;
 
     PortFieldMap portFieldDefinitions_;
 };
 
 // List of IDs used internally to check for uniqueness of IDs at component level
-class UniqueIDChecker
+class UniqueIDChecker final
 {
 public:
     void add(const std::string& id);
@@ -133,11 +133,11 @@ private:
     std::unordered_map<std::string, int> attribute_ids_;
 };
 
-class ModelBuilder
+class ModelBuilder final
 {
 public:
     ModelBuilder& withId(std::string_view id);
-    ModelBuilder& withObjective(Expression&& objective);
+    ModelBuilder& withObjectives(std::vector<Objective>&& objectives);
     ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
     ModelBuilder& withVariables(std::vector<Variable>&& variables);
     ModelBuilder& withPorts(std::vector<Port>&& ports);

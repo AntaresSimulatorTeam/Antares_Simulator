@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,14 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+
 /*!
 ** \file
 ** \brief Storage policies
 */
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \brief Storage policies
@@ -50,19 +50,27 @@ public:
 public:
     //! \name Constructors
     //@{
-    Pointer() : pData(DefaultValue())
+    Pointer():
+        pData(DefaultValue())
     {
     }
-    Pointer(const Pointer&) : pData(0)
+
+    Pointer(const Pointer&):
+        pData(0)
     {
     }
+
     template<class U>
-    Pointer(const Pointer<U>&) : pData(0)
+    Pointer(const Pointer<U>&):
+        pData(0)
     {
     }
-    Pointer(const StoredType& p) : pData(p)
+
+    Pointer(const StoredType& p):
+        pData(p)
     {
     }
+
     //@}
 
     //! Swap the data
@@ -77,14 +85,17 @@ public:
     {
         return rhs.pData;
     }
+
     friend StoredType& storageReference(Pointer& rhs)
     {
         return rhs.pData;
     }
+
     friend const StoredType& storageReference(const Pointer& rhs)
     {
         return rhs.pData;
     }
+
     //@}
 
     //! \name Operators
@@ -94,11 +105,13 @@ public:
     {
         return pData;
     }
+
     //! The operator *
     ReferenceType operator*() const
     {
         return *pData;
     }
+
     //@}
 
 protected:
@@ -110,7 +123,9 @@ protected:
         // and the complete class has a non-trivial destructor or a deallocation function,
         // the behavior is undefined.
         if (0 < sizeof(T)) // won't compile for incomplete type
+        {
             delete pData;
+        }
     }
 
 private:
@@ -145,19 +160,27 @@ public:
 public:
     //! \name Constructors
     //@{
-    Array() : pData(DefaultValue())
+    Array():
+        pData(DefaultValue())
     {
     }
-    Array(const Array&) : pData(0)
+
+    Array(const Array&):
+        pData(0)
     {
     }
+
     template<class U>
-    Array(const Pointer<U>&) : pData(0)
+    Array(const Pointer<U>&):
+        pData(0)
     {
     }
-    Array(const StoredType& p) : pData(p)
+
+    Array(const StoredType& p):
+        pData(p)
     {
     }
+
     //@}
 
     //! Swap the data
@@ -172,14 +195,17 @@ public:
     {
         return rhs.pData;
     }
+
     friend StoredType& storageReference(Array& rhs)
     {
         return rhs.pData;
     }
+
     friend const StoredType& storageReference(const Array& rhs)
     {
         return rhs.pData;
     }
+
     //@}
 
     //! \name Operators
@@ -189,11 +215,13 @@ public:
     {
         return pData;
     }
+
     //! The operator *
     ReferenceType operator*() const
     {
         return *pData;
     }
+
     //@}
 
 protected:
@@ -205,7 +233,9 @@ protected:
         // and the complete class has a non-trivial destructor or a deallocation function,
         // the behavior is undefined.
         if (0 < sizeof(T)) // won't compile for incomplete type
+        {
             delete[] pData;
+        }
     }
 
 private:
@@ -215,5 +245,4 @@ private:
 }; // class Array
 
 } // namespace Storage
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

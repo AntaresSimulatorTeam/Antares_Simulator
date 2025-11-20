@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,15 +12,7 @@
 #pragma once
 #include "../../../thread/thread.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace IO
-{
-namespace Directory
-{
-namespace Iterator
+namespace Yuni::Private::IO::Directory::Iterator
 {
 // Forward declarations
 class Interface;
@@ -42,6 +35,7 @@ public:
     Interface()
     {
     }
+
     virtual ~Interface()
     {
     }
@@ -77,14 +71,14 @@ class Options final
 {
 public:
     //! Default constructor
-    Options() :
-     self(nullptr)
+    Options():
+        self(nullptr)
 #ifdef YUNI_OS_WINDOWS
-     ,
-     wbuffer(nullptr)
+        ,
+        wbuffer(nullptr)
 #endif
-     ,
-     counter(0)
+        ,
+        counter(0)
     {
     }
 
@@ -109,12 +103,13 @@ public:
 };
 
 #ifndef YUNI_NO_THREAD_SAFE
-class IDetachedThread : public Yuni::Thread::IThread
+class IDetachedThread: public Yuni::Thread::IThread
 {
 public:
     IDetachedThread()
     {
     }
+
     virtual ~IDetachedThread()
     {
 #ifdef YUNI_OS_WINDOWS
@@ -162,8 +157,4 @@ class IDetachedThread
 };
 #endif
 
-} // namespace Iterator
-} // namespace Directory
-} // namespace IO
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::IO::Directory::Iterator

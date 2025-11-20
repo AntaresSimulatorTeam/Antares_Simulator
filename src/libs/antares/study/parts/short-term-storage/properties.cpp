@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -104,10 +104,9 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<bool>(this->enabled);
     }
 
-    // To be implemented in 9.3.1 or 9.3.2
     if (p->key == "allow-overflow")
     {
-        return true;
+        return p->value.to<bool>(this->allowOverflow);
     }
 
     return false;

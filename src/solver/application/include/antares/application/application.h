@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -83,6 +83,12 @@ public:
     }
 
 private:
+    enum class LogType
+    {
+        Warning,
+        Error
+    };
+
     /*!
     ** \brief Reset the log filename and open it
     */
@@ -110,12 +116,12 @@ private:
     const char** pArgv = nullptr;
 
     // Benchmarking
-    Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
 
     std::shared_ptr<Yuni::Job::QueueService> ioQueueService;
     IResultWriter::Ptr resultWriter = nullptr;
+    std::vector<std::pair<LogType, std::string>> messagesStack;
 
     void prepareWriter(const Antares::Data::Study& study,
                        Benchmarking::DurationCollector& duration_collector);
@@ -124,6 +130,7 @@ private:
     void readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& options);
     // Return false if the user requested the version ,available solvers, etc, true otherwise
     bool handleOptions(const Data::StudyLoadOptions& options);
+    void LogMessageStack(std::vector<std::pair<LogType, std::string>>& stack);
     // Return false if the user requested help, true otherwise
     bool parseCommandLine(Data::StudyLoadOptions& options);
     void postParametersChecks() const;

@@ -4,7 +4,6 @@ add_subdirectory(antlr-interface)
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
         nodes/PortFieldSumNode.cpp
-        nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
         nodes/ParentNode.cpp
@@ -14,18 +13,13 @@ set(SRC_Expressions
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
         visitors/EvalVisitor.cpp
-        visitors/EvaluationContext.cpp
         visitors/LinearityVisitor.cpp
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
-        visitors/SubstitutionVisitor.cpp
-        visitors/PortFieldSubstitutionVisitor.cpp
-        visitors/PortFieldSumSubstitutionVisitor.cpp
         visitors/AstDOTStyleVisitor.cpp
         visitors/InvalidNode.cpp
         visitors/NodeVisitor.cpp
 
-        hashable.cpp
 
         NodeRegistry.cpp
         include/antares/expressions/NodeRegistry.h
@@ -33,7 +27,6 @@ set(SRC_Expressions
         include/antares/expressions/nodes/ParentNode.h
         include/antares/expressions/nodes/BinaryNode.h
         include/antares/expressions/nodes/ComparisonNode.h
-        include/antares/expressions/nodes/ComponentNode.h
         include/antares/expressions/nodes/DivisionNode.h
         include/antares/expressions/nodes/EqualNode.h
         include/antares/expressions/nodes/ExpressionsNodes.h
@@ -52,27 +45,23 @@ set(SRC_Expressions
         include/antares/expressions/nodes/UnaryNode.h
         include/antares/expressions/nodes/VariableNode.h
         include/antares/expressions/nodes/TimeIndexNode.h
+        include/antares/expressions/nodes/ReducedCostNode.h
+        include/antares/expressions/nodes/DualNode.h
 
 
         include/antares/expressions/visitors/CloneVisitor.h
         include/antares/expressions/visitors/CompareVisitor.h
         include/antares/expressions/visitors/EvalVisitor.h
-        include/antares/expressions/visitors/EvaluationContext.h
         include/antares/expressions/visitors/LinearStatus.h
         include/antares/expressions/visitors/LinearityVisitor.h
         include/antares/expressions/visitors/NodeVisitor.h
         include/antares/expressions/visitors/PrintVisitor.h
         include/antares/expressions/visitors/TimeIndexVisitor.h
-        include/antares/expressions/visitors/TimeIndex.h
-        include/antares/expressions/visitors/SubstitutionVisitor.h
-        include/antares/expressions/visitors/PortFieldSubstitutionVisitor.h
-        include/antares/expressions/visitors/PortFieldSumSubstitutionVisitor.h
         include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/InvalidNode.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h
-        include/antares/expressions/hashable.h
         include/antares/expressions/expression.h
         include/antares/expressions/ShiftVector.h
         include/antares/expressions/nodes/TimeShiftNode.h
@@ -94,11 +83,20 @@ target_link_libraries(expressions
         PUBLIC
         Boost::headers
         Antares::logs
+        fmt::fmt
         #TODO i need LinearProblemData
         linear-problem-api
+        Antares::optim-model-filler
+        Antares::modeler-optimisation-container
+        Antares::optim-model-filler
         PRIVATE
         Antares::antares-study-system-model
+        Antares::exception
 )
+
+if (MSVC)
+    target_compile_options(expressions PRIVATE /utf-8)
+endif ()
 
 
 add_library(expressions-iterators
@@ -112,4 +110,3 @@ target_link_libraries(expressions-iterators PRIVATE expressions)
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
-

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI 9)
 set(ANTARES_VERSION_LO 3)
-set(ANTARES_VERSION_REVISION 0)
+set(ANTARES_VERSION_REVISION 1)
 
 # Beta release
 set(ANTARES_BETA 0)
@@ -51,7 +51,6 @@ message(STATUS "ANTLR_JAR_PATH is: ${ANTLR_JAR_PATH}")
 
 #Generate ANTLR4 source files from grammar files
 include("cmake/antlr4-generate.cmake")
-
 
 
 #CMake Macro to display message
@@ -277,6 +276,8 @@ if (BUILD_UI)
     add_compile_definitions(BUILD_UI)
     add_subdirectory(ui)  #all antares ui libs + antares simulator
 endif ()
+
+
 add_subdirectory(api)
 add_subdirectory(io)
 add_subdirectory(libs)   #antares-core fswalker
@@ -286,6 +287,7 @@ add_subdirectory(optimisation)  #optimisation APIs
 add_subdirectory(study)         #antares study model
 add_subdirectory(solver)     #antares solver and all associated libs
 add_subdirectory(modeler)       #antares modeler
+add_subdirectory(modeler-optimisation-container)       #antares modeler
 
 # Tools
 if (BUILD_TOOLS)

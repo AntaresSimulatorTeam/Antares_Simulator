@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** Copyright 2007-2025, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -103,16 +103,6 @@ std::string PrintVisitor::visit(const Nodes::PortFieldSumNode* node)
     return node->getPortName() + "." + node->getFieldName();
 }
 
-std::string PrintVisitor::visit(const Nodes::ComponentVariableNode* node)
-{
-    return node->getComponentId() + "." + node->getComponentName();
-}
-
-std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
-{
-    return node->getComponentId() + "." + node->getComponentName();
-}
-
 std::string PrintVisitor::trimAndFormat(const std::string& in)
 {
     auto s = in;
@@ -148,6 +138,16 @@ std::string PrintVisitor::visit(const Nodes::TimeSumNode* node)
 std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
     return "sum(" + dispatch(node->child()) + ")";
+}
+
+std::string PrintVisitor::visit(const Nodes::ReducedCostNode* node)
+{
+    return "reduced_cost(" + node->value() + ")";
+}
+
+std::string PrintVisitor::visit(const Nodes::DualNode* node)
+{
+    return "dual(" + node->value() + ")";
 }
 
 std::string PrintVisitor::name() const

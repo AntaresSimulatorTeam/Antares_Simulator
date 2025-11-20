@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -31,7 +31,7 @@
 
 using namespace Antares::Solver;
 
-class StubOptPeriodStringGenerator: public OptPeriodStringGenerator
+class StubOptPeriodStringGenerator final: public OptPeriodStringGenerator
 {
 public:
     std::string to_string() const override
@@ -72,9 +72,6 @@ BOOST_AUTO_TEST_CASE(Data_properly_copied)
     BOOST_CHECK(ret.Xmax == problemHebdo.Xmax);
     BOOST_CHECK(ret.Xmin == problemHebdo.Xmin);
     BOOST_CHECK(ret.RHS == problemHebdo.SecondMembre);
-
-    BOOST_CHECK(ret.variables == problemHebdo.NomDesVariables);
-    BOOST_CHECK(ret.constraints == problemHebdo.NomDesContraintes);
 }
 
 BOOST_AUTO_TEST_CASE(translate_sens)
@@ -131,6 +128,8 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
     problemHebdo.TypeDeVariable = {0, 1, 2};
     problemHebdo.IndicesDebutDeLigne = {0, 3};
     problemHebdo.NombreDeTermesDesLignes = {3, 3};
+    problemHebdo.NomDesVariables = {"a", "b", "c"};
+    problemHebdo.NomDesContraintes = {"d", "e", "f"};
     fillVector(problemHebdo.CoefficientsDeLaMatriceDesContraintes, 6);
     fillVector(problemHebdo.IndicesColonnes, 6);
 
@@ -144,6 +143,9 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
     auto expectedMdeb = problemHebdo.IndicesDebutDeLigne;
     expectedMdeb.push_back(problemHebdo.CoefficientsDeLaMatriceDesContraintes.size());
     BOOST_CHECK(std::ranges::equal(ret.Mdeb, expectedMdeb));
+
+    BOOST_CHECK(ret.VariablesMeaning == problemHebdo.NomDesVariables);
+    BOOST_CHECK(ret.ConstraintsMeaning == problemHebdo.NomDesContraintes);
 }
 
 // throw exception if NombreDeVariables is 0
@@ -152,7 +154,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeVariables_is_0)
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.NombreDeVariables = 0;
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeContraintes_is_0)
@@ -160,7 +162,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeContraintes_is_0)
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.NombreDeContraintes = 0;
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_IndicesDebutDeLigne_out_of_bound)
@@ -171,7 +173,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_IndicesDebutDeLigne_out_of_bound)
     problemHebdo.NombreDeContraintes = 3;
     problemHebdo.IndicesDebutDeLigne = {0, 3};
     problemHebdo.NombreDeTermesDesLignes = {0, 3, 6, 7, 8};
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeTermesDesLignes_out_of_bound)
@@ -182,7 +184,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeTermesDesLignes_out_of_bound)
     problemHebdo.NombreDeContraintes = 3;
     problemHebdo.NombreDeTermesDesLignes = {0, 3};
     problemHebdo.IndicesDebutDeLigne = {0, 3, 6, 7, 8};
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 // NombreDeCoefficients
