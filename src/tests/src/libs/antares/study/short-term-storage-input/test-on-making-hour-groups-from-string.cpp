@@ -21,11 +21,11 @@
 #define BOOST_TEST_MODULE "making groups of hours from a string"
 
 #define WIN32_LEAN_AND_MEAN
-
+//
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
+//
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
-
-#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
 using namespace Antares::Data::ShortTermStorage;
 

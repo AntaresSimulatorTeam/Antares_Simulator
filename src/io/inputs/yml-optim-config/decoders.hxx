@@ -30,10 +30,32 @@
 namespace YAML
 {
 
+// TODO this function is defined at least 3 times, deduplicate
+template<typename T>
+inline T as_fallback_default(const Node& n)
+{
+    return n.as<T>(T());
+}
+
 template<>
 struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Variable& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+        rhs.id = node["id"].as<std::string>();
+        rhs.location = node["location"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::IO::Inputs::YmlOptimConfig::Constraint>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Constraint& rhs)
     {
         if (!node.IsMap())
         {
@@ -68,11 +90,17 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
     {
         rhs.id = node["id"].as<std::string>();
         const auto& modelDecompositionNode = node["model-decomposition"];
-        rhs.variables = modelDecompositionNode["variables"]
-                          .as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>();
+        rhs.variables = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>(
+          modelDecompositionNode["variables"]);
 
-        rhs.objectives = modelDecompositionNode["objectives"]
-                           .as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>();
+        rhs.constraints = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::Constraint>>(
+          modelDecompositionNode["constraints"]);
+
+        rhs.objectives = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>(
+          modelDecompositionNode["objective-contributions"]);
 
         return true;
     }

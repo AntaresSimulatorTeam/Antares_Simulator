@@ -22,7 +22,7 @@
 
 #include <vector>
 
-#include "antares/antares/Enum.hpp"
+#include "antares/enums/Enum.hpp"
 #include "antares/writer/i_writer.h"
 struct PROBLEME_HEBDO;
 

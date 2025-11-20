@@ -1,7 +1,7 @@
 IF(NOT YUNI_AUTO_COMPILE_YUNI_CONFIG)
 
 	Project(yuni-config CXX)
-	CMake_minimum_required(VERSION 2.8)
+	CMake_minimum_required(VERSION 3.5)
 
 	IF(POLICY CMP0005)
 		CMake_Policy(SET CMP0005 NEW)

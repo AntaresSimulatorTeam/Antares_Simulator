@@ -23,8 +23,8 @@
 #include <string>
 
 #include <antares/expressions/expression.h>
-#include "antares/modeler/optimConfig/optimConfig.h"
 
+#include "optimConfig.h"
 #include "timeAndScenarioType.h"
 #include "valueType.h"
 
@@ -40,13 +40,15 @@ public:
              Expression upper_bound,
              ValueType type,
              TimeDependent timeDependent,
-             ScenarioDependent scenarioDependent):
+             ScenarioDependent scenarioDependent,
+             Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
         id_(std::move(id)),
         type_(type),
         lowerBound_(std::move(lower_bound)),
         upperBound_(std::move(upper_bound)),
         timeDependent_(timeDependent),
-        scenarioDependent_(scenarioDependent)
+        scenarioDependent_(scenarioDependent),
+        location_(location)
     {
     }
 
@@ -80,16 +82,14 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
-    [[nodiscard]] bool isInSubProblem() const
+    void setLocation(Modeler::Config::Location loc)
     {
-        return location_ == Modeler::Config::Location::SUBPROBLEMS
-               || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+        location_ = loc;
     }
 
-    [[nodiscard]] bool isInMasterProblem() const
+    [[nodiscard]] Modeler::Config::Location location() const
     {
-        return location_ == Modeler::Config::Location::MASTER
-               || location_ == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+        return location_;
     }
 
 private:

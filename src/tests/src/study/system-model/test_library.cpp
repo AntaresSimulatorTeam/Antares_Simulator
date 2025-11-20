@@ -21,13 +21,17 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <unit_test_utils.h>
-
-#include <boost/test/unit_test.hpp>
-
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/study/system-model/model.h"
 #include "antares/study/system-model/portType.h"
+
+// If we don't turn clang-format off here, some antlr4 header does not compile :
+// it collides with a #include <windows.h> somewhere in Yuni
+// clang-format off
+#include <unit_test_utils.h>
+// clang-format on
+
+#include <boost/test/unit_test.hpp>
 
 using namespace Antares::ModelerStudy::SystemModel;
 
