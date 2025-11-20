@@ -151,8 +151,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
 
     measure.tick();
 
-    logs.info();
-    logs.info() << "Modeler build took " << measure.toStringInSeconds();
+    logs.debug() << "Modeler build took " << measure.toStringInSeconds();
 
     return ortoolsProblem.getMpSolver();
 }
@@ -213,7 +212,10 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
 
     measure.tick();
-    logs.info() << "Solved in " << measure.toStringInSeconds();
+    logs.info() << fmt::format("Problem {}-{} solved in {}",
+                               problemeHebdo->weekInTheYear,
+                               problemeHebdo->year,
+                               measure.toStringInSeconds());
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
