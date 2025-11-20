@@ -126,11 +126,6 @@ public:
         return evaluateUnaryOperation(std::negate<>());
     }
 
-    // [[nodiscard]] std::variant<double, std::vector<double>> value() const
-    // {
-    //     return value_;
-    // }
-
     [[nodiscard]] const std::variant<double, std::vector<double>>& value() const
     {
         return value_;
