@@ -296,14 +296,14 @@ EvaluationResult applyOperation(const std::vector<EvaluationResult>& in, Operati
     std::vector<double> values(size);
     std::vector<double> row(in.size());
 
-    for (size_t i = 0; i < size; ++i)
+    for (size_t timeIndex = 0; timeIndex < size; ++timeIndex)
     {
-        for (size_t j = 0; j < in.size(); ++j)
+        for (size_t evalIndex = 0; evalIndex < in.size(); ++evalIndex)
         {
-            const auto& evalResult = in[j];
-            row[j] = evalResult.value(i);
+            const auto& evalResult = in[evalIndex];
+            row[evalIndex] = evalResult.value(timeIndex);
         }
-        values[i] = op(row);
+        values[timeIndex] = op(row);
     }
     if (size > 1)
     {

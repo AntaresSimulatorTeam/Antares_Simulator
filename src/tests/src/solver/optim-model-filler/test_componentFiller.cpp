@@ -498,7 +498,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_parameters_and_max_operator)
                                     Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)});
 
     const vector<unsigned int> timeSteps{0, 1, 2};
-    FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 0};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(2), timeSteps.at(0), timeSteps.at(2), 0};
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("par", 3);
     // setting 3 hours (including h 1 and 2)
     bounds_time_series->add({2.5, 3.8, 57.2025});
@@ -527,8 +527,8 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_parameters_and_max_operator)
                                              std::pow(par_at_t, 2)};
         BOOST_CHECK_EQUAL(ct->getCoefficient(var),
                           -*std::min_element(values.begin(), values.end()));
-        BOOST_CHECK_EQUAL(var->getLb(), t);
-        BOOST_CHECK_EQUAL(var->getUb(), t);
+        BOOST_CHECK_EQUAL(var->getLb(), 0);
+        BOOST_CHECK_EQUAL(var->getUb(), 1);
     }
 }
 
