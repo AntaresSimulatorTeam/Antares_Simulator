@@ -63,29 +63,28 @@ void AddFiliation(std::ostream& os, const std::string& parent_id, const std::str
 
 void AstDOTStyleVisitor::makeLegend(std::ostream& os)
 {
-    if (nodeCounter_.empty())
+    if (nbNodesPerType_.empty())
     {
         return;
     }
 
-    const auto& nbNodesPerType = nodeCounter_.nbNodesPerType();
-    ProcessElementLegend(nbNodesPerType.begin()->first, nbNodesPerType.begin()->second.count, os);
-    for (auto it = std::next(nbNodesPerType.begin()); it != nbNodesPerType.end(); ++it)
+    ProcessElementLegend(nbNodesPerType_.begin()->first, nbNodesPerType_.begin()->second, os);
+    for (auto it = std::next(nbNodesPerType_.begin()); it != nbNodesPerType_.end(); ++it)
     {
         auto prev_it = std::prev(it);
         AddFiliation(os, prev_it->first, it->first);
-        ProcessElementLegend(it->first, it->second.count, os);
+        ProcessElementLegend(it->first, it->second, os);
     }
     os << "}\n";
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
-    auto id = nodeCounter_.getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, "+", NodeStyle::SumStyle, os);
     for (auto* child: node->getOperands())
     {
-        auto childId = nodeCounter_.getNodeID(child);
+        auto childId = getNodeID(child);
         os << "  " << id << " -> " << childId << ";\n";
         dispatch(child, os);
     }
@@ -123,19 +122,19 @@ void AstDOTStyleVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, std::o
 
 void AstDOTStyleVisitor::visit(const Nodes::VariableNode* node, std::ostream& os)
 {
-    auto id = nodeCounter_.getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, "Var(" + node->value() + ")", NodeStyle::VariableStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::ParameterNode* node, std::ostream& os)
 {
-    auto id = nodeCounter_.getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, "Param(" + node->value() + ")", NodeStyle::ParameterStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
 {
-    auto id = nodeCounter_.getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, std::to_string(node->value()), NodeStyle::LiteralStyle, os);
 }
 
@@ -146,7 +145,7 @@ void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os
 
 void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
 {
-    auto id = nodeCounter_.getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id,
              "PF(" + node->getPortName() + "," + node->getFieldName() + ")",
              NodeStyle::PortFieldStyle,
@@ -155,7 +154,7 @@ void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& o
 
 void AstDOTStyleVisitor::visit(const Nodes::PortFieldSumNode* node, std::ostream& os)
 {
-    auto id = nodeCounter_.getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id,
              "PFSUM(" + node->getPortName() + "," + node->getFieldName() + ")",
              NodeStyle::PortFieldStyle,
@@ -192,6 +191,23 @@ std::string AstDOTStyleVisitor::name() const
     return "AstDOTStyleVisitor";
 }
 
+unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
+{
+    if (nodeIds_.find(node) == nodeIds_.end())
+    {
+        nodeIds_[node] = ++nodeCount_;
+    }
+    return nodeIds_[node];
+}
+
+void AstDOTStyleVisitor::computeNumberNodesPerType()
+{
+    for (const auto& [node, _]: nodeIds_)
+    {
+        ++nbNodesPerType_[node->name()];
+    }
+}
+
 void AstDOTStyleVisitor::emitNode(unsigned int id,
                                   const std::string& label,
                                   const BoxStyle& box_style,
@@ -208,12 +224,12 @@ void AstDOTStyleVisitor::processParentNode(const Nodes::ParentNode* node,
                                            const BoxStyle& box_style,
                                            std::ostream& os)
 {
-    auto id = nodeCounter_.getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, label, box_style, os);
 
     for (const auto* operand: node->getOperands())
     {
-        const auto operandId = nodeCounter_.getNodeID(operand);
+        const auto operandId = getNodeID(operand);
         os << "  " << id << " -> " << operandId << ";\n";
         dispatch(operand, os);
     }
@@ -227,16 +243,19 @@ void AstDOTStyleVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_
 
 void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
 {
-    nodeCounter_.computeNumberNodesPerType();
+    computeNumberNodesPerType();
 
     // Graph title showing the total number of nodes
-    os << "label=\"AST Diagram(Total nodes : " << nodeCounter_.nodeCount() << ")\"\n";
+    os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
     os << "labelloc = \"t\"\n";
 
     makeLegendTitle(os);
     makeLegend(os);
     os << "}\n";
-    nodeCounter_.reset();
+
+    nodeCount_ = 0;
+    nodeIds_.clear();
+    nbNodesPerType_.clear();
 }
 
 void AstDOTStyleVisitor::operator()(std::ostream& os, const Nodes::Node* root)

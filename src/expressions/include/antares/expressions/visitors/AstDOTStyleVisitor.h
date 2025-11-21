@@ -20,9 +20,9 @@
 */
 #pragma once
 
+#include <map>
 #include <ostream>
 
-#include "antares/expressions/nodes/NodeCounter.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
 
 namespace Antares::Expressions::Visitors
@@ -138,7 +138,18 @@ private:
     void visit(const Nodes::AllTimeSumNode* node, std::ostream& os) override;
     void visit(const Nodes::FunctionNode* node, std::ostream& os) override;
 
+    void computeNumberNodesPerType();
     void makeLegend(std::ostream& os);
+
+    /**
+     * @brief Retrieves a unique ID for a given node.
+     *
+     * Generates or retrieves a unique identifier for the specified node.
+     *
+     * @param node The node for which to get the ID.
+     * @return An integer representing the unique ID of the node.
+     */
+    unsigned int getNodeID(const Nodes::Node* node);
 
     /**
      * @brief Emits a node to the output stream.
@@ -171,6 +182,26 @@ private:
                            const std::string& label,
                            const BoxStyle& box_style,
                            std::ostream& os);
-    Nodes::NodeCounter nodeCounter_;
+
+    /**
+     * @brief A map of nodes to their unique IDs.
+     *
+     * This map is used to keep track of assigned IDs for each node in the AST.
+     */
+    std::map<const Nodes::Node*, unsigned int> nodeIds_;
+
+    /**
+     * @brief A map associating a number of instances to a type name.
+     *
+     * This map is used to keep track of assigned IDs for each node in the AST.
+     */
+    std::map<std::string, unsigned int> nbNodesPerType_;
+
+    /**
+     * @brief Counter for generating unique node IDs.
+     *
+     * This counter is incremented each time a new node ID is needed.
+     */
+    unsigned int nodeCount_ = 0;
 };
 } // namespace Antares::Expressions::Visitors
