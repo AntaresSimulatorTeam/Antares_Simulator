@@ -98,7 +98,6 @@ public:
 private:
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
-    const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables_;
 
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
@@ -136,8 +135,7 @@ ConvertorVisitor::ConvertorVisitor(
   const YmlModel::Model& model,
   const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables):
     registry_(registry),
-    model_(model),
-    optimConfigVariables_(optimConfigVariables)
+    model_(model)
 {
 }
 
