@@ -71,6 +71,11 @@ public:
                          + "' in this context")
     {
     }
+
+    explicit BadContextComposition(const std::string& name):
+        invalid_argument("'" + name + "' is not allowed in this context")
+    {
+    }
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,

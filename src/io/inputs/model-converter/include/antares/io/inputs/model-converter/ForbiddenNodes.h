@@ -130,32 +130,8 @@ public:
         rules_[forbiddenNodeKey<Parent>()].insert(forbiddenNodeKey<Child>());
     }
 
-    // ---------------------- COMPILE-TIME CHECK ----------------------
-    template<typename Parent, FunctionNodeType Child>
-    bool isForbiddenFor() const
+    bool check(const std::type_index& parentKey, const std::type_index& childKey) const
     {
-        // global check for the child enum
-        if (isForbidden<Child>())
-        {
-            return true;
-        }
-
-        auto it = rules_.find(forbiddenNodeKey<Parent>());
-        if (it == rules_.end())
-        {
-            return false;
-        }
-
-        return it->second.contains(forbiddenNodeKey<Child>());
-    }
-
-    // ---------------------- RUNTIME CHECK ----------------------
-    template<FunctionNodeType Parent>
-    bool isForbiddenFor(const Node& child) const
-    {
-        auto parentKey = forbiddenNodeKey<Parent>();
-        auto childKey = forbiddenNodeKey(child);
-
         // global forbidden child?
         if (global_.contains(childKey))
         {
@@ -172,7 +148,43 @@ public:
         return it->second.contains(childKey);
     }
 
-private:
+    // ---------------------- COMPILE-TIME CHECK ----------------------
+    template<typename Parent, FunctionNodeType Child>
+    bool isForbiddenFor() const
+    {
+        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
+    }
+
+    template<typename Parent, typename Child>
+    bool isForbiddenFor() const
+    {
+        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
+    }
+
+    // ---------------------- RUNTIME CHECK ----------------------
+    template<FunctionNodeType Parent>
+    bool isForbiddenFor(const Node& child) const
+    {
+        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey(child));
+    }
+
+    template<FunctionNodeType Child>
+    bool isForbiddenFor(const std::type_index& parentKey) const
+    {
+        return check(parentKey, forbiddenNodeKey<Child>());
+    }
+
+    template<typename Child>
+    bool isForbiddenFor(const std::type_index& parentKey) const
+    {
+        return check(parentKey, forbiddenNodeKey<Child>());
+    }
+
+    bool isForbiddenFor(const std::type_index& parentKey, const Node& child) const
+    {
+        return check(parentKey, forbiddenNodeKey(child));
+    }
+
     template<typename NodeType>
     bool isForbidden() const
     {
@@ -184,7 +196,7 @@ private:
     {
         return global_.contains(forbiddenNodeKey<NodeType>());
     }
-
+private:
     std::unordered_set<std::type_index> global_;
     std::unordered_map<std::type_index, std::unordered_set<std::type_index>> rules_;
 };
