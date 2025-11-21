@@ -20,7 +20,7 @@
  */
 
 #pragma once
-
+#include <algorithm>
 #include <antares/expressions/NodeRegistry.h>
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/optimConfig.h"
