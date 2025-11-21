@@ -113,13 +113,5 @@ INSTALL(EXPORT antares-solver
         DESTINATION cmake
 )
 
-find_program(CCACHE_PROGRAM ccache)
-if (CCACHE_PROGRAM)
-    add_custom_command(TARGET antares-solver POST_BUILD
-            COMMAND ${CCACHE_PROGRAM} -s
-            COMMENT "Displaying ccache statistics"
-            VERBATIM
-    )
-endif ()
 
 #########
