@@ -58,8 +58,7 @@ class ConvertorVisitor final: public ExprVisitor
 public:
     ConvertorVisitor(
       Expressions::Registry<Node>& registry,
-      const YmlModel::Model& model,
-      const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables);
+      const YmlModel::Model& model);
 
     std::any visit(antlr4::tree::ParseTree* tree) override;
 
@@ -125,15 +124,14 @@ Expressions::NodeRegistry convertExpressionToNode(
 
     ExprParser::ExprContext* tree = parser.expr();
     Expressions::Registry<Node> registry;
-    ConvertorVisitor visitor(registry, model, optimConfigVariables);
+    ConvertorVisitor visitor(registry, model);
     auto root = std::any_cast<Node*>(visitor.visit(tree));
     return Expressions::NodeRegistry(root, std::move(registry));
 }
 
 ConvertorVisitor::ConvertorVisitor(
   Expressions::Registry<Node>& registry,
-  const YmlModel::Model& model,
-  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables):
+  const YmlModel::Model& model):
     registry_(registry),
     model_(model)
 {
