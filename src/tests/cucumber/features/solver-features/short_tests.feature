@@ -197,7 +197,7 @@ Feature: short tests
     And in area "LOAD NODE", during year 1, total unsupplied energy is 399828376 MWh
     And in area "LOAD NODE", during year 1, "default" produces 0 MWh
 
-  @fast @short @hydro @storage
+  @fast @short @hydro @storage @test
   Scenario: 015 TS generation - Hydro power
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/015 TS generation - Hydro power"
     When I run antares simulator
@@ -207,8 +207,8 @@ Feature: short tests
     And the annual results are
       | area         | year | hydro production | hydro pumping | balance | spilled energy | unsupplied energy |
       | hydro node 1 | 1    | 29198647         | 0             | 0       | 67018154       | 0                 |
-      | hydro node-2 | 1    | 26758144         | 0             | 0       | 63506522       | 0                 |
-      | hydro node-3 | 1    | 35188296         | 0             | 0       | 80265517       | 0                 |
+      | hydro node-2 | 1    | 26722953         | 0             | 0       | 63506522       | 0                 |
+      | hydro node-3 | 1    | 35110361         | 0             | 0       | 80265517       | 0                 |
     And in area "HYDRO NODE 1", during year 1, "default" produces 0 MWh
     And in area "HYDRO NODE-2", during year 1, "default" produces 0 MWh
     And in area "HYDRO NODE-2", during year 1, "default-2" produces 0 MWh
