@@ -76,12 +76,9 @@ struct InputFixture
         }
 
         storagesForRemix.clear();
-        unsigned i = 0;
         for (auto& sts: STS_holders)
         {
-            std::string name = "sts-" + std::to_string(i);
-            storagesForRemix.push_back(sts.createSTS(UnsupE, name));
-            i++;
+            storagesForRemix.push_back(sts.createSTS(UnsupE, "some STS name"));
         }
 
         shavePeaksByRemixingStorageGen(Load, UnsupE, Spillage, DTG_MRG, storagesForRemix);
