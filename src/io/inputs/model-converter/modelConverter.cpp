@@ -167,11 +167,9 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(
     for (const auto& variable: model.variables)
     {
         SM::Expression lb(variable.lower_bound,
-                          convertExpressionToNode(variable.lower_bound,
-                                                  model));
+                          convertExpressionToNode(variable.lower_bound, model));
         SM::Expression ub(variable.upper_bound,
-                          convertExpressionToNode(variable.upper_bound,
-                                                  model));
+                          convertExpressionToNode(variable.upper_bound, model));
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
@@ -218,8 +216,7 @@ std::vector<ModelerStudy::SystemModel::Port> convertPorts(
  */
 std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefinitions(
   const IO::Inputs::YmlModel::Model& model,
-  const std::vector<ModelerStudy::SystemModel::Port>& ports,
-  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
+  const std::vector<ModelerStudy::SystemModel::Port>& ports)
 {
     std::vector<ModelerStudy::SystemModel::PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
@@ -244,8 +241,7 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
             throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
         }
 
-        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition,
-                                                    model);
+        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
 
         using namespace Antares::Expressions::Nodes;
         AST preorder(nodeRegistry.node);
@@ -267,11 +263,9 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
     return portFieldDefinitions;
 }
 
-static void addSingleConstraint(
-  std::vector<ModelerStudy::SystemModel::Constraint>& constraints,
-  const IO::Inputs::YmlModel::Constraint& constraint,
-  const IO::Inputs::YmlModel::Model& model,
-  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
+static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constraint>& constraints,
+                                const IO::Inputs::YmlModel::Constraint& constraint,
+                                const IO::Inputs::YmlModel::Model& model)
 {
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
     constraints.emplace_back(constraint.id,
@@ -286,20 +280,19 @@ static void addSingleConstraint(
  * \return A vector of SystemModel::Constraint objects.
  */
 std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
-  const IO::Inputs::YmlModel::Model& model,
-  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
+  const IO::Inputs::YmlModel::Model& model)
 {
     std::vector<ModelerStudy::SystemModel::Constraint> constraints;
     constraints.reserve(model.constraints.size());
 
     for (const auto& constraint: model.constraints)
     {
-        addSingleConstraint(constraints, constraint, model, optimConfigVariables);
+        addSingleConstraint(constraints, constraint, model);
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint, model, optimConfigVariables);
+        addSingleConstraint(constraints, constraint, model);
     }
     return constraints;
 }
@@ -311,16 +304,14 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
  * \return A vector of SystemModel::ExtraOutput objects.
  */
 std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
-  const IO::Inputs::YmlModel::Model& model,
-  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
+  const IO::Inputs::YmlModel::Model& model)
 {
     std::vector<ModelerStudy::SystemModel::ExtraOutput> extraOutputs;
     extraOutputs.reserve(model.extra_outputs.size());
 
     for (const auto& extraOutput: model.extra_outputs)
     {
-        auto nodeRegistry = convertExpressionToNode(extraOutput.expression,
-                                                    model);
+        auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
         extraOutputs.emplace_back(extraOutput.id,
                                   ModelerStudy::SystemModel::Expression{extraOutput.expression,
                                                                         std::move(nodeRegistry)});
@@ -336,15 +327,13 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
  */
 std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
   const IO::Inputs::YmlModel::Model& model,
-  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables,
   std::vector<std::pair<const YmlOptimConfig::Objective*, bool>>& optimConfigObjectives)
 {
     std::vector<ModelerStudy::SystemModel::Objective> objectives;
     objectives.reserve(model.objectives.size());
     for (const auto& objective: model.objectives)
     {
-        auto nodeRegistry = convertExpressionToNode(objective.expression,
-                                                    model);
+        auto nodeRegistry = convertExpressionToNode(objective.expression, model);
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
                                                                       std::move(nodeRegistry)},
@@ -422,18 +411,12 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
 
         std::vector<ModelerStudy::SystemModel::Port> ports = convertPorts(model, portTypes);
         std::vector<ModelerStudy::SystemModel::PortFieldDefinition>
-          portFieldDefinitions = convertPortFieldDefinitions(model,
-                                                             ports,
-                                                             unMatchedOptimConfig.variables);
-        std::vector<ModelerStudy::SystemModel::Constraint> constraints = convertConstraints(
-          model,
-          unMatchedOptimConfig.variables);
+          portFieldDefinitions = convertPortFieldDefinitions(model, ports);
+        std::vector<ModelerStudy::SystemModel::Constraint> constraints = convertConstraints(model);
         std::vector<ModelerStudy::SystemModel::ExtraOutput> extraOutputs = convertExtraOutputs(
-          model,
-          unMatchedOptimConfig.variables);
+          model);
         std::vector<ModelerStudy::SystemModel::Objective> objectives = convertObjectives(
           model,
-          unMatchedOptimConfig.variables,
           unMatchedOptimConfig.objectives);
 
         unMatchedOptimConfig.CheckOrphans();
