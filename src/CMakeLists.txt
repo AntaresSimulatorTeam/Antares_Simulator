@@ -18,7 +18,6 @@ set(ANTARES_PUBLISHER "RTE France")
 set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
-
 # OR-Tools tag
 file(READ "../ortools_tag" ORTOOLS_TAG)
 
@@ -46,8 +45,8 @@ endif ()
 include("cmake/utils.cmake")
 
 # Only used for code generation (optional)
-set(ANTLR_JAR_PATH "" CACHE FILEPATH "Path to ANTLR 4 .jar file (e.g., antlr-4.13.2-complete.jar)")
-message(STATUS "ANTLR_JAR_PATH is: ${ANTLR_JAR_PATH}")
+set(ANTLR_JAR_PATH "" CACHE FILEPATH "Path to ANTLR 4 .jar file (e.g., antlr-4.13.2-complete.jar) ")
+message(STATUS " ANTLR_JAR_PATH is: ${ANTLR_JAR_PATH}")
 
 #Generate ANTLR4 source files from grammar files
 include("cmake/antlr4-generate.cmake")
@@ -78,9 +77,9 @@ execute_process(COMMAND
 set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
 
 OMESSAGE("")
-OMESSAGE_TITLE("Antares " "v${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-${ANTARES_TARGET}")
-OMESSAGE("A New Tool for Adequacy Reporting of Electric Systems (RTE France)")
-OMESSAGE_BOLD("Configuring...")
+OMESSAGE_TITLE("Antares " " v${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-${ANTARES_TARGET}")
+OMESSAGE("A New Tool for Adequacy Reporting of Electric Systems (RTE France) ")
+OMESSAGE_BOLD(" Configuring...")
 OMESSAGE("")
 
 # Making gatherings of several projects under a project folder in IDEs
@@ -94,7 +93,7 @@ include("cmake/checks.cmake")
 
 
 if (ANTARES_LICENSE)
-    OMESSAGE("{antares}  License : ${ANTARES_LICENSE}")
+    OMESSAGE("{antares} License : ${ANTARES_LICENSE}")
 endif ()
 
 set(ANTARES_PRG_VERSION "${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}")
@@ -244,7 +243,7 @@ if (minizip-ng_FOUND)
 else ()
     find_package(minizip)
     if (minizip_FOUND)
-        message(STATUS "Found minizip (not minizip-ng).")
+        message(STATUS "Found minizip (not minizip-ng) .")
     else ()
         message(FATAL_ERROR "Minizip not found.")
     endif ()
@@ -355,7 +354,7 @@ if (WIN32 OR WIN64)
     endforeach ()
 
     #Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
-    string(REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
+    string(REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR " ${SYSTEM_RUNTIME_LIBS_NATIVE}")
 
     configure_file(
             ${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
