@@ -9,7 +9,6 @@ set(SRC_Expressions
         nodes/ParentNode.cpp
         nodes/TimeSumNode.cpp
         nodes/FunctionNode.cpp
-        nodes/NodeCounter.cpp
 
 
 
@@ -49,7 +48,6 @@ set(SRC_Expressions
         include/antares/expressions/nodes/VariableNode.h
         include/antares/expressions/nodes/TimeIndexNode.h
         include/antares/expressions/nodes/FunctionNode.h
-        include/antares/expressions/nodes/NodeCounter.h
 
 
         include/antares/expressions/visitors/CloneVisitor.h

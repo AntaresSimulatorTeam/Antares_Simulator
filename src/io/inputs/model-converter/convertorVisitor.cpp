@@ -25,7 +25,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/ForbiddenNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
-#include "antares/expressions/nodes/NodeCounter.h"
 #include "antares/expressions/nodes/TimeSumNode.h"
 
 #include "ExprLexer.h"
@@ -88,7 +87,6 @@ private:
     const ForbiddenNodes& forbiddenNodes_;
     std::vector<std::type_index> parentsStack_;
 
-    // NodeCounter nodeCounter_;
 
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
