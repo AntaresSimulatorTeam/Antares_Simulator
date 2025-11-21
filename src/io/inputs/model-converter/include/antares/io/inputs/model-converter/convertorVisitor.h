@@ -62,14 +62,10 @@ Modeler::Config::Location updateLocation(std::string id, std::vector<std::pair<T
     if (auto it = SearchEntity(id, values); it != values.end())
     {
         it->second = true;
-
         return convertLocation(it->first->location);
     }
-    else
-    {
-        it->second = false;
-        return Modeler::Config::Location::SUBPROBLEMS;
-    }
+
+    return Modeler::Config::Location::SUBPROBLEMS;
 }
 
 Expressions::NodeRegistry convertExpressionToNode(

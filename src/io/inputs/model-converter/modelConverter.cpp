@@ -440,6 +440,7 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
           model,
           unMatchedOptimConfig.variables,
           unMatchedOptimConfig.objectives);
+
         unMatchedOptimConfig.CheckOrphans();
 
         auto modelObj = modelBuilder.withId(model.id)
