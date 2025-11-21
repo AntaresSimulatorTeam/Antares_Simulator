@@ -204,7 +204,7 @@ models:
 
 ### Expressions
 
-An [expression](09-expessions.md) is a human-readable equation that allows a large flexibility in defining objects of optimization.
+[An expression](09-expressions.md) is a human-readable equation that allows a large flexibility in defining objects of optimization.
 
 ## System file
 

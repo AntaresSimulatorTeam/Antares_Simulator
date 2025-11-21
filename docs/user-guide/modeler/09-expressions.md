@@ -4,7 +4,7 @@ Expressions are human-readable arithmetic expressions.
 They can contain a sign (in this case, they are equations) or not (simply representing a value or a function).
 They allow a large flexibility in defining objects of optimization.
 
-Expressions can only be found in [models](../02-inputs.md#Models) (defined in libraries yaml files).
+Expressions can only be found in [models](02-inputs.md#Models) (defined in libraries yaml files).
 
 More specifically, they can be found in the following contexts inside a model : 
 - **constraints**
