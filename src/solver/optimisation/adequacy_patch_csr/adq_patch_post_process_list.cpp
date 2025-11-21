@@ -30,14 +30,18 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                  uint numSpace,
                                                  AreaList& areas,
                                                  const Data::Parameters& params,
-                                                 Calendar& calendar):
+                                                 Calendar& calendar,
+                                                 IResultWriter& resultWriter):
     interfacePostProcessList(problemeHebdo, numSpace)
 {
     post_process_list.push_back(
       std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, numSpace_, areas));
     // Here a post process particular to adq patch
-    post_process_list.push_back(
-      std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_, areas, params, numSpace));
+    post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
+                                                                           areas,
+                                                                           params,
+                                                                           numSpace,
+                                                                           resultWriter));
     post_process_list.push_back(
       std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
                                                          problemeHebdo_,

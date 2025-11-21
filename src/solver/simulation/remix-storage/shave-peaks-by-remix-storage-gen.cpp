@@ -1,7 +1,7 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
-#include <ranges>
 #include <set>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -13,6 +13,19 @@ const std::string shave_peak_remix_storage_error_msg_start = "Remix storage inpu
 
 namespace Antares::Solver::Simulation
 {
+
+void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream& stream)
+{
+    for (auto& storage: storagesForRemix)
+    {
+        unsigned hour = 0;
+        for (auto& withdrawal: storage->withdrawal())
+        {
+            stream << storage->name() << " " << hour << " " << withdrawal << std::endl;
+            hour++;
+        }
+    }
+}
 
 void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,
@@ -43,7 +56,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    ListStorageForRemix& listStorage)
+                                    ListStorageForRemix listStorage)
 {
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;

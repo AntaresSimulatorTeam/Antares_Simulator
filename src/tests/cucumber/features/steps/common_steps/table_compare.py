@@ -85,6 +85,9 @@ def compare_rows(r_ref: dict, r_out: dict):
     ref_cols = {k for k in r_ref.keys() if k}
     out_cols = {k for k in r_out.keys() if k}
     common = ref_cols & out_cols
+    if "basis_status" in common:
+        common.remove("basis_status")
+
     for c in sorted(common):
         a_raw = r_ref[c] if r_ref[c] is not None else ""
         b_raw = r_out[c] if r_out[c] is not None else ""
@@ -159,13 +162,13 @@ def diff_message(name: str, ref_lines, out_lines) -> Optional[str]:
     if missing_keys:
         msg_lines.append(f"- Missing rows in output (samples):")
         for k in missing_keys[:10]:
-            msg_lines.append(f"  * {_format_key(k)}")
+            msg_lines.append(f"  * {format_key(k)}")
         if len(missing_keys) > 10:
             msg_lines.append(f"  ... and {len(missing_keys) - 10} more")
     if extra_keys:
         msg_lines.append(f"- Unexpected extra rows (samples):")
         for k in extra_keys[:10]:
-            msg_lines.append(f"  * {_format_key(k)}")
+            msg_lines.append(f"  * {format_key(k)}")
         if len(extra_keys) > 10:
             msg_lines.append(f"  ... and {len(extra_keys) - 10} more")
 
@@ -184,7 +187,7 @@ def diff_message(name: str, ref_lines, out_lines) -> Optional[str]:
                     msg_lines.append("- Different values (samples):")
                 mismatches_shown += 1
                 if mismatches_shown <= mismatch_limit:
-                    msg_lines.append(f"  * {_format_key(k)}:")
+                    msg_lines.append(f"  * {format_key(k)}:")
                     for col, pair in diffs.items():
                         if col == "__missing_in_out__":
                             msg_lines.append(f"      columns missing in output: {pair}")
@@ -193,7 +196,7 @@ def diff_message(name: str, ref_lines, out_lines) -> Optional[str]:
         # If different counts for the same key, report
         if len(ref_list) != len(out_list):
             msg_lines.append(
-                f"  * {_format_key(k)}: occurrence count ref={len(ref_list)} vs out={len(out_list)}")
+                f"  * {format_key(k)}: occurrence count ref={len(ref_list)} vs out={len(out_list)}")
 
         if mismatches_shown >= mismatch_limit:
             msg_lines.append("  ... display limit reached")

@@ -99,7 +99,7 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     std::vector<Optimization::WeeklyOptimization> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
-    IResultWriter& resultWriter;
+    IResultWriter& resultWriter_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 
     std::vector<OptimisationsSimulationTable> simulationTables_;

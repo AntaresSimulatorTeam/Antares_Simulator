@@ -20,7 +20,6 @@
  */
 
 #include <ExprVisitor.h>
-#include <functional>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/ForbiddenNodes.h>

@@ -225,7 +225,7 @@ LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
             constant_ = isIdenticallyZero ? 0.0 : 1.0;
             return *this;
         }
-        if (std::abs(other.constant() - 1) < EPS_TO_ZERO)
+        if (std::abs(other.constant() - 1) > EPS_TO_ZERO)
         {
             throw std::invalid_argument("non-linear expression is not supported.");
         }
