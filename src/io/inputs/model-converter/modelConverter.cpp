@@ -168,12 +168,10 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(
     {
         SM::Expression lb(variable.lower_bound,
                           convertExpressionToNode(variable.lower_bound,
-                                                  model,
-                                                  optimConfigVariables));
+                                                  model));
         SM::Expression ub(variable.upper_bound,
                           convertExpressionToNode(variable.upper_bound,
-                                                  model,
-                                                  optimConfigVariables));
+                                                  model));
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
@@ -247,8 +245,7 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
         }
 
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition,
-                                                    model,
-                                                    optimConfigVariables);
+                                                    model);
 
         using namespace Antares::Expressions::Nodes;
         AST preorder(nodeRegistry.node);
@@ -276,7 +273,7 @@ static void addSingleConstraint(
   const IO::Inputs::YmlModel::Model& model,
   const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
 {
-    auto nodeRegistry = convertExpressionToNode(constraint.expression, model, optimConfigVariables);
+    auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
                                                                    std::move(nodeRegistry)});
@@ -323,8 +320,7 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
     for (const auto& extraOutput: model.extra_outputs)
     {
         auto nodeRegistry = convertExpressionToNode(extraOutput.expression,
-                                                    model,
-                                                    optimConfigVariables);
+                                                    model);
         extraOutputs.emplace_back(extraOutput.id,
                                   ModelerStudy::SystemModel::Expression{extraOutput.expression,
                                                                         std::move(nodeRegistry)});
@@ -348,8 +344,7 @@ std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
     for (const auto& objective: model.objectives)
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression,
-                                                    model,
-                                                    optimConfigVariables);
+                                                    model);
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
                                                                       std::move(nodeRegistry)},

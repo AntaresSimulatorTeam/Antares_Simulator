@@ -110,8 +110,7 @@ NoPortWithThisId::NoPortWithThisId(const std::string& name):
 
 Expressions::NodeRegistry convertExpressionToNode(
   const std::string& exprStr,
-  const YmlModel::Model& model,
-  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables)
+  const YmlModel::Model& model)
 {
     if (exprStr.empty())
     {

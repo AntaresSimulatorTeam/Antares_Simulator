@@ -70,6 +70,5 @@ Modeler::Config::Location updateLocation(std::string id, std::vector<std::pair<T
 
 Expressions::NodeRegistry convertExpressionToNode(
   const std::string& exprStr,
-  const YmlModel::Model& model,
-  const std::vector<std::pair<const YmlOptimConfig::Variable*, bool>>& optimConfigVariables);
+  const YmlModel::Model& model);
 } // namespace Antares::IO::Inputs::ModelConverter
