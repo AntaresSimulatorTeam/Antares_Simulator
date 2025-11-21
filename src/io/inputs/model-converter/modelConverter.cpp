@@ -402,7 +402,10 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint, model, GetWhatIsForbiddenInConstraint());
+        addSingleConstraint(constraints,
+                            constraint,
+                            model,
+                            GetWhatIsForbiddenInBindingConstraint());
     }
     return constraints;
 }
