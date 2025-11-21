@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_al
                           checkMessage(err_msg));
 }
 
-// Using direcly InputFixture<n, m> in fixture test cases does not compile on Win MSVC.
+// Using directly InputFixture<n, m> in fixture test cases does not compile on Win MSVC.
 // So we're forced to use typedefs instead.
 using InputFixture_5_2 = InputFixture<5, 2>;
 using InputFixture_5_3 = InputFixture<5, 3>;
