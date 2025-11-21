@@ -45,9 +45,23 @@ void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& pat
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
     mpSolver_ = MPSolverFactory(isMip, solverName);
-    solverName_ = solverName;
     objective_ = mpSolver_->MutableObjective();
     isLP_ = !isMip; // we don't care about pure integer prob
+
+    // Initialize objective offset callables based on solver type
+    if (solverName == "sirius")
+    {
+        // For Sirius: use a stateful functor
+        auto siriusHandler = std::make_shared<OffsetLocalHandler>();
+        setOffsetCallable_ = [siriusHandler](double offset) { siriusHandler->setOffset(offset); };
+        getOffsetCallable_ = [siriusHandler]() { return siriusHandler->getOffset(); };
+    }
+    else
+    {
+        // For other solvers: use objective_->SetOffset/offset()
+        setOffsetCallable_ = [this](double offset) { objective_->SetOffset(offset); };
+        getOffsetCallable_ = [this]() { return objective_->offset(); };
+    }
 }
 
 LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
@@ -186,27 +200,12 @@ double OrtoolsLinearProblem::getObjectiveCoefficient(
 
 void OrtoolsLinearProblem::setObjectiveOffset(double offset)
 {
-    /**
-     * SetOffset is not implemented in Sirius solver of ortools
-     *
-     **/
-    if (solverName_ == "sirius")
-    {
-        objectiveOffset_ = offset;
-    }
-    else
-    {
-        objective_->SetOffset(offset);
-    }
+    setOffsetCallable_(offset);
 }
 
 double OrtoolsLinearProblem::getObjectiveOffset() const
 {
-    if (solverName_ == "Sirius")
-    {
-        return objectiveOffset_;
-    }
-    return objective_->offset();
+    return getOffsetCallable_();
 }
 
 void OrtoolsLinearProblem::setMinimization()

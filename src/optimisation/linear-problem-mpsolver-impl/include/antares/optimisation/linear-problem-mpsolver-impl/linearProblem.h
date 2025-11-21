@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <functional>
+
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
@@ -34,6 +36,24 @@ class MPObjective;
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
+
+// Functor for Sirius solver to store objective offset
+class OffsetLocalHandler
+{
+public:
+    void setOffset(double offset)
+    {
+        offset_ = offset;
+    }
+
+    [[nodiscard]] double getOffset() const
+    {
+        return offset_;
+    }
+
+private:
+    double offset_{0.0};
+};
 
 class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem
 {
@@ -103,9 +123,10 @@ private:
 
     std::unique_ptr<OrtoolsMipSolution> solution_;
     bool isLP_{true};
-    // Sirius only because sirius does not implement some interface properly
-    double objectiveOffset_{0.0};
-    std::string solverName_;
+
+    // Callables for objective offset management
+    std::function<void(double)> setOffsetCallable_;
+    std::function<double()> getOffsetCallable_;
 };
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
