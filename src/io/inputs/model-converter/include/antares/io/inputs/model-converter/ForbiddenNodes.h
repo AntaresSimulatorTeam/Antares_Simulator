@@ -98,16 +98,17 @@ class ForbiddenNodes
 {
 public:
     // ------------------------- GLOBAL -------------------------
-    template<FunctionNodeType T>
+
+    template<typename... NodeType>
     void addGlobalForbidden()
     {
-        global_.insert(forbiddenNodeKey<T>());
+        (global_.insert(forbiddenNodeKey<NodeType>()), ...);
     }
 
-    template<typename NodeType>
+    template<FunctionNodeType... NodeType>
     void addGlobalForbidden()
     {
-        global_.insert(forbiddenNodeKey<NodeType>());
+        (global_.insert(forbiddenNodeKey<NodeType>()), ...);
     }
 
     // ---------------------- PARENT -> CHILD --------------------

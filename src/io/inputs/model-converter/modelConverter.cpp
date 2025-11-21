@@ -73,6 +73,110 @@ PortInDefinition::PortInDefinition(const std::string& portId, const std::string&
 {
 }
 
+static void CommonPreSolve(ForbiddenNodes& f)
+{
+    // constraint and objective should not contain dual or reduced_cost
+    f.addGlobalForbidden<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
+    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max and min
+    f.addForbiddenFor<FunctionNodeType::max, VariableNode>();
+    f.addForbiddenFor<FunctionNodeType::min, VariableNode>();
+    f.addForbiddenFor<FunctionNodeType::max, PortFieldNode>();
+    f.addForbiddenFor<FunctionNodeType::min, PortFieldNode>();
+    f.addForbiddenFor<FunctionNodeType::max, PortFieldSumNode>();
+    f.addForbiddenFor<FunctionNodeType::min, PortFieldSumNode>();
+}
+
+static ForbiddenNodes GetWhatIsForbiddenInConstraint()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        CommonPreSolve(f);
+        f.addGlobalForbidden<PortFieldSumNode>();
+        return f;
+    }();
+    return forbidden;
+}
+
+static ForbiddenNodes GetWhatIsForbiddenInBindingConstraint()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        CommonPreSolve(f);
+        return f;
+    }();
+    return forbidden;
+}
+
+static ForbiddenNodes GetWhatIsForbiddenInObjective()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        CommonPreSolve(f);
+        f.addGlobalForbidden<ComparisonNode,
+                             EqualNode,
+                             LessThanOrEqualNode,
+                             GreaterThanOrEqualNode>();
+
+        f.addGlobalForbidden<PortFieldSumNode>();
+        return f;
+    }();
+    return forbidden;
+}
+
+static ForbiddenNodes GetWhatIsForbiddenInPortFieldDefinition()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        CommonPreSolve(f);
+        f.addGlobalForbidden<ComparisonNode,
+                             EqualNode,
+                             LessThanOrEqualNode,
+                             GreaterThanOrEqualNode>();
+
+        f.addGlobalForbidden<PortFieldSumNode>();
+        return f;
+    }();
+    return forbidden;
+}
+
+static ForbiddenNodes GetWhatIsForbiddenInVariableBound()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        CommonPreSolve(f);
+        f.addGlobalForbidden<ComparisonNode,
+                             EqualNode,
+                             LessThanOrEqualNode,
+                             GreaterThanOrEqualNode>();
+
+        f.addGlobalForbidden<PortFieldSumNode>();
+        return f;
+    }();
+    return forbidden;
+}
+
+static ForbiddenNodes GetWhatIsForbiddenInExtraOutput()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        // TODO check        //   f.addGlobalForbidden<PortFieldSumNode>();
+        return f;
+    }();
+    return forbidden;
+}
+
 /// Convert portTypes to Antares::ModelerStudy::SystemModel::PortType
 std::vector<ModelerStudy::SystemModel::PortType> convertTypes(
   const IO::Inputs::YmlModel::Library& library)
@@ -150,7 +254,6 @@ ModelerStudy::SystemModel::ValueType convertType(IO::Inputs::YmlModel::ValueType
     }
 }
 
-static ForbiddenNodes nothingIsForbidden;
 
 /**
  * \brief Converts variables from YmlModel::Model to SystemModel::Variable.
@@ -166,10 +269,15 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
     variables.reserve(model.variables.size());
     for (const auto& variable: model.variables)
     {
+        const auto& whatIsForbiddenInVariableBound = GetWhatIsForbiddenInVariableBound();
         SM::Expression lb(variable.lower_bound,
-                          convertExpressionToNode(variable.lower_bound, model, nothingIsForbidden));
+                          convertExpressionToNode(variable.lower_bound,
+                                                  model,
+                                                  whatIsForbiddenInVariableBound));
         SM::Expression ub(variable.upper_bound,
-                          convertExpressionToNode(variable.upper_bound, model, nothingIsForbidden));
+                          convertExpressionToNode(variable.upper_bound,
+                                                  model,
+                                                  whatIsForbiddenInVariableBound));
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
@@ -242,7 +350,7 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
 
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition,
                                                     model,
-                                                    nothingIsForbidden);
+                                                    GetWhatIsForbiddenInPortFieldDefinition());
 
         using namespace Antares::Expressions::Nodes;
         AST preorder(nodeRegistry.node);
@@ -264,34 +372,12 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
     return portFieldDefinitions;
 }
 
-ForbiddenNodes makeForbiddenInConstraintAndObjective()
-{
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        // constraint and objective should not contain dual or reduced_cost
-        f.addGlobalForbidden<FunctionNodeType::reduced_cost>();
-        f.addGlobalForbidden<FunctionNodeType::dual>();
-        // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max and min
-        f.addForbiddenFor<FunctionNodeType::max, VariableNode>();
-        f.addForbiddenFor<FunctionNodeType::min, VariableNode>();
-        f.addForbiddenFor<FunctionNodeType::max, PortFieldNode>();
-        f.addForbiddenFor<FunctionNodeType::min, PortFieldNode>();
-        f.addForbiddenFor<FunctionNodeType::max, PortFieldSumNode>();
-        f.addForbiddenFor<FunctionNodeType::min, PortFieldSumNode>();
-        return f;
-    }();
-    return forbidden;
-}
-
 static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constraint>& constraints,
                                 const IO::Inputs::YmlModel::Constraint& constraint,
-                                const IO::Inputs::YmlModel::Model& model)
+                                const IO::Inputs::YmlModel::Model& model,
+                                const ForbiddenNodes& forbiddenNodes)
 {
-    auto nodeRegistry = convertExpressionToNode(constraint.expression,
-                                                model,
-                                                makeForbiddenInConstraintAndObjective());
+    auto nodeRegistry = convertExpressionToNode(constraint.expression, model, forbiddenNodes);
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
                                                                    std::move(nodeRegistry)});
@@ -311,12 +397,12 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
 
     for (const auto& constraint: model.constraints)
     {
-        addSingleConstraint(constraints, constraint, model);
+        addSingleConstraint(constraints, constraint, model, GetWhatIsForbiddenInConstraint());
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint, model);
+        addSingleConstraint(constraints, constraint, model, GetWhatIsForbiddenInConstraint());
     }
     return constraints;
 }
@@ -337,7 +423,7 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
     {
         auto nodeRegistry = convertExpressionToNode(extraOutput.expression,
                                                     model,
-                                                    nothingIsForbidden);
+                                                    GetWhatIsForbiddenInExtraOutput());
         extraOutputs.emplace_back(extraOutput.id,
                                   ModelerStudy::SystemModel::Expression{extraOutput.expression,
                                                                         std::move(nodeRegistry)});
@@ -360,7 +446,7 @@ std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression,
                                                     model,
-                                                    makeForbiddenInConstraintAndObjective());
+                                                    GetWhatIsForbiddenInObjective());
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
                                                                       std::move(nodeRegistry)});

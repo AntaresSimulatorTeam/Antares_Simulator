@@ -773,10 +773,14 @@ BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "min(varB, reduced_cost(varB))";
-    BOOST_CHECK_EXCEPTION(
-      converter.run(expression, ModelConverter::makeForbiddenInConstraintAndObjective()),
-      ModelConverter::BadContextComposition,
-      checkMessage("'min' is not allowed to contain 'VariableNode' in this context"));
+
+    // forbid variable in min
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addForbiddenFor<FunctionNodeType::min, VariableNode>();
+    BOOST_CHECK_EXCEPTION(converter.run(expression, forbidden),
+                          ModelConverter::BadContextComposition,
+                          checkMessage(
+                            "'min' is not allowed to contain 'VariableNode' in this context"));
 }
 
 BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
@@ -796,8 +800,11 @@ BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "max(reduced_cost(varB), pmin, varA)";
+    // forbid variable in max
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addForbiddenFor<FunctionNodeType::max, VariableNode>();
     BOOST_CHECK_EXCEPTION(
-      converter.run(expression, ModelConverter::makeForbiddenInConstraintAndObjective()),
+      converter.run(expression, forbidden),
       ModelConverter::BadContextComposition,
       checkMessage("'max' is not allowed to contain 'FunctionNode::reduced_cost' in this context"));
 }
