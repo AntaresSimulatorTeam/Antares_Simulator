@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <optional>
+
 #include <antares/expressions/NodeRegistry.h>
 #include "antares/io/inputs/yml-model/Library.h"
 
@@ -63,17 +65,30 @@ public:
     {
     }
 };
+
+struct BadExpression
+{
+    std::string expression;
+    std::string childName;
+    std::optional<std::string> parentName;
+};
+
 class BadContextComposition final: public std::invalid_argument
 {
 public:
-    explicit BadContextComposition(const std::string& parentName, const std::string& childName):
-        invalid_argument("'" + parentName + "' is not allowed to contain '" + childName
-                         + "' in this context")
+    static std::string BuildMessage(const BadExpression& context)
     {
+        if (context.parentName.has_value())
+        {
+            return "'" + context.parentName.value() + "' is not allowed to contain '"
+                   + context.childName + "' in this expression '" + context.expression + "'";
+        }
+        return "'" + context.childName + "' is not allowed in this expression '"
+               + context.expression + "'";
     }
 
-    explicit BadContextComposition(const std::string& name):
-        invalid_argument("'" + name + "' is not allowed in this context")
+    explicit BadContextComposition(const BadExpression& context):
+        invalid_argument(BuildMessage(context))
     {
     }
 };

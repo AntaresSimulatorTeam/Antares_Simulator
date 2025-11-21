@@ -778,9 +778,9 @@ BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addForbiddenFor<FunctionNodeType::min, VariableNode>();
     BOOST_CHECK_EXCEPTION(converter.run(expression, forbidden),
-                          ModelConverter::BadContextComposition,
-                          checkMessage(
-                            "'min' is not allowed to contain 'VariableNode' in this context"));
+      ModelConverter::BadContextComposition,
+      checkMessage("'Min' is not allowed to contain 'FunctionNode::reduced_cost' in this context '"
+                   + expression + "'"));
 }
 
 BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
@@ -806,5 +806,6 @@ BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
     BOOST_CHECK_EXCEPTION(
       converter.run(expression, forbidden),
       ModelConverter::BadContextComposition,
-      checkMessage("'max' is not allowed to contain 'FunctionNode::reduced_cost' in this context"));
+      checkMessage("'Max' is not allowed to contain 'FunctionNode::reduced_cost' in this context '"
+                   + expression + "'"));
 }
