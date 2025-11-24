@@ -811,3 +811,80 @@ BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
                             "'max' is not allowed to contain 'variable(varB)' in this expression '"
                             + expression + "'"));
 }
+BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignLT)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varA <= 38";
+    // forbid <= Globally
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addGlobalForbidden<Nodes::LessThanOrEqualNode>();
+    BOOST_CHECK_EXCEPTION(converter.run(expression, forbidden),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'<=' is not allowed in this expression '" + expression
+                                       + "'"));
+}
+
+BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignGT)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varA >= 38";
+    // forbid <= Globally
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
+    BOOST_CHECK_EXCEPTION(converter.run(expression, forbidden),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'>=' is not allowed in this expression '" + expression
+                                       + "'"));
+}
+
+BOOST_AUTO_TEST_CASE(ExpressionThatNotContainEqualSign)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varA = 38";
+    // forbid <= Globally
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addGlobalForbidden<Nodes::EqualNode>();
+    BOOST_CHECK_EXCEPTION(converter.run(expression, forbidden),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'=' is not allowed in this expression '" + expression
+                                       + "'"));
+}

@@ -100,6 +100,8 @@ private:
 
     template<FunctionNodeType func>
     void checkConsistencyWithParents(const std::string& childName) const;
+    template<typename NodeType>
+    std::any handleComparisonNode(ExprParser::ComparisonContext* context, const std::string& op);
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
@@ -243,28 +245,32 @@ std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* contex
 {
     return context->expr()->accept(this);
 }
+template<typename NodeType>
+std::any ConvertorVisitor::handleComparisonNode(ExprParser::ComparisonContext* context,
+                                                const std::string& op)
+{
+    checkConsistencyWithParents<NodeType>(op);
+    parentsStack_.push_back({"expression that already contains '" + op + "'", typeid(NodeType)});
+    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
+    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
+    parentsStack_.pop_back();
+    return static_cast<Node*>(registry_.create<NodeType>(left, right));
+}
 
 std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* context)
 {
     std::string op = context->COMPARISON()->getText();
-
-    checkConsistencyWithParents<ComparisonNode>(op);
-    parentsStack_.push_back(
-      {"expression that already contains '" + op + "'", typeid(ComparisonNode)});
-    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
-    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
-    parentsStack_.pop_back();
     if (op == "=")
     {
-        return static_cast<Node*>(registry_.create<EqualNode>(left, right));
+        return handleComparisonNode<EqualNode>(context, op);
     }
     else if (op == "<=")
     {
-        return static_cast<Node*>(registry_.create<LessThanOrEqualNode>(left, right));
+        return handleComparisonNode<LessThanOrEqualNode>(context, op);
     }
     else
     {
-        return static_cast<Node*>(registry_.create<GreaterThanOrEqualNode>(left, right));
+        return handleComparisonNode<GreaterThanOrEqualNode>(context, op);
     }
 }
 
