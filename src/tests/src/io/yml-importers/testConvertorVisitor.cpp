@@ -780,7 +780,7 @@ BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
     BOOST_CHECK_EXCEPTION(converter.run(expression, forbidden),
       ModelConverter::BadContextComposition,
                           checkMessage(
-                            "'Min' is not allowed to contain 'VariableNode' in this context '"
+                            "'min' is not allowed to contain 'variable(varB)' in this expression '"
                             + expression + "'"));
 }
 
@@ -808,6 +808,6 @@ BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
       converter.run(expression, forbidden),
                           ModelConverter::BadContextComposition,
                           checkMessage(
-                            "'Max' is not allowed to contain 'VariableNode' in this context '"
+                            "'max' is not allowed to contain 'variable(varB)' in this expression '"
                             + expression + "'"));
 }
