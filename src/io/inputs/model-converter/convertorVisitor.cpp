@@ -113,7 +113,7 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     lexer.addErrorListener(errorListener.get());
     parser.addErrorListener(errorListener.get());
 
-    ExprParser::ExprContext* tree = parser.expr();
+    ExprParser::FullexprContext* tree = parser.fullexpr();
     Expressions::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
     auto root = std::any_cast<Node*>(visitor.visit(tree));
