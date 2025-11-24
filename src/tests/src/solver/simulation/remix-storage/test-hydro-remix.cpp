@@ -63,7 +63,8 @@ struct InputFixture
                                  storageData.init_level,
                                  storageData.capacity,
                                  pumpEff,
-                                 reservoirManagement);
+                                 reservoirManagement,
+                                 "hydro");
     }
 
     void callRemixStorageAlgorithm(unsigned nbStorage = 1)

@@ -14,7 +14,7 @@ set(TARGET_LIBS #No alias
 
         # solver_api
         study
-		scenario-builder-utils
+        scenario-builder-utils
         study-loader
         file-tree-study-loader
         antares-solver-simulation

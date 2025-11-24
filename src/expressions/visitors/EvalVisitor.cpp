@@ -206,16 +206,18 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
     return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
+EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
 {
-    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, node->index());
+    const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
+    unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
+    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, cstrIndex);
 
     if (timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
         || timeIndex == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
         const auto componentConstraints = optimContainer_.getComponentConstraint(
           component_,
-          node->index(),
+          cstrIndex,
           1 /* single timestep*/);
         return EvaluationResult(componentConstraints.first[0]->dual());
     }
@@ -223,7 +225,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
     const auto componentConstraints = optimContainer_.getComponentConstraint(component_,
-                                                                             node->index(),
+                                                                             cstrIndex,
                                                                              nbTimeStep);
     for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
     {
@@ -233,14 +235,50 @@ EvaluationResult EvalVisitor::visit(const Nodes::DualNode* node)
     return EvaluationResult{constraintValues};
 }
 
-EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
+EvaluationResult EvalVisitor::handlePow(const Nodes::FunctionNode* node)
 {
-    if (node->timeIndex() == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->timeIndex() == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
+    const auto numbers = node->getOperands();
+    auto base = dispatch(numbers.at(0));
+    auto exponent = dispatch(numbers.at(1));
+    return base.evaluateBinaryOperation(exponent,
+                                        [](const auto& a, const auto& b)
+                                        { return std::pow(a, b); });
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
+{
+    switch (node->type())
+    {
+    case Nodes::FunctionNodeType::reduced_cost:
+        return handleReducedCost(node);
+    case Nodes::FunctionNodeType::dual:
+        return handleDual(node);
+    case Nodes::FunctionNodeType::max:
+        return applyOperation(variadicFunction(*this, node),
+                              [](const auto& elements)
+                              { return *std::max_element(elements.begin(), elements.end()); });
+    case Nodes::FunctionNodeType::min:
+        return applyOperation(variadicFunction(*this, node),
+                              [](const auto& elements)
+                              { return *std::min_element(elements.begin(), elements.end()); });
+    case Nodes::FunctionNodeType::pow:
+        return handlePow(node);
+    default:
+        return EvaluationResult(0);
+    }
+}
+
+EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
+{
+    const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
+
+    if (const auto timeIndex = varNode->timeIndex();
+        timeIndex == Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+        || timeIndex == Optimisation::TimeIndex::VARYING_IN_SCENARIO_ONLY)
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
-          node->index(),
+          varNode->Index(),
           1 /* single timestep*/);
         return EvaluationResult(componentVariables[0]->reducedCost());
     }
@@ -248,7 +286,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::ReducedCostNode* node)
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> varValues(nbTimeStep, 0.0);
     const std::span componentVariables = optimContainer_.getComponentVariable(component_,
-                                                                              node->index(),
+                                                                              varNode->Index(),
                                                                               nbTimeStep);
     for (unsigned varInd = 0; varInd < nbTimeStep; ++varInd)
     {
@@ -284,6 +322,25 @@ EvaluationResult::EvaluationResult(double value):
 EvaluationResult::EvaluationResult(const std::vector<double>& values):
     value_(values)
 {
+}
+
+size_t EvaluationResult::size() const
+{
+    if (std::holds_alternative<std::vector<double>>(value_))
+    {
+        return std::get<std::vector<double>>(value_).size();
+    }
+    return 1;
+}
+
+double EvaluationResult::value(unsigned i) const
+{
+    if (std::holds_alternative<std::vector<double>>(value_))
+    {
+        const auto& values = std::get<std::vector<double>>(value_);
+        return values.at(i);
+    }
+    return std::get<double>(value_);
 }
 
 EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double>>& value):

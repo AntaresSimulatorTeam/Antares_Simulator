@@ -6,9 +6,7 @@
 
 namespace Antares::Solver::Simulation
 {
-
 constexpr double TOLERANCE = 1.e-6;
-const std::string error_msg_start_hydro_remix = "Remix hydro input : ";
 
 class StorageForRemixNoLevels: public IStorageForRemix
 {
@@ -16,7 +14,8 @@ public:
     StorageForRemixNoLevels(std::vector<double>& generation,
                             std::vector<double>& unsupE,
                             const std::vector<double> Pmax,
-                            const std::vector<double> Pmin);
+                            const std::vector<double> Pmin,
+                            const std::string& name = "");
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;
@@ -31,6 +30,7 @@ protected:
     std::vector<double>& unsupE_;
     const std::vector<double> pmax_;
     const std::vector<double> pmin_;
+    const std::string error_msg_start_hydro_remix = "Remix hydro input : ";
 };
 
 } // namespace Antares::Solver::Simulation

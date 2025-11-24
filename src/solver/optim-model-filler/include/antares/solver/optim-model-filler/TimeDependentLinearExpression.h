@@ -21,6 +21,8 @@
 #pragma once
 #include <span>
 
+#include <antares/expressions/visitors/VariadicNodeFunctionVisit.h>
+
 #include "LinearExpression.h"
 
 namespace Antares::Optimization
@@ -76,5 +78,26 @@ private:
 
     std::vector<LinearExpression> v_;
 };
+
+template<class Op>
+TimeDependentLinearExpression applyOperation(const std::vector<TimeDependentLinearExpression>& lhs,
+                                             Op op)
+{
+    const auto maxSize = Expressions::Visitors::getMaxSize(lhs);
+    std::vector<const LinearExpression*> row(lhs.size());
+    std::vector<double> constants(maxSize);
+
+    for (std::size_t t = 0; t < maxSize; ++t)
+    {
+        for (int c = 0; c < lhs.size(); ++c)
+        {
+            const auto& e = lhs[c];
+            row[c] = &(e.size() < maxSize ? e[0] : e[t]);
+        }
+        constants[t] = applyOperation(row, op);
+    }
+
+    return TimeDependentLinearExpression(constants);
+}
 
 } // namespace Antares::Optimization

@@ -112,6 +112,115 @@ BOOST_FIXTURE_TEST_CASE(clone_AllTimeSumNode, Registry<Node>)
     BOOST_CHECK(expression->value() == "da");
 }
 
+BOOST_FIXTURE_TEST_CASE(clone_FunctionNodeDual, Registry<Node>)
+{
+    auto* constraintId = create<ParameterNode>("da");
+    auto* constraintIndex = create<LiteralNode>(1459);
+    FunctionNode expr(FunctionNodeType::dual, constraintId, constraintIndex);
+
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(&expr);
+    const auto cloneFunctionNodeDual = dynamic_cast<FunctionNode*>(clone);
+
+    BOOST_REQUIRE(cloneFunctionNodeDual);
+    BOOST_CHECK(cloneFunctionNodeDual->typeToString() == "dual");
+
+    const auto& operands = cloneFunctionNodeDual->getOperands();
+    const auto cloneConstraintId = dynamic_cast<ParameterNode*>(operands.at(0));
+    BOOST_REQUIRE(cloneConstraintId);
+    BOOST_CHECK(cloneConstraintId->value() == "da");
+    const auto cloneConstraintIndex = dynamic_cast<LiteralNode*>(operands.at(1));
+    BOOST_REQUIRE(cloneConstraintIndex);
+    BOOST_CHECK(cloneConstraintIndex->value() == 1459);
+}
+
+BOOST_FIXTURE_TEST_CASE(clone_FunctionNodeReducedCost, Registry<Node>)
+{
+    auto* varNode = create<VariableNode>("da", 1501);
+    FunctionNode expr(FunctionNodeType::reduced_cost, varNode);
+
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(&expr);
+    const auto cloneFunctionReducedCost = dynamic_cast<FunctionNode*>(clone);
+
+    BOOST_REQUIRE(cloneFunctionReducedCost);
+    BOOST_CHECK(cloneFunctionReducedCost->typeToString() == "reduced_cost");
+
+    const auto& operands = cloneFunctionReducedCost->getOperands();
+    const auto cloneVarNode = dynamic_cast<VariableNode*>(operands.at(0));
+    BOOST_REQUIRE(cloneVarNode);
+    BOOST_CHECK(cloneVarNode->value() == "da");
+}
+
+BOOST_FIXTURE_TEST_CASE(clone_FunctionNodePow, Registry<Node>)
+{
+    auto* base = create<VariableNode>("da", 1501);
+    auto* exponent = create<LiteralNode>(1503);
+    FunctionNode expr(FunctionNodeType::pow, base, exponent);
+
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(&expr);
+    const auto cloneFunctionPow = dynamic_cast<FunctionNode*>(clone);
+
+    BOOST_REQUIRE(cloneFunctionPow);
+    BOOST_CHECK(cloneFunctionPow->typeToString() == "pow");
+
+    const auto& operands = cloneFunctionPow->getOperands();
+    const auto cloneBase = dynamic_cast<VariableNode*>(operands.at(0));
+    BOOST_REQUIRE(cloneBase);
+    BOOST_CHECK(cloneBase->value() == "da");
+
+    const auto cloneExponent = dynamic_cast<LiteralNode*>(operands.at(1));
+    BOOST_REQUIRE(cloneExponent);
+    BOOST_CHECK(cloneExponent->value() == 1503);
+}
+
+BOOST_FIXTURE_TEST_CASE(clone_FunctionNodeMax, Registry<Node>)
+{
+    auto* base = create<VariableNode>("da", 1501);
+    auto* exponent = create<LiteralNode>(1503);
+    FunctionNode expr(FunctionNodeType::max, base, exponent);
+
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(&expr);
+    const auto cloneFunctionMax = dynamic_cast<FunctionNode*>(clone);
+
+    BOOST_REQUIRE(cloneFunctionMax);
+    BOOST_CHECK(cloneFunctionMax->typeToString() == "max");
+
+    const auto& operands = cloneFunctionMax->getOperands();
+    const auto cloneBase = dynamic_cast<VariableNode*>(operands.at(0));
+    BOOST_REQUIRE(cloneBase);
+    BOOST_CHECK(cloneBase->value() == "da");
+
+    const auto cloneExponent = dynamic_cast<LiteralNode*>(operands.at(1));
+    BOOST_REQUIRE(cloneExponent);
+    BOOST_CHECK(cloneExponent->value() == 1503);
+}
+
+BOOST_FIXTURE_TEST_CASE(clone_FunctionNodeMin, Registry<Node>)
+{
+    auto* base = create<VariableNode>("da", 1501);
+    auto* exponent = create<LiteralNode>(1503);
+    FunctionNode expr(FunctionNodeType::min, base, exponent);
+
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(&expr);
+    const auto cloneFunctionMin = dynamic_cast<FunctionNode*>(clone);
+
+    BOOST_REQUIRE(cloneFunctionMin);
+    BOOST_CHECK(cloneFunctionMin->typeToString() == "min");
+
+    const auto& operands = cloneFunctionMin->getOperands();
+    const auto cloneBase = dynamic_cast<VariableNode*>(operands.at(0));
+    BOOST_REQUIRE(cloneBase);
+    BOOST_CHECK(cloneBase->value() == "da");
+
+    const auto cloneExponent = dynamic_cast<LiteralNode*>(operands.at(1));
+    BOOST_REQUIRE(cloneExponent);
+    BOOST_CHECK(cloneExponent->value() == 1503);
+}
+
 BOOST_FIXTURE_TEST_CASE(CloneVisitor_name, Registry<Node>)
 {
     CloneVisitor cloneVisitor(*this);

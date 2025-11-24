@@ -20,7 +20,6 @@
 */
 #pragma once
 
-#include <cmath>
 #include <functional>
 #include <sstream>
 #include <variant>
@@ -31,6 +30,8 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
+
+#include "VariadicNodeFunctionVisit.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -46,6 +47,8 @@ class EvalVisitorNotImplemented: public std::invalid_argument
 public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
+
+static constexpr double DEFAULT_THRESHOLD = 1e-16;
 
 class EvaluationResult
 {
@@ -90,10 +93,11 @@ public:
         return evaluateBinaryOperation(right, std::greater_equal<>());
     }
 
+    size_t size() const;
+    double value(unsigned i) const;
+
     struct SafeDivides
     {
-        static constexpr double DEFAULT_THRESHOLD = 1e-16;
-
         explicit SafeDivides(double threshold = DEFAULT_THRESHOLD):
             threshold_(threshold)
         {
@@ -122,7 +126,7 @@ public:
         return evaluateUnaryOperation(std::negate<>());
     }
 
-    [[nodiscard]] std::variant<double, std::vector<double>> value() const
+    [[nodiscard]] const std::variant<double, std::vector<double>>& value() const
     {
         return value_;
     }
@@ -171,12 +175,13 @@ public:
     EvaluationResult timeSum(int from, int to) const;
     EvaluationResult alltimeSum(int numberOfTimeStep) const;
 
+    template<typename Op>
+    EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
+
 private:
     std::variant<double, std::vector<double>> value_;
     explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
 
-    template<typename Op>
-    EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
     template<typename Op>
     EvaluationResult evaluateUnaryOperation(Op op) const;
 
@@ -280,6 +285,34 @@ EvaluationResult EvaluationResult::evaluateUnaryOperation(Op op) const
                  value_));
 }
 
+template<class Operation>
+EvaluationResult applyOperation(const std::vector<EvaluationResult>& in, Operation op)
+{
+    if (in.size() < 2)
+    {
+        throw std::invalid_argument("Expected at least two EvaluationResult");
+    }
+    const size_t size = getMaxSize(in);
+    std::vector<double> values(size);
+    std::vector<double> row(in.size());
+
+    for (size_t timeIndex = 0; timeIndex < size; ++timeIndex)
+    {
+        for (size_t evalIndex = 0; evalIndex < in.size(); ++evalIndex)
+        {
+            const auto& evalResult = in[evalIndex];
+            row[evalIndex] = evalResult.value(timeIndex);
+        }
+        values[timeIndex] = op(row);
+    }
+    if (size > 1)
+    {
+        return EvaluationResult(values);
+    }
+
+    return EvaluationResult(values.at(0));
+}
+
 /**
  * @brief Represents a visitor for evaluating expressions within a given context.
  */
@@ -322,7 +355,9 @@ private:
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
-    EvaluationResult visit(const Nodes::ReducedCostNode* node) override;
-    EvaluationResult visit(const Nodes::DualNode* node) override;
+    EvaluationResult handleReducedCost(const Nodes::FunctionNode* node);
+    EvaluationResult handleDual(const Nodes::FunctionNode* node);
+    EvaluationResult handlePow(const Nodes::FunctionNode* node);
+    EvaluationResult visit(const Nodes::FunctionNode* node) override;
 };
 } // namespace Antares::Expressions::Visitors

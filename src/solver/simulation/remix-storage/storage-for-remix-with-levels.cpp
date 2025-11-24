@@ -40,8 +40,9 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
                                                      const std::vector<double> upRuleCurve,
                                                      const double initLevel,
                                                      const double withdrawalEff,
-                                                     const double injectionEff):
-    StorageForRemixNoLevels(withdrawal, unsupE, Pmax, Pmin),
+                                                     const double injectionEff,
+                                                     const std::string& name):
+    StorageForRemixNoLevels(withdrawal, unsupE, Pmax, Pmin, name),
     levels_(levels),
     inflows_(inflows),
     overflow_(overflow),

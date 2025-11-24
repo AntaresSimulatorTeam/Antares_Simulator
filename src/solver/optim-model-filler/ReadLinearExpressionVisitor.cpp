@@ -27,6 +27,7 @@
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
@@ -288,18 +289,65 @@ Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor
     return Antares::Optimization::TimeDependentLinearExpression(std::move(ret));
 }
 
-Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::ReducedCostNode*)
+Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleReducedCost(
+  const Nodes::FunctionNode*)
 {
     throw Antares::Error::InvalidArgumentError(
       "A linear expression can't contain extra output operator reduced_cost.");
 }
 
-Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
-  const Nodes::DualNode*)
+Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleDual(
+  const Nodes::FunctionNode*)
 {
     throw Antares::Error::InvalidArgumentError(
       "A linear expression can't contain extra output operator dual.");
+}
+
+Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handlePow(
+  const Nodes::FunctionNode* node)
+{
+    auto ret(dispatch(node->getOperands().front()));
+    auto exponentExpr = dispatch(node->getOperands().at(1));
+    if (exponentExpr.size() != 1)
+    {
+        throw Antares::Error::InvalidArgumentError("exponent must be constant");
+    }
+    const auto& exponent = exponentExpr[0];
+    for (auto& s: ret)
+    {
+        s ^= exponent;
+    }
+    return ret;
+}
+
+Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+  const Nodes::FunctionNode* node)
+{
+    switch (node->type())
+    {
+    case Nodes::FunctionNodeType::reduced_cost:
+        return handleReducedCost(node);
+    case Nodes::FunctionNodeType::dual:
+        return handleDual(node);
+    case Nodes::FunctionNodeType::max:
+    {
+        auto exprs(Visitors::variadicFunction(*this, node));
+        return applyOperation(exprs,
+                              [](const auto& elements)
+                              { return *std::max_element(elements.begin(), elements.end()); });
+    }
+    case Nodes::FunctionNodeType::min:
+    {
+        auto exprs(Visitors::variadicFunction(*this, node));
+        return applyOperation(exprs,
+                              [](const auto& elements)
+                              { return *std::min_element(elements.begin(), elements.end()); });
+    }
+    case Nodes::FunctionNodeType::pow:
+        return handlePow(node);
+    default:
+        throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
+    }
 }
 
 } // Namespace Antares::Optimisation

@@ -75,7 +75,8 @@ public:
                                                             uint numSpace,
                                                             AreaList& areas,
                                                             const Data::Parameters& params,
-                                                            Calendar& calendar);
+                                                            Calendar& calendar,
+                                                            IResultWriter& resultWriter);
     void runAll(const optRuntimeData& opt_runtime_data);
 
 protected:
