@@ -356,7 +356,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
     {
         std::string params(constraintId.at(0)->getText());
 
-        for (int param = 1; param < constraintId.size(); param++)
+        for (unsigned param = 1; param < constraintId.size(); param++)
         {
             params += ", " + constraintId.at(param)->getText();
         }
@@ -405,7 +405,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     if (variableId.size() != 1) // -> > 1
     {
         std::string params(variableId.at(0)->getText());
-        for (int param = 1; param < variableId.size(); param++)
+        for (unsigned param = 1; param < variableId.size(); param++)
         {
             params += ", " + variableId.at(param)->getText();
         }
