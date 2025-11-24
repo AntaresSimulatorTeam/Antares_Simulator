@@ -100,7 +100,7 @@ class InMemoryLoader final: public Antares::Solver::ILoader
 public:
     Antares::Solver::ModelerParameters loadParameters() override
     {
-        return {.solver = "highs",
+        return {.solver = "sirius",
                 .solverLogs = false,
                 .solverParameters = "DUMMY",
                 .noOutput = true,
