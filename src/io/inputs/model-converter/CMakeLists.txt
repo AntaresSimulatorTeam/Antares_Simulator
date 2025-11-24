@@ -3,9 +3,11 @@
 set(SOURCES
         modelConverter.cpp
         convertorVisitor.cpp
+        NodeCompositionChecker.cpp
         include/antares/io/inputs/model-converter/modelConverter.h
         include/antares/io/inputs/model-converter/convertorVisitor.h
         include/antares/io/inputs/model-converter/ForbiddenNodes.h
+        include/antares/io/inputs/model-converter/NodeCompositionChecker.h
 )
 
 # Create the library

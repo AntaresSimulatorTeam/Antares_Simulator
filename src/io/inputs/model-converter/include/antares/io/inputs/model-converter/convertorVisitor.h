@@ -21,15 +21,11 @@
 
 #pragma once
 
-#include <optional>
-
 #include <antares/expressions/NodeRegistry.h>
 #include "antares/io/inputs/yml-model/Library.h"
 
 namespace Antares::IO::Inputs::ModelConverter
 {
-class ForbiddenNodes;
-
 class NoPortWithThisId final: public std::runtime_error
 {
 public:
@@ -66,34 +62,6 @@ public:
     }
 };
 
-struct BadExpression
-{
-    std::string expression;
-    std::string childName;
-    std::optional<std::string> parentName;
-};
-
-class BadContextComposition final: public std::invalid_argument
-{
-public:
-    static std::string BuildMessage(const BadExpression& context)
-    {
-        if (context.parentName.has_value())
-        {
-            return "'" + context.parentName.value() + "' is not allowed to contain '"
-                   + context.childName + "' in this expression '" + context.expression + "'";
-        }
-        return "'" + context.childName + "' is not allowed in this expression '"
-               + context.expression + "'";
-    }
-
-    explicit BadContextComposition(const BadExpression& context):
-        invalid_argument(BuildMessage(context))
-    {
-    }
-};
-
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model,
-                                                  const ForbiddenNodes& forbiddenNodes);
+                                                  const YmlModel::Model& model);
 } // namespace Antares::IO::Inputs::ModelConverter

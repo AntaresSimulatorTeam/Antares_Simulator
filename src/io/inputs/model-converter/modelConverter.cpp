@@ -24,6 +24,7 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/expressions/expression.h"
+#include "antares/io/inputs/model-converter/NodeCompositionChecker.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -271,13 +272,13 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
     {
         const auto& whatIsForbiddenInVariableBound = GetWhatIsForbiddenInVariableBound();
         SM::Expression lb(variable.lower_bound,
-                          convertExpressionToNode(variable.lower_bound,
-                                                  model,
-                                                  whatIsForbiddenInVariableBound));
+                          convertExpressionToNode(variable.lower_bound, model));
+        NodeCompositionChecker(whatIsForbiddenInVariableBound, variable.lower_bound)
+          .dispatch(lb.RootNode());
         SM::Expression ub(variable.upper_bound,
-                          convertExpressionToNode(variable.upper_bound,
-                                                  model,
-                                                  whatIsForbiddenInVariableBound));
+                          convertExpressionToNode(variable.upper_bound, model));
+        NodeCompositionChecker(whatIsForbiddenInVariableBound, variable.upper_bound)
+          .dispatch(ub.RootNode());
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
@@ -348,9 +349,7 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
             throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
         }
 
-        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition,
-                                                    model,
-                                                    GetWhatIsForbiddenInPortFieldDefinition());
+        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
 
         using namespace Antares::Expressions::Nodes;
         AST preorder(nodeRegistry.node);
@@ -363,7 +362,8 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
             throw PortInDefinition(pfdefinition.port,
                                    dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
-
+        NodeCompositionChecker(GetWhatIsForbiddenInPortFieldDefinition(), pfdefinition.definition)
+          .dispatch(nodeRegistry.node);
         portFieldDefinitions.emplace_back(
           *itPort,
           *itField,
@@ -377,7 +377,8 @@ static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constrain
                                 const IO::Inputs::YmlModel::Model& model,
                                 const ForbiddenNodes& forbiddenNodes)
 {
-    auto nodeRegistry = convertExpressionToNode(constraint.expression, model, forbiddenNodes);
+    auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
+    NodeCompositionChecker(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
                                                                    std::move(nodeRegistry)});
@@ -424,9 +425,9 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
 
     for (const auto& extraOutput: model.extra_outputs)
     {
-        auto nodeRegistry = convertExpressionToNode(extraOutput.expression,
-                                                    model,
-                                                    GetWhatIsForbiddenInExtraOutput());
+        auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
+        NodeCompositionChecker(GetWhatIsForbiddenInExtraOutput(), extraOutput.expression)
+          .dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
                                   ModelerStudy::SystemModel::Expression{extraOutput.expression,
                                                                         std::move(nodeRegistry)});
@@ -447,9 +448,9 @@ std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
     objectives.reserve(model.objectives.size());
     for (const auto& objective: model.objectives)
     {
-        auto nodeRegistry = convertExpressionToNode(objective.expression,
-                                                    model,
-                                                    GetWhatIsForbiddenInObjective());
+        auto nodeRegistry = convertExpressionToNode(objective.expression, model);
+        NodeCompositionChecker(GetWhatIsForbiddenInObjective(), objective.expression)
+          .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
                                                                       std::move(nodeRegistry)});

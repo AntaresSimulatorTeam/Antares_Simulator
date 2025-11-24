@@ -20,9 +20,9 @@
  */
 
 #include <ExprVisitor.h>
+#include <functional>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/io/inputs/model-converter/ForbiddenNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/TimeSumNode.h"
 
@@ -38,12 +38,10 @@ using namespace Antares::Expressions::Nodes;
 class ConvertorVisitor final: public ExprVisitor
 {
 public:
-    ConvertorVisitor(Expressions::Registry<Node>& registry,
-                     const YmlModel::Model& model,
-                     const ForbiddenNodes& forbiddenNodes,
-                     const std::string& exprStr);
+    ConvertorVisitor(Expressions::Registry<Node>& registry, const YmlModel::Model& model);
 
     std::any visit(antlr4::tree::ParseTree* tree) override;
+
     Node* convertIdentifier(const std::string& identifier) const;
     std::any visitIdentifier(ExprParser::IdentifierContext* context) override;
     std::any visitMuldiv(ExprParser::MuldivContext* context) override;
@@ -84,9 +82,7 @@ public:
 private:
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
-    const ForbiddenNodes& forbiddenNodes_;
-    std::vector<std::pair<std::string, std::type_index>> parentsStack_;
-    const std::string exprStr_;
+
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
     PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
@@ -94,14 +90,6 @@ private:
     std::any ProcessChildren(const std::vector<T*>& exprContexts);
     template<class T>
     std::any processPower(std::vector<T*> exprContexts);
-
-    template<typename Child>
-    void checkConsistencyWithParents(const std::string& childName) const;
-
-    template<FunctionNodeType func>
-    void checkConsistencyWithParents(const std::string& childName) const;
-    template<typename NodeType>
-    std::any handleComparisonNode(ExprParser::ComparisonContext* context, const std::string& op);
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
@@ -110,8 +98,7 @@ NoPortWithThisId::NoPortWithThisId(const std::string& name):
 }
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model,
-                                                  const ForbiddenNodes& forbiddenNodes)
+                                                  const YmlModel::Model& model)
 {
     if (exprStr.empty())
     {
@@ -124,63 +111,21 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
 
     ExprParser::ExprContext* tree = parser.expr();
     Expressions::Registry<Node> registry;
-    ConvertorVisitor visitor(registry, model, forbiddenNodes, exprStr);
+    ConvertorVisitor visitor(registry, model);
     auto root = std::any_cast<Node*>(visitor.visit(tree));
     return Expressions::NodeRegistry(root, std::move(registry));
 }
 
 ConvertorVisitor::ConvertorVisitor(Expressions::Registry<Node>& registry,
-                                   const YmlModel::Model& model,
-                                   const ForbiddenNodes& forbiddenNodes,
-                                   const std::string& exprStr):
+                                   const YmlModel::Model& model):
     registry_(registry),
-    model_(model),
-    forbiddenNodes_(forbiddenNodes),
-    exprStr_(exprStr)
+    model_(model)
 {
 }
 
 std::any ConvertorVisitor::visit(antlr4::tree::ParseTree* tree)
 {
     return tree->accept(this);
-}
-// TODO
-template<typename Child>
-void ConvertorVisitor::checkConsistencyWithParents(const std::string& childName) const
-{
-    if (forbiddenNodes_.isForbidden<Child>())
-    {
-        throw BadContextComposition(
-          {.expression = exprStr_, .childName = childName, .parentName = std::nullopt});
-    }
-    for (auto it = parentsStack_.rbegin(); it != parentsStack_.rend(); ++it)
-    {
-        if (const auto& [parentName, typeIndex] = *it;
-            forbiddenNodes_.isForbiddenFor<Child>(typeIndex))
-        {
-            throw BadContextComposition(
-              {.expression = exprStr_, .childName = childName, .parentName = parentName});
-        }
-    }
-}
-
-template<FunctionNodeType func>
-void ConvertorVisitor::checkConsistencyWithParents(const std::string& childName) const
-{
-    if (forbiddenNodes_.isForbidden<func>())
-    {
-        throw BadContextComposition(
-          {.expression = exprStr_, .childName = childName, .parentName = std::nullopt});
-    }
-    for (auto it = parentsStack_.rbegin(); it != parentsStack_.rend(); ++it)
-    {
-        if (const auto& [parentName, typeIndex] = *it;
-            forbiddenNodes_.isForbiddenFor<func>(typeIndex))
-        {
-            throw BadContextComposition(
-              {.expression = exprStr_, .childName = childName, .parentName = parentName});
-        }
-    }
 }
 
 Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
@@ -201,7 +146,6 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         const auto& var = variables[index];
         if (var.id == identifier)
         {
-            checkConsistencyWithParents<VariableNode>("variable(" + identifier + ")");
             return static_cast<Node*>(registry_.create<VariableNode>(
               var.id,
               index,
@@ -218,18 +162,10 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
 
 std::any ConvertorVisitor::visitMuldiv(ExprParser::MuldivContext* context)
 {
-    std::string op = context->op->getText();
-    if (op == "*")
-    {
-        parentsStack_.emplace_back("multiplication", typeid(MultiplicationNode));
-    }
-    else
-    {
-        parentsStack_.emplace_back("division", typeid(MultiplicationNode));
-    }
     auto* left = std::any_cast<Node*>(visit(context->expr(0)));
     auto* right = std::any_cast<Node*>(visit(context->expr(1)));
-    parentsStack_.pop_back();
+
+    std::string op = context->op->getText();
     return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
                        : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
 }
@@ -241,9 +177,7 @@ std::any ConvertorVisitor::visitFullexpr(ExprParser::FullexprContext* context)
 
 std::any ConvertorVisitor::visitNegation(ExprParser::NegationContext* context)
 {
-    parentsStack_.emplace_back("negation", typeid(NegationNode));
     Node* n = std::any_cast<Node*>(context->expr()->accept(this));
-    parentsStack_.pop_back();
     return static_cast<Node*>(registry_.create<NegationNode>(n));
 }
 
@@ -251,32 +185,24 @@ std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* contex
 {
     return context->expr()->accept(this);
 }
-template<typename NodeType>
-std::any ConvertorVisitor::handleComparisonNode(ExprParser::ComparisonContext* context,
-                                                const std::string& op)
-{
-    checkConsistencyWithParents<NodeType>(op);
-    parentsStack_.emplace_back("expression that already contains '" + op + "'", typeid(NodeType));
-    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
-    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
-    parentsStack_.pop_back();
-    return static_cast<Node*>(registry_.create<NodeType>(left, right));
-}
 
 std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* context)
 {
+    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
+    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
+
     std::string op = context->COMPARISON()->getText();
     if (op == "=")
     {
-        return handleComparisonNode<EqualNode>(context, op);
+        return static_cast<Node*>(registry_.create<EqualNode>(left, right));
     }
     else if (op == "<=")
     {
-        return handleComparisonNode<LessThanOrEqualNode>(context, op);
+        return static_cast<Node*>(registry_.create<LessThanOrEqualNode>(left, right));
     }
     else
     {
-        return handleComparisonNode<GreaterThanOrEqualNode>(context, op);
+        return static_cast<Node*>(registry_.create<GreaterThanOrEqualNode>(left, right));
     }
 }
 
@@ -297,12 +223,10 @@ void extractSumOperands(Node* node, std::vector<Node*>& operands)
 
 std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
 {
-    std::string op = context->op->getText();
-    op == "+" ? parentsStack_.emplace_back("sum", typeid(SumNode))
-              : parentsStack_.emplace_back("subtraction", typeid(SubtractionNode));
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
-    parentsStack_.pop_back();
+
+    std::string op = context->op->getText();
     if (op == "-")
     {
         return static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
@@ -338,7 +262,6 @@ PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContex
     const auto [portId, portField] = std::any_cast<std::pair<std::string, std::string>>(
       context->accept(this));
 
-    checkConsistencyWithParents<PortFieldNode>("port field (" + portId + "." + portField + ")");
     if (isThePortIsRegistered(portId, model_.ports))
     {
         return registry_.create<PortFieldNode>(portId, portField);
@@ -359,10 +282,7 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 
 std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndexContext* context)
 {
-    checkConsistencyWithParents<TimeIndexNode>("timeIndex");
-    parentsStack_.emplace_back("timeIndex", typeid(TimeIndexNode));
     Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
-    parentsStack_.pop_back();
     auto* index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
     return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
@@ -382,31 +302,18 @@ std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftC
 
 std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
 {
-    checkConsistencyWithParents<TimeShiftNode>("timeShift");
-    parentsStack_.emplace_back("timeShift", typeid(TimeShiftNode));
-    auto node = buildShiftNode(convertIdentifier(context->IDENTIFIER()->getText()),
-                               context->shift());
-    parentsStack_.pop_back();
-    return node;
+    return buildShiftNode(convertIdentifier(context->IDENTIFIER()->getText()), context->shift());
 }
 
 std::any ConvertorVisitor::visitTimeShiftExpr(ExprParser::TimeShiftExprContext* context)
 {
-    checkConsistencyWithParents<TimeShiftNode>("timeShift");
-    parentsStack_.emplace_back("timeShift", typeid(TimeShiftNode));
-    auto node = buildShiftNode(std::any_cast<Node*>(context->expr()->accept(this)),
-                               context->shift());
-    parentsStack_.pop_back();
-    return node;
+    return buildShiftNode(std::any_cast<Node*>(context->expr()->accept(this)), context->shift());
 }
 
 std::any ConvertorVisitor::visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context)
 {
-    checkConsistencyWithParents<TimeIndexNode>("timeIndex");
-    parentsStack_.emplace_back("timeIndex", typeid(TimeIndexNode));
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
-    parentsStack_.pop_back();
     return static_cast<Node*>(registry_.create<TimeIndexNode>(left, right));
 }
 
@@ -417,16 +324,15 @@ std::any ConvertorVisitor::visitPortFieldExpr(ExprParser::PortFieldExprContext* 
 
 std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* context)
 {
-    checkConsistencyWithParents<PortFieldSumNode>("sum_connections");
     const auto port = processPortRule(context->portFieldExpr());
     const auto portName = port->getPortName();
     const auto fieldName = port->getFieldName();
+
     return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
 std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 {
-    checkConsistencyWithParents<FunctionNodeType::dual>("dual");
     if (!context)
     {
         throw std::invalid_argument("dual operator expect exactly one constraint id got nothing");
@@ -477,7 +383,6 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)
 {
-    checkConsistencyWithParents<FunctionNodeType::reduced_cost>("reduced_cost");
     if (!context)
     {
         throw std::invalid_argument(
@@ -504,11 +409,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     {
         throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
     }
-    if (!dynamic_cast<VariableNode*>(nodes[0]))
-    {
-        throw std::invalid_argument("reduced_cost operator expect exactly one variable id got: "
-                                    + nodes[0]->name());
-    }
+
     return static_cast<Node*>(
       registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
 }
@@ -516,11 +417,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
 template<class T>
 std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts)
 {
-    parentsStack_.emplace_back("exponentiation",
-                               typeid(
-                                 std::integral_constant<FunctionNodeType, FunctionNodeType::pow>));
     const auto powerExpr = std::any_cast<std::vector<Node*>>(ProcessChildren(exprContexts));
-    parentsStack_.pop_back();
     return static_cast<Node*>(
       registry_.create<FunctionNode>(FunctionNodeType::pow, powerExpr.at(0), powerExpr.at(1)));
 }
@@ -539,23 +436,15 @@ std::any ConvertorVisitor::visitRightPower(ExprParser::RightPowerContext* contex
 
 std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* context)
 {
-    parentsStack_.emplace_back("exponentiation",
-                               typeid(
-                                 std::integral_constant<FunctionNodeType, FunctionNodeType::pow>));
     auto base = std::any_cast<Node*>(context->shift_expr()->accept(this));
     auto exponent = std::any_cast<Node*>(context->right_expr()->accept(this));
-    parentsStack_.pop_back();
     return static_cast<Node*>(
       registry_.create<FunctionNode>(FunctionNodeType::pow, base, exponent));
 }
 
 std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
 {
-    parentsStack_.emplace_back("max",
-                               typeid(
-                                 std::integral_constant<FunctionNodeType, FunctionNodeType::max>));
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
-    parentsStack_.pop_back();
     if (nodes.size() < 2)
     {
         throw std::invalid_argument("max operator expect at least 2 operands got "
@@ -566,11 +455,7 @@ std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
 {
-    parentsStack_.emplace_back("min",
-                               typeid(
-                                 std::integral_constant<FunctionNodeType, FunctionNodeType::min>));
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
-    parentsStack_.pop_back();
     if (nodes.size() < 2)
     {
         throw std::invalid_argument("min operator expect at least 2 operands got "
@@ -635,25 +520,18 @@ Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shif
 
 std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
 {
-    // TODO
-    checkConsistencyWithParents<TimeSumNode>("sum");
-    parentsStack_.emplace_back("sum", typeid(TimeSumNode));
     auto* from = NodeFromShiftContext(context->from->shift_expr());
 
     auto* to = NodeFromShiftContext(context->to->shift_expr());
 
     auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
-    parentsStack_.pop_back();
+
     return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
 
 std::any ConvertorVisitor::visitAllTimeSum([[maybe_unused]] ExprParser::AllTimeSumContext* context)
 {
-    // TODO
-    checkConsistencyWithParents<AllTimeSumNode>("sum");
-    parentsStack_.emplace_back("sum", typeid(AllTimeSumNode));
     auto expr = std::any_cast<Node*>(context->expr()->accept(this));
-    parentsStack_.pop_back();
     return static_cast<Node*>(registry_.create<AllTimeSumNode>(expr));
 }
 
@@ -687,13 +565,9 @@ std::any ConvertorVisitor::visitShift([[maybe_unused]] ExprParser::ShiftContext*
 std::any ConvertorVisitor::visitShiftAddsub(
   [[maybe_unused]] ExprParser::ShiftAddsubContext* context)
 {
-    const auto op = context->op->getText();
-
-    op == "+" ? parentsStack_.emplace_back("sum", typeid(SumNode))
-              : parentsStack_.emplace_back("subtraction", typeid(SubtractionNode)); //
     Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
     Node* right = std::any_cast<Node*>(visit(context->right_expr()));
-    parentsStack_.pop_back();
+    const auto op = context->op->getText();
     return (op == "+") ? static_cast<Node*>(registry_.create<SumNode>(left, right))
                        : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
 }
@@ -702,12 +576,9 @@ std::any ConvertorVisitor::visitShiftAddsub(
 std::any ConvertorVisitor::visitShiftMuldiv(
   [[maybe_unused]] ExprParser::ShiftMuldivContext* context)
 {
-    const auto op = context->op->getText();
-    op == "*" ? parentsStack_.emplace_back("multiplication", typeid(MultiplicationNode))
-              : parentsStack_.emplace_back("division", typeid(DivisionNode));
     Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
     Node* right = std::any_cast<Node*>(visit(context->right_expr()));
-    parentsStack_.pop_back();
+    const auto op = context->op->getText();
     return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
                        : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
 }
