@@ -28,7 +28,6 @@
 
 #include "antares/expressions/nodes/FunctionNode.h"
 #include "antares/expressions/nodes/Node.h"
-using namespace Antares::Expressions::Nodes;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
@@ -38,46 +37,52 @@ std::type_index forbiddenNodeKey()
     if constexpr (std::is_same_v<NodeType, Expressions::Nodes::FunctionNode>)
     {
         static_assert(!std::is_same_v<NodeType, Expressions::Nodes::FunctionNode>,
-                      "Use FunctionNodeType enum values or forbiddenNodeKey(FunctionNodeType) "
+                      "Use Expressions::Nodes::FunctionNodeType enum values or "
+                      "forbiddenNodeKey(Expressions::Nodes::FunctionNodeType) "
                       "instead of FunctionNode for forbidden rules.");
     }
     return std::type_index(typeid(NodeType));
 }
 
-template<FunctionNodeType T>
+template<Expressions::Nodes::FunctionNodeType T>
 inline std::type_index forbiddenNodeKey()
 {
-    using Tag = std::integral_constant<FunctionNodeType, T>;
+    using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType, T>;
     return std::type_index(typeid(Tag));
 }
 
-inline std::type_index forbiddenNodeKey(const FunctionNodeType& funcType)
+inline std::type_index forbiddenNodeKey(const Expressions::Nodes::FunctionNodeType& funcType)
 {
     switch (funcType)
     {
-    case FunctionNodeType::max:
+    case Expressions::Nodes::FunctionNodeType::max:
     {
-        using Tag = std::integral_constant<FunctionNodeType, FunctionNodeType::max>;
+        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
+                                           Expressions::Nodes::FunctionNodeType::max>;
         return std::type_index(typeid(Tag));
     }
-    case FunctionNodeType::min:
+    case Expressions::Nodes::FunctionNodeType::min:
     {
-        using Tag = std::integral_constant<FunctionNodeType, FunctionNodeType::min>;
+        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
+                                           Expressions::Nodes::FunctionNodeType::min>;
         return std::type_index(typeid(Tag));
     }
-    case FunctionNodeType::pow:
+    case Expressions::Nodes::FunctionNodeType::pow:
     {
-        using Tag = std::integral_constant<FunctionNodeType, FunctionNodeType::pow>;
+        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
+                                           Expressions::Nodes::FunctionNodeType::pow>;
         return std::type_index(typeid(Tag));
     }
-    case FunctionNodeType::dual:
+    case Expressions::Nodes::FunctionNodeType::dual:
     {
-        using Tag = std::integral_constant<FunctionNodeType, FunctionNodeType::dual>;
+        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
+                                           Expressions::Nodes::FunctionNodeType::dual>;
         return std::type_index(typeid(Tag));
     }
-    case FunctionNodeType::reduced_cost:
+    case Expressions::Nodes::FunctionNodeType::reduced_cost:
     {
-        using Tag = std::integral_constant<FunctionNodeType, FunctionNodeType::reduced_cost>;
+        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
+                                           Expressions::Nodes::FunctionNodeType::reduced_cost>;
         return std::type_index(typeid(Tag));
     }
     default:
@@ -85,9 +90,9 @@ inline std::type_index forbiddenNodeKey(const FunctionNodeType& funcType)
     }
 }
 
-inline std::type_index forbiddenNodeKey(const Node& node)
+inline std::type_index forbiddenNodeKey(const Expressions::Nodes::Node& node)
 {
-    if (auto* funcNode = dynamic_cast<const FunctionNode*>(&node))
+    if (auto* funcNode = dynamic_cast<const Expressions::Nodes::FunctionNode*>(&node))
     {
         return forbiddenNodeKey(funcNode->type());
     }
@@ -105,27 +110,28 @@ public:
         (global_.insert(forbiddenNodeKey<NodeType>()), ...);
     }
 
-    template<FunctionNodeType... NodeType>
+    template<Expressions::Nodes::FunctionNodeType... NodeType>
     void addGlobalForbidden()
     {
         (global_.insert(forbiddenNodeKey<NodeType>()), ...);
     }
 
     // ---------------------- PARENT -> CHILD --------------------
-    template<FunctionNodeType Parent, typename Child>
-    requires(!std::is_same_v<Child, FunctionNodeType>)
+    template<Expressions::Nodes::FunctionNodeType Parent, typename Child>
+    requires(!std::is_same_v<Child, Expressions::Nodes::FunctionNodeType>)
     void addForbiddenFor()
     {
         rules_[forbiddenNodeKey<Parent>()].insert(forbiddenNodeKey<Child>());
     }
 
-    template<FunctionNodeType Parent, FunctionNodeType Child>
+    template<Expressions::Nodes::FunctionNodeType Parent,
+             Expressions::Nodes::FunctionNodeType Child>
     void addForbiddenFor()
     {
         rules_[forbiddenNodeKey<Parent>()].insert(forbiddenNodeKey<Child>());
     }
 
-    template<typename Parent, FunctionNodeType Child>
+    template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
     void addForbiddenFor()
     {
         rules_[forbiddenNodeKey<Parent>()].insert(forbiddenNodeKey<Child>());
@@ -150,7 +156,7 @@ public:
     }
 
     // ---------------------- COMPILE-TIME CHECK ----------------------
-    template<typename Parent, FunctionNodeType Child>
+    template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
     bool isForbiddenFor() const
     {
         return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
@@ -163,13 +169,13 @@ public:
     }
 
     // ---------------------- RUNTIME CHECK ----------------------
-    template<FunctionNodeType Parent>
-    bool isForbiddenFor(const Node& child) const
+    template<Expressions::Nodes::FunctionNodeType Parent>
+    bool isForbiddenFor(const Expressions::Nodes::Node& child) const
     {
         return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey(child));
     }
 
-    template<FunctionNodeType Child>
+    template<Expressions::Nodes::FunctionNodeType Child>
     bool isForbiddenFor(const std::type_index& parentKey) const
     {
         return check(parentKey, forbiddenNodeKey<Child>());
@@ -181,7 +187,8 @@ public:
         return check(parentKey, forbiddenNodeKey<Child>());
     }
 
-    bool isForbiddenFor(const std::type_index& parentKey, const Node& child) const
+    bool isForbiddenFor(const std::type_index& parentKey,
+                        const Expressions::Nodes::Node& child) const
     {
         return check(parentKey, forbiddenNodeKey(child));
     }
@@ -192,11 +199,12 @@ public:
         return global_.contains(forbiddenNodeKey<NodeType>());
     }
 
-    template<FunctionNodeType NodeType>
+    template<Expressions::Nodes::FunctionNodeType NodeType>
     bool isForbidden() const
     {
         return global_.contains(forbiddenNodeKey<NodeType>());
     }
+
 private:
     std::unordered_set<std::type_index> global_;
     std::unordered_map<std::type_index, std::unordered_set<std::type_index>> rules_;
