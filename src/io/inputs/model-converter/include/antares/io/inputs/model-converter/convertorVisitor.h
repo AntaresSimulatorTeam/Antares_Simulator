@@ -21,6 +21,9 @@
 
 #pragma once
 
+#include <antlr4-runtime.h>
+#include <stdexcept>
+
 #include <antares/expressions/NodeRegistry.h>
 #include "antares/io/inputs/yml-model/Library.h"
 
@@ -60,6 +63,27 @@ public:
                       + modelName + "'")
     {
     }
+};
+
+class ErrorListener: public antlr4::BaseErrorListener
+{
+public:
+    ErrorListener(const std::string& expression):
+        expr(expression)
+    {
+    }
+
+    void syntaxError(antlr4::Recognizer*,
+                     antlr4::Token*,
+                     size_t,
+                     size_t,
+                     const std::string& msg,
+                     std::exception_ptr) override
+    {
+        throw std::runtime_error("Syntax error in expression: \"" + expr + "\": " + msg);
+    }
+
+    const std::string& expr;
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,

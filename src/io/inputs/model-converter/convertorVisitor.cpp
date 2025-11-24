@@ -20,7 +20,7 @@
  */
 
 #include <ExprVisitor.h>
-#include <functional>
+#include <memory>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
@@ -108,6 +108,10 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     ExprLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     ExprParser parser(&tokens);
+
+    auto errorListener = std::make_shared<ErrorListener>(exprStr);
+    lexer.addErrorListener(errorListener.get());
+    parser.addErrorListener(errorListener.get());
 
     ExprParser::ExprContext* tree = parser.expr();
     Expressions::Registry<Node> registry;
