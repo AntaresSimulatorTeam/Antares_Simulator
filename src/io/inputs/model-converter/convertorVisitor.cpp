@@ -104,16 +104,25 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     {
         return {};
     }
+
+    // ANTLR setup
     antlr4::ANTLRInputStream input(exprStr);
     ExprLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     ExprParser parser(&tokens);
 
-    auto errorListener = std::make_shared<ErrorListener>(exprStr);
+    // error handling
+    auto errorListener = std::make_shared<ErrorListener>();
+    lexer.removeErrorListeners();  // remove antlr logs to keep ours
+    parser.removeErrorListeners(); // same
     lexer.addErrorListener(errorListener.get());
     parser.addErrorListener(errorListener.get());
 
+    // actual parsing
     ExprParser::FullexprContext* tree = parser.fullexpr();
+    errorListener->checkErrors(exprStr);
+
+    // tree conversion
     Expressions::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
     auto root = std::any_cast<Node*>(visitor.visit(tree));

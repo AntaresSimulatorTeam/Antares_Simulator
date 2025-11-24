@@ -65,14 +65,18 @@ public:
     }
 };
 
+class AntlrParsingError final: public std::invalid_argument
+{
+public:
+    explicit AntlrParsingError(const std::string& msg):
+        std::invalid_argument(msg)
+    {
+    }
+};
+
 class ErrorListener: public antlr4::BaseErrorListener
 {
 public:
-    ErrorListener(const std::string& expression):
-        expr(expression)
-    {
-    }
-
     void syntaxError(antlr4::Recognizer*,
                      antlr4::Token*,
                      size_t,
@@ -80,10 +84,26 @@ public:
                      const std::string& msg,
                      std::exception_ptr) override
     {
-        throw std::runtime_error("Syntax error in expression: \"" + expr + "\": " + msg);
+        errors.push_back(msg);
     }
 
-    const std::string& expr;
+    void checkErrors(const std::string expr) const
+    {
+        if (errors.empty())
+        {
+            return;
+        }
+
+        std::string fullMsg = "Error(s) while parsing expression: '" + expr + "'\n";
+        for (const auto& err: errors)
+        {
+            fullMsg += "  - " + err + "\n";
+        }
+        throw AntlrParsingError(fullMsg);
+    }
+
+private:
+    std::vector<std::string> errors;
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
