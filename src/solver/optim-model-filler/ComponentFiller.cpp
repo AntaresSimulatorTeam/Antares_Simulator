@@ -453,7 +453,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
       { return AreLocationsCompatible(objective.location(), targetLocation_); });
 
     auto& pb = optimEntityContainer_.Problem();
-    double objectiveOffset = 0.0;
+    double objectiveOffset = 0.0; // OK
     for (const auto& objective: model->Objectives() | locationFilter)
     {
         const auto root_node = objective.expression().RootNode();

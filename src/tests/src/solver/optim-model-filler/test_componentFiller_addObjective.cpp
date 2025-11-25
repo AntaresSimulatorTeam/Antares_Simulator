@@ -453,4 +453,31 @@ BOOST_AUTO_TEST_CASE(multiple_objectives_in_model)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 60);
 }
 
+BOOST_AUTO_TEST_CASE(time_sum_var_with_objective)
+{
+    // Objective: sum(2*x + 3) over time steps 0 to 2
+    // This should give coefficient 2 for each variable x_t0, x_t1, x_t2
+    auto from = literal(0);
+    auto to = literal(2);
+    auto expression = add(multiply(literal(2), variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY)),
+                          literal(3));
+    auto timeSum = nodeRegistry.create<Nodes::AllTimeSumNode>(expression);
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, timeSum, true);
+    createComponent("model", "componentA", {});
+
+    constexpr unsigned int last_time_step = 2;
+    FillContext ctx{0, last_time_step, 0, last_time_step, 0};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 3
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
+    for (unsigned i = 0; i < nb_var; i++)
+    {
+        {
+            BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 9);
+        }
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
