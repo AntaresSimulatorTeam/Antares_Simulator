@@ -88,6 +88,11 @@ public:
     void addVariables(const LinearProblemApi::FillContext& ctx) override;
 
     void addConstraints(const LinearProblemApi::FillContext& ctx) override;
+    void addTimeDependentObjective(const Optimization::TimeDependentLinearExpression& pairses,
+                                   const std::string& id,
+                                   const LinearProblemApi::FillContext& ctx);
+    void addStaticObjective(const Optimization::TimeDependentLinearExpression& pairses,
+                            const std::string& id);
     void addObjectives(const LinearProblemApi::FillContext& ctx) override;
 
 private:

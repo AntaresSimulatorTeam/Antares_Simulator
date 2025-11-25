@@ -412,6 +412,35 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
+void ComponentFiller::addTimeDependentObjective(
+  const Optimization::TimeDependentLinearExpression& pairses,
+  const std::string& id,
+  const LinearProblemApi::FillContext& ctx)
+{
+    auto& pb = optimEntityContainer_.Problem();
+    const auto& solverVariables = optimEntityContainer_.getVariables();
+
+    for (const auto& expr: pairses)
+    {
+        for (const auto& [index, coef]: expr)
+        {
+            pb.setObjectiveCoefficient(solverVariables[index].get(), coef);
+        }
+    }
+}
+
+void ComponentFiller::addStaticObjective(const Optimization::TimeDependentLinearExpression& pairses,
+                                         const std::string& id)
+{
+    auto& pb = optimEntityContainer_.Problem();
+    const auto& solverVariables = optimEntityContainer_.getVariables();
+
+    for (const auto& [index, value]: pairses[0])
+    {
+        pb.setObjectiveCoefficient(solverVariables[index].get(), value);
+    }
+}
+
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
     auto* model = component_.getModel();
@@ -427,18 +456,20 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     double objectiveOffset = 0.0;
     for (const auto& objective: model->Objectives() | locationFilter)
     {
+        const auto root_node = objective.expression().RootNode();
         const auto linearExpression = visitor.visitMergeDuplicates(
           objective.expression().RootNode());
 
-        for (const auto& expr: linearExpression)
+        const auto timeIndex = getConstraintTimeIndex(root_node, component_);
+        if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
+            || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
         {
-            for (const auto& [index, coef]: expr)
-            {
-                pb.setObjectiveCoefficient(solverVariables[index].get(), coef);
-            }
-            objectiveOffset += expr.constant();
+            throw Error::RuntimeError("Time dependent objectives are not supported in Antares.");
         }
-        pb.setObjectiveOffset(objectiveOffset);
+        else
+        {
+            addStaticObjective(linearExpression, objective.Id());
+        }
     }
 }
 
