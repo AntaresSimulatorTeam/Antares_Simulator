@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <stdexcept>
+
 #include <antares/expressions/NodeRegistry.h>
 #include "antares/io/inputs/yml-model/Library.h"
 
@@ -60,6 +62,11 @@ public:
                       + modelName + "'")
     {
     }
+};
+
+class AntlrParsingError final: public std::invalid_argument
+{
+    using std::invalid_argument::invalid_argument;
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
