@@ -206,9 +206,9 @@ Feature: short tests
     And the expected value of the annual system cost is 0
     And the annual results are
       | area         | year | hydro production | hydro pumping | balance | spilled energy | unsupplied energy |
-      | hydro node 1 | 1    | 29423845         | 0             | 0       | 67243352       | 0                 |
-      | hydro node-2 | 1    | 26758144         | 0             | 0       | 63506522       | 0                 |
-      | hydro node-3 | 1    | 35188296         | 0             | 0       | 80265517       | 0                 |
+      | hydro node 1 | 1    | 29198647         | 0             | 0       | 67018154       | 0                 |
+      | hydro node-2 | 1    | 26722953         | 0             | 0       | 63506522       | 0                 |
+      | hydro node-3 | 1    | 35110361         | 0             | 0       | 80265517       | 0                 |
     And in area "HYDRO NODE 1", during year 1, "default" produces 0 MWh
     And in area "HYDRO NODE-2", during year 1, "default" produces 0 MWh
     And in area "HYDRO NODE-2", during year 1, "default-2" produces 0 MWh
