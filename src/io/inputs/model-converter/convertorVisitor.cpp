@@ -293,7 +293,7 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
     return static_cast<Node*>(registry_.create<LiteralNode>(d));
 }
 
-std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndexContext* context)
+std::any ConvertorVisitor::visitTimeIndex(ExprParser::TimeIndexContext* context)
 {
     Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
     auto* index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
@@ -313,7 +313,7 @@ std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftC
     }
 }
 
-std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
+std::any ConvertorVisitor::visitTimeShift(ExprParser::TimeShiftContext* context)
 {
     return buildShiftNode(convertIdentifier(context->IDENTIFIER()->getText()), context->shift());
 }
@@ -477,7 +477,7 @@ std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
 }
 
-std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
+std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
     auto* arglist = context->argList();
@@ -531,7 +531,7 @@ Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shif
     }
 }
 
-std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
+std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 {
     auto* from = NodeFromShiftContext(context->from->shift_expr());
 
@@ -542,7 +542,7 @@ std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumCont
     return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
 
-std::any ConvertorVisitor::visitAllTimeSum([[maybe_unused]] ExprParser::AllTimeSumContext* context)
+std::any ConvertorVisitor::visitAllTimeSum(ExprParser::AllTimeSumContext* context)
 {
     auto expr = std::any_cast<Node*>(context->expr()->accept(this));
     return static_cast<Node*>(registry_.create<AllTimeSumNode>(expr));
@@ -564,19 +564,17 @@ std::any ConvertorVisitor::visitUnsignedAtom(ExprParser::UnsignedAtomContext* co
     return context->atom()->accept(this);
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitRightAtom([[maybe_unused]] ExprParser::RightAtomContext* context)
+std::any ConvertorVisitor::visitRightAtom(ExprParser::RightAtomContext* context)
 {
     return context->atom()->accept(this);
 }
 
-std::any ConvertorVisitor::visitShift([[maybe_unused]] ExprParser::ShiftContext* context)
+std::any ConvertorVisitor::visitShift(ExprParser::ShiftContext* context)
 {
     return std::any_cast<Node*>(visit(context->shift_expr()));
 }
 
-std::any ConvertorVisitor::visitShiftAddsub(
-  [[maybe_unused]] ExprParser::ShiftAddsubContext* context)
+std::any ConvertorVisitor::visitShiftAddsub(ExprParser::ShiftAddsubContext* context)
 {
     Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
     Node* right = std::any_cast<Node*>(visit(context->right_expr()));
@@ -585,9 +583,7 @@ std::any ConvertorVisitor::visitShiftAddsub(
                        : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitShiftMuldiv(
-  [[maybe_unused]] ExprParser::ShiftMuldivContext* context)
+std::any ConvertorVisitor::visitShiftMuldiv(ExprParser::ShiftMuldivContext* context)
 {
     Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
     Node* right = std::any_cast<Node*>(visit(context->right_expr()));
@@ -603,9 +599,7 @@ std::any ConvertorVisitor::visitRightMuldiv(
     throw NotImplemented("Node right mul div not implemented yet");
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitSignedExpression(
-  [[maybe_unused]] ExprParser::SignedExpressionContext* context)
+std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionContext* context)
 {
     auto a = context->expr()->accept(this);
     if (context->op->getText() == "-")
