@@ -109,7 +109,7 @@ public:
         errors.push_back(msg);
     }
 
-    void checkErrors(const std::string expr) const
+    void checkErrors(const std::string& expr) const
     {
         if (errors.empty())
         {
