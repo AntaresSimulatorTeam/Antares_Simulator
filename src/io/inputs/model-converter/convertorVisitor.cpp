@@ -20,7 +20,6 @@
  */
 
 #include <ExprVisitor.h>
-#include <memory>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
