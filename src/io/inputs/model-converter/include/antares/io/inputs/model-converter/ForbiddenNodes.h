@@ -45,7 +45,7 @@ std::type_index forbiddenNodeKey()
 }
 
 template<Expressions::Nodes::FunctionNodeType T>
-inline std::type_index forbiddenNodeKey()
+constexpr std::type_index forbiddenNodeKey()
 {
     using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType, T>;
     return std::type_index(typeid(Tag));
@@ -55,36 +55,17 @@ inline std::type_index forbiddenNodeKey(const Expressions::Nodes::FunctionNodeTy
 {
     switch (funcType)
     {
-    case Expressions::Nodes::FunctionNodeType::max:
-    {
-        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
-                                           Expressions::Nodes::FunctionNodeType::max>;
-        return std::type_index(typeid(Tag));
-    }
-    case Expressions::Nodes::FunctionNodeType::min:
-    {
-        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
-                                           Expressions::Nodes::FunctionNodeType::min>;
-        return std::type_index(typeid(Tag));
-    }
-    case Expressions::Nodes::FunctionNodeType::pow:
-    {
-        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
-                                           Expressions::Nodes::FunctionNodeType::pow>;
-        return std::type_index(typeid(Tag));
-    }
-    case Expressions::Nodes::FunctionNodeType::dual:
-    {
-        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
-                                           Expressions::Nodes::FunctionNodeType::dual>;
-        return std::type_index(typeid(Tag));
-    }
-    case Expressions::Nodes::FunctionNodeType::reduced_cost:
-    {
-        using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType,
-                                           Expressions::Nodes::FunctionNodeType::reduced_cost>;
-        return std::type_index(typeid(Tag));
-    }
+        using NT = Expressions::Nodes::FunctionNodeType;
+    case NT::max:
+        return forbiddenNodeKey<NT::max>();
+    case NT::min:
+        return forbiddenNodeKey<NT::min>();
+    case NT::pow:
+        return forbiddenNodeKey<NT::pow>();
+    case NT::dual:
+        return forbiddenNodeKey<NT::dual>();
+    case NT::reduced_cost:
+        return forbiddenNodeKey<NT::reduced_cost>();
     default:
         throw std::runtime_error("ForbiddenNodeKey is not implemented");
     }
