@@ -40,6 +40,7 @@ public:
     std::string name() const override;
 
 private:
+    Optimisation::TimeIndex processParentNode(const Nodes::ParentNode* node);
     Optimisation::TimeIndex visit(const Nodes::SumNode* add) override;
     Optimisation::TimeIndex visit(const Nodes::SubtractionNode* add) override;
     Optimisation::TimeIndex visit(const Nodes::MultiplicationNode* add) override;
@@ -57,8 +58,10 @@ private:
     Optimisation::TimeIndex visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     Optimisation::TimeIndex visit(const Nodes::TimeSumNode* timeSumNode) override;
     Optimisation::TimeIndex visit(const Nodes::AllTimeSumNode* timeSumNode) override;
-    Optimisation::TimeIndex visit(const Nodes::ReducedCostNode* node) override;
-    Optimisation::TimeIndex visit(const Nodes::DualNode* node) override;
+    Optimisation::TimeIndex handleReducedCost(const Nodes::FunctionNode* node);
+    Optimisation::TimeIndex handleDual(const Nodes::FunctionNode* node);
+    Optimisation::TimeIndex handlePow(const Nodes::FunctionNode* node);
+    Optimisation::TimeIndex visit(const Nodes::FunctionNode* node) override;
 
     std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
 

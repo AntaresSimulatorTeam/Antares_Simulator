@@ -5,7 +5,9 @@ set(SRC_UTILS_FOR_COMPONENT_FILLER_TESTS
 				component-filler-utils/variables-creators.h
 				component-filler-utils/variables-creators.cpp
 				component-filler-utils/objectives-creators.h
-				component-filler-utils/objectives-creators.cpp)
+				component-filler-utils/objectives-creators.cpp
+				component-filler-utils/constraints-creators.h
+				component-filler-utils/constraints-creators.cpp)
 
 add_boost_test(unit-tests-for-component-filler
         SRC
@@ -16,8 +18,8 @@ add_boost_test(unit-tests-for-component-filler
         test_readLinearExpressionVisitor.cpp
         test_readLinExprVisitor_sum_connections.cpp
         test_readLinearConstraintVisitor.cpp
-		visitorFixture.hpp
-		${SRC_UTILS_FOR_COMPONENT_FILLER_TESTS}
+        visitorFixture.hpp
+        ${SRC_UTILS_FOR_COMPONENT_FILLER_TESTS}
         LIBS
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl

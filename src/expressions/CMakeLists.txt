@@ -8,6 +8,8 @@ set(SRC_Expressions
         nodes/UnaryNode.cpp
         nodes/ParentNode.cpp
         nodes/TimeSumNode.cpp
+        nodes/FunctionNode.cpp
+
 
 
         visitors/CloneVisitor.cpp
@@ -45,8 +47,7 @@ set(SRC_Expressions
         include/antares/expressions/nodes/UnaryNode.h
         include/antares/expressions/nodes/VariableNode.h
         include/antares/expressions/nodes/TimeIndexNode.h
-        include/antares/expressions/nodes/ReducedCostNode.h
-        include/antares/expressions/nodes/DualNode.h
+        include/antares/expressions/nodes/FunctionNode.h
 
 
         include/antares/expressions/visitors/CloneVisitor.h
@@ -59,6 +60,7 @@ set(SRC_Expressions
         include/antares/expressions/visitors/TimeIndexVisitor.h
         include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/InvalidNode.h
+        include/antares/expressions/visitors/VariadicNodeFunctionVisit.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h

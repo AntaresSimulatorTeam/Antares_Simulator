@@ -49,6 +49,11 @@ models:
           location: master
         - id: operational_objective
           location: subproblems
+      constraints:
+        - id: constr1
+          location: master-and-subproblems
+        - id: constr2
+          location: master
   - id: lib_thermal_invest.my_other_model
     model-decomposition:
       variables:
@@ -56,6 +61,9 @@ models:
           location: subproblems
       objective-contributions:
         - id: obj1
+          location: master
+      constraints:
+        - id: constr1
           location: master
 )";
 
@@ -78,6 +86,12 @@ models:
     BOOST_CHECK_EQUAL(config[0].objectives[1].id, "operational_objective");
     BOOST_CHECK(config[0].objectives[1].location == "subproblems");
 
+    BOOST_REQUIRE_EQUAL(config[0].constraints.size(), 2);
+    BOOST_CHECK_EQUAL(config[0].constraints[0].id, "constr1");
+    BOOST_CHECK(config[0].constraints[0].location == "master-and-subproblems");
+    BOOST_CHECK_EQUAL(config[0].constraints[1].id, "constr2");
+    BOOST_CHECK(config[0].constraints[1].location == "master");
+
     // Second model
     BOOST_CHECK_EQUAL(config[1].id, "lib_thermal_invest.my_other_model");
     BOOST_REQUIRE_EQUAL(config[1].variables.size(), 1);
@@ -87,6 +101,10 @@ models:
     BOOST_REQUIRE_EQUAL(config[1].objectives.size(), 1);
     BOOST_CHECK_EQUAL(config[1].objectives[0].id, "obj1");
     BOOST_CHECK(config[1].objectives[0].location == "master");
+
+    BOOST_REQUIRE_EQUAL(config[1].constraints.size(), 1);
+    BOOST_CHECK_EQUAL(config[1].constraints[0].id, "constr1");
+    BOOST_CHECK(config[1].constraints[0].location == "master");
 }
 
 BOOST_AUTO_TEST_CASE(parse_single_model)
@@ -101,6 +119,9 @@ models:
       objective-contributions:
         - id: single_obj
           location: subproblems
+      constraints:
+        - id: single_constr
+          location: master-and-subproblems
 )";
 
     Parser parser;
@@ -112,6 +133,8 @@ models:
     BOOST_CHECK_EQUAL(config[0].variables[0].id, "single_var");
     BOOST_REQUIRE_EQUAL(config[0].objectives.size(), 1);
     BOOST_CHECK_EQUAL(config[0].objectives[0].id, "single_obj");
+    BOOST_REQUIRE_EQUAL(config[0].constraints.size(), 1);
+    BOOST_CHECK_EQUAL(config[0].constraints[0].id, "single_constr");
 }
 
 BOOST_AUTO_TEST_CASE(parse_empty_models_list)
@@ -166,6 +189,25 @@ models:
     BOOST_CHECK_EQUAL(config[0].objectives.size(), 0);
 }
 
+BOOST_AUTO_TEST_CASE(parse_model_with_empty_constraints)
+{
+    std::string yaml_content = R"(
+models:
+  - id: model_no_constraints
+    model-decomposition:
+      variables:
+        - id: var1
+          location: master
+      constraints: []
+)";
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    BOOST_REQUIRE_EQUAL(config.size(), 1);
+    BOOST_REQUIRE_EQUAL(config[0].variables.size(), 1);
+    BOOST_CHECK_EQUAL(config[0].constraints.size(), 0);
+}
+
 BOOST_AUTO_TEST_CASE(parse_all_location_types)
 {
     std::string yaml_content = R"(
@@ -186,6 +228,13 @@ models:
           location: subproblems
         - id: obj_both
           location: master-and-subproblems
+      constraints:
+        - id: c_master
+          location: master
+        - id: c_sub
+          location: subproblems
+        - id: c_both
+          location: master-and-subproblems
 )";
 
     Parser parser;
@@ -201,6 +250,11 @@ models:
     BOOST_CHECK(config[0].objectives[0].location == "master");
     BOOST_CHECK(config[0].objectives[1].location == "subproblems");
     BOOST_CHECK(config[0].objectives[2].location == "master-and-subproblems");
+
+    BOOST_REQUIRE_EQUAL(config[0].constraints.size(), 3);
+    BOOST_CHECK(config[0].constraints[0].location == "master");
+    BOOST_CHECK(config[0].constraints[1].location == "subproblems");
+    BOOST_CHECK(config[0].constraints[2].location == "master-and-subproblems");
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_models_key_throws)
@@ -221,6 +275,7 @@ models:
   - model-decomposition:
       variables: []
       objective-contributions: []
+      constraints: []
 )";
 
     Parser parser;

@@ -162,12 +162,7 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
     throw IllegalNodeException();
 }
 
-LinearConstraint ReadLinearConstraintVisitor::visit(const ReducedCostNode*)
-{
-    throw IllegalNodeException();
-}
-
-LinearConstraint ReadLinearConstraintVisitor::visit(const DualNode*)
+LinearConstraint ReadLinearConstraintVisitor::visit(const FunctionNode*)
 {
     throw IllegalNodeException();
 }

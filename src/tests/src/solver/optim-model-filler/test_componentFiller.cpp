@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <algorithm>
+
 #include <boost/test/unit_test.hpp>
 
 #include "antares/exception/RuntimeError.hpp"
@@ -452,6 +454,81 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
         BOOST_CHECK_EQUAL(ct->getCoefficient(var), -1);
         BOOST_CHECK_EQUAL(var->getLb(), t);
         BOOST_CHECK_EQUAL(var->getUb(), t);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(ct_with_time_series_parameters_and_max_operator)
+{
+    // max(7, par^2) - min(max(18, par^3), 20, par^2)*var1 <= 3
+    auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
+    auto three = literal(3);
+    auto max_node = nodeRegistry.create<FunctionNode>(
+      FunctionNodeType::max,
+      literal(7),
+      nodeRegistry.create<FunctionNode>(FunctionNodeType::pow,
+                                        parameter("par", TimeIndex::VARYING_IN_TIME_ONLY),
+                                        literal(2)));
+    auto min_node = nodeRegistry.create<FunctionNode>(
+      FunctionNodeType::min,
+      nodeRegistry.create<FunctionNode>(
+        FunctionNodeType::max,
+        literal(18),
+        nodeRegistry.create<FunctionNode>(FunctionNodeType::pow,
+                                          parameter("par", TimeIndex::VARYING_IN_TIME_ONLY),
+                                          literal(3))),
+      literal(20),
+      nodeRegistry.create<FunctionNode>(FunctionNodeType::pow,
+                                        parameter("par", TimeIndex::VARYING_IN_TIME_ONLY),
+                                        literal(2)));
+    auto ct_node = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<SubtractionNode>(max_node, multiply(min_node, var_node)),
+      three);
+
+    createModelWithSystemModelParameter(
+      "model",
+      {Parameter{"par", TimeDependent::YES, ScenarioDependent::NO}},
+      {{"var1", ValueType::BOOL, literal(0), literal(1), true, false}},
+      {{"ct1", ct_node}});
+
+    createComponent(
+      "model",
+      "componentToto",
+      {build_context_parameter_with("par",
+                                    "par",
+                                    Antares::ModelerStudy::SystemModel::ParameterType::TIMESERIE)});
+
+    const vector<unsigned int> timeSteps{0, 1, 2};
+    FillContext ctx{timeSteps.at(0), timeSteps.at(2), timeSteps.at(0), timeSteps.at(2), 0};
+    auto bounds_time_series = std::make_unique<TimeSeriesSet>("par", 3);
+    // setting 3 hours (including h 1 and 2)
+    bounds_time_series->add({2.5, 3.8, 57.2025});
+    LinearProblemData data;
+    data.addDataSeries(std::move(bounds_time_series));
+
+    std::vector<std::unique_ptr<IScenario>> scenarios;
+    buildLinearProblem(ctx, data, scenarios);
+    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 3
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 3);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 3);
+
+    for (const auto t: timeSteps)
+    {
+        const auto par_at_t = data.getData("par", 1, t);
+        auto ct = pb->lookupConstraint("componentToto.ct1_" + to_string(t));
+        BOOST_REQUIRE(ct);
+        BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
+        BOOST_CHECK_EQUAL(ct->getUb(), -std::max(7., std::pow(par_at_t, 2)) + 3);
+        auto var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(t));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK(var->isInteger());
+        std::initializer_list<double> values{std::max(18.0, std::pow(par_at_t, 3)),
+                                             20.0,
+                                             std::pow(par_at_t, 2)};
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var),
+                          -*std::min_element(values.begin(), values.end()));
+        BOOST_CHECK_EQUAL(var->getLb(), 0);
+        BOOST_CHECK_EQUAL(var->getUb(), 1);
     }
 }
 

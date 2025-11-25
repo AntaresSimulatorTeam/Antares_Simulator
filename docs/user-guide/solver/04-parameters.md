@@ -254,13 +254,19 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 
 ---
 #### hydro-debug
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+    - `true`: Create a debug folder containing hourly and monthly detailed infos about hydro levels, inflows, etc
+    - `false`: Doesn't create the folder
 
-- **Expected value:**
-- **Required:** **yes**
-- **Default value:**
-- **Usage:**
+---
+#### remix-storage-debug
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+    - `true`: Output files in format remix-*year*-*week*.csv containing withdrawal for all storages.  Each line of the file is associated to an hour and is formatted like this : *area*, *storage*, *hour*, *withdrawal*
+    - `false`: Doesn't create the folder
 
 ---
 #### result-format

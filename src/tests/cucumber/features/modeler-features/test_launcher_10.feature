@@ -116,13 +116,13 @@ Feature: 10 - Modeler extra outputs
     Then the simulation succeeds
     # price is dual of balance
     And the modeler outputs contain the following entries
-      | block | component         | output                  | timestep | scenario | value  |
-      | 1     | base_zone         | price                   | 1        | 0        | 10     |
-      | 1     | base_zone         | price                   | 2        | 0        | 15     |
-      | 1     | base_zone         | price                   | 3        | 0        | 20000  |
-      | 1     | gas_base_zone     | generation_reduced_cost | 1        | 0        | 0      |
-      | 1     | gas_base_zone     | generation_reduced_cost | 2        | 0        | 0      |
-      | 1     | gas_base_zone     | generation_reduced_cost | 3        | 0        | -19960 |
-      | 1     | oil_base_zone     | generation_reduced_cost | 1        | 0        | 20     |
-      | 1     | oil_base_zone     | generation_reduced_cost | 2        | 0        | -5     |
-      | 1     | oil_base_zone     | generation_reduced_cost | 3        | 0        | -19990 |
+      | block | component     | output                  | timestep | scenario | value  |
+      | 1     | base_zone     | price                   | 1        | 0        | 10     |
+      | 1     | base_zone     | price                   | 2        | 0        | 15     |
+      | 1     | base_zone     | price                   | 3        | 0        | 20000  |
+      | 1     | gas_base_zone | generation_reduced_cost | 1        | 0        | 0      |
+      | 1     | gas_base_zone | generation_reduced_cost | 2        | 0        | 0      |
+      | 1     | gas_base_zone | generation_reduced_cost | 3        | 0        | -19960 |
+      | 1     | oil_base_zone | generation_reduced_cost | 1        | 0        | 20     |
+      | 1     | oil_base_zone | generation_reduced_cost | 2        | 0        | -5     |
+      | 1     | oil_base_zone | generation_reduced_cost | 3        | 0        | -19990 |
