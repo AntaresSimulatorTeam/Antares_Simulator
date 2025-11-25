@@ -623,7 +623,7 @@ BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "^";
-    BOOST_CHECK_THROW(converter.run(expression), std::bad_any_cast);
+    BOOST_CHECK_THROW(converter.run(expression), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(WrongPowerExpression)
