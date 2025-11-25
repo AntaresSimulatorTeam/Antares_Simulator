@@ -255,7 +255,6 @@ ModelerStudy::SystemModel::ValueType convertType(IO::Inputs::YmlModel::ValueType
     }
 }
 
-
 /**
  * \brief Converts variables from YmlModel::Model to SystemModel::Variable.
  *

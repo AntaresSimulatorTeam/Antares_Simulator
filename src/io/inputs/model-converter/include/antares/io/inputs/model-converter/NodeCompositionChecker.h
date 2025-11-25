@@ -73,9 +73,9 @@ private:
 
     //--
 
-    ForbiddenNodes forbid_;
+    const ForbiddenNodes& forbid_;
     std::vector<std::pair<std::string, std::type_index>> parentsStack_;
-    std::string expression_;
+    const std::string& expression_;
 };
 
 struct BadExpression
@@ -105,7 +105,6 @@ public:
     }
 };
 
-// TODO
 template<typename Child>
 void NodeCompositionChecker::checkConsistencyWithParents(const std::string& childName) const
 {
