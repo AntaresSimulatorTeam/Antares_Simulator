@@ -313,4 +313,3 @@ BOOST_AUTO_TEST_CASE(one_model_two_components__dont_clash)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
