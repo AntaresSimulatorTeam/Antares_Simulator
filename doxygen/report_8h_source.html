@@ -171,16 +171,15 @@ $(document).ready(function(){initNavTree('report_8h_source.html',''); initResiza
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimization_1_1InfeasibleProblemReport.html">InfeasibleProblemReport</a>(<span class="keyword">const</span> std::vector&lt;const operations_research::MPVariable*&gt;&amp;);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> storeSuspiciousConstraints();</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> storeInfeasibilityCauses();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    std::vector&lt;std::string&gt; getLogs();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; getLogs() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> buildConstraintsFromSlackVars(<span class="keyword">const</span> std::vector&lt;const operations_research::MPVariable*&gt;&amp;);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> filterConstraintsToOneByType();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::vector&lt;std::shared_ptr&lt;WatchedConstraint&gt;&gt; constraints_;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::vector&lt;std::string&gt; report_;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;};</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> filterConstraintsToOneByType();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::vector&lt;std::shared_ptr&lt;WatchedConstraint&gt;&gt; constraints_;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::vector&lt;std::string&gt; report_;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;};</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
 <div class="ttc" id="aclassAntares_1_1Optimization_1_1InfeasibleProblemReport_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1InfeasibleProblemReport.html">Antares::Optimization::InfeasibleProblemReport</a></div><div class="ttdef"><b>Definition:</b> report.h:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
