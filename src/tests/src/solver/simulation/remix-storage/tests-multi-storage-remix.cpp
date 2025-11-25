@@ -136,9 +136,9 @@ BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_al
 
 // Using directly InputFixture<n, m> in fixture test cases does not compile on Win MSVC.
 // So we're forced to use typedefs instead.
-using InputFixture_5_2 = InputFixture<5, 2>;
-using InputFixture_5_3 = InputFixture<5, 3>;
-using InputFixture_8_2 = InputFixture<8, 2>;
+using fixture_with_5_hours_2_storages = InputFixture<5, 2>;
+using fixture_with_5_hours_3_storages = InputFixture<5, 3>;
+using fixture_with_8_hours_2_storages = InputFixture<8, 2>;
 
 // ================================================
 // Note :
@@ -146,7 +146,8 @@ using InputFixture_8_2 = InputFixture<8, 2>;
 //  H : Total storage production (or withdrawal)
 // ================================================
 
-BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat, InputFixture_5_2)
+BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat,
+                        fixture_with_5_hours_2_storages)
 {
     std::ranges::fill(TotaGenWithoutStorage, 100.);
     UnsupE = {80., 60., 40., 20., 0.};
@@ -176,7 +177,8 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat, InputFixtu
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, InputFixture_5_2)
+BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results,
+                        fixture_with_5_hours_2_storages)
 {
     std::ranges::fill(TotaGenWithoutStorage, 100.);
     UnsupE = {80., 60., 40., 20., 0.};
@@ -206,7 +208,8 @@ BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, 
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat, InputFixture_5_2)
+BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat,
+                        fixture_with_5_hours_2_storages)
 {
     std::ranges::fill(TotaGenWithoutStorage, 100.);
     UnsupE = {0., 20., 40., 60., 80.};
@@ -236,7 +239,9 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat, InputFixtu
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture_5_2, *boost::unit_test::tolerance(0.01))
+BOOST_FIXTURE_TEST_CASE(influence_of_pmax,
+                        fixture_with_5_hours_2_storages,
+                        *boost::unit_test::tolerance(0.01))
 {
     TotaGenWithoutStorage = {100., 80., 60., 40., 20.}; // Decreases
     UnsupE = {50., 50., 50., 50., 50.};
@@ -284,7 +289,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture_5_2, *boost::unit_test::
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture_5_3)
+BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, fixture_with_5_hours_3_storages)
 {
     STS_holders[0].withdrawal = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
     STS_holders[1].withdrawal = {10., 20., 10., 20., 10.};      // Total = 70. Mean = 14.
@@ -322,11 +327,8 @@ BOOST_FIXTURE_TEST_CASE(three_hydros_with_one_dominant_storage, InputFixture_5_3
     }
 }
 
-BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture_8_2)
+BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, fixture_with_8_hours_2_storages)
 {
-    // ------------------------------
-    // SETUP: Two reservoirs with distinct s1.inflows and generations
-    // ------------------------------
     STS_holders[0].withdrawal = {10., 15., 20., 15., 10., 5., 10., 15.};
     STS_holders[1].withdrawal = {5., 10., 15., 10., 5., 0., 5., 10.};
 
@@ -341,16 +343,10 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, InputFixture_8_2)
 
     UnsupE.assign(STS_holders[0].withdrawal.size(), 0.); // Not relevant for flow conservation
 
-    // ------------------------------
-    // Record pre-call total s1.inflows, generations, and init s1.levels
-    // ------------------------------
     double total_inflow_before = sum(STS_holders[0].inflows + STS_holders[1].inflows);
     double total_gen_before = sum(STS_holders[0].withdrawal + STS_holders[1].withdrawal);
     double total_init_level = STS_holders[0].initLevel + STS_holders[1].initLevel;
 
-    // ------------------------------
-    // Run Remix algorithm
-    // ------------------------------
     runRemixStorageAlgorithm();
 
     // ------------------------------
