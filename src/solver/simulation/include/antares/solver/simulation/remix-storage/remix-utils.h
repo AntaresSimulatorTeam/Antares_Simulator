@@ -82,7 +82,7 @@ inline double min_on_subrange(std::vector<double>&& v, unsigned h, unsigned H)
     return *std::ranges::min_element(subset);
 }
 
-inline double sum(const std::vector<double>&& v)
+inline double sum(const std::vector<double>& v)
 {
     return std::accumulate(v.begin(), v.end(), 0.);
 }
