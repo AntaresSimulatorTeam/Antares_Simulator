@@ -97,6 +97,38 @@ NoPortWithThisId::NoPortWithThisId(const std::string& name):
 {
 }
 
+class AntaresErrorListener: public antlr4::BaseErrorListener
+{
+public:
+    void syntaxError(antlr4::Recognizer*,
+                     antlr4::Token*,
+                     size_t,
+                     size_t,
+                     const std::string& msg,
+                     std::exception_ptr) override
+    {
+        errors.push_back(msg);
+    }
+
+    void checkErrors(const std::string expr) const
+    {
+        if (errors.empty())
+        {
+            return;
+        }
+
+        std::string fullMsg = "Error(s) while parsing expression: '" + expr + "'\n";
+        for (const auto& err: errors)
+        {
+            fullMsg += "  - " + err + "\n";
+        }
+        throw AntlrParsingError(fullMsg);
+    }
+
+private:
+    std::vector<std::string> errors;
+};
+
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
                                                   const YmlModel::Model& model)
 {
@@ -112,15 +144,15 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     ExprParser parser(&tokens);
 
     // error handling
-    auto errorListener = std::make_shared<ErrorListener>();
+    AntaresErrorListener errorListener;
     lexer.removeErrorListeners();  // remove antlr logs to keep ours
     parser.removeErrorListeners(); // same
-    lexer.addErrorListener(errorListener.get());
-    parser.addErrorListener(errorListener.get());
+    lexer.addErrorListener(&errorListener);
+    parser.addErrorListener(&errorListener);
 
     // actual parsing
     ExprParser::FullexprContext* tree = parser.fullexpr();
-    errorListener->checkErrors(exprStr);
+    errorListener.checkErrors(exprStr);
 
     // tree conversion
     Expressions::Registry<Node> registry;
