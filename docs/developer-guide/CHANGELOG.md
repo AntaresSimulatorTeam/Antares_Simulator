@@ -6,14 +6,14 @@ toc_depth: 2
 
 ## Branch 9.3.x
 
+### 9.3.2
+
 #### Important notice
 
 * Changing the way some warning or errors are handled during loading
     - Warnings that were previouly deemed fatal are now proper errors
     - It is still possible to bypass those specific errors with the command line option `--force`
     - Some of those warnings are kept as warning and now non-blocking. Mainly those related deprecated options or values
-
-### 9.3.2
 
 #### New features
 * Modeler 5.5: Add dual and reduced\_cost operators [ANT-3621] (#3177)
