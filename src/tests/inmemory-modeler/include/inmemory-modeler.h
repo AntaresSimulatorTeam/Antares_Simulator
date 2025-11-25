@@ -110,6 +110,8 @@ struct LinearProblemBuildingFixture
                                                 Antares::Expressions::Nodes::Node* node2);
 
     Antares::Expressions::Nodes::Node* negate(Antares::Expressions::Nodes::Node* node);
+    Antares::Expressions::Nodes::Node* add(Antares::Expressions::Nodes::Node* node1,
+                                           Antares::Expressions::Nodes::Node* node2);
 
     void buildLinearProblem(
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,

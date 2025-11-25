@@ -131,6 +131,11 @@ Nodes::Node* LinearProblemBuildingFixture::negate(Nodes::Node* node)
     return nodeRegistry.create<Nodes::NegationNode>(node);
 }
 
+Nodes::Node* LinearProblemBuildingFixture::add(Nodes::Node* node1, Nodes::Node* node2)
+{
+    return nodeRegistry.create<Nodes::SumNode>(node1, node2);
+}
+
 void LinearProblemBuildingFixture::createModel(const std::string& modelId,
                                                const std::vector<std::string>& parameterIds,
                                                const std::vector<VariableData>& variablesData,
