@@ -111,5 +111,4 @@ using UnsupliedEnergy = Economy_Base<UnsuppliedEnergyTrait, NextT>;
 template<class NextT = Container::EndOfList>
 using UnsupliedEnergyCSR = Economy_Base<UnsuppliedEnergyCSRTrait, NextT>;
 
-
 } // namespace Antares::Solver::Variable::Economy
