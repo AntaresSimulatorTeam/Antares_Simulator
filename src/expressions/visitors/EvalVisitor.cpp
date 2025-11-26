@@ -94,6 +94,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
           component_,
           node->Index(),
           1 /* single timestep*/);
+
         return EvaluationResult(componentVariables[0]->solutionValue());
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
