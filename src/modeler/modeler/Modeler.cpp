@@ -133,8 +133,29 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
             varNode)
         {
             checkVariableLocation(varNode->value(), location);
+            continue;
         }
 
+        // Portfields can contains variables, we recursively check their expressions
+        auto checkPortFieldExpr = [&](auto* n)
+        {
+            ModelerStudy::SystemModel::PortFieldKey key(n->getPortName(), n->getFieldName());
+            checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
+                            location,
+                            model);
+        };
+
+        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldNode*>(&node); n)
+        {
+            checkPortFieldExpr(n);
+            continue;
+        }
+
+        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node); n)
+        {
+            checkPortFieldExpr(n);
+            continue;
+        }
         // dual and reduced_cost can only be used in subproblems
         if (auto* functionNode = dynamic_cast<Antares::Expressions::Nodes::FunctionNode*>(&node);
             functionNode)
@@ -161,26 +182,9 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
                     }
                 }
             }
+            continue;
         }
 
-        // Portfields can contains variables, we recursively check their expressions
-        auto checkPortFieldExpr = [&](auto* n)
-        {
-            ModelerStudy::SystemModel::PortFieldKey key(n->getPortName(), n->getFieldName());
-            checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
-                            location,
-                            model);
-        };
-
-        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldNode*>(&node); n)
-        {
-            checkPortFieldExpr(n);
-        }
-
-        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node); n)
-        {
-            checkPortFieldExpr(n);
-        }
     }
 }
 
