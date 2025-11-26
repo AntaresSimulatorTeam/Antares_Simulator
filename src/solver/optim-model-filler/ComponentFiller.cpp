@@ -412,7 +412,6 @@ void ComponentFiller::addStaticObjective(
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
     auto* model = component_.getModel();
-    const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
     for (const auto& objective: model->Objectives() | locationFilter())
