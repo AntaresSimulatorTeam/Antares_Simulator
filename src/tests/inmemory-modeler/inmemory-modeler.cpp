@@ -136,6 +136,11 @@ Nodes::Node* LinearProblemBuildingFixture::add(Nodes::Node* node1, Nodes::Node* 
     return nodeRegistry.create<Nodes::SumNode>(node1, node2);
 }
 
+Nodes::Node* LinearProblemBuildingFixture::Sum(Nodes::Node* node)
+{
+    return nodeRegistry.create<Nodes::AllTimeSumNode>(node);
+}
+
 void LinearProblemBuildingFixture::createModel(const std::string& modelId,
                                                const std::vector<std::string>& parameterIds,
                                                const std::vector<VariableData>& variablesData,

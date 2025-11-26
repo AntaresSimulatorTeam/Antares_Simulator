@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <numeric>
 #include <ranges>
 #include <stdexcept>
 #include <variant>
@@ -415,6 +416,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
+    double objectiveOffset = 0.0;
     for (const auto& objective: model->Objectives() | locationFilter())
     {
         const auto root_node = objective.expression().RootNode();
@@ -428,7 +430,14 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
             throw Error::RuntimeError("Time dependent objectives are not supported in Antares.");
         }
         addStaticObjective(linearExpression);
+        objectiveOffset += std::accumulate(linearExpression.begin(),
+                                           linearExpression.end(),
+                                           0,
+                                           [](auto acc, auto expr)
+                                           { return acc + expr.constant(); });
     }
+    auto& pb = optimEntityContainer_.Problem();
+    pb.setObjectiveOffset(objectiveOffset);
 }
 
 TimeIndex ComponentFiller::getConstraintTimeIndex(const Node* node,

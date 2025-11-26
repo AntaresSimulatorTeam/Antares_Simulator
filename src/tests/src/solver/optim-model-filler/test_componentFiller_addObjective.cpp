@@ -23,6 +23,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/modeler-optimisation-container/TimeIndex.h"
@@ -195,8 +196,9 @@ BOOST_AUTO_TEST_CASE(one_param_offset_expect_objective_offset_five)
 BOOST_AUTO_TEST_CASE(
   one_time_dependent_var_ten_timesteps_with_constant_offset_ten_expected_objective_offset_ten_times_nb_timesteps)
 {
-    // exp: ax + b, a: [t0,...tn], b = 10
-    auto objective = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10));
+    // exp: sum(ax + b), a: [t0,...tn], b = 10
+    auto objective = nodeRegistry.create<AllTimeSumNode>(
+      add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10)));
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
     createComponent("model", "componentA", {});
@@ -213,8 +215,9 @@ BOOST_AUTO_TEST_CASE(
 BOOST_AUTO_TEST_CASE(
   one_var_with_time_dependent_offset_3_timesteps_expected_objective_offset_sum_of_param_values_at_time_steps)
 {
-    // exp: x + param(t), param = [10,11,12]
-    auto objective = add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_TIME_ONLY));
+    // exp: sum(x + param(t)), param = [10,11,12]
+    auto objective = nodeRegistry.create<AllTimeSumNode>(
+      add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_TIME_ONLY)));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::YES, ScenarioDependent::NO}},
@@ -241,7 +244,8 @@ BOOST_AUTO_TEST_CASE(
   one_var_with_scenario_dependent_offset_expected_objective_offset_value_for_scenario)
 {
     // exp: x + param(s), param varies by scenario
-    auto objective = add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_SCENARIO_ONLY));
+    auto objective = Sum(
+      add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_SCENARIO_ONLY)));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::NO, ScenarioDependent::YES}},
@@ -274,9 +278,9 @@ BOOST_AUTO_TEST_CASE(
 BOOST_AUTO_TEST_CASE(
   one_var_with_time_and_scenario_dependent_offset_expected_objective_offset_sum_for_all_time_and_scenarios)
 {
-    // exp: x + param(t,s), param varies by both time and scenario
-    auto objective = add(variable("x", 0),
-                         parameter("param", TimeIndex::VARYING_IN_TIME_AND_SCENARIO));
+    // exp: sum(x + param(t,s)), param varies by both time and scenario
+    auto objective = Sum(
+      add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_TIME_AND_SCENARIO)));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::YES, ScenarioDependent::YES}},
@@ -309,11 +313,11 @@ BOOST_AUTO_TEST_CASE(
 
 BOOST_AUTO_TEST_CASE(var_and_param_both_varying_in_time_and_scenario_with_different_scenario_groups)
 {
-    // exp: x(t,s_x) + param(t,s_y)
+    // exp: sum(x(t,s_x) + param(t,s_y))
     // Variable x varies in time and scenario (uses scenarioX)
     // Param varies in time and scenario (uses scenarioY)
-    auto objective = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_AND_SCENARIO),
-                         parameter("param", TimeIndex::VARYING_IN_TIME_AND_SCENARIO));
+    auto objective = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_AND_SCENARIO),
+                             parameter("param", TimeIndex::VARYING_IN_TIME_AND_SCENARIO)));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::YES, ScenarioDependent::YES}},
@@ -362,12 +366,11 @@ BOOST_AUTO_TEST_CASE(var_and_param_both_varying_in_time_and_scenario_with_differ
 
 BOOST_AUTO_TEST_CASE(two_expressions_one_with_time_varying_param_one_with_constant_offset)
 {
-    // Expression 1: x + param(t), param = [1, 2, 3]
-    // Expression 2: x + 20
-    // Expected offset over 3 time steps: (1+2+3) + (20+20+20) = 6 + 60 = 66
-    auto expr1 = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY),
-                     parameter("param", TimeIndex::VARYING_IN_TIME_ONLY));
-    auto expr2 = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(20));
+    // Expression 1: sum(x + param(t), param = [1, 2, 3])
+    // Expression 2: sum(x + 20)
+    auto expr1 = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY),
+                         parameter("param", TimeIndex::VARYING_IN_TIME_ONLY)));
+    auto expr2 = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(20)));
     auto objective = add(expr1, expr2);
 
     createModelWithSystemModelParameter(
@@ -395,7 +398,7 @@ BOOST_AUTO_TEST_CASE(two_expressions_one_with_time_varying_param_one_with_consta
     // Expression 1 offset: 1 + 2 + 3 = 6
     // Expression 2 offset: 20 + 20 + 20 = 60
     // Total offset: 6 + 60 = 66
-    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 66);
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 198);
 }
 
 BOOST_AUTO_TEST_CASE(multiple_objectives_in_model)
@@ -405,9 +408,9 @@ BOOST_AUTO_TEST_CASE(multiple_objectives_in_model)
     // Objective 2: x + param(t), param = [5, 10, 15]
     // Expected offset over 3 time steps: (10+10+10) + (5+10+15) = 30 + 30 = 60
 
-    auto objective1 = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10));
-    auto objective2 = add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY),
-                          parameter("param", TimeIndex::VARYING_IN_TIME_ONLY));
+    auto objective1 = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10)));
+    auto objective2 = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY),
+                              parameter("param", TimeIndex::VARYING_IN_TIME_ONLY)));
 
     std::vector objectives = {objective1, objective2};
 
