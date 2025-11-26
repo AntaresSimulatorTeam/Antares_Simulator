@@ -3,6 +3,7 @@
 # Modeler
 
 ```{toctree}
+:hidden:
 01-overview-modeler.md
 02-inputs.md
 03-outputs.md
