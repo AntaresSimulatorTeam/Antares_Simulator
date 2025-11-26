@@ -121,7 +121,8 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
 {
     for (auto& node: Antares::Expressions::Nodes::AST(expression))
     {
-        auto checkVariableLocation = [&](const std::string& varName)
+        auto checkVariableLocation =
+          [&model](const std::string& varName, const Antares::Modeler::Config::Location& location)
         {
             for (const auto& variable: model.Variables())
             {
@@ -135,12 +136,14 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
             }
         };
 
+        // base variable
         if (auto* varNode = dynamic_cast<Antares::Expressions::Nodes::VariableNode*>(&node);
             varNode)
         {
-            checkVariableLocation(varNode->value());
+            checkVariableLocation(varNode->value(), location);
         }
 
+        // dual and reduced_cost can only be used in subproblems
         if (auto* functionNode = dynamic_cast<Antares::Expressions::Nodes::FunctionNode*>(&node);
             functionNode)
         {
@@ -148,10 +151,28 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
             {
                 const auto varNode = dynamic_cast<Nodes::VariableNode*>(
                   functionNode->getOperands().at(0));
-                checkVariableLocation(varNode->value());
+                checkVariableLocation(varNode->value(),
+                                      Antares::Modeler::Config::Location::SUBPROBLEMS);
+            }
+
+            if (functionNode->type() == Antares::Expressions::Nodes::FunctionNodeType::dual)
+            {
+                // This node contains the constraint name
+                const auto n = dynamic_cast<Nodes::LiteralNode*>(functionNode->getOperands().at(0));
+                for (const auto& constraint: model.Constraints())
+                {
+                    if (constraint.Id() == n->name())
+                    {
+                        if (location != Antares::Modeler::Config::Location::SUBPROBLEMS)
+                        {
+                            throw std::runtime_error("Duals can only be used in subproblems");
+                        }
+                    }
+                }
             }
         }
 
+        // Portfields can contains variables, we recursively check their expressions
         auto checkPortFieldExpr = [&](auto* n)
         {
             ModelerStudy::SystemModel::PortFieldKey key(n->getPortName(), n->getFieldName());
