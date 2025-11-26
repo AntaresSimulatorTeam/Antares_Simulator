@@ -121,9 +121,8 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
 {
     for (auto& node: Antares::Expressions::Nodes::AST(expression))
     {
-        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::VariableNode*>(&node); n)
+        auto checkVariableLocation = [&](const std::string& varName)
         {
-            const std::string varName = n->value();
             for (const auto& variable: model.Variables())
             {
                 if (variable.Id() == varName)
@@ -133,6 +132,23 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
                         throw std::runtime_error("Mismatch locations");
                     }
                 }
+            }
+        };
+
+        if (auto* varNode = dynamic_cast<Antares::Expressions::Nodes::VariableNode*>(&node);
+            varNode)
+        {
+            checkVariableLocation(varNode->value());
+        }
+
+        if (auto* functionNode = dynamic_cast<Antares::Expressions::Nodes::FunctionNode*>(&node);
+            functionNode)
+        {
+            if (functionNode->type() == Antares::Expressions::Nodes::FunctionNodeType::reduced_cost)
+            {
+                const auto varNode = dynamic_cast<Nodes::VariableNode*>(
+                  functionNode->getOperands().at(0));
+                checkVariableLocation(varNode->value());
             }
         }
 
