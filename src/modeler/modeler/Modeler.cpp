@@ -107,16 +107,8 @@ private:
     BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
-void checkLocations(Antares::Modeler::Data& data)
-{
-}
-
-void checkModel(Antares::ModelerStudy::SystemModel::Model& model)
-{
-}
-
 void checkExpression(Antares::Expressions::Nodes::Node* expression,
-                     Antares::Modeler::Config::Location& location,
+                     const Antares::Modeler::Config::Location& location,
                      Antares::ModelerStudy::SystemModel::Model& model)
 {
     for (auto& node: Antares::Expressions::Nodes::AST(expression))
@@ -151,8 +143,7 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
             {
                 const auto varNode = dynamic_cast<Nodes::VariableNode*>(
                   functionNode->getOperands().at(0));
-                checkVariableLocation(varNode->value(),
-                                      Antares::Modeler::Config::Location::SUBPROBLEMS);
+                checkVariableLocation(varNode->value(), location);
             }
 
             if (functionNode->type() == Antares::Expressions::Nodes::FunctionNodeType::dual)
@@ -163,7 +154,7 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
                 {
                     if (constraint.Id() == n->name())
                     {
-                        if (location != Antares::Modeler::Config::Location::SUBPROBLEMS)
+                        if (constraint.location() != location)
                         {
                             throw std::runtime_error("Duals can only be used in subproblems");
                         }
@@ -189,6 +180,38 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
         if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node); n)
         {
             checkPortFieldExpr(n);
+        }
+    }
+}
+
+void checkModel(Antares::ModelerStudy::SystemModel::Model& model)
+{
+    for (const auto& constraint: model.Constraints())
+    {
+        checkExpression(constraint.expression().RootNode(), constraint.location(), model);
+    }
+
+    for (const auto& objective: model.Objectives())
+    {
+        checkExpression(objective.expression().RootNode(), objective.location(), model);
+    }
+
+    // Extra outputs must be evaluated, they need to contain only subproblem objects
+    for (const auto& [_, extraOutput]: model.ExtraOutputs())
+    {
+        checkExpression(extraOutput.expression().RootNode(),
+                        Antares::Modeler::Config::Location::SUBPROBLEMS,
+                        model);
+    }
+}
+
+void checkLocations(Antares::Modeler::Data& data)
+{
+    for (auto& lib: data.libraries)
+    {
+        for (auto& [modelName, model]: lib.Models())
+        {
+            checkModel(model);
         }
     }
 }
