@@ -444,18 +444,16 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
                                     + params);
     }
 
-    std::vector<Node*> nodes;
-    try
+    for (const auto& var: model_.variables)
     {
-        nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+        if (var.id == variableId.at(0)->getText())
+        {
+            std::vector<Node*> nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+            return static_cast<Node*>(
+              registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
+        }
     }
-    catch (const NoParameterOrVariableWithThisName&) // to print accurate message
-    {
-        throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
-    }
-
-    return static_cast<Node*>(
-      registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
+    throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
 }
 
 template<class T>
