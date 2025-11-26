@@ -116,16 +116,14 @@ void checkFunctionNode(Antares::Expressions::Nodes::Node& node,
     {
         if (functionNode->type() == Antares::Expressions::Nodes::FunctionNodeType::reduced_cost)
         {
-            const auto varNode = dynamic_cast<Nodes::VariableNode*>(
+            const auto* varNode = dynamic_cast<Nodes::VariableNode*>(
               functionNode->getOperands().at(0));
             for (const auto& variable: model.Variables())
             {
-                if (variable.Id() == varNode->value())
+                if (variable.Id() == varNode->value()
+                    && variable.location() != Antares::Modeler::Config::Location::SUBPROBLEMS)
                 {
-                    if (variable.location() != Antares::Modeler::Config::Location::SUBPROBLEMS)
-                    {
-                        throw std::runtime_error("Reduced costs can only be used in subproblems");
-                    }
+                    throw std::runtime_error("Reduced costs can only be used in subproblems");
                 }
             }
         }
@@ -133,7 +131,7 @@ void checkFunctionNode(Antares::Expressions::Nodes::Node& node,
         if (functionNode->type() == Antares::Expressions::Nodes::FunctionNodeType::dual)
         {
             // This node contains the constraint name
-            const auto n = dynamic_cast<Nodes::LiteralNode*>(functionNode->getOperands().at(0));
+            const auto* n = dynamic_cast<Nodes::LiteralNode*>(functionNode->getOperands().at(0));
             for (const auto& constraint: model.Constraints())
             {
                 if (constraint.Id() == n->name())
@@ -154,26 +152,23 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
 {
     for (auto& node: Antares::Expressions::Nodes::AST(expression))
     {
-        auto checkVariableLocation =
-          [&model](const std::string& varName, const Antares::Modeler::Config::Location& location)
+        auto checkVariableLocation = [&model, &location](const std::string& varName)
         {
             for (const auto& variable: model.Variables())
             {
-                if (variable.Id() == varName)
+                if (variable.Id() == varName
+                    && !AreLocationsCompatible(variable.location(), location))
                 {
-                    if (!AreLocationsCompatible(variable.location(), location))
-                    {
-                        throw std::runtime_error("Variable mismatch locations");
-                    }
+                    throw std::runtime_error("Variable mismatch locations");
                 }
             }
         };
 
         // base variable
-        if (auto* varNode = dynamic_cast<Antares::Expressions::Nodes::VariableNode*>(&node);
+        if (const auto* varNode = dynamic_cast<Antares::Expressions::Nodes::VariableNode*>(&node);
             varNode)
         {
-            checkVariableLocation(varNode->value(), location);
+            checkVariableLocation(varNode->value());
             continue;
         }
 
@@ -186,13 +181,13 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
                             model);
         };
 
-        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldNode*>(&node); n)
+        if (const auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldNode*>(&node); n)
         {
             checkPortFieldExpr(n);
             continue;
         }
 
-        /*if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node); n)*/
+        /*if (const auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node); n)*/
         /*{*/
         /*    checkPortFieldExpr(n);*/
         /*    continue;*/
