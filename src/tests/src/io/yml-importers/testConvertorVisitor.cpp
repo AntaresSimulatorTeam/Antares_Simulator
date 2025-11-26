@@ -39,6 +39,7 @@
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::ModelConverter;
 
 class ExpressionToNodeConvertorEmptyModel
 {
@@ -623,7 +624,7 @@ BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "^";
-    BOOST_CHECK_THROW(converter.run(expression), std::bad_any_cast);
+    BOOST_CHECK_THROW(converter.run(expression), AntlrParsingError);
 }
 
 BOOST_AUTO_TEST_CASE(WrongPowerExpression)
@@ -644,7 +645,7 @@ BOOST_AUTO_TEST_CASE(WrongPowerExpression)
 
     std::string expression = "varA^_";
     BOOST_CHECK_EXCEPTION(converter.run(expression),
-                          Antares::IO::Inputs::ModelConverter::NoParameterOrVariableWithThisName,
+                          NoParameterOrVariableWithThisName,
                           checkMessage("No parameter or variable found for this identifier: _"));
 }
 

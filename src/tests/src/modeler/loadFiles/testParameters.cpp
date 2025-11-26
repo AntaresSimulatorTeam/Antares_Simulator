@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(read_parameters)
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::ofstream paramStream(studyPath / "parameters.yml");
     paramStream << R"(
-        solver: highs
+        solver: sirius
         solver-logs: false
         solver-parameters: PRESOLVE 1
         no-output: true
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(read_parameters)
     paramStream.close();
 
     auto params = Antares::Solver::LoadFiles::loadParameters(studyPath);
-    BOOST_CHECK_EQUAL(params.solver, "highs");
+    BOOST_CHECK_EQUAL(params.solver, "sirius");
     BOOST_CHECK_EQUAL(params.solverLogs, false);
     BOOST_CHECK_EQUAL(params.solverParameters, "PRESOLVE 1");
     BOOST_CHECK_EQUAL(params.noOutput, true);
@@ -53,14 +53,14 @@ BOOST_AUTO_TEST_CASE(read_parameters_out_of_order)
     std::ofstream paramStream(studyPath / "parameters.yml");
     paramStream << R"(
         solver-logs: false
-        solver: highs
+        solver: sirius
         solver-parameters: PRESOLVE 1
         no-output: true
     )";
     paramStream.close();
 
     auto params = Antares::Solver::LoadFiles::loadParameters(studyPath);
-    BOOST_CHECK_EQUAL(params.solver, "highs");
+    BOOST_CHECK_EQUAL(params.solver, "sirius");
     BOOST_CHECK_EQUAL(params.solverLogs, false);
     BOOST_CHECK_EQUAL(params.solverParameters, "PRESOLVE 1");
     BOOST_CHECK_EQUAL(params.noOutput, true);
