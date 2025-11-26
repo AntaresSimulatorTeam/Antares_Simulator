@@ -20,36 +20,38 @@
 */
 #pragma once
 
-#include <string>
+#include <antares/expressions/nodes/FunctionNode.h>
+#include <antares/expressions/visitors/NodeVisitor.h>
 
-#include <antares/expressions/nodes/Leaf.h>
-
-namespace Antares::Expressions::Nodes
+namespace Antares::Expressions::Visitors
 {
-/**
- * @brief Represents a dual node in a syntax tree, storing a constraint name.
- */
 
-class DualNode final: public Leaf<std::string>
-{
-public:
-    explicit DualNode(const std::string& value, const unsigned index):
-        Leaf<std::string>(value),
-        index_(index)
-    {
-    }
-
-    std::string name() const override
-    {
-        return "DualNode";
-    }
-
-    unsigned index() const
-    {
-        return index_;
-    }
-
-private:
-    unsigned index_;
+template<typename T>
+concept HasSizeMethod = requires(const T& t) {
+    { t.size() } -> std::convertible_to<std::size_t>;
 };
-} // namespace Antares::Expressions::Nodes
+
+template<HasSizeMethod T>
+std::size_t getMaxSize(const std::vector<T>& elements)
+{
+    std::size_t maxSize = 0;
+    for (const auto& element: elements)
+    {
+        maxSize = std::max(maxSize, element.size());
+    }
+    return maxSize;
+}
+
+template<class R>
+std::vector<R> variadicFunction(NodeVisitor<R>& visitor, const Nodes::FunctionNode* node)
+{
+    const auto& operands = node->getOperands();
+    std::vector<R> result;
+    result.reserve(operands.size());
+    for (const auto* operand: operands)
+    {
+        result.push_back(visitor.dispatch(operand));
+    }
+    return result;
+}
+} // namespace Antares::Expressions::Visitors

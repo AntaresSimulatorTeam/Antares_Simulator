@@ -5,14 +5,15 @@ add_boost_test(test-system-model
   test_component.cpp
   test_system.cpp
   test_library.cpp
+  test_optim-config.cpp
   LIBS
-  Antares::antlr-interface
+        Antares::antlr-interface
   Antares::exception
   Antares::expressions
   Antares::model-converter
   Antares::yml-model
   Antares::yml-system
   Antares::antares-study-system-model
-  Antares::load-modeler-files
-  Antares::modeler-lib # TODO dependency of Antares::load-modeler-files
+        Antares::load-modeler-files
+        Antares::modeler-lib # TODO dependency of Antares::load-modeler-files
   test_utils_unit)

@@ -29,12 +29,9 @@
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
-#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
-#include "antares/study/system-model/parameter.h"
-#include "antares/study/system-model/timeAndScenarioType.h"
 
 #include "inmemory-modeler.h"
 #include "unit_test_utils.h"
@@ -51,7 +48,7 @@ using namespace std;
 
 BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_getObjectiveCoefficient_, LinearProblemBuildingFixture)
 
-BOOST_AUTO_TEST_CASE(one_var_with_objective)
+BOOST_AUTO_TEST_CASE(one_const_var_with_objective)
 {
     auto objective = variable("x", 0);
 
@@ -73,19 +70,10 @@ BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
 
     constexpr unsigned int last_time_step = 9;
     FillContext ctx{0, last_time_step, 0, last_time_step, 0};
-    buildLinearProblem(ctx);
-    const auto nb_var = ctx.getLocalNumberOfTimeSteps(); // = 10
-
-    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
-    for (unsigned i = 0; i < nb_var; i++)
-    {
-        const auto var_name = "componentA.x_s0_t" + to_string(i);
-        BOOST_CHECK_NO_THROW((void)pb->lookupVariable(var_name));
-        BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable(var_name)), 1);
-    }
+    BOOST_CHECK_THROW(buildLinearProblem(ctx), Antares::Error::RuntimeError);
 }
 
-BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)
+BOOST_AUTO_TEST_CASE(two_const_vars_but_only_one_in_objective)
 {
     VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.), false, false};
     VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.), false, false};
@@ -106,11 +94,9 @@ BOOST_AUTO_TEST_CASE(time_sum_var_with_objective)
 {
     // Objective: sum(2*x + 3) over time steps 0 to 2
     // This should give coefficient 2 for each variable x_t0, x_t1, x_t2
-    auto from = literal(0);
-    auto to = literal(2);
     auto expression = add(multiply(literal(2), variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY)),
                           literal(3));
-    auto timeSum = nodeRegistry.create<Nodes::AllTimeSumNode>(expression);
+    auto timeSum = nodeRegistry.create<AllTimeSumNode>(expression);
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, timeSum, true);
     createComponent("model", "componentA", {});
@@ -130,7 +116,7 @@ BOOST_AUTO_TEST_CASE(time_sum_var_with_objective)
     }
 }
 
-BOOST_AUTO_TEST_CASE(objective_varying_in_time_no_supported_error)
+BOOST_AUTO_TEST_CASE(objective_varying_in_time_not_supported_error)
 {
     // Objective: 2*x + 3
     auto expression = add(multiply(literal(2), variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY)),

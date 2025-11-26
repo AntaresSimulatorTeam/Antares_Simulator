@@ -221,11 +221,16 @@ BOOST_FIXTURE_TEST_CASE(compare_TimeShift, ComparisonFixture)
 BOOST_FIXTURE_TEST_CASE(compare_dual, ComparisonFixture)
 {
     CompareVisitor compareVisitor;
-    Node* dual1 = registry_.create<DualNode>("constraint1", 0);
-    Node* dual2 = registry_.create<DualNode>("constraint2", 1);
+    Node* dual1 = registry_.create<FunctionNode>(FunctionNodeType::dual,
+                                                 registry_.create<ParameterNode>("constraint1"),
+                                                 registry_.create<LiteralNode>(0));
+    Node* dual2 = registry_.create<FunctionNode>(FunctionNodeType::dual,
+                                                 registry_.create<ParameterNode>("constraint2"),
+                                                 registry_.create<LiteralNode>(1));
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(dual1);
+    const auto* n = dynamic_cast<FunctionNode*>(clone);
     BOOST_CHECK(compareVisitor.dispatch(dual1, clone));
     BOOST_CHECK(!compareVisitor.dispatch(dual1, dual2));
 }
@@ -233,13 +238,48 @@ BOOST_FIXTURE_TEST_CASE(compare_dual, ComparisonFixture)
 BOOST_FIXTURE_TEST_CASE(compare_reducedCost, ComparisonFixture)
 {
     CompareVisitor compareVisitor;
-    Node* reducedCost1 = registry_.create<ReducedCostNode>("var1", 0);
-    Node* reducedCost2 = registry_.create<ReducedCostNode>("var2", 1);
+    Node* reducedCost1 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                        registry_.create<VariableNode>("var1", 0));
+    Node* reducedCost2 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                        registry_.create<VariableNode>("var2", 1));
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(reducedCost1);
     BOOST_CHECK(compareVisitor.dispatch(reducedCost1, clone));
     BOOST_CHECK(!compareVisitor.dispatch(reducedCost1, reducedCost2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_pow, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* pow1 = registry_.create<FunctionNode>(FunctionNodeType::pow,
+                                                registry_.create<VariableNode>("var1", 0),
+                                                registry_.create<LiteralNode>(2));
+    Node* pow2 = registry_.create<FunctionNode>(FunctionNodeType::pow,
+                                                registry_.create<VariableNode>("var2", 1),
+                                                registry_.create<LiteralNode>(1722));
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(pow1);
+    BOOST_CHECK(compareVisitor.dispatch(pow1, clone));
+    BOOST_CHECK(!compareVisitor.dispatch(pow1, pow2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_max, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* max1 = registry_.create<FunctionNode>(FunctionNodeType::max,
+                                                registry_.create<VariableNode>("var1", 0),
+                                                registry_.create<LiteralNode>(2));
+    Node* max2 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                registry_.create<VariableNode>("var2", 1),
+                                                registry_.create<LiteralNode>(1722),
+                                                registry_.create<ParameterNode>("P"));
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(max1);
+    BOOST_CHECK(compareVisitor.dispatch(max1, clone));
+    BOOST_CHECK(!compareVisitor.dispatch(max1, max2));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

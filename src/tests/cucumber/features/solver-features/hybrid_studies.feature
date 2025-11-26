@@ -82,7 +82,7 @@ Feature: hybrid (simulator+modeler) studies
 
   @fast @short
   Scenario: Invalid study - scenario-independent variable
-    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/Scenario-independent variable"
+    Given the solver study path is "Antares_Simulator_Tests_NR/invalid-studies/hybrid/Scenario-independent variable"
     When I run antares simulator
     Then the simulation fails
     And the message "Scenario-independent variables are not supported in hybrid studies" is reported in the logs

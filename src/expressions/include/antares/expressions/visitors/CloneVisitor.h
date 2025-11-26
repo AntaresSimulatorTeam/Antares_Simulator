@@ -37,6 +37,7 @@ public:
      * @param registry The registry used for creating new nodes.
      */
     explicit CloneVisitor(Registry<Nodes::Node>& registry);
+    std::vector<Nodes::Node*> cloneOperands(const Nodes::ParentNode* node);
     std::string name() const override;
 
     Nodes::Node* visit(const Nodes::SumNode* node) override;
@@ -56,8 +57,7 @@ public:
     Nodes::Node* visit(const Nodes::TimeIndexNode* node) override;
     Nodes::Node* visit(const Nodes::TimeSumNode* node) override;
     Nodes::Node* visit(const Nodes::AllTimeSumNode* node) override;
-    Nodes::Node* visit(const Nodes::ReducedCostNode* node) override;
-    Nodes::Node* visit(const Nodes::DualNode* node) override;
+    Nodes::Node* visit(const Nodes::FunctionNode* node) override;
 
 private:
     Registry<Nodes::Node>& registry_;

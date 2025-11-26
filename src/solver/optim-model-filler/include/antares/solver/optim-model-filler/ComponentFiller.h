@@ -88,20 +88,17 @@ public:
     void addVariables(const LinearProblemApi::FillContext& ctx) override;
 
     void addConstraints(const LinearProblemApi::FillContext& ctx) override;
-    void addTimeDependentObjective(const Optimization::TimeDependentLinearExpression& pairses,
-                                   const std::string& id,
-                                   const LinearProblemApi::FillContext& ctx);
-    void addStaticObjective(const Optimization::TimeDependentLinearExpression& pairses,
-                            const std::string& id);
     void addObjectives(const LinearProblemApi::FillContext& ctx) override;
 
 private:
     void addStaticConstraint(const LinearConstraint& linear_constraint,
-                             const std::string& constraint_id) const;
+                             const std::string& constraint_id);
 
     void addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
-                                     const LinearProblemApi::FillContext& ctx) const;
+                                     const LinearProblemApi::FillContext& ctx);
+
+    void addStaticObjective(const Optimization::TimeDependentLinearExpression& expression) const;
 
     TimeIndex getConstraintTimeIndex(const Nodes::Node* node,
                                      const ModelerStudy::SystemModel::Component& component) const;
@@ -111,5 +108,13 @@ private:
     const ScenarioGroupRepository& scenarioGroupRepository_;
     const Modeler::Config::Location targetLocation_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
+
+    // Filter to keep only items compatible with the target location
+    auto locationFilter()
+    {
+        return std::views::filter(
+          [this](const auto& item)
+          { return AreLocationsCompatible(item.location(), targetLocation_); });
+    }
 };
 } // namespace Antares::Optimisation

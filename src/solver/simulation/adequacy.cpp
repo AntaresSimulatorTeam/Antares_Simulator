@@ -234,7 +234,8 @@ bool Adequacy::year(Progression::Task& progression,
                                       currentProblem,
                                       study.parameters,
                                       numSpace,
-                                      hourInTheYear);
+                                      hourInTheYear,
+                                      resultWriter);
             }
             catch (Data::AssertionError& ex)
             {

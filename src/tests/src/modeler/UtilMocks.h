@@ -23,7 +23,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
-#include <antares/optimisation/linear-problem-api/linearProblem.h>
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 #include "mockModelerObjects.h"
 
@@ -278,7 +278,7 @@ public:
     }
 
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* lookupVariable(
-      const std::string& name) const override
+      const std::string&) const override
     {
         return RandomVariable().get();
     }

@@ -21,6 +21,8 @@
 
 #include <cassert>
 #include <cmath>
+#include <sstream>
+#include <string>
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/logs/logs.h>
@@ -30,7 +32,6 @@
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
-#include "antares/study/simulation.h"
 
 #define EPSILON 1e-6
 
@@ -284,7 +285,8 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              initLevel,
                              capacity,
                              efficiency,
-                             reservoirManagement);
+                             reservoirManagement,
+                             std::string(area.name) + " hydro");
 }
 
 std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
@@ -357,7 +359,8 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
                            upRuleCurve,
                            initLevel,
                            withdrawalEff,
-                           injectionEff);
+                           injectionEff,
+                           std::string(area.name) + " " + stsProperties.name);
 }
 
 ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
@@ -382,8 +385,10 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   PROBLEME_HEBDO& problem,
                                   uint numSpace,
                                   uint firstHourOfWeek,
-                                  bool includeSTS)
+                                  bool includeSTS,
+                                  IResultWriter* writer)
 {
+    std::stringstream debugStream;
     areas.each(
       [&](const Data::Area& area)
       {
@@ -410,6 +415,10 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           {
               checkInput(load, unsupE, spillage, dtgMrg, listStorage);
               shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage);
+              if (writer)
+              {
+                  collectRemixDebugInfo(listStorage, debugStream);
+              }
           }
           catch (std::exception& e)
           {
@@ -420,13 +429,22 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
               logs.warning(msg);
           }
       });
+
+    if (writer)
+    {
+        std::string filename("remix-" + std::to_string(problem.year) + "-"
+                             + std::to_string(problem.weekInTheYear) + ".csv");
+        std::string s = debugStream.str();
+        writer->addEntryFromBuffer(filename, s);
+    }
 }
 
 void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
                            const Data::Parameters& params,
                            uint numSpace,
-                           uint hourInYear)
+                           uint hourInYear,
+                           IResultWriter& resultWriter)
 {
     if (params.shedding.policy == Data::shpShavePeaks)
     {
@@ -454,9 +472,15 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
     else if (params.shedding.policy == Data::shpAccurateShavePeaks)
     {
         bool includeSTS = params.accurateShavePeaksIncludeShortTermStorage;
+        bool debugInfos = params.remixStorageDebug;
         try
         {
-            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear, includeSTS);
+            RunAccurateShavePeaks(areas,
+                                  problem,
+                                  numSpace,
+                                  hourInYear,
+                                  includeSTS,
+                                  debugInfos ? &resultWriter : nullptr);
         }
         catch (std::invalid_argument& invalidArgExc)
         {
