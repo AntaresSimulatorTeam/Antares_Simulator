@@ -24,7 +24,9 @@
 
 #include <chrono>
 #include <fstream>
+#include <stdexcept>
 
+#include <antares/expressions/iterators/pre-order.h>
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
@@ -35,6 +37,8 @@
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
+
+#include "include/antares/solver/modeler/data.h"
 
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
@@ -102,6 +106,55 @@ private:
     Optimisation::OptimEntityContainer optimEntityContainer_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
 };
+
+void checkLocations(Antares::Modeler::Data& data)
+{
+}
+
+void checkModel(Antares::ModelerStudy::SystemModel::Model& model)
+{
+}
+
+void checkExpression(Antares::Expressions::Nodes::Node* expression,
+                     Antares::Modeler::Config::Location& location,
+                     Antares::ModelerStudy::SystemModel::Model& model)
+{
+    for (auto& node: Antares::Expressions::Nodes::AST(expression))
+    {
+        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::VariableNode*>(&node); n)
+        {
+            const std::string varName = n->value();
+            for (const auto& variable: model.Variables())
+            {
+                if (variable.Id() == varName)
+                {
+                    if (variable.location() != location)
+                    {
+                        throw std::runtime_error("Mismatch locations");
+                    }
+                }
+            }
+        }
+
+        auto checkPortFieldExpr = [&](auto* n)
+        {
+            ModelerStudy::SystemModel::PortFieldKey key(n->getPortName(), n->getFieldName());
+            checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
+                            location,
+                            model);
+        };
+
+        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldNode*>(&node); n)
+        {
+            checkPortFieldExpr(n);
+        }
+
+        if (auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node); n)
+        {
+            checkPortFieldExpr(n);
+        }
+    }
+}
 
 void Modeler::run() const
 {
