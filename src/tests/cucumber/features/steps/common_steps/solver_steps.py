@@ -15,9 +15,6 @@ from common_steps.solver_output_handler import solver_output_handler
 
 from features.steps.common_steps.assertions import assert_double_close
 from features.steps.common_steps.modeler_output_handler import modeler_output_handler
-import csv
-import io
-from typing import Optional
 from features.steps.common_steps.table_compare import *
 
 NB_HOURS_IN_WEEK = 168
