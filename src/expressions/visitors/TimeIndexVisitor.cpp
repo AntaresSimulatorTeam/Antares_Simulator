@@ -77,7 +77,7 @@ Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::GreaterThanOr
 
 Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::VariableNode* var)
 {
-    return var->timeVariability();
+    return var->variability();
 }
 
 Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
@@ -88,7 +88,7 @@ Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::ParameterNode
         return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
         // TODO: handle more cases, but ParameterType must be exhaustive first
     }
-    return param->timeIndex();
+    return param->variability();
 }
 
 Optimisation::VariabilityType TimeIndexVisitor::visit(
@@ -155,7 +155,7 @@ Optimisation::VariabilityType TimeIndexVisitor::visit(
 Optimisation::VariabilityType TimeIndexVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
     const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
-    return varNode->timeVariability();
+    return varNode->variability();
 }
 
 Optimisation::VariabilityType TimeIndexVisitor::handleDual(const Nodes::FunctionNode* node)

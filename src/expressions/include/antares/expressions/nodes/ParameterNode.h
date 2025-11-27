@@ -17,7 +17,7 @@ public:
                            Optimisation::VariabilityType time_index = Optimisation::
                              VariabilityType::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
-        time_index_(time_index)
+        variability_(time_index)
     {
     }
 
@@ -26,12 +26,12 @@ public:
         return "ParameterNode";
     }
 
-    Optimisation::VariabilityType timeIndex() const
+    Optimisation::VariabilityType variability() const
     {
-        return time_index_;
+        return variability_;
     }
 
 private:
-    Optimisation::VariabilityType time_index_;
+    Optimisation::VariabilityType variability_;
 };
 } // namespace Antares::Expressions::Nodes

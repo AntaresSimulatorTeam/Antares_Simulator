@@ -132,11 +132,11 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 {
     const auto variableStart = optimEntityContainer_.getVariableStartColumn(component_,
                                                                             node->Index());
-    if (isTimeConstant(node->timeVariability()))
+    if (isTimeConstant(node->variability()))
     {
         return Optimization::TimeDependentLinearExpression({{variableStart, 1.}}, 0.);
     }
-    if (isTimeDependent(node->timeVariability())) /* scenario not
+    if (isTimeDependent(node->variability())) /* scenario not
                                                                               handled !*/
     {
         Optimization::TimeDependentLinearExpression out(nbtimeSteps_);
@@ -157,7 +157,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->timeIndex() == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+    if (node->variability() == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         throw Error::InvalidArgumentError(

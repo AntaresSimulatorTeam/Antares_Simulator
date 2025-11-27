@@ -87,8 +87,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (node->timeVariability() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->timeVariability() == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (node->variability() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->variability() == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
@@ -113,7 +113,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = context_.getParameter(node->value());
-    if (node->timeIndex() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+    if (node->variability() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         std::string msg = "Parameter " + node->value() + " is declared constant in time and"
@@ -272,7 +272,7 @@ EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
     const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
 
-    if (const auto timeIndex = varNode->timeVariability();
+    if (const auto timeIndex = varNode->variability();
         timeIndex == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
         || timeIndex == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {

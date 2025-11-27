@@ -24,7 +24,7 @@ public:
                           Optimisation::VariabilityType time_index = Optimisation::VariabilityType::
                             VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
-        time_variability_(time_index),
+        variability_(time_index),
         index_(index)
 
     {
@@ -35,9 +35,9 @@ public:
         return "VariableNode";
     }
 
-    Optimisation::VariabilityType timeVariability() const
+    Optimisation::VariabilityType variability() const
     {
-        return time_variability_;
+        return variability_;
     }
 
     unsigned int Index() const
@@ -47,7 +47,7 @@ public:
 
 private:
     // Is the variable time-dependent / scenario-dependent ?
-    const Optimisation::VariabilityType time_variability_;
+    const Optimisation::VariabilityType variability_;
     // Local index within the component, starting from 0
     const unsigned int index_ = 0;
 };
