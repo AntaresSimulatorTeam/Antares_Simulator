@@ -125,7 +125,7 @@ public:
       const std::vector<Antares::ModelerStudy::SystemModel::Component>& component,
       Modeler::Config::Location targetLocation = Modeler::Config::Location::SUBPROBLEMS);
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
-                            const VariabilityType& timeIndex);
+                            const VariabilityType& variability);
 
     unsigned constraintGLobalIndex() const
     {

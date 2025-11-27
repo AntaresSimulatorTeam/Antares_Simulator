@@ -109,16 +109,16 @@ Nodes::Node* LinearProblemBuildingFixture::literal(double value)
 }
 
 Nodes::Node* LinearProblemBuildingFixture::parameter(const std::string& paramId,
-                                                     const VariabilityType& timeIndex)
+                                                     const VariabilityType& variability)
 {
-    return nodeRegistry.create<Nodes::ParameterNode>(paramId, timeIndex);
+    return nodeRegistry.create<Nodes::ParameterNode>(paramId, variability);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::variable(const std::string& varId,
                                                     unsigned index,
-                                                    const VariabilityType& timeIndex)
+                                                    const VariabilityType& variability)
 {
-    return nodeRegistry.create<Nodes::VariableNode>(varId, index, timeIndex);
+    return nodeRegistry.create<Nodes::VariableNode>(varId, index, variability);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::multiply(Nodes::Node* node1, Nodes::Node* node2)

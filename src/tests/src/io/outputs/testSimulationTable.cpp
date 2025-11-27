@@ -537,11 +537,10 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto cstrTimeIndex = VariabilityVisitor(*optimEntityContainer, compo)
-                                         .dispatch(constraint.expression().RootNode());
-            optimEntityContainer->registerConstraint(compo, cstrTimeIndex);
-            if (cstrTimeIndex == VariabilityType::VARYING_IN_TIME_ONLY
-                || cstrTimeIndex == VariabilityType::VARYING_IN_TIME_AND_SCENARIO)
+            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer, compo)
+                                                  .dispatch(constraint.expression().RootNode());
+            optimEntityContainer->registerConstraint(compo, constraint_variability);
+            if (isTimeDependent(constraint_variability))
             {
                 for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {
