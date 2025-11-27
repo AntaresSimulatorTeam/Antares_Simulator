@@ -156,7 +156,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
     }
 }
 
-void handleDependingOnTimeIndex(
+void handleDependingOnVariability(
   const FillContext& fillContext,
   std::optional<unsigned> scenario,
   VariabilityType idxType,
@@ -242,7 +242,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
         };
 
-        handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+        handleDependingOnVariability(fillContext, scenario, idxType, handle);
     }
 }
 
@@ -302,7 +302,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                                   .value = val,
                                   .status = MipBasisStatus::NOT_AVAILABLE});
     };
-    handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+    handleDependingOnVariability(fillContext, scenario, idxType, handle);
 }
 
 void addPortEntries(ISimulationTable& simulationTable,
@@ -354,7 +354,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                                       .status = MipBasisStatus::NOT_AVAILABLE});
         };
 
-        handleDependingOnTimeIndex(fillContext, scenario, idxType, handle);
+        handleDependingOnVariability(fillContext, scenario, idxType, handle);
     }
 }
 

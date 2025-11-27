@@ -381,11 +381,11 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        const auto timeIndex = getVariability(root_node, component_);
+        const auto variability = getVariability(root_node, component_);
 
-        optimEntityContainer_.registerConstraint(component_, timeIndex);
+        optimEntityContainer_.registerConstraint(component_, variability);
 
-        if (isTimeDependent(timeIndex))
+        if (isTimeDependent(variability))
         {
             addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx);
         }

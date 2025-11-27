@@ -180,7 +180,7 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         {
             return static_cast<Node*>(registry_.create<ParameterNode>(
               param.id,
-              Optimisation::convertToTimeIndex(param.time_dependent, param.scenario_dependent)));
+              Optimisation::variability(param.time_dependent, param.scenario_dependent)));
         }
     }
 
@@ -193,7 +193,7 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
             return static_cast<Node*>(registry_.create<VariableNode>(
               var.id,
               index,
-              Optimisation::convertToTimeIndex(var.time_dependent, var.scenario_dependent)));
+              Optimisation::variability(var.time_dependent, var.scenario_dependent)));
         }
     }
     throw NoParameterOrVariableWithThisName(identifier);
