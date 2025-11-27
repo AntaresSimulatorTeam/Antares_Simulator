@@ -23,8 +23,7 @@
 #include <string>
 #include <vector>
 
-#include "antares/modeler-optimisation-container/EvaluationContext.h"
-#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/expressions/nodes/VariableNode.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/data.h"
@@ -97,14 +96,14 @@ struct LinearProblemBuildingFixture
 
     Antares::Expressions::Nodes::Node* parameter(
       const std::string& paramId,
-      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
-        CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::TimeScenarioVariability& timeIndex = Antares::Optimisation::
+        TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* variable(
       const std::string& varId,
       unsigned int index,
-      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
-        CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::TimeScenarioVariability& timeIndex = Antares::Optimisation::
+        TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
                                                 Antares::Expressions::Nodes::Node* node2);

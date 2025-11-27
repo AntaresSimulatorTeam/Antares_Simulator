@@ -100,7 +100,7 @@ private:
 
     void addStaticObjective(const Optimization::TimeDependentLinearExpression& expression) const;
 
-    TimeIndex getConstraintTimeIndex(const Nodes::Node* node,
+    TimeScenarioVariability getConstraintTimeIndex(const Nodes::Node* node,
                                      const ModelerStudy::SystemModel::Component& component) const;
 
     const ModelerStudy::SystemModel::Component& component_;

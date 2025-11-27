@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
 BOOST_AUTO_TEST_CASE(TestUpdateTimeIndexIfShouldForceScenario)
 {
-    using TI = Antares::Optimisation::TimeIndex;
+    using TI = Antares::Optimisation::TimeScenarioVariability;
     // bool = false => no value should change
     BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
                 == TI::CONSTANT_IN_TIME_AND_SCENARIO);
@@ -540,8 +540,8 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             const auto cstrTimeIndex = TimeIndexVisitor(*optimEntityContainer, compo)
                                          .dispatch(constraint.expression().RootNode());
             optimEntityContainer->registerConstraint(compo, cstrTimeIndex);
-            if (cstrTimeIndex == TimeIndex::VARYING_IN_TIME_ONLY
-                || cstrTimeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+            if (cstrTimeIndex == TimeScenarioVariability::VARYING_IN_TIME_ONLY
+                || cstrTimeIndex == TimeScenarioVariability::VARYING_IN_TIME_AND_SCENARIO)
             {
                 for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {

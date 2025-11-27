@@ -3,11 +3,11 @@
 #include <string>
 
 #include <antares/expressions/nodes/Leaf.h>
-#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/modeler-optimisation-container/TimeVariation.h"
 
 namespace Antares::Optimisation
 {
-enum class TimeIndex : unsigned int;
+enum class TimeScenarioVariability : unsigned int;
 }
 
 namespace Antares::Expressions::Nodes
@@ -19,12 +19,12 @@ namespace Antares::Expressions::Nodes
 class VariableNode final: public Leaf<std::string>
 {
 public:
-    explicit VariableNode(
-      const std::string& value,
-      unsigned int index,
-      Optimisation::TimeIndex time_index = Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
+    explicit VariableNode(const std::string& value,
+                          unsigned int index,
+                          Optimisation::TimeScenarioVariability time_index = Optimisation::
+                            TimeScenarioVariability::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
-        time_index_(time_index),
+        time_variability_(time_index),
         index_(index)
 
     {
@@ -35,9 +35,9 @@ public:
         return "VariableNode";
     }
 
-    Optimisation::TimeIndex timeIndex() const
+    Optimisation::TimeScenarioVariability timeVariability() const
     {
-        return time_index_;
+        return time_variability_;
     }
 
     unsigned int Index() const
@@ -47,7 +47,7 @@ public:
 
 private:
     // Is the variable time-dependent / scenario-dependent ?
-    const Optimisation::TimeIndex time_index_;
+    const Optimisation::TimeScenarioVariability time_variability_;
     // Local index within the component, starting from 0
     const unsigned int index_ = 0;
 };

@@ -24,7 +24,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/modeler-optimisation-container/TimeIndex.h>
+#include <antares/modeler-optimisation-container/TimeVariation.h>
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
@@ -38,7 +38,7 @@
 using namespace Antares::Expressions;
 using PT = Antares::ModelerStudy::SystemModel::ParameterType;
 using PTV = Antares::ModelerStudy::SystemModel::ParameterTypeAndValue;
-using TI = Antares::Optimisation::TimeIndex;
+using TI = Antares::Optimisation::TimeScenarioVariability;
 
 class ConstantDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
