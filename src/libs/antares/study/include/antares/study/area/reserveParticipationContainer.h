@@ -40,7 +40,7 @@ class ReserveParticipationContainerBase
 
 protected:
     std::map<ReserveName, T> reservesParticipations;
-    std::vector<std::vector<ReserveParticipationWithName>> reserveParticipationsSymmetries;
+    std::vector<std::set<ReserveName>> reserveParticipationsSymmetries;
 
 public:
     /// @brief Add a reserve participation to the container for a given reserve name
@@ -51,63 +51,56 @@ public:
         reservesParticipations.emplace(reserveName, reserveParticipation);
     }
 
+    bool symmetricDuplicates(const std::set<ReserveName>& names) const
+    {
+        for (const auto& sym: reserveParticipationsSymmetries)
+        {
+            if ((*sym.begin() == *names.begin() && *sym.rbegin() == *names.rbegin())
+                || (*sym.begin() == *names.rbegin() && *sym.rbegin() == *names.begin()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /// @brief Add a reserve participation symmetry to the container
     /// @param names names of the reserves for which the participation is symmetrical
-    void addReserveParticipationSymmetry(std::set<ReserveName> names)
+    void addReserveParticipationSymmetry(const std::set<ReserveName>& names)
     {
-        auto symmetryRes = std::vector<ReserveParticipationWithName>();
-        for (auto name: names)
+        if (names.size() != 2)
         {
-            if (names.size() != 2)
-            {
-                throw std::out_of_range(
-                  "Must have two distinct reserves to participate to a symmetry");
-            }
-            if (reservesParticipations.contains(name))
-            {
-                symmetryRes.push_back(
-                  ReserveParticipationWithName{&reservesParticipations.at(name), name});
-            }
-            else
+            throw std::out_of_range("Must have two distinct reserves to participate to a symmetry");
+        }
+        if (symmetricDuplicates(names))
+        {
+            throw std::invalid_argument("Detected duplicate in reserves symmetries");
+        }
+        auto checkIfReserverIsParticipating = [this](const auto& name)
+        {
+            if (!reservesParticipations.contains(name))
             {
                 throw std::out_of_range("This entity is not participating to reserve " + name);
             }
-        }
-        for (auto existingSymmetry: reserveParticipationsSymmetries)
-        {
-            int sameNamesCount = 0;
-            for (auto resSym: existingSymmetry)
-            {
-                for (auto name: names)
-                {
-                    if (name == (std::string)resSym.reserveName)
-                    {
-                        sameNamesCount++;
-                    }
-                }
-            }
-            if (sameNamesCount == 2) // The symmetry is already present
-            {
-                throw std::invalid_argument("Detected duplicate in reserves symmetries");
-            }
-        }
-        reserveParticipationsSymmetries.push_back(symmetryRes);
+        };
+        checkIfReserverIsParticipating(*names.begin());
+        checkIfReserverIsParticipating(*names.rbegin());
+        reserveParticipationsSymmetries.push_back(names);
     }
 
     /// @brief Get the indices of the lists that contains reserveParticipation to the reserve name
     /// @param name name of the reserve for which the participation is searched
     /// @return indices of the lists that contains reserveParticipation to the reserve name
-    std::vector<int> symmetricalIndices(ReserveName name) const
+    std::vector<int> symmetricalIndices(const ReserveName& name) const
     {
         std::vector<int> indices;
-        for (int i = 0; i < reserveParticipationsSymmetries.size(); i++)
+
+        for (auto i = 0; i < reserveParticipationsSymmetries.size(); ++i)
         {
-            for (auto reserveParticipation: reserveParticipationsSymmetries.at(i))
+            if (const auto& symmetry = reserveParticipationsSymmetries.at(i);
+                *symmetry.begin() == name || *symmetry.rbegin() == name)
             {
-                if (reserveParticipation.reserveName == name)
-                {
-                    indices.push_back(i);
-                }
+                indices.push_back(i);
             }
         }
 
