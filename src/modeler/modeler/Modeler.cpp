@@ -167,17 +167,12 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
         }
 
         // Portfields can contains variables, we recursively check their expressions
-        auto checkPortFieldExpr = [&](auto* n)
+        if (const auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldNode*>(&node); n)
         {
             ModelerStudy::SystemModel::PortFieldKey key(n->getPortName(), n->getFieldName());
             checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
                             location,
                             model);
-        };
-
-        if (const auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldNode*>(&node); n)
-        {
-            checkPortFieldExpr(n);
             continue;
         }
 
