@@ -43,10 +43,10 @@ public:
     }
 };
 
-class NoVariableWithThisName final: public std::runtime_error
+class ReducedCostNoVariableWithThisName final: public std::runtime_error
 {
 public:
-    explicit NoVariableWithThisName(const std::string& modelName, const std::string& varName):
+    explicit ReducedCostNoVariableWithThisName(const std::string& modelName, const std::string& varName):
         runtime_error("reduced_cost called with unknown variable '" + varName + "' in model '"
                       + modelName + "'")
     {

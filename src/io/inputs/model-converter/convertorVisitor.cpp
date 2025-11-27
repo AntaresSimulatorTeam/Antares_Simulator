@@ -20,6 +20,7 @@
  */
 
 #include <ExprVisitor.h>
+#include <any>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
@@ -444,16 +445,18 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
                                     + params);
     }
 
+    unsigned index = 0;
     for (const auto& var: model_.variables)
     {
         if (var.id == variableId.at(0)->getText())
         {
-            std::vector<Node*> nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+            auto varNode = registry_.create<VariableNode>(var.id, index);
             return static_cast<Node*>(
-              registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
+              registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode));
         }
+        ++index;
     }
-    throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
+    throw ReducedCostNoVariableWithThisName(model_.id, variableId.at(0)->getText());
 }
 
 template<class T>
