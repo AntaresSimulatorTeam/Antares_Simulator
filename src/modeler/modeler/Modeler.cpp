@@ -152,23 +152,18 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
 {
     for (auto& node: Antares::Expressions::Nodes::AST(expression))
     {
-        auto checkVariableLocation = [&model, &location](const std::string& varName)
-        {
-            for (const auto& variable: model.Variables())
-            {
-                if (variable.Id() == varName
-                    && !AreLocationsCompatible(variable.location(), location))
-                {
-                    throw std::runtime_error("Variable mismatch locations");
-                }
-            }
-        };
-
         // base variable
         if (const auto* varNode = dynamic_cast<Antares::Expressions::Nodes::VariableNode*>(&node);
             varNode)
         {
-            checkVariableLocation(varNode->value());
+            for (const auto& variable: model.Variables())
+            {
+                if (variable.Id() == varNode->value()
+                    && !AreLocationsCompatible(variable.location(), location))
+                {
+                    throw std::runtime_error("Variable mismatch locations"); // TODO Better ex
+                }
+            }
             continue;
         }
 
@@ -187,7 +182,8 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
             continue;
         }
 
-        /*if (const auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node); n)*/
+        /*if (const auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node);
+         * n)*/
         /*{*/
         /*    checkPortFieldExpr(n);*/
         /*    continue;*/
