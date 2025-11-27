@@ -1,5 +1,6 @@
 var NAVTREEINDEX59 =
 {
+"structBB.html#ac0f3b6d5cb88053b6067ae9d3cec2b98":[8,0,47,10],
 "structBB.html#ad1329743a6530e3dbfabea5020c54b82":[8,0,47,6],
 "structBB.html#ad47f11bbd61f3b483f1c126ccfc228ed":[8,0,47,25],
 "structBB.html#ae48b258cd7e869b999978682281d0c3e":[8,0,47,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX59 =
 "structDecompositionFixture.html":[8,0,97],
 "structDecompositionFixture.html#a143cd7320f0ab3674554a83368f73133":[8,0,97,6],
 "structDecompositionFixture.html#a25f6187dd05eb9b670216b3b8ae12dc2":[8,0,97,0],
-"structDecompositionFixture.html#a5232d9ef11a30c4c1d03f6c7e26b1a8d":[8,0,97,7],
-"structDecompositionFixture.html#a63466d4e4412dcb42153858d497696d0":[8,0,97,1]
+"structDecompositionFixture.html#a5232d9ef11a30c4c1d03f6c7e26b1a8d":[8,0,97,7]
 };

@@ -1604,7 +1604,6 @@ var annotated_dup =
     [ "HydroPowerSmoothingUsingVariationMaxDown", "classHydroPowerSmoothingUsingVariationMaxDown.html", "classHydroPowerSmoothingUsingVariationMaxDown" ],
     [ "HydroPowerSmoothingUsingVariationMaxUp", "classHydroPowerSmoothingUsingVariationMaxUp.html", "classHydroPowerSmoothingUsingVariationMaxUp" ],
     [ "HydroPowerSmoothingUsingVariationSum", "classHydroPowerSmoothingUsingVariationSum.html", "classHydroPowerSmoothingUsingVariationSum" ],
-    [ "HydroStorageData", "structHydroStorageData.html", "structHydroStorageData" ],
     [ "I_MPS_writer", "classI__MPS__writer.html", "classI__MPS__writer" ],
     [ "IColumn", "classIColumn.html", "classIColumn" ],
     [ "IItem", "classIItem.html", "classIItem" ],

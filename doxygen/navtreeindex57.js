@@ -1,5 +1,6 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7949987ce1c23dcd30da757005e09002":[8,0,0,19,5,4,97,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a79d8d7969547f25f2f6849503b4d40c7":[8,0,0,19,5,4,97,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html":[8,0,0,19,5,4,99],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#a1198c447ddcd69e7ee7d8caefbee62df":[8,0,0,19,5,4,99,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#af3f60338146df4c34099b27f3dd21dc3":[8,0,0,19,25,4],
 "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#affceeea15cbf8215e26e88ef18988531":[8,0,0,19,25,6],
 "structAntares_1_1Solver_1_1WeeklyProblemId.html":[8,0,0,19,23],
-"structAntares_1_1Solver_1_1WeeklyProblemId.html#a35d3fc35aacffb2e238018bce9147da2":[8,0,0,19,23,2],
-"structAntares_1_1Solver_1_1WeeklyProblemId.html#a7090451986c94235a3c60ab8dbe03a1d":[8,0,0,19,23,1]
+"structAntares_1_1Solver_1_1WeeklyProblemId.html#a35d3fc35aacffb2e238018bce9147da2":[8,0,0,19,23,2]
 };

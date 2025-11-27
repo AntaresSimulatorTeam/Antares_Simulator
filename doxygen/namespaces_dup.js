@@ -1591,6 +1591,7 @@ var namespaces_dup =
           [ "SetInitialHydroLevel", "common-eco-adq_8cpp.html#ac3dc98869aac05b3bc90b8b22d33ec32", null ],
           [ "shavePeaksByRemixingStorageGen", "shave-peaks-by-remix-storage-gen_8h.html#a4a85a74da287a9bd0410a983ea8f856c", null ],
           [ "ShouldUseQuadraticOptimisation", "common-eco-adq_8cpp.html#a35eb8d7c7225b8b691c248e6778317e5", null ],
+          [ "sum", "remix-utils_8h.html#a48b79b33b6d4cd6bf06133355c40afbf", null ],
           [ "update", "shave-peaks-by-remix-help_8h.html#a1ce7f2520ce4e57370b5a56f0e861710", null ],
           [ "updateValidHours", "shave-peaks-by-remix-help_8h.html#a6030c96de573a2966ac86c71d0bf601f", null ],
           [ "updatingWeeklyFinalHydroLevel", "common-hydro-levels_8cpp.html#a4274c3f8be2e2c89c0fc3fe07230f87a", null ],
