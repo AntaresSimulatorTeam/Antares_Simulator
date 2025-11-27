@@ -334,7 +334,7 @@ public:
 
 private:
     const Optimisation::OptimEntityContainer& optimContainer_;
-    const Optimisation::EvaluationContext& context_;
+    const Optimisation::EvaluationContext& evalContext_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
 

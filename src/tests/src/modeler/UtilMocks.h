@@ -455,7 +455,6 @@ inline Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository
 
 struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>
 {
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::ModelerStudy::SystemModel::Model model = createModelWithoutParameters();
     std::vector<Antares::ModelerStudy::SystemModel::Component> components = {

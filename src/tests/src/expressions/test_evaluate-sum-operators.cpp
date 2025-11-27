@@ -22,6 +22,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <memory>
+
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -29,8 +31,81 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 
-BOOST_AUTO_TEST_CASE(dummy_test) 
-{ 
-	BOOST_CHECK(true);
+#include "UtilMocks.h"
+
+using namespace Antares::Expressions;
+using namespace Antares::Expressions::Nodes;
+using namespace Antares::Optimisation;
+using namespace Antares::ModelerStudy::SystemModel;
+
+// =================================
+// Fixture to build AST nodes tree
+// =================================
+struct build_AST_fixture
+{
+    Node* literal(double value);
+    Node* allTimeSum(Node* node);
+
+private:
+    Registry<Nodes::Node> registry_;
+};
+
+Node* build_AST_fixture::literal(double value)
+{
+    return registry_.create<LiteralNode>(value);
 }
 
+Node* build_AST_fixture::allTimeSum(Node* node)
+{
+    return registry_.create<AllTimeSumNode>(node);
+}
+
+// =============================
+// Fixture to build EvalVisitor
+// =============================
+struct build_eval_visitor_fixture
+{
+    build_eval_visitor_fixture();
+
+    LinearProblemDataImpl::LinearProblemData data;
+    MockLinearProblem linearProblem;
+    OptimEntityContainer optimEntityContainer;
+    LinearProblemApi::FillContext fillCtx;
+
+    std::unique_ptr<Visitors::EvalVisitor> evaluator;
+
+private:
+    Model model_;
+    Component component_;
+    ScenarioGroupRepository scenarioGroupRepository_;
+};
+
+build_eval_visitor_fixture::build_eval_visitor_fixture():
+    linearProblem(true),
+    fillCtx(1, 3, 1, 3, 1),
+    model_(createModelWithoutParameters()),
+    component_(createComponent(model_)),
+    scenarioGroupRepository_(getscenarioGroupRepository(component_)),
+    optimEntityContainer(linearProblem, &data, &scenarioGroupRepository_)
+{
+    optimEntityContainer.addFromSystemComponents({component_});
+    evaluator = std::make_unique<Visitors::EvalVisitor>(optimEntityContainer, fillCtx, component_);
+}
+
+// =================================================
+// Test fixture : made from both previous fixtures
+// =================================================
+struct tests_fixture: build_AST_fixture, build_eval_visitor_fixture
+{
+};
+
+BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_the_time_span, tests_fixture)
+{
+    Node* one = literal(1.);
+    Node* someOfOnes = allTimeSum(one);
+
+    auto result = evaluator->dispatch(someOfOnes);
+    double d = result.valueAsDouble();
+
+    BOOST_CHECK(d == 3.);
+}
