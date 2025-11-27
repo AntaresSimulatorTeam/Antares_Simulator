@@ -388,7 +388,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
         }
 
-        lnk->useLoopFlow = problem.CoutDeTransport[k].IntercoGereeAvecLoopFlow;
+        problem.CoutDeTransport[k].IntercoGereeAvecLoopFlow = lnk->useLoopFlow;
     }
 
     int weekDayIndex[8];
