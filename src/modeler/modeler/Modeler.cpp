@@ -22,7 +22,6 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
-#include <chrono>
 #include <fstream>
 #include <stdexcept>
 
@@ -182,12 +181,20 @@ void checkExpression(Antares::Expressions::Nodes::Node* expression,
             continue;
         }
 
-        /*if (const auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldSumNode*>(&node);
-         * n)*/
-        /*{*/
-        /*    checkPortFieldExpr(n);*/
-        /*    continue;*/
-        /*}*/
+        if (const auto* portFieldSumNode = dynamic_cast<
+              Antares::Expressions::Nodes::PortFieldSumNode*>(&node);
+            portFieldSumNode)
+        {
+            for (const auto& connection: model.ComponentConnections())
+            {
+                auto* n = connection.component()->nodeAtPortField(portFieldSumNode->getPortName(),
+                                                                  portFieldSumNode->getFieldName());
+                checkExpression(n, location, *connection.component()->getModel());
+                /*Expressions::Visitors::PrintVisitor printVisitor;*/
+                /*logs.notice() << printVisitor.dispatch(n);*/
+            }
+            continue;
+        }
 
         checkFunctionNode(node, model);
     }

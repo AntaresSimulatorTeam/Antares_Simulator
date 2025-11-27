@@ -26,6 +26,7 @@
 
 #include <antares/expressions/expression.h>
 
+#include "connection.h"
 #include "constraint.h"
 #include "extraOutput.h"
 #include "objective.h"
@@ -107,6 +108,16 @@ public:
         return extraOutputs_;
     }
 
+    void addComponentConnection(ConnectionEnd connection)
+    {
+        componentsConnections_.push_back(connection);
+    }
+
+    const std::vector<ConnectionEnd>& ComponentConnections() const
+    {
+        return componentsConnections_;
+    }
+
 private:
     friend class ModelBuilder;
     std::string id_;
@@ -119,6 +130,7 @@ private:
     std::vector<Objective> objectives_;
 
     PortFieldMap portFieldDefinitions_;
+    std::vector<ConnectionEnd> componentsConnections_; // used to check location for portFieldSum
 };
 
 // List of IDs used internally to check for uniqueness of IDs at component level

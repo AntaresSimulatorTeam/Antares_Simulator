@@ -64,6 +64,7 @@ Component::Component(const ComponentData& component_data)
 
 void Component::addComponentConnection(const std::string localPortId, ConnectionEnd&& connexionEnd)
 {
+    getModel()->addComponentConnection(connexionEnd); // used to check location later
     componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
 }
 
@@ -76,7 +77,7 @@ std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::str
     return {};
 }
 
-const Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
+Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
 {
     try
     {
