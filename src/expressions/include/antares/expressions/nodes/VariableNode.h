@@ -21,10 +21,10 @@ class VariableNode final: public Leaf<std::string>
 public:
     explicit VariableNode(const std::string& value,
                           unsigned int index,
-                          Optimisation::VariabilityType time_index = Optimisation::VariabilityType::
-                            VARYING_IN_TIME_AND_SCENARIO):
+                          Optimisation::VariabilityType variability = Optimisation::
+                            VariabilityType::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
-        variability_(time_index),
+        variability_(variability),
         index_(index)
 
     {
