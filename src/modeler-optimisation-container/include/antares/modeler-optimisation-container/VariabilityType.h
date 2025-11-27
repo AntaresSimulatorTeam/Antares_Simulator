@@ -41,8 +41,7 @@ enum class VariabilityType : unsigned int
  *
  * @return The combined TimeIndex value.
  */
-constexpr VariabilityType operator|(const VariabilityType& left,
-                                            const VariabilityType& right)
+constexpr VariabilityType operator|(const VariabilityType& left, const VariabilityType& right)
 {
     /*
      0 | x = x
@@ -52,7 +51,7 @@ constexpr VariabilityType operator|(const VariabilityType& left,
      2 | 2 = 2
      */
     return static_cast<VariabilityType>(static_cast<unsigned int>(left)
-                                                | static_cast<unsigned int>(right));
+                                        | static_cast<unsigned int>(right));
 }
 
 // to silent warning, convert bool to unsigned int
@@ -64,24 +63,24 @@ static constexpr unsigned int convertBool(bool in)
 constexpr VariabilityType convertToTimeIndex(bool timedependent, bool scenariodependent)
 {
     return static_cast<VariabilityType>((convertBool(scenariodependent) << 1)
-                                                | convertBool(timedependent));
+                                        | convertBool(timedependent));
 }
 
-constexpr bool isTimeDependent(VariabilityType timeIndex)
+constexpr bool isTimeDependent(VariabilityType variability)
 {
-    return timeIndex == VariabilityType::VARYING_IN_TIME_ONLY
-           || timeIndex == VariabilityType::VARYING_IN_TIME_AND_SCENARIO;
+    return variability == VariabilityType::VARYING_IN_TIME_ONLY
+           || variability == VariabilityType::VARYING_IN_TIME_AND_SCENARIO;
 }
 
-constexpr bool isScenarioDependent(VariabilityType timeIndex)
+constexpr bool isScenarioDependent(VariabilityType variability)
 {
-    return timeIndex == VariabilityType::VARYING_IN_SCENARIO_ONLY
-           || timeIndex == VariabilityType::VARYING_IN_TIME_AND_SCENARIO;
+    return variability == VariabilityType::VARYING_IN_SCENARIO_ONLY
+           || variability == VariabilityType::VARYING_IN_TIME_AND_SCENARIO;
 }
 
-constexpr bool isTimeConstant(VariabilityType timeIndex)
+constexpr bool isTimeConstant(VariabilityType variability)
 {
-    return timeIndex == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+    return variability == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
 } // namespace Antares::Optimisation

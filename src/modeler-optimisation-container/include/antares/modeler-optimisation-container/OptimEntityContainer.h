@@ -38,7 +38,7 @@ struct OptimComponent
 {
     std::vector<unsigned> modelVariableGlobalIndices;
     std::vector<unsigned> modelConstraintsGlobalIndices;
-    std::vector<VariabilityType> modelConstraintsTimeIndex;
+    std::vector<VariabilityType> modelConstraintsVariability;
     EvaluationContext evaluationContext;
 };
 
@@ -70,7 +70,7 @@ public:
     {
         const auto& optimComponent = optimComponents_.at(component.Index());
         return {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),
-                optimComponent.modelConstraintsTimeIndex.at(index)};
+                optimComponent.modelConstraintsVariability.at(index)};
     }
 
     LinearProblemApi::ILinearProblem& Problem()

@@ -79,7 +79,7 @@ void OptimEntityContainer::registerConstraint(const Component& component,
     unsigned gLobalIndex = constraintGLobalIndex();
     auto& optimComponent = getOptimComponent(component.Index());
     optimComponent.modelConstraintsGlobalIndices.push_back(gLobalIndex);
-    optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);
+    optimComponent.modelConstraintsVariability.push_back(timeIndex);
     addStartLine();
 }
 } // namespace Antares::Optimisation

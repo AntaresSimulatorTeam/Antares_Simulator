@@ -58,9 +58,11 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
     }
 }
 
-VariabilityType updateTimeIndexIfShouldForceScenario(VariabilityType timeIndex, bool forceExportForScenarioIndex)
+VariabilityType updateVariabilityIfShouldForceScenario(VariabilityType variability,
+                                                       bool forceExportForScenarioIndex)
 {
-    return forceExportForScenarioIndex ? timeIndex | VariabilityType::VARYING_IN_SCENARIO_ONLY : timeIndex;
+    return forceExportForScenarioIndex ? variability | VariabilityType::VARYING_IN_SCENARIO_ONLY
+                                       : variability;
 }
 
 std::string BuildModelerConstraintName(const std::string& componentId,
@@ -216,7 +218,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
           fillContext.getLocalNumberOfTimeSteps());
         ++constraintLocalIndex;
 
-        auto idxType = updateTimeIndexIfShouldForceScenario(timeIndex, forceExportForScenarioIndex);
+        auto idxType = updateVariabilityIfShouldForceScenario(timeIndex,
+                                                              forceExportForScenarioIndex);
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
@@ -276,9 +279,10 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                                                           component);
     auto value = evalVisitor.dispatch(rootNode);
 
-    VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer, component)
-                   .dispatch(rootNode);
-    idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+    VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer,
+                                                                        component)
+                                .dispatch(rootNode);
+    idxType = updateVariabilityIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
     auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
     {
@@ -320,9 +324,10 @@ void addPortEntries(ISimulationTable& simulationTable,
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
 
-        VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer, component)
-                       .dispatch(portFieldDef.Definition().RootNode());
-        idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+        VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer,
+                                                                            component)
+                                    .dispatch(portFieldDef.Definition().RootNode());
+        idxType = updateVariabilityIfShouldForceScenario(idxType, forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
         // is time and/or scenario dependent. It may be more efficient to enrich
         // EvaluationResult
