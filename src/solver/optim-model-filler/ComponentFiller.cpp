@@ -417,8 +417,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     for (const auto& objective: model->Objectives() | locationFilter())
     {
         const auto root_node = objective.expression().RootNode();
-        const auto linearExpression = visitor.visitMergeDuplicates(
-          objective.expression().RootNode());
+        const auto linearExpression = visitor.visitMergeDuplicates(root_node);
 
         const auto timeIndex = getConstraintTimeIndex(root_node, component_);
         if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
