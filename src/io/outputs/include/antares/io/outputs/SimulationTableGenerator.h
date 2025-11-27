@@ -75,8 +75,8 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  unsigned currentBlock);
 
-Optimisation::TimeScenarioVariability updateTimeIndexIfShouldForceScenario(
-  Optimisation::TimeScenarioVariability timeIndex,
+Optimisation::VariabilityType updateTimeIndexIfShouldForceScenario(
+  Optimisation::VariabilityType timeIndex,
   bool forceExportForScenarioIndex);
 
 std::string BuildModelerConstraintName(const std::string& componentId,

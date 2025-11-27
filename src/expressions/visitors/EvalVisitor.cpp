@@ -87,10 +87,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (node->timeVariability()
-          == Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->timeVariability()
-             == Optimisation::TimeScenarioVariability::VARYING_IN_SCENARIO_ONLY)
+    if (node->timeVariability() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+        || node->timeVariability() == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
@@ -115,7 +113,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = context_.getParameter(node->value());
-    if (node->timeIndex() == Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO
+    if (node->timeIndex() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         std::string msg = "Parameter " + node->value() + " is declared constant in time and"
@@ -214,8 +212,8 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
     const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, cstrIndex);
 
-    if (timeIndex == Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO
-        || timeIndex == Optimisation::TimeScenarioVariability::VARYING_IN_SCENARIO_ONLY)
+    if (timeIndex == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+        || timeIndex == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {
         const auto componentConstraints = optimContainer_.getComponentConstraint(
           component_,
@@ -275,8 +273,8 @@ EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
     const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
 
     if (const auto timeIndex = varNode->timeVariability();
-        timeIndex == Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO
-        || timeIndex == Optimisation::TimeScenarioVariability::VARYING_IN_SCENARIO_ONLY)
+        timeIndex == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+        || timeIndex == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,

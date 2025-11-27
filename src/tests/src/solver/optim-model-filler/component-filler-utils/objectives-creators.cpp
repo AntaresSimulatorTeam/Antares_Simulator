@@ -14,7 +14,7 @@ Objective makeObjectiveFromVariable(Registry<Nodes::Node>& nodeRegistry,
     auto varNode = nodeRegistry.create<Nodes::AllTimeSumNode>(
       nodeRegistry.create<Nodes::VariableNode>(varId,
                                                varIndex,
-                                               TimeScenarioVariability::VARYING_IN_TIME_ONLY));
+                                               VariabilityType::VARYING_IN_TIME_ONLY));
     NodeRegistry node_registry(varNode, std::move(nodeRegistry));
     Expression expression("expr-" + objectiveId, std::move(node_registry));
     Objective objective(objectiveId, std::move(expression), location);

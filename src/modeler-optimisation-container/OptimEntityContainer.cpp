@@ -74,7 +74,7 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
 }
 
 void OptimEntityContainer::registerConstraint(const Component& component,
-                                              const TimeScenarioVariability& timeIndex)
+                                              const VariabilityType& timeIndex)
 {
     unsigned gLobalIndex = constraintGLobalIndex();
     auto& optimComponent = getOptimComponent(component.Index());

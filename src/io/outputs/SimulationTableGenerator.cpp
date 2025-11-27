@@ -35,7 +35,7 @@
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
-using TI = Antares::Optimisation::TimeScenarioVariability;
+using TI = Antares::Optimisation::VariabilityType;
 
 namespace Antares::IO
 {

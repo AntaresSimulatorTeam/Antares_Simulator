@@ -31,7 +31,7 @@ namespace Antares::Expressions::Visitors
  * @brief Represents a visitor for determining the time and scenario dependency of nodes in a syntax
  * tree.
  */
-class TimeIndexVisitor: public NodeVisitor<Optimisation::TimeScenarioVariability>
+class TimeIndexVisitor: public NodeVisitor<Optimisation::VariabilityType>
 {
 public:
     explicit TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
@@ -40,28 +40,28 @@ public:
     std::string name() const override;
 
 private:
-    Optimisation::TimeScenarioVariability processParentNode(const Nodes::ParentNode* node);
-    Optimisation::TimeScenarioVariability visit(const Nodes::SumNode* add) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::SubtractionNode* add) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::MultiplicationNode* add) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::DivisionNode* add) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::EqualNode* add) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::LessThanOrEqualNode* add) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::GreaterThanOrEqualNode* add) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::NegationNode* neg) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::VariableNode* param) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::ParameterNode* param) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::LiteralNode* lit) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::PortFieldNode* port_field_node) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::PortFieldSumNode* port_field_node) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::TimeShiftNode* timeShiftNode) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::TimeIndexNode* timeIndexNode) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::TimeSumNode* timeSumNode) override;
-    Optimisation::TimeScenarioVariability visit(const Nodes::AllTimeSumNode* timeSumNode) override;
-    Optimisation::TimeScenarioVariability handleReducedCost(const Nodes::FunctionNode* node);
-    Optimisation::TimeScenarioVariability handleDual(const Nodes::FunctionNode* node);
-    Optimisation::TimeScenarioVariability handlePow(const Nodes::FunctionNode* node);
-    Optimisation::TimeScenarioVariability visit(const Nodes::FunctionNode* node) override;
+    Optimisation::VariabilityType processParentNode(const Nodes::ParentNode* node);
+    Optimisation::VariabilityType visit(const Nodes::SumNode* add) override;
+    Optimisation::VariabilityType visit(const Nodes::SubtractionNode* add) override;
+    Optimisation::VariabilityType visit(const Nodes::MultiplicationNode* add) override;
+    Optimisation::VariabilityType visit(const Nodes::DivisionNode* add) override;
+    Optimisation::VariabilityType visit(const Nodes::EqualNode* add) override;
+    Optimisation::VariabilityType visit(const Nodes::LessThanOrEqualNode* add) override;
+    Optimisation::VariabilityType visit(const Nodes::GreaterThanOrEqualNode* add) override;
+    Optimisation::VariabilityType visit(const Nodes::NegationNode* neg) override;
+    Optimisation::VariabilityType visit(const Nodes::VariableNode* param) override;
+    Optimisation::VariabilityType visit(const Nodes::ParameterNode* param) override;
+    Optimisation::VariabilityType visit(const Nodes::LiteralNode* lit) override;
+    Optimisation::VariabilityType visit(const Nodes::PortFieldNode* port_field_node) override;
+    Optimisation::VariabilityType visit(const Nodes::PortFieldSumNode* port_field_node) override;
+    Optimisation::VariabilityType visit(const Nodes::TimeShiftNode* timeShiftNode) override;
+    Optimisation::VariabilityType visit(const Nodes::TimeIndexNode* timeIndexNode) override;
+    Optimisation::VariabilityType visit(const Nodes::TimeSumNode* timeSumNode) override;
+    Optimisation::VariabilityType visit(const Nodes::AllTimeSumNode* timeSumNode) override;
+    Optimisation::VariabilityType handleReducedCost(const Nodes::FunctionNode* node);
+    Optimisation::VariabilityType handleDual(const Nodes::FunctionNode* node);
+    Optimisation::VariabilityType handlePow(const Nodes::FunctionNode* node);
+    Optimisation::VariabilityType visit(const Nodes::FunctionNode* node) override;
 
     std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
 

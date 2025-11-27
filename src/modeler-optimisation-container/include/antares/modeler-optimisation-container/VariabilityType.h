@@ -25,7 +25,7 @@ namespace Antares::Optimisation
 /**
  * @brief Represents the time and scenario variation of a value.
  */
-enum class TimeScenarioVariability : unsigned int
+enum class VariabilityType : unsigned int
 {
     CONSTANT_IN_TIME_AND_SCENARIO = 0,
     VARYING_IN_TIME_ONLY = 1,
@@ -41,8 +41,8 @@ enum class TimeScenarioVariability : unsigned int
  *
  * @return The combined TimeIndex value.
  */
-constexpr TimeScenarioVariability operator|(const TimeScenarioVariability& left,
-                                            const TimeScenarioVariability& right)
+constexpr VariabilityType operator|(const VariabilityType& left,
+                                            const VariabilityType& right)
 {
     /*
      0 | x = x
@@ -51,7 +51,7 @@ constexpr TimeScenarioVariability operator|(const TimeScenarioVariability& left,
      1 | 2 = 3
      2 | 2 = 2
      */
-    return static_cast<TimeScenarioVariability>(static_cast<unsigned int>(left)
+    return static_cast<VariabilityType>(static_cast<unsigned int>(left)
                                                 | static_cast<unsigned int>(right));
 }
 
@@ -61,27 +61,27 @@ static constexpr unsigned int convertBool(bool in)
     return in ? 1 : 0;
 }
 
-constexpr TimeScenarioVariability convertToTimeIndex(bool timedependent, bool scenariodependent)
+constexpr VariabilityType convertToTimeIndex(bool timedependent, bool scenariodependent)
 {
-    return static_cast<TimeScenarioVariability>((convertBool(scenariodependent) << 1)
+    return static_cast<VariabilityType>((convertBool(scenariodependent) << 1)
                                                 | convertBool(timedependent));
 }
 
-constexpr bool isTimeDependent(TimeScenarioVariability timeIndex)
+constexpr bool isTimeDependent(VariabilityType timeIndex)
 {
-    return timeIndex == TimeScenarioVariability::VARYING_IN_TIME_ONLY
-           || timeIndex == TimeScenarioVariability::VARYING_IN_TIME_AND_SCENARIO;
+    return timeIndex == VariabilityType::VARYING_IN_TIME_ONLY
+           || timeIndex == VariabilityType::VARYING_IN_TIME_AND_SCENARIO;
 }
 
-constexpr bool isScenarioDependent(TimeScenarioVariability timeIndex)
+constexpr bool isScenarioDependent(VariabilityType timeIndex)
 {
-    return timeIndex == TimeScenarioVariability::VARYING_IN_SCENARIO_ONLY
-           || timeIndex == TimeScenarioVariability::VARYING_IN_TIME_AND_SCENARIO;
+    return timeIndex == VariabilityType::VARYING_IN_SCENARIO_ONLY
+           || timeIndex == VariabilityType::VARYING_IN_TIME_AND_SCENARIO;
 }
 
-constexpr bool isTimeConstant(TimeScenarioVariability timeIndex)
+constexpr bool isTimeConstant(VariabilityType timeIndex)
 {
-    return timeIndex == TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO;
+    return timeIndex == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
 } // namespace Antares::Optimisation

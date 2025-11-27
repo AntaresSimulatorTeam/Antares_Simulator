@@ -427,7 +427,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     }
 }
 
-TimeScenarioVariability ComponentFiller::getConstraintTimeIndex(const Node* node,
+VariabilityType ComponentFiller::getConstraintTimeIndex(const Node* node,
                                                                 const Component& component) const
 {
     Visitors::TimeIndexVisitor timeIndexVisitor(optimEntityContainer_, component);

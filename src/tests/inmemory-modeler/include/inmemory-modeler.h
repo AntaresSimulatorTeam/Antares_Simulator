@@ -96,14 +96,14 @@ struct LinearProblemBuildingFixture
 
     Antares::Expressions::Nodes::Node* parameter(
       const std::string& paramId,
-      const Antares::Optimisation::TimeScenarioVariability& timeIndex = Antares::Optimisation::
-        TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::VariabilityType& timeIndex = Antares::Optimisation::
+        VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* variable(
       const std::string& varId,
       unsigned int index,
-      const Antares::Optimisation::TimeScenarioVariability& timeIndex = Antares::Optimisation::
-        TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::VariabilityType& timeIndex = Antares::Optimisation::
+        VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
                                                 Antares::Expressions::Nodes::Node* node2);

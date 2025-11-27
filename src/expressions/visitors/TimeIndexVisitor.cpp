@@ -30,78 +30,79 @@ using namespace Antares::ModelerStudy::SystemModel;
 namespace Antares::Expressions::Visitors
 {
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::processParentNode(const Nodes::ParentNode* node)
+Optimisation::VariabilityType TimeIndexVisitor::processParentNode(const Nodes::ParentNode* node)
 {
     const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO,
-                           [this](Optimisation::TimeScenarioVariability sum, Nodes::Node* operand)
+                           Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
+                           [this](Optimisation::VariabilityType sum, Nodes::Node* operand)
                            { return sum | dispatch(operand); });
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::SumNode* node)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::SumNode* node)
 {
     return processParentNode(node);
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
 {
     return dispatch(sub->left()) | dispatch(sub->right());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::MultiplicationNode* mult)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::MultiplicationNode* mult)
 {
     return dispatch(mult->left()) | dispatch(mult->right());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::DivisionNode* div)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::DivisionNode* div)
 {
     return dispatch(div->left()) | dispatch(div->right());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::EqualNode* equ)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::EqualNode* equ)
 {
     return dispatch(equ->left()) | dispatch(equ->right());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode* lt)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode* lt)
 {
     return dispatch(lt->left()) | dispatch(lt->right());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
 {
     return dispatch(gt->left()) | dispatch(gt->right());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::VariableNode* var)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::VariableNode* var)
 {
     return var->timeVariability();
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
 {
     const auto systemParameter = context_.getParameter(param->value());
     if (systemParameter.type == ParameterType::CONSTANT)
     {
-        return Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO;
+        return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
         // TODO: handle more cases, but ParameterType must be exhaustive first
     }
     return param->timeIndex();
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)
+Optimisation::VariabilityType TimeIndexVisitor::visit(
+  [[maybe_unused]] const Nodes::LiteralNode* lit)
 {
-    return Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO;
+    return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
 {
     return dispatch(neg->child());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::PortFieldNode* node)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::PortFieldNode* node)
 {
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
@@ -110,12 +111,12 @@ Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::PortF
     return dispatch(nodeToVisit);
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
 
-    auto to_return = Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO;
+    auto to_return = Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
         auto* component = connexion_end.component();
@@ -128,36 +129,36 @@ Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::PortF
     return to_return;
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
     return dispatch(timeShiftNode->left());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(
+Optimisation::VariabilityType TimeIndexVisitor::visit(
   [[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
 {
-    return Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO;
+    return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
 {
     // TODO  case from = to
     return dispatch(timeSumNode->expression());
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(
+Optimisation::VariabilityType TimeIndexVisitor::visit(
   [[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
-    return Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO;
+    return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::handleReducedCost(const Nodes::FunctionNode* node)
+Optimisation::VariabilityType TimeIndexVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
     const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
     return varNode->timeVariability();
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::handleDual(const Nodes::FunctionNode* node)
+Optimisation::VariabilityType TimeIndexVisitor::handleDual(const Nodes::FunctionNode* node)
 {
     const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
@@ -165,10 +166,10 @@ Optimisation::TimeScenarioVariability TimeIndexVisitor::handleDual(const Nodes::
     return timeIndex;
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::handlePow(const Nodes::FunctionNode* node)
+Optimisation::VariabilityType TimeIndexVisitor::handlePow(const Nodes::FunctionNode* node)
 {
     if (const auto* exponent = node->getOperands().at(1);
-        dispatch(exponent) != Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO)
+        dispatch(exponent) != Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         PrintVisitor visitor;
         throw std::runtime_error("This exponent must be constant in :" + visitor.dispatch(node));
@@ -176,7 +177,7 @@ Optimisation::TimeScenarioVariability TimeIndexVisitor::handlePow(const Nodes::F
     return dispatch(node->getOperands().at(0));
 }
 
-Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::FunctionNode* node)
+Optimisation::VariabilityType TimeIndexVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())
     {
@@ -191,7 +192,7 @@ Optimisation::TimeScenarioVariability TimeIndexVisitor::visit(const Nodes::Funct
         return handlePow(node);
     default:
         // TODO
-        return Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO;
+        return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
     }
 }
 

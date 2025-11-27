@@ -157,7 +157,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->timeIndex() == TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO
+    if (node->timeIndex() == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         throw Error::InvalidArgumentError(

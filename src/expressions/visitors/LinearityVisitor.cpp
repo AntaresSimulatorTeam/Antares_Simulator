@@ -147,7 +147,7 @@ LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
     // Check if exponent is constant in time and scenario
     TimeIndexVisitor timeVisitor(optimEntityContainer_, component_);
     auto exponentTimeIndex = timeVisitor.dispatch(operands[1]);
-    if (exponentTimeIndex != Optimisation::TimeScenarioVariability::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (exponentTimeIndex != Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         PrintVisitor visitor;
         throw std::invalid_argument("exponent must be constant in time and scenario: "
