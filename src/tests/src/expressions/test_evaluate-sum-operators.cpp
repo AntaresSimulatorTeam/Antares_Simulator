@@ -44,6 +44,7 @@ using namespace Antares::ModelerStudy::SystemModel;
 struct build_AST_fixture
 {
     Node* literal(double value);
+    Node* parameter(const std::string& name);
     Node* allTimeSum(Node* node);
 
 private:
@@ -58,6 +59,11 @@ Node* build_AST_fixture::literal(double value)
 Node* build_AST_fixture::allTimeSum(Node* node)
 {
     return registry_.create<AllTimeSumNode>(node);
+}
+
+Node* build_AST_fixture::parameter(const std::string& name)
+{
+    return registry_.create<ParameterNode>(name);
 }
 
 // =============================
@@ -109,3 +115,14 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
 
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
 }
+
+//BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
+//{
+//    // Expression : sum(p)
+//    Node* p = parameter("p");
+//    Node* someOfOnes = allTimeSum(p);
+//
+//    auto evalResult = evaluator->dispatch(someOfOnes);
+//
+//    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
+//}
