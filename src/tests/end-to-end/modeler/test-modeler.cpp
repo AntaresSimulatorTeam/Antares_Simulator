@@ -38,7 +38,7 @@
 using namespace Antares::Expressions;
 using PT = Antares::ModelerStudy::SystemModel::ParameterType;
 using PTV = Antares::ModelerStudy::SystemModel::ParameterTypeAndValue;
-using TI = Antares::Optimisation::VariabilityType;
+using VV = Antares::Optimisation::VariabilityType;
 
 class ConstantDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
@@ -163,7 +163,7 @@ public:
 
     void setLowerBoundToParameter(const std::string& parameterId)
     {
-        lower_bound = fixture.parameter(parameterId, TI::VARYING_IN_TIME_ONLY);
+        lower_bound = fixture.parameter(parameterId, VV::VARYING_IN_TIME_ONLY);
     }
 
     void addParameter(const std::string& str, const PT& type = PT::TIMESERIE)

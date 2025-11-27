@@ -32,7 +32,7 @@
 // Mock includes for testing - replace with actual includes
 #include <inmemory-modeler.h>
 
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
@@ -537,7 +537,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto cstrTimeIndex = TimeIndexVisitor(*optimEntityContainer, compo)
+            const auto cstrTimeIndex = VariabilityVisitor(*optimEntityContainer, compo)
                                          .dispatch(constraint.expression().RootNode());
             optimEntityContainer->registerConstraint(compo, cstrTimeIndex);
             if (cstrTimeIndex == VariabilityType::VARYING_IN_TIME_ONLY

@@ -31,11 +31,11 @@ namespace Antares::Expressions::Visitors
  * @brief Represents a visitor for determining the time and scenario dependency of nodes in a syntax
  * tree.
  */
-class TimeIndexVisitor: public NodeVisitor<Optimisation::VariabilityType>
+class VariabilityVisitor: public NodeVisitor<Optimisation::VariabilityType>
 {
 public:
-    explicit TimeIndexVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
-                              const ModelerStudy::SystemModel::Component& component);
+    explicit VariabilityVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
+                                const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 

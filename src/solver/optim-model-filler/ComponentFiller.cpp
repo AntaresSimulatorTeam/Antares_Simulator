@@ -27,7 +27,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 
 namespace
 {
@@ -381,7 +381,7 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        const auto timeIndex = getConstraintTimeIndex(root_node, component_);
+        const auto timeIndex = getVariability(root_node, component_);
 
         optimEntityContainer_.registerConstraint(component_, timeIndex);
 
@@ -418,7 +418,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
         const auto root_node = objective.expression().RootNode();
         const auto linearExpression = visitor.visitMergeDuplicates(root_node);
 
-        const auto timeIndex = getConstraintTimeIndex(root_node, component_);
+        const auto timeIndex = getVariability(root_node, component_);
         if (isTimeDependent(timeIndex))
         {
             throw Error::RuntimeError("Time dependent objectives are not supported in Antares.");
@@ -427,10 +427,9 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     }
 }
 
-VariabilityType ComponentFiller::getConstraintTimeIndex(const Node* node,
-                                                        const Component& component) const
+VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const
 {
-    Visitors::TimeIndexVisitor timeIndexVisitor(optimEntityContainer_, component);
-    return timeIndexVisitor.dispatch(node);
+    Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_, component);
+    return variability_visitor.dispatch(node);
 }
 } // namespace Antares::Optimisation

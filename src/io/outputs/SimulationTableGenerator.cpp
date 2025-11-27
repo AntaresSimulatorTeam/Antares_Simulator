@@ -26,7 +26,7 @@
 
 #include <antares/solver/optim-model-filler/Dimensions.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/logs/logs.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
@@ -35,7 +35,6 @@
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
-using TI = Antares::Optimisation::VariabilityType;
 
 namespace Antares::IO
 {
@@ -59,9 +58,9 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
     }
 }
 
-TI updateTimeIndexIfShouldForceScenario(TI timeIndex, bool forceExportForScenarioIndex)
+VariabilityType updateTimeIndexIfShouldForceScenario(VariabilityType timeIndex, bool forceExportForScenarioIndex)
 {
-    return forceExportForScenarioIndex ? timeIndex | TI::VARYING_IN_SCENARIO_ONLY : timeIndex;
+    return forceExportForScenarioIndex ? timeIndex | VariabilityType::VARYING_IN_SCENARIO_ONLY : timeIndex;
 }
 
 std::string BuildModelerConstraintName(const std::string& componentId,
@@ -82,7 +81,7 @@ std::string BuildModelerConstraintName(const std::string& componentId,
 void addVariableEntries(ISimulationTable& simulationTable,
                         const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
-                        const Antares::ModelerStudy::SystemModel::Component& component,
+                        const ModelerStudy::SystemModel::Component& component,
                         const OptimEntityContainer& optimEntityContainer,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
@@ -158,12 +157,12 @@ void addVariableEntries(ISimulationTable& simulationTable,
 void handleDependingOnTimeIndex(
   const FillContext& fillContext,
   std::optional<unsigned> scenario,
-  TI idxType,
+  VariabilityType idxType,
   const std::function<void(std::optional<unsigned> ts, std::optional<unsigned> scenIdx)>& handle)
 {
     switch (idxType)
     {
-    case TI::VARYING_IN_TIME_AND_SCENARIO:
+    case VariabilityType::VARYING_IN_TIME_AND_SCENARIO:
         for (unsigned ts = fillContext.getLocalFirstTimeStep();
              ts <= fillContext.getLocalLastTimeStep();
              ++ts)
@@ -171,10 +170,10 @@ void handleDependingOnTimeIndex(
             handle(ts, scenario);
         }
         break;
-    case TI::VARYING_IN_SCENARIO_ONLY:
+    case VariabilityType::VARYING_IN_SCENARIO_ONLY:
         handle(std::nullopt, scenario);
         break;
-    case TI::VARYING_IN_TIME_ONLY:
+    case VariabilityType::VARYING_IN_TIME_ONLY:
         for (unsigned ts = fillContext.getLocalFirstTimeStep();
              ts <= fillContext.getLocalLastTimeStep();
              ++ts)
@@ -182,7 +181,7 @@ void handleDependingOnTimeIndex(
             handle(ts, std::nullopt);
         }
         break;
-    case TI::CONSTANT_IN_TIME_AND_SCENARIO:
+    case VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO:
     default:
         handle(std::nullopt, std::nullopt);
         break;
@@ -192,8 +191,8 @@ void handleDependingOnTimeIndex(
 void addConstraintEntries(ISimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
-                          const Antares::ModelerStudy::SystemModel::Component& component,
-                          const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                          const ModelerStudy::SystemModel::Component& component,
+                          const OptimEntityContainer& optimEntityContainer,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           std::optional<unsigned> scenario,
@@ -262,22 +261,22 @@ void addObjectiveValue(ISimulationTable& simulation,
 
 void addEntriesForNode(ISimulationTable& simulationTable,
                        const FillContext& fillContext,
-                       const Antares::ModelerStudy::SystemModel::Component& component,
-                       const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                       const ModelerStudy::SystemModel::Component& component,
+                       const OptimEntityContainer& optimEntityContainer,
                        unsigned currentBlock,
                        const TimeConversionMode& timeConversionMode,
                        std::optional<unsigned> scenario,
                        bool forceExportForScenarioIndex,
                        const std::string& componentId,
                        const std::string& outputName,
-                       const Antares::Expressions::Nodes::Node* rootNode)
+                       const Expressions::Nodes::Node* rootNode)
 {
-    auto evalVisitor = Antares::Expressions::Visitors::EvalVisitor(optimEntityContainer,
-                                                                   fillContext,
-                                                                   component);
+    auto evalVisitor = Expressions::Visitors::EvalVisitor(optimEntityContainer,
+                                                          fillContext,
+                                                          component);
     auto value = evalVisitor.dispatch(rootNode);
 
-    TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(optimEntityContainer, component)
+    VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer, component)
                    .dispatch(rootNode);
     idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
 
@@ -304,7 +303,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const FillContext& fillContext,
-                    const Antares::ModelerStudy::SystemModel::Component& component,
+                    const ModelerStudy::SystemModel::Component& component,
                     const OptimEntityContainer& optimEntityContainer,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
@@ -315,14 +314,13 @@ void addPortEntries(ISimulationTable& simulationTable,
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
-        Antares::Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
-                                                                fillContext,
-                                                                component);
+        Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
+                                                       fillContext,
+                                                       component);
 
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
 
-        TI idxType = Antares::Expressions::Visitors::TimeIndexVisitor(optimEntityContainer,
-                                                                      component)
+        VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer, component)
                        .dispatch(portFieldDef.Definition().RootNode());
         idxType = updateTimeIndexIfShouldForceScenario(idxType, forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
@@ -357,8 +355,8 @@ void addPortEntries(ISimulationTable& simulationTable,
 
 void addExtraOutputEntries(ISimulationTable& simulationTable,
                            const FillContext& fillContext,
-                           const Antares::ModelerStudy::SystemModel::Component& component,
-                           const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                           const ModelerStudy::SystemModel::Component& component,
+                           const OptimEntityContainer& optimEntityContainer,
                            unsigned currentBlock,
                            const TimeConversionMode& timeConversionMode,
                            std::optional<unsigned> scenario,
@@ -386,7 +384,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
 void FillSimulationTable(ISimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
-                         const Antares::Modeler::Data& modelerData,
+                         const Modeler::Data& modelerData,
                          const OptimEntityContainer& optimEntityContainer,
                          const FillContext& fillContext,
                          unsigned currentBlock,
@@ -438,6 +436,6 @@ void FillSimulationTable(ISimulationTable& simulationTable,
     addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
 
     measure.tick();
-    Antares::logs.info() << "Simulation Table is generated in " << measure.toString();
+    logs.info() << "Simulation Table is generated in " << measure.toString();
 }
 } // namespace Antares::IO
