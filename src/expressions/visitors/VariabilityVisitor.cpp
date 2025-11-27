@@ -196,8 +196,9 @@ Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNod
     }
 }
 
-VariabilityVisitor::VariabilityVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
-                                   const ModelerStudy::SystemModel::Component& component):
+VariabilityVisitor::VariabilityVisitor(
+  const Optimisation::OptimEntityContainer& optimEntityContainer,
+  const ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
     context_(optimEntityContainer.getEvaluationContext(component))

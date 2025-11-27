@@ -418,8 +418,8 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
         const auto root_node = objective.expression().RootNode();
         const auto linearExpression = visitor.visitMergeDuplicates(root_node);
 
-        const auto timeIndex = getVariability(root_node, component_);
-        if (isTimeDependent(timeIndex))
+        const auto variability = getVariability(root_node, component_);
+        if (isTimeDependent(variability))
         {
             throw Error::RuntimeError("Time dependent objectives are not supported in Antares.");
         }
