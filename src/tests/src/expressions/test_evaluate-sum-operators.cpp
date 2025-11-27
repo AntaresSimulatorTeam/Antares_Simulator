@@ -30,12 +30,14 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 #include "UtilMocks.h"
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Optimisation;
+using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
 
 // =================================
@@ -83,18 +85,25 @@ struct build_eval_visitor_fixture
 private:
     Model model_;
     Component component_;
+    std::vector<Component> components_;
     ScenarioGroupRepository scenarioGroupRepository_;
 };
 
 build_eval_visitor_fixture::build_eval_visitor_fixture():
     linearProblem(true),
-    fillCtx(1, 3, 1, 3, 1),
-    model_(createModelWithoutParameters()),
-    component_(createComponent(model_)),
+    fillCtx(0, 2, 0, 2, 0),
+    model_(createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO)})),
+    component_(
+      createComponent(model_, "component", {{"p", {"p", ParameterType::TIMESERIE, "p"}}}, 0)),
     scenarioGroupRepository_(getscenarioGroupRepository(component_)),
+    components_({component_}),
     optimEntityContainer(linearProblem, &data, &scenarioGroupRepository_)
 {
-    optimEntityContainer.addFromSystemComponents({component_});
+    auto ts = std::make_unique<TimeSeriesSet>("p", 3);
+    ts->add({1., 2., 3.});
+    data.addDataSeries(std::move(ts));
+
+    optimEntityContainer.addFromSystemComponents(components_);
     evaluator = std::make_unique<Visitors::EvalVisitor>(optimEntityContainer, fillCtx, component_);
 }
 
@@ -109,20 +118,20 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
 {
     // Expression : sum(1.)
     Node* one = literal(1.);
-    Node* someOfOnes = allTimeSum(one);
+    Node* sumOfOnes = allTimeSum(one);
 
-    auto evalResult = evaluator->dispatch(someOfOnes);
+    auto evalResult = evaluator->dispatch(sumOfOnes);
 
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
 }
 
-//BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
-//{
-//    // Expression : sum(p)
-//    Node* p = parameter("p");
-//    Node* someOfOnes = allTimeSum(p);
-//
-//    auto evalResult = evaluator->dispatch(someOfOnes);
-//
-//    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
-//}
+BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
+{
+     // Expression : sum(p)
+     Node* p = parameter("p");
+     Node* sum_parameter_over_time = allTimeSum(p);
+
+     auto evalResult = evaluator->dispatch(sum_parameter_over_time);
+
+     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
+ }
