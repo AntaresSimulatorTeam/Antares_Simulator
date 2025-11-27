@@ -398,7 +398,7 @@ BOOST_AUTO_TEST_CASE(two_expressions_one_with_time_varying_param_one_with_consta
     // Expression 1 offset: 1 + 2 + 3 = 6
     // Expression 2 offset: 20 + 20 + 20 = 60
     // Total offset: 6 + 60 = 66
-    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 198);
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 66);
 }
 
 BOOST_AUTO_TEST_CASE(multiple_objectives_in_model)

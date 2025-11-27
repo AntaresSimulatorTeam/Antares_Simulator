@@ -430,11 +430,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
             throw Error::RuntimeError("Time dependent objectives are not supported in Antares.");
         }
         addStaticObjective(linearExpression);
-        objectiveOffset += std::accumulate(linearExpression.begin(),
-                                           linearExpression.end(),
-                                           0,
-                                           [](auto acc, auto expr)
-                                           { return acc + expr.constant(); });
+        objectiveOffset += linearExpression.constant()[0];
     }
     auto& pb = optimEntityContainer_.Problem();
     pb.setObjectiveOffset(objectiveOffset);
