@@ -18,4 +18,5 @@ add_boost_test(test-expressions
         mock-modeler-objects
         Antares::antares-study-system-model
         test_utils_unit
+        Antares::tests::inmemory-modeler
 )

@@ -24,6 +24,8 @@
 #include <vector>
 
 #include "antares/expressions/nodes/VariableNode.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/data.h"
@@ -64,6 +66,8 @@ struct LinearProblemBuildingFixture
     std::vector<Component> components;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
     Antares::Modeler::Data modelerData;
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
+    std::unique_ptr<Antares::Optimisation::OptimEntityContainer> optimEntityContainer;
 
     void createModel(const std::string& modelId,
                      const std::vector<std::string>& parameterIds,

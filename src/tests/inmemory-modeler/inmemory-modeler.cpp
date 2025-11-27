@@ -50,21 +50,22 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     std::vector<std::unique_ptr<LinearProblemApi::LinearProblemFiller>> fillers;
     // All LP variables coordinates (component id, variable id, scenario, time step)
 
-    ScenarioGroupRepository scenario_group_repo;
     for (auto& scenario: scenarios)
     {
         auto name = scenario->group();
-        scenario_group_repo.addScenario(name, std::move(scenario));
+        scenarioGroupRepo.addScenario(name, std::move(scenario));
     }
     pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
-    OptimEntityContainer optimEntityContainer(*pb, &dummy_data, &scenario_group_repo);
-    optimEntityContainer.addFromSystemComponents(components);
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb,
+                                                                  &dummy_data,
+                                                                  &scenarioGroupRepo);
+    optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
     {
         auto cf = std::make_unique<ComponentFiller>(
           component,
-          optimEntityContainer,
-          scenario_group_repo,
+          *optimEntityContainer,
+          scenarioGroupRepo,
           Antares::Modeler::Config::Location::SUBPROBLEMS);
         fillers.push_back(std::move(cf));
     }
