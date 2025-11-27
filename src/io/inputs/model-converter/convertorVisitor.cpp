@@ -423,7 +423,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         return node;
     }
 
-    throw NoConstraintWithThisName(model_.id, constraint_id);
+    throw DualNoConstraintWithThisName(model_.id, constraint_id);
 }
 
 std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)

@@ -54,11 +54,11 @@ public:
     }
 };
 
-class NoConstraintWithThisName final: public std::runtime_error
+class DualNoConstraintWithThisName final: public std::runtime_error
 {
 public:
-    explicit NoConstraintWithThisName(const std::string& modelName,
-                                      const std::string& constraintName):
+    explicit DualNoConstraintWithThisName(const std::string& modelName,
+                                          const std::string& constraintName):
         runtime_error("dual called with unknown constraint '" + constraintName + "' in model '"
                       + modelName + "'")
     {
