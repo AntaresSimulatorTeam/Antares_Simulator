@@ -1,5 +1,6 @@
 var structTest_1_1Modeler_1_1LinearProblemBuildingFixture =
 [
+    [ "add", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a2a09953081eb60b9d7b39605615ba455", null ],
     [ "buildLinearProblem", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a50bcefd9a5eed89f9388e11874230dca", null ],
     [ "buildLinearProblem", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#afd06dc895b766328cf0a338211ffdd26", null ],
     [ "buildLinearProblem", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a92923271aab191d68618f2e099a0ea0d", null ],
