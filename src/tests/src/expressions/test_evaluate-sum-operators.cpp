@@ -99,13 +99,13 @@ struct tests_fixture: build_AST_fixture, build_eval_visitor_fixture
 {
 };
 
-BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_the_time_span, tests_fixture)
+BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
 {
+    // Expression : sum(1.)
     Node* one = literal(1.);
     Node* someOfOnes = allTimeSum(one);
 
-    auto result = evaluator->dispatch(someOfOnes);
-    double d = result.valueAsDouble();
+    auto evalResult = evaluator->dispatch(someOfOnes);
 
-    BOOST_CHECK(d == 3.);
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
 }
