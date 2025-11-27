@@ -127,11 +127,12 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
 
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
 {
-    // Expression : sum(p)
+    // Expression : sum(p), where p = {p1, p2, p3} = {1., 2., 3.}
     Node* p = parameter("p");
     Node* sum_parameter_over_time = allTimeSum(p);
 
     auto evalResult = evaluator->dispatch(sum_parameter_over_time);
 
+    // Expected result of sum evaluation is p1 + p2 + p3 = 6.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
 }
