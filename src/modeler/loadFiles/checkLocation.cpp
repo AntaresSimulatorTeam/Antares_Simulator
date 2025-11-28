@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <stdexcept>
+
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/modeler/data.h>
@@ -30,6 +32,15 @@ using namespace Antares::Modeler::Config;
 
 namespace Antares::Solver::LoadFiles
 {
+
+class LocationError final: public std::invalid_argument
+{
+public:
+    explicit LocationError(const Model& model, const std::string& message):
+        std::invalid_argument("In model '" + model.Id() + "' checking for locations: " + message)
+    {
+    }
+};
 
 void checkFunctionNode(Node& node, Model& model)
 {
@@ -44,9 +55,10 @@ void checkFunctionNode(Node& node, Model& model)
                 if (variable.Id() == varNode->value()
                     && variable.location() != Location::SUBPROBLEMS)
                 {
-                    throw std::runtime_error(
+                    throw LocationError(
+                      model,
                       "Error for variable: '" + varNode->value()
-                      + "' reduced_cost can only be used in variables located in subproblems");
+                        + "' reduced_cost can only be used in variables located in subproblems");
                 }
             }
         }
@@ -54,14 +66,15 @@ void checkFunctionNode(Node& node, Model& model)
         if (functionNode->type() == FunctionNodeType::dual)
         {
             // This node contains the constraint name
-            const auto* n = dynamic_cast<LiteralNode*>(functionNode->getOperands().at(0));
+            const auto* n = dynamic_cast<ParameterNode*>(functionNode->getOperands().at(0));
             for (const auto& constraint: model.Constraints())
             {
-                if (constraint.Id() == n->name() && constraint.location() != Location::SUBPROBLEMS)
+                if (constraint.Id() == n->value() && constraint.location() != Location::SUBPROBLEMS)
                 {
-                    throw std::runtime_error(
+                    throw LocationError(
+                      model,
                       "Error for constraint: '" + n->name()
-                      + "' dual can only be used in constraints located in subproblems");
+                        + "' dual can only be used in constraints located in subproblems");
                 }
             }
         }
@@ -80,11 +93,12 @@ void checkExpression(Node* expression, const Location& location, Model& model)
                 if (variable.Id() == varNode->value()
                     && !AreLocationsCompatible(variable.location(), location))
                 {
-                    throw std::runtime_error(
+                    throw LocationError(
+                      model,
                       "Error for variable: '" + varNode->value()
-                      + "' location doesn't match the expression location (variable location: "
-                      + LocationToStr(variable.location())
-                      + ", expression location: " + LocationToStr(location) + ")");
+                        + "' location doesn't match the expression location (variable location: "
+                        + LocationToStr(variable.location())
+                        + ", expression location: " + LocationToStr(location) + ")");
                 }
             }
             continue;
