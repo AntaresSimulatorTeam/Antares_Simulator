@@ -31,16 +31,16 @@
 
 namespace Antares::IO::Inputs::ModelConverter
 {
+template<typename T>
+concept NodeType = !std::is_same_v<T, Expressions::Nodes::FunctionNode>;
+
 template<typename NodeType>
 std::type_index forbiddenNodeKey()
 {
-    if constexpr (std::is_same_v<NodeType, Expressions::Nodes::FunctionNode>)
-    {
         static_assert(!std::is_same_v<NodeType, Expressions::Nodes::FunctionNode>,
                       "Use Expressions::Nodes::FunctionNodeType enum values or "
                       "forbiddenNodeKey(Expressions::Nodes::FunctionNodeType) "
                       "instead of FunctionNode for forbidden rules.");
-    }
     return std::type_index(typeid(NodeType));
 }
 
