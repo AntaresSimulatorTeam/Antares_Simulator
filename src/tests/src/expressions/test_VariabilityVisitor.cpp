@@ -198,10 +198,11 @@ BOOST_AUTO_TEST_CASE(alltimeSumNode_expression)
                       Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 }
 
-static const std::vector VariabilityType_ALL{VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-                                             VariabilityType::VARYING_IN_TIME_ONLY,
-                                             VariabilityType::VARYING_IN_SCENARIO_ONLY,
-                                             VariabilityType::VARYING_IN_TIME_AND_SCENARIO};
+static const std::vector<VariabilityType> VariabilityType_ALL{
+  VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
+  VariabilityType::VARYING_IN_TIME_ONLY,
+  VariabilityType::VARYING_IN_SCENARIO_ONLY,
+  VariabilityType::VARYING_IN_TIME_AND_SCENARIO};
 
 template<class T>
 static std::pair<Node*, ParameterNode*> s_(Registry<Node>& registry,
@@ -212,13 +213,15 @@ static std::pair<Node*, ParameterNode*> s_(Registry<Node>& registry,
     return {registry.create<T>(left, right), right};
 }
 
-static const std::vector operator_ALL{&s_<SumNode>,
-                                      &s_<SubtractionNode>,
-                                      &s_<MultiplicationNode>,
-                                      &s_<DivisionNode>,
-                                      &s_<EqualNode>,
-                                      &s_<LessThanOrEqualNode>,
-                                      &s_<GreaterThanOrEqualNode>};
+static const std::vector<std::pair<Node*, ParameterNode*> (*)(Registry<Node>&,
+                                                              const VariabilityType&)>
+  operator_ALL{&s_<SumNode>,
+               &s_<SubtractionNode>,
+               &s_<MultiplicationNode>,
+               &s_<DivisionNode>,
+               &s_<EqualNode>,
+               &s_<LessThanOrEqualNode>,
+               &s_<GreaterThanOrEqualNode>};
 
 BOOST_DATA_TEST_CASE_F(TestVariabilityVisitorFixture,
                        simple_all,
@@ -239,11 +242,12 @@ static Node* singleNode(Registry<Node>& registry)
     return registry.create<T>("hello", "world");
 }
 
-static const std::vector VariabilityVisitor{&singleNode<PortFieldNode>};
+static const std::vector<Node* (*)(Registry<Node>&)> nodesNotHandledByVariabilityVisitor{
+  &singleNode<PortFieldNode>};
 
 BOOST_DATA_TEST_CASE_F(TestVariabilityVisitorFixture,
                        catching_exceptions_when_visiting_not_handled_nodes,
-                       bdata::make(VariabilityVisitor),
+                       bdata::make(nodesNotHandledByVariabilityVisitor),
                        not_handled_node)
 {
     Node* nonHandldedNode = not_handled_node(fixture.nodeRegistry);
