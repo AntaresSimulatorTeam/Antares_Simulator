@@ -10,6 +10,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearPr
     [ "getConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ad810104bf5421fd91f7e4f109691166e", null ],
     [ "getConstraints", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a80e54dcbef12f15a3f4a7417e6b8a733", null ],
     [ "getObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a82a02e375c6023ac34d4c4965452acb4", null ],
+    [ "getObjectiveOffset", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aebf441cf6b814f661bdd3ef32ff41bc0", null ],
     [ "getVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ae1cef913dfec9db8e81171f80ac10335", null ],
     [ "getVariables", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aff02a83235f791c25bb5b6636656fcbe", null ],
     [ "infinity", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#abd4e8899aef33860e73beeb6b432309f", null ],
@@ -22,6 +23,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearPr
     [ "setMaximization", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#adb27c35d60176747dc2fc0b0a6208c2c", null ],
     [ "setMinimization", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab33feeaee7a419af07af27d33f012425", null ],
     [ "setObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab41e6e0ace04662a545d9994998a4abd", null ],
+    [ "setObjectiveOffset", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aae6631b7fac7dabb949d5b63ba8ac914", null ],
     [ "solve", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a88ed3d6317fca4f49260a612490f996d", null ],
     [ "variableCount", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#acdc3201becddac071a8afba456b067e8", null ],
     [ "Write", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a78ff9aa8f5abee6c80ef8bdfbe0f821d", null ]

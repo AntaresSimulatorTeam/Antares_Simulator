@@ -9,6 +9,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem =
     [ "getConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#ace145aa1eed67edce6f6785e32523ca4", null ],
     [ "getConstraints", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#adc4f59e5dc138c14b172de53c94a4c51", null ],
     [ "getObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a1030be994c27b07f8315634ec045fbea", null ],
+    [ "getObjectiveOffset", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a0068b91ac66bf5e7143918063568b0e5", null ],
     [ "getVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#acc4199d7ea128ac788f4de6eeb68150c", null ],
     [ "getVariables", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a590420ecc34a328f1bd5afd1cc551e92", null ],
     [ "infinity", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a36ae3bf4633469cd6b6cd9120ed31dc5", null ],
@@ -20,6 +21,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem =
     [ "setMaximization", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a583f449567f5e0521df4b072e02e0dab", null ],
     [ "setMinimization", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a59b06a4998978cb5f2b775ed519500f8", null ],
     [ "setObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87", null ],
+    [ "setObjectiveOffset", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#ae4589f2bc3f44a1c8e67603f8a256f14", null ],
     [ "solve", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#af4093d6dd854e4e013623803f16a8afa", null ],
     [ "variableCount", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#aac94919884b7a2f4079ec8d3c7a71658", null ]
 ];

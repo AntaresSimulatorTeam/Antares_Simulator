@@ -195,6 +195,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a82a02e375c6023ac34d4c4965452acb4"><td class="memItemLeft" align="right" valign="top"><a id="a82a02e375c6023ac34d4c4965452acb4"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>getObjectiveCoefficient</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a> *var) const override</td></tr>
 <tr class="separator:a82a02e375c6023ac34d4c4965452acb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae6631b7fac7dabb949d5b63ba8ac914"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aae6631b7fac7dabb949d5b63ba8ac914">setObjectiveOffset</a> (double objectiveOffset) override</td></tr>
+<tr class="memdesc:aae6631b7fac7dabb949d5b63ba8ac914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the constant offset for the objective function.  <a href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aae6631b7fac7dabb949d5b63ba8ac914">More...</a><br /></td></tr>
+<tr class="separator:aae6631b7fac7dabb949d5b63ba8ac914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebf441cf6b814f661bdd3ef32ff41bc0"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aebf441cf6b814f661bdd3ef32ff41bc0">getObjectiveOffset</a> () const override</td></tr>
+<tr class="memdesc:aebf441cf6b814f661bdd3ef32ff41bc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current objective offset value.  <a href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aebf441cf6b814f661bdd3ef32ff41bc0">More...</a><br /></td></tr>
+<tr class="separator:aebf441cf6b814f661bdd3ef32ff41bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab33feeaee7a419af07af27d33f012425"><td class="memItemLeft" align="right" valign="top"><a id="ab33feeaee7a419af07af27d33f012425"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab33feeaee7a419af07af27d33f012425">setMinimization</a> () override</td></tr>
 <tr class="memdesc:ab33feeaee7a419af07af27d33f012425"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the optimization direction to minimize. <br /></td></tr>
@@ -232,6 +238,75 @@ Friends</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Write</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">OrtoolsLinearProblem</a> &amp;problem, const std::filesystem::path &amp;path)</td></tr>
 <tr class="separator:a78ff9aa8f5abee6c80ef8bdfbe0f821d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aebf441cf6b814f661bdd3ef32ff41bc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebf441cf6b814f661bdd3ef32ff41bc0">&#9670;&nbsp;</a></span>getObjectiveOffset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem::getObjectiveOffset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current objective offset value. </p>
+<p>Retrieves the constant term currently added to the objective function. For the Sirius solver, this value is stored locally; for other solvers, it uses OR-Tools' native support.</p>
+<dl class="section return"><dt>Returns</dt><dd>The current objective offset. </dd></dl>
+
+<p>Implements <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a>.</p>
+
+</div>
+</div>
+<a id="aae6631b7fac7dabb949d5b63ba8ac914"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae6631b7fac7dabb949d5b63ba8ac914">&#9670;&nbsp;</a></span>setObjectiveOffset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem::setObjectiveOffset </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>objectiveOffset</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the constant offset for the objective function. </p>
+<p>The objective offset is a constant term added to the objective function. It shifts the objective value but does not affect the optimal solution. For the Sirius solver, this value is stored locally; for other solvers, it uses OR-Tools' native support.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">objectiveOffset</td><td>The constant offset to add to the objective function. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/optimisation/linear-problem-mpsolver-impl/include/antares/optimisation/linear-problem-mpsolver-impl/<a class="el" href="linear-problem-mpsolver-impl_2include_2antares_2optimisation_2linear-problem-mpsolver-impl_2linearProblem_8h_source.html">linearProblem.h</a></li>
 <li>src/optimisation/linear-problem-mpsolver-impl/linearProblem.cpp</li>

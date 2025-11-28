@@ -621,10 +621,13 @@ var annotated_dup =
           [ "TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet" ]
         ] ],
         [ "LinearProblemMpsolverImpl", null, [
+          [ "ObjectiveOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1ObjectiveOffsetHandler.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1ObjectiveOffsetHandler" ],
           [ "OrtoolsLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem" ],
           [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
           [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
-          [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ]
+          [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ],
+          [ "SiriusObjectiveOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1SiriusObjectiveOffsetHandler.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1SiriusObjectiveOffsetHandler" ],
+          [ "GenericOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1GenericOffsetHandler.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1GenericOffsetHandler" ]
         ] ],
         [ "EvaluationContext", "classAntares_1_1Optimisation_1_1EvaluationContext.html", "classAntares_1_1Optimisation_1_1EvaluationContext" ],
         [ "OptimComponent", "structAntares_1_1Optimisation_1_1OptimComponent.html", "structAntares_1_1Optimisation_1_1OptimComponent" ],
@@ -1513,8 +1516,8 @@ var annotated_dup =
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", "classColumnBasedStorage" ],
-    [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
     [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
+    [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
