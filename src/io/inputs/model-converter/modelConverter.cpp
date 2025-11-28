@@ -100,7 +100,7 @@ static ForbiddenNodes ForbiddenInConstraint()
     return forbidden;
 }
 
-static ForbiddenNodes GetWhatIsForbiddenInBindingConstraint()
+static ForbiddenNodes ForbiddenInBindingConstraint()
 {
     static ForbiddenNodes forbidden = []()
     {
@@ -401,9 +401,7 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
     for (const auto& constraint: model.binding_constraints)
     {
         addSingleConstraint(constraints,
-                            constraint,
-                            model,
-                            GetWhatIsForbiddenInBindingConstraint());
+                            constraint, model, ForbiddenInBindingConstraint());
     }
     return constraints;
 }

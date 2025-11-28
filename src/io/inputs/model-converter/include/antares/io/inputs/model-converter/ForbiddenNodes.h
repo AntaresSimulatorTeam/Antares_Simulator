@@ -75,7 +75,7 @@ inline std::type_index forbiddenNodeKey(const Expressions::Nodes::Node& node)
     {
         return forbiddenNodeKey(funcNode->type());
     }
-    return std::type_index(typeid(node));
+    return {typeid(node)};
 }
 
 class ForbiddenNodes
@@ -116,7 +116,53 @@ public:
         rules_[forbiddenNodeKey<Parent>()].insert(forbiddenNodeKey<Child>());
     }
 
-    bool check(const std::type_index& parentKey, const std::type_index& childKey) const
+    // ---------------------- COMPILE-TIME CHECK ----------------------
+    template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
+    [[nodiscard]] bool isForbiddenFor() const
+    {
+        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
+    }
+
+    template<typename Parent, typename Child>
+    [[nodiscard]] bool isForbiddenFor() const
+    {
+        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
+    }
+
+    // ---------------------- RUNTIME CHECK ----------------------
+
+    template<Expressions::Nodes::FunctionNodeType Child>
+    [[nodiscard]] bool isForbiddenFor(const std::type_index& parentKey) const
+    {
+        return check(parentKey, forbiddenNodeKey<Child>());
+    }
+
+    template<typename Child>
+    [[nodiscard]] bool isForbiddenFor(const std::type_index& parentKey) const
+    {
+        return check(parentKey, forbiddenNodeKey<Child>());
+    }
+
+    // ---------------------- GLOBALLY FORBIDDEN ----------------------
+
+    template<typename NodeType>
+    [[nodiscard]] bool isForbidden() const
+    {
+        return global_.contains(forbiddenNodeKey<NodeType>());
+    }
+
+    template<Expressions::Nodes::FunctionNodeType NodeType>
+    [[nodiscard]] bool isForbidden() const
+    {
+        return global_.contains(forbiddenNodeKey<NodeType>());
+    }
+
+private:
+    std::unordered_set<std::type_index> global_;
+    std::unordered_map<std::type_index, std::unordered_set<std::type_index>> rules_;
+
+    [[nodiscard]] bool check(const std::type_index& parentKey,
+                             const std::type_index& childKey) const
     {
         // global forbidden child?
         if (global_.contains(childKey))
@@ -125,7 +171,7 @@ public:
         }
 
         // parent-specific forbidden child?
-        auto it = rules_.find(parentKey);
+        const auto& it = rules_.find(parentKey);
         if (it == rules_.end())
         {
             return false;
@@ -133,60 +179,6 @@ public:
 
         return it->second.contains(childKey);
     }
-
-    // ---------------------- COMPILE-TIME CHECK ----------------------
-    template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
-    bool isForbiddenFor() const
-    {
-        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
-    }
-
-    template<typename Parent, typename Child>
-    bool isForbiddenFor() const
-    {
-        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
-    }
-
-    // ---------------------- RUNTIME CHECK ----------------------
-    template<Expressions::Nodes::FunctionNodeType Parent>
-    bool isForbiddenFor(const Expressions::Nodes::Node& child) const
-    {
-        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey(child));
-    }
-
-    template<Expressions::Nodes::FunctionNodeType Child>
-    bool isForbiddenFor(const std::type_index& parentKey) const
-    {
-        return check(parentKey, forbiddenNodeKey<Child>());
-    }
-
-    template<typename Child>
-    bool isForbiddenFor(const std::type_index& parentKey) const
-    {
-        return check(parentKey, forbiddenNodeKey<Child>());
-    }
-
-    bool isForbiddenFor(const std::type_index& parentKey,
-                        const Expressions::Nodes::Node& child) const
-    {
-        return check(parentKey, forbiddenNodeKey(child));
-    }
-
-    template<typename NodeType>
-    bool isForbidden() const
-    {
-        return global_.contains(forbiddenNodeKey<NodeType>());
-    }
-
-    template<Expressions::Nodes::FunctionNodeType NodeType>
-    bool isForbidden() const
-    {
-        return global_.contains(forbiddenNodeKey<NodeType>());
-    }
-
-private:
-    std::unordered_set<std::type_index> global_;
-    std::unordered_map<std::type_index, std::unordered_set<std::type_index>> rules_;
 };
 
 } // namespace Antares::IO::Inputs::ModelConverter

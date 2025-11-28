@@ -41,86 +41,88 @@ void NodeChecker::visit(const SumNode* sumNode)
     checkChildren<SumNode>("sum", sumNode->getOperands(), false);
 }
 
-void NodeChecker::visit(const Expressions::Nodes::SubtractionNode* subtractionNode)
+void NodeChecker::visit(const SubtractionNode* subtractionNode)
 {
     checkChildren<SubtractionNode>("subtraction", subtractionNode->getOperands(), false);
 }
 
-void NodeChecker::visit(const Expressions::Nodes::MultiplicationNode* multiplicationNode)
+void NodeChecker::visit(const MultiplicationNode* multiplicationNode)
 {
     checkChildren<MultiplicationNode>("multiplication", multiplicationNode->getOperands(), false);
 }
 
-void NodeChecker::visit(const Expressions::Nodes::DivisionNode* divisionNode)
+void NodeChecker::visit(const DivisionNode* divisionNode)
 {
     checkChildren<DivisionNode>("division", divisionNode->getOperands(), false);
 }
 
-void NodeChecker::visit(const Expressions::Nodes::EqualNode* equalNode)
+void NodeChecker::visit(const EqualNode* equalNode)
 {
     handleComparisonNode<EqualNode>("=", equalNode->getOperands());
 }
 
-void NodeChecker::visit(const Expressions::Nodes::LessThanOrEqualNode* lessThanOrEqualNode)
+void NodeChecker::visit(const LessThanOrEqualNode* lessThanOrEqualNode)
 {
     handleComparisonNode<LessThanOrEqualNode>("<=", lessThanOrEqualNode->getOperands());
 }
 
-void NodeChecker::visit(const Expressions::Nodes::GreaterThanOrEqualNode* greaterThanOrEqualNode)
+void NodeChecker::visit(const GreaterThanOrEqualNode* greaterThanOrEqualNode)
 {
     handleComparisonNode<GreaterThanOrEqualNode>(">=", greaterThanOrEqualNode->getOperands());
 }
 
-void NodeChecker::visit(const Expressions::Nodes::NegationNode* negationNode)
+void NodeChecker::visit(const NegationNode* negationNode)
 {
     dispatch(negationNode->child());
 }
 
-void NodeChecker::visit(const Expressions::Nodes::LiteralNode*)
+void NodeChecker::visit(const LiteralNode*)
 {
+    // keep empty
 }
 
-void NodeChecker::visit(const Expressions::Nodes::VariableNode* variableNode)
+void NodeChecker::visit(const VariableNode* variableNode)
 {
     checkConsistencyWithParents<VariableNode>("variable(" + variableNode->value() + ")");
 }
 
-void NodeChecker::visit(const Expressions::Nodes::ParameterNode*)
+void NodeChecker::visit(const ParameterNode*)
 {
+    // keep empty
 }
 
-void NodeChecker::visit(const Expressions::Nodes::PortFieldNode* portFieldNode)
+void NodeChecker::visit(const PortFieldNode* portFieldNode)
 {
     checkConsistencyWithParents<PortFieldNode>("port field (" + portFieldNode->getPortName() + "."
                                                + portFieldNode->getFieldName() + ")");
 }
 
-void NodeChecker::visit(const Expressions::Nodes::PortFieldSumNode*)
+void NodeChecker::visit(const PortFieldSumNode*)
 {
     checkConsistencyWithParents<PortFieldSumNode>("sum_connections");
 }
 
-void NodeChecker::visit(const Expressions::Nodes::TimeShiftNode* timeShiftNode)
+void NodeChecker::visit(const TimeShiftNode* timeShiftNode)
 {
     checkChildren<TimeShiftNode>("timeShift", timeShiftNode->getOperands(), true);
 }
 
-void NodeChecker::visit(const Expressions::Nodes::TimeIndexNode* timeIndexNode)
+void NodeChecker::visit(const TimeIndexNode* timeIndexNode)
 {
     checkChildren<TimeIndexNode>("timeIndex", timeIndexNode->getOperands(), true);
 }
 
-void NodeChecker::visit(const Expressions::Nodes::TimeSumNode* timeSumNode)
+void NodeChecker::visit(const TimeSumNode* timeSumNode)
 {
     checkChildren<TimeSumNode>("sum", timeSumNode->getOperands(), true);
 }
 
-void NodeChecker::visit(const Expressions::Nodes::AllTimeSumNode* allTimeSumNode)
+void NodeChecker::visit(const AllTimeSumNode* allTimeSumNode)
 {
     checkChildren<AllTimeSumNode>("sum", allTimeSumNode->getOperands(), true);
 }
 
-void NodeChecker::visit(const Expressions::Nodes::FunctionNode* functionNode)
+void NodeChecker::visit(const FunctionNode* functionNode)
 {
     switch (functionNode->type())
     {

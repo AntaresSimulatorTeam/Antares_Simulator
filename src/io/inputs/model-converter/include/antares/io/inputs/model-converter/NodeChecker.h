@@ -99,7 +99,7 @@ public:
                                context.childName,
                                context.expression);
         }
-        return fmt::format("'{}' is not allowed in this context '{}",
+        return fmt::format("'{}' is not allowed in this context '{}'",
                            context.childName,
                            context.expression);
     }
