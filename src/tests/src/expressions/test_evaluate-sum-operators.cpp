@@ -30,7 +30,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
-#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/modeler-optimisation-container/VariabilityType.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 #include "UtilMocks.h"
@@ -48,7 +48,7 @@ using namespace Antares::ModelerStudy::SystemModel;
 struct build_AST_fixture
 {
     Node* literal(double value);
-    Node* parameter(const std::string& name, const TimeIndex variability);
+    Node* parameter(const std::string& name, const VariabilityType variability);
     Node* allTimeSum(Node* node);
     Node* timeSum(Node* from, Node* to, Node* p);
 
@@ -66,7 +66,7 @@ Node* build_AST_fixture::allTimeSum(Node* node)
     return registry_.create<AllTimeSumNode>(node);
 }
 
-Node* build_AST_fixture::parameter(const std::string& name, const TimeIndex variability)
+Node* build_AST_fixture::parameter(const std::string& name, const VariabilityType variability)
 {
     return registry_.create<ParameterNode>(name, variability);
 }
@@ -140,7 +140,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
 {
     // Expression : sum(p), where p = {p1, p2, p3} = {1., 2., 3.}
-    Node* p = parameter("p", TimeIndex::VARYING_IN_TIME_ONLY);
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
     Node* sum = allTimeSum(p);
 
     auto evalResult = evaluator->dispatch(sum);
@@ -152,7 +152,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = {p1, p2, p3} = {1., 2., 3.}
-    Node* p = parameter("p", TimeIndex::VARYING_IN_TIME_ONLY);
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
 
     Node* from = literal(0);
     Node* to = literal(1);
@@ -186,7 +186,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_on_interval_t__t_plus_1, tests_fixture)
 BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = 5
-    Node* five = parameter("five", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    Node* five = parameter("five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Node* from = literal(0);
     Node* to = literal(1);
