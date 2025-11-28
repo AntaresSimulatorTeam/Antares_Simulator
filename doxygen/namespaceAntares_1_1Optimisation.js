@@ -33,17 +33,20 @@ var namespaceAntares_1_1Optimisation =
     [ "LinearConstraint", "structAntares_1_1Optimisation_1_1LinearConstraint.html", "structAntares_1_1Optimisation_1_1LinearConstraint" ],
     [ "ReadLinearConstraintVisitor", "classAntares_1_1Optimisation_1_1ReadLinearConstraintVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearConstraintVisitor" ],
     [ "ReadLinearExpressionVisitor", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor" ],
-    [ "TimeIndex", "namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0", [
-      [ "CONSTANT_IN_TIME_AND_SCENARIO", "namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0af345732ff2a78575909e4a8e03a21bda", null ],
-      [ "VARYING_IN_TIME_ONLY", "namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0af22c09d6a3d286c13601c93951b6bae8", null ],
-      [ "VARYING_IN_SCENARIO_ONLY", "namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0a091abf8282e083e408851c8f94a9404d", null ],
-      [ "VARYING_IN_TIME_AND_SCENARIO", "namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0af96b5b73f8ffe3bc24d33d212791b794", null ]
+    [ "VariabilityType", "namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351", [
+      [ "CONSTANT_IN_TIME_AND_SCENARIO", "namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351af345732ff2a78575909e4a8e03a21bda", null ],
+      [ "VARYING_IN_TIME_ONLY", "namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351af22c09d6a3d286c13601c93951b6bae8", null ],
+      [ "VARYING_IN_SCENARIO_ONLY", "namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351a091abf8282e083e408851c8f94a9404d", null ],
+      [ "VARYING_IN_TIME_AND_SCENARIO", "namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351af96b5b73f8ffe3bc24d33d212791b794", null ]
     ] ],
     [ "buildVariableName", "namespaceAntares_1_1Optimisation.html#a3285d2e9ba0b174de3a9ec497ff79dc5", null ],
     [ "checkTimeSteps", "namespaceAntares_1_1Optimisation.html#a156d5abad9c6bc2cf8dfb5919a160ad4", null ],
-    [ "convertToTimeIndex", "namespaceAntares_1_1Optimisation.html#aebe6096cec959e6e9b0a4343daf77c04", null ],
     [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a48c69d82095c9d4b7ac778aad53b0afa", null ],
     [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a4f35767787ea7ad2c4ffa35bbb2254bb", null ],
+    [ "isScenarioDependent", "namespaceAntares_1_1Optimisation.html#a71ec14c30f5e16e800f48711698122f1", null ],
+    [ "isTimeConstant", "namespaceAntares_1_1Optimisation.html#ab67b00c9c72a890f2f1637226018f390", null ],
+    [ "isTimeDependent", "namespaceAntares_1_1Optimisation.html#a6b3c0288d726c2e4207c9942236a5d0e", null ],
     [ "operator-", "namespaceAntares_1_1Optimisation.html#a75b8a5eaeb2eedac8d8be9501ea647a6", null ],
-    [ "operator|", "namespaceAntares_1_1Optimisation.html#aaa8ef259fea24e6b7402d5a380d08154", null ]
+    [ "operator|", "namespaceAntares_1_1Optimisation.html#a02898960488ee6ee4ac5d83b4d1ed8c9", null ],
+    [ "variability", "namespaceAntares_1_1Optimisation.html#a7946a6158774791be219711cab7b5238", null ]
 ];

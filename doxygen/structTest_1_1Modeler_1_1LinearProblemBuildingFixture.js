@@ -12,12 +12,14 @@ var structTest_1_1Modeler_1_1LinearProblemBuildingFixture =
     [ "literal", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#ac549ec9ac83f8eda9eb4776c54bb84f1", null ],
     [ "multiply", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a55e7b184398c8c2f81b6a65f622905d9", null ],
     [ "negate", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a244c9b617dd37ccd0d5dd68190685b36", null ],
-    [ "parameter", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a9df17f5778622138997dd3d7c7261414", null ],
-    [ "variable", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#ab9afde3daafce5b6d0b4e870edda78bb", null ],
+    [ "parameter", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a7d442c766460146c265217037d099189", null ],
+    [ "variable", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a46f52004cca1aaf09baf208418a0f532", null ],
     [ "components", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#aedc08193ed389147c5396f69e46612b3", null ],
     [ "dummy_data_", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#abc1a037c4a01443a7fbc6a83b4cd3658", null ],
     [ "modelerData", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#afb4054121e470ec8f497cd241aec18a0", null ],
     [ "models", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a40658eb5c0faf492539914f8415f9b66", null ],
     [ "nodeRegistry", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a217af771a3cc3b9e3cb2cd551fc614f0", null ],
-    [ "pb", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#acc9a10e2848577bce276e87d368bb5d9", null ]
+    [ "optimEntityContainer", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a7bdd0586fcda74c9f26b9ba59420e439", null ],
+    [ "pb", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#acc9a10e2848577bce276e87d368bb5d9", null ],
+    [ "scenarioGroupRepo", "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a5ad18f207ed2f91de79dae41ed567ab7", null ]
 ];

@@ -939,14 +939,14 @@ var hierarchy =
       [ "Antares::Expressions::Visitors::NodeVisitor< Antares::Optimization::TimeDependentLinearExpression >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Optimisation::ReadLinearExpressionVisitor", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html", null ]
       ] ],
+      [ "Antares::Expressions::Visitors::NodeVisitor< Optimisation::VariabilityType >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
+        [ "Antares::Expressions::Visitors::VariabilityVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1VariabilityVisitor.html", null ]
+      ] ],
       [ "Antares::Expressions::Visitors::NodeVisitor< EvaluationResult >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Expressions::Visitors::EvalVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html", null ]
       ] ],
       [ "Antares::Expressions::Visitors::NodeVisitor< void, std::ostream & >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Expressions::Visitors::AstDOTStyleVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1AstDOTStyleVisitor.html", null ]
-      ] ],
-      [ "Antares::Expressions::Visitors::NodeVisitor< Optimisation::TimeIndex >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
-        [ "Antares::Expressions::Visitors::TimeIndexVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1TimeIndexVisitor.html", null ]
       ] ],
       [ "Antares::Expressions::Nodes::Node", "classAntares_1_1Expressions_1_1Nodes_1_1Node.html", [
         [ "Antares::Expressions::Nodes::Leaf< double >", "classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html", [
@@ -1057,6 +1057,7 @@ var hierarchy =
       [ "Antares::Optimisation::LinearProblemApi::EmptyScenario", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html", null ],
       [ "Antares::Optimisation::LinearProblemDataImpl::Scenario", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario.html", null ],
       [ "Antares::Optimization::DefaultScenario", "classAntares_1_1Optimization_1_1DefaultScenario.html", null ],
+      [ "DefaultScenario", "classDefaultScenario.html", null ],
       [ "DefaultScenario", "classDefaultScenario.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::ISimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html", [
@@ -1869,6 +1870,7 @@ var hierarchy =
     [ "TestContext", "structTestContext.html", null ],
     [ "TestException", "classTestException.html", null ],
     [ "TestExceptionN< N >", "classTestExceptionN.html", null ],
+    [ "TestVariabilityVisitorFixture", "structTestVariabilityVisitorFixture.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html", null ],
     [ "ThermalClusterConfig", "classThermalClusterConfig.html", null ],
     [ "ThermalIniFile", "structThermalIniFile.html", [

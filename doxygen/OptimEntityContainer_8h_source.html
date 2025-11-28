@@ -158,7 +158,7 @@ $(document).ready(function(){initNavTree('OptimEntityContainer_8h_source.html','
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;antares/optimisation/linear-problem-api/linearProblem.h&quot;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;EvaluationContext.h&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;TimeIndex.h&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;VariabilityType.h&quot;</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;scenarioGroupRepo.h&quot;</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div>
@@ -167,7 +167,7 @@ $(document).ready(function(){initNavTree('OptimEntityContainer_8h_source.html','
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::vector&lt;unsigned&gt; modelVariableGlobalIndices;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::vector&lt;unsigned&gt; modelConstraintsGlobalIndices;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::vector&lt;TimeIndex&gt; modelConstraintsTimeIndex;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::vector&lt;VariabilityType&gt; modelConstraintsVariability;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1EvaluationContext.html">EvaluationContext</a> evaluationContext;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
@@ -193,13 +193,13 @@ $(document).ready(function(){initNavTree('OptimEntityContainer_8h_source.html','
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">return</span> optimComponent.evaluationContext;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    [[nodiscard]] std::pair&lt;unsigned int, TimeIndex&gt; getConstraintData(</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    [[nodiscard]] std::pair&lt;unsigned int, VariabilityType&gt; getConstraintData(</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a>&amp; component,</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; optimComponent = optimComponents_.at(component.Index());</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordflow">return</span> {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                optimComponent.modelConstraintsTimeIndex.at(index)};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                optimComponent.modelConstraintsVariability.at(index)};</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">LinearProblemApi::ILinearProblem</a>&amp; Problem()</div>
@@ -229,7 +229,7 @@ $(document).ready(function(){initNavTree('OptimEntityContainer_8h_source.html','
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    [[nodiscard]] std::pair&lt;std::span&lt;const std::unique_ptr&lt;LinearProblemApi::IMipConstraint&gt;&gt;,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                            <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a>&gt;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                            <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">VariabilityType</a>&gt;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    getComponentConstraint(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a>&amp; component,</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                           <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index,</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                           std::size_t nbTimeSteps)<span class="keyword"> const</span></div>
@@ -254,7 +254,7 @@ $(document).ready(function(){initNavTree('OptimEntityContainer_8h_source.html','
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keyword">const</span> std::vector&lt;Antares::ModelerStudy::SystemModel::Component&gt;&amp; component,</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;      Modeler::Config::Location targetLocation = Modeler::Config::Location::SUBPROBLEMS);</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordtype">void</span> registerConstraint(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                            <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a>&amp; timeIndex);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                            <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">VariabilityType</a>&amp; variability);</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">unsigned</span> constraintGLobalIndex()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="keyword">    </span>{</div>
@@ -282,7 +282,7 @@ $(document).ready(function(){initNavTree('OptimEntityContainer_8h_source.html','
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1OptimEntityContainer_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Antares::Optimisation::OptimEntityContainer</a></div><div class="ttdef"><b>Definition:</b> OptimEntityContainer.h:46</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1ScenarioGroupRepository_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Antares::Optimisation::ScenarioGroupRepository</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:12</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:9</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a4f756d9a72af3d0a7f2c41ee8b7782e0"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Antares::Optimisation::TimeIndex</a></div><div class="ttdeci">TimeIndex</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> TimeIndex.h:29</div></div>
+<div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a1e55658b769471a302044e59ca6ee351"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Antares::Optimisation::VariabilityType</a></div><div class="ttdeci">VariabilityType</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> VariabilityType.h:29</div></div>
 <div class="ttc" id="astructAntares_1_1Optimisation_1_1OptimComponent_html"><div class="ttname"><a href="structAntares_1_1Optimisation_1_1OptimComponent.html">Antares::Optimisation::OptimComponent</a></div><div class="ttdef"><b>Definition:</b> OptimEntityContainer.h:38</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

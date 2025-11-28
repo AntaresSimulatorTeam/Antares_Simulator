@@ -132,11 +132,11 @@ $(document).ready(function(){initNavTree('VariableNode_8h_source.html',''); init
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;antares/expressions/nodes/Leaf.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/modeler-optimisation-container/TimeIndex.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/modeler-optimisation-container/VariabilityType.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="namespaceAntares_1_1Optimisation.html">    8</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">enum class</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">TimeIndex</a> : unsigned int;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">enum class</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">VariabilityType</a> : unsigned int;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;namespace Antares::Expressions::Nodes</div>
@@ -145,12 +145,12 @@ $(document).ready(function(){initNavTree('VariableNode_8h_source.html',''); init
 <div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html">   19</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html">VariableNode</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html">Leaf</a>&lt;std::string&gt;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html">VariableNode</a>(</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      <span class="keyword">const</span> std::string&amp; value,</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index,</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;      <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Optimisation::TimeIndex</a> time_index = Optimisation::TimeIndex::VARYING_IN_TIME_AND_SCENARIO):</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html">VariableNode</a>(<span class="keyword">const</span> std::string&amp; value,</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                          <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index,</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;                          <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Optimisation::VariabilityType</a> variability = Optimisation::</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;                            VariabilityType::VARYING_IN_TIME_AND_SCENARIO):</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html">Leaf&lt;std::string&gt;</a>(value),</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        time_index_(time_index),</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        variability_(variability),</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        index_(index)</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    {</div>
@@ -161,9 +161,9 @@ $(document).ready(function(){initNavTree('VariableNode_8h_source.html',''); init
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;VariableNode&quot;</span>;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    }</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Optimisation::TimeIndex</a> timeIndex()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Optimisation::VariabilityType</a> variability()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> time_index_;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> variability_;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> Index()<span class="keyword"> const</span></div>
@@ -173,7 +173,7 @@ $(document).ready(function(){initNavTree('VariableNode_8h_source.html',''); init
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">// Is the variable time-dependent / scenario-dependent ?</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Optimisation::TimeIndex</a> time_index_;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Optimisation::VariabilityType</a> variability_;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">// Local index within the component, starting from 0</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index_ = 0;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;};</div>
@@ -181,7 +181,7 @@ $(document).ready(function(){initNavTree('VariableNode_8h_source.html',''); init
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1Leaf_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1Leaf.html">Antares::Expressions::Nodes::Leaf</a></div><div class="ttdoc">Represents a leaf node in a syntax tree.</div><div class="ttdef"><b>Definition:</b> Leaf.h:34</div></div>
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1VariableNode_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html">Antares::Expressions::Nodes::VariableNode</a></div><div class="ttdoc">Represents a variable node in a syntax tree, storing a string value.</div><div class="ttdef"><b>Definition:</b> VariableNode.h:20</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:9</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a4f756d9a72af3d0a7f2c41ee8b7782e0"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a4f756d9a72af3d0a7f2c41ee8b7782e0">Antares::Optimisation::TimeIndex</a></div><div class="ttdeci">TimeIndex</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> TimeIndex.h:29</div></div>
+<div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a1e55658b769471a302044e59ca6ee351"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Antares::Optimisation::VariabilityType</a></div><div class="ttdeci">VariabilityType</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> VariabilityType.h:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
