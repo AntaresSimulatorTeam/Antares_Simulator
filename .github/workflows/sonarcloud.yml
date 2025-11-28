@@ -69,7 +69,7 @@ jobs:
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.ccache
-        key: sonar-${{ matrix.os }}-v1-${{ github.event.pull_request.head.ref }}
+        key: sonar-${{ matrix.os }}-v1-${{ github.event.pull_request.head.ref || github.ref_name }}
         restore-keys: |
           ${{ matrix.os }}-v1
 
