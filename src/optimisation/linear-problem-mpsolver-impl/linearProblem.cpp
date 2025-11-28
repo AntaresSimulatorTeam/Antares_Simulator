@@ -42,6 +42,24 @@ void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& pat
     of << out;
 }
 
+// Functor for Sirius solver to store objective offset
+class LocalObjectiveOffsetStorage
+{
+public:
+    void setOffset(double offset)
+    {
+        offset_ = offset;
+    }
+
+    [[nodiscard]] double getOffset() const
+    {
+        return offset_;
+    }
+
+private:
+    double offset_{0.0};
+};
+
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
     mpSolver_ = MPSolverFactory(isMip, solverName);
@@ -52,7 +70,7 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
     if (solverName == "sirius")
     {
         // For Sirius: use a stateful functor
-        auto siriusHandler = std::make_shared<OffsetLocalHandler>();
+        auto siriusHandler = std::make_shared<LocalObjectiveOffsetStorage>();
         setOffsetCallable_ = [siriusHandler](double offset) { siriusHandler->setOffset(offset); };
         getOffsetCallable_ = [siriusHandler]() { return siriusHandler->getOffset(); };
     }
@@ -198,9 +216,9 @@ double OrtoolsLinearProblem::getObjectiveCoefficient(
     return objective_->GetCoefficient(getMpVar(var));
 }
 
-void OrtoolsLinearProblem::setObjectiveOffset(double offset)
+void OrtoolsLinearProblem::setObjectiveOffset(double objectiveOffset)
 {
-    setOffsetCallable_(offset);
+    setOffsetCallable_(objectiveOffset);
 }
 
 double OrtoolsLinearProblem::getObjectiveOffset() const

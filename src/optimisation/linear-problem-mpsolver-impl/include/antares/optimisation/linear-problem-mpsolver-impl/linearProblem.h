@@ -37,24 +37,6 @@ class MPObjective;
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-// Functor for Sirius solver to store objective offset
-class OffsetLocalHandler
-{
-public:
-    void setOffset(double offset)
-    {
-        offset_ = offset;
-    }
-
-    [[nodiscard]] double getOffset() const
-    {
-        return offset_;
-    }
-
-private:
-    double offset_{0.0};
-};
-
 class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem
 {
 public:
@@ -94,7 +76,27 @@ public:
     void setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
     double getObjectiveCoefficient(const LinearProblemApi::IMipVariable* var) const override;
 
-    void setObjectiveOffset(double offset) override;
+    /**
+     * @brief Sets the constant offset for the objective function.
+     *
+     * The objective offset is a constant term added to the objective function.
+     * It shifts the objective value but does not affect the optimal solution.
+     * For the Sirius solver, this value is stored locally; for other solvers, it uses OR-Tools'
+     * native support.
+     *
+     * @param objectiveOffset The constant offset to add to the objective function.
+     */
+    void setObjectiveOffset(double objectiveOffset) override;
+
+    /**
+     * @brief Returns the current objective offset value.
+     *
+     * Retrieves the constant term currently added to the objective function.
+     * For the Sirius solver, this value is stored locally; for other solvers, it uses OR-Tools'
+     * native support.
+     *
+     * @return The current objective offset.
+     */
     [[nodiscard]] double getObjectiveOffset() const override;
 
     void setMinimization() override;
