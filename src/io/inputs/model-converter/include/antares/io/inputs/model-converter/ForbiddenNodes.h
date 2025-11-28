@@ -159,7 +159,9 @@ public:
 
 private:
     std::unordered_set<std::type_index> global_;
-    std::unordered_map<std::type_index, std::unordered_set<std::type_index>> rules_;
+    std::unordered_map<std::type_index /* parent */,
+                       std::unordered_set<std::type_index> /* children */>
+      rules_;
 
     [[nodiscard]] bool check(const std::type_index& parentKey,
                              const std::type_index& childKey) const

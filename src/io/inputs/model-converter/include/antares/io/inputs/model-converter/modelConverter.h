@@ -24,8 +24,6 @@
 
 #include "antares/io/inputs/yml-model/Library.h"
 
-#include "ForbiddenNodes.h"
-
 namespace Antares
 {
 namespace ModelerStudy::SystemModel
