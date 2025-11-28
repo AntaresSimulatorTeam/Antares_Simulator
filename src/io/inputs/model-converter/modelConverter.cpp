@@ -272,10 +272,18 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
         const auto& whatIsForbiddenInVariableBound = ForbiddenInVariableBound();
         SM::Expression lb(variable.lower_bound,
                           convertExpressionToNode(variable.lower_bound, model));
-        NodeChecker(whatIsForbiddenInVariableBound, variable.lower_bound).dispatch(lb.RootNode());
+        if (lb.RootNode())
+        {
+            NodeChecker(whatIsForbiddenInVariableBound, variable.lower_bound)
+              .dispatch(lb.RootNode());
+        }
         SM::Expression ub(variable.upper_bound,
                           convertExpressionToNode(variable.upper_bound, model));
-        NodeChecker(whatIsForbiddenInVariableBound, variable.upper_bound).dispatch(ub.RootNode());
+        if (ub.RootNode())
+        {
+            NodeChecker(whatIsForbiddenInVariableBound, variable.upper_bound)
+              .dispatch(ub.RootNode());
+        }
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
