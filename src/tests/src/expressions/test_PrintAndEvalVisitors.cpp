@@ -591,7 +591,7 @@ BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_basic, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
 {
-    ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    ParameterNode root("my-param", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
     const std::string value = "221.3";
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
@@ -660,7 +660,7 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
 {
-    ParameterNode root("my-param", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    ParameterNode root("my-param", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
     const std::string value = "221.3";
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
@@ -681,7 +681,7 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
     const std::string id = "my-param";
     const std::string value = "45.7";
 
-    ParameterNode root(id, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    ParameterNode root(id, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
     auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
@@ -763,7 +763,7 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
 struct TimeDependentParameterFixture
 
 {
-    ParameterNode root = ParameterNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode root = ParameterNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     unsigned hour_0 = 0;
@@ -826,7 +826,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
 template<typename NodeType>
 EvaluationResult CreateAndEvaluateTimeNode(Node* p)
 {
-    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     NodeType root(&paramNode, p);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
@@ -874,7 +874,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
 
 EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
 {
-    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     TimeSumNode root(from, to, &paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
@@ -915,7 +915,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param, MyDummyFixture)
 
 EvaluationResult CreateAndEvaluateAllTimeSumNode()
 {
-    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     AllTimeSumNode root(&paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
@@ -953,7 +953,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_alltimeSum_param, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
 {
-    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
     MultiplicationNode root(&literal, &paramNode);
     const std::string value = "dummy";
@@ -1011,7 +1011,7 @@ double evalExpected<DivisionNode>(double a, double b)
 template<typename BinaryNode>
 void evaluate_time_dependent_operation()
 {
-    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
     BinaryNode root(&literal, &paramNode); // Correctly use the type as a template argument
     const std::string value = "dummy";
@@ -1045,7 +1045,7 @@ void evaluate_time_dependent_operation()
 template<typename BinaryNode>
 void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
 {
-    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
     BinaryNode binary_node(&literal, &paramNode); // Correctly use the type as a template argument
 
@@ -1086,7 +1086,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
 template<typename BinaryNode>
 void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
 {
-    ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     LiteralNode literal(2.0);
     BinaryNode binary_node(&literal, &paramNode); // Correctly use the type as a template argument
 
@@ -1275,7 +1275,7 @@ BOOST_AUTO_TEST_CASE(functionNode_min_timeDepdentParameter)
       {build_context_parameter_with("Param2", "P2", ParameterType::TIMESERIE)});
     fixture.dummy_data.addParams(
       std::make_pair<std::string, std::vector<double>>("P2", {-400, 1568}));
-    ParameterNode second("Param2", TimeIndex::VARYING_IN_TIME_ONLY);
+    ParameterNode second("Param2", VariabilityType::VARYING_IN_TIME_ONLY);
     auto min = FunctionNode(FunctionNodeType::min, &fixture.root, &second);
 
     PrintVisitor printVisitor;
@@ -1613,7 +1613,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 
     Node* root = create<VariableNode>("my_const_variable",
                                       0,
-                                      TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+                                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     EvalVisitor visitor(optimContainer, fillContext, components.back());
     double eval = visitor.dispatch(root).valueAsDouble();
@@ -1621,15 +1621,15 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 
     Node* reducedCost = create<FunctionNode>(
       FunctionNodeType::reduced_cost,
-      create<VariableNode>("my_const_variable", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO));
+      create<VariableNode>("my_const_variable", 0, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO));
     eval = visitor.dispatch(reducedCost).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 4.96);
 
-    root = create<VariableNode>("my_const_variable", 0, TimeIndex::VARYING_IN_SCENARIO_ONLY);
+    root = create<VariableNode>("my_const_variable", 0, VariabilityType::VARYING_IN_SCENARIO_ONLY);
     eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 
-    root = create<VariableNode>("my_non_const_variable", 1, TimeIndex::VARYING_IN_TIME_ONLY);
+    root = create<VariableNode>("my_non_const_variable", 1, VariabilityType::VARYING_IN_TIME_ONLY);
     auto evalVector = visitor.dispatch(root).valuesAsVector();
     BOOST_CHECK_EQUAL(evalVector.size(), 3);
     BOOST_CHECK_EQUAL(evalVector[0], 45.3);
@@ -1638,7 +1638,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 
     root = create<VariableNode>("my_non_const_variable",
                                 1,
-                                TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+                                VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
     evalVector = visitor.dispatch(root).valuesAsVector();
     BOOST_CHECK_EQUAL(evalVector.size(), 3);
     BOOST_CHECK_EQUAL(evalVector[0], 45.3);

@@ -4,7 +4,7 @@ set(SRC-modeler-optimisation-container
         include/antares/
         include/antares/modeler-optimisation-container/EvaluationContext.h
         include/antares/modeler-optimisation-container/OptimEntityContainer.h
-        include/antares/modeler-optimisation-container/TimeIndex.h
+        include/antares/modeler-optimisation-container/VariabilityType.h
         include/antares/modeler-optimisation-container/scenarioGroupRepo.h
         scenarioGroupRepo.cpp
         scenarioGroupRepoExceptions.cpp
