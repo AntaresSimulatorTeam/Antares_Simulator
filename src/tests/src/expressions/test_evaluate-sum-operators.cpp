@@ -188,8 +188,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_
     // Expression : sum(t .. t+1, p), where p = 5
     Node* five = parameter("five", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
 
-    Node* from = literal(0.);
-    Node* to = literal(1.);
+    Node* from = literal(0);
+    Node* to = literal(1);
     Node* sum = timeSum(from, to, five);
 
     auto evalResult = evaluator->dispatch(sum);
