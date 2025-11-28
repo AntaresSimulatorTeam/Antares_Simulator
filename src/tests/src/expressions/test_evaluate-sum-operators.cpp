@@ -75,14 +75,13 @@ struct build_eval_visitor_fixture
 {
     build_eval_visitor_fixture();
 
-    LinearProblemDataImpl::LinearProblemData data;
-    MockLinearProblem linearProblem;
-    OptimEntityContainer optimEntityContainer;
-    LinearProblemApi::FillContext fillCtx;
-
     std::unique_ptr<Visitors::EvalVisitor> evaluator;
 
 private:
+    LinearProblemDataImpl::LinearProblemData data_;
+    MockLinearProblem linearProblem_;
+    OptimEntityContainer optimEntityContainer_;
+    LinearProblemApi::FillContext fillCtx_;
     Model model_;
     Component component_;
     std::vector<Component> components_;
@@ -90,21 +89,21 @@ private:
 };
 
 build_eval_visitor_fixture::build_eval_visitor_fixture():
-    linearProblem(true),
-    fillCtx(0, 2, 0, 2, 0),
+    linearProblem_(true),
+    fillCtx_(0, 2, 0, 2, 0),
     model_(createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO)})),
     component_(
       createComponent(model_, "component", {{"p", {"p", ParameterType::TIMESERIE, "p"}}}, 0)),
     scenarioGroupRepository_(getscenarioGroupRepository(component_)),
     components_({component_}),
-    optimEntityContainer(linearProblem, &data, &scenarioGroupRepository_)
+    optimEntityContainer_(linearProblem_, &data_, &scenarioGroupRepository_)
 {
     auto ts = std::make_unique<TimeSeriesSet>("p", 3);
     ts->add({1., 2., 3.});
-    data.addDataSeries(std::move(ts));
+    data_.addDataSeries(std::move(ts));
 
-    optimEntityContainer.addFromSystemComponents(components_);
-    evaluator = std::make_unique<Visitors::EvalVisitor>(optimEntityContainer, fillCtx, component_);
+    optimEntityContainer_.addFromSystemComponents(components_);
+    evaluator = std::make_unique<Visitors::EvalVisitor>(optimEntityContainer_, fillCtx_, component_);
 }
 
 // =================================================
