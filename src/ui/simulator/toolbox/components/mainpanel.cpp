@@ -20,16 +20,13 @@
  */
 
 #include "mainpanel.h"
-
 #include <wx/dcbuffer.h>
 #include <wx/sizer.h>
-
-#include "antares/config/config.h"
-
-#include "../../../common/lock.h"
-#include "../../application/main/main.h"
 #include "../../application/study.h"
+#include "../../application/main/main.h"
+#include "antares/config/config.h"
 #include "../../toolbox/resources.h"
+#include "../../../common/lock.h"
 
 using namespace Yuni;
 
@@ -290,8 +287,7 @@ void MainPanel::refreshFromStudy()
         }
         else
         {
-            pStudyCaption = wxStringFromUTF8(study.header.caption)
-                            + " (GUI WILL BE DISCONTINUED IN 9.4)";
+            pStudyCaption = wxStringFromUTF8(study.header.caption) + " (GUI WILL BE DISCONTINUED IN 9.4)";
             mainFrm->title(pStudyCaption);
         }
 

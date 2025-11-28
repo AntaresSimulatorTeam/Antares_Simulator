@@ -19,15 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <ui/common/lock.h>
-#include <wx/statusbr.h>
-
 #include <yuni/yuni.h>
-
-#include "../../toolbox/components/datagrid/gridhelper.h"
+#include "main.h"
 #include "../../windows/version.h"
 #include "../study.h"
-#include "main.h"
+#include "../../toolbox/components/datagrid/gridhelper.h"
+#include <wx/statusbr.h>
+#include <ui/common/lock.h>
 
 using namespace Component::Datagrid;
 
@@ -38,11 +36,11 @@ void ApplWnd::resetDefaultStatusBarText()
 {
     assert(wxIsMainThread() == true && "Must be ran from the main thread");
 #if defined(wxUSE_STATUSBAR)
-    SetStatusText(wxString(wxT("  "))
-                  << Antares::VersionToWxString() << " (GUI WILL BE DISCONTINUED IN 9.4)");
+    SetStatusText(wxString(wxT("  ")) << Antares::VersionToWxString() << " (GUI WILL BE DISCONTINUED IN 9.4)");
     GetStatusBar()->SetBackgroundColour(wxColour("yellow"));
 #endif
 }
+
 
 bool oneCellSelected(wxGrid& grid)
 {
@@ -50,7 +48,9 @@ bool oneCellSelected(wxGrid& grid)
     return cells.size() > 0;
 }
 
-size_t updateStatisticsOpForOneCell(wxGrid& grid, VGridHelper* gridHelper, Selection::IOperator* op)
+size_t updateStatisticsOpForOneCell(wxGrid& grid,
+                                    VGridHelper* gridHelper,
+                                    Selection::IOperator* op)
 {
     size_t totalCell = 0;
     const wxGridCellCoordsArray& cells(grid.GetSelectedCells());
@@ -69,7 +69,9 @@ bool rowsSelected(wxGrid& grid)
     return rows.size() > 0;
 }
 
-size_t updateStatisticsOpForRows(wxGrid& grid, VGridHelper* gridHelper, Selection::IOperator* op)
+size_t updateStatisticsOpForRows(wxGrid& grid,
+                                 VGridHelper* gridHelper,
+                                 Selection::IOperator* op)
 {
     size_t totalCell = 0;
     int colCount = grid.GetNumberCols();
@@ -91,7 +93,9 @@ bool columnsSelected(wxGrid& grid)
     return cols.size() > 0;
 }
 
-size_t updateStatisticsOpForColumns(wxGrid& grid, VGridHelper* gridHelper, Selection::IOperator* op)
+size_t updateStatisticsOpForColumns(wxGrid& grid,
+                                    VGridHelper* gridHelper,
+                                    Selection::IOperator* op)
 {
     size_t totalCell = 0;
     int rowCount = grid.GetNumberRows();
@@ -116,7 +120,9 @@ bool blockSelected(wxGrid& grid)
     return (blockTopLeft.size() == blockBottomRight.size()) && (blockTopLeft.size() > 0);
 }
 
-size_t updateStatisticsOpForBlock(wxGrid& grid, VGridHelper* gridHelper, Selection::IOperator* op)
+size_t updateStatisticsOpForBlock(wxGrid& grid,
+                                  VGridHelper* gridHelper,
+                                  Selection::IOperator* op)
 {
     size_t totalCell = 0;
     const wxGridCellCoordsArray& blockTopLeft(grid.GetSelectionBlockTopLeft());
@@ -158,7 +164,7 @@ static size_t applyOperatorOnSelectedCells(wxGrid& grid,
     {
         return updateStatisticsOpForRows(grid, gridHelper, op);
     }
-
+    
     if (columnsSelected(grid))
     {
         return updateStatisticsOpForColumns(grid, gridHelper, op);
@@ -168,19 +174,17 @@ static size_t applyOperatorOnSelectedCells(wxGrid& grid,
     {
         return updateStatisticsOpForBlock(grid, gridHelper, op);
     }
-
+    
     return 0;
 }
 
 void ApplWnd::gridOperatorSelectedCellsUpdateResult(wxGrid* grid)
 {
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
-
     enum
     {
         fieldIndex = 1,
     };
-
     // The status bar
     auto* statusBar = GetStatusBar();
     pGridSelectionAttachedGrid = grid;
@@ -217,18 +221,15 @@ void ApplWnd::gridOperatorSelectedCellsUpdateResult(wxGrid* grid)
             }
         }
         // Empty
-        statusBar->SetStatusText(wxString(wxT("|   ("))
-                                   << pGridSelectionOperator->caption() << wxT(')'),
-                                 fieldIndex);
+        statusBar->SetStatusText(
+          wxString(wxT("|   (")) << pGridSelectionOperator->caption() << wxT(')'), fieldIndex);
     }
 }
 
 void ApplWnd::evtOnContextMenuStatusBar(wxContextMenuEvent& evt)
 {
     if (GUIIsLock())
-    {
         return;
-    }
 
     wxStatusBar* statusBar = GetStatusBar();
     if (statusBar)
