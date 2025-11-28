@@ -30,6 +30,21 @@ enum class Location
     SUBPROBLEMS
 };
 
+inline const char* LocationToStr(Location loc)
+{
+    switch (loc)
+    {
+    case Location::MASTER:
+        return "master";
+    case Location::MASTER_AND_SUBPROBLEMS:
+        return "master-and-subproblems";
+    case Location::SUBPROBLEMS:
+        return "subproblems";
+    default:
+        return "Unknown";
+    }
+}
+
 constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
 {
     switch (rhs)

@@ -44,7 +44,9 @@ void checkFunctionNode(Node& node, Model& model)
                 if (variable.Id() == varNode->value()
                     && variable.location() != Location::SUBPROBLEMS)
                 {
-                    throw std::runtime_error("Reduced costs can only be used in subproblems");
+                    throw std::runtime_error(
+                      "Error for variable: '" + varNode->value()
+                      + "' reduced_cost can only be used in variables located in subproblems");
                 }
             }
         }
@@ -55,12 +57,11 @@ void checkFunctionNode(Node& node, Model& model)
             const auto* n = dynamic_cast<LiteralNode*>(functionNode->getOperands().at(0));
             for (const auto& constraint: model.Constraints())
             {
-                if (constraint.Id() == n->name())
+                if (constraint.Id() == n->name() && constraint.location() != Location::SUBPROBLEMS)
                 {
-                    if (constraint.location() != Location::SUBPROBLEMS)
-                    {
-                        throw std::runtime_error("Duals can only be used in subproblems");
-                    }
+                    throw std::runtime_error(
+                      "Error for constraint: '" + n->name()
+                      + "' dual can only be used in constraints located in subproblems");
                 }
             }
         }
@@ -79,7 +80,11 @@ void checkExpression(Node* expression, const Location& location, Model& model)
                 if (variable.Id() == varNode->value()
                     && !AreLocationsCompatible(variable.location(), location))
                 {
-                    throw std::runtime_error("Variable mismatch locations"); // TODO Better ex
+                    throw std::runtime_error(
+                      "Error for variable: '" + varNode->value()
+                      + "' location doesn't match the expression location (variable location: "
+                      + LocationToStr(variable.location())
+                      + ", expression location: " + LocationToStr(location) + ")");
                 }
             }
             continue;
