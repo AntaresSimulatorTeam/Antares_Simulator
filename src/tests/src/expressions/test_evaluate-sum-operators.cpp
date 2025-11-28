@@ -180,10 +180,9 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_on_interval_t__t_plus_1, tests_fixture)
     // Expected result : 2p = 14
     double expected = 14;
     double actual = evalResult.valueAsDouble();
-    BOOST_CHECK(actual == expected);
+    BOOST_CHECK_EQUAL(actual, expected);
 }
 
-/*
 BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = 5
@@ -195,9 +194,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_
 
     auto evalResult = evaluator->dispatch(sum);
 
-    // Expected result : (2p, 2p, 2p) = (10, 10., 10.).
-    std::vector<double> expected = {10., 10., 10.};
-    std::vector<double> actual = evalResult.valuesAsVector();
-    BOOST_CHECK(actual == expected);
+    // Expected result : 2p = 10.
+    double expected = 10;
+    double actual = evalResult.valueAsDouble();
+    BOOST_CHECK_EQUAL(actual, expected);
 }
-*/
