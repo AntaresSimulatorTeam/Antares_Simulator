@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -25,7 +24,6 @@
 #include <fstream>
 #include <stdexcept>
 
-#include <antares/expressions/iterators/pre-order.h>
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
@@ -43,7 +41,6 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
-using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Solver
