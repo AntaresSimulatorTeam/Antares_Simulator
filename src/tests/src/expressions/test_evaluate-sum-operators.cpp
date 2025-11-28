@@ -30,8 +30,8 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
-#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 #include "UtilMocks.h"
 
@@ -143,6 +143,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
     // Expected result of sum evaluation is p1 + p2 + p3 = 6.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
 }
+
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = {p1, p2, p3} = {1., 2., 3.}
@@ -160,19 +161,19 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_on_interval_t__t_plus_1, tests_fixture)
     BOOST_CHECK(actual == expected);
 }
 
-//BOOST_FIXTURE_TEST_CASE(sum_a_literal_on_interval_t__t_plus_1, tests_fixture)
+// BOOST_FIXTURE_TEST_CASE(sum_a_literal_on_interval_t__t_plus_1, tests_fixture)
 //{
-//    // Expression : sum(t .. t+1, p), where p = 5
-//    Node* five = parameter("five", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+//     // Expression : sum(t .. t+1, p), where p = 5
+//     Node* five = parameter("five", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
 //
-//    Node* from = literal(0.);
-//    Node* to = literal(1.);
-//    Node* sum = timeSum(from, to, five);
+//     Node* from = literal(0.);
+//     Node* to = literal(1.);
+//     Node* sum = timeSum(from, to, five);
 //
-//    auto evalResult = evaluator->dispatch(sum);
+//     auto evalResult = evaluator->dispatch(sum);
 //
-//    // Expected result : (2p, 2p, 2p) = (10, 10., 10.).
-//    std::vector<double> expected = {10., 10., 10.};
-//    std::vector<double> actual = evalResult.valuesAsVector();
-//    BOOST_CHECK(actual == expected);
-//}
+//     // Expected result : (2p, 2p, 2p) = (10, 10., 10.).
+//     std::vector<double> expected = {10., 10., 10.};
+//     std::vector<double> actual = evalResult.valuesAsVector();
+//     BOOST_CHECK(actual == expected);
+// }
