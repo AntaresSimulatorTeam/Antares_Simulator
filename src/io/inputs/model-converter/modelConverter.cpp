@@ -400,8 +400,7 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints,
-                            constraint, model, ForbiddenInBindingConstraint());
+        addSingleConstraint(constraints, constraint, model, ForbiddenInBindingConstraint());
     }
     return constraints;
 }
