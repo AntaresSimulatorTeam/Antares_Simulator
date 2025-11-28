@@ -21,8 +21,8 @@ jobs:
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
       BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
+      #config in env to be accessible at each step
       CCACHE_DIR: ${{ github.workspace }}/.ccache
-      CCACHE_LOGFILE: ${{ github.workspace }}/ccache.log
       CCACHE_COMPILERCHECK: content
       CCACHE_BASEDIR: ${{ github.workspace }}
       CCACHE_SLOPPINESS: time_macros,include_file_mtime
@@ -76,23 +76,11 @@ jobs:
     - name: Configure ccache
       run: |
         # Ensure directory exists and point ccache at it
-        export CCACHE_DIR=${{ github.workspace }}/.ccache
-        mkdir -p "$CCACHE_DIR"
+        mkdir -p ${{ env.CCACHE_DIR }}
         # Increase size to reduce evictions; adjust to suit your CI quota
-        ccache --set-config=cache_dir="$CCACHE_DIR"
         ccache --set-config=max_size=5G
         ccache --set-config=compression=true
-        # Normalize absolute paths to improve hits when workspace paths differ
-        ccache --set-config=base_dir=${{ github.workspace }}
-        # Be tolerant to compiler binary path changes; check by content
-        export CCACHE_COMPILERCHECK=content
-        # IMPORTANT: tolerate file/time macros (e.g. __DATE__/__TIME__) and include mtime differences
-        # This reduces misses caused by headers injecting dates/hours different between build.
-        ccache --set-config=sloppiness=time_macros,include_file_mtime
-        echo "CCACHE_DIR=${CCACHE_DIR}" >> $GITHUB_ENV
-        echo "CCACHE_COMPILERCHECK=${CCACHE_COMPILERCHECK}" >> $GITHUB_ENV
         ccache --show-config || true
-        # show compact stats & config to help debug (do NOT reset stats here)
         ccache -p
       shell: bash
 
