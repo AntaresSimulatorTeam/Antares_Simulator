@@ -50,21 +50,22 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     std::vector<std::unique_ptr<LinearProblemApi::LinearProblemFiller>> fillers;
     // All LP variables coordinates (component id, variable id, scenario, time step)
 
-    ScenarioGroupRepository scenario_group_repo;
     for (auto& scenario: scenarios)
     {
         auto name = scenario->group();
-        scenario_group_repo.addScenario(name, std::move(scenario));
+        scenarioGroupRepo.addScenario(name, std::move(scenario));
     }
     pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
-    OptimEntityContainer optimEntityContainer(*pb, &dummy_data, &scenario_group_repo);
-    optimEntityContainer.addFromSystemComponents(components);
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb,
+                                                                  &dummy_data,
+                                                                  &scenarioGroupRepo);
+    optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
     {
         auto cf = std::make_unique<ComponentFiller>(
           component,
-          optimEntityContainer,
-          scenario_group_repo,
+          *optimEntityContainer,
+          scenarioGroupRepo,
           Antares::Modeler::Config::Location::SUBPROBLEMS);
         fillers.push_back(std::move(cf));
     }
@@ -109,16 +110,16 @@ Nodes::Node* LinearProblemBuildingFixture::literal(double value)
 }
 
 Nodes::Node* LinearProblemBuildingFixture::parameter(const std::string& paramId,
-                                                     const TimeIndex& timeIndex)
+                                                     const VariabilityType& variability)
 {
-    return nodeRegistry.create<Nodes::ParameterNode>(paramId, timeIndex);
+    return nodeRegistry.create<Nodes::ParameterNode>(paramId, variability);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::variable(const std::string& varId,
                                                     unsigned index,
-                                                    const TimeIndex& timeIndex)
+                                                    const VariabilityType& variability)
 {
-    return nodeRegistry.create<Nodes::VariableNode>(varId, index, timeIndex);
+    return nodeRegistry.create<Nodes::VariableNode>(varId, index, variability);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::multiply(Nodes::Node* node1, Nodes::Node* node2)
@@ -129,6 +130,11 @@ Nodes::Node* LinearProblemBuildingFixture::multiply(Nodes::Node* node1, Nodes::N
 Nodes::Node* LinearProblemBuildingFixture::negate(Nodes::Node* node)
 {
     return nodeRegistry.create<Nodes::NegationNode>(node);
+}
+
+Nodes::Node* LinearProblemBuildingFixture::add(Nodes::Node* node1, Nodes::Node* node2)
+{
+    return nodeRegistry.create<Nodes::SumNode>(node1, node2);
 }
 
 void LinearProblemBuildingFixture::createModel(const std::string& modelId,

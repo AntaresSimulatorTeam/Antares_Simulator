@@ -4,7 +4,7 @@ add_boost_test(test-expressions
         test_main.cpp
         test_nodes.cpp
         test_PrintAndEvalVisitors.cpp
-        test_TimeIndexVisitor.cpp
+        test_VariabilityVisitor.cpp
         test_LinearVisitor.cpp
         test_CompareVisitor.cpp
         test_CloneVisitor.cpp
@@ -17,4 +17,6 @@ add_boost_test(test-expressions
         linear-problem-data-impl
         mock-modeler-objects
         Antares::antares-study-system-model
-	test_utils_unit)
+        test_utils_unit
+        Antares::tests::inmemory-modeler
+)

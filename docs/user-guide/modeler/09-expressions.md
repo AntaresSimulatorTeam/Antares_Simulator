@@ -4,7 +4,7 @@ Expressions are human-readable arithmetic expressions.
 They can contain a sign (in this case, they are equations) or not (simply representing a value or a function).
 They allow a large flexibility in defining objects of optimization.
 
-Expressions can only be found in [models](../02-inputs.md#Models) (defined in libraries yaml files).
+Expressions can only be found in [models](02-inputs.md#Models) (defined in libraries yaml files).
 
 More specifically, they can be found in the following contexts inside a model :
 
@@ -180,18 +180,18 @@ _Exemple_ :
 
 ```yaml
 models:
-  - id: myModel
-    variables:
-    - id: myVar
-      upper_bound: 1
-    constraints:
-    - id: myConstraint
-      expression: x <= 1
-    extra-outputs:
-    - id: marginal_price_variable
-      expression: -reduced_cost(myVar)
-    - id: marginal_price_constraint
-      expression: dual(myConstraint)
+- id: myModel
+  variables:
+  - id: myVar
+    upper_bound: 1
+  constraints:
+  - id: myConstraint
+    expression: x <= 1
+  extra-outputs:
+  - id: marginal_price_variable
+    expression: -reduced_cost(myVar)
+  - id: marginal_price_constraint
+    expression: dual(myConstraint)
 ```
 
 ### Power operator
@@ -206,14 +206,14 @@ _Example :_
 
 ```yaml
 models:
-  - id: myModel
-    variables:
-    - id: myVar
-    parameters:
-    - id: myParam
-    extra-outputs:
-    - id: myOutput
-      expression: myVar^(2 + myParam)
+- id: myModel
+  variables:
+  - id: myVar
+  parameters:
+  - id: myParam
+  extra-outputs:
+  - id: myOutput
+    expression: myVar^(2 + myParam)
 ```
 
 ### max (or min) operator
@@ -231,18 +231,18 @@ _Example :_
 
 ```yaml
 models:
-  - id: myModel
-    variables:
-    - id: x
-    parameters:
-    - id: a
-    - id: b
-    constraints:
-    - id: myConstraint
-      expression: x < max(a,b)
-    extra-outputs:
-    - id: myOutput
-      expression: max(x, a*b)
+- id: myModel
+  variables:
+  - id: x
+  parameters:
+  - id: a
+  - id: b
+  constraints:
+  - id: myConstraint
+    expression: x < max(a,b)
+  extra-outputs:
+  - id: myOutput
+    expression: max(x, a*b)
 ```
 
 Nothing forbids to also have :
@@ -279,14 +279,14 @@ In following tables :
 
 ---
 
-| Context of expression   | Scenario | Dual | Power | Max/Min | sum |
-|-------------------------|----------|------|-------|---------|-----|
-| constraints             | ?        | no   | NV    | NV      | yes |
-| binding-constraints     | ?        | no   | NV    | NV      | yes |
-| objective-contributions | ?        | no   | NV    | NV      | yes |
-| port-field-definitions  | ?        | no   | NV    | NV      | yes |
-| variable bounds         | ?        | no   | NV    | NV      | yes |
-| extra-output            | ?        | yes  | yes   | yes     | yes |
+| Context of expression   | Scenario | Dual | Power | Max/Min | sum | sum(S..E) |
+|-------------------------|----------|------|-------|---------|-----|-----------|
+| constraints             | ?        | no   | NV    | NV      | yes | yes       |       
+| binding-constraints     | ?        | no   | NV    | NV      | yes | yes       |     
+| objective-contributions | no       | no   | NV    | NV      | yes | no        |    
+| port-field-definitions  | ?        | no   | NV    | NV      | yes | yes       |   
+| variable bounds         | ?        | no   | NV    | NV      | yes | yes       |  
+| extra-output            | ?        | yes  | yes   | yes     | yes | yes       | 
 
 ### References to elements defined elsewhere
 
