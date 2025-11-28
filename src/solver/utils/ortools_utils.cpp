@@ -109,7 +109,7 @@ static void TuneSolverSpecificOptions(MPSolver* solver,
     case MPSolver::GUROBI_LINEAR_PROGRAMMING: 
     case MPSolver::GUROBI_MIXED_INTEGER_PROGRAMMING:
     {
-        specificParams = GUROBI_PARAMS + "\n " + solverParameters;
+        specificParams = GUROBI_PARAMS + "\n" + solverParameters;
         status = solver->SetSolverSpecificParametersAsString(specificParams);
         checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
