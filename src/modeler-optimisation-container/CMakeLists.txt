@@ -24,6 +24,10 @@ target_link_libraries(${PROJ}
         Antares::linear-problem-api
 )
 
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)
+
 target_include_directories(${PROJ}
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
