@@ -22,7 +22,6 @@
 #include "antares/solver/modeler/Modeler.h"
 
 #include <fstream>
-#include <stdexcept>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
@@ -103,127 +102,6 @@ private:
     BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
-void checkFunctionNode(Antares::Expressions::Nodes::Node& node,
-                       Antares::ModelerStudy::SystemModel::Model& model)
-{
-    // dual and reduced_cost can only be used in subproblems
-    if (auto* functionNode = dynamic_cast<Antares::Expressions::Nodes::FunctionNode*>(&node);
-        functionNode)
-    {
-        if (functionNode->type() == Antares::Expressions::Nodes::FunctionNodeType::reduced_cost)
-        {
-            const auto* varNode = dynamic_cast<Nodes::VariableNode*>(
-              functionNode->getOperands().at(0));
-            for (const auto& variable: model.Variables())
-            {
-                if (variable.Id() == varNode->value()
-                    && variable.location() != Antares::Modeler::Config::Location::SUBPROBLEMS)
-                {
-                    throw std::runtime_error("Reduced costs can only be used in subproblems");
-                }
-            }
-        }
-
-        if (functionNode->type() == Antares::Expressions::Nodes::FunctionNodeType::dual)
-        {
-            // This node contains the constraint name
-            const auto* n = dynamic_cast<Nodes::LiteralNode*>(functionNode->getOperands().at(0));
-            for (const auto& constraint: model.Constraints())
-            {
-                if (constraint.Id() == n->name())
-                {
-                    if (constraint.location() != Antares::Modeler::Config::Location::SUBPROBLEMS)
-                    {
-                        throw std::runtime_error("Duals can only be used in subproblems");
-                    }
-                }
-            }
-        }
-    }
-}
-
-void checkExpression(Antares::Expressions::Nodes::Node* expression,
-                     const Antares::Modeler::Config::Location& location,
-                     Antares::ModelerStudy::SystemModel::Model& model)
-{
-    for (auto& node: Antares::Expressions::Nodes::AST(expression))
-    {
-        // base variable
-        if (const auto* varNode = dynamic_cast<Antares::Expressions::Nodes::VariableNode*>(&node);
-            varNode)
-        {
-            for (const auto& variable: model.Variables())
-            {
-                if (variable.Id() == varNode->value()
-                    && !AreLocationsCompatible(variable.location(), location))
-                {
-                    throw std::runtime_error("Variable mismatch locations"); // TODO Better ex
-                }
-            }
-            continue;
-        }
-
-        // Portfields can contains variables, we recursively check their expressions
-        if (const auto* n = dynamic_cast<Antares::Expressions::Nodes::PortFieldNode*>(&node); n)
-        {
-            ModelerStudy::SystemModel::PortFieldKey key(n->getPortName(), n->getFieldName());
-            checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
-                            location,
-                            model);
-            continue;
-        }
-
-        if (const auto* portFieldSumNode = dynamic_cast<
-              Antares::Expressions::Nodes::PortFieldSumNode*>(&node);
-            portFieldSumNode)
-        {
-            for (const auto& connection: model.ComponentConnections())
-            {
-                auto* n = connection.component()->nodeAtPortField(portFieldSumNode->getPortName(),
-                                                                  portFieldSumNode->getFieldName());
-                checkExpression(n, location, *connection.component()->getModel());
-                /*Expressions::Visitors::PrintVisitor printVisitor;*/
-                /*logs.notice() << printVisitor.dispatch(n);*/
-            }
-            continue;
-        }
-
-        checkFunctionNode(node, model);
-    }
-}
-
-void checkModel(Antares::ModelerStudy::SystemModel::Model& model)
-{
-    for (const auto& constraint: model.Constraints())
-    {
-        checkExpression(constraint.expression().RootNode(), constraint.location(), model);
-    }
-
-    for (const auto& objective: model.Objectives())
-    {
-        checkExpression(objective.expression().RootNode(), objective.location(), model);
-    }
-
-    // Extra outputs must be evaluated, they need to contain only subproblem objects
-    for (const auto& [_, extraOutput]: model.ExtraOutputs())
-    {
-        checkExpression(extraOutput.expression().RootNode(),
-                        Antares::Modeler::Config::Location::SUBPROBLEMS,
-                        model);
-    }
-}
-
-void checkLocations(Antares::Modeler::Data& data)
-{
-    for (auto& lib: data.libraries)
-    {
-        for (auto& [modelName, model]: lib.Models())
-        {
-            checkModel(model);
-        }
-    }
-}
-
 void Modeler::run() const
 {
     Antares::Solver::ModelerParameters parameters;
@@ -234,7 +112,7 @@ void Modeler::run() const
         parameters = loader_.loadParameters();
         logs.info() << "Parameters loaded";
         data = loader_.loadAll();
-        checkLocations(data);
+        LoadFiles::checkLocations(data);
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {

@@ -22,12 +22,13 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/modeler/data.h>
+#include <antares/solver/modeler/loadFiles/loadFiles.h>
 
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Modeler::Config;
 
-namespace Antares::Solver
+namespace Antares::Solver::LoadFiles
 {
 
 void checkFunctionNode(Node& node, Model& model)
@@ -139,4 +140,4 @@ void checkLocations(Modeler::Data& data)
     }
 }
 
-} // namespace Antares::Solver
+} // namespace Antares::Solver::LoadFiles

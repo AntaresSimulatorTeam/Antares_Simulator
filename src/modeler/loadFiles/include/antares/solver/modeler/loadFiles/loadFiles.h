@@ -56,6 +56,8 @@ void loadOptimConfig(const std::filesystem::path& studyPath,
 
 void handleYamlError(const YAML::Exception& e, const std::string& filename);
 
+void checkLocations(Antares::Modeler::Data& data);
+
 /// Generic error class for all loading errors to catch in the main
 class ErrorLoadingYaml final: public std::runtime_error
 {
