@@ -119,19 +119,21 @@ void checkExpression(Node* expression,
 
         if (const auto* portFieldSumNode = dynamic_cast<PortFieldSumNode*>(&node); portFieldSumNode)
         {
+            // This code allows to have a clear message if one of the referenced expression contains
+            // bad locations
+            std::string msgInCaseOfError = "In model '" + model.Id() + "': In expression '"
+                                           + exprStr + "': this 'sum_connections("
+                                           + portFieldSumNode->getPortName() + "."
+                                           + portFieldSumNode->getFieldName()
+                                           + ")' is referencing a variable in a different "
+                                             "location: ";
+
             for (const auto& connection: model.ComponentConnections())
             {
                 auto* n = connection.component()->nodeAtPortField(portFieldSumNode->getPortName(),
                                                                   portFieldSumNode->getFieldName());
 
-
-                // This code is used to handle error with a clear message
-                std::string msgInCaseOfError = "In model '" + model.Id() + "': In expression '"
-                                               + exprStr + "': this 'sum_connections("
-                                               + portFieldSumNode->getPortName() + "."
-                                               + portFieldSumNode->getFieldName()
-                                               + ")' is referencing a variable in a different "
-                                                 "location: ";
+                // Convert the tree to a string, used for error messages
                 Expressions::Visitors::PrintVisitor printVisitor;
                 std::string nodeExpression = printVisitor.dispatch(n);
 
@@ -144,6 +146,7 @@ void checkExpression(Node* expression,
             continue;
         }
 
+        // handle dual and reduced_cosr
         checkFunctionNode(node, model, exprStr);
     }
 }
