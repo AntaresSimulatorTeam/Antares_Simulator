@@ -25,7 +25,7 @@
 
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/modeler-optimisation-container/VariabilityType.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(one_const_var_with_objective)
 
 BOOST_AUTO_TEST_CASE(one_time_dependent_var_with_objective)
 {
-    auto objective = variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY);
+    auto objective = variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY);
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
     createComponent("model", "componentA", {});
@@ -94,7 +94,8 @@ BOOST_AUTO_TEST_CASE(time_sum_var_with_objective)
 {
     // Objective: sum(2*x + 3) over time steps 0 to 2
     // This should give coefficient 2 for each variable x_t0, x_t1, x_t2
-    auto expression = add(multiply(literal(2), variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY)),
+    auto expression = add(multiply(literal(2),
+                                   variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY)),
                           literal(3));
     auto timeSum = nodeRegistry.create<AllTimeSumNode>(expression);
 
@@ -118,7 +119,8 @@ BOOST_AUTO_TEST_CASE(time_sum_var_with_objective)
 BOOST_AUTO_TEST_CASE(objective_varying_in_time_not_supported_error)
 {
     // Objective: 2*x + 3
-    auto expression = add(multiply(literal(2), variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY)),
+    auto expression = add(multiply(literal(2),
+                                   variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY)),
                           literal(3));
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, expression, true);

@@ -29,7 +29,7 @@
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 
 #include "EvaluationContext.h"
-#include "TimeIndex.h"
+#include "VariabilityType.h"
 #include "scenarioGroupRepo.h"
 
 namespace Antares::Optimisation
@@ -38,7 +38,7 @@ struct OptimComponent
 {
     std::vector<unsigned> modelVariableGlobalIndices;
     std::vector<unsigned> modelConstraintsGlobalIndices;
-    std::vector<TimeIndex> modelConstraintsTimeIndex;
+    std::vector<VariabilityType> modelConstraintsVariability;
     EvaluationContext evaluationContext;
 };
 
@@ -64,13 +64,13 @@ public:
         return optimComponent.evaluationContext;
     }
 
-    [[nodiscard]] std::pair<unsigned int, TimeIndex> getConstraintData(
+    [[nodiscard]] std::pair<unsigned int, VariabilityType> getConstraintData(
       const Antares::ModelerStudy::SystemModel::Component& component,
       unsigned int index) const
     {
         const auto& optimComponent = optimComponents_.at(component.Index());
         return {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),
-                optimComponent.modelConstraintsTimeIndex.at(index)};
+                optimComponent.modelConstraintsVariability.at(index)};
     }
 
     LinearProblemApi::ILinearProblem& Problem()
@@ -100,7 +100,7 @@ public:
     }
 
     [[nodiscard]] std::pair<std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>>,
-                            TimeIndex>
+                            VariabilityType>
     getComponentConstraint(const Antares::ModelerStudy::SystemModel::Component& component,
                            unsigned int index,
                            std::size_t nbTimeSteps) const
@@ -125,7 +125,7 @@ public:
       const std::vector<Antares::ModelerStudy::SystemModel::Component>& component,
       Modeler::Config::Location targetLocation = Modeler::Config::Location::SUBPROBLEMS);
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
-                            const TimeIndex& timeIndex);
+                            const VariabilityType& variability);
 
     unsigned constraintGLobalIndex() const
     {

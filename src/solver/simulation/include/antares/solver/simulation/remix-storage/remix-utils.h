@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <numeric>
 #include <ranges>
 #include <span>
 #include <stdexcept>
@@ -79,6 +80,11 @@ inline double min_on_subrange(std::vector<double>&& v, unsigned h, unsigned H)
 
     std::span<double> subset(v.begin() + h, v.begin() + H);
     return *std::ranges::min_element(subset);
+}
+
+inline double sum(const std::vector<double>& v)
+{
+    return std::accumulate(v.begin(), v.end(), 0.);
 }
 
 template<typename T>
