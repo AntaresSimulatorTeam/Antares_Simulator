@@ -37,7 +37,7 @@
 #include <unit_test_utils.h>
 
 #include "antares/io/inputs/model-converter/ForbiddenNodes.h"
-#include "antares/io/inputs/model-converter/NodeCompositionChecker.h"
+#include "antares/io/inputs/model-converter/NodeChecker.h"
 // clang-format on
 
 using namespace Antares::Expressions;
@@ -776,11 +776,11 @@ BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addForbiddenFor<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
     auto node = converter.run(expression);
-    BOOST_CHECK_EXCEPTION(
-      ModelConverter::NodeCompositionChecker(forbidden, expression).dispatch(node.node),
-      ModelConverter::BadContextComposition,
-      checkMessage("'min' is not allowed to contain 'variable(varB)' in this context '" + expression
-                   + "'"));
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage(
+                            "'min' is not allowed to contain 'variable(varB)' in this context '"
+                            + expression + "'"));
 }
 
 BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
@@ -804,11 +804,11 @@ BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addForbiddenFor<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
     auto node = converter.run(expression);
-    BOOST_CHECK_EXCEPTION(
-      ModelConverter::NodeCompositionChecker(forbidden, expression).dispatch(node.node),
-      ModelConverter::BadContextComposition,
-      checkMessage("'max' is not allowed to contain 'variable(varB)' in this context '" + expression
-                   + "'"));
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage(
+                            "'max' is not allowed to contain 'variable(varB)' in this context '"
+                            + expression + "'"));
 }
 
 BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignLT)
@@ -832,10 +832,10 @@ BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignLT)
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::LessThanOrEqualNode>();
     auto node = converter.run(expression);
-    BOOST_CHECK_EXCEPTION(
-      ModelConverter::NodeCompositionChecker(forbidden, expression).dispatch(node.node),
-      ModelConverter::BadContextComposition,
-      checkMessage("'expression with <=' is not allowed in this context '" + expression + "'"));
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'expression with <=' is not allowed in this context '"
+                                       + expression + "'"));
 }
 
 BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignGT)
@@ -859,10 +859,10 @@ BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignGT)
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
     auto node = converter.run(expression);
-    BOOST_CHECK_EXCEPTION(
-      ModelConverter::NodeCompositionChecker(forbidden, expression).dispatch(node.node),
-      ModelConverter::BadContextComposition,
-      checkMessage("'expression with >=' is not allowed in this context '" + expression + "'"));
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'expression with >=' is not allowed in this context '"
+                                       + expression + "'"));
 }
 
 BOOST_AUTO_TEST_CASE(ExpressionThatNotContainEqualSign)
@@ -886,8 +886,8 @@ BOOST_AUTO_TEST_CASE(ExpressionThatNotContainEqualSign)
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::EqualNode>();
     auto node = converter.run(expression);
-    BOOST_CHECK_EXCEPTION(
-      ModelConverter::NodeCompositionChecker(forbidden, expression).dispatch(node.node),
-      ModelConverter::BadContextComposition,
-      checkMessage("'expression with =' is not allowed in this context '" + expression + "'"));
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'expression with =' is not allowed in this context '"
+                                       + expression + "'"));
 }

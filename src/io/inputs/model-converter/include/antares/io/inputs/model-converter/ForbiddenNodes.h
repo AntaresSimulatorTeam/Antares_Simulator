@@ -31,8 +31,6 @@
 
 namespace Antares::IO::Inputs::ModelConverter
 {
-template<typename T>
-concept NodeType = !std::is_same_v<T, Expressions::Nodes::FunctionNode>;
 
 template<typename NodeType>
 std::type_index forbiddenNodeKey()

@@ -24,7 +24,7 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/expressions/expression.h"
-#include "antares/io/inputs/model-converter/NodeCompositionChecker.h"
+#include "antares/io/inputs/model-converter/NodeChecker.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -87,7 +87,7 @@ static void CommonPreSolve(ForbiddenNodes& f)
     f.addForbiddenFor<FunctionNodeType::min, PortFieldSumNode>();
 }
 
-static ForbiddenNodes GetWhatIsForbiddenInConstraint()
+static ForbiddenNodes ForbiddenInConstraint()
 {
     static ForbiddenNodes forbidden = []()
     {
@@ -112,7 +112,7 @@ static ForbiddenNodes GetWhatIsForbiddenInBindingConstraint()
     return forbidden;
 }
 
-static ForbiddenNodes GetWhatIsForbiddenInObjective()
+static ForbiddenNodes ForbiddenInObjective()
 {
     static ForbiddenNodes forbidden = []()
     {
@@ -130,7 +130,7 @@ static ForbiddenNodes GetWhatIsForbiddenInObjective()
     return forbidden;
 }
 
-static ForbiddenNodes GetWhatIsForbiddenInPortFieldDefinition()
+static ForbiddenNodes ForbiddenInPortFieldDefinition()
 {
     static ForbiddenNodes forbidden = []()
     {
@@ -148,7 +148,7 @@ static ForbiddenNodes GetWhatIsForbiddenInPortFieldDefinition()
     return forbidden;
 }
 
-static ForbiddenNodes GetWhatIsForbiddenInVariableBound()
+static ForbiddenNodes ForbiddenInVariableBound()
 {
     static ForbiddenNodes forbidden = []()
     {
@@ -166,7 +166,7 @@ static ForbiddenNodes GetWhatIsForbiddenInVariableBound()
     return forbidden;
 }
 
-static ForbiddenNodes GetWhatIsForbiddenInExtraOutput()
+static ForbiddenNodes ForbiddenInExtraOutput()
 {
     static ForbiddenNodes forbidden = []()
     {
@@ -269,15 +269,13 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
     variables.reserve(model.variables.size());
     for (const auto& variable: model.variables)
     {
-        const auto& whatIsForbiddenInVariableBound = GetWhatIsForbiddenInVariableBound();
+        const auto& whatIsForbiddenInVariableBound = ForbiddenInVariableBound();
         SM::Expression lb(variable.lower_bound,
                           convertExpressionToNode(variable.lower_bound, model));
-        NodeCompositionChecker(whatIsForbiddenInVariableBound, variable.lower_bound)
-          .dispatch(lb.RootNode());
+        NodeChecker(whatIsForbiddenInVariableBound, variable.lower_bound).dispatch(lb.RootNode());
         SM::Expression ub(variable.upper_bound,
                           convertExpressionToNode(variable.upper_bound, model));
-        NodeCompositionChecker(whatIsForbiddenInVariableBound, variable.upper_bound)
-          .dispatch(ub.RootNode());
+        NodeChecker(whatIsForbiddenInVariableBound, variable.upper_bound).dispatch(ub.RootNode());
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
@@ -361,7 +359,7 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
             throw PortInDefinition(pfdefinition.port,
                                    dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
-        NodeCompositionChecker(GetWhatIsForbiddenInPortFieldDefinition(), pfdefinition.definition)
+        NodeChecker(ForbiddenInPortFieldDefinition(), pfdefinition.definition)
           .dispatch(nodeRegistry.node);
         portFieldDefinitions.emplace_back(
           *itPort,
@@ -377,7 +375,7 @@ static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constrain
                                 const ForbiddenNodes& forbiddenNodes)
 {
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
-    NodeCompositionChecker(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
+    NodeChecker(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
                                                                    std::move(nodeRegistry)});
@@ -397,7 +395,7 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
 
     for (const auto& constraint: model.constraints)
     {
-        addSingleConstraint(constraints, constraint, model, GetWhatIsForbiddenInConstraint());
+        addSingleConstraint(constraints, constraint, model, ForbiddenInConstraint());
     }
 
     for (const auto& constraint: model.binding_constraints)
@@ -425,8 +423,7 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
     for (const auto& extraOutput: model.extra_outputs)
     {
         auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
-        NodeCompositionChecker(GetWhatIsForbiddenInExtraOutput(), extraOutput.expression)
-          .dispatch(nodeRegistry.node);
+        NodeChecker(ForbiddenInExtraOutput(), extraOutput.expression).dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
                                   ModelerStudy::SystemModel::Expression{extraOutput.expression,
                                                                         std::move(nodeRegistry)});
@@ -448,8 +445,7 @@ std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
     for (const auto& objective: model.objectives)
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression, model);
-        NodeCompositionChecker(GetWhatIsForbiddenInObjective(), objective.expression)
-          .dispatch(nodeRegistry.node);
+        NodeChecker(ForbiddenInObjective(), objective.expression).dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
                                                                       std::move(nodeRegistry)});

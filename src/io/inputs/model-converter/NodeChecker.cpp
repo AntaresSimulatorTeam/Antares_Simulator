@@ -18,112 +18,109 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "include/antares/io/inputs/model-converter/NodeCompositionChecker.h"
+#include "include/antares/io/inputs/model-converter/NodeChecker.h"
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 using namespace Antares::Expressions::Nodes;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
-NodeCompositionChecker::NodeCompositionChecker(const ForbiddenNodes& forbid,
-                                               const std::string& expression):
+NodeChecker::NodeChecker(const ForbiddenNodes& forbid, const std::string& expression):
     forbid_(forbid),
     expression_(expression)
 {
 }
 
-std::string NodeCompositionChecker::name() const
+std::string NodeChecker::name() const
 {
-    return "NodeCompositionChecker";
+    return "NodeChecker";
 }
 
-void NodeCompositionChecker::visit(const SumNode* sumNode)
+void NodeChecker::visit(const SumNode* sumNode)
 {
     checkChildren<SumNode>("sum", sumNode->getOperands(), false);
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::SubtractionNode* subtractionNode)
+void NodeChecker::visit(const Expressions::Nodes::SubtractionNode* subtractionNode)
 {
     checkChildren<SubtractionNode>("subtraction", subtractionNode->getOperands(), false);
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::MultiplicationNode* multiplicationNode)
+void NodeChecker::visit(const Expressions::Nodes::MultiplicationNode* multiplicationNode)
 {
     checkChildren<MultiplicationNode>("multiplication", multiplicationNode->getOperands(), false);
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::DivisionNode* divisionNode)
+void NodeChecker::visit(const Expressions::Nodes::DivisionNode* divisionNode)
 {
     checkChildren<DivisionNode>("division", divisionNode->getOperands(), false);
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::EqualNode* equalNode)
+void NodeChecker::visit(const Expressions::Nodes::EqualNode* equalNode)
 {
     handleComparisonNode<EqualNode>("=", equalNode->getOperands());
 }
 
-void NodeCompositionChecker::visit(
-  const Expressions::Nodes::LessThanOrEqualNode* lessThanOrEqualNode)
+void NodeChecker::visit(const Expressions::Nodes::LessThanOrEqualNode* lessThanOrEqualNode)
 {
     handleComparisonNode<LessThanOrEqualNode>("<=", lessThanOrEqualNode->getOperands());
 }
 
-void NodeCompositionChecker::visit(
-  const Expressions::Nodes::GreaterThanOrEqualNode* greaterThanOrEqualNode)
+void NodeChecker::visit(const Expressions::Nodes::GreaterThanOrEqualNode* greaterThanOrEqualNode)
 {
     handleComparisonNode<GreaterThanOrEqualNode>(">=", greaterThanOrEqualNode->getOperands());
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::NegationNode* negationNode)
+void NodeChecker::visit(const Expressions::Nodes::NegationNode* negationNode)
 {
     dispatch(negationNode->child());
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::LiteralNode*)
+void NodeChecker::visit(const Expressions::Nodes::LiteralNode*)
 {
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::VariableNode* variableNode)
+void NodeChecker::visit(const Expressions::Nodes::VariableNode* variableNode)
 {
     checkConsistencyWithParents<VariableNode>("variable(" + variableNode->value() + ")");
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::ParameterNode*)
+void NodeChecker::visit(const Expressions::Nodes::ParameterNode*)
 {
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::PortFieldNode* portFieldNode)
+void NodeChecker::visit(const Expressions::Nodes::PortFieldNode* portFieldNode)
 {
     checkConsistencyWithParents<PortFieldNode>("port field (" + portFieldNode->getPortName() + "."
                                                + portFieldNode->getFieldName() + ")");
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::PortFieldSumNode*)
+void NodeChecker::visit(const Expressions::Nodes::PortFieldSumNode*)
 {
     checkConsistencyWithParents<PortFieldSumNode>("sum_connections");
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::TimeShiftNode* timeShiftNode)
+void NodeChecker::visit(const Expressions::Nodes::TimeShiftNode* timeShiftNode)
 {
     checkChildren<TimeShiftNode>("timeShift", timeShiftNode->getOperands(), true);
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::TimeIndexNode* timeIndexNode)
+void NodeChecker::visit(const Expressions::Nodes::TimeIndexNode* timeIndexNode)
 {
     checkChildren<TimeIndexNode>("timeIndex", timeIndexNode->getOperands(), true);
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::TimeSumNode* timeSumNode)
+void NodeChecker::visit(const Expressions::Nodes::TimeSumNode* timeSumNode)
 {
     checkChildren<TimeSumNode>("sum", timeSumNode->getOperands(), true);
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::AllTimeSumNode* allTimeSumNode)
+void NodeChecker::visit(const Expressions::Nodes::AllTimeSumNode* allTimeSumNode)
 {
     checkChildren<AllTimeSumNode>("sum", allTimeSumNode->getOperands(), true);
 }
 
-void NodeCompositionChecker::visit(const Expressions::Nodes::FunctionNode* functionNode)
+void NodeChecker::visit(const Expressions::Nodes::FunctionNode* functionNode)
 {
     switch (functionNode->type())
     {
