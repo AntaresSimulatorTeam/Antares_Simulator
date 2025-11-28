@@ -35,9 +35,10 @@ using namespace operations_research;
 
 const std::string XPRESS_PARAMS = "THREADS 1";
 const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
-const std::string GUROBI_PARAMS = "Threads 1"; // See
-                                               // https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#threads
-                                               // for Gurobi threads (and other) parameter reference
+const std::string GUROBI_PARAMS
+  = "Threads 1"; // See
+                 // https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#threads
+                 // for Gurobi threads (and other) parameter reference
 
 using Antares::Solver::Optimization::SingleOptimOptions;
 
