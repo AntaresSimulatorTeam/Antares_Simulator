@@ -50,6 +50,7 @@ struct build_AST_fixture
     Node* literal(double value);
     Node* parameter(const std::string& name, const TimeIndex variability);
     Node* allTimeSum(Node* node);
+    Node* timeSum(Node* from, Node* to, Node* p);
 
 private:
     Registry<Nodes::Node> registry_;
@@ -68,6 +69,11 @@ Node* build_AST_fixture::allTimeSum(Node* node)
 Node* build_AST_fixture::parameter(const std::string& name, const TimeIndex variability)
 {
     return registry_.create<ParameterNode>(name, variability);
+}
+
+Node* build_AST_fixture::timeSum(Node* from, Node* to, Node* p)
+{
+    return registry_.create<TimeSumNode>(from, to, p);
 }
 
 // =============================
@@ -130,12 +136,43 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
 {
     // Expression : sum(p), where p = {p1, p2, p3} = {1., 2., 3.}
     Node* p = parameter("p", TimeIndex::VARYING_IN_TIME_ONLY);
-    Node* sum_parameter_over_time = allTimeSum(p);
+    Node* sum = allTimeSum(p);
 
-    auto evalResult = evaluator->dispatch(sum_parameter_over_time);
+    auto evalResult = evaluator->dispatch(sum);
 
     // Expected result of sum evaluation is p1 + p2 + p3 = 6.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
 }
+BOOST_FIXTURE_TEST_CASE(sum_a_parameter_on_interval_t__t_plus_1, tests_fixture)
+{
+    // Expression : sum(t .. t+1, p), where p = {p1, p2, p3} = {1., 2., 3.}
+    Node* p = parameter("p", TimeIndex::VARYING_IN_TIME_ONLY);
 
+    Node* from = literal(0.);
+    Node* to = literal(1.);
+    Node* sum = timeSum(from, to, p);
 
+    auto evalResult = evaluator->dispatch(sum);
+
+    // Expected result : (p1 + p2, p2 + p3, p3 + p1) = (3., 5., 4.).
+    std::vector<double> expected = {3., 5., 4.};
+    std::vector<double> actual = evalResult.valuesAsVector();
+    BOOST_CHECK(actual == expected);
+}
+
+//BOOST_FIXTURE_TEST_CASE(sum_a_literal_on_interval_t__t_plus_1, tests_fixture)
+//{
+//    // Expression : sum(t .. t+1, p), where p = 5
+//    Node* five = parameter("five", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+//
+//    Node* from = literal(0.);
+//    Node* to = literal(1.);
+//    Node* sum = timeSum(from, to, five);
+//
+//    auto evalResult = evaluator->dispatch(sum);
+//
+//    // Expected result : (2p, 2p, 2p) = (10, 10., 10.).
+//    std::vector<double> expected = {10., 10., 10.};
+//    std::vector<double> actual = evalResult.valuesAsVector();
+//    BOOST_CHECK(actual == expected);
+//}
