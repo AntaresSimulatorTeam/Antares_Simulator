@@ -23,6 +23,7 @@
 
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/modeler/data.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 
@@ -35,14 +36,10 @@ namespace Antares::Solver::LoadFiles
 
 class LocationError final: public std::invalid_argument
 {
-public:
-    explicit LocationError(const Model& model, const std::string& message):
-        std::invalid_argument("In model '" + model.Id() + "' checking for locations: " + message)
-    {
-    }
+    using std::invalid_argument::invalid_argument;
 };
 
-void checkFunctionNode(Node& node, Model& model)
+void checkFunctionNode(Node& node, Model& model, const std::string& exprStr)
 {
     // dual and reduced_cost can only be used in subproblems
     if (auto* functionNode = dynamic_cast<FunctionNode*>(&node); functionNode)
@@ -56,9 +53,9 @@ void checkFunctionNode(Node& node, Model& model)
                     && variable.location() != Location::SUBPROBLEMS)
                 {
                     throw LocationError(
-                      model,
-                      "Error for variable: '" + varNode->value()
-                        + "' reduced_cost can only be used in variables located in subproblems");
+                      "Model '" + model.Id() + "': In expression '" + exprStr
+                      + "': Error for variable '" + varNode->value()
+                      + "': reduced_cost can only be used on variables located in subproblems");
                 }
             }
         }
@@ -72,16 +69,20 @@ void checkFunctionNode(Node& node, Model& model)
                 if (constraint.Id() == n->value() && constraint.location() != Location::SUBPROBLEMS)
                 {
                     throw LocationError(
-                      model,
-                      "Error for constraint: '" + n->name()
-                        + "' dual can only be used in constraints located in subproblems");
+                      "Model '" + model.Id() + "': In expression '" + exprStr
+                      + "': Error for constraint '" + n->name()
+                      + "': dual can only be used on constraints located in subproblems");
                 }
             }
         }
     }
 }
 
-void checkExpression(Node* expression, const Location& location, Model& model)
+void checkExpression(Node* expression,
+                     const Location& location,
+                     Model& model,
+                     const std::string& exprStr,
+                     const std::string& errorMsgForPortFieldSum = "")
 {
     for (auto& node: AST(expression))
     {
@@ -94,11 +95,11 @@ void checkExpression(Node* expression, const Location& location, Model& model)
                     && !AreLocationsCompatible(variable.location(), location))
                 {
                     throw LocationError(
-                      model,
-                      "Error for variable: '" + varNode->value()
-                        + "' location doesn't match the expression location (variable location: "
-                        + LocationToStr(variable.location())
-                        + ", expression location: " + LocationToStr(location) + ")");
+                      errorMsgForPortFieldSum + "Model '" + model.Id() + ": In expression '"
+                      + exprStr + "': Error for variable '" + varNode->value()
+                      + "': Location doesn't match the expression location (variable location: "
+                      + LocationToStr(variable.location())
+                      + ", expression location: " + LocationToStr(location) + ")");
                 }
             }
             continue;
@@ -108,9 +109,11 @@ void checkExpression(Node* expression, const Location& location, Model& model)
         if (const auto* n = dynamic_cast<PortFieldNode*>(&node); n)
         {
             PortFieldKey key(n->getPortName(), n->getFieldName());
+            auto& expr = model.PortFieldDefinitions().at(key).Definition();
             checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
                             location,
-                            model);
+                            model,
+                            expr.Value());
             continue;
         }
 
@@ -120,12 +123,28 @@ void checkExpression(Node* expression, const Location& location, Model& model)
             {
                 auto* n = connection.component()->nodeAtPortField(portFieldSumNode->getPortName(),
                                                                   portFieldSumNode->getFieldName());
-                checkExpression(n, location, *connection.component()->getModel());
+
+
+                // This code is used to handle error with a clear message
+                std::string msgInCaseOfError = "In model '" + model.Id() + "': In expression '"
+                                               + exprStr + "': this 'sum_connections("
+                                               + portFieldSumNode->getPortName() + "."
+                                               + portFieldSumNode->getFieldName()
+                                               + ")' is referencing a variable in a different "
+                                                 "location: ";
+                Expressions::Visitors::PrintVisitor printVisitor;
+                std::string nodeExpression = printVisitor.dispatch(n);
+
+                checkExpression(n,
+                                location,
+                                *connection.component()->getModel(),
+                                nodeExpression,
+                                msgInCaseOfError);
             }
             continue;
         }
 
-        checkFunctionNode(node, model);
+        checkFunctionNode(node, model, exprStr);
     }
 }
 
@@ -133,18 +152,27 @@ void checkModel(Model& model)
 {
     for (const auto& constraint: model.Constraints())
     {
-        checkExpression(constraint.expression().RootNode(), constraint.location(), model);
+        checkExpression(constraint.expression().RootNode(),
+                        constraint.location(),
+                        model,
+                        constraint.expression().Value());
     }
 
     for (const auto& objective: model.Objectives())
     {
-        checkExpression(objective.expression().RootNode(), objective.location(), model);
+        checkExpression(objective.expression().RootNode(),
+                        objective.location(),
+                        model,
+                        objective.expression().Value());
     }
 
     // Extra outputs must be evaluated, they need to contain only subproblem objects
     for (const auto& [_, extraOutput]: model.ExtraOutputs())
     {
-        checkExpression(extraOutput.expression().RootNode(), Location::SUBPROBLEMS, model);
+        checkExpression(extraOutput.expression().RootNode(),
+                        Location::SUBPROBLEMS,
+                        model,
+                        extraOutput.expression().Value());
     }
 }
 
