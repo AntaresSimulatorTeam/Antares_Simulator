@@ -680,7 +680,7 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
 {
     const std::string id = "my-param";
     const std::string value = "45.7";
-    
+
     ParameterNode root(id, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
@@ -823,11 +823,11 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
       EvaluationResult::EvalResultTypeError);
 }
 
-template<typename left, typename right>
-EvaluationResult CreateAndEvaluateTimeNode(const right& p)
+template<typename NodeType>
+EvaluationResult CreateAndEvaluateTimeNode(Node* p)
 {
     ParameterNode paramNode("my-param", TimeIndex::VARYING_IN_TIME_ONLY);
-    left root(&paramNode, p);
+    NodeType root(&paramNode, p);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
@@ -855,8 +855,7 @@ EvaluationResult CreateAndEvaluateTimeNode(const right& p)
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 {
     LiteralNode literal_node(-1.0);
-    const auto eval = CreateAndEvaluateTimeNode<TimeShiftNode, Node*>(&literal_node)
-                        .valuesAsVector();
+    const auto eval = CreateAndEvaluateTimeNode<TimeShiftNode>(&literal_node).valuesAsVector();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeShift t-1 {2, 0, 1}
     BOOST_CHECK_EQUAL(eval[0], 2); //
@@ -867,8 +866,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
 {
     LiteralNode literal_node(1.0);
-    const auto eval = CreateAndEvaluateTimeNode<TimeIndexNode, Node*>(&literal_node)
-                        .valueAsDouble();
+    const auto eval = CreateAndEvaluateTimeNode<TimeIndexNode>(&literal_node).valueAsDouble();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeIndex[1]
     BOOST_CHECK_EQUAL(eval, 1); //
@@ -1098,7 +1096,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     std::vector<unsigned int> hours = {1, 2};
-    
+
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
     auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);

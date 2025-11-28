@@ -99,9 +99,14 @@ private:
 build_eval_visitor_fixture::build_eval_visitor_fixture():
     linearProblem_(true),
     fillCtx_(0, 2, 0, 2, 0),
-    model_(createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO)})),
-    component_(
-      createComponent(model_, "component", {{"p", {"p", ParameterType::TIMESERIE, "p"}}}, 0)),
+    model_(
+      createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO),
+                                 Parameter("five", TimeDependent::YES, ScenarioDependent::NO)})),
+    component_(createComponent(model_,
+                               "component",
+                               {{"p", {"p", ParameterType::TIMESERIE, "p"}},
+                                {"five", {"five", ParameterType::CONSTANT, "5"}}},
+                               0)),
     scenarioGroupRepository_(getscenarioGroupRepository(component_)),
     components_({component_}),
     optimEntityContainer_(linearProblem_, &data_, &scenarioGroupRepository_)
@@ -149,8 +154,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_on_interval_t__t_plus_1, tests_fixture)
     // Expression : sum(t .. t+1, p), where p = {p1, p2, p3} = {1., 2., 3.}
     Node* p = parameter("p", TimeIndex::VARYING_IN_TIME_ONLY);
 
-    Node* from = literal(0.);
-    Node* to = literal(1.);
+    Node* from = literal(0);
+    Node* to = literal(1);
     Node* sum = timeSum(from, to, p);
 
     auto evalResult = evaluator->dispatch(sum);
@@ -161,19 +166,38 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_on_interval_t__t_plus_1, tests_fixture)
     BOOST_CHECK(actual == expected);
 }
 
-// BOOST_FIXTURE_TEST_CASE(sum_a_literal_on_interval_t__t_plus_1, tests_fixture)
-//{
-//     // Expression : sum(t .. t+1, p), where p = 5
-//     Node* five = parameter("five", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-//
-//     Node* from = literal(0.);
-//     Node* to = literal(1.);
-//     Node* sum = timeSum(from, to, five);
-//
-//     auto evalResult = evaluator->dispatch(sum);
-//
-//     // Expected result : (2p, 2p, 2p) = (10, 10., 10.).
-//     std::vector<double> expected = {10., 10., 10.};
-//     std::vector<double> actual = evalResult.valuesAsVector();
-//     BOOST_CHECK(actual == expected);
-// }
+BOOST_FIXTURE_TEST_CASE(sum_a_literal_on_interval_t__t_plus_1, tests_fixture)
+{
+    // Expression : sum(t .. t+1, p), where p = 7
+    Node* seven = literal(7);
+
+    Node* from = literal(0);
+    Node* to = literal(1);
+    Node* sum = timeSum(from, to, seven);
+
+    auto evalResult = evaluator->dispatch(sum);
+
+    // Expected result : 2p = 14
+    double expected = 14;
+    double actual = evalResult.valueAsDouble();
+    BOOST_CHECK(actual == expected);
+}
+
+/*
+BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_fixture)
+{
+    // Expression : sum(t .. t+1, p), where p = 5
+    Node* five = parameter("five", TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    Node* from = literal(0.);
+    Node* to = literal(1.);
+    Node* sum = timeSum(from, to, five);
+
+    auto evalResult = evaluator->dispatch(sum);
+
+    // Expected result : (2p, 2p, 2p) = (10, 10., 10.).
+    std::vector<double> expected = {10., 10., 10.};
+    std::vector<double> actual = evalResult.valuesAsVector();
+    BOOST_CHECK(actual == expected);
+}
+*/
