@@ -129,8 +129,6 @@ private:
     explicit Component(const ComponentData& component_data);
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
     std::map<std::string, std::string> portToAreaConnections_;
-
-protected:
     ComponentData data_;
 };
 

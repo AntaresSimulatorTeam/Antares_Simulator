@@ -84,8 +84,7 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
 
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     auto model = createModelWithParameters(params);
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, "compo", system_parameters)};
+    const std::vector<Component> components{createComponent(model, "compo", system_parameters)};
     EvaluationContext context(&components.back(), &mockData, &emptyScenario);
 
     // 1. Valid number (CONSTANT)
@@ -681,11 +680,11 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
 {
     const std::string id = "my-param";
     const std::string value = "45.7";
-    const ParameterType param_type = ParameterType::TIMESERIE;
+    
     ParameterNode root(id, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
 
@@ -770,10 +769,9 @@ struct TimeDependentParameterFixture
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
 
-    const ParameterType param_type = ParameterType::TIMESERIE;
     Model model;
     std::string compoName = "1245";
-    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
+    std::vector<Component> components;
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem,
@@ -797,7 +795,8 @@ struct TimeDependentParameterFixture
         }
 
         model = createModelWithParameters(params);
-        additionnalParams.emplace(build_context_parameter_with("my-param", value, param_type));
+        additionnalParams.emplace(
+          build_context_parameter_with("my-param", value, ParameterType::TIMESERIE));
         components.push_back(createComponent(model, compoName, additionnalParams));
         scenarioGroupRepo = getscenarioGroupRepository(components.front());
         optimContainer.addFromSystemComponents(components);
@@ -836,13 +835,11 @@ EvaluationResult CreateAndEvaluateTimeNode(const right& p)
     unsigned first = 0;
     unsigned last = 2;
 
-    const auto param_type = ParameterType::TIMESERIE;
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
     const auto compoName = "1245";
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, compoName, {param})};
+    const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
@@ -888,13 +885,11 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     unsigned first = 0;
     unsigned last = 2;
 
-    const auto param_type = ParameterType::TIMESERIE;
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
     const auto compoName = "1245";
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, compoName, {param})};
+    const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
@@ -931,13 +926,11 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     unsigned first = 0;
     unsigned last = 2;
 
-    const auto param_type = ParameterType::TIMESERIE;
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
     const auto compoName = "1245";
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, compoName, {param})};
+    const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
@@ -970,13 +963,11 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
 
-    const auto param_type = ParameterType::TIMESERIE;
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
     const auto compoName = "1245";
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, compoName, {param})};
+    const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       components.back());
     OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
@@ -1031,14 +1022,12 @@ void evaluate_time_dependent_operation()
     unsigned hour_0 = 1;
     unsigned hour_1 = 2;
 
-    const auto param_type = ParameterType::TIMESERIE;
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
     const auto compoName = "1245";
 
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, compoName, {param})};
+    const std::vector<Component> components{createComponent(model, compoName, {param})};
 
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       components.back());
@@ -1069,13 +1058,11 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     std::vector<unsigned int> hours = {1, 2};
 
-    const auto param_type = ParameterType::TIMESERIE;
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
     const auto compoName = "1245";
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, compoName, {param})};
+    const std::vector<Component> components{createComponent(model, compoName, {param})};
 
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       components.back());
@@ -1111,14 +1098,13 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     MockLinearProblemData dummy_data;
     Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     std::vector<unsigned int> hours = {1, 2};
-    const auto param_type = ParameterType::TIMESERIE;
+    
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, param_type);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
     const auto compoName = "1245";
 
-    const std::vector<Antares::ModelerStudy::SystemModel::Component> components{
-      createComponent(model, compoName, {param})};
+    const std::vector<Component> components{createComponent(model, compoName, {param})};
 
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = getscenarioGroupRepository(
       components.back());

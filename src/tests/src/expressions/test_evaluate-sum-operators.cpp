@@ -31,6 +31,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
+#include "antares/modeler-optimisation-container/TimeIndex.h"
 
 #include "UtilMocks.h"
 
@@ -47,7 +48,7 @@ using namespace Antares::ModelerStudy::SystemModel;
 struct build_AST_fixture
 {
     Node* literal(double value);
-    Node* parameter(const std::string& name);
+    Node* parameter(const std::string& name, const TimeIndex variability);
     Node* allTimeSum(Node* node);
 
 private:
@@ -64,9 +65,9 @@ Node* build_AST_fixture::allTimeSum(Node* node)
     return registry_.create<AllTimeSumNode>(node);
 }
 
-Node* build_AST_fixture::parameter(const std::string& name)
+Node* build_AST_fixture::parameter(const std::string& name, const TimeIndex variability)
 {
-    return registry_.create<ParameterNode>(name);
+    return registry_.create<ParameterNode>(name, variability);
 }
 
 // =============================
@@ -128,7 +129,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
 {
     // Expression : sum(p), where p = {p1, p2, p3} = {1., 2., 3.}
-    Node* p = parameter("p");
+    Node* p = parameter("p", TimeIndex::VARYING_IN_TIME_ONLY);
     Node* sum_parameter_over_time = allTimeSum(p);
 
     auto evalResult = evaluator->dispatch(sum_parameter_over_time);
@@ -136,3 +137,5 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
     // Expected result of sum evaluation is p1 + p2 + p3 = 6.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
 }
+
+
