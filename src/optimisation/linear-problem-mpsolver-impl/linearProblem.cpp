@@ -56,6 +56,8 @@ public:
         return offset_;
     }
 
+    ~SiriusObjectiveOffsetHandler() override = default;
+
 private:
     double offset_{0.0};
 };
@@ -64,7 +66,7 @@ private:
 class GenericOffsetHandler: public ObjectiveOffsetHandler
 {
 public:
-    GenericOffsetHandler(operations_research::MPObjective* objective):
+    explicit GenericOffsetHandler(operations_research::MPObjective* objective):
         objective_(objective)
     {
     }
@@ -78,6 +80,8 @@ public:
     {
         return objective_->offset();
     }
+
+    ~GenericOffsetHandler() override = default;
 
 private:
     operations_research::MPObjective* objective_{nullptr};

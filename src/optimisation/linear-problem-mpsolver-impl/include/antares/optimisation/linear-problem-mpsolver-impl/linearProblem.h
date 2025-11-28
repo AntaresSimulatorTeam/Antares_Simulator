@@ -40,6 +40,7 @@ class ObjectiveOffsetHandler
 public:
     virtual void setOffset(double offset) = 0;
     virtual double getOffset() const = 0;
+    virtual ~ObjectiveOffsetHandler() = default;
 };
 
 class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem
