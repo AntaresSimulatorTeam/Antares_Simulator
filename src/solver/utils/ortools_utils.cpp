@@ -35,6 +35,7 @@ using namespace operations_research;
 
 const std::string XPRESS_PARAMS = "THREADS 1";
 const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
+const std::string GUROBI_PARAMS = "Threads 1";
 
 using Antares::Solver::Optimization::SingleOptimOptions;
 
@@ -101,6 +102,14 @@ static void TuneSolverSpecificOptions(MPSolver* solver,
     case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING:
     {
         specificParams = SCIP_PARAMS + ", " + solverParameters;
+        status = solver->SetSolverSpecificParametersAsString(specificParams);
+        checkSetSolverSpecificParameters(status, solverName, specificParams);
+        break;
+    }
+    case MPSolver::GUROBI_LINEAR_PROGRAMMING: 
+    case MPSolver::GUROBI_MIXED_INTEGER_PROGRAMMING:
+    {
+        specificParams = GUROBI_PARAMS + "\n " + solverParameters;
         status = solver->SetSolverSpecificParametersAsString(specificParams);
         checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
