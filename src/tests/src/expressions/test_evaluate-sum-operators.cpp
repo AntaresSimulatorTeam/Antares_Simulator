@@ -36,6 +36,7 @@
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
+using namespace Antares::Expressions::Visitors;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
@@ -103,7 +104,7 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
     data_.addDataSeries(std::move(ts));
 
     optimEntityContainer_.addFromSystemComponents(components_);
-    evaluator = std::make_unique<Visitors::EvalVisitor>(optimEntityContainer_, fillCtx_, component_);
+    evaluator = std::make_unique<EvalVisitor>(optimEntityContainer_, fillCtx_, component_);
 }
 
 // =================================================
