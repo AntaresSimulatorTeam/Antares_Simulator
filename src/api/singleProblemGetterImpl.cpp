@@ -100,7 +100,20 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
 {
-    return {};
+    std::vector<WeeklyProblemId> ret;
+
+    const auto& p = study_->parameters;
+    for (unsigned int year = 0; year < p.nbYears; year++)
+    {
+        if (p.yearsFilter[year])
+        {
+            for (unsigned week = 0; week < p.simulationDays.numberOfWeeks(); week++)
+            {
+                ret.emplace_back(year, week);
+            }
+        }
+    }
+    return ret;
 }
 
 void SingleProblemGetter::initializeRandomNumbers()
