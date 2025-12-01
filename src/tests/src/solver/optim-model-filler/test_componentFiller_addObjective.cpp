@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(
 {
     // exp: sum(ax + b), a: [t0,...tn], b = 10
     auto objective = nodeRegistry.create<AllTimeSumNode>(
-      add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10)));
+      add(variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY), literal(10)));
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective, true);
     createComponent("model", "componentA", {});
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(
 {
     // exp: sum(x + param(t)), param = [10,11,12]
     auto objective = nodeRegistry.create<AllTimeSumNode>(
-      add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_TIME_ONLY)));
+      add(variable("x", 0), parameter("param", VariabilityType::VARYING_IN_TIME_ONLY)));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::YES, ScenarioDependent::NO}},
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(
 {
     // exp: x + param(s), param varies by scenario
     auto objective = Sum(
-      add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_SCENARIO_ONLY)));
+      add(variable("x", 0), parameter("param", VariabilityType::VARYING_IN_SCENARIO_ONLY)));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::NO, ScenarioDependent::YES}},
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE(
 {
     // exp: sum(x + param(t,s)), param varies by both time and scenario
     auto objective = Sum(
-      add(variable("x", 0), parameter("param", TimeIndex::VARYING_IN_TIME_AND_SCENARIO)));
+      add(variable("x", 0), parameter("param", VariabilityType::VARYING_IN_TIME_AND_SCENARIO)));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::YES, ScenarioDependent::YES}},
@@ -318,8 +318,8 @@ BOOST_AUTO_TEST_CASE(var_and_param_both_varying_in_time_and_scenario_with_differ
     // exp: sum(x(t,s_x) + param(t,s_y))
     // Variable x varies in time and scenario (uses scenarioX)
     // Param varies in time and scenario (uses scenarioY)
-    auto objective = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_AND_SCENARIO),
-                             parameter("param", TimeIndex::VARYING_IN_TIME_AND_SCENARIO)));
+    auto objective = Sum(add(variable("x", 0, VariabilityType::VARYING_IN_TIME_AND_SCENARIO),
+                             parameter("param", VariabilityType::VARYING_IN_TIME_AND_SCENARIO)));
     createModelWithSystemModelParameter(
       "model",
       {Parameter{"param", TimeDependent::YES, ScenarioDependent::YES}},
@@ -370,9 +370,9 @@ BOOST_AUTO_TEST_CASE(two_expressions_one_with_time_varying_param_one_with_consta
 {
     // Expression 1: sum(x + param(t), param = [1, 2, 3])
     // Expression 2: sum(x + 20)
-    auto expr1 = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY),
-                         parameter("param", TimeIndex::VARYING_IN_TIME_ONLY)));
-    auto expr2 = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(20)));
+    auto expr1 = Sum(add(variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY),
+                         parameter("param", VariabilityType::VARYING_IN_TIME_ONLY)));
+    auto expr2 = Sum(add(variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY), literal(20)));
     auto objective = add(expr1, expr2);
 
     createModelWithSystemModelParameter(
@@ -410,9 +410,10 @@ BOOST_AUTO_TEST_CASE(multiple_objectives_in_model)
     // Objective 2: x + param(t), param = [5, 10, 15]
     // Expected offset over 3 time steps: (10+10+10) + (5+10+15) = 30 + 30 = 60
 
-    auto objective1 = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY), literal(10)));
-    auto objective2 = Sum(add(variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY),
-                              parameter("param", TimeIndex::VARYING_IN_TIME_ONLY)));
+    auto objective1 = Sum(
+      add(variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY), literal(10)));
+    auto objective2 = Sum(add(variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY),
+                              parameter("param", VariabilityType::VARYING_IN_TIME_ONLY)));
 
     std::vector objectives = {objective1, objective2};
 
@@ -450,7 +451,8 @@ BOOST_AUTO_TEST_CASE(time_sum_var_with_objective)
     // This should give coefficient 2 for each variable x_t0, x_t1, x_t2
     auto from = literal(0);
     auto to = literal(2);
-    auto expression = add(multiply(literal(2), variable("x", 0, TimeIndex::VARYING_IN_TIME_ONLY)),
+    auto expression = add(multiply(literal(2),
+                                   variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY)),
                           literal(3));
     auto timeSum = nodeRegistry.create<Nodes::AllTimeSumNode>(expression);
 
