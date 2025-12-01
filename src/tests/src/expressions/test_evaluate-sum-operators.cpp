@@ -164,8 +164,20 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_over_time_span, tests_fix
 
     auto evalResult = evaluator->dispatch(sum);
 
-    // Expected result of sum evaluation is p1 + p2 + p3 = 6.
+    // Expected evaluation result : p1 + p2 + p3 = 6.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_time_series_over_time_span, tests_fixture)
+{
+    // Expression : sum(p^2), where p = {p1, p2, p3} = {1., 2., 3.}
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* sum_of_squares = allTimeSum(square(p));
+
+    auto evalResult = evaluator->dispatch(sum_of_squares);
+
+    // Expected evaluation result : p1^2 + p2^2 + p3^2 = 1 + 4 + 9 = 14
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 14.);
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_over_time_span__then_square, tests_fixture)
@@ -223,8 +235,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests
 
     auto evalResult = evaluator->dispatch(sum_of_squares);
 
-    // Expected result : 
-    // (p1^2 + p2^2, p2^2 + p3^2, p3^2 + p1^2) 
+    // Expected result :
+    // (p1^2 + p2^2, p2^2 + p3^2, p3^2 + p1^2)
     // = (1^2 + 2^2, 2^2 + 3^2, 3^2 + 1^2) = (5., 13., 10.)
     std::vector<double> expected = {5., 13., 10.};
     std::vector<double> actual = evalResult.valuesAsVector();
