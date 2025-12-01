@@ -33,6 +33,16 @@ const std::vector<Node*>& ParentNode::getOperands() const
     return operands_;
 }
 
+const std::vector<const Node*> ParentNode::getConstOperands() const
+{
+    std::vector<const Node*> constOperands;
+    for (const auto* operand: operands_)
+    {
+        constOperands.push_back(operand);
+    }
+    return constOperands;
+}
+
 size_t ParentNode::size() const
 {
     return operands_.size();

@@ -39,14 +39,14 @@ class LocationError final: public std::invalid_argument
     using std::invalid_argument::invalid_argument;
 };
 
-void checkFunctionNode(Node& node, Model& model, const std::string& exprStr)
+void checkFunctionNode(const Node& node, Model& model, const std::string& exprStr)
 {
     // dual and reduced_cost can only be used in subproblems
-    if (auto* functionNode = dynamic_cast<FunctionNode*>(&node); functionNode)
+    if (auto* functionNode = dynamic_cast<const FunctionNode*>(&node); functionNode)
     {
         if (functionNode->type() == FunctionNodeType::reduced_cost)
         {
-            const auto* varNode = dynamic_cast<VariableNode*>(functionNode->getOperands().at(0));
+            const auto* varNode = dynamic_cast<const VariableNode*>(functionNode->getOperands().at(0));
             for (const auto& variable: model.Variables())
             {
                 if (variable.Id() == varNode->value()
@@ -63,7 +63,7 @@ void checkFunctionNode(Node& node, Model& model, const std::string& exprStr)
         if (functionNode->type() == FunctionNodeType::dual)
         {
             // This node contains the constraint name
-            const auto* n = dynamic_cast<ParameterNode*>(functionNode->getOperands().at(0));
+            const auto* n = dynamic_cast<const ParameterNode*>(functionNode->getOperands().at(0));
             for (const auto& constraint: model.Constraints())
             {
                 if (constraint.Id() == n->value() && constraint.location() != Location::SUBPROBLEMS)
@@ -78,16 +78,16 @@ void checkFunctionNode(Node& node, Model& model, const std::string& exprStr)
     }
 }
 
-void checkExpression(Node* expression,
+void checkExpression(const Node* expression,
                      const Location& location,
                      Model& model,
-                     const std::string& exprStr,
-                     const std::string& errorMsgForPortFieldSum = "")
+                     const std::string& exprStr, // used for error msgs
+                     const std::string& errorMsgForPortFieldSum = "") // used for error msgs
 {
-    for (auto& node: AST(expression))
+    for (const auto& node: ASTconst(expression))
     {
         // base variable
-        if (const auto* varNode = dynamic_cast<VariableNode*>(&node); varNode)
+        if (const auto* varNode = dynamic_cast<const VariableNode*>(&node); varNode)
         {
             for (const auto& variable: model.Variables())
             {
@@ -106,7 +106,7 @@ void checkExpression(Node* expression,
         }
 
         // Portfields can contains variables, we recursively check their expressions
-        if (const auto* n = dynamic_cast<PortFieldNode*>(&node); n)
+        if (const auto* n = dynamic_cast<const PortFieldNode*>(&node); n)
         {
             PortFieldKey key(n->getPortName(), n->getFieldName());
             auto& expr = model.PortFieldDefinitions().at(key).Definition();
@@ -117,7 +117,7 @@ void checkExpression(Node* expression,
             continue;
         }
 
-        if (const auto* portFieldSumNode = dynamic_cast<PortFieldSumNode*>(&node); portFieldSumNode)
+        if (const auto* portFieldSumNode = dynamic_cast<const PortFieldSumNode*>(&node); portFieldSumNode)
         {
             // This code allows to have a clear message if one of the referenced expression contains
             // bad locations
@@ -132,7 +132,7 @@ void checkExpression(Node* expression,
             {
                 auto* component = connection.component();
                 auto* port = connection.port();
-                auto* n = component->nodeAtPortField(port->Id(), portFieldSumNode->getFieldName());
+                const auto* n = component->nodeAtPortField(port->Id(), portFieldSumNode->getFieldName());
 
                 // Convert the tree to a string, used for error messages
                 Expressions::Visitors::PrintVisitor printVisitor;
@@ -152,7 +152,7 @@ void checkExpression(Node* expression,
     }
 }
 
-void checkModel(Model& model)
+void checkModel(Model& model) // TODO use const
 {
     for (const auto& constraint: model.Constraints())
     {
@@ -180,7 +180,7 @@ void checkModel(Model& model)
     }
 }
 
-void checkLocations(Modeler::Data& data)
+void checkLocations(Modeler::Data& data) // TODO use const
 {
     for (auto& lib: data.libraries)
     {
