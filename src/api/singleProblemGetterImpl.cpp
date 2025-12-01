@@ -103,11 +103,11 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
     std::vector<WeeklyProblemId> ret;
 
     const auto& p = study_->parameters;
-    for (unsigned int year = 0; year < p.nbYears; year++)
+    for (unsigned int year = 0; year < p.nbYears; ++year)
     {
         if (p.yearsFilter[year])
         {
-            for (unsigned week = 0; week < p.simulationDays.numberOfWeeks(); week++)
+            for (unsigned week = 0; week < p.simulationDays.numberOfWeeks(); ++week)
             {
                 ret.emplace_back(year, week);
             }
