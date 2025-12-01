@@ -212,8 +212,76 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(in_memory_check_get_problem_ids)
 
-BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
+BOOST_AUTO_TEST_CASE(three_years_two_weeks)
 {
-    auto study = buildStudy(false, true);
+    StudyBuilder builder;
+    builder.simulationBetweenDays(0, 14);
+
+    builder.setNumberMCyears(3);
+
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+
+    const Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    auto problem_ids = getter.getProblemIds();
+    BOOST_REQUIRE_EQUAL(problem_ids.size(), 3 * 2); // (3 years) x (2 weeks)
+
+    // First problem is (year, week) = (0, 0)
+    BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
+    BOOST_CHECK_EQUAL(problem_ids[0].week, 0);
+
+    // Last problem is (year, week) = (2, 1)
+    BOOST_CHECK_EQUAL(problem_ids[5].year, 2);
+    BOOST_CHECK_EQUAL(problem_ids[5].week, 1);
+}
+
+BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year)
+{
+    StudyBuilder builder;
+    builder.simulationBetweenDays(0, 14);
+
+    builder.setNumberMCyears(3);
+
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+    // Disable year 1 in the playlist
+    study->parameters.yearsFilter[1] = false;
+
+    const Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    auto problem_ids = getter.getProblemIds();
+    BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 2); // (2 years) x (2 weeks), one year is disabled
+
+    // First problem is (year, week) = (0, 0)
+    BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
+    BOOST_CHECK_EQUAL(problem_ids[0].week, 0);
+
+    // Last problem is (year, week) = (2, 1)
+    BOOST_CHECK_EQUAL(problem_ids[3].year, 2);
+    BOOST_CHECK_EQUAL(problem_ids[3].week, 1);
+}
+
+BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year_partial_year)
+{
+    StudyBuilder builder;
+    builder.simulationBetweenDays(7, 14);
+
+    builder.setNumberMCyears(3);
+
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+    // Disable year 1 in the playlist
+    study->parameters.yearsFilter[1] = false;
+
+    const Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    auto problem_ids = getter.getProblemIds();
+    BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 1); // (2 years) x (1 week), one year is disabled
+
+    // First problem is (year, week) = (0, 0)
+    BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
+    BOOST_CHECK_EQUAL(problem_ids[0].week, 0);
+
+    // Last problem is (year, week) = (2, 1)
+    BOOST_CHECK_EQUAL(problem_ids[1].year, 2);
+    BOOST_CHECK_EQUAL(problem_ids[1].week, 0);
 }
 BOOST_AUTO_TEST_SUITE_END()
