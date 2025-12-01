@@ -212,6 +212,25 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
     BOOST_CHECK(actual == expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests_fixture)
+{
+    // Expression : sum(t .. t+1, p^2), where p = {p1, p2, p3} = {1., 2., 3.}
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+
+    Node* from = literal(0);
+    Node* to = literal(1);
+    Node* sum_of_squares = timeSum(from, to, square(p));
+
+    auto evalResult = evaluator->dispatch(sum_of_squares);
+
+    // Expected result : 
+    // (p1^2 + p2^2, p2^2 + p3^2, p3^2 + p1^2) 
+    // = (1^2 + 2^2, 2^2 + 3^2, 3^2 + 1^2) = (5., 13., 10.)
+    std::vector<double> expected = {5., 13., 10.};
+    std::vector<double> actual = evalResult.valuesAsVector();
+    BOOST_CHECK(actual == expected);
+}
+
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_a_literal_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = 7
