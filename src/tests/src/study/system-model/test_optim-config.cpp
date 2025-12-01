@@ -267,13 +267,26 @@ BOOST_AUTO_TEST_CASE(locationToString)
     BOOST_CHECK_EQUAL(LocationToStr(Location::SUBPROBLEMS), "subproblems");
 }
 
-BOOST_AUTO_TEST_CASE(locationsCompatible)
+BOOST_AUTO_TEST_CASE(locationsCompatibleForFillers)
 {
     BOOST_CHECK(AreLocationsCompatibleForFillers(Location::MASTER, Location::MASTER));
     BOOST_CHECK(AreLocationsCompatibleForFillers(Location::SUBPROBLEMS, Location::SUBPROBLEMS));
+    BOOST_CHECK(!AreLocationsCompatibleForFillers(Location::SUBPROBLEMS, Location::MASTER));
+    BOOST_CHECK(!AreLocationsCompatibleForFillers(Location::MASTER, Location::SUBPROBLEMS));
     BOOST_CHECK(AreLocationsCompatibleForFillers(Location::MASTER_AND_SUBPROBLEMS, Location::MASTER));
     BOOST_CHECK(AreLocationsCompatibleForFillers(Location::MASTER_AND_SUBPROBLEMS, Location::SUBPROBLEMS));
-    BOOST_CHECK(!AreLocationsCompatibleForFillers(Location::SUBPROBLEMS, Location::MASTER));
+    BOOST_CHECK(AreLocationsCompatibleForFillers(Location::MASTER_AND_SUBPROBLEMS, Location::MASTER_AND_SUBPROBLEMS));
+}
+
+BOOST_AUTO_TEST_CASE(locationsCompatibleForExpressions)
+{
+    BOOST_CHECK(AreLocationsCompatibleForExpressions(Location::MASTER, Location::MASTER));
+    BOOST_CHECK(AreLocationsCompatibleForExpressions(Location::SUBPROBLEMS, Location::SUBPROBLEMS));
+    BOOST_CHECK(AreLocationsCompatibleForExpressions(Location::MASTER_AND_SUBPROBLEMS, Location::MASTER_AND_SUBPROBLEMS));
+    BOOST_CHECK(!AreLocationsCompatibleForExpressions(Location::MASTER, Location::MASTER_AND_SUBPROBLEMS));
+    BOOST_CHECK(!AreLocationsCompatibleForExpressions(Location::SUBPROBLEMS, Location::MASTER_AND_SUBPROBLEMS));
+    BOOST_CHECK(!AreLocationsCompatibleForExpressions(Location::SUBPROBLEMS, Location::MASTER));
+    BOOST_CHECK(!AreLocationsCompatibleForExpressions(Location::MASTER, Location::SUBPROBLEMS));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
