@@ -51,6 +51,7 @@ struct build_AST_fixture
     Node* parameter(const std::string& name, const VariabilityType variability);
     Node* allTimeSum(Node* node);
     Node* timeSum(Node* from, Node* to, Node* p);
+    Node* square(Node* node);
 
 private:
     Registry<Nodes::Node> registry_;
@@ -74,6 +75,12 @@ Node* build_AST_fixture::parameter(const std::string& name, const VariabilityTyp
 Node* build_AST_fixture::timeSum(Node* from, Node* to, Node* p)
 {
     return registry_.create<TimeSumNode>(from, to, p);
+}
+
+Node* build_AST_fixture::square(Node* node)
+{
+    Node* exponant = literal(2);
+    return registry_.create<FunctionNode>(FunctionNodeType::pow, node, exponant);
 }
 
 // =============================
@@ -137,6 +144,18 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
 }
 
+BOOST_FIXTURE_TEST_CASE(sum_on_a_literal_over_time_span__then_square, tests_fixture)
+{
+    // Expression : sum(1.)^2
+    Node* one = literal(1.);
+    Node* sumOfOnes = allTimeSum(one);
+    Node* squareSum = square(sumOfOnes);
+
+    auto evalResult = evaluator->dispatch(squareSum);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 9.);
+}
+
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
 {
     // Expression : sum(p), where p = {p1, p2, p3} = {1., 2., 3.}
@@ -149,7 +168,21 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
 }
 
-BOOST_FIXTURE_TEST_CASE(sum_a_parameter_on_interval_t__t_plus_1, tests_fixture)
+// ==================================================================
+// CAUTION :
+// Suppose p is a parameter (either a literal, a constant parameter or a time series).
+// In a yaml file, if sum operator is used with operator .., it's a time sum.
+// It's always used with a time index 't' implicitly.
+// For example : sum(t .. t+1, p).
+// As a consequence,
+// - the following expression : sum(0 .. 1, p) is rejected.
+// - sum(t .. t+1, p) means that for each time step t, we sum p over the interval [t, t+1].
+// - sum(t .. t+1, p) current evaluation result has the same dimension as p.
+//   Please see following tests.
+// In code, time sum operator is represented by type TimeSumNode.
+// ==================================================================
+
+BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = {p1, p2, p3} = {1., 2., 3.}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
@@ -166,7 +199,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_on_interval_t__t_plus_1, tests_fixture)
     BOOST_CHECK(actual == expected);
 }
 
-BOOST_FIXTURE_TEST_CASE(sum_a_literal_on_interval_t__t_plus_1, tests_fixture)
+BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_a_literal_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = 7
     Node* seven = literal(7);
