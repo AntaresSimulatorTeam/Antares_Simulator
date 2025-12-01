@@ -91,6 +91,7 @@ void LegacyFiller::CreateVariable(unsigned idxVar) const
                                            isIntegerVariable,
                                            GetVariableName(idxVar));
     linearProblem_.setObjectiveCoefficient(var, problemeAResoudre_->CoutLineaire[idxVar]);
+    // linearProblem_.setObjectiveOffset(problemeAResoudre_->)
 }
 
 void LegacyFiller::CopyVariables() const

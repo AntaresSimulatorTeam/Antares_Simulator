@@ -264,6 +264,20 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
     return solution_.get();
 }
 
+OrtoolsMipSolution* OrtoolsLinearProblem::solution(bool verboseSolver)
+{
+    if (!solution_)
+    {
+        solve(verboseSolver);
+    }
+    return solution_.get();
+}
+
+double OrtoolsLinearProblem::objectiveValue() const
+{
+    return objective_->Value() + getOffsetCallable_();
+}
+
 double OrtoolsLinearProblem::infinity() const
 {
     return MPSolver::infinity();
