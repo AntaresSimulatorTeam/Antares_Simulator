@@ -34,11 +34,12 @@ class SingleProblemGetter;
 
 namespace Antares::Solver
 {
-class SingleProblemGetter
+class SingleProblemGetter final
 {
 public:
     explicit SingleProblemGetter(const std::filesystem::path& studyPath);
     ~SingleProblemGetter();
+    std::vector<WeeklyProblemId> getProblemIds() const;
     ConstantDataFromAntares getConstantData();
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
 

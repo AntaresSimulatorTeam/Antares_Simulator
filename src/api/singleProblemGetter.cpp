@@ -44,4 +44,8 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     return impl_->getWeeklyData(id);
 }
 
+std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
+{
+    return impl_->getProblemIds();
+}
 } // namespace Antares::Solver

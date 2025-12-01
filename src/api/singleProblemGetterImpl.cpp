@@ -98,6 +98,11 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
     initializeRandomNumbers();
 }
 
+std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
+{
+    return {};
+}
+
 void SingleProblemGetter::initializeRandomNumbers()
 {
     int nbYears = 0;
