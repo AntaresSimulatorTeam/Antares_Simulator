@@ -66,4 +66,40 @@ BOOST_FIXTURE_TEST_CASE(variable_error, Fixture)
                             "location: master, expression location: subproblems)"));
 }
 
+BOOST_FIXTURE_TEST_CASE(reduced_cost, Fixture)
+{
+    Node* root = registry.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                               registry.create<VariableNode>("var", 0));
+
+    std::vector<Variable> variables;
+    variables.push_back({"var", {}, {}, ValueType::FLOAT, {}, {}});
+    variables[0].setLocation(Location::MASTER_AND_SUBPROBLEMS);
+
+    auto model = modelBuilder.withVariables(std::move(variables)).withId("base model").build();
+
+    BOOST_CHECK_EXCEPTION(
+      checkExpression(root, Location::SUBPROBLEMS, model, "reduced_cost(var)"),
+      LocationError,
+      checkMessage("Model 'base model': In expression 'reduced_cost(var)': Error for variable "
+                   "'var': reduced_cost can only be used on variables located in subproblems"));
+}
+
+BOOST_FIXTURE_TEST_CASE(dual, Fixture)
+{
+    Node* root = registry.create<FunctionNode>(FunctionNodeType::dual,
+                                               registry.create<ParameterNode>("constraint"),
+                                               registry.create<LiteralNode>(0));
+
+    std::vector<Constraint> constraints;
+    constraints.push_back({"constraint", {}});
+    constraints[0].setLocation(Location::MASTER_AND_SUBPROBLEMS);
+    auto model = modelBuilder.withConstraints(std::move(constraints)).withId("base model").build();
+
+    BOOST_CHECK_EXCEPTION(
+      checkExpression(root, Location::SUBPROBLEMS, model, "dual(constraint)"),
+      LocationError,
+      checkMessage("Model 'base model': In expression 'dual(constraint)': Error for constraint "
+                   "'constraint': dual can only be used on constraints located in subproblems"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

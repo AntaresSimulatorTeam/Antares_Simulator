@@ -105,7 +105,7 @@ void checkFunctionNode(const Node& node, Model& model, const std::string& exprSt
                 {
                     throw LocationError(
                       "Model '" + model.Id() + "': In expression '" + exprStr
-                      + "': Error for constraint '" + n->name()
+                      + "': Error for constraint '" + n->value()
                       + "': dual can only be used on constraints located in subproblems");
                 }
             }
