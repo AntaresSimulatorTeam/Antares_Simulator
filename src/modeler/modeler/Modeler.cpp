@@ -112,7 +112,6 @@ void Modeler::run() const
         parameters = loader_.loadParameters();
         logs.info() << "Parameters loaded";
         data = loader_.loadAll();
-        LoadFiles::checkLocations(data);
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
