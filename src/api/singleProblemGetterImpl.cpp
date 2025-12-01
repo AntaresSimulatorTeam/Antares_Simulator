@@ -25,6 +25,7 @@
 #include <string>
 
 #include "antares/benchmarking/DurationCollector.h"
+#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -43,10 +44,23 @@ constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
 const std::string kName = "my-name";         // Arbitrary
 Antares::Solver::NullResultWriter gResultWriter;
 Benchmarking::DurationCollector gDurationCollector;
+
+std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& studyPath)
+{
+    Antares::FileTreeStudyLoader loader(studyPath);
+    auto study = loader.load();
+    return study;
+}
 } // namespace
 
 namespace Antares::Solver::Implementation
 {
+
+SingleProblemGetter::SingleProblemGetter(const std::filesystem::path& studyPath):
+    SingleProblemGetter(loadStudy(studyPath))
+{
+}
+
 SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study):
     study_(std::move(study))
 {

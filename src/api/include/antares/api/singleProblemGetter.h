@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <memory>
 
 #include "antares/solver/lps/LpsFromAntares.h"
@@ -36,7 +37,7 @@ namespace Antares::Solver
 class SingleProblemGetter
 {
 public:
-    explicit SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study);
+    explicit SingleProblemGetter(const std::filesystem::path& studyPath);
     ~SingleProblemGetter();
     ConstantDataFromAntares getConstantData();
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);

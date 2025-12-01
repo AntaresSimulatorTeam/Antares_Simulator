@@ -27,10 +27,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/antares/constants.h"
-#include "antares/api/singleProblemGetter.h"
 #include "antares/study/study.h"
 
 #include "in-memory-study.h"
+#include "singleProblemGetterImpl.h"
 
 constexpr double EPSILON = 1.e-6;
 
@@ -97,7 +97,7 @@ std::unique_ptr<Antares::Data::Study> buildStudy(bool thermal, bool hydro)
 BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 {
     auto study = buildStudy(true, false);
-    Antares::Solver::SingleProblemGetter getter(std::move(study));
+    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
     const Antares::Solver::ConstantDataFromAntares constantData = getter.getConstantData();
     // 504 = 3*168, 3 sets of variables
     // unsupplied energy
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
 {
     auto study = buildStudy(false, true);
-    Antares::Solver::SingleProblemGetter getter(std::move(study));
+    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
     const Antares::Solver::ConstantDataFromAntares constantData = getter.getConstantData();
     // Total 1008
     // 168 unsupplied energy

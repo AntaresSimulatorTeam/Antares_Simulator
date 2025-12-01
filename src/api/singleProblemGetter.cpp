@@ -25,8 +25,8 @@
 
 namespace Antares::Solver
 {
-SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study):
-    impl_(std::make_unique<Implementation::SingleProblemGetter>(std::move(study)))
+SingleProblemGetter::SingleProblemGetter(const std::filesystem::path& studyPath):
+    impl_(std::make_unique<Implementation::SingleProblemGetter>(studyPath))
 {
 }
 

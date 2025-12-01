@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "antares/api/singleProblemGetter.h"
-#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 
 constexpr int kMaxDisplay = 10'000;
 
@@ -46,10 +45,7 @@ int main(int argc, char** argv)
     const unsigned int year = toInt(argv[2]);
     const unsigned int week = toInt(argv[3]);
 
-    Antares::FileTreeStudyLoader loader(argv[1]);
-    auto study = loader.load();
-
-    Antares::Solver::SingleProblemGetter getter(std::move(study));
+    Antares::Solver::SingleProblemGetter getter(argv[1]);
     auto constant = getter.getConstantData();
     auto weekly = getter.getWeeklyData({year, week});
 
