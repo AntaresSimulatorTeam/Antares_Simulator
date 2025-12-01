@@ -25,7 +25,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/modeler/data.h>
-#include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include <antares/solver/modeler/loadFiles/checkLocation.h>
 
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
@@ -38,119 +38,6 @@ class LocationError final: public std::invalid_argument
 {
     using std::invalid_argument::invalid_argument;
 };
-
-void checkFunctionNode(const Node& node, Model& model, const std::string& exprStr)
-{
-    // dual and reduced_cost can only be used in subproblems
-    if (auto* functionNode = dynamic_cast<const FunctionNode*>(&node); functionNode)
-    {
-        if (functionNode->type() == FunctionNodeType::reduced_cost)
-        {
-            const auto* varNode = dynamic_cast<const VariableNode*>(functionNode->getOperands().at(0));
-            for (const auto& variable: model.Variables())
-            {
-                if (variable.Id() == varNode->value()
-                    && variable.location() != Location::SUBPROBLEMS)
-                {
-                    throw LocationError(
-                      "Model '" + model.Id() + "': In expression '" + exprStr
-                      + "': Error for variable '" + varNode->value()
-                      + "': reduced_cost can only be used on variables located in subproblems");
-                }
-            }
-        }
-
-        if (functionNode->type() == FunctionNodeType::dual)
-        {
-            // This node contains the constraint name
-            const auto* n = dynamic_cast<const ParameterNode*>(functionNode->getOperands().at(0));
-            for (const auto& constraint: model.Constraints())
-            {
-                if (constraint.Id() == n->value() && constraint.location() != Location::SUBPROBLEMS)
-                {
-                    throw LocationError(
-                      "Model '" + model.Id() + "': In expression '" + exprStr
-                      + "': Error for constraint '" + n->name()
-                      + "': dual can only be used on constraints located in subproblems");
-                }
-            }
-        }
-    }
-}
-
-void checkExpression(const Node* expression,
-                     const Location& location,
-                     Model& model,
-                     const std::string& exprStr, // used for error msgs
-                     const std::string& errorMsgForPortFieldSum = "") // used for error msgs
-{
-    for (const auto& node: ASTconst(expression))
-    {
-        // base variable
-        if (const auto* varNode = dynamic_cast<const VariableNode*>(&node); varNode)
-        {
-            for (const auto& variable: model.Variables())
-            {
-                if (variable.Id() == varNode->value()
-                    && !AreLocationsCompatible(variable.location(), location))
-                {
-                    throw LocationError(
-                      errorMsgForPortFieldSum + "Model '" + model.Id() + ": In expression '"
-                      + exprStr + "': Error for variable '" + varNode->value()
-                      + "': Location doesn't match the expression location (variable location: "
-                      + LocationToStr(variable.location())
-                      + ", expression location: " + LocationToStr(location) + ")");
-                }
-            }
-            continue;
-        }
-
-        // Portfields can contains variables, we recursively check their expressions
-        if (const auto* n = dynamic_cast<const PortFieldNode*>(&node); n)
-        {
-            PortFieldKey key(n->getPortName(), n->getFieldName());
-            auto& expr = model.PortFieldDefinitions().at(key).Definition();
-            checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
-                            location,
-                            model,
-                            expr.Value());
-            continue;
-        }
-
-        if (const auto* portFieldSumNode = dynamic_cast<const PortFieldSumNode*>(&node); portFieldSumNode)
-        {
-            // This code allows to have a clear message if one of the referenced expression contains
-            // bad locations
-            std::string msgInCaseOfError = "In model '" + model.Id() + "': In expression '"
-                                           + exprStr + "': this 'sum_connections("
-                                           + portFieldSumNode->getPortName() + "."
-                                           + portFieldSumNode->getFieldName()
-                                           + ")' is referencing a variable in a different "
-                                             "location: ";
-
-            for (const auto& connection: model.ComponentConnections())
-            {
-                auto* component = connection.component();
-                auto* port = connection.port();
-                const auto* n = component->nodeAtPortField(port->Id(), portFieldSumNode->getFieldName());
-
-                // Convert the tree to a string, used for error messages
-                Expressions::Visitors::PrintVisitor printVisitor;
-                std::string nodeExpression = printVisitor.dispatch(n);
-
-                checkExpression(n,
-                                location,
-                                *connection.component()->getModel(),
-                                nodeExpression,
-                                msgInCaseOfError);
-            }
-            continue;
-        }
-
-        // handle dual and reduced_cosr
-        checkFunctionNode(node, model, exprStr);
-    }
-}
 
 void checkModel(Model& model) // TODO use const
 {
@@ -191,4 +78,119 @@ void checkLocations(Modeler::Data& data) // TODO use const
     }
 }
 
+void checkFunctionNode(const Node& node, Model& model, const std::string& exprStr)
+{
+    // dual and reduced_cost can only be used in subproblems
+    if (auto* functionNode = dynamic_cast<const FunctionNode*>(&node); functionNode)
+    {
+        if (functionNode->type() == FunctionNodeType::reduced_cost)
+        {
+            const auto* varNode = dynamic_cast<const VariableNode*>(
+              functionNode->getOperands().at(0));
+            for (const auto& variable: model.Variables())
+            {
+                if (variable.Id() == varNode->value()
+                    && variable.location() != Location::SUBPROBLEMS)
+                {
+                    throw LocationError(
+                      "Model '" + model.Id() + "': In expression '" + exprStr
+                      + "': Error for variable '" + varNode->value()
+                      + "': reduced_cost can only be used on variables located in subproblems");
+                }
+            }
+        }
+
+        if (functionNode->type() == FunctionNodeType::dual)
+        {
+            // This node contains the constraint name
+            const auto* n = dynamic_cast<const ParameterNode*>(functionNode->getOperands().at(0));
+            for (const auto& constraint: model.Constraints())
+            {
+                if (constraint.Id() == n->value() && constraint.location() != Location::SUBPROBLEMS)
+                {
+                    throw LocationError(
+                      "Model '" + model.Id() + "': In expression '" + exprStr
+                      + "': Error for constraint '" + n->name()
+                      + "': dual can only be used on constraints located in subproblems");
+                }
+            }
+        }
+    }
+}
+
+void checkExpression(const Node* expression,
+                     const Location& location,
+                     Model& model,
+                     const std::string& exprStr,                 // used for error msgs
+                     const std::string& errorMsgForPortFieldSum) // used for error msgs
+{
+    for (const auto& node: ASTconst(expression))
+    {
+        // base variable
+        if (const auto* varNode = dynamic_cast<const VariableNode*>(&node); varNode)
+        {
+            for (const auto& variable: model.Variables())
+            {
+                if (variable.Id() == varNode->value()
+                    && !AreLocationsCompatible(variable.location(), location))
+                {
+                    throw LocationError(
+                      errorMsgForPortFieldSum + "Model '" + model.Id() + ": In expression '"
+                      + exprStr + "': Error for variable '" + varNode->value()
+                      + "': Location doesn't match the expression location (variable location: "
+                      + LocationToStr(variable.location())
+                      + ", expression location: " + LocationToStr(location) + ")");
+                }
+            }
+            continue;
+        }
+
+        // Portfields can contains variables, we recursively check their expressions
+        if (const auto* n = dynamic_cast<const PortFieldNode*>(&node); n)
+        {
+            PortFieldKey key(n->getPortName(), n->getFieldName());
+            auto& expr = model.PortFieldDefinitions().at(key).Definition();
+            checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
+                            location,
+                            model,
+                            expr.Value());
+            continue;
+        }
+
+        if (const auto* portFieldSumNode = dynamic_cast<const PortFieldSumNode*>(&node);
+            portFieldSumNode)
+        {
+            // This code allows to have a clear message if one of the referenced expression contains
+            // bad locations
+            std::string msgInCaseOfError = "In model '" + model.Id() + "': In expression '"
+                                           + exprStr + "': this 'sum_connections("
+                                           + portFieldSumNode->getPortName() + "."
+                                           + portFieldSumNode->getFieldName()
+                                           + ")' is referencing a variable in a different "
+                                             "location: ";
+
+            for (const auto& connection: model.ComponentConnections())
+            {
+                auto* component = connection.component();
+                auto* port = connection.port();
+                const auto* n = component->nodeAtPortField(port->Id(),
+                                                           portFieldSumNode->getFieldName());
+
+                // Convert the tree to a string, used for error messages
+                Expressions::Visitors::PrintVisitor printVisitor;
+                std::string nodeExpression = printVisitor.dispatch(n);
+
+                checkExpression(n,
+                                location,
+                                *connection.component()->getModel(),
+                                nodeExpression,
+                                msgInCaseOfError);
+            }
+            continue;
+        }
+
+        // handle dual and reduced_cosr
+        checkFunctionNode(node, model, exprStr);
+    }
+}
 } // namespace Antares::Solver::LoadFiles

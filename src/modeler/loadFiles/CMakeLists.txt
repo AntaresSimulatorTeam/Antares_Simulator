@@ -14,6 +14,7 @@ set(SOURCES
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
         include/antares/solver/modeler/loadFiles/Fileloader.h
+        include/antares/solver/modeler/loadFiles/checkLocation.h
 )
 
 # Create the library
