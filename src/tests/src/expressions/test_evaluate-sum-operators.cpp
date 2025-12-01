@@ -189,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_over_time_span__then_squa
 
     auto evalResult = evaluator->dispatch(squareSum);
 
-    // Expected result of sum evaluation is (p1 + p2 + p3)^2 = 36.
+    // Expected evaluation result : (p1 + p2 + p3)^2 = 36.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 36.);
 }
 
@@ -218,7 +218,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
 
     auto evalResult = evaluator->dispatch(sum);
 
-    // Expected result : (p1 + p2, p2 + p3, p3 + p1) = (3., 5., 4.).
+    // Expected evaluation result : (p1 + p2, p2 + p3, p3 + p1) = (3., 5., 4.).
     std::vector<double> expected = {3., 5., 4.};
     std::vector<double> actual = evalResult.valuesAsVector();
     BOOST_CHECK(actual == expected);
@@ -235,8 +235,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests
 
     auto evalResult = evaluator->dispatch(sum_of_squares);
 
-    // Expected result :
-    // (p1^2 + p2^2, p2^2 + p3^2, p3^2 + p1^2)
+    // Expected evaluation result : (p1^2 + p2^2, p2^2 + p3^2, p3^2 + p1^2)
     // = (1^2 + 2^2, 2^2 + 3^2, 3^2 + 1^2) = (5., 13., 10.)
     std::vector<double> expected = {5., 13., 10.};
     std::vector<double> actual = evalResult.valuesAsVector();
@@ -254,8 +253,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_param_as_TS_on_interval_t__t_plus_1__then_square, 
 
     auto evalResult = evaluator->dispatch(squared_sum);
 
-    // Expected result :
-    // ((p1 + p2)^2, (p2 + p3)^2, (p3 + p1)^2)
+    // Expected evaluation result : ((p1 + p2)^2, (p2 + p3)^2, (p3 + p1)^2)
     // = (1 + 2)^2, (2 + 3)2, (3 + 1)^2) = (9., 25., 16.)
     std::vector<double> expected = {9., 25., 16.};
     std::vector<double> actual = evalResult.valuesAsVector();
@@ -273,7 +271,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_literal_on_interval_t__t_plus_1, test
 
     auto evalResult = evaluator->dispatch(sum);
 
-    // Expected result : 2p = 14
+    // Expected evaluation result : p + p = 14
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 14.);
 }
 
@@ -288,7 +286,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_param_as_literal_on_interval_t__t_plus_1__then_squ
 
     auto evalResult = evaluator->dispatch(squared_sum);
 
-    // Expected result : sum(t .. t+1, p)^2 = (2p)^2 = 14^2 = 196
+    // Expected evaluation result : sum(t .. t+1, p)^2 = (p + p)^2 = 14^2 = 196
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 196.);
 }
 
@@ -303,7 +301,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_literal_on_interval_t__t_plus_1, 
 
     auto evalResult = evaluator->dispatch(sum_of_squares);
 
-    // Expected result : sum(t .. t+1, p^2) = 2p^2 = 2 x 49 = 98
+    // Expected evaluation result : sum(t .. t+1, p^2) = 2p^2 = 2 x 49 = 98
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 98.);
 }
 
@@ -318,8 +316,36 @@ BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_
 
     auto evalResult = evaluator->dispatch(sum);
 
-    // Expected result : 2p = 10.
-    double expected = 10;
-    double actual = evalResult.valueAsDouble();
-    BOOST_CHECK_EQUAL(actual, expected);
+    // Expected evaluation result : p + p = 10.
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 10);
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_a_squared_constant_param_on_interval_t__t_plus_1, tests_fixture)
+{
+    // Expression : sum(t .. t+1, p^2), where p = 5
+    Node* five = parameter("five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    Node* from = literal(0);
+    Node* to = literal(1);
+    Node* sum_of_squares = timeSum(from, to, square(five));
+
+    auto evalResult = evaluator->dispatch(sum_of_squares);
+
+    // Expected evaluation result : p^2 + p^2 = 25 + 25 = 50.
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 50);
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_const_param_on_interval_t__t_plus_1__then_square, tests_fixture)
+{
+    // Expression : sum(t .. t+1, p)^2, where p = 5
+    Node* five = parameter("five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    Node* from = literal(0);
+    Node* to = literal(1);
+    Node* squared_sum = square(timeSum(from, to, five));
+
+    auto evalResult = evaluator->dispatch(squared_sum);
+
+    // Expected evaluation result : (p + p)^2 = 10^2 = 100.
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 100);
 }
