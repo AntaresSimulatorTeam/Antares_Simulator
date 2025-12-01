@@ -42,6 +42,12 @@ class ObjectiveOffsetHandler
 public:
     virtual void setOffset(double offset) = 0;
     virtual double getOffset() const = 0;
+
+    virtual double getHandledOffset() const
+    {
+        return 0.0;
+    }
+
     virtual ~ObjectiveOffsetHandler() = default;
 };
 

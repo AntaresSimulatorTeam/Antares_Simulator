@@ -56,6 +56,11 @@ public:
         return offset_;
     }
 
+    double getHandledOffset() const override
+    {
+        return offset_;
+    }
+
     ~SiriusObjectiveOffsetHandler() override = default;
 
 private:
@@ -302,7 +307,7 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solution(bool verboseSolver)
 
 double OrtoolsLinearProblem::objectiveValue() const
 {
-    return objective_->Value() + getOffsetCallable_();
+    return objective_->Value() + offsetHandler_->getHandledOffset();
 }
 
 double OrtoolsLinearProblem::infinity() const
