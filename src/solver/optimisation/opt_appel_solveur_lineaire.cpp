@@ -248,7 +248,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                   : TimeConversionMode::DailyBlocks;
         FillSimulationTable(*simulationTable,
                             ortoolsProblem,
-                            ::getObjectiveValue(solver),
+                            solver->Objective().Value(),
                             *modelerData,
                             optimEntityContainer,
                             fillCtx,
@@ -259,7 +259,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     return {.timeMeasure = timeMeasure,
             .mps_writer_factory = mps_writer_factory,
-            .objectiveValue = getObjectiveValue(solver)};
+            .objectiveValue = solver->Objective().Value()};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
