@@ -93,6 +93,7 @@ std::unique_ptr<Antares::Data::Study> buildStudy(bool thermal, bool hydro)
     area->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
     return std::move(builder.study);
 }
+BOOST_AUTO_TEST_SUITE(in_memory_check_problem_contents)
 
 BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 {
@@ -207,3 +208,12 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                       3048.5130614352684,
                       EPSILON); // random initial level
 }
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(in_memory_check_get_problem_ids)
+
+BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
+{
+    auto study = buildStudy(false, true);
+}
+BOOST_AUTO_TEST_SUITE_END()
