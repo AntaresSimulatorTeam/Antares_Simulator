@@ -74,12 +74,12 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
 }
 
 void OptimEntityContainer::registerConstraint(const Component& component,
-                                              const TimeIndex& timeIndex)
+                                              const VariabilityType& variability)
 {
     unsigned gLobalIndex = constraintGLobalIndex();
     auto& optimComponent = getOptimComponent(component.Index());
     optimComponent.modelConstraintsGlobalIndices.push_back(gLobalIndex);
-    optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);
+    optimComponent.modelConstraintsVariability.push_back(variability);
     addStartLine();
 }
 } // namespace Antares::Optimisation

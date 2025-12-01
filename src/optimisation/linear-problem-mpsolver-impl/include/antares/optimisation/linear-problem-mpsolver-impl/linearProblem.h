@@ -37,6 +37,14 @@ class MPObjective;
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
+class ObjectiveOffsetHandler
+{
+public:
+    virtual void setOffset(double offset) = 0;
+    virtual double getOffset() const = 0;
+    virtual ~ObjectiveOffsetHandler() = default;
+};
+
 class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem
 {
 public:
@@ -134,9 +142,7 @@ private:
     std::unique_ptr<OrtoolsMipSolution> solution_;
     bool isLP_{true};
 
-    // Callables for objective offset management
-    std::function<void(double)> setOffsetCallable_;
-    std::function<double()> getOffsetCallable_;
+    std::unique_ptr<ObjectiveOffsetHandler> offsetHandler_;
 };
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

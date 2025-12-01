@@ -132,13 +132,11 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 {
     const auto variableStart = optimEntityContainer_.getVariableStartColumn(component_,
                                                                             node->Index());
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (isTimeConstant(node->variability()))
     {
         return Optimization::TimeDependentLinearExpression({{variableStart, 1.}}, 0.);
     }
-    if (node->timeIndex() == TimeIndex::VARYING_IN_TIME_ONLY
-        || node->timeIndex()
-             == TimeIndex::VARYING_IN_TIME_AND_SCENARIO) /* scenario not
+    if (isTimeDependent(node->variability())) /* scenario not
                                                                               handled !*/
     {
         Optimization::TimeDependentLinearExpression out(nbtimeSteps_);
@@ -159,7 +157,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->timeIndex() == TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+    if (node->variability() == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
         throw Error::InvalidArgumentError(
@@ -285,14 +283,14 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     return Optimization::TimeDependentLinearExpression(std::move(ret));
 }
 
-Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleReducedCost(
+Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleReducedCost(
   const Nodes::FunctionNode*)
 {
     throw Error::InvalidArgumentError(
       "A linear expression can't contain extra output operator reduced_cost.");
 }
 
-Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleDual(
+Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleDual(
   const Nodes::FunctionNode*)
 {
     throw Error::InvalidArgumentError(
@@ -306,7 +304,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleP
     auto exponentExpr = dispatch(node->getOperands().at(1));
     if (exponentExpr.size() != 1)
     {
-        throw Antares::Error::InvalidArgumentError("exponent must be constant");
+        throw Error::InvalidArgumentError("exponent must be constant");
     }
     const auto& exponent = exponentExpr[0];
     for (auto& s: ret)
@@ -316,7 +314,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::handleP
     return ret;
 }
 
-Antares::Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
+Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::FunctionNode* node)
 {
     switch (node->type())

@@ -25,7 +25,7 @@
 
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/modeler-optimisation-container/VariabilityType.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
 BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
 {
     // var1 <= 3
-    auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
+    auto var_node = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodeRegistry.create<LessThanOrEqualNode>(var_node, three);
 
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
 BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
 {
     // 5 - var1 <= 3
-    auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
+    auto var_node = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodeRegistry.create<LessThanOrEqualNode>(
       nodeRegistry.create<SubtractionNode>(literal(5), var_node),
@@ -147,8 +147,8 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
       {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
       {{"var1",
         ValueType::BOOL,
-        parameter("bounds", TimeIndex::VARYING_IN_TIME_ONLY),
-        parameter("bounds", TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", VariabilityType::VARYING_IN_TIME_ONLY),
+        parameter("bounds", VariabilityType::VARYING_IN_TIME_ONLY),
         true,
         false}},
       {{"ct1", ct_node}});
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
 
 BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
 {
-    auto var_node = variable("var1", 0, TimeIndex::VARYING_IN_TIME_ONLY);
+    auto var_node = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
     auto three = literal(3);
     auto ct_node = nodeRegistry.create<LessThanOrEqualNode>(
       nodeRegistry.create<SubtractionNode>(literal(5), var_node),
@@ -200,8 +200,8 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
       {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
       {{"var1",
         ValueType::BOOL,
-        parameter("bounds", TimeIndex::VARYING_IN_TIME_ONLY),
-        parameter("bounds", TimeIndex::VARYING_IN_TIME_ONLY),
+        parameter("bounds", VariabilityType::VARYING_IN_TIME_ONLY),
+        parameter("bounds", VariabilityType::VARYING_IN_TIME_ONLY),
         true,
         false}},
       {{"ct1", ct_node}});

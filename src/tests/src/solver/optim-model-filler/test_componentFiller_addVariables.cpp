@@ -25,16 +25,12 @@
 
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/modeler-optimisation-container/TimeIndex.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
-#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
-#include "antares/study/system-model/parameter.h"
-#include "antares/study/system-model/timeAndScenarioType.h"
 
 #include "inmemory-modeler.h"
 #include "unit_test_utils.h"

@@ -48,6 +48,7 @@ target_link_libraries(solver_api
 # Single problem library
 # This API allows the developper to build problems on-demand
 add_library(single_problem_api)
+add_library(Antares::single_problem_api ALIAS single_problem_api)
 
 target_sources(single_problem_api
 	PRIVATE

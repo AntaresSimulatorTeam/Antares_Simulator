@@ -261,7 +261,8 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
 BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    ParameterNode p("param_ts", Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    ParameterNode p("param_ts",
+                    Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     BOOST_CHECK_THROW(visitor().dispatch(&p), Antares::Error::InvalidArgumentError);
 }
