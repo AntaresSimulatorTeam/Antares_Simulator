@@ -130,8 +130,9 @@ void checkExpression(Node* expression,
 
             for (const auto& connection: model.ComponentConnections())
             {
-                auto* n = connection.component()->nodeAtPortField(portFieldSumNode->getPortName(),
-                                                                  portFieldSumNode->getFieldName());
+                auto* component = connection.component();
+                auto* port = connection.port();
+                auto* n = component->nodeAtPortField(port->Id(), portFieldSumNode->getFieldName());
 
                 // Convert the tree to a string, used for error messages
                 Expressions::Visitors::PrintVisitor printVisitor;
