@@ -6,6 +6,10 @@ target_sources(study-loader INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/antares/study-loader/IStudyLoader.h>
 )
 
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)
+
 target_include_directories(study-loader
         INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
