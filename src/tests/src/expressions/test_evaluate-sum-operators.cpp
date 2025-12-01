@@ -262,7 +262,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_param_as_TS_on_interval_t__t_plus_1__then_square, 
     BOOST_CHECK(actual == expected);
 }
 
-BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_a_literal_on_interval_t__t_plus_1, tests_fixture)
+BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_literal_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = 7
     Node* seven = literal(7);
@@ -274,9 +274,37 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_a_literal_on_interval_t__t_plus_1, te
     auto evalResult = evaluator->dispatch(sum);
 
     // Expected result : 2p = 14
-    double expected = 14;
-    double actual = evalResult.valueAsDouble();
-    BOOST_CHECK_EQUAL(actual, expected);
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 14.);
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_a_param_as_literal_on_interval_t__t_plus_1__then_square, tests_fixture)
+{
+    // Expression : sum(t .. t+1, p)^2, where p = 7
+    Node* seven = literal(7);
+
+    Node* from = literal(0);
+    Node* to = literal(1);
+    Node* squared_sum = square(timeSum(from, to, seven));
+
+    auto evalResult = evaluator->dispatch(squared_sum);
+
+    // Expected result : sum(t .. t+1, p)^2 = (2p)^2 = 14^2 = 196
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 196.);
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_literal_on_interval_t__t_plus_1, tests_fixture)
+{
+    // Expression : sum(t .. t+1, p^2), where p = 7
+    Node* seven = literal(7);
+
+    Node* from = literal(0);
+    Node* to = literal(1);
+    Node* sum_of_squares = timeSum(from, to, square(seven));
+
+    auto evalResult = evaluator->dispatch(sum_of_squares);
+
+    // Expected result : sum(t .. t+1, p^2) = 2p^2 = 2 x 49 = 98
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 98.);
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_fixture)
