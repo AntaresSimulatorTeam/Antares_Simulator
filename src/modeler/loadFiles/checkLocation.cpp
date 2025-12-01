@@ -34,11 +34,6 @@ using namespace Antares::Modeler::Config;
 namespace Antares::Solver::LoadFiles
 {
 
-class LocationError final: public std::invalid_argument
-{
-    using std::invalid_argument::invalid_argument;
-};
-
 void checkModel(Model& model) // TODO use const
 {
     for (const auto& constraint: model.Constraints())
@@ -135,7 +130,7 @@ void checkExpression(const Node* expression,
                     && !AreLocationsCompatible(variable.location(), location))
                 {
                     throw LocationError(
-                      errorMsgForPortFieldSum + "Model '" + model.Id() + ": In expression '"
+                      errorMsgForPortFieldSum + "Model '" + model.Id() + "': In expression '"
                       + exprStr + "': Error for variable '" + varNode->value()
                       + "': Location doesn't match the expression location (variable location: "
                       + LocationToStr(variable.location())

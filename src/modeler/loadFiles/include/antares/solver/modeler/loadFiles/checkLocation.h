@@ -37,4 +37,9 @@ void checkExpression(const Antares::Expressions::Nodes::Node* expression,
                      const std::string& exprStr,
                      const std::string& errorMsgForPortFieldSum = "");
 
+class LocationError final: public std::invalid_argument
+{
+    using std::invalid_argument::invalid_argument;
+};
+
 } // namespace Antares::Solver::LoadFiles

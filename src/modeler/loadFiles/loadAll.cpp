@@ -23,8 +23,8 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/data.h>
-#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/modeler/loadFiles/checkLocation.h"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/utils/utils.h"
 
 using namespace Antares::ModelerStudy;
