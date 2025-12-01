@@ -102,4 +102,37 @@ BOOST_FIXTURE_TEST_CASE(dual, Fixture)
                    "'constraint': dual can only be used on constraints located in subproblems"));
 }
 
+BOOST_FIXTURE_TEST_CASE(portfield, Fixture)
+{
+    // expressions setup
+    Node* pfNode = registry.create<PortFieldNode>("port", "field");
+    Antares::Expressions::Registry<Node> registry2;
+    Node* varNode = registry2.create<VariableNode>("var1", 0);
+    Antares::Expressions::NodeRegistry node_registry(varNode, std::move(registry2));
+    Expression pfExpression("var1", std::move(node_registry));
+
+    // var setup
+    std::vector<Variable> variables;
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}});
+    variables[0].setLocation(Location::SUBPROBLEMS);
+
+    // ports setup
+    PortField portfield("field");
+    std::vector portFields = {portfield};
+    PortType portType("port", std::move(portFields), "field");
+    Port port("port", portType);
+    std::vector<PortFieldDefinition> portFieldDefs;
+    portFieldDefs.emplace_back(port, portfield, std::move(pfExpression));
+
+    auto model = modelBuilder.withVariables(std::move(variables))
+                   .withPortFieldDefinitions(std::move(portFieldDefs))
+                   .withId("base model")
+                   .build();
+
+    /*BOOST_CHECK_EXCEPTION(*/
+    /*  checkExpression(pfNode, Location::MASTER, model, "port.field"),*/
+    /*  LocationError,*/
+    /*  checkMessage("Model 'base model': In expression 'dual(constraint)': Error for constraint "*/
+    /*               "'constraint': dual can only be used on constraints located in subproblems"));*/
+}
 BOOST_AUTO_TEST_SUITE_END()
