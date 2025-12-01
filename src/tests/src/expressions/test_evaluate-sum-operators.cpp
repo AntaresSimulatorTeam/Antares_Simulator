@@ -156,7 +156,7 @@ BOOST_FIXTURE_TEST_CASE(sum_on_a_literal_over_time_span__then_square, tests_fixt
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 9.);
 }
 
-BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
+BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_over_time_span, tests_fixture)
 {
     // Expression : sum(p), where p = {p1, p2, p3} = {1., 2., 3.}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
@@ -166,6 +166,19 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_over_time_span, tests_fixture)
 
     // Expected result of sum evaluation is p1 + p2 + p3 = 6.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_over_time_span__then_square, tests_fixture)
+{
+    // Expression : sum(p)^2, where p = {p1, p2, p3} = {1., 2., 3.}
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* sum = allTimeSum(p);
+    Node* squareSum = square(sum);
+
+    auto evalResult = evaluator->dispatch(squareSum);
+
+    // Expected result of sum evaluation is (p1 + p2 + p3)^2 = 36.
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 36.);
 }
 
 // ==================================================================
