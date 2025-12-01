@@ -112,7 +112,7 @@ private:
     {
         return std::views::filter(
           [this](const auto& item)
-          { return AreLocationsCompatible(item.location(), targetLocation_); });
+          { return AreLocationsCompatibleForFillers(item.location(), targetLocation_); });
     }
 };
 } // namespace Antares::Optimisation

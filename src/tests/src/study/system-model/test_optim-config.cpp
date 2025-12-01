@@ -269,11 +269,11 @@ BOOST_AUTO_TEST_CASE(locationToString)
 
 BOOST_AUTO_TEST_CASE(locationsCompatible)
 {
-    BOOST_CHECK(AreLocationsCompatible(Location::MASTER, Location::MASTER));
-    BOOST_CHECK(AreLocationsCompatible(Location::SUBPROBLEMS, Location::SUBPROBLEMS));
-    BOOST_CHECK(AreLocationsCompatible(Location::MASTER_AND_SUBPROBLEMS, Location::MASTER));
-    BOOST_CHECK(AreLocationsCompatible(Location::MASTER_AND_SUBPROBLEMS, Location::SUBPROBLEMS));
-    BOOST_CHECK(!AreLocationsCompatible(Location::SUBPROBLEMS, Location::MASTER));
+    BOOST_CHECK(AreLocationsCompatibleForFillers(Location::MASTER, Location::MASTER));
+    BOOST_CHECK(AreLocationsCompatibleForFillers(Location::SUBPROBLEMS, Location::SUBPROBLEMS));
+    BOOST_CHECK(AreLocationsCompatibleForFillers(Location::MASTER_AND_SUBPROBLEMS, Location::MASTER));
+    BOOST_CHECK(AreLocationsCompatibleForFillers(Location::MASTER_AND_SUBPROBLEMS, Location::SUBPROBLEMS));
+    BOOST_CHECK(!AreLocationsCompatibleForFillers(Location::SUBPROBLEMS, Location::MASTER));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

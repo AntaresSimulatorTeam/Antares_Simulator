@@ -127,7 +127,7 @@ void checkExpression(const Node* expression,
             for (const auto& variable: model.Variables())
             {
                 if (variable.Id() == varNode->value()
-                    && !AreLocationsCompatible(variable.location(), location))
+                    && !AreLocationsCompatibleForExpressions(variable.location(), location))
                 {
                     throw LocationError(
                       errorMsgForPortField + "Model '" + model.Id() + "': In expression '" + exprStr

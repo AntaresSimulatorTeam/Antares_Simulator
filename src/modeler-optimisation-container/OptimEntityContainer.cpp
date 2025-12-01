@@ -52,7 +52,7 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
         modelVariableGlobalIndices.reserve(variables.size());
         for (const auto& variable: variables)
         {
-            if (AreLocationsCompatible(variable.location(), targetLocation))
+            if (AreLocationsCompatibleForFillers(variable.location(), targetLocation))
             {
                 modelVariableGlobalIndices.push_back(variableGlobalIndex);
                 ++variableGlobalIndex;

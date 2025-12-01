@@ -45,7 +45,7 @@ inline const char* LocationToStr(Location loc)
     }
 }
 
-constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
+constexpr bool AreLocationsCompatibleForFillers(Location lhs, Location rhs)
 {
     switch (rhs)
     {
@@ -55,6 +55,22 @@ constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
         return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
     case Location::MASTER_AND_SUBPROBLEMS:
         return true;
+    default:
+        return false;
+    }
+}
+
+// stricter for MASTER_AND_SUBPROLEMS
+constexpr bool AreLocationsCompatibleForExpressions(Location lhs, Location rhs)
+{
+    switch (rhs)
+    {
+    case Location::MASTER:
+        return lhs == Location::MASTER || lhs == Location::MASTER_AND_SUBPROBLEMS;
+    case Location::SUBPROBLEMS:
+        return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
+    case Location::MASTER_AND_SUBPROBLEMS:
+        return lhs == Location::MASTER_AND_SUBPROBLEMS;
     default:
         return false;
     }
