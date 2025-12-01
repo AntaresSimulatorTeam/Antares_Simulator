@@ -116,8 +116,8 @@ void checkFunctionNode(const Node& node, Model& model, const std::string& exprSt
 void checkExpression(const Node* expression,
                      const Location& location,
                      Model& model,
-                     const std::string& exprStr,                 // used for error msgs
-                     const std::string& errorMsgForPortFieldSum) // used for error msgs
+                     const std::string& exprStr,              // used for error msgs
+                     const std::string& errorMsgForPortField) // used for error msgs
 {
     for (const auto& node: ASTconst(expression))
     {
@@ -130,8 +130,8 @@ void checkExpression(const Node* expression,
                     && !AreLocationsCompatible(variable.location(), location))
                 {
                     throw LocationError(
-                      errorMsgForPortFieldSum + "Model '" + model.Id() + "': In expression '"
-                      + exprStr + "': Error for variable '" + varNode->value()
+                      errorMsgForPortField + "Model '" + model.Id() + "': In expression '" + exprStr
+                      + "': Error for variable '" + varNode->value()
                       + "': Location doesn't match the expression location (variable location: "
                       + LocationToStr(variable.location())
                       + ", expression location: " + LocationToStr(location) + ")");
@@ -141,14 +141,23 @@ void checkExpression(const Node* expression,
         }
 
         // Portfields can contains variables, we recursively check their expressions
-        if (const auto* n = dynamic_cast<const PortFieldNode*>(&node); n)
+        if (const auto* portFieldNode = dynamic_cast<const PortFieldNode*>(&node); portFieldNode)
         {
-            PortFieldKey key(n->getPortName(), n->getFieldName());
+            // This code allows to have a clear message if one of the referenced expression contains
+            // bad locations
+            std::string msgInCaseOfError = "In model '" + model.Id() + "': In expression '"
+                                           + exprStr + "': this port field definition '"
+                                           + portFieldNode->getPortName() + "."
+                                           + portFieldNode->getFieldName()
+                                           + "': is referencing a expression with a bad location";
+
+            PortFieldKey key(portFieldNode->getPortName(), portFieldNode->getFieldName());
             auto& expr = model.PortFieldDefinitions().at(key).Definition();
             checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
                             location,
                             model,
-                            expr.Value());
+                            expr.Value(),
+                            msgInCaseOfError);
             continue;
         }
 

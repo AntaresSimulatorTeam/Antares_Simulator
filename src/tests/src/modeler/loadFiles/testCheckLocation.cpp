@@ -129,10 +129,13 @@ BOOST_FIXTURE_TEST_CASE(portfield, Fixture)
                    .withId("base model")
                    .build();
 
-    /*BOOST_CHECK_EXCEPTION(*/
-    /*  checkExpression(pfNode, Location::MASTER, model, "port.field"),*/
-    /*  LocationError,*/
-    /*  checkMessage("Model 'base model': In expression 'dual(constraint)': Error for constraint "*/
-    /*               "'constraint': dual can only be used on constraints located in subproblems"));*/
+    BOOST_CHECK_EXCEPTION(
+      checkExpression(pfNode, Location::MASTER, model, "port.field"),
+      LocationError,
+      checkMessage(
+        "In model 'base model': In expression 'port.field': this port field definition "
+        "'port.field': is referencing a expression with a bad locationModel 'base model': In "
+        "expression 'var1': Error for variable 'var1': Location doesn't match the expression "
+        "location (variable location: subproblems, expression location: master)"));
 }
 BOOST_AUTO_TEST_SUITE_END()
