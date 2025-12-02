@@ -178,4 +178,53 @@ BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
                    "'var2': Location doesn't match the expression location (variable "
                    "location: master, expression location: master-and-subproblems)"));
 }
+
+BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
+{
+    // expressions setup
+    Node* pfNode = registry.create<PortFieldNode>("port", "field");
+    Node* pfSumNode = registry.create<PortFieldSumNode>("port", "field");
+
+    Antares::Expressions::Registry<Node> registry2;
+    Node* varNode = registry2.create<VariableNode>("var1", 0);
+    Antares::Expressions::NodeRegistry node_registry(varNode, std::move(registry2));
+    Expression pfExpression("var1", std::move(node_registry));
+
+    // var setup
+    std::vector<Variable> variables;
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}});
+    variables[0].setLocation(Location::MASTER);
+
+    // ports setup
+    PortField portfield("field");
+    std::vector portFields = {portfield};
+    PortType portType("port", std::move(portFields), "field");
+    Port port("port", portType);
+    std::vector<PortFieldDefinition> portFieldDefs;
+    portFieldDefs.emplace_back(port, portfield, std::move(pfExpression));
+
+    auto model1 = modelBuilder.withPorts({port}).withId("model1").build();
+
+    auto model2 = modelBuilder.withVariables(std::move(variables))
+                    .withId("model2")
+                    .withPorts({port})
+                    .withPortFieldDefinitions(std::move(portFieldDefs))
+                    .build();
+
+    ComponentBuilder componentBuilder;
+    auto component1 = componentBuilder.withModel(&model1).withId("comp1").build();
+    auto component2 = componentBuilder.withModel(&model2).withId("comp2").build();
+
+    component1.addComponentConnection("port",
+                                      ConnectionEnd(&component2, &model2.Ports().at("port")));
+
+    BOOST_CHECK_EXCEPTION(
+      checkExpression(pfSumNode, Location::SUBPROBLEMS, model1, "sum_connections(port.field)"),
+      LocationError,
+      checkMessage(
+        "In model 'model1': In expression 'sum_connections(port.field)': this "
+        "'sum_connections(port.field)' is referencing a variable in a different location: Model "
+        "'model2': In expression 'var1': Error for variable 'var1': Location doesn't match the "
+        "expression location (variable location: master, expression location: subproblems)"));
+}
 BOOST_AUTO_TEST_SUITE_END()
