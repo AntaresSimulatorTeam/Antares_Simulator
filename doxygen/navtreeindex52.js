@@ -1,5 +1,7 @@
 var NAVTREEINDEX52 =
 {
+"minDispatchableGenByPlant_8h_source.html":[9,0,0,8,12,0,0,0,0,2,24],
+"minmax-data_8h_source.html":[9,0,0,8,12,0,0,0,0,3,6],
 "minmax_8h_source.html":[9,0,0,8,12,0,0,0,0,3,7],
 "minmax_8hxx_source.html":[9,0,0,8,12,0,0,0,0,3,8],
 "misc-gen_8h_source.html":[9,0,0,12,0,0,0,0,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX52 =
 "recentfiles_8h_source.html":[9,0,0,12,2,0,5],
 "refresh_8h_source.html":[9,0,0,12,2,1,1,9],
 "regenerate__timeseries_8h.html#a1ebea0829a0b311b9da682b6fd203711":[7,0,0,25,4,69],
-"regenerate__timeseries_8h_source.html":[9,0,0,8,9,0,0,0,0,13],
-"registry_8cpp.html#a4e0118bd2003ed16500fdfc08d0a9fec":[7,0,0,3,1,0,1],
-"registry_8cpp.html#a590273b76deb4183c0f07fecadf8656d":[7,0,0,3,1,0,4]
+"regenerate__timeseries_8h_source.html":[9,0,0,8,9,0,0,0,0,13]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX58 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a61f234773186606b5c626e7f37c03940":[8,0,0,19,5,48,0],
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a6d966cf874e32355f6be63a6ddff7d38":[8,0,0,19,5,48,2],
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a8817632e67a3dc61be90415e4c72bb21":[8,0,0,19,5,48,3],
 "structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html":[8,0,0,19,5,11],
 "structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html#a905e8a24356cb52316233560ff56c213":[8,0,0,19,5,11,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX58 =
 "structBB.html#a2a4045c7f1088d63abbd3d54dbe985d5":[8,0,47,0],
 "structBB.html#a2a6e7f93f940affcc5e286efc509a521":[8,0,47,13],
 "structBB.html#a2a75cae64fc7c0eca4a6928cd8978073":[8,0,47,28],
-"structBB.html#a2c0192d015d53dc7d636f97af3620e19":[8,0,47,36],
-"structBB.html#a2d57d5351767259313ce5cc663313888":[8,0,47,11],
-"structBB.html#a3673881f6e747d0861d3a08cefe7655b":[8,0,47,37]
+"structBB.html#a2c0192d015d53dc7d636f97af3620e19":[8,0,47,36]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX44 =
 {
+"classThermalClusterConfig.html#abace94f5ac57bc4df91f01a660999bc9":[8,0,315,0],
+"classThermalClusterConfig.html#ac83352ac06f31d36246b1e5243408d8b":[8,0,315,1],
 "classTimeSeriesConfigurer.html":[8,0,320],
 "classTimeSeriesConfigurer.html#a09aa7d8152e9531ca6c7cc5650274c50":[8,0,320,4],
 "classTimeSeriesConfigurer.html#a1b41d4ee31d8ed634be783eead089e27":[8,0,320,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX44 =
 "classmodeler__output__handler_1_1modeler__output__handler.html#a985a70001fe921e0320a8d7e886d3e93":[8,0,18,1,0],
 "classmodeler__output__handler_1_1modeler__output__handler.html#aa21692c4d0e9a68d64eb2d03abe8fd0f":[8,0,18,1,3],
 "classmodeler__output__handler_1_1modeler__output__handler.html#af59107f79284eea116bc5f9e22018912":[8,0,18,1,4],
-"classmodified__inode_1_1UserData.html":[8,0,19,0],
-"classmodified__inode_1_1UserData.html#a10049079570ae26f144370ca119d096b":[8,0,19,0,8],
-"classmodified__inode_1_1UserData.html#a1fb387ae81bbfa622eef665620bb9a1b":[8,0,19,0,6]
+"classmodified__inode_1_1UserData.html":[8,0,19,0]
 };

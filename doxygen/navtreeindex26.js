@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html":[8,0,0,19,4,32],
 "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a0094da4202ac66454f3edfe7d10639b0":[8,0,0,19,4,32,4],
 "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a212c999ea53dd23f4e478991eefb4272":[8,0,0,19,4,32,2],
 "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a683d6520f0fe8bcce849f86dceb6b116":[8,0,0,19,4,32,0],
@@ -42,7 +43,8 @@ var NAVTREEINDEX26 =
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#af59eaedb92f3fd242b80285c209ea01d":[8,0,0,19,4,19,6],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#af64d429861d44ac78b178bfe3ae7e288":[8,0,0,19,4,19,12],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html":[8,0,0,19,6],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a0d217ecec39e7584f6167f63be17dd61":[8,0,0,19,6,3],
+"classAntares_1_1Solver_1_1SingleProblemGetter.html#a0d217ecec39e7584f6167f63be17dd61":[8,0,0,19,6,4],
+"classAntares_1_1Solver_1_1SingleProblemGetter.html#a2f69b06241987cb3d116a504de3b12eb":[8,0,0,19,6,3],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#a577c72d5a1ee659d8001b703d6b65234":[8,0,0,19,6,0],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#aa223c37a230b8f3ce347606ce3fa05d8":[8,0,0,19,6,2],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#aa3f22eef8a4a0c56884490c755a3e5fd":[8,0,0,19,6,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX26 =
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a7bf355952e9aafcdda9cc7a550feb7b4":[8,0,0,19,5,49,16],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#aae9843fe82923ae50f064ded793fc161":[8,0,0,19,5,49,11],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ac1e014d2de9184db2ce2e3d45aa2fafc":[8,0,0,19,5,49,10],
-"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#acbebd86d74e68ef469742e63385ade7c":[8,0,0,19,5,49,5],
-"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ad603fc24d59c893ba4e90ef930cce96f":[8,0,0,19,5,49,15],
-"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ae2aca29028eb0f59a5fd80df96b92f32":[8,0,0,19,5,49,13]
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#acbebd86d74e68ef469742e63385ade7c":[8,0,0,19,5,49,5]
 };

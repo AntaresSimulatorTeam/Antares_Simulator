@@ -1,5 +1,7 @@
 var NAVTREEINDEX54 =
 {
+"solver__steps_8py.html#ae1d5f24c503db441e4490191255ff0f1":[7,0,38,22],
+"solver__steps_8py.html#ae3273d3798a6a7ad65b8af0cf0ce32fc":[7,0,38,45],
 "solver__steps_8py.html#ae7a40bd76bfc797c61586fa7d8b15152":[7,0,38,33],
 "solver__steps_8py.html#aea78b3117789304b50ea01ed270f34d5":[7,0,38,21],
 "solver__steps_8py.html#aebe85f8a80cd0cae6841c9d1e1ffdf90":[7,0,38,15],
@@ -247,7 +249,5 @@ var NAVTREEINDEX54 =
 "structAntares_1_1Forms_1_1CompareByTimestamp.html":[8,0,0,10,8],
 "structAntares_1_1Forms_1_1CompareByTimestamp.html#a86dc8bae4c22c0428d74a4894d44195f":[8,0,0,10,8,0],
 "structAntares_1_1Graph_1_1Edge_1_1addpWeight.html":[8,0,0,11,1,0],
-"structAntares_1_1Graph_1_1Edge_1_1addpWeight.html#af93ea7a0752198aa56f08af6ca159d03":[8,0,0,11,1,0,0],
-"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[8,0,0,11,1,1],
-"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html#afc933aff024e6c8479b530010a71b06f":[8,0,0,11,1,1,0]
+"structAntares_1_1Graph_1_1Edge_1_1addpWeight.html#af93ea7a0752198aa56f08af6ca159d03":[8,0,0,11,1,0,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#ad8bcde81cd7a9576a40fcfbdec0ef641":[8,0,0,19,5,2,6,4],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#aea38383d370e4d6e9d3b7b36c7d79faf":[8,0,0,19,5,2,6,3],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#af1e3b3b5ceb43f6b4828c86b5d51a1b1":[8,0,0,19,5,2,6,2],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html":[8,0,0,19,5,2,6,0],
 "structAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_1_1Statistics.html":[8,0,0,19,5,3,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html#a5c7f9bffc29aa5a55a442faab07543b8":[8,0,0,19,5,4,89,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html#a890570e0a4fd9a83b540ce42cbe5ae92":[8,0,0,19,5,4,89,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html#aec72b6ece340443fcea3c2e18e5acd1b":[8,0,0,19,5,4,89,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html":[8,0,0,19,5,4,91],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html#a3066fd88b76ddb1f060166c7216e656f":[8,0,0,19,5,4,91,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html#abe6c0ed7e9e1b9b8c02b08f3ee71ce1b":[8,0,0,19,5,4,91,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html":[8,0,0,19,5,4,91]
 };

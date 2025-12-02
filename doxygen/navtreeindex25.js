@@ -8,7 +8,8 @@ var NAVTREEINDEX25 =
 "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#aee0a4fe2d7330cb232cfb47d36566850":[8,0,0,19,12,0],
 "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629":[8,0,0,19,12,5],
 "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html":[8,0,0,19,0,1],
-"classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a1eb140845344d0eca8786f1af22d87ba":[8,0,0,19,0,1,3],
+"classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a1eb140845344d0eca8786f1af22d87ba":[8,0,0,19,0,1,4],
+"classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a57e614ec25c94cf43622437ba1e163a2":[8,0,0,19,0,1,3],
 "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#ab186edf43dc7154042e8686079bdd241":[8,0,0,19,0,1,0],
 "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#ab9acfec601094165c0af58467e929ca9":[8,0,0,19,0,1,1],
 "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#acb7a26a08534ac5074ae8a4175a2a39e":[8,0,0,19,0,1,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a9a22ad906029e28ed985d02525b7d2c5":[8,0,0,19,4,30,0],
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#acede9ee07eb1b94787ae67129696e6e9":[8,0,0,19,4,30,4],
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#acff4e5a5f12327bdf0aac5feb5b4b669":[8,0,0,19,4,30,1],
-"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#ad3044341a566ea98f66b67d2f604cfce":[8,0,0,19,4,30,5],
-"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html":[8,0,0,19,4,32]
+"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#ad3044341a566ea98f66b67d2f604cfce":[8,0,0,19,4,30,5]
 };

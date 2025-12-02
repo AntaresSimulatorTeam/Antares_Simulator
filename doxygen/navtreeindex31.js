@@ -1,5 +1,7 @@
 var NAVTREEINDEX31 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#aa4b5732c73d0a03087c450fad334a0b8":[8,0,0,19,5,4,126,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#abb3f75c7cbafdf3d2c869687a90e9012":[8,0,0,19,5,4,126,19],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#ac0aa54ab2168adb02bb95c1bce199a11":[8,0,0,19,5,4,126,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#ac7ed21a8b75db782d0577cdb6f1c991b":[8,0,0,19,5,4,126,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html#ad8b8d0d5fd21301341eb30f4696baecd":[8,0,0,19,5,4,126,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX31 =
 "classAntares_1_1Solver_1_1Variable_1_1Links.html#a932b2404583fd68a9efef56cac9cb4b1":[8,0,0,19,5,14,19],
 "classAntares_1_1Solver_1_1Variable_1_1Links.html#a93fbea9ec541a11b7a86d2de3bffdb33":[8,0,0,19,5,14,30],
 "classAntares_1_1Solver_1_1Variable_1_1Links.html#a9e1270b32653a40ca97ed7bdc7fb1efc":[8,0,0,19,5,14,2],
-"classAntares_1_1Solver_1_1Variable_1_1Links.html#a9e87f2f40a72078c6032c50e29dd10a6":[8,0,0,19,5,14,33],
-"classAntares_1_1Solver_1_1Variable_1_1Links.html#aa87e51be1e8e422748a62ce38cee24df":[8,0,0,19,5,14,10],
-"classAntares_1_1Solver_1_1Variable_1_1Links.html#aaa3a7dbfba99c6d7675c9cb8eeb55d11":[8,0,0,19,5,14,28]
+"classAntares_1_1Solver_1_1Variable_1_1Links.html#a9e87f2f40a72078c6032c50e29dd10a6":[8,0,0,19,5,14,33]
 };

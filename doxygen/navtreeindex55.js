@@ -1,5 +1,7 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[8,0,0,11,1,1],
+"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html#afc933aff024e6c8479b530010a71b06f":[8,0,0,11,1,1,0],
 "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html":[8,0,0,12,0,2,4],
 "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html":[8,0,0,12,0,2,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html":[8,0,0,12,0,3,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html":[8,0,0,19,5,2,6],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a557de5cb7722aebe1712eef0d95e44e9":[8,0,0,19,5,2,6,1],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a9a44430db793c29fddd32b7f47c7b7e8":[8,0,0,19,5,2,6,6],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#aaa890883e70aa99ba77758166a186ccc":[8,0,0,19,5,2,6,5],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#ad8bcde81cd7a9576a40fcfbdec0ef641":[8,0,0,19,5,2,6,4],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#aea38383d370e4d6e9d3b7b36c7d79faf":[8,0,0,19,5,2,6,3]
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#aaa890883e70aa99ba77758166a186ccc":[8,0,0,19,5,2,6,5]
 };

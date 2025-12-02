@@ -1,5 +1,7 @@
 var NAVTREEINDEX60 =
 {
+"structDONNEES__ANNUELLES.html#af9a33e07de5b24237150705d3ca101d4":[8,0,102,1],
+"structDONNEES__ANNUELLES.html#afa8601dbed579161a7c57c2d23b16af9":[8,0,102,13],
 "structDONNEES__MENSUELLES__ETENDUES.html":[8,0,103],
 "structDONNEES__MENSUELLES__ETENDUES.html#a015a263c8551f028381b8dc0fb84d41e":[8,0,103,6],
 "structDONNEES__MENSUELLES__ETENDUES.html#a08b98a3beb7497d3616f69f6d42b28a0":[8,0,103,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX60 =
 "structInputFixture.html#a025545a7d039703a71432d3eef6628ee":[8,0,160,20],
 "structInputFixture.html#a05a859d5c130bf59acdf696507449b81":[8,0,160,15],
 "structInputFixture.html#a0cd6baf4191230b126223443ee26eb94":[8,0,160,21],
-"structInputFixture.html#a1b3edd114b4c478f63a031cf6f66ba1f":[8,0,160,12],
-"structInputFixture.html#a29deb1ad80e0ce8f5e0543caf716186b":[8,0,160,23],
-"structInputFixture.html#a3056d3004bb5db484e4f63aff1860846":[8,0,160,5]
+"structInputFixture.html#a1b3edd114b4c478f63a031cf6f66ba1f":[8,0,160,12]
 };
