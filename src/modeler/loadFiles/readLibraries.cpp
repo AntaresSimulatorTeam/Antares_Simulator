@@ -25,8 +25,8 @@
 #include <antares/io/inputs/model-converter/modelConverter.h>
 #include <antares/io/inputs/yml-model/parser.h>
 #include <antares/logs/logs.h>
-#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/io/inputs/yml-optim-config/OptimConfig.h"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs;
@@ -84,7 +84,6 @@ static Library loadSingleLibrary(const fs::path& filePath)
 std::vector<Library> loadLibraries(const fs::path& studyPath, const OptimConfig& optimConfig)
 {
     std::vector<Library> libraries;
-
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
     for (const auto& entry: fs::directory_iterator(directoryPath))
     {
