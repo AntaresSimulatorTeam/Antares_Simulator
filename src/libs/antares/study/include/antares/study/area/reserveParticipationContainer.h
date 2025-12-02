@@ -80,8 +80,7 @@ public:
         {
             throw std::out_of_range("Must have two distinct reserves to participate to a symmetry");
         }
-        checkSymmetricDuplicates(names))
-        
+        checkSymmetricDuplicates(names);
 
         checkIfReserverIsParticipating(names);
 
