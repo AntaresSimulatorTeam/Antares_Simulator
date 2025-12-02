@@ -44,7 +44,7 @@ struct Fixture
 
 BOOST_AUTO_TEST_SUITE(check_location)
 
-BOOST_FIXTURE_TEST_CASE(variable_error, Fixture)
+BOOST_FIXTURE_TEST_CASE(one_var_good_one_var_throw, Fixture)
 {
     Node* goodLocVar = registry.create<VariableNode>("var1", 0);
     Node* badLocVar = registry.create<VariableNode>("var2", 0);
@@ -66,7 +66,7 @@ BOOST_FIXTURE_TEST_CASE(variable_error, Fixture)
                             "location: master, expression location: subproblems)"));
 }
 
-BOOST_FIXTURE_TEST_CASE(reduced_cost, Fixture)
+BOOST_FIXTURE_TEST_CASE(reduced_cost_throw, Fixture)
 {
     Node* root = registry.create<FunctionNode>(FunctionNodeType::reduced_cost,
                                                registry.create<VariableNode>("var", 0));
@@ -84,7 +84,7 @@ BOOST_FIXTURE_TEST_CASE(reduced_cost, Fixture)
                    "'var': reduced_cost can only be used on variables located in subproblems"));
 }
 
-BOOST_FIXTURE_TEST_CASE(dual, Fixture)
+BOOST_FIXTURE_TEST_CASE(dual_throw, Fixture)
 {
     Node* root = registry.create<FunctionNode>(FunctionNodeType::dual,
                                                registry.create<ParameterNode>("constraint"),
@@ -102,7 +102,7 @@ BOOST_FIXTURE_TEST_CASE(dual, Fixture)
                    "'constraint': dual can only be used on constraints located in subproblems"));
 }
 
-BOOST_FIXTURE_TEST_CASE(portfield, Fixture)
+BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
 {
     // expressions setup
     Node* pfNode = registry.create<PortFieldNode>("port", "field");
@@ -137,5 +137,45 @@ BOOST_FIXTURE_TEST_CASE(portfield, Fixture)
         "'port.field': is referencing a expression with a bad locationModel 'base model': In "
         "expression 'var1': Error for variable 'var1': Location doesn't match the expression "
         "location (variable location: subproblems, expression location: master)"));
+}
+
+BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
+{
+    // expressions setup
+    Node* pfNode = registry.create<PortFieldNode>("port", "field");
+    Node* varNodeBad = registry.create<VariableNode>("var2", 0);
+    Node* root = registry.create<SumNode>(pfNode, varNodeBad);
+
+    Antares::Expressions::Registry<Node> registry2;
+    Node* varNode = registry2.create<VariableNode>("var1", 0);
+    Antares::Expressions::NodeRegistry node_registry(varNode, std::move(registry2));
+    Expression pfExpression("var1", std::move(node_registry));
+
+    // var setup
+    std::vector<Variable> variables;
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}});
+    variables.push_back({"var2", {}, {}, ValueType::FLOAT, {}, {}});
+    variables[0].setLocation(Location::MASTER_AND_SUBPROBLEMS);
+    variables[1].setLocation(Location::MASTER);
+
+    // ports setup
+    PortField portfield("field");
+    std::vector portFields = {portfield};
+    PortType portType("port", std::move(portFields), "field");
+    Port port("port", portType);
+    std::vector<PortFieldDefinition> portFieldDefs;
+    portFieldDefs.emplace_back(port, portfield, std::move(pfExpression));
+
+    auto model = modelBuilder.withVariables(std::move(variables))
+                   .withPortFieldDefinitions(std::move(portFieldDefs))
+                   .withId("base model")
+                   .build();
+
+    BOOST_CHECK_EXCEPTION(
+      checkExpression(root, Location::MASTER_AND_SUBPROBLEMS, model, "port.field + var2"),
+      LocationError,
+      checkMessage("Model 'base model': In expression 'port.field + var2': Error for variable "
+                   "'var2': Location doesn't match the expression location (variable "
+                   "location: master, expression location: master-and-subproblems)"));
 }
 BOOST_AUTO_TEST_SUITE_END()
