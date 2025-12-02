@@ -265,7 +265,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_param_as_TS_on_interval_t__t_plus_1__then_square, 
     auto evalResult = evalVisitor->dispatch(squared_sum);
 
     // Expected evaluation result : ((p1 + p2)^2, (p2 + p3)^2, (p3 + p1)^2)
-    // = (1 + 2)^2, (2 + 3)2, (3 + 1)^2) = (9., 25., 16.)
+    // = ((1 + 2)^2, (2 + 3)^2, (3 + 1)^2) = (9., 25., 16.)
     std::vector<double> expected = {9., 25., 16.};
     std::vector<double> actual = evalResult.valuesAsVector();
     BOOST_CHECK(actual == expected);
