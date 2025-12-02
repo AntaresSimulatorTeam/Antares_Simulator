@@ -91,7 +91,7 @@ public:
         for (auto i = 0; i < reserveParticipationsSymmetries.size(); ++i)
         {
             if (const auto& symmetry = reserveParticipationsSymmetries.at(i);
-                *symmetry.begin() == name || *symmetry.rbegin() == name)
+                symmetry.contains(name))
             {
                 indices.push_back(i);
             }
