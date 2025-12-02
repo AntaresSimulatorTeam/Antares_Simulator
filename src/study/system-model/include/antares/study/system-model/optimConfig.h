@@ -30,50 +30,10 @@ enum class Location
     SUBPROBLEMS
 };
 
-inline const char* LocationToStr(Location loc)
-{
-    switch (loc)
-    {
-    case Location::MASTER:
-        return "master";
-    case Location::MASTER_AND_SUBPROBLEMS:
-        return "master-and-subproblems";
-    case Location::SUBPROBLEMS:
-        return "subproblems";
-    default:
-        return "Unknown";
-    }
-}
+const char* LocationToStr(Location loc);
 
-constexpr bool AreLocationsCompatibleForFillers(Location lhs, Location rhs)
-{
-    switch (rhs)
-    {
-    case Location::MASTER:
-        return lhs == Location::MASTER || lhs == Location::MASTER_AND_SUBPROBLEMS;
-    case Location::SUBPROBLEMS:
-        return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
-    case Location::MASTER_AND_SUBPROBLEMS:
-        return true;
-    default:
-        return false;
-    }
-}
-
+bool AreLocationsCompatibleForFillers(Location lhs, Location rhs);
 // stricter for MASTER_AND_SUBPROLEMS
-constexpr bool AreLocationsCompatibleForExpressions(Location lhs, Location rhs)
-{
-    switch (rhs)
-    {
-    case Location::MASTER:
-        return lhs == Location::MASTER || lhs == Location::MASTER_AND_SUBPROBLEMS;
-    case Location::SUBPROBLEMS:
-        return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
-    case Location::MASTER_AND_SUBPROBLEMS:
-        return lhs == Location::MASTER_AND_SUBPROBLEMS;
-    default:
-        return false;
-    }
-}
+bool AreLocationsCompatibleForExpressions(Location lhs, Location rhs);
 
 } // namespace Antares::Modeler::Config
