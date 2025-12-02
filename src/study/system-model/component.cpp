@@ -64,7 +64,7 @@ Component::Component(const ComponentData& component_data)
 
 void Component::addComponentConnection(const std::string localPortId, ConnectionEnd&& connexionEnd)
 {
-    getModel()->addComponentConnection(connexionEnd); // used to check location later
+    getModel()->addComponentConnection(localPortId, connexionEnd); // used to check location later
     componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
 }
 

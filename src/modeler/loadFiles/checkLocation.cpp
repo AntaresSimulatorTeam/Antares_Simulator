@@ -173,22 +173,29 @@ void checkExpression(const Node* expression,
                                            + ")' is referencing a variable in a different "
                                              "location: ";
 
-            for (const auto& connection: model.ComponentConnections())
+            for (const auto& [portLocalId, connections]: model.ComponentsConnections())
             {
-                auto* component = connection.component();
-                auto* port = connection.port();
-                const auto* n = component->nodeAtPortField(port->Id(),
-                                                           portFieldSumNode->getFieldName());
+                if (portLocalId != portFieldSumNode->getPortName())
+                {
+                    continue;
+                }
+                for (const auto& connection: connections)
+                {
+                    auto* component = connection.component();
+                    auto* port = connection.port();
+                    const auto* n = component->nodeAtPortField(port->Id(),
+                                                               portFieldSumNode->getFieldName());
 
-                // Convert the tree to a string, used for error messages
-                Expressions::Visitors::PrintVisitor printVisitor;
-                std::string nodeExpression = printVisitor.dispatch(n);
+                    // Convert the tree to a string, used for error messages
+                    Expressions::Visitors::PrintVisitor printVisitor;
+                    std::string nodeExpression = printVisitor.dispatch(n);
 
-                checkExpression(n,
-                                location,
-                                *connection.component()->getModel(),
-                                nodeExpression,
-                                msgInCaseOfError);
+                    checkExpression(n,
+                                    location,
+                                    *connection.component()->getModel(),
+                                    nodeExpression,
+                                    msgInCaseOfError);
+                }
             }
             continue;
         }
