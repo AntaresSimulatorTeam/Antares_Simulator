@@ -90,17 +90,17 @@ struct build_eval_visitor_fixture
 {
     build_eval_visitor_fixture();
 
-    std::unique_ptr<Visitors::EvalVisitor> evaluator;
+    std::unique_ptr<Visitors::EvalVisitor> evalVisitor;
 
 private:
     LinearProblemDataImpl::LinearProblemData data_;
     MockLinearProblem linearProblem_;
-    OptimEntityContainer optimEntityContainer_;
+    std::unique_ptr<OptimEntityContainer> optimEntityContainer_;
     LinearProblemApi::FillContext fillCtx_;
     Model model_;
     Component component_;
     std::vector<Component> components_;
-    ScenarioGroupRepository scenarioGroupRepository_;
+    ScenarioGroupRepository scenarioGroupRepo_;
 };
 
 build_eval_visitor_fixture::build_eval_visitor_fixture():
@@ -108,22 +108,28 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
     fillCtx_(0, 2, 0, 2, 0),
     model_(
       createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO),
-                                 Parameter("five", TimeDependent::YES, ScenarioDependent::NO)})),
+                                 Parameter("five", TimeDependent::NO, ScenarioDependent::NO)})),
     component_(createComponent(model_,
-                               "component",
+                               "component-id",
                                {{"p", {"p", ParameterType::TIMESERIE, "p"}},
                                 {"five", {"five", ParameterType::CONSTANT, "5"}}},
                                0)),
-    scenarioGroupRepository_(getscenarioGroupRepository(component_)),
-    components_({component_}),
-    optimEntityContainer_(linearProblem_, &data_, &scenarioGroupRepository_)
+    scenarioGroupRepo_(makeScenarioGroupRepo(component_)),
+    components_({component_})
 {
+    // Parameter p : make assocaited time-series
     auto ts = std::make_unique<TimeSeriesSet>("p", 3);
     ts->add({1., 2., 3.});
     data_.addDataSeries(std::move(ts));
 
-    optimEntityContainer_.addFromSystemComponents(components_);
-    evaluator = std::make_unique<EvalVisitor>(optimEntityContainer_, fillCtx_, component_);
+    // Creation of a OptimEntityContainer
+    optimEntityContainer_ = std::make_unique<OptimEntityContainer>(linearProblem_,
+                                                                   &data_,
+                                                                   &scenarioGroupRepo_);
+    optimEntityContainer_->addFromSystemComponents(components_);
+
+    // And finally, creation of the evaluation visitor (purpose of this fixture)
+    evalVisitor = std::make_unique<EvalVisitor>(*optimEntityContainer_, fillCtx_, component_);
 }
 
 // =================================================
@@ -141,7 +147,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
     Node* one = literal(1.);
     Node* sumOfOnes = allTimeSum(one);
 
-    auto evalResult = evaluator->dispatch(sumOfOnes);
+    auto evalResult = evalVisitor->dispatch(sumOfOnes);
 
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
 }
@@ -153,7 +159,7 @@ BOOST_FIXTURE_TEST_CASE(sum_on_a_literal_over_time_span__then_square, tests_fixt
     Node* sumOfOnes = allTimeSum(one);
     Node* squareSum = square(sumOfOnes);
 
-    auto evalResult = evaluator->dispatch(squareSum);
+    auto evalResult = evalVisitor->dispatch(squareSum);
 
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 9.);
 }
@@ -164,7 +170,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_over_time_span, tests_fix
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
     Node* sum = allTimeSum(p);
 
-    auto evalResult = evaluator->dispatch(sum);
+    auto evalResult = evalVisitor->dispatch(sum);
 
     // Expected evaluation result : p1 + p2 + p3 = 6.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 6.);
@@ -176,7 +182,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_time_series_over_time_span, tests
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
     Node* sum_of_squares = allTimeSum(square(p));
 
-    auto evalResult = evaluator->dispatch(sum_of_squares);
+    auto evalResult = evalVisitor->dispatch(sum_of_squares);
 
     // Expected evaluation result : p1^2 + p2^2 + p3^2 = 1 + 4 + 9 = 14
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 14.);
@@ -189,7 +195,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_over_time_span__then_squa
     Node* sum = allTimeSum(p);
     Node* squareSum = square(sum);
 
-    auto evalResult = evaluator->dispatch(squareSum);
+    auto evalResult = evalVisitor->dispatch(squareSum);
 
     // Expected evaluation result : (p1 + p2 + p3)^2 = 36.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 36.);
@@ -221,7 +227,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
     Node* to = literal(1);
     Node* sum = timeSum(from, to, p);
 
-    auto evalResult = evaluator->dispatch(sum);
+    auto evalResult = evalVisitor->dispatch(sum);
 
     // Expected evaluation result : (p1 + p2, p2 + p3, p3 + p1) = (3., 5., 4.).
     std::vector<double> expected = {3., 5., 4.};
@@ -238,7 +244,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests
     Node* to = literal(1);
     Node* sum_of_squares = timeSum(from, to, square(p));
 
-    auto evalResult = evaluator->dispatch(sum_of_squares);
+    auto evalResult = evalVisitor->dispatch(sum_of_squares);
 
     // Expected evaluation result : (p1^2 + p2^2, p2^2 + p3^2, p3^2 + p1^2)
     // = (1^2 + 2^2, 2^2 + 3^2, 3^2 + 1^2) = (5., 13., 10.)
@@ -256,7 +262,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_param_as_TS_on_interval_t__t_plus_1__then_square, 
     Node* to = literal(1);
     Node* squared_sum = square(timeSum(from, to, p));
 
-    auto evalResult = evaluator->dispatch(squared_sum);
+    auto evalResult = evalVisitor->dispatch(squared_sum);
 
     // Expected evaluation result : ((p1 + p2)^2, (p2 + p3)^2, (p3 + p1)^2)
     // = (1 + 2)^2, (2 + 3)2, (3 + 1)^2) = (9., 25., 16.)
@@ -274,7 +280,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_literal_on_interval_t__t_plus_1, test
     Node* to = literal(1);
     Node* sum = timeSum(from, to, seven);
 
-    auto evalResult = evaluator->dispatch(sum);
+    auto evalResult = evalVisitor->dispatch(sum);
 
     // Expected evaluation result : p + p = 14
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 14.);
@@ -289,7 +295,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_param_as_literal_on_interval_t__t_plus_1__then_squ
     Node* to = literal(1);
     Node* squared_sum = square(timeSum(from, to, seven));
 
-    auto evalResult = evaluator->dispatch(squared_sum);
+    auto evalResult = evalVisitor->dispatch(squared_sum);
 
     // Expected evaluation result : sum(t .. t+1, p)^2 = (p + p)^2 = 14^2 = 196
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 196.);
@@ -304,7 +310,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_literal_on_interval_t__t_plus_1, 
     Node* to = literal(1);
     Node* sum_of_squares = timeSum(from, to, square(seven));
 
-    auto evalResult = evaluator->dispatch(sum_of_squares);
+    auto evalResult = evalVisitor->dispatch(sum_of_squares);
 
     // Expected evaluation result : sum(t .. t+1, p^2) = 2p^2 = 2 x 49 = 98
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 98.);
@@ -319,7 +325,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_
     Node* to = literal(1);
     Node* sum = timeSum(from, to, five);
 
-    auto evalResult = evaluator->dispatch(sum);
+    auto evalResult = evalVisitor->dispatch(sum);
 
     // Expected evaluation result : p + p = 10.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 10);
@@ -334,7 +340,7 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_constant_param_on_interval_t__t_plus_1, te
     Node* to = literal(1);
     Node* sum_of_squares = timeSum(from, to, square(five));
 
-    auto evalResult = evaluator->dispatch(sum_of_squares);
+    auto evalResult = evalVisitor->dispatch(sum_of_squares);
 
     // Expected evaluation result : p^2 + p^2 = 25 + 25 = 50.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 50);
@@ -349,7 +355,7 @@ BOOST_FIXTURE_TEST_CASE(sum_const_param_on_interval_t__t_plus_1__then_square, te
     Node* to = literal(1);
     Node* squared_sum = square(timeSum(from, to, five));
 
-    auto evalResult = evaluator->dispatch(squared_sum);
+    auto evalResult = evalVisitor->dispatch(squared_sum);
 
     // Expected evaluation result : (p + p)^2 = 10^2 = 100.
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 100);
