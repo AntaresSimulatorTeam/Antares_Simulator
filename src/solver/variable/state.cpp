@@ -66,42 +66,6 @@ State::State(Data::Study& s):
 {
 }
 
-void State::initReserveParticipationIndexMaps()
-{
-    auto loadReserveParticipations = [area = this->area](CAPACITY_RESERVATION& reserve)
-    {
-        // Thermal clusters
-        for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
-        {
-            area->reserveParticipationIndexMaps.value().thermalClusters.insert(
-              {{reserve.reserveName, reserveParticipation.clusterName},
-               reserveParticipation.areaIndexClusterParticipation});
-        }
-
-        // Short Term Storage
-        for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
-        {
-            area->reserveParticipationIndexMaps.value().STStorageClusters.insert(
-              {{reserve.reserveName, reserveParticipation.clusterName},
-               reserveParticipation.areaIndexClusterParticipation});
-        }
-
-        // Hydro
-        for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
-        {
-            area->reserveParticipationIndexMaps.value().Hydro.insert(
-              {reserve.reserveName, reserveParticipation.areaIndexClusterParticipation});
-        }
-    };
-
-    area->reserveParticipationIndexMaps.emplace();
-    // Reserves up
-    for (auto& reserve: problemeHebdo->allReserves.value()[area->index].areaCapacityReservations)
-    {
-        loadReserveParticipations(reserve);
-    }
-}
-
 void State::initFromThermalClusterIndex(const uint clusterEnabledIndex)
 {
     // asserts

@@ -84,11 +84,6 @@ public:
     explicit State(Data::Study& s);
 
     /*!
-     ** \brief Instantiate the BiMaps so that all the data can be accessed afterwards
-     */
-    void initReserveParticipationIndexMaps();
-
-    /*!
     ** \brief Initialize some variables according an area index
     **
     ** \param areaIndex Index of the area

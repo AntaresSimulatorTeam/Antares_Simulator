@@ -502,16 +502,6 @@ void Areas<NextT>::weekBegin(State& state)
     {
         pAreas[i].weekBegin(state);
     }
-
-    if (state.study.parameters.reservesEnabled)
-    {
-        state.study.areas.each(
-          [&state](Data::Area& area)
-          {
-              state.area = &area;
-              state.initReserveParticipationIndexMaps();
-          });
-    }
 }
 
 template<class NextT>
