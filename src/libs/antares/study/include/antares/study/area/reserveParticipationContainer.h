@@ -51,33 +51,40 @@ public:
         reservesParticipations.emplace(reserveName, reserveParticipation);
     }
 
-    bool symmetricDuplicates(const std::set<ReserveName>& names) const
+    bool checkSymmetricDuplicates(const std::set<ReserveName>& names) const
     {
-        return std::ranges::any_of(reserveParticipationsSymmetries,
-                                   [&](const auto& sym) { return sym == names; });
+        if (std::ranges::any_of(reserveParticipationsSymmetries,
+                                [&](const auto& sym) { return sym == names; }))
+        {
+            throw std::invalid_argument("Detected duplicate in reserves symmetries");
+        }
+    }
+
+    void checkIfReserverIsParticipating(const std::set<ReserveName>& names) const
+    {
+        for (const auto& name: names)
+        {
+            if (!reservesParticipations.contains(name))
+            {
+                throw std::out_of_range("This entity is not participating to reserve " + name);
+            }
+        }
     }
 
     /// @brief Add a reserve participation symmetry to the container
     /// @param names names of the reserves for which the participation is symmetrical
     void addReserveParticipationSymmetry(const std::set<ReserveName>& names)
     {
+        // TODO check if more than 2 reserves can be symmetrical
         if (names.size() != 2)
         {
             throw std::out_of_range("Must have two distinct reserves to participate to a symmetry");
         }
-        if (symmetricDuplicates(names))
-        {
-            throw std::invalid_argument("Detected duplicate in reserves symmetries");
-        }
-        auto checkIfReserverIsParticipating = [this](const auto& name)
-        {
-            if (!reservesParticipations.contains(name))
-            {
-                throw std::out_of_range("This entity is not participating to reserve " + name);
-            }
-        };
-        checkIfReserverIsParticipating(*names.begin());
-        checkIfReserverIsParticipating(*names.rbegin());
+        checkSymmetricDuplicates(names))
+        
+
+        checkIfReserverIsParticipating(names);
+
         reserveParticipationsSymmetries.push_back(names);
     }
 
