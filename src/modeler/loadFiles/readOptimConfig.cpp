@@ -26,6 +26,7 @@
 #include "antares/io/inputs/yml-optim-config/converter.h"
 #include "antares/io/inputs/yml-optim-config/parser.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
+#include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Inputs;
@@ -62,6 +63,7 @@ static YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
     }
 }
 
+// gp : to be removed
 static void updateLibraries(const YmlOptimConfig::OptimConfig& obj,
                             std::vector<ModelerStudy::SystemModel::Library>& libraries)
 {
@@ -76,6 +78,7 @@ static void updateLibraries(const YmlOptimConfig::OptimConfig& obj,
     }
 }
 
+// gp : to be removed
 void loadOptimConfig(const fs::path& studyPath,
                      std::vector<ModelerStudy::SystemModel::Library>& libraries)
 {
@@ -89,6 +92,19 @@ void loadOptimConfig(const fs::path& studyPath,
     std::string content = readOptimConfigFile(configPath);
     const auto&& obj = parseOptimConfig(content, configPath);
     updateLibraries(obj, libraries);
+}
+
+YmlOptimConfig::OptimConfig loadOptimConfig(const fs::path& studyPath)
+{
+    const fs::path configPath = studyPath / "input" / "optim-config.yml";
+    if (!std::filesystem::exists(configPath))
+    {
+        logs.info() << "Optim config file not found at " << configPath;
+        return {};
+    }
+
+    std::string content = readOptimConfigFile(configPath);
+    return parseOptimConfig(content, configPath);
 }
 
 } // namespace Antares::Solver::LoadFiles

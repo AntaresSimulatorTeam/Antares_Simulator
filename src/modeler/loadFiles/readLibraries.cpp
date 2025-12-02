@@ -26,14 +26,24 @@
 #include <antares/io/inputs/yml-model/parser.h>
 #include <antares/logs/logs.h>
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
+#include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 
+using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::YmlOptimConfig;
 namespace fs = std::filesystem;
+
+// gp : declared here because can't be declared in loadFiles.h (which refuses to load OptimConfig.h)
+// gp : TODO : this will have to be improved.
+namespace Antares::Solver::LoadFiles
+{
+OptimConfig loadOptimConfig(const std::filesystem::path& studyPath);
+}
 
 namespace Antares::Solver::LoadFiles
 {
-using namespace IO::Inputs;
 
-static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
+static Library loadSingleLibrary(const fs::path& filePath)
 {
     std::string libraryStr;
     try
@@ -71,9 +81,9 @@ static ModelerStudy::SystemModel::Library loadSingleLibrary(const fs::path& file
     }
 }
 
-std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& studyPath)
+std::vector<Library> loadLibraries(const fs::path& studyPath, const OptimConfig& optimConfig)
 {
-    std::vector<ModelerStudy::SystemModel::Library> libraries;
+    std::vector<Library> libraries;
 
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
     for (const auto& entry: fs::directory_iterator(directoryPath))
@@ -89,5 +99,14 @@ std::vector<ModelerStudy::SystemModel::Library> loadLibraries(const fs::path& st
         logs.info() << "Library loaded: " << libraries.back().Id();
     }
     return libraries;
+}
+
+std::vector<Library> loadLibraries(const fs::path& studyPath)
+{
+    // First we extract the optim config from its own yaml file.
+    auto optimConfig = loadOptimConfig(studyPath);
+
+    // Then we load libraries, updating them with the optim config.
+    return loadLibraries(studyPath, optimConfig);
 }
 } // namespace Antares::Solver::LoadFiles
