@@ -134,6 +134,7 @@ struct tests_fixture: build_AST_fixture, build_eval_visitor_fixture
 };
 
 BOOST_AUTO_TEST_SUITE(tests_on_sum_over_all_time_span)
+
 BOOST_FIXTURE_TEST_CASE(sum_a_literal_over_time_span, tests_fixture)
 {
     // Expression : sum(1.)
@@ -210,6 +211,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // In code, time sum operator is represented by type TimeSumNode.
 // ==================================================================
 BOOST_AUTO_TEST_SUITE(tests_on_sum_over_interval_t__t_plus_1)
+
 BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, tests_fixture)
 {
     // Expression : sum(t .. t+1, p), where p = {p1, p2, p3} = {1., 2., 3.}
