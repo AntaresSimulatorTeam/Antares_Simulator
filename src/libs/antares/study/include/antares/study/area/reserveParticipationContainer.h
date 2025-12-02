@@ -53,15 +53,8 @@ public:
 
     bool symmetricDuplicates(const std::set<ReserveName>& names) const
     {
-        for (const auto& sym: reserveParticipationsSymmetries)
-        {
-            if ((*sym.begin() == *names.begin() && *sym.rbegin() == *names.rbegin())
-                || (*sym.begin() == *names.rbegin() && *sym.rbegin() == *names.begin()))
-            {
-                return true;
-            }
-        }
-        return false;
+        return std::ranges::any_of(reserveParticipationsSymmetries,
+                                   [&](const auto& sym) { return sym == names; });
     }
 
     /// @brief Add a reserve participation symmetry to the container
