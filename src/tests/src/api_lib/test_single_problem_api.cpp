@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(constantData.ConstraintsMatrixCoeff[0], -1);
     BOOST_CHECK_EQUAL(constantData.ConstraintsMatrixCoeff[1], -1);
 
-    const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 0});
+    const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
     // COST
     BOOST_CHECK_CLOSE(firstWeekData.LinearCost[dispatchableVariable],
                       19.999456400134147,
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
     const auto areaHydroLevel = findIndex(constantData.ConstraintsMeaning,
                                           "AreaHydroLevel::area<area>::hour<0>");
 
-    const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 0});
+    const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
     // COST
     BOOST_CHECK_CLOSE(firstWeekData.LinearCost[hydroLevelVariable],
                       -1.e-6,
@@ -202,9 +202,9 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                       3048.5130614352684,
                       EPSILON); // random initial level
 
-    const Antares::Solver::WeeklyDataFromAntares secondWeekData = getter.getWeeklyData({0, 1});
+    const Antares::Solver::WeeklyDataFromAntares secondWeekData = getter.getWeeklyData({0, 2});
     // RHS
-    BOOST_CHECK_CLOSE(firstWeekData.RHS[areaHydroLevel],
+    BOOST_CHECK_CLOSE(secondWeekData.RHS[areaHydroLevel],
                       3048.5130614352684,
                       EPSILON); // random initial level
 }
@@ -228,11 +228,11 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks)
 
     // First problem is (year, week) = (0, 0)
     BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
-    BOOST_CHECK_EQUAL(problem_ids[0].week, 0);
+    BOOST_CHECK_EQUAL(problem_ids[0].week, 1);
 
     // Last problem is (year, week) = (2, 1)
     BOOST_CHECK_EQUAL(problem_ids[5].year, 2);
-    BOOST_CHECK_EQUAL(problem_ids[5].week, 1);
+    BOOST_CHECK_EQUAL(problem_ids[5].week, 2);
 }
 
 BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year)
@@ -253,11 +253,11 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year)
 
     // First problem is (year, week) = (0, 0)
     BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
-    BOOST_CHECK_EQUAL(problem_ids[0].week, 0);
+    BOOST_CHECK_EQUAL(problem_ids[0].week, 1);
 
     // Last problem is (year, week) = (2, 1)
     BOOST_CHECK_EQUAL(problem_ids[3].year, 2);
-    BOOST_CHECK_EQUAL(problem_ids[3].week, 1);
+    BOOST_CHECK_EQUAL(problem_ids[3].week, 2);
 }
 
 BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year_partial_year)
@@ -278,10 +278,10 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year_partial_year)
 
     // First problem is (year, week) = (0, 0)
     BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
-    BOOST_CHECK_EQUAL(problem_ids[0].week, 0);
+    BOOST_CHECK_EQUAL(problem_ids[0].week, 1);
 
     // Last problem is (year, week) = (2, 1)
     BOOST_CHECK_EQUAL(problem_ids[1].year, 2);
-    BOOST_CHECK_EQUAL(problem_ids[1].week, 0);
+    BOOST_CHECK_EQUAL(problem_ids[1].week, 1);
 }
 BOOST_AUTO_TEST_SUITE_END()

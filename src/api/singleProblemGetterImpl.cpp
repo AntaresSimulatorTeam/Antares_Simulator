@@ -22,6 +22,7 @@
 #include "singleProblemGetterImpl.h"
 
 #include <map>
+#include <stdexcept>
 #include <string>
 
 #include "antares/benchmarking/DurationCollector.h"
@@ -109,7 +110,8 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
         {
             for (unsigned week = 0; week < p.simulationDays.numberOfWeeks(); ++week)
             {
-                ret.emplace_back(year, week);
+                // by convention, weeks start at 1
+                ret.emplace_back(year, week + 1);
             }
         }
     }
@@ -151,9 +153,15 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
 
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
-    const auto [year, week] = id;
+    auto [year, week] = id;
+    // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
+    if (week == 0)
+    {
+        throw std::invalid_argument("Invalid week number 0 detected, week number must be >=1");
+    }
+    week--;
 
-    pb_.year = id.year;
+    pb_.year = year;
     pb_.weekInTheYear = week;
 
     const auto [hydroLevels, ventilationResults] = getYearlyData(year);
