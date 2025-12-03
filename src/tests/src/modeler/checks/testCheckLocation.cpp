@@ -136,7 +136,9 @@ BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
       LocationError,
       checkMessage(
         "In model 'base model': In expression 'port.field': this port field definition "
-        "'port.field': is referencing an expression containing an incorrect location: Model 'base model': In expression 'var1': Error for variable 'var1': Location doesn't match the expression location (variable location: subproblems, expression location: master)"));
+        "'port.field': is referencing an expression containing an incorrect location: Model 'base "
+        "model': In expression 'var1': Error for variable 'var1': Location doesn't match the "
+        "expression location (variable location: subproblems, expression location: master)"));
 }
 
 BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
@@ -223,7 +225,8 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
       LocationError,
       checkMessage(
         "In model 'model1': In expression 'sum_connections(port.field)': this "
-        "'sum_connections(port.field)' is referencing an expression containing an incorrect location: Model "
+        "'sum_connections(port.field)' is referencing an expression containing an incorrect "
+        "location: Model "
         "'model2': In expression 'var1': Error for variable 'var1': Location doesn't match the "
         "expression location (variable location: master, expression location: subproblems)"));
 }
