@@ -24,8 +24,8 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/solver/modeler/checks/checkLocation.h>
 #include <antares/solver/modeler/data.h>
-#include <antares/solver/modeler/loadFiles/checkLocation.h>
 
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
@@ -155,7 +155,7 @@ void checkExpression(const Node* expression,
             // bad locations
             std::string msgInCaseOfError = fmt::format(
               "In model '{}': In expression '{}': this port field definition '{}.{}': is "
-              "referencing an expression containing an incorrect location",
+              "referencing an expression containing an incorrect location: ",
               model.Id(),
               exprStr,
               portFieldNode->getPortName(),

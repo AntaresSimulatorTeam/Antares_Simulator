@@ -10,11 +10,9 @@ set(SOURCES
         readScenarioGroup.cpp
         readSystem.cpp
         readOptimConfig.cpp
-        checkLocation.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
         include/antares/solver/modeler/loadFiles/Fileloader.h
-        include/antares/solver/modeler/loadFiles/checkLocation.h
 )
 
 # Create the library
@@ -45,6 +43,7 @@ target_link_libraries(load-modeler-files
         Antares::modeler-lib
         Antares::scenario-group-parser
         Antares::utils
+        Antares::modeler-checks
         fmt::fmt
 )
 

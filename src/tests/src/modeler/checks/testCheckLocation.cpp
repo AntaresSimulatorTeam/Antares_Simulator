@@ -20,9 +20,11 @@
  */
 #define WIN32_LEAN_AND_MEAN
 
+#define BOOST_TEST_MODULE modeler checks
+
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/modeler/loadFiles/checkLocation.h>
+#include <antares/solver/modeler/checks/checkLocation.h>
 #include "antares/study/system-model/model.h"
 
 // If we don't turn clang-format off here, some antlr4 header does not compile :
@@ -134,9 +136,7 @@ BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
       LocationError,
       checkMessage(
         "In model 'base model': In expression 'port.field': this port field definition "
-        "'port.field': is referencing a expression with a bad locationModel 'base model': In "
-        "expression 'var1': Error for variable 'var1': Location doesn't match the expression "
-        "location (variable location: subproblems, expression location: master)"));
+        "'port.field': is referencing an expression containing an incorrect location: Model 'base model': In expression 'var1': Error for variable 'var1': Location doesn't match the expression location (variable location: subproblems, expression location: master)"));
 }
 
 BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
@@ -223,7 +223,7 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
       LocationError,
       checkMessage(
         "In model 'model1': In expression 'sum_connections(port.field)': this "
-        "'sum_connections(port.field)' is referencing a variable in a different location: Model "
+        "'sum_connections(port.field)' is referencing an expression containing an incorrect location: Model "
         "'model2': In expression 'var1': Error for variable 'var1': Location doesn't match the "
         "expression location (variable location: master, expression location: subproblems)"));
 }
