@@ -11,7 +11,7 @@
     {
       "kind": "git",
       "repository": "https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry",
-      "baseline": "9b4a8e17c594af44915fdd75b9affb5ff3be4cc8",
+      "baseline": "3df163f8c877d4c6911797c6a3a6df672c395c2d",
       "packages": [
         "sirius-solver"
       ]

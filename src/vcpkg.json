@@ -3,10 +3,6 @@
   "version-string": "9.3.2",
   "dependencies": [
     {
-      "name": "sirius-solver",
-      "version>=": "1.8"
-    },
-    {
       "name": "wxwidgets",
       "platform": "windows"
     },
