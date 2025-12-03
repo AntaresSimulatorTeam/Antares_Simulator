@@ -32,7 +32,7 @@
 // Mock includes for testing - replace with actual includes
 #include <inmemory-modeler.h>
 
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
@@ -77,24 +77,24 @@ BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
 BOOST_AUTO_TEST_CASE(TestUpdateTimeIndexIfShouldForceScenario)
 {
-    using TI = Antares::Optimisation::TimeIndex;
+    using TI = Antares::Optimisation::VariabilityType;
     // bool = false => no value should change
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
+    BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
                 == TI::CONSTANT_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_SCENARIO_ONLY, false)
+    BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::VARYING_IN_SCENARIO_ONLY, false)
                 == TI::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_TIME_ONLY, false)
+    BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::VARYING_IN_TIME_ONLY, false)
                 == TI::VARYING_IN_TIME_ONLY);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_TIME_AND_SCENARIO, false)
+    BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::VARYING_IN_TIME_AND_SCENARIO, false)
                 == TI::VARYING_IN_TIME_AND_SCENARIO);
     // bool = true => scenario dependency should be added
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, true)
+    BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, true)
                 == TI::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_SCENARIO_ONLY, true)
+    BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::VARYING_IN_SCENARIO_ONLY, true)
                 == TI::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_TIME_ONLY, true)
+    BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::VARYING_IN_TIME_ONLY, true)
                 == TI::VARYING_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK(updateTimeIndexIfShouldForceScenario(TI::VARYING_IN_TIME_AND_SCENARIO, true)
+    BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::VARYING_IN_TIME_AND_SCENARIO, true)
                 == TI::VARYING_IN_TIME_AND_SCENARIO);
 }
 BOOST_AUTO_TEST_SUITE_END()
@@ -537,11 +537,10 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto cstrTimeIndex = TimeIndexVisitor(*optimEntityContainer, compo)
-                                         .dispatch(constraint.expression().RootNode());
-            optimEntityContainer->registerConstraint(compo, cstrTimeIndex);
-            if (cstrTimeIndex == TimeIndex::VARYING_IN_TIME_ONLY
-                || cstrTimeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer, compo)
+                                                  .dispatch(constraint.expression().RootNode());
+            optimEntityContainer->registerConstraint(compo, constraint_variability);
+            if (isTimeDependent(constraint_variability))
             {
                 for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {

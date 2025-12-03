@@ -299,6 +299,15 @@ public:
         return 0.;
     }
 
+    void setObjectiveOffset(double) override
+    {
+    }
+
+    double getObjectiveOffset() const override
+    {
+        return {};
+    }
+
     void setMinimization() override
     {
     }
