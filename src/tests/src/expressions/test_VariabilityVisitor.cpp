@@ -93,7 +93,7 @@ struct TestVariabilityVisitorFixture
         fixture.createComponent(
           "model",
           "compo",
-          {build_context_parameter_with("param", "0", ParameterType::TIMESERIE)},
+          {build_context_parameter_with("param", "0", ParameterType::TIMESERIES)},
           "group");
 
         auto bounds_time_series = std::make_unique<LinearProblemDataImpl::TimeSeriesSet>("bounds",

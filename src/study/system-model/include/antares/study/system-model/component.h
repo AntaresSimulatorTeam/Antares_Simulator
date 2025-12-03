@@ -33,7 +33,7 @@ namespace Antares::ModelerStudy::SystemModel
 enum class ParameterType : unsigned int
 {
     CONSTANT = 0,
-    TIMESERIE = 1
+    TIMESERIES = 1
     // TODO: add varying_in_scenario_only, varying_in_time_and_scenario, and handle them in visitors
 };
 

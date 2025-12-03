@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
 
     createComponent("model",
                     "componentToto",
-                    {build_context_parameter_with("bounds", "bounds", ParameterType::TIMESERIE)});
+                    {build_context_parameter_with("bounds", "bounds", ParameterType::TIMESERIES)});
 
     const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 0};
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
 
     createComponent("model",
                     "componentToto",
-                    {build_context_parameter_with("bounds", "bounds", ParameterType::TIMESERIE)},
+                    {build_context_parameter_with("bounds", "bounds", ParameterType::TIMESERIES)},
                     "GROUPENAME");
 
     const vector<unsigned int> timeSteps{0, 1};

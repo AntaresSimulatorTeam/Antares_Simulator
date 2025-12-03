@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
       {valid_number, {valid_number, ParameterType::CONSTANT, "42.5"}},
       {invalid_number, {invalid_number, ParameterType::CONSTANT, "abc"}},
       {out_of_range, {out_of_range, ParameterType::CONSTANT, "1e500"}},
-      {timeserie_param, {timeserie_param, ParameterType::TIMESERIE, "timeserie_file"}}};
+      {timeserie_param, {timeserie_param, ParameterType::TIMESERIES, "timeserie_file"}}};
 
     std::map<std::string, double> variables; // Not needed for this test
 
@@ -684,7 +684,7 @@ BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context__
     ParameterNode root(id, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIES);
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
 
@@ -789,14 +789,14 @@ struct TimeDependentParameterFixture
         for (const auto& [name, typeAndValue]: additionnalParams)
         {
             params.emplace_back(name,
-                                typeAndValue.type == ParameterType::TIMESERIE ? TimeDependent::YES
+                                typeAndValue.type == ParameterType::TIMESERIES ? TimeDependent::YES
                                                                               : TimeDependent::NO,
                                 ScenarioDependent::NO);
         }
 
         model = createModelWithParameters(params);
         additionnalParams.emplace(
-          build_context_parameter_with("my-param", value, ParameterType::TIMESERIE));
+          build_context_parameter_with("my-param", value, ParameterType::TIMESERIES));
         components.push_back(createComponent(model, compoName, additionnalParams));
         scenarioGroupRepo = makeScenarioGroupRepo(components.front());
         optimContainer.addFromSystemComponents(components);
@@ -837,7 +837,7 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
 
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIES);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
@@ -885,7 +885,7 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
 
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIES);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
@@ -926,7 +926,7 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
 
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIES);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
@@ -963,7 +963,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
 
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIES);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
@@ -1022,7 +1022,7 @@ void evaluate_time_dependent_operation()
 
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIES);
     const auto compoName = "1245";
 
     const std::vector<Component> components{createComponent(model, compoName, {param})};
@@ -1058,7 +1058,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
 
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIES);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
 
@@ -1099,7 +1099,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
 
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::YES, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIE);
+    auto param = build_context_parameter_with("my-param", value, ParameterType::TIMESERIES);
     const auto compoName = "1245";
 
     const std::vector<Component> components{createComponent(model, compoName, {param})};
@@ -1272,7 +1272,7 @@ BOOST_FIXTURE_TEST_CASE(functionNode_min, MyDummyFixture)
 BOOST_AUTO_TEST_CASE(functionNode_min_timeDepdentParameter)
 {
     TimeDependentParameterFixture fixture(
-      {build_context_parameter_with("Param2", "P2", ParameterType::TIMESERIE)});
+      {build_context_parameter_with("Param2", "P2", ParameterType::TIMESERIES)});
     fixture.dummy_data.addParams(
       std::make_pair<std::string, std::vector<double>>("P2", {-400, 1568}));
     ParameterNode second("Param2", VariabilityType::VARYING_IN_TIME_ONLY);

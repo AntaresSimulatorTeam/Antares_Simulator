@@ -111,7 +111,7 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
                                  Parameter("five", TimeDependent::NO, ScenarioDependent::NO)})),
     component_(createComponent(model_,
                                "component-id",
-                               {{"p", {"p", ParameterType::TIMESERIE, "p"}},
+                               {{"p", {"p", ParameterType::TIMESERIES, "p"}},
                                 {"five", {"five", ParameterType::CONSTANT, "5"}}},
                                0)),
     scenarioGroupRepo_(makeScenarioGroupRepo(component_)),
