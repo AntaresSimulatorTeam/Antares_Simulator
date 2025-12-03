@@ -21,6 +21,8 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <boost/algorithm/string.hpp>
+
 #include <antares/io/file.h>
 #include <antares/io/inputs/model-converter/modelConverter.h>
 #include <antares/io/inputs/yml-model/parser.h>
@@ -37,7 +39,7 @@ namespace fs = std::filesystem;
 // gp : TODO : this will have to be improved.
 namespace Antares::Solver::LoadFiles
 {
-OptimConfig loadOptimConfig(const std::filesystem::path& studyPath);
+OptimConfig loadOptimConfigFromYaml(const std::filesystem::path& studyPath);
 }
 
 namespace Antares::Solver::LoadFiles
@@ -108,21 +110,70 @@ std::vector<YmlModel::Library> loadLibrariesFromYaml(const fs::path& studyPath)
     return yml_libs;
 }
 
+static std::pair<std::string, std::string> splitModelId(const std::string& modelId)
+{
+    std::vector<std::string> result;
+    boost::split(result, modelId, boost::is_any_of("."));
+    return {result[0], result[1]}; // We assume the format is always libraryId.modelId
+}
+
+YmlModel::Model& fetchModelInLibrairies(const YmlOptimConfig::Model& optimConfigModel,
+                                        std::vector<YmlModel::Library>& ymlLibs)
+{
+    const auto [libId, modelId] = splitModelId(optimConfigModel.id);
+
+    auto lib = std::ranges::find_if(ymlLibs, [&libId](const auto& l) { return l.id == libId; });
+    if (lib == ymlLibs.end())
+    {
+        throw std::runtime_error("No library found with this name: " + libId);
+    }
+
+    auto modelIt = std::ranges::find_if(lib->models,
+                                        [&modelId](const auto& m) { return m.id == modelId; });
+    if (modelIt == lib->models.end())
+    {
+        throw std::runtime_error("No model found with this name: " + modelId);
+    }
+
+    return *modelIt;
+}
+
+void updateVariables(YmlModel::Model& libModel, const YmlOptimConfig::Model& optimConfigModel)
+{
+    for (const auto& optCfgVar: optimConfigModel.variables)
+    {
+        auto predicate = [&optCfgVar](const auto& v) { return v.id == optCfgVar.id; };
+        auto varIt = std::ranges::find_if(libModel.variables, predicate);
+        if (varIt == libModel.variables.end())
+        {
+            throw std::runtime_error("No variable found with this name: " + optCfgVar.id);
+        }
+        varIt->location = optCfgVar.location;
+    }
+}
+
+void updateSystemModel(YmlModel::Model& libModel, const YmlOptimConfig::Model& ymlModel)
+{
+    updateVariables(libModel, ymlModel);
+    // updateConstraints(ymlLibs, ymlModel);
+    // updateObjective(ymlLibs, ymlModel);
+}
+
 void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
                                     const YmlOptimConfig::OptimConfig& ymlOptimConfig)
 {
+    for (const auto& optimConfigModel: ymlOptimConfig)
+    {
+        auto& libModel = fetchModelInLibrairies(optimConfigModel, ymlLibs);
+        updateSystemModel(libModel, optimConfigModel);
+    }
 }
 
 std::vector<SystemModel::Library> loadLibraries(const fs::path& studyPath)
 {
-    // First we load and store libraries from yaml files.
-    auto ymlLibs = loadLibrariesFromYaml(studyPath);
-
-    // Then we extract the optim config from its own yaml file.
-    auto ymlOptimConfig = loadOptimConfig(studyPath);
-
-    updateLibrariesWithOptimConfig(ymlLibs, ymlOptimConfig);
-
-    return convertIntoSystemLibs(ymlLibs);
+    auto ymlLibraries = loadLibrariesFromYaml(studyPath);
+    auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
+    updateLibrariesWithOptimConfig(ymlLibraries, ymlOptimConfig);
+    return convertIntoSystemLibs(ymlLibraries);
 }
 } // namespace Antares::Solver::LoadFiles

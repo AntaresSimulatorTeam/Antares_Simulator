@@ -137,11 +137,11 @@ SystemModel::Objective& findSystemObjective(const std::string& obj_id, SystemMod
 
 void updateSystemModel(SystemModel::Model& sysModel, const YmlOptimConfig::Model& ymlModel)
 {
-    for (const auto& ymlVar: ymlModel.variables)
-    {
-        auto& sysVariable = findSystemVariable(ymlVar.id, sysModel);
-        sysVariable.setLocation(convertLocation(ymlVar.location));
-    }
+    // for (const auto& ymlVar: ymlModel.variables)
+    //{
+    //     auto& sysVariable = findSystemVariable(ymlVar.id, sysModel);
+    //     sysVariable.setLocation(convertLocation(ymlVar.location));
+    // }
 
     for (const auto& ymlConstraint: ymlModel.constraints)
     {

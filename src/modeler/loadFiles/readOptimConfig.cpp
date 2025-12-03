@@ -94,7 +94,7 @@ void loadOptimConfig(const fs::path& studyPath,
     updateLibraries(obj, libraries);
 }
 
-YmlOptimConfig::OptimConfig loadOptimConfig(const fs::path& studyPath)
+YmlOptimConfig::OptimConfig loadOptimConfigFromYaml(const fs::path& studyPath)
 {
     const fs::path configPath = studyPath / "input" / "optim-config.yml";
     if (!std::filesystem::exists(configPath))

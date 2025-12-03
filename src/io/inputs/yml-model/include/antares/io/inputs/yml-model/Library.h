@@ -66,6 +66,7 @@ struct Variable
     ValueType variable_type;
     bool time_dependent;
     bool scenario_dependent;
+    std::string location = "subproblems";
 };
 
 struct Port

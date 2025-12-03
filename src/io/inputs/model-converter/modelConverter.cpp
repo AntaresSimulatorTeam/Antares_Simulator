@@ -126,6 +126,27 @@ std::vector<ModelerStudy::SystemModel::Parameter> convertParameters(
     return parameters;
 }
 
+// gp : duplication of convertLocation from src/io/inputs/yml-optim-config/converter.cpp
+Modeler::Config::Location convertLocation(const std::string& locationStr)
+{
+    std::string locLower = locationStr;
+    std::ranges::transform(locLower, locLower.begin(), ::tolower);
+    if (locLower == "master")
+    {
+        return Modeler::Config::Location::MASTER;
+    }
+    if (locLower == "master-and-subproblems")
+    {
+        return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+    if (locLower == "subproblems")
+    {
+        return Modeler::Config::Location::SUBPROBLEMS;
+    }
+    // gp : should we throw Error::RuntimeError (as in converter.cpp)
+    throw std::runtime_error("Unknown location: " + locationStr);
+}
+
 /**
  * \brief Converts a YmlModel::ValueType to an SystemModel::ValueType.
  *
@@ -172,7 +193,8 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
                                std::move(ub),
                                convertType(variable.variable_type),
                                SM::fromBool<SM::TimeDependent>(variable.time_dependent),
-                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent));
+                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent),
+                               convertLocation(variable.location));
     }
 
     return variables;
