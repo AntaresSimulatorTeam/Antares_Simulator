@@ -1,6 +1,5 @@
 var NAVTREEINDEX30 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a2d6728edaf06ef5f48222fb934b373d4":[8,0,0,19,5,4,86,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a575b572072b7a0acf808e86f3f9bbe7c":[8,0,0,19,5,4,86,13],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a5c59de1ba2cda45417482b7cbc404030":[8,0,0,19,5,4,86,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html#a6344a84943b70406b9e9b5cd7af5f01b":[8,0,0,19,5,4,86,18],
@@ -249,5 +248,6 @@ var NAVTREEINDEX30 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a909990ea0460ff64adaab294d55961c2":[8,0,0,19,5,4,108,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a994c7f46c5d75b2170f67d00c93dc7ba":[8,0,0,19,5,4,108,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a99a5ff1328e23840b85200ec8b96e843":[8,0,0,19,5,4,108,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ab04ad31d8b044f31839c2ef26ad8deee":[8,0,0,19,5,4,108,13]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ab04ad31d8b044f31839c2ef26ad8deee":[8,0,0,19,5,4,108,13],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ab6348aef5092ee85863d2405d9fdabf4":[8,0,0,19,5,4,108,15]
 };

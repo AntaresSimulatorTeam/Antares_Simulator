@@ -6,7 +6,6 @@ var structMyDummyFixture =
     [ "ctx", "structMyDummyFixture.html#adf8353bba45cd4aeb4f6fc527dcee020", null ],
     [ "data", "structMyDummyFixture.html#a68cb5dd51e0ca2b207e7f98d45ebbfed", null ],
     [ "defaultComponentEvalVisitor", "structMyDummyFixture.html#a11c71d9b944fcd774bb4725983ea7a50", null ],
-    [ "emptyScenario", "structMyDummyFixture.html#a91f17e9c252614496d41220189d4ec62", null ],
     [ "linearProblem", "structMyDummyFixture.html#a20f65daebcd1bbff9a215b8319f09126", null ],
     [ "model", "structMyDummyFixture.html#ac6fb895949afcc7459ac9fd6394f86f2", null ],
     [ "optimEntityContainer", "structMyDummyFixture.html#a929865efc1fc09c430059009cef917b8", null ],

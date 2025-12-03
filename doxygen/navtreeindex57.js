@@ -1,6 +1,5 @@
 var NAVTREEINDEX57 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[8,0,0,19,5,4,118,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html":[8,0,0,19,5,4,120,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster_1_1Statistics.html":[8,0,0,19,5,4,122,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html":[8,0,0,19,5,4,124,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#afa929b139bcabb9a98ad8715fc874a62":[8,0,0,19,5,4,111,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html":[8,0,0,19,5,4,16],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a1fe574440a01eafe5bbc071c44c50afe":[8,0,0,19,5,4,16,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a416f29be80a14c3363740d25a38fa852":[8,0,0,19,5,4,16,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a416f29be80a14c3363740d25a38fa852":[8,0,0,19,5,4,16,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a434025b2227226e722e1db0ce5631e5c":[8,0,0,19,5,4,16,0]
 };

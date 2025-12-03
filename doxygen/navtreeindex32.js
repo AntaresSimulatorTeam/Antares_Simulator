@@ -1,6 +1,5 @@
 var NAVTREEINDEX32 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a5daa6c0aac4dcec5a4721acdba67adf5":[8,0,0,19,5,4,130,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a77711bcd11f6b149abf196df12003f73":[8,0,0,19,5,4,130,17],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#a8493d303c268e758fa769029549a1d61":[8,0,0,19,5,4,130,14],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html#aa30701999e87cc04f9c26b46db9d1ba1":[8,0,0,19,5,4,130,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX32 =
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a967a698802a948a13a5e71b6f80eb408":[8,0,0,19,5,6,0,4,11],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#ab19a782333ec92485a5bf393232e425b":[8,0,0,19,5,6,0,4,5],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#af29ebb7e4b1e13cd7d3512f700c2b240":[8,0,0,19,5,6,0,4,10],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html":[8,0,0,19,5,6,0,8]
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html":[8,0,0,19,5,6,0,8],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a02fc26267153c8dd7a1d55d4f2d63e9b":[8,0,0,19,5,6,0,8,0]
 };

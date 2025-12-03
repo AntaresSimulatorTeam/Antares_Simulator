@@ -159,9 +159,6 @@ requires std::derived_from&lt; Derived, <a class="el" href="classAntares_1_1Expr
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a91f17e9c252614496d41220189d4ec62"><td class="memItemLeft" align="right" valign="top"><a id="a91f17e9c252614496d41220189d4ec62"></a>
-<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html">Antares::Optimisation::LinearProblemApi::EmptyScenario</a>&#160;</td><td class="memItemRight" valign="bottom"><b>emptyScenario</b></td></tr>
-<tr class="separator:a91f17e9c252614496d41220189d4ec62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68cb5dd51e0ca2b207e7f98d45ebbfed"><td class="memItemLeft" align="right" valign="top"><a id="a68cb5dd51e0ca2b207e7f98d45ebbfed"></a>
 <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html">Antares::Optimisation::LinearProblemDataImpl::LinearProblemData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>data</b></td></tr>
 <tr class="separator:a68cb5dd51e0ca2b207e7f98d45ebbfed"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,8 +167,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ac6fb895949afcc7459ac9fd6394f86f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a729b86a6cc6b2fb4fcc9b920a47005ec"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>components</b></td></tr>
 <tr class="separator:a729b86a6cc6b2fb4fcc9b920a47005ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a062d6f6fd98cacab66820acbdd978abd"><td class="memItemLeft" align="right" valign="top"><a id="a062d6f6fd98cacab66820acbdd978abd"></a>
-<a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Antares::Optimisation::ScenarioGroupRepository</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioGroupRepository</b> = getscenarioGroupRepository(components.front())</td></tr>
+<tr class="memitem:a062d6f6fd98cacab66820acbdd978abd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Antares::Optimisation::ScenarioGroupRepository</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioGroupRepository</b></td></tr>
 <tr class="separator:a062d6f6fd98cacab66820acbdd978abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20f65daebcd1bbff9a215b8319f09126"><td class="memItemLeft" align="right" valign="top"><a id="a20f65daebcd1bbff9a215b8319f09126"></a>
 <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a>&#160;</td><td class="memItemRight" valign="bottom"><b>linearProblem</b> = <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a>(true)</td></tr>
@@ -215,6 +211,22 @@ std::unique_ptr&lt; <a class="el" href="classAntares_1_1Expressions_1_1Visitors_
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= Antares::Optimisation::</div>
 <div class="line">      OptimEntityContainer(linearProblem, &amp;data, &amp;scenarioGroupRepository)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a062d6f6fd98cacab66820acbdd978abd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a062d6f6fd98cacab66820acbdd978abd">&#9670;&nbsp;</a></span>scenarioGroupRepository</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Antares::Optimisation::ScenarioGroupRepository</a> MyDummyFixture::scenarioGroupRepository</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= makeScenarioGroupRepo(</div>
+<div class="line">      components.front())</div>
 </div><!-- fragment -->
 </div>
 </div>

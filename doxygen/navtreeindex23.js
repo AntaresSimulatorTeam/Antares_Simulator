@@ -1,6 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"classAntares_1_1Optimisation_1_1Dimensions.html":[8,0,0,16,15],
 "classAntares_1_1Optimisation_1_1Dimensions.html#a1658640cd6df97460a92111b610ca45e":[8,0,0,16,15,5],
 "classAntares_1_1Optimisation_1_1Dimensions.html#a21781e17abe32467a86c035ed37e99e9":[8,0,0,16,15,1],
 "classAntares_1_1Optimisation_1_1Dimensions.html#a5a0914d09021385d106e46117146de6d":[8,0,0,16,15,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX23 =
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#aee6c7fd6d4cb9d8e1ae97557ef566538":[8,0,0,16,2,4,5],
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#af3382d4e4c3065fde77c79fe101e58d0":[8,0,0,16,2,4,11],
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html#afd587a1d84aef1ee56bf6a0ee8c642b6":[8,0,0,16,2,4,7],
-"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1SiriusObjectiveOffsetHandler.html":[8,0,0,16,2,5]
+"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1SiriusObjectiveOffsetHandler.html":[8,0,0,16,2,5],
+"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1SiriusObjectiveOffsetHandler.html#a191fe28d77d12e9a5140a999edfb894a":[8,0,0,16,2,5,2]
 };

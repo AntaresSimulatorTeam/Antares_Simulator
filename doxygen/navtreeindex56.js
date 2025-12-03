@@ -1,6 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html#ae971a87a76cfa18feb2040ef7bd54f9a":[8,0,0,12,0,5,2,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html":[8,0,0,12,0,5,4],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html#a0a43111f5db7a3477d0becee1f7304bd":[8,0,0,12,0,5,4,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html#a261816e26a02162e63ad57df2bfb3b98":[8,0,0,12,0,5,4,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html":[8,0,0,19,5,4,110,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[8,0,0,19,5,4,112,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[8,0,0,19,5,4,17,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html":[8,0,0,19,5,4,116,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html":[8,0,0,19,5,4,116,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[8,0,0,19,5,4,118,0]
 };

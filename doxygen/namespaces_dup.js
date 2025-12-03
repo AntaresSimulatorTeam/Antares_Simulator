@@ -1344,7 +1344,7 @@ var namespaces_dup =
           ] ],
           [ "ParameterType", "study_2system-model_2include_2antares_2study_2system-model_2component_8h.html#a620a0eceac0574c76cf43bf9ec593f31", [
             [ "CONSTANT", "study_2system-model_2include_2antares_2study_2system-model_2component_8h.html#a620a0eceac0574c76cf43bf9ec593f31a8d6b5cada83510220f59e00ce86d4d92", null ],
-            [ "TIMESERIE", "study_2system-model_2include_2antares_2study_2system-model_2component_8h.html#a620a0eceac0574c76cf43bf9ec593f31afbf3aba0c9e7398d988d2e3f73effce3", null ]
+            [ "TIMESERIES", "study_2system-model_2include_2antares_2study_2system-model_2component_8h.html#a620a0eceac0574c76cf43bf9ec593f31a5eb907bdd20f7bdad174e0525e3c4097", null ]
           ] ],
           [ "ScenarioDependent", "timeAndScenarioType_8h.html#a9fcb90f553c0df726b365defc71d4d2b", [
             [ "NO", "timeAndScenarioType_8h.html#a9fcb90f553c0df726b365defc71d4d2bac2f3f489a00553e7a01d369c103c7251", null ],

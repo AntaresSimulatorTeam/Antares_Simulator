@@ -1,6 +1,5 @@
 var NAVTREEINDEX28 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a4f63e6e4a200a00fde5e2614671a891b":[8,0,0,19,5,4,44,20],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a4feb6cd38dc930fe8c03af80e89705a5":[8,0,0,19,5,4,44,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a597774277d5e0dcdb1c449ad8f888a10":[8,0,0,19,5,4,44,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a64c81d9d2e47854e2bd6476d1809d378":[8,0,0,19,5,4,44,11],
@@ -249,5 +248,6 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a5272ce001ef10d961f9ae776bb6eb836":[8,0,0,19,5,4,38,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a5f42c300dd7d9fd34acbbcc9efa3f31f":[8,0,0,19,5,4,38,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a890bd3d434fa217fe305c0d74f3cecfb":[8,0,0,19,5,4,38,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a95d30ebc66944f64d781055e50fa57f7":[8,0,0,19,5,4,38,1]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#a95d30ebc66944f64d781055e50fa57f7":[8,0,0,19,5,4,38,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html#aa5d92dc282532cb69589607d9a75b03a":[8,0,0,19,5,4,38,10]
 };

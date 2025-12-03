@@ -1,6 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#ad17d6916adc061b17740e09249be4bd0":[8,0,0,19,5,0,1,13],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#ad7feaf5196b58994212edc8447b26968":[8,0,0,19,5,0,1,12],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#adc89806064ef282e0c5ea198bc33e82a":[8,0,0,19,5,0,1,17],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html":[8,0,0,19,5,0,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX27 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a051c1a23fd06a6a190402b0df67a75d3":[8,0,0,19,5,4,44,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a14a2acefc7418d58f1d56cfa4822e947":[8,0,0,19,5,4,44,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a2781df39931622a432f7cfbf2dd57c79":[8,0,0,19,5,4,44,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a397e7a568b6b125f7d4b14b74b3538d0":[8,0,0,19,5,4,44,9]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a397e7a568b6b125f7d4b14b74b3538d0":[8,0,0,19,5,4,44,9],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#a4f63e6e4a200a00fde5e2614671a891b":[8,0,0,19,5,4,44,20]
 };

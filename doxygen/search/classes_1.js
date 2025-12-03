@@ -40,6 +40,8 @@ var searchData=
   ['boundssizemismatch_3592',['BoundsSizeMismatch',['../classAntares_1_1Optimisation_1_1AddVariableVisitor_1_1BoundsSizeMismatch.html',1,'Antares::Optimisation::AddVariableVisitor']]],
   ['boxstyle_3593',['BoxStyle',['../structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html',1,'Antares::Expressions::Visitors']]],
   ['buffer_3594',['Buffer',['../classAntares_1_1UnitTests_1_1Buffer.html',1,'Antares::UnitTests']]],
-  ['buildcontext_3595',['BuildContext',['../classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html',1,'Antares::ExtSource::Handler']]],
-  ['button_3596',['Button',['../classAntares_1_1Component_1_1Button.html',1,'Antares::Component']]]
+  ['build_5fast_5ffixture_3595',['build_AST_fixture',['../structbuild__AST__fixture.html',1,'']]],
+  ['build_5feval_5fvisitor_5ffixture_3596',['build_eval_visitor_fixture',['../structbuild__eval__visitor__fixture.html',1,'']]],
+  ['buildcontext_3597',['BuildContext',['../classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html',1,'Antares::ExtSource::Handler']]],
+  ['button_3598',['Button',['../classAntares_1_1Component_1_1Button.html',1,'Antares::Component']]]
 ];

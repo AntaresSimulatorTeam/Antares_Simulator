@@ -13,6 +13,5 @@ var classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component =
     [ "Index", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a22b2ed394925fa3984744930babccd65", null ],
     [ "nodeAtPortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#aad8c68f3da3bfa5af228281db269adbb", null ],
     [ "portToAreaConnections", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a434594ac7de2a71fd06048a864e18f13", null ],
-    [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a352938aacebb94060db85218d879f90d", null ],
-    [ "data_", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a10115ecd908ef5ba412258b20b3b6fa0", null ]
+    [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a352938aacebb94060db85218d879f90d", null ]
 ];

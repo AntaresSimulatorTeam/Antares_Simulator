@@ -1,6 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"classAntares_1_1Solver_1_1Progression.html#a55da3f13b6237c0c73c84afdea3d92f1":[8,0,0,19,7,1],
 "classAntares_1_1Solver_1_1Progression.html#a55da3f13b6237c0c73c84afdea3d92f1a1cb9aebe6e353c34ba1aa4595c62e1f9":[8,0,0,19,7,1,4],
 "classAntares_1_1Solver_1_1Progression.html#a55da3f13b6237c0c73c84afdea3d92f1a6384de106e75135de913ec496c352dc6":[8,0,0,19,7,1,8],
 "classAntares_1_1Solver_1_1Progression.html#a55da3f13b6237c0c73c84afdea3d92f1aa846be1a63788cf8a35552116e7c0ccb":[8,0,0,19,7,1,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX26 =
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a9c9e8cd03b30a9f21c4282e7864edec8":[8,0,0,19,5,0,1,2],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#ab9f3fed4d28646855588c0e5c7de5c80":[8,0,0,19,5,0,1,7],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#ac4005bf4b3dfd22c11452bee5bed0051":[8,0,0,19,5,0,1,9],
-"classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#ac77b0f4dd96b147dba6a376ff0583ef4":[8,0,0,19,5,0,1,14]
+"classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#ac77b0f4dd96b147dba6a376ff0583ef4":[8,0,0,19,5,0,1,14],
+"classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#ad17d6916adc061b17740e09249be4bd0":[8,0,0,19,5,0,1,13]
 };
