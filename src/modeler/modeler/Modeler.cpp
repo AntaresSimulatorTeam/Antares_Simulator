@@ -34,8 +34,6 @@
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
 
-#include "include/antares/solver/modeler/data.h"
-
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Optimization;

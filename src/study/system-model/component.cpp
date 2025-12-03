@@ -91,6 +91,21 @@ Node* Component::nodeAtPortField(const std::string& portId, const std::string& f
     }
 }
 
+const Expression& Component::expressionAtPortField(const std::string& portId,
+                                                   const std::string& fieldId) const
+{
+    try
+    {
+        PortFieldKey key(portId, fieldId);
+        return getModel()->PortFieldDefinitions().at(key).Definition();
+    }
+    catch (const std::out_of_range&)
+    {
+        throw std::invalid_argument("Port field '" + portId + "." + fieldId
+                                    + "' not found in component '" + data_.id + "'");
+    }
+}
+
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
     std::string exceptionPrefix = "Cannot connect area \"" + areaId + "\" to port \"" + localPortId

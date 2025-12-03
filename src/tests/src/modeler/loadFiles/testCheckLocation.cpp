@@ -32,7 +32,7 @@
 // clang-format on
 
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Solver::LoadFiles;
+using namespace Antares::Modeler::Checks;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Modeler::Config;
 

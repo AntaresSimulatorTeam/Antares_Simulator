@@ -24,7 +24,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/modeler/data.h>
 
-namespace Antares::Solver::LoadFiles
+namespace Antares::Modeler::Checks
 {
 
 /// Check location validity for all modeler data
@@ -42,4 +42,4 @@ class LocationError final: public std::invalid_argument
     using std::invalid_argument::invalid_argument;
 };
 
-} // namespace Antares::Solver::LoadFiles
+} // namespace Antares::Modeler::Checks

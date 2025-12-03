@@ -35,11 +35,7 @@ const std::vector<Node*>& ParentNode::getOperands() const
 
 const std::vector<const Node*> ParentNode::getConstOperands() const
 {
-    std::vector<const Node*> constOperands;
-    for (const auto* operand: operands_)
-    {
-        constOperands.push_back(operand);
-    }
+    std::vector<const Node*> constOperands(operands_.begin(), operands_.end());
     return constOperands;
 }
 

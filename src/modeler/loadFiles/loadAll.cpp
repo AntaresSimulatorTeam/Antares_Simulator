@@ -54,7 +54,7 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     logs.info() << "Scenario groups loaded";
     logs.info() << "Modeler loaded in " << measure.toStringInSeconds();
 
-    checkLocations(data);
+    Modeler::Checks::checkLocations(data);
     logs.info() << "Locations validity OK";
 
     return data;

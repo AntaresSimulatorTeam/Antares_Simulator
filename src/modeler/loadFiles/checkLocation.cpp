@@ -31,7 +31,7 @@ using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Modeler::Config;
 
-namespace Antares::Solver::LoadFiles
+namespace Antares::Modeler::Checks
 {
 
 void checkModel(Model& model) // TODO use const
@@ -149,7 +149,8 @@ void checkExpression(const Node* expression,
                                            + exprStr + "': this port field definition '"
                                            + portFieldNode->getPortName() + "."
                                            + portFieldNode->getFieldName()
-                                           + "': is referencing a expression with a bad location";
+                                           + "': is referencing a expression with a incorrect "
+                                             "location";
 
             PortFieldKey key(portFieldNode->getPortName(), portFieldNode->getFieldName());
             auto& expr = model.PortFieldDefinitions().at(key).Definition();
@@ -183,25 +184,22 @@ void checkExpression(const Node* expression,
                 {
                     auto* component = connection.component();
                     auto* port = connection.port();
-                    const auto* n = component->nodeAtPortField(port->Id(),
-                                                               portFieldSumNode->getFieldName());
+                    const auto& expr = component->expressionAtPortField(
+                      port->Id(),
+                      portFieldSumNode->getFieldName());
 
-                    // Convert the tree to a string, used for error messages
-                    Expressions::Visitors::PrintVisitor printVisitor;
-                    std::string nodeExpression = printVisitor.dispatch(n);
-
-                    checkExpression(n,
+                    checkExpression(expr.RootNode(),
                                     location,
                                     *connection.component()->getModel(),
-                                    nodeExpression,
+                                    expr.Value(),
                                     msgInCaseOfError);
                 }
             }
             continue;
         }
 
-        // handle dual and reduced_cosr
+        // handle dual and reduced_cost
         checkFunctionNode(node, model, exprStr);
     }
 }
-} // namespace Antares::Solver::LoadFiles
+} // namespace Antares::Modeler::Checks
