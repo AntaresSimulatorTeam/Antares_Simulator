@@ -790,7 +790,7 @@ struct TimeDependentParameterFixture
         {
             params.emplace_back(name,
                                 typeAndValue.type == ParameterType::TIMESERIES ? TimeDependent::YES
-                                                                              : TimeDependent::NO,
+                                                                               : TimeDependent::NO,
                                 ScenarioDependent::NO);
         }
 
