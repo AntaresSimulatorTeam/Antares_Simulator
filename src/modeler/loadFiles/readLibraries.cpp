@@ -90,8 +90,7 @@ std::vector<SystemModel::Library> convertIntoSystemLibs(const std::vector<YmlMod
     return libraries;
 }
 
-std::vector<SystemModel::Library> loadLibraries(const fs::path& studyPath,
-                                                const OptimConfig& optimConfig)
+std::vector<YmlModel::Library> loadLibrariesFromYaml(const fs::path& studyPath)
 {
     std::vector<YmlModel::Library> yml_libs;
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
@@ -106,16 +105,24 @@ std::vector<SystemModel::Library> loadLibraries(const fs::path& studyPath,
 
         yml_libs.push_back(loadSingleLibrary(entry.path()));
     }
+    return yml_libs;
+}
 
-    return convertIntoSystemLibs(yml_libs);
+void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
+                                    const YmlOptimConfig::OptimConfig& ymlOptimConfig)
+{
 }
 
 std::vector<SystemModel::Library> loadLibraries(const fs::path& studyPath)
 {
-    // First we extract the optim config from its own yaml file.
-    auto optimConfig = loadOptimConfig(studyPath);
+    // First we load and store libraries from yaml files.
+    auto ymlLibs = loadLibrariesFromYaml(studyPath);
 
-    // Then we load libraries, updating them with the optim config.
-    return loadLibraries(studyPath, optimConfig);
+    // Then we extract the optim config from its own yaml file.
+    auto ymlOptimConfig = loadOptimConfig(studyPath);
+
+    updateLibrariesWithOptimConfig(ymlLibs, ymlOptimConfig);
+
+    return convertIntoSystemLibs(ymlLibs);
 }
 } // namespace Antares::Solver::LoadFiles
