@@ -19,7 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <stdexcept>
+#include <fmt/format.h>
 
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -87,10 +87,12 @@ void checkFunctionNode(const Node& node, Model& model, const std::string& exprSt
                 if (variable.Id() == varNode->value()
                     && variable.location() != Location::SUBPROBLEMS)
                 {
-                    throw LocationError(
-                      "Model '" + model.Id() + "': In expression '" + exprStr
-                      + "': Error for variable '" + varNode->value()
-                      + "': reduced_cost can only be used on variables located in subproblems");
+                    throw LocationError(fmt::format(
+                      "Model '{}': In expression '{}': Error for variable '{}': reduced_cost can "
+                      "only be used on variables located in subproblems",
+                      model.Id(),
+                      exprStr,
+                      varNode->value()));
                 }
             }
         }
@@ -104,9 +106,11 @@ void checkFunctionNode(const Node& node, Model& model, const std::string& exprSt
                 if (constraint.Id() == n->value() && constraint.location() != Location::SUBPROBLEMS)
                 {
                     throw LocationError(
-                      "Model '" + model.Id() + "': In expression '" + exprStr
-                      + "': Error for constraint '" + n->value()
-                      + "': dual can only be used on constraints located in subproblems");
+                      fmt::format("Model '{}': In expression '{}': Error for constraint '{}': dual "
+                                  "can only be used on constraints located in subproblems",
+                                  model.Id(),
+                                  exprStr,
+                                  n->value()));
                 }
             }
         }
@@ -130,11 +134,15 @@ void checkExpression(const Node* expression,
                     && !AreLocationsCompatibleForExpressions(variable.location(), location))
                 {
                     throw LocationError(
-                      errorMsgForPortField + "Model '" + model.Id() + "': In expression '" + exprStr
-                      + "': Error for variable '" + varNode->value()
-                      + "': Location doesn't match the expression location (variable location: "
-                      + LocationToStr(variable.location())
-                      + ", expression location: " + LocationToStr(location) + ")");
+                      fmt::format("{}Model '{}': In expression '{}': Error for variable '{}': "
+                                  "Location doesn't match the expression location (variable "
+                                  "location: {}, expression location: {})",
+                                  errorMsgForPortField,
+                                  model.Id(),
+                                  exprStr,
+                                  varNode->value(),
+                                  LocationToStr(variable.location()),
+                                  LocationToStr(location)));
                 }
             }
             continue;
@@ -145,12 +153,13 @@ void checkExpression(const Node* expression,
         {
             // This code allows to have a clear message if one of the referenced expression contains
             // bad locations
-            std::string msgInCaseOfError = "In model '" + model.Id() + "': In expression '"
-                                           + exprStr + "': this port field definition '"
-                                           + portFieldNode->getPortName() + "."
-                                           + portFieldNode->getFieldName()
-                                           + "': is referencing a expression with a incorrect "
-                                             "location";
+            std::string msgInCaseOfError = fmt::format(
+              "In model '{}': In expression '{}': this port field definition '{}.{}': is "
+              "referencing an expression containing an incorrect location",
+              model.Id(),
+              exprStr,
+              portFieldNode->getPortName(),
+              portFieldNode->getFieldName());
 
             PortFieldKey key(portFieldNode->getPortName(), portFieldNode->getFieldName());
             auto& expr = model.PortFieldDefinitions().at(key).Definition();
@@ -167,12 +176,13 @@ void checkExpression(const Node* expression,
         {
             // This code allows to have a clear message if one of the referenced expression contains
             // bad locations
-            std::string msgInCaseOfError = "In model '" + model.Id() + "': In expression '"
-                                           + exprStr + "': this 'sum_connections("
-                                           + portFieldSumNode->getPortName() + "."
-                                           + portFieldSumNode->getFieldName()
-                                           + ")' is referencing a variable in a different "
-                                             "location: ";
+            std::string msgInCaseOfError = fmt::format(
+              "In model '{}': In expression '{}': this 'sum_connections({}.{})' is referencing an "
+              "expression containing an incorrect location: ",
+              model.Id(),
+              exprStr,
+              portFieldSumNode->getPortName(),
+              portFieldSumNode->getFieldName());
 
             for (const auto& [portLocalId, connections]: model.ComponentsConnections())
             {
