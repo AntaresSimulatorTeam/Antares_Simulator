@@ -8,7 +8,7 @@ on:
       - develop
       - dependabot/**
       - feature/reserve_model_lot3_scalian
-      - feature/fix_bug_mutltithread_reserves
+      - feature/fix_bug_multithread_reserves
   schedule:
   - cron: '21 2 * * *'
   workflow_call:
