@@ -4,9 +4,10 @@ Expressions are human-readable arithmetic expressions.
 They can contain a sign (in this case, they are equations) or not (simply representing a value or a function).
 They allow a large flexibility in defining objects of optimization.
 
-Expressions can only be found in [models](../02-inputs.md#Models) (defined in libraries yaml files).
+Expressions can only be found in [models](02-inputs.md#Models) (defined in libraries yaml files).
 
-More specifically, they can be found in the following contexts inside a model : 
+More specifically, they can be found in the following contexts inside a model :
+
 - **constraints**
 - **binding-constraints**
 - **objective-contributions**
@@ -14,9 +15,11 @@ More specifically, they can be found in the following contexts inside a model :
 - in fields **lower-bound** and **upper-bound** of **variables**.
 - **extra-output**
 
-Many elements can be found in an expression. In the following sections, we give a list of these elements, but have in mind that all these elements cannot be used in any kind of expression.
+Many elements can be found in an expression. In the following sections, we give a list of these elements, but have in
+mind that all these elements cannot be used in any kind of expression.
 It depends on the context of the expression inside the model.
-For instance, if the expression is used to define the **lower-bound** of a **variable**, it cannot contain a reference to any **variable**.
+For instance, if the expression is used to define the **lower-bound** of a **variable**, it cannot contain a reference
+to any **variable**.
 For more precision see [Cases where elements can be used in expressions]
 
 Here is the list of elements possibly composing an expression :
@@ -38,20 +41,23 @@ The following operators are allowed between two elements :
 You can use simple floating-point literals anywhere. The character `.` represents the floating point.
 
 _Example:_
+
 ~~~yaml
 expression: 3 * 67.43 - 5 / 3.14
 ~~~
 
 ## References to elements defined elsewhere
 
-Expressions can contain references to elements defined elsewhere, either in the same model (as the expression), or outside the model (via ports).
+Expressions can contain references to elements defined elsewhere, either in the same model (as the expression), or
+outside the model (via ports).
 These elements can be one of the following (we assume they are already defined elsewhere) :
 
 ### Parameters in expressions
 
-You can use a parameter by using its **id**. Note that if the parameter is time-dependent (resp. scenario-dependent), then
+You can use a parameter by using its **id**. Note that if the parameter is time-dependent (resp. scenario-dependent),
+then
 it can be used only for variables or constraints that are time-dependent (resp. scenario-dependent), and that its values
-will be implicitly unfolded during the interpretation of the expression.  
+will be implicitly unfolded during the interpretation of the expression.
 
 _Example:_
 
@@ -64,7 +70,7 @@ expression: 3 * parameter_1 + 6.345 / parameter_2
 You can use a variable by using its **id**. Note that if the variable is time-dependent (resp. scenario-dependent), then
 it can be used only for constraints that are time-dependent (resp. scenario-dependent), and that its values
 will be implicitly unfolded during the interpretation of the expression.
-  
+
 _Example:_
 
 ~~~yaml
@@ -74,7 +80,7 @@ expression: 3 * parameter_1 * variable_a + variable_b + 56.4 <= variable_4 * 439
 **Caution** :
 A **non linear mutiplication** is multiplying 2 variables.
 A **non linear division** is : the division right operand is a variable, whatever the lft operand.
-There is an important restriction about non linear multiplications or divisions. 
+There is an important restriction about non linear multiplications or divisions.
 They're only allowed in the context of **extra-output**.
 
 In general, expressions must be linear with respect to variables.
@@ -94,8 +100,8 @@ port is time-dependent (resp. scenario-dependent), which is deduced from the var
 it can be used only for constraints that are time-dependent (resp. scenario-dependent), and that its values
 will be implicitly unfolded during the interpretation of the expression. Unless, of course, you use time (resp.
 scenario)
-aggregators to aggregate it into a time-constant (resp. scenario-constant) value. 
- 
+aggregators to aggregate it into a time-constant (resp. scenario-constant) value.
+
 _Example:_
 
 ~~~yaml
@@ -112,8 +118,10 @@ In expressions, apart from arithmetic operators, other operator can be found.
 
 For time-dependent parameters, variables, and port fields, you can use these time operators:
 
-- **[t]** (as a suffix) : this operator is implied (doesn't have to be specified), but can be used if you like to explicit your intent
-- **[N]** (as a suffix) : where N is any expression resolving to an integer (using only literals and parameters), this selects
+- **[t]** (as a suffix) : this operator is implied (doesn't have to be specified), but can be used if you like to
+  explicit your intent
+- **[N]** (as a suffix) : where N is any expression resolving to an integer (using only literals and parameters), this
+  selects
   the value of the element at the N-th timestamp.
 - **[t+N]** suffix: where N is any expression resolving to an integer (using only literals and parameters), this is a
   forward shift operator of N timestamps.
@@ -147,7 +155,8 @@ For scenario-dependent parameters, variables, and port fields, you can use this 
 
 You can aggregate incoming ports using the following operator :
 
-**sum_connections(port.field)** : where "port" is the port **id** and "field" is the field **id**, this operator computes the
+**sum_connections(port.field)** : where "port" is the port **id** and "field" is the field **id**, this operator
+computes the
 sum of values of this port field, on all incoming connections from other models.  
 Note that the resulting sum can be time-dependent and/or scenario-dependent, depending on the port definition.
 
@@ -160,28 +169,29 @@ expression: sum_connections(dc_port.flow) = 0
 ### Dual operators
 
 In some cases, we need to access dual results of variables / constraints of the linear problem.
-Depending on the case, the dual unary operator is : 
+Depending on the case, the dual unary operator is :
+
 - dual result of a **variable** whose id is **my_var** is accessed by **-reduced_cost(myVar)**
 - dual result of a **constraint** whose if is **my_constraint** is accessed by **dual(myConstraint)**
 
-Note that dual results can only used within an expression whose context is an extra output. 
+Note that dual results can only used within an expression whose context is an extra output.
 
-_Exemple_ : 
+_Exemple_ :
 
 ```yaml
 models:
-  - id: myModel
-    variables:
-    - id: myVar
-      upper_bound: 1
-    constraints:
-    - id: myConstraint
-      expression: x <= 1
-    extra-outputs:
-    - id: marginal_price_variable
-      expression: -reduced_cost(myVar)
-    - id: marginal_price_constraint
-      expression: dual(myConstraint)
+- id: myModel
+  variables:
+  - id: myVar
+    upper_bound: 1
+  constraints:
+  - id: myConstraint
+    expression: x <= 1
+  extra-outputs:
+  - id: marginal_price_variable
+    expression: -reduced_cost(myVar)
+  - id: marginal_price_constraint
+    expression: dual(myConstraint)
 ```
 
 ### Power operator
@@ -190,31 +200,30 @@ This binary operator **^** is used within any expression, but with following res
 In the context of a linear problem construction (any context but **extra-output**), its operands
 can only be literals or parameters.
 
-Within an **extra-output expression**, references to variables are allowed. 
+Within an **extra-output expression**, references to variables are allowed.
 
-_Example :_ 
+_Example :_
 
 ```yaml
 models:
-  - id: myModel
-    variables:
-    - id: myVar
-    parameters:
-    - id: myParam
-    extra-outputs:
-    - id: myOutput
-      expression: myVar^(2 + myParam)
+- id: myModel
+  variables:
+  - id: myVar
+  parameters:
+  - id: myParam
+  extra-outputs:
+  - id: myOutput
+    expression: myVar^(2 + myParam)
 ```
 
 ### max (or min) operator
 
 This n-ary operator **max(u, v, ...)** can be used within any expression, with following restrictions.
 
-In the context of a linear problem construction (any context but **extra-output**), its operands 
+In the context of a linear problem construction (any context but **extra-output**), its operands
 can only be literals or parameters.
 
-Within an **extra-output expression**, references to variables are allowed. 
-
+Within an **extra-output expression**, references to variables are allowed.
 
 Furthermore, operands of min/max can only be literals or parameters.
 
@@ -222,73 +231,73 @@ _Example :_
 
 ```yaml
 models:
-  - id: myModel
-    variables:
-    - id: x
-    parameters:
-    - id: a
-    - id: b
-    constraints:
-    - id: myConstraint
-      expression: x < max(a,b)
-    extra-outputs:
-    - id: myOutput
-      expression: max(x, a*b)
+- id: myModel
+  variables:
+  - id: x
+  parameters:
+  - id: a
+  - id: b
+  constraints:
+  - id: myConstraint
+    expression: x < max(a,b)
+  extra-outputs:
+  - id: myOutput
+    expression: max(x, a*b)
 ```
 
-Nothing forbids to also have : 
+Nothing forbids to also have :
 
 ```yaml
 max(2, 3) * x + min(3,4) * y # in objective
 max(2, 3) * x + min(3, 4) * y <= 42 # in a constraint
 ```
 
-
 ## Cases where elements can be used in expressions
 
 ### Operators
 
-**Caution** : as already said, non-linear multiplications or divisions are forbidden in expressions in general, except within an **extra-output** expressions.
-Apart from that case, variables can only be multiplied/divided by literals/parameters. 
+**Caution** : as already said, non-linear multiplications or divisions are forbidden in expressions in general, except
+within an **extra-output** expressions.
+Apart from that case, variables can only be multiplied/divided by literals/parameters.
 
-In following tables : 
+In following tables :
+
 - **L** means : only linear multiplication or division is allowed
 - **NL** means non linear multiplication or division is allowed
 - **NV** : the operator applies to non-variable elements only (that is literals and parameters).
 
 ---
 
-|Context of expression        | [+-]  | [*/] | [<>=] |  Time | sum_connections |
-|-----------------------------|-------|------|-------|-------|-----------------|
-|constraints                  |  yes  |   L  |  yes  |  yes  |  no             |
-|binding-constraints          |  yes  |   L  |  yes  |  yes  |  yes            |
-|objective-contributions      |  yes  |   L  |  no   |  no   |  no             |
-|port-field-definitions       |  yes  |   L  |  no   |  no   |  no             |
-|variable bounds              |  yes  |   L  |  no   |  no   |  no             |
-|extra-output                 |  yes  |   NL |  no   |  no   |  no             |
+| Context of expression   | [+-] | [*/] | [<>=] | Time | sum_connections |
+|-------------------------|------|------|-------|------|-----------------|
+| constraints             | yes  | L    | yes   | yes  | no              |
+| binding-constraints     | yes  | L    | yes   | yes  | yes             |
+| objective-contributions | yes  | L    | no    | no   | no              |
+| port-field-definitions  | yes  | L    | no    | no   | no              |
+| variable bounds         | yes  | L    | no    | no   | no              |
+| extra-output            | yes  | NL   | no    | no   | no              |
 
 ---
 
-|Context of expression        | Scenario | Dual | Power | Max/Min | sum |
-|-----------------------------|----------|------|-------|---------|-----|
-|constraints                  |    ?     |  no  |   NV  |    NV   | yes |
-|binding-constraints          |    ?     |  no  |   NV  |    NV   | yes |
-|objective-contributions      |    ?     |  no  |   NV  |    NV   | yes |
-|port-field-definitions       |    ?     |  no  |   NV  |    NV   | yes |
-|variable bounds              |    ?     |  no  |   NV  |    NV   | yes |
-|extra-output                 |    ?     |  yes |   yes |    yes  | yes |
-
+| Context of expression   | Scenario | Dual | Power | Max/Min | sum | sum(S..E) |
+|-------------------------|----------|------|-------|---------|-----|-----------|
+| constraints             | ?        | no   | NV    | NV      | yes | yes       |       
+| binding-constraints     | ?        | no   | NV    | NV      | yes | yes       |     
+| objective-contributions | no       | no   | NV    | NV      | yes | no        |    
+| port-field-definitions  | ?        | no   | NV    | NV      | yes | yes       |   
+| variable bounds         | ?        | no   | NV    | NV      | yes | yes       |  
+| extra-output            | ?        | yes  | yes   | yes     | yes | yes       | 
 
 ### References to elements defined elsewhere
 
-|Context of expression        | variable  | parameter| Port |
-|-----------------------------|-----------|----------|------|
-|constraints                  |  yes      |   yes    |  no  |
-|binding-constraints          |  yes      |   yes    |  yes |
-|objective-contributions      |  yes      |   yes    |  no  |
-|port-field-definitions       |  yes      |   yes    |  no  |
-|variable bounds              |  no       |   yes    |  no  |
-|extra-output                 |  yes      |   yes    |  yes |
+| Context of expression   | variable | parameter | Port |
+|-------------------------|----------|-----------|------|
+| constraints             | yes      | yes       | no   |
+| binding-constraints     | yes      | yes       | yes  |
+| objective-contributions | yes      | yes       | no   |
+| port-field-definitions  | yes      | yes       | no   |
+| variable bounds         | no       | yes       | no   |
+| extra-output            | yes      | yes       | yes  |
 
 
  

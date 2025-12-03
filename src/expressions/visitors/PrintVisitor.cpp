@@ -25,6 +25,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/expressions/visitors/VariadicNodeFunctionVisit.h>
 
 namespace Antares::Expressions::Visitors
 {
@@ -140,14 +141,65 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
     return "sum(" + dispatch(node->child()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::ReducedCostNode* node)
+std::string PrintVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
-    return "reduced_cost(" + node->value() + ")";
+    const auto* varIdNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
+    return "reduced_cost(" + varIdNode->value() + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::DualNode* node)
+// TODO rename
+std::string PrintVisitor::ProcessOtherFunction(const Nodes::FunctionNode* node)
 {
-    return "dual(" + node->value() + ")";
+    std::string ret;
+    if (node->size() >= 2)
+    {
+        ret = node->typeToString() + "(";
+    }
+    else
+    {
+        throw std::invalid_argument(
+          "variadic Function printing: node must have at least 2 children");
+    }
+    const auto children = variadicFunction(*this, node);
+    for (size_t i = 0; i < children.size(); ++i)
+    {
+        ret += children[i];
+        if (i != children.size() - 1)
+        {
+            ret += ", ";
+        }
+    }
+    ret += ")";
+    return ret;
+}
+
+std::string PrintVisitor::handlePow(const Nodes::FunctionNode* node)
+{
+    return dispatch(node->getOperands().front()) + "^(" + dispatch(node->getOperands().at(1)) + ")";
+}
+
+std::string PrintVisitor::handleDual(const Nodes::FunctionNode* node)
+{
+    const auto* cstrIdNode = dynamic_cast<Nodes::ParameterNode*>(node->getOperands().at(0));
+    return "dual(" + cstrIdNode->value() + ")";
+}
+
+std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
+{
+    switch (node->type())
+    {
+    case Nodes::FunctionNodeType::reduced_cost:
+        return handleReducedCost(node);
+    case Nodes::FunctionNodeType::dual:
+        return handleDual(node);
+    case Nodes::FunctionNodeType::max:
+    case Nodes::FunctionNodeType::min:
+        return ProcessOtherFunction(node);
+    case Nodes::FunctionNodeType::pow:
+        return handlePow(node);
+    default:
+        return "";
+    }
 }
 
 std::string PrintVisitor::name() const

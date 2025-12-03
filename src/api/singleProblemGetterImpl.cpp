@@ -25,6 +25,7 @@
 #include <string>
 
 #include "antares/benchmarking/DurationCollector.h"
+#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -43,10 +44,23 @@ constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
 const std::string kName = "my-name";         // Arbitrary
 Antares::Solver::NullResultWriter gResultWriter;
 Benchmarking::DurationCollector gDurationCollector;
+
+std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& studyPath)
+{
+    Antares::FileTreeStudyLoader loader(studyPath);
+    auto study = loader.load();
+    return study;
+}
 } // namespace
 
 namespace Antares::Solver::Implementation
 {
+
+SingleProblemGetter::SingleProblemGetter(const std::filesystem::path& studyPath):
+    SingleProblemGetter(loadStudy(studyPath))
+{
+}
+
 SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study):
     study_(std::move(study))
 {
@@ -82,6 +96,24 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
     initializeRandomNumbers();
+}
+
+std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
+{
+    std::vector<WeeklyProblemId> ret;
+
+    const auto& p = study_->parameters;
+    for (unsigned int year = 0; year < p.nbYears; ++year)
+    {
+        if (p.yearsFilter[year])
+        {
+            for (unsigned week = 0; week < p.simulationDays.numberOfWeeks(); ++week)
+            {
+                ret.emplace_back(year, week);
+            }
+        }
+    }
+    return ret;
 }
 
 void SingleProblemGetter::initializeRandomNumbers()

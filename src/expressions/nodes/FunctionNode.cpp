@@ -18,49 +18,28 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
 
-#include <string>
-
-#include <antares/expressions/nodes/Leaf.h>
-#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/expressions/nodes/FunctionNode.h"
 
 namespace Antares::Expressions::Nodes
 {
-/**
- * @brief Represents a reduced cost node in a syntax tree, storing a variable name.
- */
-
-class ReducedCostNode final: public Leaf<std::string>
+std::string FunctionNodeTypeToString(FunctionNodeType type)
 {
-public:
-    explicit ReducedCostNode(const std::string& value,
-                             const unsigned index,
-                             const Optimisation::TimeIndex time_index = Optimisation::TimeIndex::
-                               VARYING_IN_TIME_AND_SCENARIO):
-        Leaf<std::string>(value),
-        index_(index),
-        time_index_(time_index)
+    switch (type)
     {
+    case FunctionNodeType::reduced_cost:
+        return "reduced_cost";
+    case FunctionNodeType::dual:
+        return "dual";
+    case FunctionNodeType::max:
+        return "max";
+    case FunctionNodeType::min:
+        return "min";
+    case FunctionNodeType::pow:
+        return "pow";
+    default:
+        return "Unknown function";
     }
+}
 
-    std::string name() const override
-    {
-        return "ReducedCostNode";
-    }
-
-    unsigned index() const
-    {
-        return index_;
-    }
-
-    Optimisation::TimeIndex timeIndex() const
-    {
-        return time_index_;
-    }
-
-private:
-    unsigned index_;
-    const Optimisation::TimeIndex time_index_;
-};
 } // namespace Antares::Expressions::Nodes

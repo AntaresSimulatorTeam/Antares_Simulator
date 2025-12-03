@@ -24,7 +24,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/modeler-optimisation-container/TimeIndex.h>
+#include <antares/modeler-optimisation-container/VariabilityType.h>
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
@@ -38,7 +38,7 @@
 using namespace Antares::Expressions;
 using PT = Antares::ModelerStudy::SystemModel::ParameterType;
 using PTV = Antares::ModelerStudy::SystemModel::ParameterTypeAndValue;
-using TI = Antares::Optimisation::TimeIndex;
+using VV = Antares::Optimisation::VariabilityType;
 
 class ConstantDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
@@ -100,7 +100,7 @@ class InMemoryLoader final: public Antares::Solver::ILoader
 public:
     Antares::Solver::ModelerParameters loadParameters() override
     {
-        return {.solver = "highs",
+        return {.solver = "sirius",
                 .solverLogs = false,
                 .solverParameters = "DUMMY",
                 .noOutput = true,
@@ -163,10 +163,10 @@ public:
 
     void setLowerBoundToParameter(const std::string& parameterId)
     {
-        lower_bound = fixture.parameter(parameterId, TI::VARYING_IN_TIME_ONLY);
+        lower_bound = fixture.parameter(parameterId, VV::VARYING_IN_TIME_ONLY);
     }
 
-    void addParameter(const std::string& str, const PT& type = PT::TIMESERIE)
+    void addParameter(const std::string& str, const PT& type = PT::TIMESERIES)
     {
         parameters.emplace(Test::Modeler::build_context_parameter_with(str, "GROUPA", type));
         parameterIds.push_back(str);

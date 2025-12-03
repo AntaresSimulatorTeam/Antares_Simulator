@@ -1,4 +1,4 @@
-solver: highs
+solver: sirius
 solver-logs: true
 solver-parameters: THREADS 1
 no-output: false

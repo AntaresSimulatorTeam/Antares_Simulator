@@ -12,6 +12,7 @@ target_link_libraries(mock-modeler-objects
   Antares::antares-study-system-model
         expressions
         expressions-iterators
+        linear-problem-mpsolver-impl
     )
 
 target_include_directories(

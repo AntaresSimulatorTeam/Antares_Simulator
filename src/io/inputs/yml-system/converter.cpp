@@ -111,7 +111,7 @@ static Component createComponent(const YmlSystem::Component& c,
         parameters.try_emplace(id,
                                ParameterTypeAndValue{.id = id,
                                                      .type = time_dependent
-                                                               ? ParameterType::TIMESERIE
+                                                               ? ParameterType::TIMESERIES
                                                                : ParameterType::CONSTANT,
                                                      .value = value});
     }

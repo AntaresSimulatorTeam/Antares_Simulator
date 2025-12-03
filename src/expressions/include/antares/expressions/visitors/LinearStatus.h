@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <vector>
 
 namespace Antares::Expressions::Visitors
 {
@@ -174,5 +175,16 @@ constexpr LinearStatus operator-(LinearStatus a, LinearStatus b)
 constexpr LinearStatus operator-(LinearStatus a)
 {
     return a;
+}
+
+constexpr bool operator<(LinearStatus a, LinearStatus b)
+{
+    return static_cast<char>(a) < static_cast<char>(b);
+}
+
+template<class Operation>
+LinearStatus applyOperation(const std::vector<LinearStatus>& in, Operation op)
+{
+    return op(in);
 }
 } // namespace Antares::Expressions::Visitors

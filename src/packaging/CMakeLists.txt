@@ -11,10 +11,10 @@ set(TARGET_LIBS #No alias
         # it is available for everything
 
         solver_api # What we want to export
+	single_problem_api
 
-        # solver_api
         study
-		scenario-builder-utils
+        scenario-builder-utils
         study-loader
         file-tree-study-loader
         antares-solver-simulation
@@ -39,7 +39,6 @@ set(TARGET_LIBS #No alias
 
         # study-loader : nothing
 
-        # file-tree-study-loader
         application
 
         # run-mode

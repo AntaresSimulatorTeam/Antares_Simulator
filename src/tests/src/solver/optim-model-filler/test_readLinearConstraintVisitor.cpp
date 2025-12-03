@@ -121,23 +121,25 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node,
 BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, VisitorFixture<ReadLinearConstraintVisitor>)
 {
     auto lit = create<LiteralNode>(5.);
-    std::vector<Node*> illegal_nodes = {
-      create<SumNode>(),
-      create<SubtractionNode>(lit, lit),
-      create<MultiplicationNode>(lit, lit),
-      create<DivisionNode>(lit, lit),
-      create<NegationNode>(lit),
-      create<VariableNode>("var", 99),
-      create<ParameterNode>("param"),
-      create<LiteralNode>(5.),
-      create<PortFieldNode>("port", "field"),
-      create<PortFieldSumNode>("port", "field"),
-      create<TimeShiftNode>(lit, lit),
-      create<TimeIndexNode>(lit, lit),
-      create<TimeSumNode>(lit, lit, lit),
-      create<AllTimeSumNode>(lit),
-      create<DualNode>("constraint", 0),
-      create<ReducedCostNode>("var", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)};
+    std::vector<Node*> illegal_nodes = {create<SumNode>(),
+                                        create<SubtractionNode>(lit, lit),
+                                        create<MultiplicationNode>(lit, lit),
+                                        create<DivisionNode>(lit, lit),
+                                        create<NegationNode>(lit),
+                                        create<VariableNode>("var", 99),
+                                        create<ParameterNode>("param"),
+                                        create<LiteralNode>(5.),
+                                        create<PortFieldNode>("port", "field"),
+                                        create<PortFieldSumNode>("port", "field"),
+                                        create<TimeShiftNode>(lit, lit),
+                                        create<TimeIndexNode>(lit, lit),
+                                        create<TimeSumNode>(lit, lit, lit),
+                                        create<AllTimeSumNode>(lit),
+                                        create<FunctionNode>(FunctionNodeType::dual,
+                                                             create<ParameterNode>("constraint"),
+                                                             create<LiteralNode>(0)),
+                                        create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                             create<VariableNode>("var", 0))};
 
     for (Node* node: illegal_nodes)
     {

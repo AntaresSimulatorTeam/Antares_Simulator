@@ -20,38 +20,38 @@
 */
 #pragma once
 
-namespace Antares::Optimisation
+#include <antares/expressions/nodes/FunctionNode.h>
+#include <antares/expressions/visitors/NodeVisitor.h>
+
+namespace Antares::Expressions::Visitors
 {
-/**
- * @brief Represents the time and scenario variation of a value.
- */
-enum class TimeIndex : unsigned int
-{
-    CONSTANT_IN_TIME_AND_SCENARIO = 0,
-    VARYING_IN_TIME_ONLY = 1,
-    VARYING_IN_SCENARIO_ONLY = 2,
-    VARYING_IN_TIME_AND_SCENARIO = 3
+
+template<typename T>
+concept HasSizeMethod = requires(const T& t) {
+    { t.size() } -> std::convertible_to<std::size_t>;
 };
 
-/**
- * @brief Combines two TimeIndex values.
- *
- * @param left The left operand.
- * @param right The right operand.
- *
- * @return The combined TimeIndex value.
- */
-constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
+template<HasSizeMethod T>
+std::size_t getMaxSize(const std::vector<T>& elements)
 {
-    /*
-     0 | x = x
-     3 | x = 3
-     1 | 1 = 1
-     1 | 2 = 3
-     2 | 2 = 2
-     */
-    return static_cast<TimeIndex>(static_cast<unsigned int>(left)
-                                  | static_cast<unsigned int>(right));
+    std::size_t maxSize = 0;
+    for (const auto& element: elements)
+    {
+        maxSize = std::max(maxSize, element.size());
+    }
+    return maxSize;
 }
 
-} // namespace Antares::Optimisation
+template<class R>
+std::vector<R> variadicFunction(NodeVisitor<R>& visitor, const Nodes::FunctionNode* node)
+{
+    const auto& operands = node->getOperands();
+    std::vector<R> result;
+    result.reserve(operands.size());
+    for (const auto* operand: operands)
+    {
+        result.push_back(visitor.dispatch(operand));
+    }
+    return result;
+}
+} // namespace Antares::Expressions::Visitors
