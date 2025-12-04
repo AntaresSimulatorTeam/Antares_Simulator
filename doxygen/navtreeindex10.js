@@ -1,5 +1,11 @@
 var NAVTREEINDEX10 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Average.html#ae9117adf64c851537140bb936787c364":[8,0,0,3,0,1,1,3],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1CellCount.html":[8,0,0,3,0,1,3],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1CellCount.html#a00f79f7f72235b6c6b1ad8642b8426ef":[8,0,0,3,0,1,3,0],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1CellCount.html#a26a9d1302910bc184762dc10b2f4bf46":[8,0,0,3,0,1,3,1],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1CellCount.html#a7c676a545766f51ccdf68bfe224a3fdd":[8,0,0,3,0,1,3,3],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1CellCount.html#a8c2ebb504a070670a2d5d862bcda097d":[8,0,0,3,0,1,3,4],
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1CellCount.html#ad9ef373cd6f76b2c0a7b1cfbcdcc4c02":[8,0,0,3,0,1,3,2],
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1IOperator.html":[8,0,0,3,0,1,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1IOperator.html#a0494d37c157f5bd9e0b631f08b76cde7":[8,0,0,3,0,1,0,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX10 =
 "classAntares_1_1Component_1_1ListboxPanel.html#aff9900c977144d2c411ce4a498cbeeb2":[8,0,0,3,6,12],
 "classAntares_1_1Component_1_1MainPanel.html":[8,0,0,3,11],
 "classAntares_1_1Component_1_1MainPanel.html#a046c8cdbec8d05926218e6684eb10e17":[8,0,0,3,11,3],
-"classAntares_1_1Component_1_1MainPanel.html#a12e27b6a74ebab04c04a48b1ef4d7a3b":[8,0,0,3,11,0],
-"classAntares_1_1Component_1_1MainPanel.html#a5ab57545c197511c96b4a5cb004531d3":[8,0,0,3,11,8],
-"classAntares_1_1Component_1_1MainPanel.html#a8506c2c8a0c599f1f0d6251835e4179d":[8,0,0,3,11,2],
-"classAntares_1_1Component_1_1MainPanel.html#a96498e3f2acb81074761de1a44dd16c9":[8,0,0,3,11,4],
-"classAntares_1_1Component_1_1MainPanel.html#a9ba6c6fa28b527b91c9164b857feea51":[8,0,0,3,11,7],
-"classAntares_1_1Component_1_1MainPanel.html#ab93883dad1b9697bcd66ceb136b20014":[8,0,0,3,11,6],
-"classAntares_1_1Component_1_1MainPanel.html#ad2c6bd8aae02690b6e438e569dd7f60d":[8,0,0,3,11,5]
+"classAntares_1_1Component_1_1MainPanel.html#a12e27b6a74ebab04c04a48b1ef4d7a3b":[8,0,0,3,11,0]
 };

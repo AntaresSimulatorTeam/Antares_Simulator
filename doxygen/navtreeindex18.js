@@ -1,5 +1,11 @@
 var NAVTREEINDEX18 =
 {
+"classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html":[8,0,0,7,29],
+"classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html#aca99f28871ed2ca344b10018c83a1576":[8,0,0,7,29,0],
+"classAntares_1_1Error_1_1IncompatibleLinearSolverParameters.html":[8,0,0,7,18],
+"classAntares_1_1Error_1_1IncompatibleLinearSolverParameters.html#a6f83f9db3b32f53626945783a2a24ef9":[8,0,0,7,18,0],
+"classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html":[8,0,0,7,10],
+"classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html#a34b20dcd9edab578075f9453e630828a":[8,0,0,7,10,0],
 "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html":[8,0,0,7,12],
 "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html#a71a92c95457ca7146bdcd3343ca0ed40":[8,0,0,7,12,0],
 "classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html":[8,0,0,7,13],
@@ -243,11 +249,5 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#ac7cf4776a080e1dd712663233597e237":[8,0,0,8,1,6,24],
 "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#ace7f806cf772ca5059d86195650b9d38":[8,0,0,8,1,6,14],
 "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#adba70bd301a4112f1a6c0d4ff392101a":[8,0,0,8,1,6,23],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#adcfa9fa00f860e14bfc4f6ce214dfeea":[8,0,0,8,1,6,11],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1EvalResultTimeIndexOutOfRange.html":[8,0,0,8,1,6,0],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1EvalResultTypeError.html":[8,0,0,8,1,6,1],
-"classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html":[8,0,0,8,1,9],
-"classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html#a4729ed056c2ffe385bc54c7cc1a1a575":[8,0,0,8,1,9,0],
-"classAntares_1_1Expressions_1_1Visitors_1_1LinearityVisitor.html":[8,0,0,8,1,11],
-"classAntares_1_1Expressions_1_1Visitors_1_1LinearityVisitor.html#a0dc4bc14651677f90dcac4c2f28a2100":[8,0,0,8,1,11,1]
+"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#adcfa9fa00f860e14bfc4f6ce214dfeea":[8,0,0,8,1,6,11]
 };

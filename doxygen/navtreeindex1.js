@@ -16,6 +16,11 @@ var NAVTREEINDEX1 =
 "FinalStockExpression_8h_source.html":[9,0,0,8,7,1,0,0,0,1,18],
 "FinalStockGroup_8h_source.html":[9,0,0,8,7,1,0,0,0,1,19],
 "FlowDissociation_8h_source.html":[9,0,0,8,7,1,0,0,0,1,20],
+"ForbiddenNodes_8h.html#a12af9cd5dcc9be8065afa70065131191":[7,0,0,14,0,1,34],
+"ForbiddenNodes_8h.html#a24655580a077a61a8f78570bf4964c65":[7,0,0,14,0,1,35],
+"ForbiddenNodes_8h.html#a581ae31bced06c989ff6bf3bc0a11198":[7,0,0,14,0,1,36],
+"ForbiddenNodes_8h.html#ad81c0ab6624a07e1e07d29a370f91fe7":[7,0,0,14,0,1,37],
+"ForbiddenNodes_8h_source.html":[9,0,0,3,1,1,0,0,0,0,0,1],
 "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4b":[7,0,0,10,0,26],
 "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4ba2ffe4e77325d9a7152f7086ea7aa5114":[7,0,0,10,0,26,2],
 "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4ba30d7e0494351def45591fccb21d3510b":[7,0,0,10,0,26,4],
@@ -105,6 +110,7 @@ var NAVTREEINDEX1 =
 "NbUnitsOutageLessThanNbUnitsStopGroup_8h_source.html":[9,0,0,8,7,1,0,0,0,1,38],
 "NbUnitsOutageLessThanNbUnitsStop_8h_source.html":[9,0,0,8,7,1,0,0,0,1,37],
 "NegationNode_8h_source.html":[9,0,0,2,1,0,0,1,12],
+"NodeChecker_8h_source.html":[9,0,0,3,1,1,0,0,0,0,0,3],
 "NodeRegistry_8h_source.html":[9,0,0,2,1,0,0,5],
 "NodeVisitor_8h.html#a1223b5e8ad3c7f529adba9a8c80778d2":[7,0,0,10,1,37],
 "NodeVisitor_8h.html#a5b5976faff61f38859604300973b83d2":[7,0,0,10,1,27],
@@ -243,11 +249,5 @@ var NAVTREEINDEX1 =
 "adequacy__patch__runtime__data_8h_source.html":[9,0,0,8,9,0,0,0,0,2],
 "adq-patch-params_8cpp.html#a6e8d51c98799f13c023c9e838eb643fb":[7,0,0,6,0,9],
 "adq-patch-params_8h.html#a0200971409ab686c759b13aa3f4d3d5d":[7,0,0,6,0,11],
-"adq-patch-params_8h.html#a6eb931add6f618a6322faadb0c3ef338":[7,0,0,6,0,3],
-"adq-patch-params_8h.html#a6eb931add6f618a6322faadb0c3ef338a045bc6c54f8ce6fd7bdfd938125bf370":[7,0,0,6,0,3,1],
-"adq-patch-params_8h.html#a6eb931add6f618a6322faadb0c3ef338a3cb5671f7d151ec60b4e94ee67595702":[7,0,0,6,0,3,0],
-"adq-patch-params_8h.html#a6fc6e7b547617d748ee338c3a58bf36f":[7,0,0,6,0,2],
-"adq-patch-params_8h.html#a6fc6e7b547617d748ee338c3a58bf36fa6eee1833fb70f83f628247ed74925fb4":[7,0,0,6,0,2,2],
-"adq-patch-params_8h.html#a6fc6e7b547617d748ee338c3a58bf36fa8272b1904359540de8c50c758f779e97":[7,0,0,6,0,2,0],
-"adq-patch-params_8h.html#a6fc6e7b547617d748ee338c3a58bf36faec1dfec941cda4f1ec8b413723bc7b8a":[7,0,0,6,0,2,1]
+"adq-patch-params_8h.html#a6eb931add6f618a6322faadb0c3ef338":[7,0,0,6,0,3]
 };

@@ -74,6 +74,7 @@ var hierarchy =
     [ "Antares::TSGenerator::AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
+    [ "Antares::IO::Inputs::ModelConverter::BadExpression", "structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression.html", null ],
     [ "antlr4::BaseErrorListener", null, [
       [ "Antares::Data::ShortTermStorage::CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::AntaresErrorListener", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener.html", null ],
@@ -588,6 +589,7 @@ var hierarchy =
     [ "FixtureMultipleTS", "classFixtureMultipleTS.html", null ],
     [ "FixtureStudyOnly", "structFixtureStudyOnly.html", null ],
     [ "FlowDissociationData", "structFlowDissociationData.html", null ],
+    [ "Antares::IO::Inputs::ModelConverter::ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html", null ],
     [ "Antares::Component::FrameShowData", "classAntares_1_1Component_1_1FrameShowData.html", null ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
     [ "Antares::Solver::Variable::Economy::GenerationTraits< Tag >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html", null ],
@@ -933,6 +935,9 @@ var hierarchy =
       [ "Antares::Expressions::Visitors::NodeVisitor< std::string >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Expressions::Visitors::PrintVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1PrintVisitor.html", null ]
       ] ],
+      [ "Antares::Expressions::Visitors::NodeVisitor< void >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
+        [ "Antares::IO::Inputs::ModelConverter::NodeChecker", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NodeChecker.html", null ]
+      ] ],
       [ "Antares::Expressions::Visitors::NodeVisitor< bool, const Nodes::Node * >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Expressions::Visitors::CompareVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1CompareVisitor.html", null ]
       ] ],
@@ -1014,6 +1019,7 @@ var hierarchy =
       [ "Antares::Expressions::Visitors::InvalidNode", "classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html", null ],
       [ "Antares::Expressions::Visitors::NodeTypeShouldBeInExtraOutput", "classAntares_1_1Expressions_1_1Visitors_1_1NodeTypeShouldBeInExtraOutput.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
+      [ "Antares::IO::Inputs::ModelConverter::BadContextComposition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadContextComposition.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ],
       [ "Antares::Optimisation::AddVariableVisitor::BoundsSizeMismatch", "classAntares_1_1Optimisation_1_1AddVariableVisitor_1_1BoundsSizeMismatch.html", null ],

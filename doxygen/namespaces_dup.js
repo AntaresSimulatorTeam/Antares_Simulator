@@ -1152,6 +1152,7 @@ var namespaces_dup =
             [ "NoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName" ],
             [ "NoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName" ],
             [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
+            [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes" ],
             [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException" ],
             [ "PortWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists" ],
             [ "PortTypeWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists" ],
@@ -1161,6 +1162,9 @@ var namespaces_dup =
             [ "PortNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition" ],
             [ "FieldNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition" ],
             [ "PortInDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition" ],
+            [ "NodeChecker", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NodeChecker.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NodeChecker" ],
+            [ "BadExpression", "structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression.html", "structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression" ],
+            [ "BadContextComposition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadContextComposition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadContextComposition" ],
             [ "convert", "modelConverter_8h.html#a734798ef9ebc030c06d71e86ab1f3473", null ],
             [ "convertConstraints", "modelConverter_8cpp.html#afa920dbb254d432b074819c0a351caae", null ],
             [ "convertExpressionToNode", "convertorVisitor_8cpp.html#a1410f7982fde7bac28b6e5a3d330c351", null ],
@@ -1173,7 +1177,11 @@ var namespaces_dup =
             [ "convertType", "modelConverter_8cpp.html#a0f47ce41f17f6160bf36c67d08e545c9", null ],
             [ "convertTypes", "modelConverter_8cpp.html#a1088a8c1790ed3bb470dff1151b76cbe", null ],
             [ "convertVariables", "modelConverter_8cpp.html#a54ffbf422f4e51558629fbc0c06be0a3", null ],
-            [ "extractSumOperands", "convertorVisitor_8cpp.html#afa5c8a0bd8efdf755de9122b85b0d7b9", null ]
+            [ "extractSumOperands", "convertorVisitor_8cpp.html#afa5c8a0bd8efdf755de9122b85b0d7b9", null ],
+            [ "forbiddenNodeKey", "ForbiddenNodes_8h.html#a12af9cd5dcc9be8065afa70065131191", null ],
+            [ "forbiddenNodeKey", "ForbiddenNodes_8h.html#a24655580a077a61a8f78570bf4964c65", null ],
+            [ "forbiddenNodeKey", "ForbiddenNodes_8h.html#a581ae31bced06c989ff6bf3bc0a11198", null ],
+            [ "forbiddenNodeKey", "ForbiddenNodes_8h.html#ad81c0ab6624a07e1e07d29a370f91fe7", null ]
           ] ],
           [ "SystemConverter", null, [
             [ "ErrorWhileSplittingLibraryAndModel", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel" ],

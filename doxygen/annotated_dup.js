@@ -489,6 +489,7 @@ var annotated_dup =
             [ "NoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName" ],
             [ "NoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName" ],
             [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
+            [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes" ],
             [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException" ],
             [ "PortWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists" ],
             [ "PortTypeWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists" ],
@@ -497,7 +498,10 @@ var annotated_dup =
             [ "PortTypeNotFound", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeNotFound" ],
             [ "PortNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition" ],
             [ "FieldNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition" ],
-            [ "PortInDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition" ]
+            [ "PortInDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition" ],
+            [ "NodeChecker", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NodeChecker.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NodeChecker" ],
+            [ "BadExpression", "structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression.html", "structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression" ],
+            [ "BadContextComposition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadContextComposition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadContextComposition" ]
           ] ],
           [ "SystemConverter", null, [
             [ "ErrorWhileSplittingLibraryAndModel", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel" ],
