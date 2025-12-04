@@ -157,7 +157,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
     if (week == 0)
     {
-        throw std::invalid_argument("Invalid week number 0 detected, week number must be >=1");
+        throw std::out_of_range("Invalid week number 0 detected, week number must be >=1");
     }
     week--;
 
