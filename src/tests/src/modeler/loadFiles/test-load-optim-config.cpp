@@ -36,7 +36,6 @@ CreateInputFileFixture::CreateInputFileFixture()
 
     librariesFolder_ = inputFolder_ / "model-libraries";
     std::filesystem::create_directory(librariesFolder_);
-
 }
 
 void CreateInputFileFixture::createLibraryFile(const std::string& yaml_content)
@@ -52,7 +51,7 @@ void CreateInputFileFixture::createOptimConfigFile(const std::string& yaml_conte
 }
 
 void CreateInputFileFixture::createYamlFile(const std::string& filename,
-                                          const std::string& yaml_content)
+                                            const std::string& yaml_content)
 {
     std::filesystem::path yamlPath = creationFolder_ / filename;
     std::ofstream outStream;
@@ -67,29 +66,18 @@ CreateInputFileFixture ::~CreateInputFileFixture()
     std::filesystem::remove_all(librariesFolder_);
     std::filesystem::remove_all(inputFolder_);
 }
-
-BOOST_FIXTURE_TEST_CASE(dummy_test, CreateInputFileFixture)
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_variable_decomposition, CreateInputFileFixture)
 {
     // Arrange part
     std::string yamlContent = R"(library:
   id: my-lib
   description: blah-blah
-
   models:
     - id: some-model
       variables:
         - id: x
-          lower-bound: 0
-          upper-bound: 1
-          variable-type: continuous
         - id: y
-          lower-bound: 0
-          upper-bound: 1
-          variable-type: continuous
-        - id: z
-          lower-bound: 0
-          upper-bound: 1
-          variable-type: continuous)";
+        - id: z)";
 
     createLibraryFile(yamlContent);
 
@@ -120,6 +108,53 @@ BOOST_FIXTURE_TEST_CASE(dummy_test, CreateInputFileFixture)
 
     BOOST_CHECK_EQUAL(modelVariables[2].Id(), "z");
     BOOST_CHECK(modelVariables[2].location() == Location::SUBPROBLEMS);
-    
-    BOOST_CHECK(true);
+}
+
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_decomposition, CreateInputFileFixture)
+{
+    // Arrange part
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: blah-blah
+  models:
+    - id: some-model
+      variables:
+        - id: x
+      constraints:
+        - id: c1
+          expression: x = 0
+        - id: c2
+          expression: x = 0
+        - id: c3
+          expression: x = 0)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+      - id: my-lib.some-model
+        model-decomposition:
+          constraints:
+            - id: c1
+              location: master
+            - id: c2
+              location: master-and-subproblems
+            - id: c3
+              location: subproblems)";
+
+    createOptimConfigFile(yamlContent);
+
+    // Act part
+    auto libraries = loadLibraries(studyFolder);
+
+    // Assert part
+    const auto& modelConstraints = libraries[0].Models()["some-model"].Constraints();
+
+    BOOST_CHECK_EQUAL(modelConstraints[0].Id(), "c1");
+    BOOST_CHECK(modelConstraints[0].location() == Location::MASTER);
+
+    BOOST_CHECK_EQUAL(modelConstraints[1].Id(), "c2");
+    BOOST_CHECK(modelConstraints[1].location() == Location::MASTER_AND_SUBPROBLEMS);
+
+    BOOST_CHECK_EQUAL(modelConstraints[2].Id(), "c3");
+    BOOST_CHECK(modelConstraints[2].location() == Location::SUBPROBLEMS);
 }

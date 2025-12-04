@@ -86,6 +86,7 @@ struct Constraint
 {
     std::string id;
     std::string expression;
+    std::string location = "subproblems";
 };
 
 struct ExtraOutput
@@ -98,6 +99,7 @@ struct Objective
 {
     std::string id;
     std::string expression;
+    std::string location = "subproblems";
 };
 
 struct Model

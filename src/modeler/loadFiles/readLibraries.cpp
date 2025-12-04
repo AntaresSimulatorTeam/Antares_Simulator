@@ -125,38 +125,66 @@ YmlModel::Model& fetchModelInLibrairies(const YmlOptimConfig::Model& optimConfig
     auto lib = std::ranges::find_if(ymlLibs, [&libId](const auto& l) { return l.id == libId; });
     if (lib == ymlLibs.end())
     {
-        throw std::runtime_error("No library found with this name: " + libId);
+        throw std::runtime_error("No library '" + libId + "' found.");
     }
 
     auto modelIt = std::ranges::find_if(lib->models,
                                         [&modelId](const auto& m) { return m.id == modelId; });
     if (modelIt == lib->models.end())
     {
-        throw std::runtime_error("No model found with this name: " + modelId);
+        throw std::runtime_error("No model '" + modelId + "' found.");
     }
 
     return *modelIt;
 }
 
-void updateVariables(YmlModel::Model& libModel, const YmlOptimConfig::Model& optimConfigModel)
+void updateVariables(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
 {
     for (const auto& optCfgVar: optimConfigModel.variables)
     {
         auto predicate = [&optCfgVar](const auto& v) { return v.id == optCfgVar.id; };
-        auto varIt = std::ranges::find_if(libModel.variables, predicate);
-        if (varIt == libModel.variables.end())
+        auto var = std::ranges::find_if(model.variables, predicate);
+        if (var == model.variables.end())
         {
-            throw std::runtime_error("No variable found with this name: " + optCfgVar.id);
+            throw std::runtime_error("No variable '" + optCfgVar.id + "' found.");
         }
-        varIt->location = optCfgVar.location;
+        var->location = optCfgVar.location;
     }
 }
 
-void updateSystemModel(YmlModel::Model& libModel, const YmlOptimConfig::Model& ymlModel)
+void updateConstraints(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
 {
-    updateVariables(libModel, ymlModel);
-    // updateConstraints(ymlLibs, ymlModel);
-    // updateObjective(ymlLibs, ymlModel);
+    for (const auto& optCfgConst: optimConfigModel.constraints)
+    {
+        auto predicate = [&optCfgConst](const auto& c) { return c.id == optCfgConst.id; };
+        auto constraint = std::ranges::find_if(model.constraints, predicate);
+        if (constraint == model.constraints.end())
+        {
+            throw std::runtime_error("No constraint '" + optCfgConst.id + "' found.");
+        }
+        constraint->location = optCfgConst.location;
+    }
+}
+
+void updateObjective(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
+{
+    for (const auto& optCfgObj: optimConfigModel.objectives)
+    {
+        auto predicate = [&optCfgObj](const auto& obj) { return obj.id == optCfgObj.id; };
+        auto objective = std::ranges::find_if(model.objectives, predicate);
+        if (objective == model.objectives.end())
+        {
+            throw std::runtime_error("No objective '" + optCfgObj.id + "' found.");
+        }
+        objective->location = optCfgObj.location;
+    }
+}
+
+void updateSystemModel(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
+{
+    updateVariables(model, optimConfigModel);
+    updateConstraints(model, optimConfigModel);
+    updateObjective(model, optimConfigModel);
 }
 
 void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
@@ -164,8 +192,8 @@ void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
 {
     for (const auto& optimConfigModel: ymlOptimConfig)
     {
-        auto& libModel = fetchModelInLibrairies(optimConfigModel, ymlLibs);
-        updateSystemModel(libModel, optimConfigModel);
+        auto& model = fetchModelInLibrairies(optimConfigModel, ymlLibs);
+        updateSystemModel(model, optimConfigModel);
     }
 }
 

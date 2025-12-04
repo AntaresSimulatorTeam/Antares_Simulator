@@ -288,7 +288,8 @@ static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constrain
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
-                                                                   std::move(nodeRegistry)});
+                                                                   std::move(nodeRegistry)},
+                             convertLocation(constraint.location));
 }
 
 /**
@@ -353,7 +354,8 @@ std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
         auto nodeRegistry = convertExpressionToNode(objective.expression, model);
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
-                                                                      std::move(nodeRegistry)});
+                                                                      std::move(nodeRegistry)},
+                                convertLocation(objective.location));
     }
     return objectives;
 }

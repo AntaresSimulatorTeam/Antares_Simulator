@@ -143,17 +143,17 @@ void updateSystemModel(SystemModel::Model& sysModel, const YmlOptimConfig::Model
     //     sysVariable.setLocation(convertLocation(ymlVar.location));
     // }
 
-    for (const auto& ymlConstraint: ymlModel.constraints)
-    {
-        auto& sysConstraint = findSystemConstraint(ymlConstraint.id, sysModel);
-        sysConstraint.setLocation(convertLocation(ymlConstraint.location));
-    }
+    // for (const auto& ymlConstraint: ymlModel.constraints)
+    //{
+    //     auto& sysConstraint = findSystemConstraint(ymlConstraint.id, sysModel);
+    //     sysConstraint.setLocation(convertLocation(ymlConstraint.location));
+    // }
 
-    for (const auto& ymlObj: ymlModel.objectives)
-    {
-        auto& sysObjective = findSystemObjective(ymlObj.id, sysModel);
-        sysObjective.setLocation(convertLocation(ymlObj.location));
-    }
+    //for (const auto& ymlObj: ymlModel.objectives)
+    //{
+    //    auto& sysObjective = findSystemObjective(ymlObj.id, sysModel);
+    //    sysObjective.setLocation(convertLocation(ymlObj.location));
+    //}
 }
 
 void updateLibrairies(const OptimConfig& ymlOptimConfig,
