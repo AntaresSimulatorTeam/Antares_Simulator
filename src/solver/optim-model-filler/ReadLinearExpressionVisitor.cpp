@@ -167,6 +167,11 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 
     if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
+        if (node->variability() == VariabilityType::VARYING_IN_TIME_AND_SCENARIO)
+        {
+            double value = evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0);
+            return Optimization::TimeDependentLinearExpression({}, value);
+        }
         double value = evalContext_.getSystemParameterValueAsDouble(node->value());
         return Optimization::TimeDependentLinearExpression({}, value);
     }

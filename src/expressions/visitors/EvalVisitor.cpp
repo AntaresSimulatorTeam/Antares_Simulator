@@ -123,6 +123,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
     }
     if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
+        if (node->variability() == Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO)
+        {
+            return EvaluationResult(
+              evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0));
+        }
         return EvaluationResult{evalContext_.getSystemParameterValueAsDouble(node->value())};
     }
 
