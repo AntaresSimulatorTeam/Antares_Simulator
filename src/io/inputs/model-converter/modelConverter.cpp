@@ -126,7 +126,6 @@ std::vector<ModelerStudy::SystemModel::Parameter> convertParameters(
     return parameters;
 }
 
-// gp : duplication of convertLocation from src/io/inputs/yml-optim-config/converter.cpp
 Modeler::Config::Location convertLocation(const std::string& locationStr)
 {
     std::string locLower = locationStr;
@@ -143,7 +142,7 @@ Modeler::Config::Location convertLocation(const std::string& locationStr)
     {
         return Modeler::Config::Location::SUBPROBLEMS;
     }
-    // gp : should we throw Error::RuntimeError (as in converter.cpp)
+
     throw std::runtime_error("Unknown location: " + locationStr);
 }
 

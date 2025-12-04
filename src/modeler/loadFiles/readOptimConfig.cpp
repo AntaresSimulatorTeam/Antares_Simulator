@@ -24,7 +24,6 @@
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 #include "antares/io/inputs/yml-optim-config/OptimConfig.h"
-#include "antares/io/inputs/yml-optim-config/converter.h"
 #include "antares/io/inputs/yml-optim-config/parser.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
