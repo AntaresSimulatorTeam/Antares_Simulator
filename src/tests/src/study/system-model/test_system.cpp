@@ -32,8 +32,6 @@
 // clang-format on
 #include <boost/test/unit_test.hpp>
 
-#include "antares/io/inputs/model-converter/ForbiddenNodes.h"
-
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs::ModelConverter;
 using namespace Antares::IO::Inputs;
