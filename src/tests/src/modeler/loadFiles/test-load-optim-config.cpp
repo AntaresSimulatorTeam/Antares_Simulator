@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
@@ -66,6 +67,7 @@ CreateInputFileFixture ::~CreateInputFileFixture()
     std::filesystem::remove_all(librariesFolder_);
     std::filesystem::remove_all(inputFolder_);
 }
+
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_variable_decomposition, CreateInputFileFixture)
 {
     // Arrange part
@@ -206,4 +208,93 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateIn
 
     BOOST_CHECK_EQUAL(modelObjectives[2].Id(), "obj_3");
     BOOST_CHECK(modelObjectives[2].location() == Location::SUBPROBLEMS);
+}
+
+BOOST_FIXTURE_TEST_CASE(objective_does_not_exist_in_model___exception_raised,
+                        CreateInputFileFixture)
+{
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: blah-blah
+  models:
+    - id: some-model
+      variables:
+        - id: x
+      objective-contributions:
+        - id: my_obj
+          expression: x = 0)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+      - id: my-lib.some-model
+        model-decomposition:
+          objective-contributions:
+            - id: some_obj
+              location: subproblems)";
+
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
+                          std::runtime_error,
+                          checkMessage("No objective 'some_obj' found."));
+}
+
+BOOST_FIXTURE_TEST_CASE(variable_does_not_exist_in_model___exception_raised, CreateInputFileFixture)
+{
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: blah-blah
+  models:
+    - id: some-model
+      variables:
+        - id: x
+        - id: y
+        - id: z)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+      - id: my-lib.some-model
+        model-decomposition:
+          variables:
+            - id: v
+              location: master)";
+
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
+                          std::runtime_error,
+                          checkMessage("No variable 'v' found."));
+}
+
+BOOST_FIXTURE_TEST_CASE(constraint_does_not_exist_in_model___exception_raised,
+                        CreateInputFileFixture)
+{
+    // Arrange part
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: blah-blah
+  models:
+    - id: some-model
+      variables:
+        - id: x
+      constraints:
+        - id: my_constraint
+          expression: x = 0)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+      - id: my-lib.some-model
+        model-decomposition:
+          constraints:
+            - id: some_constraint
+              location: master)";
+
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
+                          std::runtime_error,
+                          checkMessage("No constraint 'some_constraint' found."));
 }
