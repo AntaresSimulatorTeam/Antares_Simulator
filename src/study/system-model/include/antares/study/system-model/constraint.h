@@ -37,7 +37,7 @@ public:
                Expression expression,
                Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
         id_(std::move(id)),
-        expression_(std::move(expression)), 
+        expression_(std::move(expression)),
         location_(location)
     {
     }
