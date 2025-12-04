@@ -158,3 +158,52 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_decomposition, CreateI
     BOOST_CHECK_EQUAL(modelConstraints[2].Id(), "c3");
     BOOST_CHECK(modelConstraints[2].location() == Location::SUBPROBLEMS);
 }
+
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateInputFileFixture)
+{
+    // Arrange part
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: blah-blah
+  models:
+    - id: some-model
+      variables:
+        - id: x
+      objective-contributions:
+        - id: obj_1
+          expression: x = 0
+        - id: obj_2
+          expression: x = 0
+        - id: obj_3
+          expression: x = 0)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+      - id: my-lib.some-model
+        model-decomposition:
+          objective-contributions:
+            - id: obj_1
+              location: master
+            - id: obj_2
+              location: master-and-subproblems
+            - id: obj_3
+              location: subproblems)";
+
+    createOptimConfigFile(yamlContent);
+
+    // Act part
+    auto libraries = loadLibraries(studyFolder);
+
+    // Assert part
+    const auto& modelObjectives = libraries[0].Models()["some-model"].Objectives();
+
+    BOOST_CHECK_EQUAL(modelObjectives[0].Id(), "obj_1");
+    BOOST_CHECK(modelObjectives[0].location() == Location::MASTER);
+
+    BOOST_CHECK_EQUAL(modelObjectives[1].Id(), "obj_2");
+    BOOST_CHECK(modelObjectives[1].location() == Location::MASTER_AND_SUBPROBLEMS);
+
+    BOOST_CHECK_EQUAL(modelObjectives[2].Id(), "obj_3");
+    BOOST_CHECK(modelObjectives[2].location() == Location::SUBPROBLEMS);
+}
