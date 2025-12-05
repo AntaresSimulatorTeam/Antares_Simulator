@@ -57,6 +57,6 @@ LinearProblemApi::MipStatus OrtoolsMipSolution::getStatus() const
 
 double OrtoolsMipSolution::getObjectiveValue() const
 {
-    return mpSolver_->Objective().Value();
+    return ::getObjectiveValue(mpSolver_);
 }
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl
