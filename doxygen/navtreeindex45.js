@@ -1,6 +1,5 @@
 var NAVTREEINDEX45 =
 {
-"classVariableManagement_1_1VariableManager.html#a2bc96efc19cc97f7f2ed7a076420ceb3":[8,0,31,0,20],
 "classVariableManagement_1_1VariableManager.html#a2e80917f3fd697ea835dc060488c63d4":[8,0,31,0,14],
 "classVariableManagement_1_1VariableManager.html#a3b8fd62c71c7458085f89e3ac8ce4770":[8,0,31,0,19],
 "classVariableManagement_1_1VariableManager.html#a42d783d986b711e8df630b3abc2d144b":[8,0,31,0,18],
@@ -249,5 +248,6 @@ var NAVTREEINDEX45 =
 "classreferenceIniFile.html#a75321962859591936a29ac8ccfb7ea9a":[8,0,256,8],
 "classreferenceIniFile.html#ab918a89fc2994f9e449cadc853522f97":[8,0,256,4],
 "classreferenceIniFile.html#ad8f56103cf90e97314837d175fb5cb8d":[8,0,256,9],
+"classreferenceIniFile.html#ae38f514c87175cb16d7d50c117aae175":[8,0,256,1],
 "classreferenceIniFile.html#ae38f514c87175cb16d7d50c117aae175":[8,0,256,3]
 };

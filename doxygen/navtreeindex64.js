@@ -1,6 +1,5 @@
 var NAVTREEINDEX64 =
 {
-"structTimeDependentParameterFixture.html#a554c4666a5d7599badf0328b042eb643":[8,0,322,11],
 "structTimeDependentParameterFixture.html#a58e0058bbf113c8e5799efa07fffab51":[8,0,322,12],
 "structTimeDependentParameterFixture.html#a5d06f9305ce8fd7c2d5e1f2b01e87c59":[8,0,322,10],
 "structTimeDependentParameterFixture.html#a688a83c198ed5030ca190c1f14ed6074":[8,0,322,7],
@@ -249,5 +248,6 @@ var NAVTREEINDEX64 =
 "toolbox_2input_2input_8h_source.html":[9,0,0,12,2,1,5,4],
 "tools_2yby-aggregator_2job_8h_source.html":[9,0,0,11,2,1],
 "tools_2yby-aggregator_2output_8h_source.html":[9,0,0,11,2,3],
-"tools_2yby-aggregator_2studydata_8h_source.html":[9,0,0,11,2,7]
+"tools_2yby-aggregator_2studydata_8h_source.html":[9,0,0,11,2,7],
+"tools_2yby-aggregator_2variable_8h_source.html":[9,0,0,11,2,8]
 };

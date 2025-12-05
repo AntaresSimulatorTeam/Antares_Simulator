@@ -1,6 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastAllAreas.html#adefce8a2685ae988b1e8141c0c356c82":[8,0,0,3,0,0,38,6],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastAllAreas.html#aed912c928a70da21009497d597c54522":[8,0,0,3,0,0,38,12],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastAllAreas.html#af7290c72a88e8f7ad0a32ca19ea81edc":[8,0,0,3,0,0,38,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastCoefficients.html":[8,0,0,3,0,0,39],
@@ -249,5 +248,6 @@ var NAVTREEINDEX9 =
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Average.html#a7ef5e3412decb1e214636262e120676a":[8,0,0,3,0,1,1,4],
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Average.html#a7f0d806502e263486772f03b122308fe":[8,0,0,3,0,1,1,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Average.html#a8d25f8cc5ffa03b4b235a6fa963b255d":[8,0,0,3,0,1,1,2],
-"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Average.html#ad02e3287822cb6f3aaac0cd67f6155da":[8,0,0,3,0,1,1,0]
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Average.html#ad02e3287822cb6f3aaac0cd67f6155da":[8,0,0,3,0,1,1,0],
+"classAntares_1_1Component_1_1Datagrid_1_1Selection_1_1Average.html#ae9117adf64c851537140bb936787c364":[8,0,0,3,0,1,1,3]
 };

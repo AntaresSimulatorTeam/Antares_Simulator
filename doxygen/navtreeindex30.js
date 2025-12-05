@@ -1,6 +1,5 @@
 var NAVTREEINDEX30 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a2b10372da3e64f215aec615e4f0d104d":[8,0,0,19,5,4,82,20],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a2ca0cee43764e4e8ce91267594e5a945":[8,0,0,19,5,4,82,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a41463f3fcf3f178b9e49b896120c97bc":[8,0,0,19,5,4,82,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a41d6e15f0959974a9d93b54b67749a53":[8,0,0,19,5,4,82,14],
@@ -249,5 +248,6 @@ var NAVTREEINDEX30 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a87a7076f89811af83d158a9afd31fd04":[8,0,0,19,5,4,104,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a8a9c73c8c1dd8156332c1471fda86bc8":[8,0,0,19,5,4,104,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a9869b6961e7376f6670802fed92104be":[8,0,0,19,5,4,104,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#ab5201e2205635aa82d330ee29a8c48eb":[8,0,0,19,5,4,104,19]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#ab5201e2205635aa82d330ee29a8c48eb":[8,0,0,19,5,4,104,19],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#ac0d48a11d00928034b626e20ccf7ef45":[8,0,0,19,5,4,104,4]
 };

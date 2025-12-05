@@ -1,6 +1,5 @@
 var NAVTREEINDEX60 =
 {
-"structBB.html#ae48b258cd7e869b999978682281d0c3e":[8,0,47,5],
 "structBB.html#af72187197c329155e7a55102647b400f":[8,0,47,1],
 "structBOUND__FLEX__DOWN__NODE.html":[8,0,58],
 "structBOUND__FLEX__DOWN__NODE.html#a890184842464aadcca63cb2970421d3a":[8,0,58,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX60 =
 "structDecompositionFixture.html#a5232d9ef11a30c4c1d03f6c7e26b1a8d":[8,0,99,7],
 "structDecompositionFixture.html#a63466d4e4412dcb42153858d497696d0":[8,0,99,1],
 "structDecompositionFixture.html#aacb2a1dc5a89552cba9da938b0b871b8":[8,0,99,4],
-"structDecompositionFixture.html#abb2d37133a07fa7bb420ba9be46568d2":[8,0,99,5]
+"structDecompositionFixture.html#abb2d37133a07fa7bb420ba9be46568d2":[8,0,99,5],
+"structDecompositionFixture.html#abe64a0d68fbb98f41d0e91af2349a93f":[8,0,99,9]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX49 =
 {
-"dispatcher_8h_source.html":[9,0,0,12,1,2],
 "domesticUnsuppliedEnergy_8h_source.html":[9,0,0,8,12,0,0,0,0,2,7],
 "drag-drop_8hxx_source.html":[9,0,0,12,2,0,0,2],
 "drawingcontext_8h_source.html":[9,0,0,12,2,1,1,3,5],
@@ -80,8 +79,8 @@ var NAVTREEINDEX49 =
 "fswalker_8h.html#ab777e309f17298e4978a2bab94bc79d6":[7,0,21,7],
 "fswalker_8h.html#ac5aaabb740cba264f88d690c605f84ad":[7,0,21,10],
 "fswalker_8h_source.html":[9,0,0,4,1,1],
-"functions.html":[8,3,0,0],
 "functions.html":[8,3,0],
+"functions.html":[8,3,0,0],
 "functions_b.html":[8,3,0,1],
 "functions_c.html":[8,3,0,2],
 "functions_d.html":[8,3,0,3],
@@ -89,8 +88,8 @@ var NAVTREEINDEX49 =
 "functions_enum.html":[8,3,4],
 "functions_eval.html":[8,3,5],
 "functions_f.html":[8,3,0,5],
-"functions_func.html":[8,3,1,0],
 "functions_func.html":[8,3,1],
+"functions_func.html":[8,3,1,0],
 "functions_func_b.html":[8,3,1,1],
 "functions_func_c.html":[8,3,1,2],
 "functions_func_d.html":[8,3,1,3],
@@ -130,8 +129,8 @@ var NAVTREEINDEX49 =
 "functions_r.html":[8,3,0,17],
 "functions_s.html":[8,3,0,18],
 "functions_t.html":[8,3,0,19],
-"functions_type.html":[8,3,3],
 "functions_type.html":[8,3,3,0],
+"functions_type.html":[8,3,3],
 "functions_type_b.html":[8,3,3,1],
 "functions_type_c.html":[8,3,3,2],
 "functions_type_d.html":[8,3,3,3],
@@ -149,8 +148,8 @@ var NAVTREEINDEX49 =
 "functions_type_v.html":[8,3,3,15],
 "functions_u.html":[8,3,0,20],
 "functions_v.html":[8,3,0,21],
-"functions_vars.html":[8,3,2],
 "functions_vars.html":[8,3,2,0],
+"functions_vars.html":[8,3,2],
 "functions_vars_b.html":[8,3,2,1],
 "functions_vars_c.html":[8,3,2,2],
 "functions_vars_d.html":[8,3,2,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX49 =
 "gui_8cpp.html#a8ece4d59dc4d6767620ae522d2058f0a":[7,0,0,8,0,13],
 "gui_8cpp.html#a9ccc5d00eeb4030573b3598ee8a90b9d":[7,0,0,8,0,15],
 "gui_8cpp.html#af089757198f3dd6d588b49c35fdb13fa":[7,0,0,8,0,12],
-"gui_8cpp.html#aff91aa67ab4974a4b13238d0101834c5":[7,0,0,8,0,4]
+"gui_8cpp.html#aff91aa67ab4974a4b13238d0101834c5":[7,0,0,8,0,4],
+"gui_8h.html#a196db958f0592b871d0d2faa3ca36589":[7,0,0,8,0,2]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"classAntares_1_1Data_1_1StudyRuntimeInfos.html#af1f6117511f38d9392284eddb2005989":[8,0,0,5,66,0],
 "classAntares_1_1Data_1_1StudyVersion.html":[8,0,0,5,75],
 "classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee":[8,0,0,5,75,5],
 "classAntares_1_1Data_1_1StudyVersion.html#a26d794df23c8604eadce35cab13ec13e":[8,0,0,5,75,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html":[8,0,0,7,24],
 "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html#a506b8f072799cf43c01939c556066e2e":[8,0,0,7,24,0],
 "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html":[8,0,0,7,25],
-"classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html#a8f401db8c1a820330b1aadafb7a948e5":[8,0,0,7,25,0]
+"classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html#a8f401db8c1a820330b1aadafb7a948e5":[8,0,0,7,25,0],
+"classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html":[8,0,0,7,29]
 };

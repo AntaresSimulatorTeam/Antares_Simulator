@@ -1,6 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html#a839eca4c81921d66cc1b45a9b539082e":[8,0,0,12,0,3,0,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html#abf2915cf563cf2b4c48710366b50d10e":[8,0,0,12,0,3,0,2],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html#ac9411c259fab4da09430db520e57d837":[8,0,0,12,0,3,0,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port.html":[8,0,0,12,0,3,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html":[8,0,0,19,5,4,8],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows_1_1Statistics.html":[8,0,0,19,5,4,42,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations_1_1Statistics.html":[8,0,0,19,5,4,62,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLDTraits.html":[8,0,0,19,5,4,63]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLDTraits.html":[8,0,0,19,5,4,63],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html":[8,0,0,19,5,4,64]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX51 =
 {
-"internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0afcee7b4708db347a6b0a44305cca73d4":[7,0,0,12,9,66],
 "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0afe628a0f49b690896e4b5265c049439d":[7,0,0,12,9,19],
 "internal-ids_8h.html#a9e9b814398d8f3dfd614e67481b6a5d0aff87e5b9a09ce155c3a86a64170cb2d8":[7,0,0,12,9,56],
 "internal-ids_8h_source.html":[9,0,0,12,2,0,0,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX51 =
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#affa3d918be92f1016e56794f61026a5a":[7,0,0,6,216],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h_source.html":[9,0,0,4,0,25,0,0,0,16],
 "libs_2antares_2study_2include_2antares_2study_2output_8h_source.html":[9,0,0,4,0,25,0,0,0,20],
-"libs_2antares_2study_2include_2antares_2study_2parts_2common_2cluster_8h_source.html":[9,0,0,4,0,25,0,0,0,5,0,0]
+"libs_2antares_2study_2include_2antares_2study_2parts_2common_2cluster_8h_source.html":[9,0,0,4,0,25,0,0,0,5,0,0],
+"libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2allocation_8h_source.html":[9,0,0,4,0,25,0,0,0,5,1,0]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX48 =
 {
-"dir_78b16d83f19ed5108ba7d586f55397e6.html":[9,0,0,8,12,0,0,0,0,4],
 "dir_79a3e724839bc9216a240bf576933a1b.html":[9,0,0,4,0,25,0,0],
 "dir_7b8037b01c904e47e6df8336b21c3e01.html":[9,0,0,4,0,7],
 "dir_7b9203e18af43fe9a3c6f5aa62c78cb5.html":[9,0,0,12,2,2,9],
@@ -249,5 +248,6 @@ var NAVTREEINDEX48 =
 "diskfreespace_8hxx_source.html":[9,0,0,12,2,1,8,0],
 "dispatchable-generation-margin_8h_source.html":[9,0,0,8,12,0,0,0,0,2,5],
 "dispatchableGeneration_8h_source.html":[9,0,0,8,12,0,0,0,0,2,6],
-"dispatcher_2dispatcher_8h_source.html":[9,0,0,12,1,1,2]
+"dispatcher_2dispatcher_8h_source.html":[9,0,0,12,1,1,2],
+"dispatcher_8h_source.html":[9,0,0,12,1,2]
 };

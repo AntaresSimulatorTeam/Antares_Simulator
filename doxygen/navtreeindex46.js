@@ -1,6 +1,5 @@
 var NAVTREEINDEX46 =
 {
-"classreferenceIniFile.html#ae38f514c87175cb16d7d50c117aae175":[8,0,256,1],
 "classreferenceIniFile.html#af14c0e9ad664aa1793c0671b25a5c9ed":[8,0,256,7],
 "classreferenceIniFile.html#af14c0e9ad664aa1793c0671b25a5c9ed":[8,0,256,6],
 "classreferenceScBuilderFile.html":[8,0,257],
@@ -249,5 +248,6 @@ var NAVTREEINDEX46 =
 "dataSeriesRepo_8h_source.html":[9,0,0,7,1,0,0,0,0,1],
 "dataSeries_8h_source.html":[9,0,0,7,1,0,0,0,0,0],
 "datafile_8h_source.html":[9,0,0,11,2,0],
-"datasource_8h_source.html":[9,0,0,12,2,1,1,2,0,1]
+"datasource_8h_source.html":[9,0,0,12,2,1,1,2,0,1],
+"datasource_8hxx_source.html":[9,0,0,12,2,1,1,2,0,2]
 };

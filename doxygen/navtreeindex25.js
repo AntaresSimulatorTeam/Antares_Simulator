@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"classAntares_1_1PrepareInflows.html#aba0b4a6d5f3592f5f3d21870535d619f":[8,0,0,54,0],
 "classAntares_1_1Private_1_1Component_1_1CustomWxButton.html":[8,0,0,18,0,0],
 "classAntares_1_1Private_1_1Component_1_1CustomWxButton.html#a6104435ce815091591b0d6a260ca06a3":[8,0,0,18,0,0,1],
 "classAntares_1_1Private_1_1Component_1_1CustomWxButton.html#a639ab9ecaf68a998a93d9aa76eb4a9b0":[8,0,0,18,0,0,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX25 =
 "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html":[8,0,0,19,30],
 "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html#a54602b93d4eddc2ee40bad655ff55b9d":[8,0,0,19,30,0],
 "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html":[8,0,0,19,2,1],
-"classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html#ad971b38ab23e428999f5dfe9deae6bd3":[8,0,0,19,2,1,0]
+"classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html#ad971b38ab23e428999f5dfe9deae6bd3":[8,0,0,19,2,1,0],
+"classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html":[8,0,0,19,2,0]
 };

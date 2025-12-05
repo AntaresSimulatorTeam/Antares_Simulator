@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"classAntares_1_1Map_1_1Control.html#a3d66c6cc69cd363099e8bf26beaf6df3":[8,0,0,13,4,11],
 "classAntares_1_1Map_1_1Control.html#a41d9a1b163c1fdf3e9ae42e33a7cb439":[8,0,0,13,4,2],
 "classAntares_1_1Map_1_1Control.html#a57d0cf4b2a3c9a20629731a34b156c7e":[8,0,0,13,4,43],
 "classAntares_1_1Map_1_1Control.html#a5903021f10f7818e42bdba299d6677a0":[8,0,0,13,4,19],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#acfff65d6a45e4f2e5e914ee8462117bf":[8,0,0,13,1,2,16],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#adf8a64807fe32a19a8e3eba0459c40ad":[8,0,0,13,1,2,14],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#ae240ee4b10049e5aa384a897fb7862d2":[8,0,0,13,1,2,7],
-"classAntares_1_1Map_1_1Tool_1_1Tool.html#af8326e7448637d34ee7d4193225dbb94":[8,0,0,13,1,2,13]
+"classAntares_1_1Map_1_1Tool_1_1Tool.html#af8326e7448637d34ee7d4193225dbb94":[8,0,0,13,1,2,13],
+"classAntares_1_1Map_1_1Tool_1_1Tool.html#afc6dcba1068df60f5f3aa01e7d72b249":[8,0,0,13,1,2,9]
 };
