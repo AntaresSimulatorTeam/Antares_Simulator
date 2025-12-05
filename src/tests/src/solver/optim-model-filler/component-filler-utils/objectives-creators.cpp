@@ -1,3 +1,4 @@
+#include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "objectives-creators.h"
 
 using namespace Antares::ModelerStudy::SystemModel;

@@ -31,6 +31,10 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
+
+
+#include <antares/logs/logs.h>
+
 /**
  * Read Linear Expression Visitor
  * Visits a Node and produces a Linear Expression (defined by an offset and non-zero
@@ -169,6 +173,7 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     {
         if (node->variability() == VariabilityType::VARYING_IN_TIME_AND_SCENARIO)
         {
+            logs.notice() << fillContext_.getYear();
             double value = evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0);
             return Optimization::TimeDependentLinearExpression({}, value);
         }

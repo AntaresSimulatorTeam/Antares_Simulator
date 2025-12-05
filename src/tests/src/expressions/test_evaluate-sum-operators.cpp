@@ -30,7 +30,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
-#include "antares/modeler-optimisation-container/VariabilityType.h"
+#include <antares/study/system-model/variabilityType.h>
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 #include "UtilMocks.h"

@@ -33,8 +33,9 @@ namespace Antares::ModelerStudy::SystemModel
 enum class ParameterType : unsigned int
 {
     CONSTANT = 0,
-    TIMESERIES = 1
-    // TODO: add varying_in_scenario_only, varying_in_time_and_scenario, and handle them in visitors
+    TIMESERIES = 1,
+    VARYING_IN_SCENARIO_ONLY = 2
+    // TODO: add varying_in_time_and_scenario, and handle them in visitors
 };
 
 // this struct contains more or less the same infos as the one in system.h
