@@ -29,22 +29,14 @@
 #include <antares/logs/logs.h>
 #include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
+#include "antares/solver/modeler/loadFiles/readOptimConfig.h"
 
 using namespace Antares::ModelerStudy;
 using namespace Antares::IO::Inputs;
-using namespace Antares::IO::Inputs::YmlOptimConfig;
 namespace fs = std::filesystem;
 
-// gp : declared here because can't be declared in loadFiles.h (which refuses to load OptimConfig.h)
-// gp : TODO : this will have to be improved.
 namespace Antares::Solver::LoadFiles
 {
-OptimConfig loadOptimConfigFromYaml(const std::filesystem::path& studyPath);
-}
-
-namespace Antares::Solver::LoadFiles
-{
-
 static YmlModel::Library loadSingleLibrary(const fs::path& filePath)
 {
     std::string libraryStr;
@@ -132,7 +124,7 @@ YmlModel::Model& fetchModelInLibrairies(const YmlOptimConfig::Model& optimConfig
                                         [&modelId](const auto& m) { return m.id == modelId; });
     if (modelIt == lib->models.end())
     {
-        throw std::runtime_error("No model '" + modelId + "' found.");
+        throw std::runtime_error("No model '" + libId + "." + modelId + "' found.");
     }
 
     return *modelIt;
@@ -166,7 +158,7 @@ void updateConstraints(YmlModel::Model& model, const YmlOptimConfig::Model& opti
     }
 }
 
-void updateObjective(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
+void updateObjectives(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
 {
     for (const auto& optCfgObj: optimConfigModel.objectives)
     {
@@ -184,7 +176,7 @@ void updateSystemModel(YmlModel::Model& model, const YmlOptimConfig::Model& opti
 {
     updateVariables(model, optimConfigModel);
     updateConstraints(model, optimConfigModel);
-    updateObjective(model, optimConfigModel);
+    updateObjectives(model, optimConfigModel);
 }
 
 void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
@@ -200,7 +192,7 @@ void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
 std::vector<SystemModel::Library> loadLibraries(const fs::path& studyPath)
 {
     auto ymlLibraries = loadLibrariesFromYaml(studyPath);
-    auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
+    const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
     updateLibrariesWithOptimConfig(ymlLibraries, ymlOptimConfig);
     return convertIntoSystemLibs(ymlLibraries);
 }

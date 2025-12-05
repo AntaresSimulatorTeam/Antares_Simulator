@@ -59,7 +59,6 @@ void CreateInputFileFixture::createYamlFile(const std::string& filename,
     outStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
     outStream << yaml_content;
     outStream.flush();
-    outStream.close();
 }
 
 CreateInputFileFixture ::~CreateInputFileFixture()
@@ -208,6 +207,46 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateIn
 
     BOOST_CHECK_EQUAL(modelObjectives[2].Id(), "obj_3");
     BOOST_CHECK(modelObjectives[2].location() == Location::SUBPROBLEMS);
+}
+
+BOOST_FIXTURE_TEST_CASE(no_library_but_reference_an_objective_in_optim_config___exception_raised,
+                        CreateInputFileFixture)
+{
+    std::string yamlContent = R"(models:
+      - id: my-lib.some-model
+        model-decomposition:
+          objective-contributions:
+            - id: some_obj
+              location: subproblems)";
+
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
+                          std::runtime_error,
+                          checkMessage("No library 'my-lib' found."));
+}
+
+BOOST_FIXTURE_TEST_CASE(model_does_not_exist_in_library___exception_raised, CreateInputFileFixture)
+{
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: blah-blah
+  models: [])";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+      - id: my-lib.some-model
+        model-decomposition:
+          objective-contributions:
+            - id: some_obj
+              location: subproblems)";
+
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
+                          std::runtime_error,
+                          checkMessage("No model 'my-lib.some-model' found."));
 }
 
 BOOST_FIXTURE_TEST_CASE(objective_does_not_exist_in_model___exception_raised,

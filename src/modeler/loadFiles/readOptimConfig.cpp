@@ -19,11 +19,12 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include "antares/solver/modeler/loadFiles/readOptimConfig.h"
+
 #include <yaml-cpp/yaml.h>
 
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
-#include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 #include "antares/io/inputs/yml-optim-config/parser.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
