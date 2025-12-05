@@ -159,20 +159,23 @@ $(document).ready(function(){initNavTree('singleProblemGetterImpl_8h_source.html
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a> getWeeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::vector&lt;WeeklyProblemId&gt; getProblemIds() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a>&amp; getYearlyData(<span class="keywordtype">unsigned</span> year);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a> computeHydroLevels(<span class="keywordtype">unsigned</span> year, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; initialLevel);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> initializeRandomNumbers();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    Antares::Data::Area::ScratchMap scratchmap_;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html">HebdoProblemToLpsTranslator</a> translator_;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::unique_ptr&lt;Antares::Data::Study&gt; study_;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> pb_;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    AllData allData_;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::optional&lt;Antares::Solver::Simulation::randomNumbers&gt;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      randomForParallelYears_; <span class="comment">// Allow the use of std::optional&lt;T&gt;::emplace for delayed</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                               <span class="comment">// building</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;} <span class="comment">// namespace Antares::Solver::Implementation</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> writeNTCTimeSeries(<span class="keyword">const</span> std::filesystem::path&amp; outputDir);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> writeStudyDescriptionFiles(<span class="keyword">const</span> std::filesystem::path&amp; outputDir);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a>&amp; getYearlyData(<span class="keywordtype">unsigned</span> year);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a> computeHydroLevels(<span class="keywordtype">unsigned</span> year, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; initialLevel);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> initializeRandomNumbers();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    Antares::Data::Area::ScratchMap scratchmap_;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html">HebdoProblemToLpsTranslator</a> translator_;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::unique_ptr&lt;Antares::Data::Study&gt; study_;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> pb_;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    AllData allData_;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    std::optional&lt;Antares::Solver::Simulation::randomNumbers&gt;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      randomForParallelYears_; <span class="comment">// Allow the use of std::optional&lt;T&gt;::emplace for delayed</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                               <span class="comment">// building</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <span class="comment">// namespace Antares::Solver::Implementation</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:51</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1HebdoProblemToLpsTranslator_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html">Antares::Solver::HebdoProblemToLpsTranslator</a></div><div class="ttdoc">Class for translating a weekly problem to a linear programming problem.</div><div class="ttdef"><b>Definition:</b> HebdoProblemToLpsTranslator.h:51</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">Antares::Solver::Implementation::SingleProblemGetter</a></div><div class="ttdef"><b>Definition:</b> singleProblemGetterImpl.h:25</div></div>

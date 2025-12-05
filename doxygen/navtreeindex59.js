@@ -1,5 +1,9 @@
 var NAVTREEINDEX59 =
 {
+"structAntares_1_1Solver_1_1WeeklyProblemId.html#a7090451986c94235a3c60ab8dbe03a1d":[8,0,0,19,23,1],
+"structAntares_1_1Solver_1_1WeeklyProblemId.html#af63c9340c5aa646452554668c110f07d":[8,0,0,19,23,0],
+"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html":[8,0,0,22,3],
+"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a0fcbe39849beb049ff51d60ac59f8751":[8,0,0,22,3,1],
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a1db14558e691c5480cfe6c818cde751e":[8,0,0,22,3,7],
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a2844fe3746edf8f66d1106a5b89d0c1f":[8,0,0,22,3,10],
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a44d01713ce180942ce8b013971248378":[8,0,0,22,3,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX59 =
 "structBB.html#aae733ddc9b449e6ecc44698589e7704a":[8,0,47,38],
 "structBB.html#ab462a7efde6a7a0abb473f823f1eea23":[8,0,47,16],
 "structBB.html#ab644c481c6525f0ff3841b224123e2d6":[8,0,47,24],
-"structBB.html#ab8c3361cbb94758f22c13b6389450330":[8,0,47,7],
-"structBB.html#ac0f3b6d5cb88053b6067ae9d3cec2b98":[8,0,47,10],
-"structBB.html#ad1329743a6530e3dbfabea5020c54b82":[8,0,47,6],
-"structBB.html#ad47f11bbd61f3b483f1c126ccfc228ed":[8,0,47,25],
-"structBB.html#ae48b258cd7e869b999978682281d0c3e":[8,0,47,5]
+"structBB.html#ab8c3361cbb94758f22c13b6389450330":[8,0,47,7]
 };

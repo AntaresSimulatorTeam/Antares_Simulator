@@ -1,5 +1,9 @@
 var NAVTREEINDEX54 =
 {
+"renewable_2cluster_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,3,1],
+"renewable_2cluster__list_8h_source.html":[9,0,0,4,0,25,0,0,0,5,3,2],
+"renewable_2defines_8h_source.html":[9,0,0,4,0,25,0,0,0,5,3,5],
+"renewable_8areasummary_8h_source.html":[9,0,0,12,2,1,1,1,1,0,9],
 "report_8cpp.html#a1418a64099521dabe8235df401f4f0cc":[7,0,0,21,37],
 "report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3":[7,0,0,21,33],
 "report_8cpp.html#afca59b8c35ac2975defa738d1098f969":[7,0,0,21,31],
@@ -245,9 +249,5 @@ var NAVTREEINDEX54 =
 "specific__test_8py.html#af5f345d527551a3529c60a035eb5fee0":[7,0,39,5],
 "specific__test_8py.html#afe9a58d5dea5dea20d85f938376e69c5":[7,0,39,10],
 "spotlight-provider_8h_source.html":[9,0,0,12,2,2,9,11],
-"spotlight_2spotlight_8h_source.html":[9,0,0,12,1,0,3,9],
-"spotlight_8h_source.html":[9,0,0,12,1,0,5],
-"spotlight_8hxx_source.html":[9,0,0,12,1,0,3,10],
-"standard-page_8hxx_source.html":[9,0,0,12,2,0,0,0,0],
-"startupwizard_8h_source.html":[9,0,0,12,2,2,29]
+"spotlight_2spotlight_8h_source.html":[9,0,0,12,1,0,3,9]
 };

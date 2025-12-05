@@ -4,5 +4,7 @@ var classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter =
     [ "SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#ab9acfec601094165c0af58467e929ca9", null ],
     [ "getConstantData", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#acb7a26a08534ac5074ae8a4175a2a39e", null ],
     [ "getProblemIds", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a57e614ec25c94cf43622437ba1e163a2", null ],
-    [ "getWeeklyData", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a1eb140845344d0eca8786f1af22d87ba", null ]
+    [ "getWeeklyData", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a1eb140845344d0eca8786f1af22d87ba", null ],
+    [ "writeNTCTimeSeries", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a35e80d2d1eff376f4f5ca1a91a17be74", null ],
+    [ "writeStudyDescriptionFiles", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a1238d3e0992688df9a9662a99e654d75", null ]
 ];

@@ -1,5 +1,9 @@
 var NAVTREEINDEX49 =
 {
+"dispatchable-generation-margin_8h_source.html":[9,0,0,8,12,0,0,0,0,2,5],
+"dispatchableGeneration_8h_source.html":[9,0,0,8,12,0,0,0,0,2,6],
+"dispatcher_2dispatcher_8h_source.html":[9,0,0,12,1,1,2],
+"dispatcher_8h_source.html":[9,0,0,12,1,2],
 "domesticUnsuppliedEnergy_8h_source.html":[9,0,0,8,12,0,0,0,0,2,7],
 "drag-drop_8hxx_source.html":[9,0,0,12,2,0,0,2],
 "drawingcontext_8h_source.html":[9,0,0,12,2,1,1,3,5],
@@ -245,9 +249,5 @@ var NAVTREEINDEX49 =
 "gui_8cpp.html#a4351c8b9c0743cdac9215ad9d8c5f9b9":[7,0,0,8,0,5],
 "gui_8cpp.html#a658d8359ad9df6e82c69bc4be365cbb9":[7,0,0,8,0,0],
 "gui_8cpp.html#a7c0a970eddb79a955686b109250780a3":[7,0,0,8,0,14],
-"gui_8cpp.html#a8ece4d59dc4d6767620ae522d2058f0a":[7,0,0,8,0,13],
-"gui_8cpp.html#a9ccc5d00eeb4030573b3598ee8a90b9d":[7,0,0,8,0,15],
-"gui_8cpp.html#af089757198f3dd6d588b49c35fdb13fa":[7,0,0,8,0,12],
-"gui_8cpp.html#aff91aa67ab4974a4b13238d0101834c5":[7,0,0,8,0,4],
-"gui_8h.html#a196db958f0592b871d0d2faa3ca36589":[7,0,0,8,0,2]
+"gui_8cpp.html#a8ece4d59dc4d6767620ae522d2058f0a":[7,0,0,8,0,13]
 };
