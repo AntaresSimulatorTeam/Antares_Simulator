@@ -186,14 +186,19 @@ void Modeler::run() const
         auto output = writer_.outputPath();
 
         // 1-1.mps
+        // save integer var indices, relax them before writing the mps
+        SaveAndRelax(subproblem, output / "subProblem-integer-indices.txt");
         Write(subproblem, output / "1-1.mps");
         // master.mps
+        // save integer var indices, relax them before writing the mps
+        SaveAndRelax(master_problem, output / "master-integer-indices.txt");
         Write(master_problem, output / "master.mps");
 
         // structure.txt
         BendersDecompositionWriter writer(bendersDecomposition);
         std::ofstream of(output / "structure.txt");
         writer.write(of);
+        // TODO do i need to restore integrality for the modeler ?
     }
 
     logs.info() << "Launching resolution...";
