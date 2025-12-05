@@ -30,6 +30,9 @@ public:
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
     std::vector<WeeklyProblemId> getProblemIds() const;
 
+    void writeNTCTimeSeries(const std::filesystem::path& outputDir);
+    void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
+
 private:
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);

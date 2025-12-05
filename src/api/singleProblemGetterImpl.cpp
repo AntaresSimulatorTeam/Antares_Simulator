@@ -24,10 +24,12 @@
 #include <map>
 #include <string>
 
+#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/regenerate_timeseries.h"
@@ -96,6 +98,7 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
     initializeRandomNumbers();
+    ScenarioBuilderOwner(*study_).callScenarioBuilder();
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
@@ -135,6 +138,26 @@ void SingleProblemGetter::initializeRandomNumbers()
     MersenneTwister randomHydroGenerator;
     randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
     randomForParallelYears_->compute(*study_, 1, isYearPerformed, randomHydroGenerator);
+}
+
+void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& outputDir)
+{
+    // TS number have already been loaded/generated, we just need to write them
+    auto writer = resultWriterFactory(Antares::Data::ResultFormat::legacyFilesDirectories,
+                                      outputDir,
+                                      nullptr, // not needed
+                                      gDurationCollector);
+    study_->storeTimeSeriesNumbers<Antares::Data::TimeSeriesType::timeSeriesTransmissionCapacities>(
+      *writer);
+}
+
+void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path& outputDir)
+{
+    auto writer = resultWriterFactory(Antares::Data::ResultFormat::legacyFilesDirectories,
+                                      outputDir,
+                                      nullptr, // not needed
+                                      gDurationCollector);
+    OPT_ExportStructures(&pb_, *writer);
 }
 
 ConstantDataFromAntares SingleProblemGetter::getConstantData()

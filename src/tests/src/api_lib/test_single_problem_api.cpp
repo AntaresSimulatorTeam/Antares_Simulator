@@ -22,6 +22,7 @@
 #define BOOST_TEST_MODULE test_api
 #define WIN32_LEAN_AND_MEAN
 
+#include <fstream>
 #include <memory>
 
 #include <boost/test/unit_test.hpp>
@@ -283,5 +284,78 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year_partial_year)
     // Last problem is (year, week) = (2, 1)
     BOOST_CHECK_EQUAL(problem_ids[1].year, 2);
     BOOST_CHECK_EQUAL(problem_ids[1].week, 0);
+}
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(file_export)
+
+BOOST_AUTO_TEST_CASE(single_link_ntc_ts_numbers)
+{
+    StudyBuilder builder;
+    builder.setNumberMCyears(5);
+
+    auto* a1 = builder.addAreaToStudy("AREA");
+    auto* a2 = builder.addAreaToStudy("ZREA");
+    auto link = AreaAddLinkBetweenAreas(a1, a2);
+
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+
+    // Erase TS numbers for repeatability (no randomness)
+    for (int ii = 0; ii < 5; ii++)
+    {
+        link->timeseriesNumbers[ii] = ii % 3;
+    }
+
+    auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
+    getter.writeNTCTimeSeries(output_dir);
+    std::ifstream read(output_dir / "ts-numbers" / "ntc" / "area" / "zrea.txt");
+    BOOST_REQUIRE(read);
+    std::string content((std::istreambuf_iterator<char>(read)), std::istreambuf_iterator<char>());
+    const std::string expected = R"(size:1x5
+1
+2
+3
+1
+2
+)";
+
+    BOOST_CHECK_EQUAL(content, expected);
+}
+
+BOOST_AUTO_TEST_CASE(single_link_structure_files)
+{
+    StudyBuilder builder;
+
+    auto* a1 = builder.addAreaToStudy("AREA");
+    auto* a2 = builder.addAreaToStudy("ZREA");
+    auto link = AreaAddLinkBetweenAreas(a1, a2);
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+
+    auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
+    getter.writeStudyDescriptionFiles(output_dir);
+
+    // interco-1-1.txt
+    {
+        std::ifstream interco(output_dir / "interco-1-1.txt");
+        BOOST_REQUIRE(interco);
+        std::string content((std::istreambuf_iterator<char>(interco)),
+                            std::istreambuf_iterator<char>());
+        const std::string expected = "0 0 1\n";
+        BOOST_CHECK_EQUAL(content, expected);
+    }
+
+    // area-1-1.txt
+    {
+        std::ifstream areas(output_dir / "area-1-1.txt");
+        BOOST_REQUIRE(areas);
+        std::string content((std::istreambuf_iterator<char>(areas)),
+                            std::istreambuf_iterator<char>());
+        const std::string expected = "area\nzrea\n";
+        BOOST_CHECK_EQUAL(content, expected);
+    }
 }
 BOOST_AUTO_TEST_SUITE_END()
