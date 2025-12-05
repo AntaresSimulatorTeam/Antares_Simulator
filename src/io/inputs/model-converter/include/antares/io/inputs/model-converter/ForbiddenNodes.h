@@ -43,7 +43,7 @@ std::type_index forbiddenNodeKey()
 }
 
 template<Expressions::Nodes::FunctionNodeType T>
-constexpr std::type_index forbiddenNodeKey()
+std::type_index forbiddenNodeKey()
 {
     using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType, T>;
     return std::type_index(typeid(Tag));
