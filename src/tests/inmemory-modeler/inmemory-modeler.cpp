@@ -37,7 +37,7 @@ namespace Test::Modeler
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type)
+  const VariabilityType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }

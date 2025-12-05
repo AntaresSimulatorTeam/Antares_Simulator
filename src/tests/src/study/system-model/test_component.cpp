@@ -57,7 +57,8 @@ BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentBuilderCreationFixture)
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type = ParameterType::CONSTANT)
+  const Antares::Optimisation::VariabilityType& type = Antares::Optimisation::VariabilityType::
+    CONSTANT_IN_TIME_AND_SCENARIO)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
