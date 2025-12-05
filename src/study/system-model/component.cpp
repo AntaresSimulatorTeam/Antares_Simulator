@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <ranges>
+#include <fmt/format.h>
 
 #include <antares/study/system-model/component.h>
 
@@ -43,15 +43,46 @@ static void checkComponentDataValidity(const ComponentData& data)
     if (data.model->Parameters().size() != data.parameter_values.size())
     {
         throw std::invalid_argument(
-          "The component \"" + data.id + "\" has " + std::to_string(data.parameter_values.size())
-          + " parameter(s), but its model has " + std::to_string(data.model->Parameters().size()));
+          fmt::format("The component \"{}\" has {} parameter(s), but its model has {}",
+                      data.id,
+                      data.parameter_values.size(),
+                      data.model->Parameters().size()));
     }
-    for (const auto& param: data.model->Parameters() | std::views::keys)
+
+    for (const auto& [paramName, param]: data.model->Parameters())
     {
-        if (!data.parameter_values.contains(param))
+        auto dependanceMismatchThrow = [](const std::string& modelId,
+                                          const std::string& componentId,
+                                          const std::string& parameterId,
+                                          const std::string& dependanceType)
         {
-            throw std::invalid_argument("The component \"" + data.id
-                                        + "\" has no value for parameter '" + param + "'");
+            throw std::invalid_argument(
+              fmt::format("Model '{}': Component '{}': Parameter '{}': {} dependance mismatch "
+                          "between model and system",
+                          modelId,
+                          componentId,
+                          parameterId,
+                          dependanceType));
+        };
+
+        try
+        {
+            auto value = data.parameter_values.at(paramName);
+            if (!param.isTimeDependent() && isTimeDependent(value.type))
+            {
+                dependanceMismatchThrow(data.model->Id(), data.id, paramName, "Time");
+            }
+            if (!param.isScenarioDependent() && isScenarioDependent(value.type))
+            {
+                dependanceMismatchThrow(data.model->Id(), data.id, paramName, "Scenario");
+            }
+        }
+        catch (const std::out_of_range&)
+        {
+            throw std::invalid_argument(
+              fmt::format("The component '{}' has no value for parameter '{}'",
+                          data.id,
+                          paramName));
         }
     }
 }
