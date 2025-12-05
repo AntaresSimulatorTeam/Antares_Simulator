@@ -100,7 +100,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_variable_decomposition, CreateInp
     auto libraries = loadLibraries(studyFolder);
 
     // Assert part
-    const auto& modelVariables = libraries[0].Models()["some-model"].Variables();
+    const auto& modelVariables = libraries[0].Models().at("some-model").Variables();
 
     BOOST_CHECK_EQUAL(modelVariables[0].Id(), "x");
     BOOST_CHECK(modelVariables[0].location() == Location::MASTER);
@@ -149,7 +149,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_decomposition, CreateI
     auto libraries = loadLibraries(studyFolder);
 
     // Assert part
-    const auto& modelConstraints = libraries[0].Models()["some-model"].Constraints();
+    const auto& modelConstraints = libraries[0].Models().at("some-model").Constraints();
 
     BOOST_CHECK_EQUAL(modelConstraints[0].Id(), "c1");
     BOOST_CHECK(modelConstraints[0].location() == Location::MASTER);
@@ -198,7 +198,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateIn
     auto libraries = loadLibraries(studyFolder);
 
     // Assert part
-    const auto& modelObjectives = libraries[0].Models()["some-model"].Objectives();
+    const auto& modelObjectives = libraries[0].Models().at("some-model").Objectives();
 
     BOOST_CHECK_EQUAL(modelObjectives[0].Id(), "obj_1");
     BOOST_CHECK(modelObjectives[0].location() == Location::MASTER);
