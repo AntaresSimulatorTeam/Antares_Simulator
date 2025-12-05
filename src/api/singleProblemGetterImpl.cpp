@@ -37,6 +37,8 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/writer/i_writer.h"
 
+#include "fmt/format.h"
+
 namespace
 {
 constexpr int optimizationNumber = 1;  // the 1st optim is available for now
@@ -44,7 +46,6 @@ constexpr int numeroDeLIntervalle = 0; // simplex-range = week
 constexpr int numSpace = 0;            // full sequential
 constexpr int PremierPdtDeLIntervalle = 0;
 constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
-const std::string kName = "my-name";         // Arbitrary
 Antares::Solver::NullResultWriter gResultWriter;
 Benchmarking::DurationCollector gDurationCollector;
 
@@ -53,6 +54,11 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
     Antares::FileTreeStudyLoader loader(studyPath);
     auto study = loader.load();
     return study;
+}
+
+std::string problemName(const WeeklyProblemId& id)
+{
+    return fmt::format("problem-{}-{}.txt", id.year, id.week);
 }
 } // namespace
 
@@ -248,7 +254,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                                     optimizationNumber);
 
     OPT_InitialiserLesCoutsLineaire(&pb_, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
-    return translator_.translate(pb_.ProblemeAResoudre.get(), kName);
+    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
