@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(
       objective);
     createComponent("model",
                     "componentA",
-                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIE)});
+                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIES)});
 
     FillContext ctx{0, 2, 0, 2, 0};
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(
       objective);
     createComponent("model",
                     "componentA",
-                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIE)},
+                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIES)},
                     "scenario_group");
 
     FillContext ctx{0, 0, 0, 0, 0};
@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(
       objective);
     createComponent("model",
                     "componentA",
-                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIE)},
+                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIES)},
                     "scenario_group");
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
@@ -328,7 +328,7 @@ BOOST_AUTO_TEST_CASE(var_and_param_both_varying_in_time_and_scenario_with_differ
       objective);
     createComponent("model",
                     "componentA",
-                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIE)},
+                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIES)},
                     "scenarioX");
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
@@ -383,7 +383,7 @@ BOOST_AUTO_TEST_CASE(two_expressions_one_with_time_varying_param_one_with_consta
       objective);
     createComponent("model",
                     "componentA",
-                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIE)});
+                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIES)});
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
 
@@ -425,7 +425,7 @@ BOOST_AUTO_TEST_CASE(multiple_objectives_in_model)
       objectives);
     createComponent("model",
                     "componentA",
-                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIE)});
+                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIES)});
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
 
