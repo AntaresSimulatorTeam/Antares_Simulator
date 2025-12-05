@@ -125,7 +125,6 @@ public:
 
     [[nodiscard]] TimeSeriesNumber getData(Year) const override
     {
-        logs.notice() << "Ok mdr";
         return 1; // Default rank for empty groupId
     }
 };
