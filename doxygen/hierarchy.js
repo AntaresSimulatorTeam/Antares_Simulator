@@ -1293,10 +1293,6 @@ var hierarchy =
     [ "Antares::IO::Inputs::YmlModel::Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html", null ],
     [ "Antares::IO::Inputs::YmlOptimConfig::Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Objective", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html", null ],
-    [ "Antares::Optimisation::LinearProblemMpsolverImpl::ObjectiveOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1ObjectiveOffsetHandler.html", [
-      [ "Antares::Optimisation::LinearProblemMpsolverImpl::GenericOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1GenericOffsetHandler.html", null ],
-      [ "Antares::Optimisation::LinearProblemMpsolverImpl::SiriusObjectiveOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1SiriusObjectiveOffsetHandler.html", null ]
-    ] ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
     ] ],

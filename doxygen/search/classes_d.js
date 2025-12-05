@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['objective_4405',['Objective',['../structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html',1,'Antares::IO::Inputs::YmlModel::Objective'],['../structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html',1,'Antares::IO::Inputs::YmlOptimConfig::Objective'],['../classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html',1,'Antares::ModelerStudy::SystemModel::Objective']]],
-  ['objectiveoffsethandler_4406',['ObjectiveOffsetHandler',['../classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1ObjectiveOffsetHandler.html',1,'Antares::Optimisation::LinearProblemMpsolverImpl']]],
+  ['objective_4406',['Objective',['../structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html',1,'Antares::IO::Inputs::YmlModel::Objective'],['../structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html',1,'Antares::IO::Inputs::YmlOptimConfig::Objective'],['../classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html',1,'Antares::ModelerStudy::SystemModel::Objective']]],
   ['offsets_4407',['Offsets',['../classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Offsets.html',1,'Antares::Action::AntaresStudy::Constraint']]],
   ['one_5fcolumn_5f_5fdumper_4408',['one_column__dumper',['../classAntares_1_1one__column____dumper.html',1,'Antares']]],
   ['oneareastudy_4409',['OneAreaStudy',['../structOneAreaStudy.html',1,'']]],

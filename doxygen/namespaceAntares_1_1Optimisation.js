@@ -9,15 +9,11 @@ var namespaceAntares_1_1Optimisation =
       [ "TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet" ]
     ] ],
     [ "LinearProblemMpsolverImpl", null, [
-      [ "ObjectiveOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1ObjectiveOffsetHandler.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1ObjectiveOffsetHandler" ],
       [ "OrtoolsLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem" ],
       [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
       [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
       [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ],
-      [ "SiriusObjectiveOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1SiriusObjectiveOffsetHandler.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1SiriusObjectiveOffsetHandler" ],
-      [ "GenericOffsetHandler", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1GenericOffsetHandler.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1GenericOffsetHandler" ],
       [ "convertOrtoolsBasisStatus", "convertOrtoolsBasisStatus_8cpp.html#a82d1e8a5093f3f009bf7c358f7ec432f", null ],
-      [ "offsetHandlerFactory", "linearProblem_8cpp.html#adc10a67b43c344fdfd7b7cde34669c9e", null ],
       [ "Write", "linearProblem_8cpp.html#ad57898e44d942c01aeb3b40bdc835f1e", null ]
     ] ],
     [ "EvaluationContext", "classAntares_1_1Optimisation_1_1EvaluationContext.html", "classAntares_1_1Optimisation_1_1EvaluationContext" ],
