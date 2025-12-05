@@ -39,7 +39,7 @@ EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContaine
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
     optimContainer_(optimContainer),
-    context_(optimContainer.getEvaluationContext(component)),
+    evalContext_(optimContainer.getEvaluationContext(component)),
     fillContext_(fillContext),
     component_(component)
 {
@@ -94,6 +94,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
           component_,
           node->Index(),
           1 /* single timestep*/);
+
         return EvaluationResult(componentVariables[0]->solutionValue());
     }
     // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
@@ -112,7 +113,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
-    const auto systemParameter = context_.getParameter(node->value());
+    const auto systemParameter = evalContext_.getParameter(node->value());
     if (node->variability() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
         && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
@@ -122,16 +123,16 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
     }
     if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
     {
-        return EvaluationResult{context_.getSystemParameterValueAsDouble(node->value())};
+        return EvaluationResult{evalContext_.getSystemParameterValueAsDouble(node->value())};
     }
+
+    unsigned year = fillContext_.getYear();
     std::vector<double> params;
     params.reserve(fillContext_.getLocalNumberOfTimeSteps());
-    for (auto timeStep = fillContext_.getGlobalFirstTimeStep();
-         timeStep <= fillContext_.getGlobalLastTimeStep();
-         ++timeStep)
+    for (auto t = fillContext_.getGlobalFirstTimeStep(); t <= fillContext_.getGlobalLastTimeStep();
+         ++t)
     {
-        params.emplace_back(
-          context_.getParameterValue(node->value(), fillContext_.getYear(), timeStep));
+        params.emplace_back(evalContext_.getParameterValue(node->value(), year, t));
     }
     return EvaluationResult{params};
 }

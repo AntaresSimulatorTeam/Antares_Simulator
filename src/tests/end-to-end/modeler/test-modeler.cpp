@@ -166,7 +166,7 @@ public:
         lower_bound = fixture.parameter(parameterId, VV::VARYING_IN_TIME_ONLY);
     }
 
-    void addParameter(const std::string& str, const PT& type = PT::TIMESERIE)
+    void addParameter(const std::string& str, const PT& type = PT::TIMESERIES)
     {
         parameters.emplace(Test::Modeler::build_context_parameter_with(str, "GROUPA", type));
         parameterIds.push_back(str);
