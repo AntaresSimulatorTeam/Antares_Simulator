@@ -36,7 +36,6 @@
 #include "inmemory-modeler.h"
 
 using namespace Antares::Expressions;
-using PT = Antares::ModelerStudy::SystemModel::ParameterType;
 using PTV = Antares::ModelerStudy::SystemModel::ParameterTypeAndValue;
 using VV = Antares::Optimisation::VariabilityType;
 
@@ -166,7 +165,7 @@ public:
         lower_bound = fixture.parameter(parameterId, VV::VARYING_IN_TIME_ONLY);
     }
 
-    void addParameter(const std::string& str, const PT& type = PT::TIMESERIES)
+    void addParameter(const std::string& str, const VV& type = VV::VARYING_IN_TIME_AND_SCENARIO)
     {
         parameters.emplace(Test::Modeler::build_context_parameter_with(str, "GROUPA", type));
         parameterIds.push_back(str);

@@ -108,12 +108,12 @@ static Component createComponent(const YmlSystem::Component& c,
     std::map<std::string, ParameterTypeAndValue> parameters;
     for (const auto& [id, time_dependent, scenario_dependent, value]: c.parameters)
     {
-        parameters.try_emplace(id,
-                               ParameterTypeAndValue{.id = id,
-                                                     .type = time_dependent
-                                                               ? ParameterType::TIMESERIES
-                                                               : ParameterType::CONSTANT,
-                                                     .value = value});
+        parameters.try_emplace(
+          id,
+          ParameterTypeAndValue{.id = id,
+                                .type = Optimisation::variability(time_dependent,
+                                                                  scenario_dependent),
+                                .value = value});
     }
 
     auto component = component_builder.withId(c.id)

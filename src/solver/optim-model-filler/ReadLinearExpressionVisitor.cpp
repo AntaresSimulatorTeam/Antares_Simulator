@@ -22,6 +22,7 @@
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 
 #include <antares/expressions/visitors/NodeVisitor.h>
+#include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/exception/InvalidArgumentError.hpp"
@@ -30,10 +31,6 @@
 #include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
-
-
-
-#include <antares/logs/logs.h>
 
 /**
  * Read Linear Expression Visitor
@@ -161,23 +158,23 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->variability() == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
+    if (node->variability() != systemParameter.type)
     {
         throw Error::InvalidArgumentError(
-          "Parameter " + node->value()
-          + " is declared constant in time and scenario in library but not in system");
+          "Parameter '" + node->value()
+          + "': scenario and/or time dependance mismatch between model and system");
     }
 
-    if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
+    if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        if (node->variability() == VariabilityType::VARYING_IN_TIME_AND_SCENARIO)
-        {
-            logs.notice() << fillContext_.getYear();
-            double value = evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0);
-            return Optimization::TimeDependentLinearExpression({}, value);
-        }
         double value = evalContext_.getSystemParameterValueAsDouble(node->value());
+
+        return Optimization::TimeDependentLinearExpression({}, value);
+    }
+    if (node->variability() == VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    {
+        logs.notice() << fillContext_.getYear();
+        double value = evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0);
         return Optimization::TimeDependentLinearExpression({}, value);
     }
     // only dependent

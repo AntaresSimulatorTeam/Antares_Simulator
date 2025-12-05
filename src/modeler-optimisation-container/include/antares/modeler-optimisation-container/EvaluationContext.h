@@ -56,8 +56,7 @@ public:
                                               unsigned int firstHour,
                                               unsigned int lastHour) const;
 
-    [[nodiscard]] ModelerStudy::SystemModel::ParameterType getParameterType(
-      const std::string& key) const;
+    [[nodiscard]] Optimisation::VariabilityType getParameterType(const std::string& key) const;
 
     [[nodiscard]] ModelerStudy::SystemModel::ParameterTypeAndValue getParameter(
       const std::string& key) const;
