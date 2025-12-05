@@ -158,13 +158,20 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->variability() != systemParameter.type)
+    if (Optimisation::isScenarioDependent(systemParameter.type)
+         && !Optimisation::isScenarioDependent(node->variability()))
     {
-        throw Error::InvalidArgumentError(
-          "Parameter '" + node->value()
-          + "': scenario and/or time dependance mismatch between model and system");
+        std::string msg = "Parameter '" + node->value()
+                          + "': scenario dependance mismatch between model and system";
+        throw Error::InvalidArgumentError(msg);
     }
-
+    if (Optimisation::isTimeDependent(systemParameter.type)
+            && !Optimisation::isTimeDependent(node->variability()))
+    {
+        std::string msg = "Parameter '" + node->value()
+                          + "': time dependance mismatch between model and system";
+        throw Error::InvalidArgumentError(msg);
+    }
     if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         double value = evalContext_.getSystemParameterValueAsDouble(node->value());

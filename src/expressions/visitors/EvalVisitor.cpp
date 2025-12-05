@@ -114,11 +114,18 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->variability() != systemParameter.type)
+    if (Optimisation::isScenarioDependent(systemParameter.type)
+         && !Optimisation::isScenarioDependent(node->variability()))
     {
         std::string msg = "Parameter '" + node->value()
-                          + "': scenario and/or time dependance mismatch between model and system";
-
+                          + "': scenario dependance mismatch between model and system";
+        throw std::invalid_argument(msg);
+    }
+    if (Optimisation::isTimeDependent(systemParameter.type)
+            && !Optimisation::isTimeDependent(node->variability()))
+    {
+        std::string msg = "Parameter '" + node->value()
+                          + "': time dependance mismatch between model and system";
         throw std::invalid_argument(msg);
     }
     if (systemParameter.type == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
