@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
+#include <string>
 #include <yaml-cpp/yaml.h>
 
 #include <boost/algorithm/string.hpp>
@@ -130,53 +130,26 @@ YmlModel::Model& fetchModelInLibrairies(const YmlOptimConfig::Model& optimConfig
     return *modelIt;
 }
 
-void updateVariables(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
+template<class U, class V>
+void update(U& out, const V& in, const std::string& elementType)
 {
-    for (const auto& optCfgVar: optimConfigModel.variables)
+    for (const auto& optCfg: in)
     {
-        auto predicate = [&optCfgVar](const auto& v) { return v.id == optCfgVar.id; };
-        auto var = std::ranges::find_if(model.variables, predicate);
-        if (var == model.variables.end())
+        auto predicate = [&optCfg](const auto& v) { return v.id == optCfg.id; };
+        auto element = std::ranges::find_if(out, predicate);
+        if (element == out.end())
         {
-            throw std::runtime_error("No variable '" + optCfgVar.id + "' found.");
+            throw std::runtime_error("No " + elementType + " '" + optCfg.id + "' found.");
         }
-        var->location = optCfgVar.location;
-    }
-}
-
-void updateConstraints(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
-{
-    for (const auto& optCfgConst: optimConfigModel.constraints)
-    {
-        auto predicate = [&optCfgConst](const auto& c) { return c.id == optCfgConst.id; };
-        auto constraint = std::ranges::find_if(model.constraints, predicate);
-        if (constraint == model.constraints.end())
-        {
-            throw std::runtime_error("No constraint '" + optCfgConst.id + "' found.");
-        }
-        constraint->location = optCfgConst.location;
-    }
-}
-
-void updateObjectives(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
-{
-    for (const auto& optCfgObj: optimConfigModel.objectives)
-    {
-        auto predicate = [&optCfgObj](const auto& obj) { return obj.id == optCfgObj.id; };
-        auto objective = std::ranges::find_if(model.objectives, predicate);
-        if (objective == model.objectives.end())
-        {
-            throw std::runtime_error("No objective '" + optCfgObj.id + "' found.");
-        }
-        objective->location = optCfgObj.location;
+        element->location = optCfg.location;
     }
 }
 
 void updateSystemModel(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
 {
-    updateVariables(model, optimConfigModel);
-    updateConstraints(model, optimConfigModel);
-    updateObjectives(model, optimConfigModel);
+    update(model.variables, optimConfigModel.variables, "variable");
+    update(model.constraints, optimConfigModel.constraints, "constraint");
+    update(model.objectives, optimConfigModel.objectives, "objective");
 }
 
 void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
