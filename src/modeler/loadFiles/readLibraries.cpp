@@ -131,17 +131,17 @@ YmlModel::Model& fetchModelInLibrairies(const YmlOptimConfig::Model& optimConfig
 }
 
 template<class U, class V>
-void update(U& out, const V& in, const std::string& elementType)
+void update(std::vector<U>& out, const std::vector<V>& yml_in, const std::string& elementType)
 {
-    for (const auto& optCfg: in)
+    for (const auto& ymlOptCfg: yml_in)
     {
-        auto predicate = [&optCfg](const auto& v) { return v.id == optCfg.id; };
+        auto predicate = [&ymlOptCfg](const auto& v) { return v.id == ymlOptCfg.id; };
         auto element = std::ranges::find_if(out, predicate);
         if (element == out.end())
         {
-            throw std::runtime_error("No " + elementType + " '" + optCfg.id + "' found.");
+            throw std::runtime_error("No " + elementType + " '" + ymlOptCfg.id + "' found.");
         }
-        element->location = optCfg.location;
+        element->location = ymlOptCfg.location;
     }
 }
 
