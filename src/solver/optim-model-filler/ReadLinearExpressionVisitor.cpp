@@ -22,7 +22,6 @@
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 
 #include <antares/expressions/visitors/NodeVisitor.h>
-#include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/exception/InvalidArgumentError.hpp"
@@ -164,9 +163,8 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 
         return Optimization::TimeDependentLinearExpression({}, value);
     }
-    if (node->variability() == VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {
-        logs.notice() << fillContext_.getYear();
         double value = evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0);
         return Optimization::TimeDependentLinearExpression({}, value);
     }
