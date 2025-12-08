@@ -22,17 +22,22 @@
 #include "singleProblemGetterImpl.h"
 
 #include <map>
+#include <stdexcept>
 #include <string>
 
+#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/writer/i_writer.h"
+
+#include "fmt/format.h"
 
 namespace
 {
@@ -41,7 +46,6 @@ constexpr int numeroDeLIntervalle = 0; // simplex-range = week
 constexpr int numSpace = 0;            // full sequential
 constexpr int PremierPdtDeLIntervalle = 0;
 constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
-const std::string kName = "my-name";         // Arbitrary
 Antares::Solver::NullResultWriter gResultWriter;
 Benchmarking::DurationCollector gDurationCollector;
 
@@ -50,6 +54,11 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
     Antares::FileTreeStudyLoader loader(studyPath);
     auto study = loader.load();
     return study;
+}
+
+std::string problemName(const WeeklyProblemId& id)
+{
+    return fmt::format("problem-{}-{}.txt", id.year, id.week);
 }
 } // namespace
 
@@ -96,6 +105,7 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
     initializeRandomNumbers();
+    ScenarioBuilderOwner(*study_).callScenarioBuilder();
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
@@ -109,7 +119,8 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
         {
             for (unsigned week = 0; week < p.simulationDays.numberOfWeeks(); ++week)
             {
-                ret.emplace_back(year, week);
+                // by convention, weeks start at 1
+                ret.emplace_back(year, week + 1);
             }
         }
     }
@@ -137,6 +148,26 @@ void SingleProblemGetter::initializeRandomNumbers()
     randomForParallelYears_->compute(*study_, 1, isYearPerformed, randomHydroGenerator);
 }
 
+void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& outputDir)
+{
+    // TS number have already been loaded/generated, we just need to write them
+    auto writer = resultWriterFactory(Antares::Data::ResultFormat::legacyFilesDirectories,
+                                      outputDir,
+                                      nullptr, // not needed
+                                      gDurationCollector);
+    study_->storeTimeSeriesNumbers<Antares::Data::TimeSeriesType::timeSeriesTransmissionCapacities>(
+      *writer);
+}
+
+void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path& outputDir)
+{
+    auto writer = resultWriterFactory(Antares::Data::ResultFormat::legacyFilesDirectories,
+                                      outputDir,
+                                      nullptr, // not needed
+                                      gDurationCollector);
+    OPT_ExportStructures(&pb_, *writer);
+}
+
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
 {
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(&pb_);
@@ -151,9 +182,15 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
 
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
-    const auto [year, week] = id;
+    auto [year, week] = id;
+    // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
+    if (week == 0)
+    {
+        throw std::out_of_range("Invalid week number 0 detected, week number must be >=1");
+    }
+    week--;
 
-    pb_.year = id.year;
+    pb_.year = year;
     pb_.weekInTheYear = week;
 
     const auto [hydroLevels, ventilationResults] = getYearlyData(year);
@@ -217,7 +254,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                                     optimizationNumber);
 
     OPT_InitialiserLesCoutsLineaire(&pb_, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
-    return translator_.translate(pb_.ProblemeAResoudre.get(), kName);
+    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)

@@ -22,6 +22,7 @@
 #include "antares/solver/optimisation/opt_export_structure.h"
 
 #include <string>
+#include <vector>
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 

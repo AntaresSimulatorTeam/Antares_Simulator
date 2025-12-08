@@ -112,7 +112,8 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
-        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out), parse_output_folder_from_logs(context.logs_out))
+        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out),
+                                             parse_output_folder_from_logs(context.logs_out))
 
     context.return_code = process.returncode
 
@@ -160,12 +161,13 @@ def check_variables(context, model):
 
 @then(u'the master problem contains the following variables')
 def check_master_variables(context):
-    assert(context.moh.problems != None and context.moh.problems.master != None)
+    assert (context.moh.problems != None and context.moh.problems.master != None)
     check_variables(context, context.moh.problems.master)
+
 
 @then(u'the subproblem contains the following variables')
 def check_subproblem_variables(context):
-    assert(context.moh.problems != None and context.moh.problems.subproblem != None)
+    assert (context.moh.problems != None and context.moh.problems.subproblem != None)
     model = context.moh.problems.subproblem
     check_variables(context, context.moh.problems.subproblem)
 
@@ -187,6 +189,7 @@ def parse_structure(content):
         })
     return entries
 
+
 @then(u'the structure file contains the following entries')
 def check_structure(context):
     structure = context.moh.problems.structure
@@ -205,4 +208,4 @@ def check_structure(context):
     extra = actual_set - expected_set
 
     assert not missing, f"Missing entries: {missing}"
-    assert not extra,   f"Unexpected entries: {extra}"
+    assert not extra, f"Unexpected entries: {extra}"
