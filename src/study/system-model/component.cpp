@@ -49,22 +49,20 @@ static void checkComponentDataValidity(const ComponentData& data)
                       data.model->Parameters().size()));
     }
 
+    auto dependanceMismatchThrow =
+      [&data](const std::string& parameterId, const std::string& dependanceType)
+    {
+        throw std::invalid_argument(
+          fmt::format("Model '{}': Component '{}': Parameter '{}': {} dependance mismatch "
+                      "between model and system",
+                      data.model->Id(),
+                      data.id,
+                      parameterId,
+                      dependanceType));
+    };
+
     for (const auto& [paramName, param]: data.model->Parameters())
     {
-        auto dependanceMismatchThrow = [](const std::string& modelId,
-                                          const std::string& componentId,
-                                          const std::string& parameterId,
-                                          const std::string& dependanceType)
-        {
-            throw std::invalid_argument(
-              fmt::format("Model '{}': Component '{}': Parameter '{}': {} dependance mismatch "
-                          "between model and system",
-                          modelId,
-                          componentId,
-                          parameterId,
-                          dependanceType));
-        };
-
         try
         {
             auto value = data.parameter_values.at(paramName);
@@ -72,15 +70,15 @@ static void checkComponentDataValidity(const ComponentData& data)
             bool scenarioMismatch = !param.isScenarioDependent() && isScenarioDependent(value.type);
             if (timeMismatch && scenarioMismatch)
             {
-                dependanceMismatchThrow(data.model->Id(), data.id, paramName, "Time and Scenario");
+                dependanceMismatchThrow(paramName, "Time and Scenario");
             }
             if (timeMismatch)
             {
-                dependanceMismatchThrow(data.model->Id(), data.id, paramName, "Time");
+                dependanceMismatchThrow(paramName, "Time");
             }
             if (scenarioMismatch)
             {
-                dependanceMismatchThrow(data.model->Id(), data.id, paramName, "Scenario");
+                dependanceMismatchThrow(paramName, "Scenario");
             }
         }
         catch (const std::out_of_range&)
