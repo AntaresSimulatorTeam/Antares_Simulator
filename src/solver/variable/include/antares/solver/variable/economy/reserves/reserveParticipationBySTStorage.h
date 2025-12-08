@@ -206,7 +206,9 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         if (state.study.parameters.reservesEnabled
-            && state.area->reserveParticipationIndexMaps.value().STStorageClusters.size())
+            && state.study.runtime.reserveParticipationIndexMaps.value()
+                 .at(state.area->id)
+                 .STStorageClusters.size())
         {
             for (auto& [clusterName, _]:
                  state.reserveParticipationPerSTStorageClusterForYear[state.hourInTheYear])
@@ -215,11 +217,12 @@ public:
                      state.reserveParticipationPerSTStorageClusterForYear[state.hourInTheYear]
                                                                          [clusterName])
                 {
-                    pValuesForTheCurrentYear[numSpace]
-                                            [state.area->reserveParticipationIndexMaps.value()
-                                               .STStorageClusters.left.at(
-                                                 std::make_pair(reserveName, clusterName))]
-                                              .hour[state.hourInTheYear]
+                    pValuesForTheCurrentYear
+                      [numSpace]
+                      [state.study.runtime.reserveParticipationIndexMaps.value()
+                         .at(state.area->id)
+                         .STStorageClusters.left.at(std::make_pair(reserveName, clusterName))]
+                        .hour[state.hourInTheYear]
                       = reserveParticipation;
                 }
             }
@@ -251,12 +254,14 @@ public:
             // Write the data for the current year
             for (uint i = 0; i < pSize; ++i)
             {
-                if (results.data.area->reserveParticipationIndexMaps
-                    && results.data.area->reserveParticipationIndexMaps.value()
+                if (results.data.study.parameters.reservesEnabled
+                    && results.data.study.runtime.reserveParticipationIndexMaps.value()
+                         .at(results.data.area->id)
                          .STStorageClusters.size()) // Bimap is not empty
                 {
-                    auto [reserveName, clusterName] = results.data.area
-                                                        ->reserveParticipationIndexMaps.value()
+                    auto [reserveName, clusterName] = results.data.study.runtime
+                                                        .reserveParticipationIndexMaps.value()
+                                                        .at(results.data.area->id)
                                                         .STStorageClusters.right.at(i);
                     // Write the data for the current year
                     results.variableCaption = reserveName + "_"

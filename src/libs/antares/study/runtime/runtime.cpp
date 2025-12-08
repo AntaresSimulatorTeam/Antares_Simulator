@@ -21,6 +21,7 @@
 
 #include "antares/study/runtime/runtime.h"
 
+#include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/antares/fatal-error.h"
@@ -300,6 +301,44 @@ void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& param
                      << ", seed: " << parameters.seed[i];
 #endif
         random[i].reset(parameters.seed[i]);
+    }
+}
+
+void StudyRuntimeInfos::initializeReservesIndexMaps(Study& study, const PROBLEME_HEBDO& problem)
+{
+    auto loadReserveParticipations = [&](const Area* area, const CAPACITY_RESERVATION& reserve)
+    {
+        // Thermal clusters
+        for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
+        {
+            reserveParticipationIndexMaps.value().at(area->id).thermalClusters.insert(
+              {{reserve.reserveName, reserveParticipation.clusterName},
+               reserveParticipation.areaIndexClusterParticipation});
+        }
+
+        // Short Term Storage
+        for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
+        {
+            reserveParticipationIndexMaps.value().at(area->id).STStorageClusters.insert(
+              {{reserve.reserveName, reserveParticipation.clusterName},
+               reserveParticipation.areaIndexClusterParticipation});
+        }
+
+        // Hydro
+        for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
+        {
+            reserveParticipationIndexMaps.value().at(area->id).Hydro.insert(
+              {reserve.reserveName, reserveParticipation.areaIndexClusterParticipation});
+        }
+    };
+
+    reserveParticipationIndexMaps.emplace();
+    for (const auto& area: study.areas | std::views::values)
+    {
+        for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
+        {
+            loadReserveParticipations(area, reserve);
+        }
     }
 }
 

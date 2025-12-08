@@ -37,14 +37,6 @@ using namespace Antares::Data;
 
 constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
 
-static void initReserveParticipationIndexMap(AreaList& areas)
-{
-    for (auto& [areaName, area]: areas)
-    {
-        area->reserveParticipationIndexMaps.emplace();
-    }
-}
-
 static void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
 {
     int globalReserveIndex = 0;
@@ -184,9 +176,6 @@ static void importShortTermStorages(Data::Parameters parameters,
 
                         areaReserves.areaCapacityReservations[areaReserveIdx]
                           .AllSTStorageReservesParticipation.emplace(idx, reserveParticipation);
-                        area->reserveParticipationIndexMaps.value().STStorageClusters.insert(
-                          {{reserveName, reserveParticipation.clusterName},
-                           reserveParticipation.areaIndexClusterParticipation});
 
                         for (const auto& symIdx:
                              cluster.reserveParticipationContainer.value().symmetricalIndices(
@@ -255,9 +244,6 @@ static void importHydrosReserves(AreaList& areas, PROBLEME_HEBDO& problem)
 
                     areaReserves.areaCapacityReservations[areaReserveIdx]
                       .AllHydroReservesParticipation.push_back(std::move(reserveParticipation));
-
-                    area->reserveParticipationIndexMaps.value().Hydro.insert(
-                      {reserveName, reserveParticipation.areaIndexClusterParticipation});
 
                     for (const auto& symIdx:
                          hydro.reserveParticipationContainer.value().symmetricalIndices(
@@ -430,7 +416,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
     if (parameters.reservesEnabled)
     {
-        initReserveParticipationIndexMap(study.areas);
         importCapacityReservations(study.areas, problem);
         importHydrosReserves(study.areas, problem);
     }
@@ -576,10 +561,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                         areaReserves.areaCapacityReservations[areaReserveIdx]
                           .AllThermalReservesParticipation.emplace(cluster->index,
                                                                    reserveParticipation);
-
-                        area.reserveParticipationIndexMaps.value().thermalClusters.insert(
-                          {{reserveName, reserveParticipation.clusterName},
-                           reserveParticipation.areaIndexClusterParticipation});
 
                         for (const auto& symIdx:
                              cluster->reserveParticipationContainer.value().symmetricalIndices(

@@ -24,8 +24,14 @@
 #include <string>
 #include <vector>
 
+#include <boost/bimap.hpp>
+
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/parameters.h>
+#include "antares/study/area/ReserveOpt.h"
+#include "antares/study/fwd.h"
+
+struct PROBLEME_HEBDO;
 
 namespace Antares::Data
 {
@@ -86,6 +92,7 @@ public:
     bool loadFromStudy(Study& study);
 
     void initializeRandomNumberGenerators(const Parameters& parameters);
+    void initializeReservesIndexMaps(Study& study, const PROBLEME_HEBDO& problem);
 
 public:
     //! The number of years to process
@@ -116,6 +123,18 @@ public:
         uint shortTermStorageCumulativeConstraints = 0;
         uint hydros = 0;
     } counts;
+
+    using ReserveName = std::string;
+
+    struct ReserveIndexMap
+    {
+        boost::bimap<std::pair<ReserveName, std::string>, int> thermalClusters;
+        boost::bimap<std::pair<ReserveName, std::string>, int> STStorageClusters;
+        boost::bimap<ReserveName, int> Hydro;
+    };
+
+    //! Map used to access reserves participation indices
+    ReserveOpt<std::map<AreaName, ReserveIndexMap>> reserveParticipationIndexMaps;
 
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;

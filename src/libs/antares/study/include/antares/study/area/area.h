@@ -26,8 +26,6 @@
 #include <stdlib.h>
 #include <vector>
 
-#include <boost/bimap.hpp>
-
 //
 #include "antares/study/parts/parts.h"
 //
@@ -296,15 +294,6 @@ public:
 
     /// \name AllCapacityReservations structure to keep track of the added capacity reservations
     ReserveOpt<AllCapacityReservations> allCapacityReservations;
-
-    struct ReserveIndexMap
-    {
-        boost::bimap<std::pair<ReserveName, std::string>, int> thermalClusters;
-        boost::bimap<std::pair<ReserveName, std::string>, int> STStorageClusters;
-        boost::bimap<ReserveName, int> Hydro;
-    };
-
-    ReserveOpt<ReserveIndexMap> reserveParticipationIndexMaps;
 
     //! \name Output filtering
     //@{

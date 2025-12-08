@@ -208,7 +208,9 @@ public:
     {
         // Get end year calculations
         if (state.study.parameters.reservesEnabled
-            && state.area->reserveParticipationIndexMaps.value().thermalClusters.size())
+            && state.study.runtime.reserveParticipationIndexMaps.value()
+                 .at(state.area->id)
+                 .thermalClusters.size())
         {
             for (auto& [clusterName, _]:
                  state.reserveParticipationPerThermalClusterForYear[state.hourInTheYear])
@@ -217,11 +219,12 @@ public:
                      state.reserveParticipationPerThermalClusterForYear[state.hourInTheYear]
                                                                        [clusterName])
                 {
-                    pValuesForTheCurrentYear[numSpace]
-                                            [state.area->reserveParticipationIndexMaps.value()
-                                               .thermalClusters.left.at(
-                                                 std::make_pair(reserveName, clusterName))]
-                                              .hour[state.hourInTheYear]
+                    pValuesForTheCurrentYear
+                      [numSpace]
+                      [state.study.runtime.reserveParticipationIndexMaps.value()
+                         .at(state.area->id)
+                         .thermalClusters.left.at(std::make_pair(reserveName, clusterName))]
+                        .hour[state.hourInTheYear]
                       = reserveParticipation.onUnitsParticipation;
                 }
             }
@@ -254,12 +257,14 @@ public:
             // Write the data for the current year
             for (uint i = 0; i < pSize; ++i)
             {
-                if (results.data.area->reserveParticipationIndexMaps
-                    && results.data.area->reserveParticipationIndexMaps.value()
+                if (results.data.study.parameters.reservesEnabled
+                    && results.data.study.runtime.reserveParticipationIndexMaps.value()
+                         .at(results.data.area->id)
                          .thermalClusters.size()) // Bimap is not empty
                 {
-                    auto [reserveName, clusterName] = results.data.area
-                                                        ->reserveParticipationIndexMaps.value()
+                    auto [reserveName, clusterName] = results.data.study.runtime
+                                                        .reserveParticipationIndexMaps.value()
+                                                        .at(results.data.area->id)
                                                         .thermalClusters.right.at(i);
                     results.variableCaption = reserveName + "_"
                                               + clusterName; // VCardType::Caption();

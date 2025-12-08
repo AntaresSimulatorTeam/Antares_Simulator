@@ -152,14 +152,18 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         if (state.study.parameters.reservesEnabled
-            && state.area->reserveParticipationIndexMaps.value().Hydro.size())
+            && state.study.runtime.reserveParticipationIndexMaps.value()
+                 .at(state.area->id)
+                 .Hydro.size())
         {
             for (const auto& [reserveName, reserveParticipation]:
                  state.reserveParticipationPerHydroForYear[state.hourInTheYear]["Hydro"])
             {
-                pValuesForTheCurrentYear[numSpace][state.area->reserveParticipationIndexMaps.value()
-                                                     .Hydro.left.at(reserveName)]
-                  .hour[state.hourInTheYear]
+                pValuesForTheCurrentYear[numSpace]
+                                        [state.study.runtime.reserveParticipationIndexMaps.value()
+                                           .at(state.area->id)
+                                           .Hydro.left.at(reserveName)]
+                                          .hour[state.hourInTheYear]
                   = reserveParticipation;
             }
         }
@@ -185,11 +189,14 @@ public:
             assert(NULL != results.data.area);
             for (uint i = 0; i < pSize; ++i)
             {
-                if (results.data.area->reserveParticipationIndexMaps
-                    && results.data.area->reserveParticipationIndexMaps.value()
+                if (results.data.study.parameters.reservesEnabled
+                    && results.data.study.runtime.reserveParticipationIndexMaps.value()
+                         .at(results.data.area->id)
                          .Hydro.size()) // Bimap is not empty
                 {
-                    auto reserveName = results.data.area->reserveParticipationIndexMaps.value()
+                    auto reserveName = results.data.study.runtime.reserveParticipationIndexMaps
+                                         .value()
+                                         .at(results.data.area->id)
                                          .Hydro.right.at(i);
                     results.variableCaption = reserveName + "_Hydro"; // VCardType::Caption();
                     results.variableUnit = VCardType::Unit();
