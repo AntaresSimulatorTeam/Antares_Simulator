@@ -35,6 +35,7 @@
 using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::YmlModel;
 using namespace Antares::ModelerStudy;
+using namespace Antares::Modeler::Config;
 
 struct Fixture
 {
@@ -166,8 +167,8 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
       .id = "model1",
       .description = "description",
       .parameters = {{"pmax", true, false}},
-      .variables = {{"var1", "7", "pmax", YmlModel::ValueType::BOOL, true, true},
-                    {"var2", "99999999.9999999", "var1", YmlModel::ValueType::INTEGER, true, true}},
+      .variables = {{"var1", "7", "pmax", ValueType::BOOL, true, true, "master"},
+                    {"var2", "999.99", "var1", ValueType::INTEGER, true, true, "subproblems"}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
@@ -179,18 +180,18 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
     auto& model = lib.Models().at("model1");
     const auto& vars = model.Variables();
     BOOST_REQUIRE_EQUAL(vars.size(), 2);
-    const auto variable1 = std::ranges::find_if(vars,
-                                                [](const auto& v) { return v.Id() == "var1"; });
-    const auto variable2 = std::ranges::find_if(vars,
-                                                [](const auto& v) { return v.Id() == "var2"; });
-    BOOST_CHECK(variable1 != vars.cend());
-    BOOST_CHECK_EQUAL(variable1->LowerBound().Value(), "7");
-    BOOST_CHECK_EQUAL(variable1->UpperBound().Value(), "pmax");
-    BOOST_CHECK_EQUAL(variable1->Type(), SystemModel::ValueType::BOOL);
-    BOOST_CHECK(variable2 != vars.cend());
-    BOOST_CHECK_EQUAL(variable2->LowerBound().Value(), "99999999.9999999");
-    BOOST_CHECK_EQUAL(variable2->UpperBound().Value(), "var1");
-    BOOST_CHECK_EQUAL(variable2->Type(), SystemModel::ValueType::INTEGER);
+    const auto var_1 = std::ranges::find_if(vars, [](const auto& v) { return v.Id() == "var1"; });
+    const auto var_2 = std::ranges::find_if(vars, [](const auto& v) { return v.Id() == "var2"; });
+    BOOST_CHECK(var_1 != vars.cend());
+    BOOST_CHECK_EQUAL(var_1->LowerBound().Value(), "7");
+    BOOST_CHECK_EQUAL(var_1->UpperBound().Value(), "pmax");
+    BOOST_CHECK_EQUAL(var_1->Type(), SystemModel::ValueType::BOOL);
+    BOOST_CHECK(var_1->location() == Location::MASTER);
+    BOOST_CHECK(var_2 != vars.cend());
+    BOOST_CHECK_EQUAL(var_2->LowerBound().Value(), "999.99");
+    BOOST_CHECK_EQUAL(var_2->UpperBound().Value(), "var1");
+    BOOST_CHECK_EQUAL(var_2->Type(), SystemModel::ValueType::INTEGER);
+    BOOST_CHECK(var_2->location() == Location::SUBPROBLEMS);
 }
 
 // wrong variable ValueType
@@ -200,7 +201,7 @@ BOOST_FIXTURE_TEST_CASE(wrong_value_type, Fixture)
       .id = "model1",
       .description = "description",
       .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "param2", static_cast<YmlModel::ValueType>(5), true, true}},
+      .variables = {{"varP", "7", "param2", static_cast<ValueType>(5), true, true, "master"}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
@@ -277,19 +278,20 @@ BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
 // Test library with models and constraints
 BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
 {
-    YmlModel::Model model1{.id = "model1",
-                           .description = "description",
-                           .parameters = {{"expression1", true, false},
-                                          {"expression2", true, false},
-                                          {"expression3", true, false}},
-                           .variables = {},
-                           .ports = {},
-                           .port_field_definitions = {},
-                           .constraints = {{"constraint1", "expression1", "subproblems"},
-                                           {"constraint2", "expression2", "subproblems"}},
-                           .binding_constraints = {{"constraint3", "expression3", "subproblems"}},
-                           .objectives = {},
-                           .extra_outputs = {}};
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"expression1", true, false},
+                     {"expression2", true, false},
+                     {"expression3", true, false}},
+      .variables = {},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {{"constraint1", "expression1", "subproblems"},
+                      {"constraint2", "expression2", "master-and-subproblems"}},
+      .binding_constraints = {{"constraint3", "expression3", "master"}},
+      .objectives = {},
+      .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -303,6 +305,9 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(constraint2.expression().Value(), "expression2");
     BOOST_CHECK_EQUAL(constraint3.Id(), "constraint3");
     BOOST_CHECK_EQUAL(constraint3.expression().Value(), "expression3");
+    BOOST_CHECK(constraint1.location() == Location::SUBPROBLEMS);
+    BOOST_CHECK(constraint2.location() == Location::MASTER_AND_SUBPROBLEMS);
+    BOOST_CHECK(constraint3.location() == Location::MASTER);
 }
 
 bool constraintAlreadyExists(const ModelConverter::ConstraintWithThisIdAlreadyExists& ex)
@@ -314,38 +319,56 @@ bool constraintAlreadyExists(const ModelConverter::ConstraintWithThisIdAlreadyEx
 // Test with 2 models
 BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
 {
-    YmlModel::Model model1{
-      .id = "model1",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "param2", ValueType::CONTINUOUS, true, true, "subproblems"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {},
-      .extra_outputs = {}};
-    YmlModel::Model model2{
+    YmlModel::Model ymlModel_1{.id = "model1",
+                               .description = "description",
+                               .parameters = {{"param1", true, false}, {"param2", false, false}},
+                               .variables = {{"varP",
+                                              "7",
+                                              "param2",
+                                              ValueType::CONTINUOUS,
+                                              true,
+                                              true,
+                                              "master-and-subproblems"}},
+                               .ports = {},
+                               .port_field_definitions = {},
+                               .constraints = {},
+                               .binding_constraints = {},
+                               .objectives = {},
+                               .extra_outputs = {}};
+
+    YmlModel::Model ymlModel_2{
       .id = "model2",
       .description = "description",
       .parameters = {},
-      .variables = {{"var1", "7", "8", ValueType::BOOL, true, true, "subproblems"},
-                    {"var2", "99999999.9", "var1", ValueType::INTEGER, true, true, "subproblems"}},
+      .variables = {{"var1", "7", "8", ValueType::BOOL, true, true, "master"},
+                    {"var2", "9999.9", "var1", ValueType::INTEGER, true, true, "subproblems"}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
       .objectives = {},
       .extra_outputs = {}};
-    library.models = {model1, model2};
+
+    library.models = {ymlModel_1, ymlModel_2};
+
     SystemModel::Library lib = ModelConverter::convert(library);
+
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 2);
-    auto& modelo1 = lib.Models().at("model1");
-    BOOST_REQUIRE_EQUAL(modelo1.Parameters().size(), 2);
-    BOOST_REQUIRE_EQUAL(modelo1.Variables().size(), 1);
-    auto& modelo2 = lib.Models().at("model2");
-    BOOST_REQUIRE_EQUAL(modelo2.Parameters().size(), 0);
-    BOOST_REQUIRE_EQUAL(modelo2.Variables().size(), 2);
+
+    auto& model1 = lib.Models().at("model1");
+    BOOST_REQUIRE_EQUAL(model1.Parameters().size(), 2);
+    BOOST_REQUIRE_EQUAL(model1.Variables().size(), 1);
+
+    auto& model2 = lib.Models().at("model2");
+    BOOST_REQUIRE_EQUAL(model2.Parameters().size(), 0);
+    BOOST_REQUIRE_EQUAL(model2.Variables().size(), 2);
+
+    auto& var11 = model1.Variables()[0];
+    auto& var21 = model2.Variables()[0];
+    auto& var22 = model2.Variables()[1];
+    BOOST_CHECK(var11.location() == Location::MASTER_AND_SUBPROBLEMS);
+    BOOST_CHECK(var21.location() == Location::MASTER);
+    BOOST_CHECK(var22.location() == Location::SUBPROBLEMS);
 }
 
 // Test library with ports field definitions
@@ -462,8 +485,10 @@ BOOST_FIXTURE_TEST_CASE(model_extra_outputs_properly_translated, Fixture)
       .binding_constraints = {},
       .objectives = {},
       .extra_outputs = {{"output1", "5 * param1"}, {"output2", "param1 / var1 * 95.4"}}};
+
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
+
     auto& model = lib.Models().at("model1");
     BOOST_REQUIRE_EQUAL(model.ExtraOutputs().size(), 2);
     auto& output1 = model.ExtraOutputs().at("output1");
