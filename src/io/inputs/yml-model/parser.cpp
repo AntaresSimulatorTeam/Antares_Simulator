@@ -20,6 +20,7 @@
  */
 
 #include "antares/io/inputs/yml-model/parser.h"
+
 #include "antares/io/inputs/yml-model/Library.h"
 
 #include "decoders.hxx"
