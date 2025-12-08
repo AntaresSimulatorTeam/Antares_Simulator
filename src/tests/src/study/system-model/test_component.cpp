@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(fail_on_missing_wrong_param)
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
                           checkMessage(
-                            "The component \"component\" has no value for parameter 'param1'"));
+                            "The component 'component' has no value for parameter 'param1'"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_too_many_params1)

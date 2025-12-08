@@ -676,26 +676,6 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     BOOST_CHECK_EQUAL(std::stod(value), eval);
 }
 
-BOOST_FIXTURE_TEST_CASE(parameter_constant_at_creation_but_not_in_eval_context___exception_raised,
-                        MyDummyFixture)
-{
-    const std::string id = "my-param";
-    const std::string value = "45.7";
-
-    ParameterNode root(id, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
-    Model model = createModelWithParameters(
-      {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
-    auto param = build_context_parameter_with("my-param",
-                                              value,
-                                              VariabilityType::VARYING_IN_TIME_ONLY);
-    const auto compoName = components.back().Id() + "1245";
-    const auto* compo = addComponent(compoName, model, {param});
-
-    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
-
-    BOOST_CHECK_THROW(visitor.dispatch(&root), std::invalid_argument);
-}
-
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
     [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,

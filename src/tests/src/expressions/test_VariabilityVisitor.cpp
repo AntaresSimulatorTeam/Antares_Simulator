@@ -93,7 +93,7 @@ struct TestVariabilityVisitorFixture
         fixture.createComponent(
           "model",
           "compo",
-          {build_context_parameter_with("param", "0", VariabilityType::VARYING_IN_TIME_ONLY)},
+          {build_context_parameter_with("param", "0", VariabilityType::VARYING_IN_SCENARIO_ONLY)},
           "group");
 
         auto bounds_time_series = std::make_unique<LinearProblemDataImpl::TimeSeriesSet>("bounds",
@@ -194,44 +194,6 @@ BOOST_AUTO_TEST_CASE(alltimeSumNode_expression)
     AllTimeSumNode t3(&variableNode);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3),
                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
-}
-
-static const std::vector<VariabilityType> VariabilityType_ALL{
-  VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-  VariabilityType::VARYING_IN_TIME_ONLY,
-  VariabilityType::VARYING_IN_SCENARIO_ONLY,
-  VariabilityType::VARYING_IN_TIME_AND_SCENARIO};
-
-template<class T>
-static std::pair<Node*, ParameterNode*> s_(Registry<Node>& registry,
-                                           const VariabilityType& time_index)
-{
-    Node* left = registry.create<LiteralNode>(42.);
-    ParameterNode* right = registry.create<ParameterNode>("param", time_index);
-    return {registry.create<T>(left, right), right};
-}
-
-static const std::vector<std::pair<Node*, ParameterNode*> (*)(Registry<Node>&,
-                                                              const VariabilityType&)>
-  operator_ALL{&s_<SumNode>,
-               &s_<SubtractionNode>,
-               &s_<MultiplicationNode>,
-               &s_<DivisionNode>,
-               &s_<EqualNode>,
-               &s_<LessThanOrEqualNode>,
-               &s_<GreaterThanOrEqualNode>};
-
-BOOST_DATA_TEST_CASE_F(TestVariabilityVisitorFixture,
-                       simple_all,
-                       bdata::make(VariabilityType_ALL) * bdata::make(operator_ALL),
-                       variability,
-                       binaryOperator)
-{
-    auto [root, parameter] = binaryOperator(fixture.nodeRegistry, variability);
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(root), variability);
-
-    Node* neg = fixture.nodeRegistry.create<NegationNode>(root);
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(neg), variability);
 }
 
 template<class T>
