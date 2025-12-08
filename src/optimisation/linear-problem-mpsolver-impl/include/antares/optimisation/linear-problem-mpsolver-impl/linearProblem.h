@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <functional>
-
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
