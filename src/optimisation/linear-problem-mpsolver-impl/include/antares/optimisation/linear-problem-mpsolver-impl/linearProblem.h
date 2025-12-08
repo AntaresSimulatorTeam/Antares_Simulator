@@ -117,9 +117,6 @@ public:
     [[nodiscard]] bool isLP() const override;
 
     friend void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& path);
-    // TODO this should be override method
-    friend void SaveAndRelax(const OrtoolsLinearProblem& problem,
-                             const std::filesystem::path& path);
 
 protected:
     [[nodiscard]] operations_research::MPSolver* MpSolver() const;

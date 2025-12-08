@@ -42,29 +42,6 @@ void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& pat
     of << out;
 }
 
-void SaveAndRelax(const OrtoolsLinearProblem& problem, const std::filesystem::path& path)
-{
-    if (!problem.MpSolver()->IsMIP())
-    {
-        return;
-    }
-    std::string out;
-    const auto& variables = problem.mpSolver_->variables();
-    for (auto i = 0; i < problem.mpSolver_->NumVariables(); ++i)
-    {
-        if (auto* var = variables[i]; var->integer())
-        {
-            out += var->name() + '\t' + std::to_string(i) + '\n';
-            var->SetInteger(false);
-        }
-    }
-    if (!out.empty())
-    {
-        std::ofstream of(path);
-        of << out;
-    }
-}
-
 // Sirius solver to store objective offset
 class SiriusObjectiveOffsetHandler: public ObjectiveOffsetHandler
 {
