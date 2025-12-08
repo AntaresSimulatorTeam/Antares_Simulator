@@ -34,12 +34,7 @@ namespace Antares::Optimisation::LinearProblemMpsolverImpl
 
 void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& path)
 {
-    std::string out;
-    problem.mpSolver_->ExportModelAsMpsFormat(/* fixed_format (ignored) */ false,
-                                              /* obfuscate */ false,
-                                              &out);
-    std::ofstream of(path);
-    of << out;
+    problem.mpSolver_->Write(path.string());
 }
 
 // Sirius solver to store objective offset
