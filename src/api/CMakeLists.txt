@@ -64,6 +64,7 @@ target_include_directories(single_problem_api
 
 target_link_libraries(single_problem_api
         PRIVATE
+	fmt::fmt
         antares-solver-simulation
         Antares::optimization-options
 	model_antares

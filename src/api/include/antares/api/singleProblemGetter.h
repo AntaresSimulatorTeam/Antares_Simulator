@@ -39,9 +39,17 @@ class SingleProblemGetter final
 public:
     explicit SingleProblemGetter(const std::filesystem::path& studyPath);
     ~SingleProblemGetter();
+    // NOTE week indices start at 1
+    // year indices start at 0
     std::vector<WeeklyProblemId> getProblemIds() const;
     ConstantDataFromAntares getConstantData();
+    // NOTE week indices start at 1
+    // year indices start at 0
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
+
+    // TODO[FOM] This should not be necessary
+    void writeNTCTimeSeries(const std::filesystem::path& outputDir);
+    void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;

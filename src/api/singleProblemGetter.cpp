@@ -48,4 +48,15 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
 {
     return impl_->getProblemIds();
 }
+
+void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& outputDir)
+{
+    impl_->writeNTCTimeSeries(outputDir);
+}
+
+void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path& outputDir)
+{
+    impl_->writeStudyDescriptionFiles(outputDir);
+}
+
 } // namespace Antares::Solver

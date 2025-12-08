@@ -63,7 +63,7 @@ jobs:
     - name: Install ccache
       run: sudo apt-get install -y ccache
 
-    # Can't use ubuntu cache. Cache hit is only single digit %
+      # Can't use ubuntu cache. Cache hit is only single digit %
     - name: Restore ccache cache
       id: cache
       uses: actions/cache/restore@v4
@@ -259,8 +259,8 @@ jobs:
       if: always()
       run: ccache -s
 
-    # Delete the old cache on hit to emulate a cache update. See
-    # https://github.com/actions/cache/issues/342.
+      # Delete the old cache on hit to emulate a cache update. See
+      # https://github.com/actions/cache/issues/342.
     - name: Delete old cache
       continue-on-error: true
       env:
