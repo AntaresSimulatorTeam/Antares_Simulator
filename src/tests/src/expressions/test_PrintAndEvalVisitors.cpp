@@ -67,17 +67,20 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
     const auto valid_number = "valid_number";
     const auto invalid_number = "invalid_number";
     const auto out_of_range = "out_of_range";
+    const auto scenario_only = "scenario_only";
     const auto timeserie_param = "timeserie_param";
     std::vector<Parameter> params = {
       Parameter{valid_number, TimeDependent::NO, ScenarioDependent::NO},
       Parameter{invalid_number, TimeDependent::NO, ScenarioDependent::NO},
       Parameter{out_of_range, TimeDependent::NO, ScenarioDependent::NO},
+      Parameter{scenario_only, TimeDependent::NO, ScenarioDependent::YES},
       Parameter{timeserie_param, TimeDependent::YES, ScenarioDependent::YES}};
 
     std::map<std::string, ParameterTypeAndValue> system_parameters = {
       {valid_number, {valid_number, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "42.5"}},
       {invalid_number, {invalid_number, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "abc"}},
       {out_of_range, {out_of_range, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "1e500"}},
+      {scenario_only, {scenario_only, VariabilityType::VARYING_IN_SCENARIO_ONLY, "timeserie_file"}},
       {timeserie_param,
        {timeserie_param, VariabilityType::VARYING_IN_TIME_ONLY, "timeserie_file"}}};
 
@@ -109,6 +112,10 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
 
     // 6. Timeserie parameter should be handled by getParameterValue instead
     BOOST_CHECK_EQUAL(context.getParameterValue(timeserie_param, 0, 1), 123.45);
+
+    // 7. Scenario only: handled like a timeserie parameter
+    BOOST_CHECK_EQUAL(context.getParameterValue(scenario_only, 0, 1), 123.45);
+
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
@@ -665,6 +672,23 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     const std::string value = "221.3";
     Model model = createModelWithParameters(
       {Parameter("my-param", TimeDependent::NO, ScenarioDependent::NO)});
+    auto param = build_context_parameter_with("my-param", value);
+    const auto compoName = components.back().Id() + "1245";
+    const auto* compo = addComponent(compoName, model, {param});
+
+    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
+
+    const double eval = visitor.dispatch(&root).valueAsDouble();
+
+    BOOST_CHECK_EQUAL(std::stod(value), eval);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
+{
+    ParameterNode root("my-param", VariabilityType::VARYING_IN_SCENARIO_ONLY);
+    const std::string value = "144.4";
+    Model model = createModelWithParameters(
+      {Parameter("my-param", TimeDependent::NO, ScenarioDependent::YES)});
     auto param = build_context_parameter_with("my-param", value);
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
