@@ -242,7 +242,7 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solution(bool verboseSolver)
 
 double OrtoolsLinearProblem::objectiveValue() const
 {
-    return objective_->Value();
+    return ::getObjectiveValue(mpSolver_);
 }
 
 double OrtoolsLinearProblem::infinity() const
