@@ -146,7 +146,7 @@ void LinearProblemBuildingFixture::createModel(const std::string& modelId,
     std::vector<Parameter> parameters;
     for (const auto& parameter_id: std::move(parameterIds))
     {
-        parameters.emplace_back(parameter_id, TimeDependent::NO, ScenarioDependent::NO);
+        parameters.emplace_back(parameter_id, TimeDependent::YES, ScenarioDependent::YES);
     }
     createModelWithSystemModelParameter(modelId,
                                         parameters,
