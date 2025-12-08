@@ -33,6 +33,7 @@
 #include "enum_operators.h"
 
 using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::YmlModel;
 using namespace Antares::ModelerStudy;
 
 struct Fixture
@@ -122,7 +123,7 @@ BOOST_FIXTURE_TEST_CASE(model_with_one_objective_properly_translated, Fixture)
                            .port_field_definitions = {},
                            .constraints = {},
                            .binding_constraints = {},
-                           .objectives = {{"objective-id", "param1"}},
+                           .objectives = {{"objective-id", "param1", "subproblems"}},
                            .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
@@ -171,7 +172,7 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objectives = {{"objective-id", "var1"}},
+      .objectives = {{"objective-id", "var1", "subproblems"}},
       .extra_outputs = {}};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
@@ -284,9 +285,9 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
                            .variables = {},
                            .ports = {},
                            .port_field_definitions = {},
-                           .constraints = {{"constraint1", "expression1"},
-                                           {"constraint2", "expression2"}},
-                           .binding_constraints = {{"constraint3", "expression3"}},
+                           .constraints = {{"constraint1", "expression1", "subproblems"},
+                                           {"constraint2", "expression2", "subproblems"}},
+                           .binding_constraints = {{"constraint3", "expression3", "subproblems"}},
                            .objectives = {},
                            .extra_outputs = {}};
     library.models = {model1};
@@ -317,7 +318,7 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
       .id = "model1",
       .description = "description",
       .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "param2", YmlModel::ValueType::CONTINUOUS, true, true}},
+      .variables = {{"varP", "7", "param2", ValueType::CONTINUOUS, true, true, "subproblems"}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
@@ -328,8 +329,8 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
       .id = "model2",
       .description = "description",
       .parameters = {},
-      .variables = {{"var1", "7", "8", YmlModel::ValueType::BOOL, true, true},
-                    {"var2", "99999999.9999999", "var1", YmlModel::ValueType::INTEGER, true, true}},
+      .variables = {{"var1", "7", "8", ValueType::BOOL, true, true, "subproblems"},
+                    {"var2", "99999999.9", "var1", ValueType::INTEGER, true, true, "subproblems"}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
@@ -454,7 +455,7 @@ BOOST_FIXTURE_TEST_CASE(model_extra_outputs_properly_translated, Fixture)
       .id = "model1",
       .description = "description",
       .parameters = {{"param1", true, false}},
-      .variables = {{"var1", "7", "8", YmlModel::ValueType::CONTINUOUS, true, true}},
+      .variables = {{"var1", "7", "8", ValueType::CONTINUOUS, true, true, "subproblems"}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
