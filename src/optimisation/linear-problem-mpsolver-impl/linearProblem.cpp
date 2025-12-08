@@ -42,70 +42,10 @@ void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& pat
     of << out;
 }
 
-// Sirius solver to store objective offset
-class SiriusObjectiveOffsetHandler: public ObjectiveOffsetHandler
-{
-public:
-    void setOffset(double offset) override
-    {
-        offset_ = offset;
-    }
-
-    [[nodiscard]] double getOffset() const override
-    {
-        return offset_;
-    }
-
-    ~SiriusObjectiveOffsetHandler() override = default;
-
-private:
-    double offset_{0.0};
-};
-
-// Other solvers than Sirius (Xpress, etc.) know how to handle objective offset
-class GenericOffsetHandler: public ObjectiveOffsetHandler
-{
-public:
-    explicit GenericOffsetHandler(operations_research::MPObjective* objective):
-        objective_(objective)
-    {
-    }
-
-    void setOffset(double offset) override
-    {
-        objective_->SetOffset(offset);
-    }
-
-    [[nodiscard]] double getOffset() const override
-    {
-        return objective_->offset();
-    }
-
-    ~GenericOffsetHandler() override = default;
-
-private:
-    operations_research::MPObjective* objective_{nullptr};
-};
-
-std::unique_ptr<ObjectiveOffsetHandler> offsetHandlerFactory(
-  const std::string& solverName,
-  operations_research::MPObjective* objective)
-{
-    if (solverName == "sirius")
-    {
-        return std::make_unique<SiriusObjectiveOffsetHandler>();
-    }
-    else
-    {
-        return std::make_unique<GenericOffsetHandler>(objective);
-    }
-}
-
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName):
     mpSolver_(MPSolverFactory(isMip, solverName)),
     objective_(mpSolver_->MutableObjective()),
-    isLP_(!isMip),
-    offsetHandler_(offsetHandlerFactory(solverName, objective_))
+    isLP_(!isMip)
 {
 }
 
@@ -245,12 +185,12 @@ double OrtoolsLinearProblem::getObjectiveCoefficient(
 
 void OrtoolsLinearProblem::setObjectiveOffset(double objectiveOffset)
 {
-    offsetHandler_->setOffset(objectiveOffset);
+    objective_->SetOffset(objectiveOffset);
 }
 
 double OrtoolsLinearProblem::getObjectiveOffset() const
 {
-    return offsetHandler_->getOffset();
+    return objective_->offset();
 }
 
 void OrtoolsLinearProblem::setMinimization()
