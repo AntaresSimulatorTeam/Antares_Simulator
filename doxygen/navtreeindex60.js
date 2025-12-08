@@ -1,5 +1,11 @@
 var NAVTREEINDEX60 =
 {
+"structBOUND__FLEX__UP__NODE.html#a3f87b04f2db3a6a0c9c867c821567314":[8,0,59,0],
+"structBasicProblemFixture.html":[8,0,46],
+"structBasicProblemFixture.html#a1978c05b0ad1387ca3ae897b9fe5a699":[8,0,46,0],
+"structBasicProblemFixture.html#a380c59a3e6aef2db1c4bf8caf53aab7f":[8,0,46,3],
+"structBasicProblemFixture.html#a6e17f314e6680796a5e840d6baa65b32":[8,0,46,5],
+"structBasicProblemFixture.html#a747b7be2857828ab0b6feab97c66e93c":[8,0,46,1],
 "structBasicProblemFixture.html#a99cb1176b9e498c7e868b38ae0f547b2":[8,0,46,6],
 "structBasicProblemFixture.html#ab7619ea9427772a6e71c97bda525a577":[8,0,46,7],
 "structBasicProblemFixture.html#abe6fa8ad0dc387898733c97b7849b15e":[8,0,46,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX60 =
 "structDecompositionFixture.html#ad61cd7492abe6c5151976a6f4963835a":[8,0,99,2],
 "structDecompositionFixture.html#aeed8ab363034e0677689a338557e296a":[8,0,99,8],
 "structDecompositionFixture.html#afdd892ec4eabfa2cc3dddbd0210017c1":[8,0,99,3],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html":[8,0,10,3],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html#a0c421653ebfdf4880e9d6ef696b8e066":[8,0,10,3,1],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html#a14c71eb770f5fb3d9c25fd0212e66bbf":[8,0,10,3,3],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html#a36ffe9486d43d0ae204beb85df6a17c5":[8,0,10,3,2],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html#aa0845131db1bf0a23bcbb899e4583de2":[8,0,10,3,0],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html#abfa96368bf488377723f8d9078915274":[8,0,10,3,4],
-"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html":[8,0,10,4]
+"structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html":[8,0,10,3]
 };

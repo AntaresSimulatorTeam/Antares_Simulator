@@ -1,5 +1,11 @@
 var NAVTREEINDEX49 =
 {
+"dsm_8h_source.html":[9,0,0,12,2,1,1,1,1,0,3],
+"dtgMarginAfterCsr_8h_source.html":[9,0,0,8,12,0,0,0,0,2,8],
+"dummyVariable_8h_source.html":[9,0,0,10,2,4,1,0],
+"duplicates_8cpp.html#ab6937710a3bff3b3b2d555d27459d50b":[7,0,0,2,4],
+"duplicates_8h_source.html":[9,0,0,4,0,25,0,0,0,13],
+"ecoInput_8h_source.html":[9,0,0,4,0,25,0,0,0,5,6,6],
 "economy_2overallCost_8h_source.html":[9,0,0,8,12,0,0,0,0,2,31],
 "economy_2spilledEnergy_8h_source.html":[9,0,0,8,12,0,0,0,0,2,42],
 "economy_8h_source.html":[9,0,0,8,9,0,0,0,0,7],
@@ -70,8 +76,8 @@ var NAVTREEINDEX49 =
 "fswalker_8h.html#ab777e309f17298e4978a2bab94bc79d6":[7,0,21,7],
 "fswalker_8h.html#ac5aaabb740cba264f88d690c605f84ad":[7,0,21,10],
 "fswalker_8h_source.html":[9,0,0,4,1,1],
-"functions.html":[8,3,0,0],
 "functions.html":[8,3,0],
+"functions.html":[8,3,0,0],
 "functions_b.html":[8,3,0,1],
 "functions_c.html":[8,3,0,2],
 "functions_d.html":[8,3,0,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX49 =
 "gui_8h.html#a196db958f0592b871d0d2faa3ca36589":[7,0,0,8,0,2],
 "gui_8h_source.html":[9,0,0,12,1,1,3],
 "gui_8hxx.html#a3459eb69dd1b47678e5b7dc4d9e33109":[7,0,0,22,1,6],
-"gui_8hxx_source.html":[9,0,0,12,1,1,4],
-"h2o2__j__donnees__mensuelles_8h_source.html":[9,0,0,8,2,0,0,0,0,1,0],
-"h2o2__j__donnees__optimisation_8h_source.html":[9,0,0,8,2,0,0,0,0,1,1],
-"h2o2__j__fonctions_8h_source.html":[9,0,0,8,2,0,0,0,0,1,2],
-"h2o__j__ajouter__bruit__au__cout_8cpp.html#ab6ac77c77f3fed066d75172156b06033":[7,0,14,6],
-"h2o__j__construire__les__contraintes_8cpp.html#ae44418ffaf9333fae000d694ea6f9bd0":[7,0,14,7],
-"h2o__j__construire__les__variables_8cpp.html#a41711404a55b3c4ef805e777508990ed":[7,0,14,8]
+"gui_8hxx_source.html":[9,0,0,12,1,1,4]
 };

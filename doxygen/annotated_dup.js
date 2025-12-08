@@ -1751,6 +1751,7 @@ var annotated_dup =
     [ "StartUpCostsData", "structStartUpCostsData.html", "structStartUpCostsData" ],
     [ "StorageFixture", "structStorageFixture.html", "structStorageFixture" ],
     [ "StorageMock", "classStorageMock.html", "classStorageMock" ],
+    [ "StorageMockForDebugInfo", "classStorageMockForDebugInfo.html", "classStorageMockForDebugInfo" ],
     [ "StringIsNotWellFormated", "classStringIsNotWellFormated.html", "classStringIsNotWellFormated" ],
     [ "StructureIndex", "classStructureIndex.html", "classStructureIndex" ],
     [ "STS_holder", "structSTS__holder.html", "structSTS__holder" ],

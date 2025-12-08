@@ -1087,7 +1087,8 @@ var hierarchy =
       [ "Antares::Solver::Simulation::StorageForRemixNoLevels", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixNoLevels.html", [
         [ "Antares::Solver::Simulation::StorageForRemixWithLevels", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixWithLevels.html", null ]
       ] ],
-      [ "StorageMock", "classStorageMock.html", null ]
+      [ "StorageMock", "classStorageMock.html", null ],
+      [ "StorageMockForDebugInfo", "classStorageMockForDebugInfo.html", null ]
     ] ],
     [ "Antares::IStudyLoader", "classAntares_1_1IStudyLoader.html", [
       [ "Antares::FileTreeStudyLoader", "classAntares_1_1FileTreeStudyLoader.html", null ],

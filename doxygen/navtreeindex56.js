@@ -1,5 +1,11 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port.html#a393ae3ee75988668b9314588dbcb0a73":[8,0,0,12,0,3,2,1],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html":[8,0,0,12,0,3,3],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html#a40f4eb3c34d4591b9d8d2915b31ae106":[8,0,0,12,0,3,3,0],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html#a73cf3fa2e03f8981e1a626d5eade4c0c":[8,0,0,12,0,3,3,1],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html#adc3f0df41692e9972d1c987c5a1c5a87":[8,0,0,12,0,3,3,2],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html":[8,0,0,12,0,3,8],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a7a562f7314121fcd04b3fa6daa38f12a":[8,0,0,12,0,3,8,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a865eba3b61b4b2be2cc94922a42f1f02":[8,0,0,12,0,3,8,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a91f19c42361e39bf30b40b79dee92da0":[8,0,0,12,0,3,8,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html#a163cf8e05ac0be8fb46395db0664120b":[8,0,0,19,5,4,64,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSRTraits.html":[8,0,0,19,5,4,65],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLPTraits.html":[8,0,0,19,5,4,66],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base__Traits.html":[8,0,0,19,5,4,67],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base__Traits.html#ad457200af05829f7919821d542783282":[8,0,0,19,5,4,67,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSRTraits.html":[8,0,0,19,5,4,68],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoadTraits.html":[8,0,0,19,5,4,10],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html":[8,0,0,19,5,4,58,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge_1_1Statistics.html":[8,0,0,19,5,4,76,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics.html":[8,0,0,19,5,4,60,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base__Traits.html":[8,0,0,19,5,4,67]
 };

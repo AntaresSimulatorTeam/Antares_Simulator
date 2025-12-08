@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Solver::Simulation::IStorageForRemix Class Reference</title>
+<title>Antares Simulator: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classStorageMockForDebugInfo.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,56 +123,26 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Simulation_1
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Solver::Simulation::IStorageForRemix Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">StorageMockForDebugInfo Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for Antares::Solver::Simulation::IStorageForRemix:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.png" usemap="#Antares::Solver::Simulation::IStorageForRemix_map" alt=""/>
-  <map id="Antares::Solver::Simulation::IStorageForRemix_map" name="Antares::Solver::Simulation::IStorageForRemix_map">
-<area href="classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixNoLevels.html" alt="Antares::Solver::Simulation::StorageForRemixNoLevels" shape="rect" coords="0,56,326,80"/>
-<area href="classStorageMock.html" alt="StorageMock" shape="rect" coords="336,56,662,80"/>
-<area href="classStorageMockForDebugInfo.html" alt="StorageMockForDebugInfo" shape="rect" coords="672,56,998,80"/>
-<area href="classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixWithLevels.html" alt="Antares::Solver::Simulation::StorageForRemixWithLevels" shape="rect" coords="0,112,326,136"/>
-  </map>
-</div></div>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a9b02b83c52a7114f4dbe84c074b39905"><td class="memItemLeft" align="right" valign="top"><a id="a9b02b83c52a7114f4dbe84c074b39905"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>IStorageForRemix</b> (std::string name)</td></tr>
-<tr class="separator:a9b02b83c52a7114f4dbe84c074b39905"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50deb5e3ba3fc2325a6077f870fad8fc"><td class="memItemLeft" align="right" valign="top"><a id="a50deb5e3ba3fc2325a6077f870fad8fc"></a>
-const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const</td></tr>
-<tr class="separator:a50deb5e3ba3fc2325a6077f870fad8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28cfcef18757ce361bbe896825ff4f5d"><td class="memItemLeft" align="right" valign="top"><a id="a28cfcef18757ce361bbe896825ff4f5d"></a>
-virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>maxExchange</b> (unsigned hourOfMaxGen, unsigned hourOfMinGen) const =0</td></tr>
-<tr class="separator:a28cfcef18757ce361bbe896825ff4f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f771d799dc5dddcb34956b8ce231d6d"><td class="memItemLeft" align="right" valign="top"><a id="a4f771d799dc5dddcb34956b8ce231d6d"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> ()=0</td></tr>
-<tr class="separator:a4f771d799dc5dddcb34956b8ce231d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a674309866c1f30d77bc138a4079d0b9b"><td class="memItemLeft" align="right" valign="top"><a id="a674309866c1f30d77bc138a4079d0b9b"></a>
-virtual const std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>initWithdrawal</b> () const =0</td></tr>
-<tr class="separator:a674309866c1f30d77bc138a4079d0b9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd5d08542576b857126e1f4ab05c4883"><td class="memItemLeft" align="right" valign="top"><a id="afd5d08542576b857126e1f4ab05c4883"></a>
-virtual std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>withdrawal</b> ()=0</td></tr>
-<tr class="separator:afd5d08542576b857126e1f4ab05c4883"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/solver/simulation/include/antares/solver/simulation/remix-storage/<a class="el" href="storage-for-remix-interface_8h_source.html">storage-for-remix-interface.h</a></li>
-</ul>
-</div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a>, including all inherited members.</p>
+<table class="directory">
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>initWithdrawal</b>() const override (defined in <a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a>)</td><td class="entry"><a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>IStorageForRemix</b>(std::string name) (defined in <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>maxExchange</b>(unsigned, unsigned) const override (defined in <a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a>)</td><td class="entry"><a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>name</b>() const (defined in <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>StorageMockForDebugInfo</b>(const std::string &amp;name, const std::vector&lt; double &gt; &amp;withdrawal_data) (defined in <a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a>)</td><td class="entry"><a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>update</b>() override (defined in <a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a>)</td><td class="entry"><a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>withdrawal</b>() override (defined in <a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a>)</td><td class="entry"><a class="el" href="classStorageMockForDebugInfo.html">StorageMockForDebugInfo</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~IStorageForRemix</b>()=default (defined in <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">Antares::Solver::Simulation::IStorageForRemix</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+</table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Simulation</b></li><li class="navelem"><a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html">IStorageForRemix</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
