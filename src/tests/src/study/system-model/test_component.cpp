@@ -282,8 +282,9 @@ BOOST_AUTO_TEST_CASE(param_variability_time_and_scenario_mismatch)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("Model 'model': Component 'component': Parameter 'param1': "
-                                       "Time and Scenario dependance mismatch between model and system"));
+                          checkMessage(
+                            "Model 'model': Component 'component': Parameter 'param1': "
+                            "Time and Scenario dependance mismatch between model and system"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_unexisting_port)

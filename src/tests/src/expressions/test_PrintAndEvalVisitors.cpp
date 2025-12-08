@@ -115,7 +115,6 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
 
     // 7. Scenario only: handled like a timeserie parameter
     BOOST_CHECK_EQUAL(context.getParameterValue(scenario_only, 0, 1), 123.45);
-
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
