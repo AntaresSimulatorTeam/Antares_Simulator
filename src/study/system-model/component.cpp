@@ -68,11 +68,17 @@ static void checkComponentDataValidity(const ComponentData& data)
         try
         {
             auto value = data.parameter_values.at(paramName);
-            if (!param.isTimeDependent() && isTimeDependent(value.type))
+            bool timeMismatch = !param.isTimeDependent() && isTimeDependent(value.type);
+            bool scenarioMismatch = !param.isScenarioDependent() && isScenarioDependent(value.type);
+            if (timeMismatch && scenarioMismatch)
+            {
+                dependanceMismatchThrow(data.model->Id(), data.id, paramName, "Time and Scenario");
+            }
+            if (timeMismatch)
             {
                 dependanceMismatchThrow(data.model->Id(), data.id, paramName, "Time");
             }
-            if (!param.isScenarioDependent() && isScenarioDependent(value.type))
+            if (scenarioMismatch)
             {
                 dependanceMismatchThrow(data.model->Id(), data.id, paramName, "Scenario");
             }
