@@ -22,10 +22,12 @@ struct CreateInputFileFixture
     std::filesystem::path studyFolder;
 
 private:
-    void createYamlFile(const std::string& filename, const std::string& yaml_content);
+    void createYamlFile(const std::filesystem::path& creationDir,
+                        const std::string& filename,
+                        const std::string& yaml_content);
+
     std::filesystem::path inputFolder_;
     std::filesystem::path librariesFolder_;
-    std::filesystem::path creationFolder_;
 };
 
 CreateInputFileFixture::CreateInputFileFixture()
@@ -41,22 +43,20 @@ CreateInputFileFixture::CreateInputFileFixture()
 
 void CreateInputFileFixture::createLibraryFile(const std::string& yaml_content)
 {
-    creationFolder_ = librariesFolder_;
-    createYamlFile("my-library.yml", yaml_content);
+    createYamlFile(librariesFolder_, "my-library.yml", yaml_content);
 }
 
 void CreateInputFileFixture::createOptimConfigFile(const std::string& yaml_content)
 {
-    creationFolder_ = inputFolder_;
-    createYamlFile("optim-config.yml", yaml_content);
+    createYamlFile(inputFolder_, "optim-config.yml", yaml_content);
 }
 
-void CreateInputFileFixture::createYamlFile(const std::string& filename,
+void CreateInputFileFixture::createYamlFile(const std::filesystem::path& creationDir,
+                                            const std::string& filename,
                                             const std::string& yaml_content)
 {
-    std::filesystem::path yamlPath = creationFolder_ / filename;
     std::ofstream outStream;
-    outStream.open(yamlPath, std::ofstream::trunc | std::ofstream::out);
+    outStream.open(creationDir / filename, std::ofstream::trunc | std::ofstream::out);
     outStream << yaml_content;
     outStream.flush();
 }
