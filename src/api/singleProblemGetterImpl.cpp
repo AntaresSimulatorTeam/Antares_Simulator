@@ -168,12 +168,12 @@ void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path
     OPT_ExportStructures(&pb_, *writer);
 }
 
-void fillLinks(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)
+void fillLinksProperties(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)
 {
-    auto& studyruntime = study.runtime;
+    const auto& studyruntime = study.runtime;
     for (uint k = 0; k < studyruntime.interconnectionsCount(); ++k)
     {
-        auto* lnk = studyruntime.areaLink[k];
+        const auto* lnk = studyruntime.areaLink[k];
         pb.CoutDeTransport[k].IntercoGereeAvecDesCouts = lnk->useHurdlesCost;
     }
 }
@@ -182,7 +182,7 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
 {
     // IntercoGereeAvecDesCouts needs to be initialized
     // before building variable list and the common matrix
-    fillLinks(pb_, *study_);
+    fillLinksProperties(pb_, *study_);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(&pb_);
 
