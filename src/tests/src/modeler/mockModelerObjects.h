@@ -43,8 +43,7 @@ Antares::ModelerStudy::SystemModel::Component createComponent(
   unsigned index = 0);
 
 std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
-build_context_parameter_with(
-  const std::string& id,
-  const std::string& value,
-  const Antares::ModelerStudy::SystemModel::ParameterType& type = Antares::ModelerStudy::
-    SystemModel::ParameterType::CONSTANT);
+build_context_parameter_with(const std::string& id,
+                             const std::string& value,
+                             const Antares::Optimisation::VariabilityType& type = Antares::
+                               Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);

@@ -37,7 +37,7 @@ namespace Test::Modeler
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type)
+  const VariabilityType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
@@ -146,7 +146,7 @@ void LinearProblemBuildingFixture::createModel(const std::string& modelId,
     std::vector<Parameter> parameters;
     for (const auto& parameter_id: std::move(parameterIds))
     {
-        parameters.emplace_back(parameter_id, TimeDependent::NO, ScenarioDependent::NO);
+        parameters.emplace_back(parameter_id, TimeDependent::YES, ScenarioDependent::YES);
     }
     createModelWithSystemModelParameter(modelId,
                                         parameters,

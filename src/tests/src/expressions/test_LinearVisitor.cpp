@@ -29,7 +29,7 @@
 #include <antares/expressions/visitors/LinearStatus.h>
 #include <antares/expressions/visitors/LinearityVisitor.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
-#include <antares/modeler-optimisation-container/VariabilityType.h>
+#include <antares/study/system-model/variabilityType.h>
 
 #include "UtilMocks.h"
 #include "unit_test_utils.h"

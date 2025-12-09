@@ -93,7 +93,7 @@ struct TestVariabilityVisitorFixture
         fixture.createComponent(
           "model",
           "compo",
-          {build_context_parameter_with("param", "0", ParameterType::TIMESERIES)},
+          {build_context_parameter_with("param", "0", VariabilityType::VARYING_IN_SCENARIO_ONLY)},
           "group");
 
         auto bounds_time_series = std::make_unique<LinearProblemDataImpl::TimeSeriesSet>("bounds",
@@ -118,16 +118,16 @@ BOOST_FIXTURE_TEST_SUITE(TestVariabilityVisitor, TestVariabilityVisitorFixture)
 BOOST_AUTO_TEST_CASE(simple_time_dependant_expression)
 {
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&literalNode),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&parameterNode),
-                      Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY);
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&variableNode),
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY);
+                      VariabilityType::VARYING_IN_TIME_ONLY);
 
     // addition of literalNode, parameterNode and variableNode is time and scenario dependent
     Node* expr = fixture.nodeRegistry.create<SumNode>(&literalNode, &parameterNode, &variableNode);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(expr),
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
 }
 
 BOOST_AUTO_TEST_CASE(timeShift_expression)
@@ -135,16 +135,16 @@ BOOST_AUTO_TEST_CASE(timeShift_expression)
     TimeShiftNode constant_time_shift_node(&literalNode, &parameterNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&constant_time_shift_node),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     TimeShiftNode scenario_only_time_shift_node(&parameterNode, &literalNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&scenario_only_time_shift_node),
-                      Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY);
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
 
     TimeShiftNode time_dep_only_time_shift_node(&variableNode, &literalNode);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&time_dep_only_time_shift_node),
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY);
+                      VariabilityType::VARYING_IN_TIME_ONLY);
 }
 
 BOOST_AUTO_TEST_CASE(timeIndexNode_expression)
@@ -152,16 +152,16 @@ BOOST_AUTO_TEST_CASE(timeIndexNode_expression)
     TimeIndexNode t1(&literalNode, &parameterNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     TimeIndexNode t2(&parameterNode, &literalNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     TimeIndexNode t3(&variableNode, &literalNode);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 }
 
 BOOST_AUTO_TEST_CASE(timeSumNode_expression)
@@ -169,16 +169,14 @@ BOOST_AUTO_TEST_CASE(timeSumNode_expression)
     TimeSumNode t1(&literalNode, &parameterNode, &literalNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     TimeSumNode t2(&literalNode, &parameterNode, &parameterNode);
 
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2),
-                      Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2), VariabilityType::VARYING_IN_SCENARIO_ONLY);
 
     TimeSumNode t3(&literalNode, &parameterNode, &variableNode);
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3),
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3), VariabilityType::VARYING_IN_TIME_ONLY);
 }
 
 BOOST_AUTO_TEST_CASE(alltimeSumNode_expression)
@@ -186,54 +184,16 @@ BOOST_AUTO_TEST_CASE(alltimeSumNode_expression)
     AllTimeSumNode t1(&literalNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     AllTimeSumNode t2(&parameterNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     AllTimeSumNode t3(&variableNode);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
-}
-
-static const std::vector<VariabilityType> VariabilityType_ALL{
-  VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-  VariabilityType::VARYING_IN_TIME_ONLY,
-  VariabilityType::VARYING_IN_SCENARIO_ONLY,
-  VariabilityType::VARYING_IN_TIME_AND_SCENARIO};
-
-template<class T>
-static std::pair<Node*, ParameterNode*> s_(Registry<Node>& registry,
-                                           const VariabilityType& time_index)
-{
-    Node* left = registry.create<LiteralNode>(42.);
-    ParameterNode* right = registry.create<ParameterNode>("param", time_index);
-    return {registry.create<T>(left, right), right};
-}
-
-static const std::vector<std::pair<Node*, ParameterNode*> (*)(Registry<Node>&,
-                                                              const VariabilityType&)>
-  operator_ALL{&s_<SumNode>,
-               &s_<SubtractionNode>,
-               &s_<MultiplicationNode>,
-               &s_<DivisionNode>,
-               &s_<EqualNode>,
-               &s_<LessThanOrEqualNode>,
-               &s_<GreaterThanOrEqualNode>};
-
-BOOST_DATA_TEST_CASE_F(TestVariabilityVisitorFixture,
-                       simple_all,
-                       bdata::make(VariabilityType_ALL) * bdata::make(operator_ALL),
-                       variability,
-                       binaryOperator)
-{
-    auto [root, parameter] = binaryOperator(fixture.nodeRegistry, variability);
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(root), variability);
-
-    Node* neg = fixture.nodeRegistry.create<NegationNode>(root);
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(neg), variability);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 }
 
 template<class T>
@@ -256,57 +216,56 @@ BOOST_DATA_TEST_CASE_F(TestVariabilityVisitorFixture,
 
 BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
 {
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-                        | Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+                        | VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+                        | VariabilityType::VARYING_IN_TIME_ONLY,
+                      VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+                        | VariabilityType::VARYING_IN_SCENARIO_ONLY,
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+                        | VariabilityType::VARYING_IN_TIME_AND_SCENARIO,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
 
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY
-                        | Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_TIME_ONLY
+                        | VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
+                      VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_TIME_ONLY | VariabilityType::VARYING_IN_TIME_ONLY,
+                      VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_TIME_ONLY
+                        | VariabilityType::VARYING_IN_SCENARIO_ONLY,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_TIME_ONLY
+                        | VariabilityType::VARYING_IN_TIME_AND_SCENARIO,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
 
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY
-                        | Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_SCENARIO_ONLY
+                        | VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_SCENARIO_ONLY
+                        | VariabilityType::VARYING_IN_TIME_ONLY,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_SCENARIO_ONLY
+                        | VariabilityType::VARYING_IN_SCENARIO_ONLY,
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_SCENARIO_ONLY
+                        | VariabilityType::VARYING_IN_TIME_AND_SCENARIO,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
 
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO
-                        | Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_TIME_ONLY,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK_EQUAL(Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO
-                        | Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO,
-                      Antares::Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_TIME_AND_SCENARIO
+                        | VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_TIME_AND_SCENARIO
+                        | VariabilityType::VARYING_IN_TIME_ONLY,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_TIME_AND_SCENARIO
+                        | VariabilityType::VARYING_IN_SCENARIO_ONLY,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(VariabilityType::VARYING_IN_TIME_AND_SCENARIO
+                        | VariabilityType::VARYING_IN_TIME_AND_SCENARIO,
+                      VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
 }
 
 BOOST_AUTO_TEST_CASE(test_overwrite_time_inde_from_component)
@@ -319,10 +278,11 @@ BOOST_AUTO_TEST_CASE(test_overwrite_time_inde_from_component)
                         {"param"},
                         {{"v1", ValueType::FLOAT, fixture.literal(0.), fixture.literal(100.)}},
                         {});
-    fixture.createComponent("model",
-                            "compo",
-                            {build_context_parameter_with("param", "0", ParameterType::CONSTANT)},
-                            "group");
+    fixture.createComponent(
+      "model",
+      "compo",
+      {build_context_parameter_with("param", "0", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)},
+      "group");
 
     auto bounds_time_series = std::make_unique<LinearProblemDataImpl::TimeSeriesSet>("bounds", 3);
     LinearProblemApi::FillContext ctx{0, 2, 0, 2, 0};
@@ -339,7 +299,7 @@ BOOST_AUTO_TEST_CASE(test_overwrite_time_inde_from_component)
     variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[1]);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&parameterNode),
-                      Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

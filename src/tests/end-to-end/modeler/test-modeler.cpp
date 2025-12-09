@@ -24,9 +24,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/modeler-optimisation-container/VariabilityType.h>
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
+#include <antares/study/system-model/variabilityType.h>
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
 #include "antares/optimisation/linear-problem-api/mipSolution.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
@@ -36,7 +36,6 @@
 #include "inmemory-modeler.h"
 
 using namespace Antares::Expressions;
-using PT = Antares::ModelerStudy::SystemModel::ParameterType;
 using PTV = Antares::ModelerStudy::SystemModel::ParameterTypeAndValue;
 using VV = Antares::Optimisation::VariabilityType;
 
@@ -166,7 +165,7 @@ public:
         lower_bound = fixture.parameter(parameterId, VV::VARYING_IN_TIME_ONLY);
     }
 
-    void addParameter(const std::string& str, const PT& type = PT::TIMESERIES)
+    void addParameter(const std::string& str, const VV& type = VV::VARYING_IN_TIME_AND_SCENARIO)
     {
         parameters.emplace(Test::Modeler::build_context_parameter_with(str, "GROUPA", type));
         parameterIds.push_back(str);
