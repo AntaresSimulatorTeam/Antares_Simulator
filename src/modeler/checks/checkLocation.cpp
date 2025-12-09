@@ -34,13 +34,14 @@ using namespace Antares::Modeler::Config;
 namespace Antares::Modeler::Checks
 {
 
-void checkModel(const Model& model)
+void checkModel(const Model& model, const System& system)
 {
     for (const auto& constraint: model.Constraints())
     {
         checkExpression(constraint.expression().RootNode(),
                         constraint.location(),
                         model,
+                        system,
                         constraint.expression().Value());
     }
 
@@ -49,6 +50,7 @@ void checkModel(const Model& model)
         checkExpression(objective.expression().RootNode(),
                         objective.location(),
                         model,
+                        system,
                         objective.expression().Value());
     }
 
@@ -58,6 +60,7 @@ void checkModel(const Model& model)
         checkExpression(extraOutput.expression().RootNode(),
                         Location::SUBPROBLEMS,
                         model,
+                        system,
                         extraOutput.expression().Value());
     }
 }
@@ -68,7 +71,7 @@ void checkLocations(const Modeler::Data& data)
     {
         for (const auto& [_, model]: lib.Models())
         {
-            checkModel(model);
+            checkModel(model, *data.system);
         }
     }
 }
@@ -120,6 +123,7 @@ void checkFunctionNode(const Node& node, const Model& model, const std::string& 
 void checkExpression(const Node* expression,
                      const Location& location,
                      const Model& model,
+                     const System& system,
                      const std::string& exprStr,              // used for error msgs
                      const std::string& errorMsgForPortField) // used for error msgs
 {
@@ -166,6 +170,7 @@ void checkExpression(const Node* expression,
             checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
                             location,
                             model,
+                            system,
                             expr.Value(),
                             msgInCaseOfError);
             continue;
@@ -184,13 +189,15 @@ void checkExpression(const Node* expression,
               portFieldSumNode->getPortName(),
               portFieldSumNode->getFieldName());
 
-            for (const auto& [portLocalId, connections]: model.ComponentsConnections())
+            for (const auto& component: system.Components())
             {
-                if (portLocalId != portFieldSumNode->getPortName())
+                if (component.getModel()->Id() != model.Id())
                 {
                     continue;
                 }
-                for (const auto& connection: connections)
+
+                for (const auto& connection:
+                     component.componentConnectionsViaPort(portFieldSumNode->getPortName()))
                 {
                     auto* component = connection.component();
                     auto* port = connection.port();
@@ -201,6 +208,7 @@ void checkExpression(const Node* expression,
                     checkExpression(expr.RootNode(),
                                     location,
                                     *connection.component()->getModel(),
+                                    system,
                                     expr.Value(),
                                     msgInCaseOfError);
                 }

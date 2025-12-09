@@ -28,12 +28,13 @@ namespace Antares::Modeler::Checks
 {
 
 /// Check location validity for all modeler data
-void checkLocations(Antares::Modeler::Data& data);
+void checkLocations(const Antares::Modeler::Data& data);
 
 // shouldn't be used outside, here for unit tests
 void checkExpression(const Antares::Expressions::Nodes::Node* expression,
                      const Antares::Modeler::Config::Location& location,
                      const Antares::ModelerStudy::SystemModel::Model& model,
+                     const Antares::ModelerStudy::SystemModel::System& system,
                      const std::string& exprStr,
                      const std::string& errorMsgForPortFieldSum = "");
 
