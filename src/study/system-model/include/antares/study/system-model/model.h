@@ -72,12 +72,12 @@ public:
         return id_;
     }
 
-    std::vector<Objective>& Objectives()
+    const std::vector<Objective>& Objectives() const
     {
         return objectives_;
     }
 
-    std::vector<Constraint>& Constraints()
+    const std::vector<Constraint>& Constraints() const
     {
         return constraints_;
     }
@@ -87,7 +87,7 @@ public:
         return parameters_;
     }
 
-    std::vector<Variable>& Variables()
+    const std::vector<Variable>& Variables() const
     {
         return variables_;
     }

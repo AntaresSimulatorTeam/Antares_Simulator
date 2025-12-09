@@ -82,11 +82,6 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
-    void setLocation(Modeler::Config::Location loc)
-    {
-        location_ = loc;
-    }
-
     [[nodiscard]] Modeler::Config::Location location() const
     {
         return location_;

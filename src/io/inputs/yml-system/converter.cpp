@@ -75,9 +75,9 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
-static Model& getModel(const std::vector<Library>& libraries,
-                       const std::string& libraryId,
-                       const std::string& modelId)
+static const Model& getModel(const std::vector<Library>& libraries,
+                             const std::string& libraryId,
+                             const std::string& modelId)
 {
     auto lib = std::ranges::find_if(libraries,
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
@@ -101,7 +101,7 @@ static Component createComponent(const YmlSystem::Component& c,
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
-    Model& model = getModel(libraries, libraryId, modelId);
+    const Model& model = getModel(libraries, libraryId, modelId);
 
     ComponentBuilder component_builder;
 
