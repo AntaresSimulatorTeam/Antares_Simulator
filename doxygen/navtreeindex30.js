@@ -1,10 +1,5 @@
 var NAVTREEINDEX30 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#aaafabb33ac1a55397bac8ba742f1f9aa":[8,0,0,19,5,4,82,16],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ab720009ec458bc105a2e41987da8fa41":[8,0,0,19,5,4,82,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ac1ae8240c431a37f44f4a6b42cf9e5a1":[8,0,0,19,5,4,82,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ac317f7bff9a9f2b04ca8d840d4313b86":[8,0,0,19,5,4,82,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ae240623e2fd98bd7290277990ff9cc1c":[8,0,0,19,5,4,82,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ae4f268d1c545117c594203b271ff7a5b":[8,0,0,19,5,4,82,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ae7842cdecc640ca9e673bbb5b41c97ce":[8,0,0,19,5,4,82,17],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#aeabeb20ec97493f7b1e0e37663c32a73":[8,0,0,19,5,4,82,6],
@@ -249,5 +244,10 @@ var NAVTREEINDEX30 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a0d36f0f8db53699f8a44a00a83e4a27c":[8,0,0,19,5,4,106,17],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a22208b46a9f2bc1c01d275a875e8e78b":[8,0,0,19,5,4,106,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a35ec22f3720e136cf86514d96b3fee46":[8,0,0,19,5,4,106,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a4a6f97bf8bc8de2b740ec94be73e8743":[8,0,0,19,5,4,106,13]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a4a6f97bf8bc8de2b740ec94be73e8743":[8,0,0,19,5,4,106,13],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a51e384092f5e6524864eaccfd1c4471a":[8,0,0,19,5,4,106,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a55086957b44eb4513016dee9b59dc824":[8,0,0,19,5,4,106,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a55eee7f9b46c0d57256e7813b03f6309":[8,0,0,19,5,4,106,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a57cfa165d2ceb8f0857ea8452e08bca4":[8,0,0,19,5,4,106,19],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a63b73ab0e55e17eb36d8f6dfc76b60f0":[8,0,0,19,5,4,106,16]
 };

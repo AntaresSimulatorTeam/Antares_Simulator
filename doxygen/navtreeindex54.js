@@ -1,5 +1,11 @@
 var NAVTREEINDEX54 =
 {
+"renewable_2defines_8h_source.html":[9,0,0,4,0,25,0,0,0,5,3,5],
+"renewable_8areasummary_8h_source.html":[9,0,0,12,2,1,1,1,1,0,9],
+"report_8cpp.html#a1418a64099521dabe8235df401f4f0cc":[7,0,0,21,37],
+"report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3":[7,0,0,21,33],
+"report_8cpp.html#afca59b8c35ac2975defa738d1098f969":[7,0,0,21,31],
+"report_8h_source.html":[9,0,0,8,3,0,0,0,0,1],
 "reportbuilder_8hxx_source.html":[9,0,0,8,12,0,0,0,0,4,1],
 "reserves_8h_source.html":[9,0,0,12,0,0,0,0,11],
 "reservoirlevel_8h_source.html":[9,0,0,8,12,0,0,0,0,2,41],
@@ -243,11 +249,5 @@ var NAVTREEINDEX54 =
 "spotlight-provider_8h_source.html":[9,0,0,12,2,2,9,11],
 "spotlight_2spotlight_8h_source.html":[9,0,0,12,1,0,3,9],
 "spotlight_8h_source.html":[9,0,0,12,1,0,5],
-"spotlight_8hxx_source.html":[9,0,0,12,1,0,3,10],
-"standard-page_8hxx_source.html":[9,0,0,12,2,0,0,0,0],
-"startupwizard_8h_source.html":[9,0,0,12,2,2,29],
-"state_8hxx_source.html":[9,0,0,8,12,0,0,0,0,18],
-"statusbar_8cpp.html#a3f7cb3fd78e6342998e364445d7d0b56":[7,0,0,12,14],
-"statusbar_8cpp.html#a411103761861ecf43fb2186691d1be2a":[7,0,0,12,17],
-"statusbar_8cpp.html#a41e5318b03d134a4e05d8dd14a05c552":[7,0,0,12,18]
+"spotlight_8hxx_source.html":[9,0,0,12,1,0,3,10]
 };

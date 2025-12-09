@@ -1,10 +1,5 @@
 var NAVTREEINDEX28 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a1fc77d590567494a5bdefed251019656":[8,0,0,19,5,4,26,24],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a29ff605f45c21be58b31bdf9b4c0e4c9":[8,0,0,19,5,4,26,16],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a2b42e6c167669c8a49f7a556e689792d":[8,0,0,19,5,4,26,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a379835d9ab9e7da6b4a89d5fb848fee0":[8,0,0,19,5,4,26,14],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a3f91680ff0e9c28d3f0075d048f39ca6":[8,0,0,19,5,4,26,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a462757130d54b9357938de57f5866b37":[8,0,0,19,5,4,26,19],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a4c63cc82ddcbda94c2d6c7b706c1545f":[8,0,0,19,5,4,26,25],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a5370641925b960f875d167aad35196d1":[8,0,0,19,5,4,26,17],
@@ -249,5 +244,10 @@ var NAVTREEINDEX28 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#afc5ffe4584901a8c5fddbedc24c9681a":[8,0,0,19,5,4,54,16],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html":[8,0,0,19,5,4,56],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a12ccff3afbe078dcdeb4196b59bcd4d2":[8,0,0,19,5,4,56,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a18a975e803cd21282f534980b0ae8044":[8,0,0,19,5,4,56,19]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a18a975e803cd21282f534980b0ae8044":[8,0,0,19,5,4,56,19],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a1b39751b93451c2080847b7a776fe80b":[8,0,0,19,5,4,56,6],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2927426a44a69a919cb0de33cf9967a4":[8,0,0,19,5,4,56,12],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2abe983705d4bc378af030d1462327a7":[8,0,0,19,5,4,56,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2c26e2792a39e6c82ae09a16051b427b":[8,0,0,19,5,4,56,13],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2ce2fb5f2e34cd72de118e10874283a9":[8,0,0,19,5,4,56,1]
 };

@@ -1,10 +1,5 @@
 var NAVTREEINDEX31 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a51e384092f5e6524864eaccfd1c4471a":[8,0,0,19,5,4,106,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a55086957b44eb4513016dee9b59dc824":[8,0,0,19,5,4,106,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a55eee7f9b46c0d57256e7813b03f6309":[8,0,0,19,5,4,106,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a57cfa165d2ceb8f0857ea8452e08bca4":[8,0,0,19,5,4,106,19],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a63b73ab0e55e17eb36d8f6dfc76b60f0":[8,0,0,19,5,4,106,16],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a69f065ab5058bee9c0fbc20ceadca0d0":[8,0,0,19,5,4,106,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a7dc7bb7ebf79b56da46e957a26209413":[8,0,0,19,5,4,106,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a8e269a4ef1773ececaa424932039d1b2":[8,0,0,19,5,4,106,2],
@@ -249,5 +244,10 @@ var NAVTREEINDEX31 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html":[8,0,0,19,5,4,11],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a213913a380ca7b911271d15a21771a5b":[8,0,0,19,5,4,11,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a4ecc50e28d514b72d9e32b6ff1d46b26":[8,0,0,19,5,4,11,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a8b8ebb0d4403e8efd0bf59ed1f1375f2":[8,0,0,19,5,4,11,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a8b8ebb0d4403e8efd0bf59ed1f1375f2":[8,0,0,19,5,4,11,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#acffc8adb9d14871e6995de50180cf1f8":[8,0,0,19,5,4,11,0],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html":[8,0,0,19,5,4,128],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a0efa942868c5814bc050a11491e3318f":[8,0,0,19,5,4,128,13],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a14612c2f5063e747d0fa3e4163bdb46a":[8,0,0,19,5,4,128,15],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a1624ce82eab9effcd82b2804914e0c0a":[8,0,0,19,5,4,128,8]
 };

@@ -524,7 +524,6 @@ var annotated_dup =
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser" ]
           ] ],
           [ "YmlOptimConfig", null, [
-            [ "ModelObjectNotFound", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ModelObjectNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ModelObjectNotFound" ],
             [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable" ],
             [ "Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
@@ -1519,8 +1518,8 @@ var annotated_dup =
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", "classColumnBasedStorage" ],
-    [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
     [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
+    [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
@@ -1542,6 +1541,7 @@ var annotated_dup =
     [ "CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES", "structCORRESPONDANCES__DES__CONTRAINTES__JOURNALIERES.html", "structCORRESPONDANCES__DES__CONTRAINTES__JOURNALIERES" ],
     [ "CORRESPONDANCES_DES_VARIABLES", "structCORRESPONDANCES__DES__VARIABLES.html", "structCORRESPONDANCES__DES__VARIABLES" ],
     [ "COUTS_DE_TRANSPORT", "structCOUTS__DE__TRANSPORT.html", "structCOUTS__DE__TRANSPORT" ],
+    [ "CreateInputFileFixture", "structCreateInputFileFixture.html", "structCreateInputFileFixture" ],
     [ "CreateOptionsAndSettings", "structCreateOptionsAndSettings.html", "structCreateOptionsAndSettings" ],
     [ "CsrAreaBalance", "classCsrAreaBalance.html", "classCsrAreaBalance" ],
     [ "CsrAreaBalanceData", "structCsrAreaBalanceData.html", "structCsrAreaBalanceData" ],
@@ -1553,7 +1553,6 @@ var annotated_dup =
     [ "CumulationConstraint", "structCumulationConstraint.html", "structCumulationConstraint" ],
     [ "CustomErrorListener", "classCustomErrorListener.html", null ],
     [ "DataFile", "classDataFile.html", "classDataFile" ],
-    [ "DecompositionFixture", "structDecompositionFixture.html", "structDecompositionFixture" ],
     [ "DefaultScenario", "classDefaultScenario.html", "classDefaultScenario" ],
     [ "DEMAND_FLEX_DOWN_POOL", "structDEMAND__FLEX__DOWN__POOL.html", "structDEMAND__FLEX__DOWN__POOL" ],
     [ "DEMAND_FLEX_UP_POOL", "structDEMAND__FLEX__UP__POOL.html", "structDEMAND__FLEX__UP__POOL" ],

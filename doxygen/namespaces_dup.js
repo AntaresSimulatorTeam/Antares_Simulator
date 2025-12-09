@@ -1169,6 +1169,7 @@ var namespaces_dup =
             [ "convertConstraints", "modelConverter_8cpp.html#afa920dbb254d432b074819c0a351caae", null ],
             [ "convertExpressionToNode", "convertorVisitor_8cpp.html#a1410f7982fde7bac28b6e5a3d330c351", null ],
             [ "convertExtraOutputs", "modelConverter_8cpp.html#a510fc356e9113e8ea266e14e2f07226c", null ],
+            [ "convertLocation", "modelConverter_8cpp.html#af7c9a709feb9d86d77da7197aba1b4e7", null ],
             [ "convertModels", "modelConverter_8cpp.html#af88bf9b62f270194ed2eb81a262ed783", null ],
             [ "convertObjectives", "modelConverter_8cpp.html#a382967c248e6bb7991eadb5f30ebcfd3", null ],
             [ "convertParameters", "modelConverter_8cpp.html#a961d31001ecee6be04694fd7cd404377", null ],
@@ -1188,8 +1189,8 @@ var namespaces_dup =
             [ "ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound" ],
             [ "TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ],
             [ "ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
-            [ "convert", "yml-system_2converter_8cpp.html#a9f842fbbb321672e7e73e2b80a544ee5", null ],
-            [ "convert", "yml-system_2include_2antares_2io_2inputs_2yml-system_2converter_8h.html#ada2347e748f40b1e85c758563ccbd5e0", null ]
+            [ "convert", "converter_8cpp.html#a9f842fbbb321672e7e73e2b80a544ee5", null ],
+            [ "convert", "converter_8h.html#ada2347e748f40b1e85c758563ccbd5e0", null ]
           ] ],
           [ "YmlModel", null, [
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter" ],
@@ -1212,21 +1213,12 @@ var namespaces_dup =
             [ "toString", "Library_8h.html#a4ab8a249c390873b9a32120dff43c548", null ]
           ] ],
           [ "YmlOptimConfig", null, [
-            [ "ModelObjectNotFound", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ModelObjectNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ModelObjectNotFound" ],
             [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable" ],
             [ "Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser" ],
-            [ "OptimConfig", "OptimConfig_8h.html#a132dca77c2465f4526050af121879ebb", null ],
-            [ "convertLocation", "yml-optim-config_2converter_8cpp.html#a3deefa766d6f36bc2a8db57f231a453a", null ],
-            [ "findSystemConstraint", "yml-optim-config_2converter_8cpp.html#a7ef8681d127a918d37bb14ae66ae5c56", null ],
-            [ "findSystemModel", "yml-optim-config_2converter_8cpp.html#a14fd46235e8075e9ee41db80afaa41f3", null ],
-            [ "findSystemObjective", "yml-optim-config_2converter_8cpp.html#a487ddd09c3325468b62da51592428c74", null ],
-            [ "findSystemVariable", "yml-optim-config_2converter_8cpp.html#a3bbed888a07b90c1349f6e13bab5533b", null ],
-            [ "updateLibrairies", "yml-optim-config_2include_2antares_2io_2inputs_2yml-optim-config_2converter_8h.html#a908eb2780498c87ca8fbd9c147bb683e", null ],
-            [ "updateLibrairies", "yml-optim-config_2converter_8cpp.html#a2cfbc752c0149258122f94d890c042f6", null ],
-            [ "updateSystemModel", "yml-optim-config_2converter_8cpp.html#a431261c8b6f5096ce88c6ea0634c8259", null ]
+            [ "OptimConfig", "OptimConfig_8h.html#a132dca77c2465f4526050af121879ebb", null ]
           ] ],
           [ "YmlSystem", null, [
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser" ],
@@ -1494,20 +1486,26 @@ var namespaces_dup =
         [ "LoadFiles", null, [
           [ "FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ],
+          [ "convertIntoSystemLibs", "readLibraries_8cpp.html#a4c4fde5299afed81da67e3ec8f8991bb", null ],
+          [ "fetchModelInLibrairies", "readLibraries_8cpp.html#abe6239f031880259e4c2e83277ea4b3c", null ],
           [ "handleYamlError", "handleErrors_8cpp.html#a3931b46cb45d08d279deff1b66f27d16", null ],
           [ "loadAll", "loadFiles_8h.html#aff8eb21ced6578063106ab9797151ba1", null ],
           [ "loadDataSeries", "loadFiles_8h.html#ae7e06ed8aa17a4652bbe2c62205c3496", null ],
-          [ "loadLibraries", "readLibraries_8cpp.html#afcca1b64c07d2560f09018ae21643417", null ],
+          [ "loadLibraries", "readLibraries_8cpp.html#a3c78f9b9abef935397782fb2d712d777", null ],
           [ "loadLibraries", "loadFiles_8h.html#aff904c8613f4c1757a9b56fd397fcb19", null ],
-          [ "loadOptimConfig", "readOptimConfig_8cpp.html#aa25971a558acc10720b4ef1db4e6be2c", null ],
-          [ "loadOptimConfig", "loadFiles_8h.html#a209b0e6fb85a837dd5c7a2d22df463b3", null ],
+          [ "loadLibrariesFromYaml", "readLibraries_8cpp.html#ae1560c4512adcd8c7dc0b3673ca9c24a", null ],
+          [ "loadOptimConfigFromYaml", "readOptimConfig_8cpp.html#a61af7bf09ec480b49487d047bd348887", null ],
+          [ "loadOptimConfigFromYaml", "readOptimConfig_8h.html#afc2f325f75ef454d4e5f6d4dcd8ad65b", null ],
           [ "loadParameters", "readParameters_8cpp.html#a851d9bdb147028b9f37d6bb7d4b68ce3", null ],
           [ "loadParameters", "loadFiles_8h.html#aefa634dcb9ba9c6ba4ec4ac55065fe3b", null ],
           [ "loadScenarioGroupRepository", "loadFiles_8h.html#a0090c27f5dec990dc65e6482653feb99", null ],
           [ "loadSystem", "readSystem_8cpp.html#a8babba588d7df856e9efd4ae1350c30d", null ],
           [ "loadSystem", "loadFiles_8h.html#a33a4abfd0fc7d8e50b06ec3bc672e8d9", null ],
           [ "parseModelerParameters", "parseModelerParameters_8h.html#aec770ce15d1ae94b5c46e6d8575f038f", null ],
-          [ "parseScenarioGroupRepository", "readScenarioGroup_8cpp.html#a943db40ecb725367be53737db95dcdb2", null ]
+          [ "parseScenarioGroupRepository", "readScenarioGroup_8cpp.html#a943db40ecb725367be53737db95dcdb2", null ],
+          [ "update", "readLibraries_8cpp.html#af6f4c5ffb877f45090311d523454e265", null ],
+          [ "updateLibrariesWithOptimConfig", "readLibraries_8cpp.html#a41348676606a3f34a484e98ab2fde145", null ],
+          [ "updateSystemModel", "readLibraries_8cpp.html#ac8c0c34381d96d898d7ec85fc31b8819", null ]
         ] ],
         [ "Optimization", null, [
           [ "SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions" ],

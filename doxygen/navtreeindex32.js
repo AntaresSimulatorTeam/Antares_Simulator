@@ -1,10 +1,5 @@
 var NAVTREEINDEX32 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#acffc8adb9d14871e6995de50180cf1f8":[8,0,0,19,5,4,11,0],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html":[8,0,0,19,5,4,128],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a0efa942868c5814bc050a11491e3318f":[8,0,0,19,5,4,128,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a14612c2f5063e747d0fa3e4163bdb46a":[8,0,0,19,5,4,128,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a1624ce82eab9effcd82b2804914e0c0a":[8,0,0,19,5,4,128,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a1b2870db41e73f3c02852fc5e0750de8":[8,0,0,19,5,4,128,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a1d65c4e2f796e2c60321e927b7543da4":[8,0,0,19,5,4,128,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a2a82693904902fb26ec5e84ff62983c9":[8,0,0,19,5,4,128,14],
@@ -249,5 +244,10 @@ var NAVTREEINDEX32 =
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html":[8,0,0,19,5,6,0,1],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a06139289fe774c8911d0b396d2aaff73":[8,0,0,19,5,6,0,1,9],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a09ece722ca44aa446a2af6a3639c9f1f":[8,0,0,19,5,6,0,1,11],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a0d886740a6d460b0c730495e8486efba":[8,0,0,19,5,6,0,1,0]
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a0d886740a6d460b0c730495e8486efba":[8,0,0,19,5,6,0,1,0],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a34a2c72a466e1bd0ec2bddefd02a9fd8":[8,0,0,19,5,6,0,1,5],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a4773647f36139810d10b9f0d2d9ee0d1":[8,0,0,19,5,6,0,1,12],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a4fa3f067c0677361a7e0139277508537":[8,0,0,19,5,6,0,1,7],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a6c37c3ba7dbc7ebc27f5421c0ea1b2f3":[8,0,0,19,5,6,0,1,3],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a8856da4cab8091606805c3ca2204c46c":[8,0,0,19,5,6,0,1,8]
 };

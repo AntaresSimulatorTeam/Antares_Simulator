@@ -1,10 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a70484175188fcdc158658a740917b940":[8,0,0,19,6,6],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#aa223c37a230b8f3ce347606ce3fa05d8":[8,0,0,19,6,2],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#aa3f22eef8a4a0c56884490c755a3e5fd":[8,0,0,19,6,1],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#ae625c9a225b8b34cf95f6bdb59e2a5ad":[8,0,0,19,6,5],
-"classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[8,0,0,19,33],
 "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html#acfc39b20c72ad381aafc51d5610243b2":[8,0,0,19,33,0],
 "classAntares_1_1Solver_1_1SystemLinearProblemBuilder.html":[8,0,0,19,18],
 "classAntares_1_1Solver_1_1SystemLinearProblemBuilder.html#a46558e54a715d34324b8d53a638cac8d":[8,0,0,19,18,2],
@@ -249,5 +244,10 @@ var NAVTREEINDEX27 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#aeb53aa1cdb1825f90ecfffdd38fa2d82":[8,0,0,19,5,4,24,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#af386fba01228e6263b83018d893d692c":[8,0,0,19,5,4,24,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#af86a03c81a4d8982784bf4c96671bb8b":[8,0,0,19,5,4,24,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html":[8,0,0,19,5,4,26]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html":[8,0,0,19,5,4,26],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a1fc77d590567494a5bdefed251019656":[8,0,0,19,5,4,26,24],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a29ff605f45c21be58b31bdf9b4c0e4c9":[8,0,0,19,5,4,26,16],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a2b42e6c167669c8a49f7a556e689792d":[8,0,0,19,5,4,26,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a379835d9ab9e7da6b4a89d5fb848fee0":[8,0,0,19,5,4,26,14],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a3f91680ff0e9c28d3f0075d048f39ca6":[8,0,0,19,5,4,26,7]
 };

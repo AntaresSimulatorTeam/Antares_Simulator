@@ -1,10 +1,5 @@
 var NAVTREEINDEX29 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a1b39751b93451c2080847b7a776fe80b":[8,0,0,19,5,4,56,6],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2927426a44a69a919cb0de33cf9967a4":[8,0,0,19,5,4,56,12],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2abe983705d4bc378af030d1462327a7":[8,0,0,19,5,4,56,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2c26e2792a39e6c82ae09a16051b427b":[8,0,0,19,5,4,56,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2ce2fb5f2e34cd72de118e10874283a9":[8,0,0,19,5,4,56,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a2e5e7afb949bb9dbe5c8cbfb4d140080":[8,0,0,19,5,4,56,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a39d268ad831edd9ce25efda2fe9066db":[8,0,0,19,5,4,56,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a3aab750527eee1c4ffad867e4b18d743":[8,0,0,19,5,4,56,16],
@@ -249,5 +244,10 @@ var NAVTREEINDEX29 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a5d5a41b64c21b9b1f11f9b52f8f764e6":[8,0,0,19,5,4,82,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a6557e2618cf87b8198038b51307fbd99":[8,0,0,19,5,4,82,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a6c506a9b062eef56cd0012e51d83e95d":[8,0,0,19,5,4,82,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a8b1bc1011b3cc941f71a33005a9ed158":[8,0,0,19,5,4,82,12]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#a8b1bc1011b3cc941f71a33005a9ed158":[8,0,0,19,5,4,82,12],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#aaafabb33ac1a55397bac8ba742f1f9aa":[8,0,0,19,5,4,82,16],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ab720009ec458bc105a2e41987da8fa41":[8,0,0,19,5,4,82,15],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ac1ae8240c431a37f44f4a6b42cf9e5a1":[8,0,0,19,5,4,82,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ac317f7bff9a9f2b04ca8d840d4313b86":[8,0,0,19,5,4,82,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html#ae240623e2fd98bd7290277990ff9cc1c":[8,0,0,19,5,4,82,10]
 };

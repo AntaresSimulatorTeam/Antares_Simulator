@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: DecompositionFixture Struct Reference</title>
+<title>Antares Simulator: src/modeler/loadFiles/include/antares/solver/modeler/loadFiles/readOptimConfig.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('structDecompositionFixture.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('readOptimConfig_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,54 +123,28 @@ $(document).ready(function(){initNavTree('structDecompositionFixture.html',''); 
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structDecompositionFixture-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">DecompositionFixture Struct Reference</div>  </div>
+<div class="title">readOptimConfig.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:afdd892ec4eabfa2cc3dddbd0210017c1"><td class="memItemLeft" align="right" valign="top"><a id="afdd892ec4eabfa2cc3dddbd0210017c1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>buildModel</b> ()</td></tr>
-<tr class="separator:afdd892ec4eabfa2cc3dddbd0210017c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad61cd7492abe6c5151976a6f4963835a"><td class="memItemLeft" align="right" valign="top"><a id="ad61cd7492abe6c5151976a6f4963835a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>buildLibraryWithModel</b> ()</td></tr>
-<tr class="separator:ad61cd7492abe6c5151976a6f4963835a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacb2a1dc5a89552cba9da938b0b871b8"><td class="memItemLeft" align="right" valign="top"><a id="aacb2a1dc5a89552cba9da938b0b871b8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>createOptimConfigFile</b> (const std::string &amp;yaml_content)</td></tr>
-<tr class="separator:aacb2a1dc5a89552cba9da938b0b871b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:aeed8ab363034e0677689a338557e296a"><td class="memItemLeft" align="right" valign="top"><a id="aeed8ab363034e0677689a338557e296a"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>studyFolder</b></td></tr>
-<tr class="separator:aeed8ab363034e0677689a338557e296a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a143cd7320f0ab3674554a83368f73133"><td class="memItemLeft" align="right" valign="top"><a id="a143cd7320f0ab3674554a83368f73133"></a>
-std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Library.html">Library</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>libraries</b></td></tr>
-<tr class="separator:a143cd7320f0ab3674554a83368f73133"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe64a0d68fbb98f41d0e91af2349a93f"><td class="memItemLeft" align="right" valign="top"><a id="abe64a0d68fbb98f41d0e91af2349a93f"></a>
-std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable.html">Variable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>variables</b></td></tr>
-<tr class="separator:abe64a0d68fbb98f41d0e91af2349a93f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb2d37133a07fa7bb420ba9be46568d2"><td class="memItemLeft" align="right" valign="top"><a id="abb2d37133a07fa7bb420ba9be46568d2"></a>
-std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Constraint.html">Constraint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>constraints</b></td></tr>
-<tr class="separator:abb2d37133a07fa7bb420ba9be46568d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5232d9ef11a30c4c1d03f6c7e26b1a8d"><td class="memItemLeft" align="right" valign="top"><a id="a5232d9ef11a30c4c1d03f6c7e26b1a8d"></a>
-std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html">Objective</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>objectives</b></td></tr>
-<tr class="separator:a5232d9ef11a30c4c1d03f6c7e26b1a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/tests/src/study/system-model/test_optim-config.cpp</li>
-</ul>
-</div><!-- contents -->
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;antares/io/inputs/yml-optim-config/OptimConfig.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">using namespace </span>Antares::IO::Inputs::YmlOptimConfig;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>Antares::Solver::LoadFiles</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;OptimConfig loadOptimConfigFromYaml(<span class="keyword">const</span> std::filesystem::path&amp; studyPath);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;}</div>
+</div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="structDecompositionFixture.html">DecompositionFixture</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_45215590e5c4d98109af9f0f9921f13a.html">modeler</a></li><li class="navelem"><a class="el" href="dir_03bde25dd5aaf6a48891929ad3468560.html">loadFiles</a></li><li class="navelem"><a class="el" href="dir_bd8fd2ac40d01e398fd429e689e5a220.html">include</a></li><li class="navelem"><a class="el" href="dir_f0a1227722302b853dd1dbdee3f8cd3d.html">antares</a></li><li class="navelem"><a class="el" href="dir_054476bb392b66ea06d3553241bb42da.html">solver</a></li><li class="navelem"><a class="el" href="dir_40456181201b16ba8903bfa7d723e8fd.html">modeler</a></li><li class="navelem"><a class="el" href="dir_01a5b12af437d98f9990671de8689261.html">loadFiles</a></li><li class="navelem"><b>readOptimConfig.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

@@ -153,8 +153,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -294,6 +294,7 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::Simulation::costStatistics", "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html", null ],
     [ "COUTS_DE_TRANSPORT", "structCOUTS__DE__TRANSPORT.html", null ],
+    [ "CreateInputFileFixture", "structCreateInputFileFixture.html", null ],
     [ "CreateOptionsAndSettings", "structCreateOptionsAndSettings.html", null ],
     [ "CsrAreaBalanceData", "structCsrAreaBalanceData.html", null ],
     [ "CsrBindingConstraintHourData", "structCsrBindingConstraintHourData.html", null ],
@@ -333,7 +334,6 @@ var hierarchy =
     [ "Antares::Toolbox::Filter::Operator::DataType", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html", null ],
     [ "Antares::Date::DayInterval", "structAntares_1_1Date_1_1DayInterval.html", null ],
     [ "Antares::DebugData", "structAntares_1_1DebugData.html", null ],
-    [ "DecompositionFixture", "structDecompositionFixture.html", null ],
     [ "Yuni::Default", null, [
       [ "Antares::Solver::Variable::IVariable< Join< LeftT, RightT >, Yuni::Default, VCardJoin >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
@@ -1604,7 +1604,6 @@ var hierarchy =
       [ "Antares::IO::Inputs::SystemConverter::ErrorWhileSplittingLibraryAndModel", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::LibraryNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1LibraryNotFound.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", null ],
-      [ "Antares::IO::Inputs::YmlOptimConfig::ModelObjectNotFound", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ModelObjectNotFound.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
       [ "Antares::Solver::LoadFiles::ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", null ],
       [ "Antares::Solver::Modeler::ModelerError", "classAntares_1_1Solver_1_1Modeler_1_1ModelerError.html", null ],
