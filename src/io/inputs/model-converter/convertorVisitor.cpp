@@ -451,7 +451,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     {
         if (var.id == variableId.at(0)->getText())
         {
-            auto varNode = registry_.create<VariableNode>(var.id, index);
+            auto* varNode = registry_.create<VariableNode>(var.id, index);
             return static_cast<Node*>(
               registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode));
         }
