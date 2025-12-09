@@ -28,7 +28,7 @@
 #include <antares/expressions/visitors/LinearStatus.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/PrintVisitor.h"
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
 
 namespace Antares::Expressions::Visitors
@@ -145,9 +145,9 @@ LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
     LinearStatus base = dispatch(operands[0]);
 
     // Check if exponent is constant in time and scenario
-    TimeIndexVisitor timeVisitor(optimEntityContainer_, component_);
-    auto exponentTimeIndex = timeVisitor.dispatch(operands[1]);
-    if (exponentTimeIndex != Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+    VariabilityVisitor variability_visitor(optimEntityContainer_, component_);
+    auto exponentTimeIndex = variability_visitor.dispatch(operands[1]);
+    if (exponentTimeIndex != Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         PrintVisitor visitor;
         throw std::invalid_argument("exponent must be constant in time and scenario: "

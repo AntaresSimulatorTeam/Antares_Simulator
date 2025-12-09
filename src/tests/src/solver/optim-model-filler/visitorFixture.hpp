@@ -91,7 +91,7 @@ private:
         return setComponentParameterValues(
           {{"param_3", SystemModel::ParameterType::CONSTANT, "3."},
            {"param_m5", SystemModel::ParameterType::CONSTANT, "-5."},
-           {"param_ts", SystemModel::ParameterType::TIMESERIE, "0_1_2"},
+           {"param_ts", SystemModel::ParameterType::TIMESERIES, "0_1_2"},
            {"param1", SystemModel::ParameterType::CONSTANT, "-2."},
            {"param2", SystemModel::ParameterType::CONSTANT, "8."}});
     }

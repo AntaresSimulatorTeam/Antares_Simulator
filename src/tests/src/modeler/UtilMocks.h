@@ -299,6 +299,15 @@ public:
         return 0.;
     }
 
+    void setObjectiveOffset(double) override
+    {
+    }
+
+    double getObjectiveOffset() const override
+    {
+        return {};
+    }
+
     void setMinimization() override
     {
     }
@@ -443,7 +452,7 @@ struct PredfinedSolutionLinearProblemMock: MockLinearProblem
     }
 };
 
-inline Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
+inline Antares::Optimisation::ScenarioGroupRepository makeScenarioGroupRepo(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
     Antares::Optimisation::ScenarioGroupRepository repository;
@@ -455,13 +464,12 @@ inline Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository
 
 struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>
 {
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::ModelerStudy::SystemModel::Model model = createModelWithoutParameters();
     std::vector<Antares::ModelerStudy::SystemModel::Component> components = {
       std::move(createComponent(model))};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
-      = getscenarioGroupRepository(components.front());
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository = makeScenarioGroupRepo(
+      components.front());
 
     MockLinearProblem linearProblem = MockLinearProblem(true);
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};

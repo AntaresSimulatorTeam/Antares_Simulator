@@ -66,6 +66,7 @@ struct Variable
     ValueType variable_type;
     bool time_dependent;
     bool scenario_dependent;
+    std::string location;
 };
 
 struct Port
@@ -85,6 +86,7 @@ struct Constraint
 {
     std::string id;
     std::string expression;
+    std::string location;
 };
 
 struct ExtraOutput
@@ -97,6 +99,7 @@ struct Objective
 {
     std::string id;
     std::string expression;
+    std::string location;
 };
 
 struct Model

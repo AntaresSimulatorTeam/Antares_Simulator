@@ -24,7 +24,6 @@
 
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/EvalVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 #include "UtilMocks.h"

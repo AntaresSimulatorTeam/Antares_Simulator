@@ -22,8 +22,9 @@
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
 #include <antares/expressions/iterators/pre-order.h>
-#include <antares/expressions/nodes/PortFieldNode.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/expressions/expression.h"
+#include "antares/io/inputs/model-converter/NodeChecker.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -31,6 +32,7 @@
 #include "antares/study/system-model/port.h"
 #include "antares/study/system-model/portType.h"
 #include "antares/study/system-model/variable.h"
+using namespace Antares::Expressions::Nodes;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
@@ -70,6 +72,73 @@ PortInDefinition::PortInDefinition(const std::string& portId, const std::string&
     std::runtime_error("In port-field-definitions, for port: " + portId
                        + " , found another port in the definition: " + portInDefId)
 {
+}
+
+static void CommonPreSolve(ForbiddenNodes& f)
+{
+    // constraint, objective and variable bounds should not contain dual or reduced_cost
+    f.addGlobalForbidden<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
+    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max and min
+    f.addForbiddenFor<FunctionNodeType::max, VariableNode>();
+    f.addForbiddenFor<FunctionNodeType::min, VariableNode>();
+    f.addForbiddenFor<FunctionNodeType::max, PortFieldNode>();
+    f.addForbiddenFor<FunctionNodeType::min, PortFieldNode>();
+    f.addForbiddenFor<FunctionNodeType::max, PortFieldSumNode>();
+    f.addForbiddenFor<FunctionNodeType::min, PortFieldSumNode>();
+}
+
+static ForbiddenNodes ForbiddenInConstraint()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        CommonPreSolve(f);
+        f.addGlobalForbidden<PortFieldSumNode>();
+        return f;
+    }();
+    return forbidden;
+}
+
+static ForbiddenNodes ForbiddenInBindingConstraint()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        CommonPreSolve(f);
+        return f;
+    }();
+    return forbidden;
+}
+
+static ForbiddenNodes PreSolveNonConstraint()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        CommonPreSolve(f);
+        f.addGlobalForbidden<ComparisonNode,
+                             EqualNode,
+                             LessThanOrEqualNode,
+                             GreaterThanOrEqualNode,
+                             PortFieldSumNode>();
+        return f;
+    }();
+    return forbidden;
+}
+
+static ForbiddenNodes ForbiddenInExtraOutput()
+{
+    static ForbiddenNodes forbidden = []()
+    {
+        // Initialization code executed ONCE
+        ForbiddenNodes f;
+        // TODO check        //   f.addGlobalForbidden<PortFieldSumNode>();
+        return f;
+    }();
+    return forbidden;
 }
 
 /// Convert portTypes to Antares::ModelerStudy::SystemModel::PortType
@@ -126,6 +195,26 @@ std::vector<ModelerStudy::SystemModel::Parameter> convertParameters(
     return parameters;
 }
 
+Modeler::Config::Location convertLocation(const std::string& locationStr)
+{
+    std::string locLower = locationStr;
+    std::ranges::transform(locLower, locLower.begin(), ::tolower);
+    if (locLower == "master")
+    {
+        return Modeler::Config::Location::MASTER;
+    }
+    if (locLower == "master-and-subproblems")
+    {
+        return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+    if (locLower == "subproblems")
+    {
+        return Modeler::Config::Location::SUBPROBLEMS;
+    }
+
+    throw std::runtime_error("Unknown location: " + locationStr);
+}
+
 /**
  * \brief Converts a YmlModel::ValueType to an SystemModel::ValueType.
  *
@@ -163,16 +252,28 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
     variables.reserve(model.variables.size());
     for (const auto& variable: model.variables)
     {
+        const auto& whatIsForbiddenInVariableBound = PreSolveNonConstraint();
         SM::Expression lb(variable.lower_bound,
                           convertExpressionToNode(variable.lower_bound, model));
+        if (lb.RootNode())
+        {
+            NodeChecker(whatIsForbiddenInVariableBound, variable.lower_bound)
+              .dispatch(lb.RootNode());
+        }
         SM::Expression ub(variable.upper_bound,
                           convertExpressionToNode(variable.upper_bound, model));
+        if (ub.RootNode())
+        {
+            NodeChecker(whatIsForbiddenInVariableBound, variable.upper_bound)
+              .dispatch(ub.RootNode());
+        }
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
                                convertType(variable.variable_type),
                                SM::fromBool<SM::TimeDependent>(variable.time_dependent),
-                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent));
+                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent),
+                               convertLocation(variable.location));
     }
 
     return variables;
@@ -250,7 +351,7 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
             throw PortInDefinition(pfdefinition.port,
                                    dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
-
+        NodeChecker(PreSolveNonConstraint(), pfdefinition.definition).dispatch(nodeRegistry.node);
         portFieldDefinitions.emplace_back(
           *itPort,
           *itField,
@@ -261,12 +362,15 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
 
 static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constraint>& constraints,
                                 const IO::Inputs::YmlModel::Constraint& constraint,
-                                const IO::Inputs::YmlModel::Model& model)
+                                const IO::Inputs::YmlModel::Model& model,
+                                const ForbiddenNodes& forbiddenNodes)
 {
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
+    NodeChecker(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
-                                                                   std::move(nodeRegistry)});
+                                                                   std::move(nodeRegistry)},
+                             convertLocation(constraint.location));
 }
 
 /**
@@ -283,12 +387,12 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
 
     for (const auto& constraint: model.constraints)
     {
-        addSingleConstraint(constraints, constraint, model);
+        addSingleConstraint(constraints, constraint, model, ForbiddenInConstraint());
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint, model);
+        addSingleConstraint(constraints, constraint, model, ForbiddenInBindingConstraint());
     }
     return constraints;
 }
@@ -308,6 +412,7 @@ std::vector<ModelerStudy::SystemModel::ExtraOutput> convertExtraOutputs(
     for (const auto& extraOutput: model.extra_outputs)
     {
         auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
+        NodeChecker(ForbiddenInExtraOutput(), extraOutput.expression).dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
                                   ModelerStudy::SystemModel::Expression{extraOutput.expression,
                                                                         std::move(nodeRegistry)});
@@ -329,9 +434,11 @@ std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
     for (const auto& objective: model.objectives)
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression, model);
+        NodeChecker(PreSolveNonConstraint(), objective.expression).dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
-                                                                      std::move(nodeRegistry)});
+                                                                      std::move(nodeRegistry)},
+                                convertLocation(objective.location));
     }
     return objectives;
 }
