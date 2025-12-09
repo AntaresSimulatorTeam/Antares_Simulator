@@ -1476,7 +1476,8 @@ var namespaces_dup =
           [ "YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData" ],
           [ "SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter" ],
           [ "AllData", "singleProblemGetterImpl_8h.html#a2b9ca4b32a64c5d8437d4c350a5785e3", null ],
-          [ "HydroLevels", "singleProblemGetterImpl_8h.html#afe2acc563fb1a49f02e132fab30bfa79", null ]
+          [ "HydroLevels", "singleProblemGetterImpl_8h.html#afe2acc563fb1a49f02e132fab30bfa79", null ],
+          [ "fillLinksProperties", "singleProblemGetterImpl_8cpp.html#aada1fdb1eb77a1728c77c4d39240dcaa", null ]
         ] ],
         [ "Initialization", null, [
           [ "Error", null, [

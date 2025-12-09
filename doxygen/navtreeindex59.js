@@ -1,5 +1,6 @@
 var NAVTREEINDEX59 =
 {
+"structAntares_1_1Solver_1_1WeeklyProblemId.html":[8,0,0,19,23],
 "structAntares_1_1Solver_1_1WeeklyProblemId.html#a35d3fc35aacffb2e238018bce9147da2":[8,0,0,19,23,2],
 "structAntares_1_1Solver_1_1WeeklyProblemId.html#a7090451986c94235a3c60ab8dbe03a1d":[8,0,0,19,23,1],
 "structAntares_1_1Solver_1_1WeeklyProblemId.html#af63c9340c5aa646452554668c110f07d":[8,0,0,19,23,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX59 =
 "structBB.html#a932a98c0022eff723cb1076b11cd3459":[8,0,47,4],
 "structBB.html#aa0baf92abd88afab02b8c73329b2be41":[8,0,47,3],
 "structBB.html#aae733ddc9b449e6ecc44698589e7704a":[8,0,47,38],
-"structBB.html#ab462a7efde6a7a0abb473f823f1eea23":[8,0,47,16],
-"structBB.html#ab644c481c6525f0ff3841b224123e2d6":[8,0,47,24]
+"structBB.html#ab462a7efde6a7a0abb473f823f1eea23":[8,0,47,16]
 };

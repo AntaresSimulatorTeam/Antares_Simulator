@@ -151,18 +151,18 @@ var NAVTREEINDEX =
 "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2prepro_8h_source.html",
 "modeler__steps_8py.html#aa20861b4b7d40db3245b78f9a82c75dc",
 "renewable_2defines_8h_source.html",
-"standard-page_8hxx_source.html",
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html#a3d4860b65a0ee5ec9e0d5d7207306460",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a74ce32eeac934caba04608683cf13457",
-"structAntares_1_1Solver_1_1WeeklyProblemId.html#a35d3fc35aacffb2e238018bce9147da2",
-"structBB.html#ab8c3361cbb94758f22c13b6389450330",
-"structDONNEES__MENSUELLES__ETENDUES.html#aec8ba8f4b5b1e3fa918f706723618542",
-"structLibraryObjects.html#a9fcf420a76c93ce5acb7976f5845f55e",
-"structPrepareYaml.html#aee37e9fa6924aa5992087f67fcd4c957",
-"structTimeDependentParameterFixture.html#a58e0058bbf113c8e5799efa07fffab51",
-"ts-generator_8h_source.html",
-"utils_8h.html#abf1ed071f48713775fb500e5f54b4d55"
+"spotlight_8hxx_source.html",
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html#a2714fe812a83e7539d59afcf11a4fb3c",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage_1_1Statistics.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7309dce5ec0dd2134b6e2788294af4a1",
+"structAntares_1_1Solver_1_1WeeklyProblemId.html",
+"structBB.html#ab644c481c6525f0ff3841b224123e2d6",
+"structDONNEES__MENSUELLES__ETENDUES.html#aebb6510d52067c4272c094ae968d8c0c",
+"structLibraryObjects.html#a96e5b0162c73283464e9eaf99795eef0",
+"structPrepareYaml.html#ae178284de2027aaec282020edecb88d4",
+"structTimeDependentParameterFixture.html#a554c4666a5d7599badf0328b042eb643",
+"tools_2yby-aggregator_2variable_8h_source.html",
+"utils_8h.html#abde9eaa5a619dca098a7b9e9fd8189d3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

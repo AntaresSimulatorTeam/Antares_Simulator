@@ -1,5 +1,6 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html#a2714fe812a83e7539d59afcf11a4fb3c":[8,0,0,12,0,3,6,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html#a3d4860b65a0ee5ec9e0d5d7207306460":[8,0,0,12,0,3,6,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html#ab3378867f4f625acf685dc6c08dc61bd":[8,0,0,12,0,3,6,2],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html":[8,0,0,12,0,3,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits_3_01SolarTag_01_4.html":[8,0,0,19,5,4,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits_3_01WindTag_01_4.html":[8,0,0,19,5,4,6],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts_1_1Statistics.html":[8,0,0,19,5,4,56,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost_1_1Statistics.html":[8,0,0,19,5,4,38,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage_1_1Statistics.html":[8,0,0,19,5,4,40,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost_1_1Statistics.html":[8,0,0,19,5,4,38,0]
 };

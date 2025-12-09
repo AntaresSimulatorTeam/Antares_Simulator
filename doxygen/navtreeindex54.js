@@ -117,6 +117,7 @@ var NAVTREEINDEX54 =
 "simulator_2windows_2scenario-builder_2panel_8h_source.html":[9,0,0,12,2,2,11,0],
 "simulator_2windows_2simulation_2panel_8h_source.html":[9,0,0,12,2,2,12,0],
 "simulator_2windows_2thermal_2panel_8h_source.html":[9,0,0,12,2,2,14,1],
+"singleProblemGetterImpl_8cpp.html#aada1fdb1eb77a1728c77c4d39240dcaa":[7,0,0,25,0,4],
 "singleProblemGetterImpl_8h.html#a2b9ca4b32a64c5d8437d4c350a5785e3":[7,0,0,25,0,2],
 "singleProblemGetterImpl_8h.html#afe2acc563fb1a49f02e132fab30bfa79":[7,0,0,25,0,3],
 "singleProblemGetterImpl_8h_source.html":[9,0,0,0,1,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX54 =
 "specific__test_8py.html#afe9a58d5dea5dea20d85f938376e69c5":[7,0,39,10],
 "spotlight-provider_8h_source.html":[9,0,0,12,2,2,9,11],
 "spotlight_2spotlight_8h_source.html":[9,0,0,12,1,0,3,9],
-"spotlight_8h_source.html":[9,0,0,12,1,0,5],
-"spotlight_8hxx_source.html":[9,0,0,12,1,0,3,10]
+"spotlight_8h_source.html":[9,0,0,12,1,0,5]
 };

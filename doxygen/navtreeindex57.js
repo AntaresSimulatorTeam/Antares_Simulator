@@ -1,5 +1,6 @@
 var NAVTREEINDEX57 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage_1_1Statistics.html":[8,0,0,19,5,4,40,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html":[8,0,0,19,5,4,8],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows_1_1Statistics.html":[8,0,0,19,5,4,42,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations_1_1Statistics.html":[8,0,0,19,5,4,62,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a8f191a16115a23507ffc4fae82ab40b5":[8,0,0,19,5,4,14,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#adbca1497b750785315490d938a62d0f2":[8,0,0,19,5,4,14,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html":[8,0,0,19,5,4,97],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a5adbc7f59dae68aa48b704007ba8eb0f":[8,0,0,19,5,4,97,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7309dce5ec0dd2134b6e2788294af4a1":[8,0,0,19,5,4,97,4]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a5adbc7f59dae68aa48b704007ba8eb0f":[8,0,0,19,5,4,97,1]
 };
