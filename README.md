@@ -69,7 +69,6 @@ or [its sources](docs/developer-guide/0-Introduction.md).
 * [src/libs/](src/libs)           - miscellaneous Antares_Simulator libraries.
 * [src/solver/](src/solver)     - simulation and optimization part.
 * [src/tools/](src/tools)        - miscellaneous tools for dataset management.
-* [src/ui/](src/ui)           - Graphic user interface.
 
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml/badge.svg?branch=develop
 

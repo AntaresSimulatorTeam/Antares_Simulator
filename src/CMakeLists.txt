@@ -181,7 +181,7 @@ endif ()
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
-option(BUILD_UI "Build antares ui simulator" ON)
+set(BUILD_UI OFF CACHE BOOL "Build antares ui simulator" FORCE)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
 option(BUILD_TOOLS "Build antares tools" OFF)
@@ -250,12 +250,6 @@ else ()
     endif ()
 endif ()
 
-#wxWidget not needed for all library find is done in ui CMakeLists.txt
-if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
-    #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
-    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
-endif ()
-
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
 
@@ -272,10 +266,6 @@ add_subdirectory("ext/yuni/src")
 OMESSAGE("") # empty line
 
 # Sub Directories
-if (BUILD_UI)
-    add_compile_definitions(BUILD_UI)
-    add_subdirectory(ui)  #all antares ui libs + antares simulator
-endif ()
 
 
 add_subdirectory(api)

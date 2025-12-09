@@ -38,7 +38,6 @@
 
 #include "constants.h"
 #include "links.h"
-#include "ui.h"
 
 namespace Antares::Data
 {
@@ -297,12 +296,6 @@ public:
     uint filterYearByYear = filterAll;
     //@}
 
-    //! \name UI
-    //@{
-    //! Information for the UI
-    std::unique_ptr<AreaUI> ui;
-    //@}
-
     //! \name Dynamic
     //@{
     /*!
@@ -323,7 +316,6 @@ public:
     //@}
 
 private:
-    void internalInitialize();
     void createMissingTimeSeries();
     void createMissingPrepros();
 

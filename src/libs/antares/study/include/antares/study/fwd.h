@@ -42,7 +42,6 @@ class StudyLoadOptions;
 class Area;
 class AreaLink;
 class AreaList;
-class AreaUI;
 class ThermalCluster;
 class RenewableCluster;
 
@@ -54,8 +53,6 @@ class BindingConstraint;
 class BindingConstraintsRepository;
 
 class StudyRuntimeInfos;
-
-class UIRuntimeInfo;
 
 class Correlation;
 

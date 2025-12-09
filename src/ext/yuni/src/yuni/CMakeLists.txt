@@ -120,11 +120,6 @@ if(YUNI_MODULE_GRAPHICS)
 	endif()
 endif()
 
-if(YUNI_MODULE_UI)
-	include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ui.cmake")
-endif()
-
-
 
 if(YUNI_MODULE_MEDIA)
 	include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/media.cmake")

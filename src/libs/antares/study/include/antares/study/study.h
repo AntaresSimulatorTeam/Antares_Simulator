@@ -51,8 +51,6 @@ namespace Antares::Data
 ** \brief Antares Study
 */
 
-class UIRuntimeInfo;
-
 class Study: public Yuni::NonCopyable<Study>, public LayerData
 {
 public:
@@ -566,11 +564,6 @@ public:
     StudyRuntimeInfos runtime;
 
     // Antares::Solver::Variable::State* state;
-
-    /*!
-    ** \brief Specific data related to the User Interface
-    */
-    UIRuntimeInfo* uiinfo = nullptr;
 
     /*!
     ** \brief The file extension for file within the input ('txt' or 'csv')

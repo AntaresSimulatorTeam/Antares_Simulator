@@ -209,14 +209,6 @@ static bool AreaListSaveToFolderSingleArea(const Area& area,
         ret = false;
     }
 
-    // Data related to User Interface
-    if (area.ui && area.ui->modified())
-    {
-        buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
-                       << "ui.ini";
-        ret = area.ui->saveToFile(buffer) && ret;
-    }
-
     // Nodal optimization
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
                    << "optimization.ini";
@@ -908,18 +900,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         fs::path folder = study.folderInput / "links" / area.id.c_str();
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
-    }
-
-    // TODO remove with GUI
-    if (JIT::usedFromGUI)
-    {
-        if (!area.ui)
-        {
-            area.ui = std::make_unique<AreaUI>();
-        }
-
-        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP << "ui.ini";
-        ret = area.ui->loadFromFile(buffer) && ret;
     }
 
     bool averageTs = (study.usedByTheSolver && study.parameters.derated);

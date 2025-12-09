@@ -51,13 +51,6 @@ set(SRC_AREAS
 source_group("study\\area" FILES ${SRC_AREAS})
 
 
-set(SRC_STUDY_AREA_UI
-        include/antares/study/area/ui.h
-        area/ui.cpp
-)
-source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
-
-
 set(SRC_STUDY_PART_COMMON
         parts/common/cluster.cpp
         include/antares/study/parts/common/cluster.h
@@ -133,12 +126,6 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/hydromaxtimeseriesreader.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
-
-set(SRC_STUDY_UI
-        include/antares/study/ui-runtimeinfos.h
-        ui-runtimeinfos.cpp
-)
-source_group(study\\UI FILES ${SRC_STUDY_UI})
 
 set(SRC_STUDY_PARAMETERS
         include/antares/study/parameters.h
@@ -269,8 +256,6 @@ set(SRC_ALL
         ${SRC_STDCXX}
         ${SRC_AREAS}
         ${SRC_XCAST}
-        ${SRC_STUDY_AREA_UI}
-        ${SRC_STUDY_UI}
         ${SRC_STUDY_PARAMETERS}
         ${SRC_STUDY_FINDER}
         ${SRC_STUDY_BINDING_CONSTRAINT}

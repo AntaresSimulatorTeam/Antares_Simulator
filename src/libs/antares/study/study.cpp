@@ -43,7 +43,6 @@
 #include "antares/study/runtime.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/scenario-builder/updater.hxx"
-#include "antares/study/ui-runtimeinfos.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
@@ -91,12 +90,6 @@ Study::Study(bool forTheSolver):
     preproWindCorrelation.timeSeries = timeSeriesWind;
     preproHydroCorrelation.timeSeries = timeSeriesHydro;
 
-    // Data related to the GUI
-    if (JIT::usedFromGUI)
-    {
-        uiinfo = new UIRuntimeInfo(*this);
-        uiinfo->reloadAll();
-    }
 }
 
 Study::~Study()
@@ -107,7 +100,6 @@ Study::~Study()
 void Study::clear()
 {
     scenarioRules.reset();
-    FreeAndNil(uiinfo);
 
     // areas
     setsOfAreas.clear();
@@ -168,15 +160,6 @@ void Study::createAsNew()
     // Scenario Builder
     scenarioRulesDestroy();
 
-    // Cache
-    if (JIT::usedFromGUI)
-    {
-        if (not uiinfo)
-        {
-            uiinfo = new UIRuntimeInfo(*this);
-        }
-        uiinfo->reloadAll();
-    }
     // Reduce memory footprint
     reduceMemoryUsage();
 }
@@ -514,10 +497,6 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
         area->resetToDefaultValues();
     }
 
-    if (uiinfo)
-    {
-        uiinfo->reload();
-    }
     return area;
 }
 
@@ -537,7 +516,7 @@ bool Study::areaDelete(Area* area)
     logs.info() << "destroying the area: " << area->name;
 
     // The new scope is mandatory to rebuild the correlation matrices
-    // and the scenario builder data *before* reloading uiinfo.
+    // and the scenario builder data.
     {
         // Updating all hydro allocation
         areas.each([&area](Data::Area& areait) { areait.hydro.allocation.remove(area->id); });
@@ -563,10 +542,6 @@ bool Study::areaDelete(Area* area)
         // delete updates here
     }
 
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
     return true;
 }
 
@@ -622,11 +597,6 @@ void Study::areaDelete(Area::Vector& arealist)
         }
     }
 
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
-
     if (arealist.size() > 1)
     {
         logs.info() << arealist.size() << " areas have been destroyed";
@@ -652,10 +622,6 @@ bool Study::linkDelete(AreaLink* lnk)
     // The area in the study must be removed
     AreaLinkRemove(lnk);
 
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
     return true;
 }
 
@@ -733,11 +699,6 @@ bool Study::areaRename(Area* area, AreaName newName)
 
     // ReAdjust all interconnections
     areas.fixOrientationForAllInterconnections(bindingConstraints);
-
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
 
     return ret;
 }
@@ -834,11 +795,6 @@ bool Study::clusterRename(Cluster* cluster, std::string newName)
     }
 
     ScenarioBuilderUpdater updaterSB(*this);
-
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
 
     return ret;
 }
