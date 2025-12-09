@@ -1281,27 +1281,6 @@ Area* AreaList::findFromName(const AreaName& name)
     return (i != this->areas.end()) ? i->second : nullptr;
 }
 
-Area* AreaList::findFromPosition(const int x, const int y) const
-{
-    if (!this->areas.empty())
-    {
-        auto end = this->areas.rend();
-        double nearestDistance = 5;
-        Area* nearestItem = nullptr;
-        for (auto i = this->areas.rbegin(); i != end; ++i)
-        {
-            auto lastArea = i->second;
-            if (lastArea->ui && std::abs(lastArea->ui->x - x) < nearestDistance
-                && std::abs(lastArea->ui->y - y) < nearestDistance)
-            {
-                nearestItem = lastArea;
-            }
-        }
-        return nearestItem;
-    }
-    return nullptr;
-}
-
 const Area* AreaList::findFromName(const AreaName& name) const
 {
     AreaName id = transformNameIntoID(name);

@@ -85,27 +85,6 @@ public:
     */
     ~Area();
 
-    //@}
-
-    // !\name isVisibleOnLayer
-    //@{
-    /*!
-    ** \brief check visibility on layer
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const
-    {
-        if (ui == nullptr)
-        {
-            return false;
-        }
-
-        std::vector<size_t>& layerList = ui->mapLayersVisibilityList;
-        std::vector<size_t>::iterator layerPosition = std::find(layerList.begin(),
-                                                                layerList.end(),
-                                                                layerID);
-        return layerPosition != layerList.end();
-    }
-
     //! \name Links
     //@{
     /*!
@@ -503,8 +482,6 @@ public:
     ** \brief Find an area from its name
     */
     Area* findFromName(const AreaName& name);
-
-    Area* findFromPosition(const int x, const int y) const;
 
     /*!
     ** \brief Find an area from its name (const)

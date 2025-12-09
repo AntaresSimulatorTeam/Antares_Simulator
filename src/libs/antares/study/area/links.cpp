@@ -269,15 +269,6 @@ void AreaLink::reverse()
     indirectCapacities.markAsModified();
 }
 
-bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
-{
-    if (from && with)
-    {
-        return from->isVisibleOnLayer(layerID) && with->isVisibleOnLayer(layerID);
-    }
-    return false;
-}
-
 AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 {
     /* Asserts */

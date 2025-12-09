@@ -322,10 +322,6 @@ void Area::markAsModified() const
             (i->second)->markAsModified();
         }
     }
-    if (ui)
-    {
-        ui->markAsModified();
-    }
 }
 
 void Area::detachLinkFromID(const AreaName& id)

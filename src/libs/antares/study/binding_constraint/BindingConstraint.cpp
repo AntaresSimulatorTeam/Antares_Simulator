@@ -502,56 +502,6 @@ uint BindingConstraint::synthesisFilter() const
     return pFilterSynthesis;
 }
 
-bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
-{
-    if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
-    {
-        return true;
-    }
-
-    auto endWeights = this->end();
-
-    for (auto j = this->begin(); j != endWeights; ++j)
-    {
-        auto* areaLink = j->first;
-        if (!areaLink)
-        {
-            continue;
-        }
-
-        if (!areaLink->isVisibleOnLayer(layerID) || j->second == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
-{
-    if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
-    {
-        return true;
-    }
-
-    auto endWeights = pClusterWeights.end();
-
-    for (auto j = pClusterWeights.begin(); j != endWeights; ++j)
-    {
-        auto* cluster = j->first;
-        if (!cluster)
-        {
-            continue;
-        }
-
-        if (!cluster->isVisibleOnLayer(layerID) || j->second == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
 double BindingConstraint::weight(const AreaLink* lnk) const
 {
     auto i = pLinkWeights.find(lnk);
