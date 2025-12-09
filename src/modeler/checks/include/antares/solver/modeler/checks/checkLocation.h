@@ -33,7 +33,7 @@ void checkLocations(Antares::Modeler::Data& data);
 // shouldn't be used outside, here for unit tests
 void checkExpression(const Antares::Expressions::Nodes::Node* expression,
                      const Antares::Modeler::Config::Location& location,
-                     Antares::ModelerStudy::SystemModel::Model& model,
+                     const Antares::ModelerStudy::SystemModel::Model& model,
                      const std::string& exprStr,
                      const std::string& errorMsgForPortFieldSum = "");
 

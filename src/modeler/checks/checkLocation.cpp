@@ -34,7 +34,7 @@ using namespace Antares::Modeler::Config;
 namespace Antares::Modeler::Checks
 {
 
-void checkModel(Model& model) // TODO use const
+void checkModel(const Model& model)
 {
     for (const auto& constraint: model.Constraints())
     {
@@ -62,18 +62,18 @@ void checkModel(Model& model) // TODO use const
     }
 }
 
-void checkLocations(Modeler::Data& data) // TODO use const
+void checkLocations(const Modeler::Data& data)
 {
-    for (auto& lib: data.libraries)
+    for (const auto& lib: data.libraries)
     {
-        for (auto& [modelName, model]: lib.Models())
+        for (const auto& [_, model]: lib.Models())
         {
             checkModel(model);
         }
     }
 }
 
-void checkFunctionNode(const Node& node, Model& model, const std::string& exprStr)
+void checkFunctionNode(const Node& node, const Model& model, const std::string& exprStr)
 {
     // dual and reduced_cost can only be used in subproblems
     if (auto* functionNode = dynamic_cast<const FunctionNode*>(&node); functionNode)
@@ -119,7 +119,7 @@ void checkFunctionNode(const Node& node, Model& model, const std::string& exprSt
 
 void checkExpression(const Node* expression,
                      const Location& location,
-                     Model& model,
+                     const Model& model,
                      const std::string& exprStr,              // used for error msgs
                      const std::string& errorMsgForPortField) // used for error msgs
 {

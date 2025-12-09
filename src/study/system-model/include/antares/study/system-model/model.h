@@ -108,16 +108,6 @@ public:
         return extraOutputs_;
     }
 
-    void addComponentConnection(const std::string localPortId, ConnectionEnd& connection)
-    {
-        componentsConnections_[localPortId].push_back(connection);
-    }
-
-    const std::map<std::string, std::vector<ConnectionEnd>>& ComponentsConnections() const
-    {
-        return componentsConnections_;
-    }
-
 private:
     friend class ModelBuilder;
     std::string id_;
@@ -130,9 +120,6 @@ private:
     std::vector<Objective> objectives_;
 
     PortFieldMap portFieldDefinitions_;
-
-    // used to check locations for portFieldSum
-    std::map<std::string, std::vector<ConnectionEnd>> componentsConnections_;
 };
 
 // List of IDs used internally to check for uniqueness of IDs at component level
