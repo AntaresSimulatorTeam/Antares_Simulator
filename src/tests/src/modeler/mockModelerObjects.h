@@ -26,12 +26,16 @@
 
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters(
   std::vector<Antares::ModelerStudy::SystemModel::Parameter> params);
+
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
+
 Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
+
 Antares::ModelerStudy::SystemModel::Component createComponent(
   Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id = "component",
   unsigned index = 0);
+
 Antares::ModelerStudy::SystemModel::Component createComponent(
   Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id,

@@ -2,17 +2,19 @@ include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
 
 set(SRC_UTILS_FOR_COMPONENT_FILLER_TESTS
-				component-filler-utils/variables-creators.h
-				component-filler-utils/variables-creators.cpp
-				component-filler-utils/objectives-creators.h
-				component-filler-utils/objectives-creators.cpp
-				component-filler-utils/constraints-creators.h
-				component-filler-utils/constraints-creators.cpp)
+        component-filler-utils/variables-creators.h
+        component-filler-utils/variables-creators.cpp
+        component-filler-utils/objectives-creators.h
+        component-filler-utils/objectives-creators.cpp
+        component-filler-utils/constraints-creators.h
+        component-filler-utils/constraints-creators.cpp)
 
 add_boost_test(unit-tests-for-component-filler
         SRC
         test_main.cpp
-        test_componentFiller.cpp
+        test_componentFiller_addVariables.cpp
+        test_componentFiller_addConstraints.cpp
+        test_componentFiller_addObjective.cpp
         test-component-filler-to-master-pb.cpp
         test_linearExpression.cpp
         test_readLinearExpressionVisitor.cpp

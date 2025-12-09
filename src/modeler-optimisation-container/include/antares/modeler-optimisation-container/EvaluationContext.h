@@ -73,13 +73,7 @@ public:
     };
 
 private:
-  
-        const ModelerStudy::SystemModel::Component* component_;
-
-
-    /**
-     * @brief A map storing variable values.
-     */
+    const ModelerStudy::SystemModel::Component* component_;
     const Optimisation::LinearProblemApi::ILinearProblemData* data_;
     const Optimisation::LinearProblemApi::IScenario* scenario_;
 };

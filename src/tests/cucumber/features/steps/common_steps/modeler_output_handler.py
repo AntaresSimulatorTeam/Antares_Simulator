@@ -5,11 +5,13 @@ import numpy as np
 import common_steps.mps_utils as mpu
 import os
 
+
 def read_if_exists(path, readfunc):
     if (os.path.exists(path)):
         return readfunc(path)
     else:
         return None
+
 
 class invest_problems:
     def __init__(self, master, subproblem, structure):

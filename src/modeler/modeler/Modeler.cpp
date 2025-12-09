@@ -61,7 +61,6 @@ public:
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
       BendersDecomposition* bendersDecomposition):
         system_(system),
-        dataSeries_(dataSeries),
         scenarioGroupRepository_(scenarioGroupRepository),
         optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository),
         bendersDecomposition_(bendersDecomposition)
@@ -97,7 +96,6 @@ public:
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    const LinearProblemApi::ILinearProblemData& dataSeries_;
     const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
     Optimisation::OptimEntityContainer optimEntityContainer_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
