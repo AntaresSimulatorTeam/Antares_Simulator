@@ -169,11 +169,11 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateIn
         - id: x
       objective-contributions:
         - id: obj_1
-          expression: x = 0
+          expression: x
         - id: obj_2
-          expression: x = 0
+          expression: x
         - id: obj_3
-          expression: x = 0)";
+          expression: x)";
 
     createLibraryFile(yamlContent);
 
@@ -253,7 +253,7 @@ BOOST_FIXTURE_TEST_CASE(objective_does_not_exist_in_model___exception_raised,
         - id: x
       objective-contributions:
         - id: my_obj
-          expression: x = 0)";
+          expression: x)";
 
     createLibraryFile(yamlContent);
 
@@ -312,7 +312,7 @@ BOOST_FIXTURE_TEST_CASE(constraint_does_not_exist_in_model___exception_raised,
         - id: x
       constraints:
         - id: my_constraint
-          expression: x = 0)";
+          expression: x)";
 
     createLibraryFile(yamlContent);
 
