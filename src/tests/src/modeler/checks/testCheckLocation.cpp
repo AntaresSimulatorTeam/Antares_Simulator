@@ -41,6 +41,9 @@ using namespace Antares::Modeler::Config;
 struct Fixture
 {
     ModelBuilder modelBuilder;
+    SystemBuilder systemBuilder;
+    ComponentBuilder componentBuilder;
+
     Antares::Expressions::Registry<Node> registry;
 };
 
@@ -53,19 +56,22 @@ BOOST_FIXTURE_TEST_CASE(one_var_good_one_var_throw, Fixture)
     Node* root = registry.create<SumNode>(goodLocVar, badLocVar);
 
     std::vector<Variable> variables;
-    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}});
-    variables.push_back({"var2", {}, {}, ValueType::BOOL, {}, {}});
-    variables[0].setLocation(Location::SUBPROBLEMS);
-    variables[1].setLocation(Location::MASTER);
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::SUBPROBLEMS});
+    variables.push_back({"var2", {}, {}, ValueType::BOOL, {}, {}, Location::MASTER});
 
     auto model = modelBuilder.withVariables(std::move(variables)).withId("base model").build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
 
-    BOOST_CHECK_EXCEPTION(checkExpression(root, Location::SUBPROBLEMS, model, "var1 + var2"),
-                          LocationError,
-                          checkMessage(
-                            "Model 'base model': In expression 'var1 + var2': Error for variable "
-                            "'var2': Location doesn't match the expression location (variable "
-                            "location: master, expression location: subproblems)"));
+    BOOST_CHECK_EXCEPTION(
+      checkExpression(root, Location::SUBPROBLEMS, model, system, "var1 + var2"),
+      LocationError,
+      checkMessage("Model 'base model': In expression 'var1 + var2': Error for variable "
+                   "'var2': Location doesn't match the expression location (variable "
+                   "location: master, expression location: subproblems)"));
 }
 
 BOOST_FIXTURE_TEST_CASE(reduced_cost_throw, Fixture)
@@ -74,13 +80,18 @@ BOOST_FIXTURE_TEST_CASE(reduced_cost_throw, Fixture)
                                                registry.create<VariableNode>("var", 0));
 
     std::vector<Variable> variables;
-    variables.push_back({"var", {}, {}, ValueType::FLOAT, {}, {}});
-    variables[0].setLocation(Location::MASTER_AND_SUBPROBLEMS);
+    variables.push_back(
+      {"var", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER_AND_SUBPROBLEMS});
 
     auto model = modelBuilder.withVariables(std::move(variables)).withId("base model").build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
 
     BOOST_CHECK_EXCEPTION(
-      checkExpression(root, Location::SUBPROBLEMS, model, "reduced_cost(var)"),
+      checkExpression(root, Location::SUBPROBLEMS, model, system, "reduced_cost(var)"),
       LocationError,
       checkMessage("Model 'base model': In expression 'reduced_cost(var)': Error for variable "
                    "'var': reduced_cost can only be used on variables located in subproblems"));
@@ -93,12 +104,16 @@ BOOST_FIXTURE_TEST_CASE(dual_throw, Fixture)
                                                registry.create<LiteralNode>(0));
 
     std::vector<Constraint> constraints;
-    constraints.push_back({"constraint", {}});
-    constraints[0].setLocation(Location::MASTER_AND_SUBPROBLEMS);
+    constraints.push_back({"constraint", {}, Location::MASTER_AND_SUBPROBLEMS});
     auto model = modelBuilder.withConstraints(std::move(constraints)).withId("base model").build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
 
     BOOST_CHECK_EXCEPTION(
-      checkExpression(root, Location::SUBPROBLEMS, model, "dual(constraint)"),
+      checkExpression(root, Location::SUBPROBLEMS, model, system, "dual(constraint)"),
       LocationError,
       checkMessage("Model 'base model': In expression 'dual(constraint)': Error for constraint "
                    "'constraint': dual can only be used on constraints located in subproblems"));
@@ -115,8 +130,7 @@ BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
 
     // var setup
     std::vector<Variable> variables;
-    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}});
-    variables[0].setLocation(Location::SUBPROBLEMS);
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::SUBPROBLEMS});
 
     // ports setup
     PortField portfield("field");
@@ -130,9 +144,14 @@ BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
                    .withPortFieldDefinitions(std::move(portFieldDefs))
                    .withId("base model")
                    .build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
 
     BOOST_CHECK_EXCEPTION(
-      checkExpression(pfNode, Location::MASTER, model, "port.field"),
+      checkExpression(pfNode, Location::MASTER, model, system, "port.field"),
       LocationError,
       checkMessage(
         "In model 'base model': In expression 'port.field': this port field definition "
@@ -155,10 +174,9 @@ BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
 
     // var setup
     std::vector<Variable> variables;
-    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}});
-    variables.push_back({"var2", {}, {}, ValueType::FLOAT, {}, {}});
-    variables[0].setLocation(Location::MASTER_AND_SUBPROBLEMS);
-    variables[1].setLocation(Location::MASTER);
+    variables.push_back(
+      {"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER_AND_SUBPROBLEMS});
+    variables.push_back({"var2", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER});
 
     // ports setup
     PortField portfield("field");
@@ -172,9 +190,14 @@ BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
                    .withPortFieldDefinitions(std::move(portFieldDefs))
                    .withId("base model")
                    .build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
 
     BOOST_CHECK_EXCEPTION(
-      checkExpression(root, Location::MASTER_AND_SUBPROBLEMS, model, "port.field + var2"),
+      checkExpression(root, Location::MASTER_AND_SUBPROBLEMS, model, system, "port.field + var2"),
       LocationError,
       checkMessage("Model 'base model': In expression 'port.field + var2': Error for variable "
                    "'var2': Location doesn't match the expression location (variable "
@@ -194,8 +217,7 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
 
     // var setup
     std::vector<Variable> variables;
-    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}});
-    variables[0].setLocation(Location::MASTER);
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER});
 
     // ports setup
     PortField portfield("field");
@@ -213,15 +235,20 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
                     .withPortFieldDefinitions(std::move(portFieldDefs))
                     .build();
 
-    ComponentBuilder componentBuilder;
     auto component1 = componentBuilder.withModel(&model1).withId("comp1").build();
     auto component2 = componentBuilder.withModel(&model2).withId("comp2").build();
 
     component1.addComponentConnection("port",
                                       ConnectionEnd(&component2, &model2.Ports().at("port")));
 
+    auto system = systemBuilder.withComponents({component1, component2}).withId("system").build();
+
     BOOST_CHECK_EXCEPTION(
-      checkExpression(pfSumNode, Location::SUBPROBLEMS, model1, "sum_connections(port.field)"),
+      checkExpression(pfSumNode,
+                      Location::SUBPROBLEMS,
+                      model1,
+                      system,
+                      "sum_connections(port.field)"),
       LocationError,
       checkMessage(
         "In model 'model1': In expression 'sum_connections(port.field)': this "
