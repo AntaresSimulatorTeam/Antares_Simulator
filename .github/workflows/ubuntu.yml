@@ -32,6 +32,7 @@ env:
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
+  PYTHON_VERSION: "3.12"
 
 jobs:
 
@@ -105,7 +106,7 @@ jobs:
       id: setup-python
       uses: actions/setup-python@v6
       with:
-        python-version: '3.12'
+        python-version: ${ { env.PYTHON_VERSION } }
 
     - name: Install dependencies
       run: |
@@ -118,6 +119,8 @@ jobs:
         python -m pip install "xpress==9.6.0"
         XPRESS_DIR=${{ env.pythonLocation }}/lib/python${{ env.PYTHON_VERSION }}/site-packages/xpresslibs
         echo "XPRESSDIR=$XPRESS_DIR" >> $GITHUB_ENV
+        echo $XPRESS_DIR
+        ls -l $XPRESS_DIR/lib/libxprs.so.45
         echo "XPAUTH_PATH=${{ env.pythonLocation }}/lib/python${{ env.PYTHON_VERSION }}/site-packages/xpress/license/community-xpauth.xpr" >> $GITHUB_ENV
         echo "Create symbolic link for XPRESS library file because it is missing in the Python installation"
         ln -s $XPRESS_DIR/lib/libxprs.so.45 $XPRESS_DIR/lib/libxprs.so
