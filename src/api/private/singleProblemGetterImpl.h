@@ -21,12 +21,17 @@ struct YearlyData
 
 using AllData = std::map<unsigned int /* year */, YearlyData>;
 
-class SingleProblemGetter
+class SingleProblemGetter final
 {
 public:
+    explicit SingleProblemGetter(const std::filesystem::path& studyPath);
     explicit SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study);
     ConstantDataFromAntares getConstantData();
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
+    std::vector<WeeklyProblemId> getProblemIds() const;
+
+    void writeNTCTimeSeries(const std::filesystem::path& outputDir);
+    void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
 
 private:
     const YearlyData& getYearlyData(unsigned year);

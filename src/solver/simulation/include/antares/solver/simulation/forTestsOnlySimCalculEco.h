@@ -18,16 +18,10 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
 #pragma once
+#include <antares/solver/simulation/sim_structure_probleme_economique.h>
+#include <antares/study/area/area.h>
 
-#include <antares/io/inputs/yml-optim-config/OptimConfig.h>
-#include "antares/study/system-model/library.h"
+void importCapacityReservations(Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
 
-namespace Antares::IO::Inputs::YmlOptimConfig
-{
-
-void updateLibrairies(const OptimConfig& ymlOptimConfig,
-                      std::vector<ModelerStudy::SystemModel::Library>& libraries);
-
-} // namespace Antares::IO::Inputs::YmlOptimConfig
+void importHydroReserves(Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);

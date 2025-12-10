@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/PMaxReserve.h"
-using namespace reserve;
 
 void PMaxReserve::add(int pays, int reserve, int cluster, int pdt)
 {

@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/STReleaseMaxReserve.h"
-using namespace reserve;
 
 void STReleaseMaxReserve::add(int pays, int reserve, int cluster, int pdt)
 {

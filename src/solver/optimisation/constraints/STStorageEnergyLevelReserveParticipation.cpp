@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/STStorageEnergyLevelReserveParticipation.h"
-using namespace reserve;
 
 void STStorageEnergyLevelReserveParticipation::add(int pays, int cluster, int reserve, int pdt)
 {
@@ -7,7 +6,7 @@ void STStorageEnergyLevelReserveParticipation::add(int pays, int cluster, int re
     CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
                                                   .areaCapacityReservations[reserve];
 
-    if (capacityReservation.maxActivationDuration > 0)
+    if (capacityReservation.referenceActivationDuration > 0)
     {
         if (!data.Simulation)
         {
@@ -19,14 +18,14 @@ void STStorageEnergyLevelReserveParticipation::add(int pays, int cluster, int re
             // R_{min,res} : max power participation ratio
             // R_up : max stock level
             {
-                double sign = capacityReservation.type == Type::UP ? -1.0 : 1.0;
+                double sign = capacityReservation.type == ReserveType::UP ? -1.0 : 1.0;
 
                 RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation
                   = capacityReservation.AllSTStorageReservesParticipation[cluster];
 
                 builder.updateHourWithinWeek(pdt);
 
-                for (int t = 0; t < capacityReservation.maxActivationDuration; t++)
+                for (int t = 0; t < capacityReservation.referenceActivationDuration; t++)
                 {
                     builder.STStorageClusterReserveParticipation(
                       capacityReservation.type,

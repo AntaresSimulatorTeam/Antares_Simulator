@@ -36,7 +36,7 @@ public:
                                             int offset = 0,
                                             int delta = 0);
 
-    int& STStorageClusterReserveParticipation(reserve::Type type,
+    int& STStorageClusterReserveParticipation(ReserveType type,
                                               unsigned int index,
                                               unsigned int hourInWeek,
                                               int offset = 0,
@@ -52,7 +52,7 @@ public:
                                                    int offset = 0,
                                                    int delta = 0);
 
-    int& HydroReserveParticipation(reserve::Type type,
+    int& HydroReserveParticipation(ReserveType type,
                                    unsigned int index,
                                    unsigned int hourInWeek,
                                    int offset = 0,

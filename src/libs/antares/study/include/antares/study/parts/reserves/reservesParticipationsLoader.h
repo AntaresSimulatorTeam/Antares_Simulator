@@ -158,7 +158,7 @@ class ThermalReserveLoader: public ReserveParticipationLoader<ThermalReserveLoad
                 {
                     if (!cluster->reserveParticipationContainer)
                     {
-                        throw std::out_of_range(
+                        throw std::runtime_error(
                           "Area " + area.name + ", " + clusterName
                           + " : trying to add symmetries without any reserves participations");
                     }
@@ -324,7 +324,7 @@ class HydroReserveLoader: public ReserveParticipationLoader<HydroReserveLoader>
         auto& reserveParticipationContainer = area.hydro.reserveParticipationContainer;
         if (!area.hydro.reserveParticipationContainer)
         {
-            throw std::out_of_range(
+            throw std::runtime_error(
               "Area " + area.name
               + ", hydro : trying to add symmetries without any reserves participations");
         }

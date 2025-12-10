@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/STStorageLevelReserveParticipation.h"
-using namespace reserve;
 
 void STStorageLevelReserveParticipation::add(int pays, int cluster, int pdt)
 {
@@ -22,7 +21,7 @@ void STStorageLevelReserveParticipation::add(int pays, int cluster, int pdt)
         // P_{res} : power participation for reserve up res
         // R_{min,res} : max power participation ratio
         // R_down : min stock level
-        for (auto type: {reserve::Type::DOWN, reserve::Type::UP})
+        for (auto type: {ReserveType::DOWN, ReserveType::UP})
         {
             builder.updateHourWithinWeek(pdt);
 
@@ -42,7 +41,7 @@ void STStorageLevelReserveParticipation::add(int pays, int cluster, int pdt)
             if (builder.NumberOfVariables() > 0)
             {
                 builder.ShortTermStorageLevel(globalClusterIdx,
-                                              type == reserve::Type::DOWN ? 1. : -1.);
+                                              type == ReserveType::DOWN ? 1. : -1.);
                 builder.lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
                   .reservesIndices.value()

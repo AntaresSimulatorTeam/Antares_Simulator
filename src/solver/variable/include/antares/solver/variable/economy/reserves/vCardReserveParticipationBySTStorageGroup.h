@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2023 RTE
+** Copyright 2007-2025 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -26,78 +26,12 @@
 */
 #pragma once
 
-#include "../../storage/results.h"
+#include "reserveParticipationBase.h"
 
-namespace Antares
+namespace Antares::Solver::Variable::Economy::Reserves
 {
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
-{
-struct VCardReserveParticipationBySTStorageGroup
-{
-    //! Caption
-    static std::string Caption()
-    {
-        return "SHORT TERM STORAGE GROUP PARTICIPATION TO RESERVE";
-    }
 
-    //! Unit
-    static std::string Unit()
-    {
-        return "MWh";
-    }
+using VCardReserveParticipationBySTStorageGroup = VCardReserveParticipationBase<
+  STStorageGroupTraits>;
 
-    //! The short description of the variable
-    static std::string Description()
-    {
-        return "Reserve Participation from a group to a reserve";
-    }
-
-    //! The expected results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
-      ResultsType;
-
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardReserveParticipationBySTStorageGroup VCardForSpatialAggregate;
-
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::DataLevel::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile
-                            & (Category::FileLevel::id | Category::FileLevel::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 2,
-        //! Number of columns used by the variable
-        columnCount = Category::dynamicColumns,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
-
-    typedef IntermediateValues IntermediateValuesDeepType;
-    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
-
-    // typedef IntermediateValues IntermediateValuesType;
-
-}; // class VCard
-
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy::Reserves

@@ -30,7 +30,7 @@
 #include "antares/solver/utils/optimization_statistics.h"
 #include "antares/study/fwd.h"
 #include "antares/study/study.h"
-
+using namespace Antares::Data;
 class AdequacyPatchRuntimeData;
 
 struct CORRESPONDANCES_DES_VARIABLES
@@ -70,10 +70,10 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> runningThermalClusterParticipation;
         std::vector<int> thermalClusterParticipation;
         std::vector<int> offThermalClusterParticipation;
-        reserve::ReserveTypeData<std::vector<int>> STStorageClusterParticipation;
+        ReserveTypeData<std::vector<int>> STStorageClusterParticipation;
         std::vector<int> STStorageReleaseClusterParticipation;
         std::vector<int> STStorageStoreClusterParticipation;
-        reserve::ReserveTypeData<std::vector<int>> HydroParticipation;
+        ReserveTypeData<std::vector<int>> HydroParticipation;
         std::vector<int> HydroReleaseParticipation;
         std::vector<int> HydroStoreParticipation;
 
@@ -129,15 +129,15 @@ struct CORRESPONDANCES_DES_CONTRAINTES
         std::vector<int> maxPowerOffUnitsInThermalCluster;
         std::vector<int> thermalClusterPOutBoundMin;
         std::vector<int> thermalClusterPOutBoundMax;
-        reserve::ReserveTypeData<std::vector<int>> STStorageLevelParticipation;
+        ReserveTypeData<std::vector<int>> STStorageLevelParticipation;
         std::vector<int> STStorageEnergyLevelParticipation;
-        reserve::ReserveTypeData<std::vector<int>> STStorageGlobalStockEnergyLevelParticipation;
+        ReserveTypeData<std::vector<int>> STStorageGlobalStockEnergyLevelParticipation;
         std::vector<int> STStorageClusterMaxReleaseParticipation;
         std::vector<int> STStorageClusterMaxStoreParticipation;
         std::vector<int> STStorageClusterReleaseCapacityThresholdsMax;
         std::vector<int> STStorageClusterReleaseCapacityThresholdsMin;
         std::vector<int> STStorageClusterStoreCapacityThresholds;
-        reserve::ReserveTypeData<std::vector<int>> HydroLevelParticipation;
+        ReserveTypeData<std::vector<int>> HydroLevelParticipation;
         std::vector<int> HydroEnergyLevelParticipation;
         std::vector<int> HydroGlobalEnergyLevelParticipationUp;
         std::vector<int> HydroGlobalEnergyLevelParticipationDown;
@@ -355,12 +355,12 @@ struct CAPACITY_RESERVATION
     std::vector<RESERVE_PARTICIPATION_HYDRO> AllHydroReservesParticipation;
     std::vector<double> need; //!< Vector size is number of hours in year
 
-    reserve::Type type{reserve::Type::DOWN};
+    ReserveType type{ReserveType::DOWN};
     double unsuppliedCost = 0;
     double spillageCost = 0;
     double powerActivationRatio = 0;
     double energyActivationRatio = 1;
-    int maxActivationDuration = 0;
+    int referenceActivationDuration = 0;
     std::string reserveName;
     int globalReserveIndex;
     int areaReserveIndex;
@@ -376,8 +376,8 @@ struct RESERVE_PARTICIPATION_WITH_RESERVE_NAME
 // Vector size is number of reserves up or down
 struct AREA_RESERVES_VECTOR
 {
-    reserve::ReserveTypeData<double> maxGlobalEnergyActivationRatio{1., 1.};
-    reserve::ReserveTypeData<int> referenceGlobalActivationDuration{0, 0};
+    ReserveTypeData<double> maxGlobalEnergyActivationRatio{1., 1.};
+    ReserveTypeData<int> referenceGlobalActivationDuration{0, 0};
     std::vector<CAPACITY_RESERVATION> areaCapacityReservations{};
     std::map<
       /*area_clusterId*/ int,

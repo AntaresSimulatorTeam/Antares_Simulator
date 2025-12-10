@@ -11,8 +11,8 @@ set(TARGET_LIBS #No alias
         # it is available for everything
 
         solver_api # What we want to export
+	single_problem_api
 
-        # solver_api
         study
         scenario-builder-utils
         study-loader
@@ -39,7 +39,6 @@ set(TARGET_LIBS #No alias
 
         # study-loader : nothing
 
-        # file-tree-study-loader
         application
 
         # run-mode
@@ -113,6 +112,7 @@ set(TARGET_LIBS #No alias
         scenario-group-parser
         yml-optim-config
         enums
+        modeler-checks
 )
 
 install(TARGETS ${TARGET_LIBS}

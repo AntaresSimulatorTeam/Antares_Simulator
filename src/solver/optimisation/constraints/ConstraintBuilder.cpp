@@ -20,7 +20,6 @@
 */
 
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
-using namespace reserve;
 
 void ConstraintBuilder::build()
 {
@@ -83,7 +82,7 @@ ConstraintBuilder& ConstraintBuilder::ThermalClusterReserveParticipation(unsigne
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::STStorageClusterReserveParticipation(Type type,
+ConstraintBuilder& ConstraintBuilder::STStorageClusterReserveParticipation(ReserveType type,
                                                                            unsigned int index,
                                                                            double coeff,
                                                                            int offset,
@@ -120,7 +119,7 @@ ConstraintBuilder& ConstraintBuilder::STStorageStoreClusterReserveParticipation(
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::HydroReserveParticipation(Type type,
+ConstraintBuilder& ConstraintBuilder::HydroReserveParticipation(ReserveType type,
                                                                 unsigned int index,
                                                                 double coeff,
                                                                 int offset,

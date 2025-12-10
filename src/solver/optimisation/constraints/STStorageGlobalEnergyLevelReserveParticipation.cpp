@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/STStorageGlobalEnergyLevelReserveParticipation.h"
-using namespace reserve;
 
 void STStorageGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, int pdt)
 {
@@ -15,7 +14,7 @@ void STStorageGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, 
         // R_{min,res} : max power participation ratio
         // R_up : max stock level
 
-        for (auto type: {Type::DOWN, Type::UP})
+        for (auto type: {ReserveType::DOWN, ReserveType::UP})
         {
             builder.updateHourWithinWeek(pdt);
 
@@ -39,7 +38,7 @@ void STStorageGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, 
                 }
                 if (builder.NumberOfVariables() > 0)
                 {
-                    int sign = type == Type::UP ? -1 : 1;
+                    int sign = type == ReserveType::UP ? -1 : 1;
                     builder.ShortTermStorageLevel(
                       globalClusterIdx,
                       sign * data.areaReserves[pays].maxGlobalEnergyActivationRatio[type],

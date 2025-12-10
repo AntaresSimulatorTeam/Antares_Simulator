@@ -106,6 +106,8 @@ public:
     TargetVectorUpdater targetUpdater_;
 };
 
+using namespace Antares::Data;
+
 class VariableNamer: public Namer
 {
 public:
@@ -120,7 +122,7 @@ public:
     void ParticipationOfSTStorageStoreToReserve(unsigned int variable,
                                                 const std::string& clusterName,
                                                 const std::string& reserveName);
-    void ParticipationOfSTStorageToReserve(reserve::Type type,
+    void ParticipationOfSTStorageToReserve(ReserveType type,
                                            unsigned int variable,
                                            const std::string& clusterName,
                                            const std::string& reserveName);
@@ -130,7 +132,7 @@ public:
     void ParticipationOfHydroStoreToReserve(unsigned int variable,
                                             const std::string& clusterName,
                                             const std::string& reserveName);
-    void ParticipationOfHydroToReserve(reserve::Type type,
+    void ParticipationOfHydroToReserve(ReserveType type,
                                        unsigned int variable,
                                        const std::string& clusterName,
                                        const std::string& reserveName);
@@ -232,7 +234,7 @@ public:
     void STReserveParticipation(unsigned int constraint,
                                 const std::string& clusterName,
                                 const std::string& reserveName,
-                                reserve::Type type);
+                                ReserveType type);
     void STReleaseMaxReserve(unsigned int constraint,
                              const std::string& clusterName,
                              const std::string& reserveName);
@@ -245,15 +247,15 @@ public:
     void STStoreCapacityThresholdsDown(unsigned int constraint, const std::string& clusterName);
     void STStorageLevelReserveParticipation(unsigned int constraint,
                                             const std::string& clusterName,
-                                            reserve::Type type);
+                                            ReserveType type);
     void STEnergyStockLevelReserveParticipation(unsigned int constraint,
                                                 const std::string& clusterName,
                                                 const std::string& reserveName);
     void STGlobalEnergyStockLevelReserveParticipation(unsigned int constraint,
                                                       const std::string& clusterName,
-                                                      reserve::Type type);
+                                                      ReserveType type);
 
-    void HydroReserveParticipation(reserve::Type type,
+    void HydroReserveParticipation(ReserveType type,
                                    unsigned int constraint,
                                    const std::string& clusterName,
                                    const std::string& reserveName);
@@ -268,7 +270,7 @@ public:
                                             const std::string& clusterName);
     void HydroStoreCapacityThresholdsUp(unsigned int constraint, const std::string& clusterName);
     void HydroStoreCapacityThresholdsDown(unsigned int constraint, const std::string& clusterName);
-    void HydroLevelReserveParticipation(reserve::Type type,
+    void HydroLevelReserveParticipation(ReserveType type,
                                         unsigned int constraint,
                                         const std::string& clusterName);
     void HydroEnergyLevelReserveParticipation(unsigned int constraint,

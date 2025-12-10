@@ -28,7 +28,6 @@
 
 #include "variables/VariableManagement.h"
 #include "variables/VariableManagerUtils.h"
-using namespace reserve;
 
 struct ReserveVariablesBoundsSetter
 {
@@ -80,7 +79,7 @@ struct ReserveVariablesBoundsSetter
     // Set variables bounds for a Thermal cluster participation to a reserve up or down
     void setThermalReserveParticipationBounds(int clusterParticipationIdInArea,
                                               int clusterParticipationId,
-                                              Type type)
+                                              ReserveType type)
     {
         const auto& indices = varIndices();
         auto& prod = problemeHebdo->ResultatsHoraires[pays].ProductionThermique[pdtHebdo];
@@ -88,7 +87,7 @@ struct ReserveVariablesBoundsSetter
         setVarBounds(indices.runningThermalClusterParticipation[clusterParticipationId],
                      &prod.ParticipationReservesDuPalierOn.value()[clusterParticipationIdInArea]);
 
-        if (type == Type::UP)
+        if (type == ReserveType::UP)
         {
             setVarBounds(
               indices.offThermalClusterParticipation[clusterParticipationId],
@@ -103,7 +102,7 @@ struct ReserveVariablesBoundsSetter
 
     void setSTStorageReserveParticipationBounds(int clusterParticipationIdInArea,
                                                 int clusterParticipationId,
-                                                Type type)
+                                                ReserveType type)
     {
         const auto& indices = varIndices();
         auto& st = problemeHebdo->ResultatsHoraires[pays]
@@ -120,7 +119,7 @@ struct ReserveVariablesBoundsSetter
     // Set variables bounds for a Hydro participation to a reserve up
     void setHydroReserveParticipationBounds(int clusterParticipationIdInArea,
                                             int clusterParticipationId,
-                                            Type type)
+                                            ReserveType type)
 
     {
         const auto& indices = varIndices();

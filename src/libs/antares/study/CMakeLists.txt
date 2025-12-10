@@ -44,6 +44,7 @@ set(SRC_AREAS
         include/antares/study/area/ReserveOpt.h
         include/antares/study/area/area.hxx
         include/antares/study/area/scratchpad.h
+		include/antares/study/area/forTestsOnlyList.h
         area/scratchpad.cpp
         area/area.cpp
         area/links.cpp
@@ -66,12 +67,8 @@ set(SRC_STUDY_PART_COMMON
         parts/common/cluster.cpp
         include/antares/study/parts/common/cluster.h
         include/antares/study/parts/common/cluster_list.h
-        include/antares/study/parts/common/makeGroupsOfSymmetriesFromString.h
-        include/antares/study/parts/common/SymmetryCollectorVisitor.h
         parts/common/cluster_list.cpp
         include/antares/study/parts/common/CustomErrorListener.h
-        parts/common/makeGroupsofSymmettriesFromString.cpp
-
 )
 source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 
@@ -106,6 +103,9 @@ source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
 
 set(SRC_STUDY_PART_RESERVES
         include/antares/study/parts/reserves/reservesParticipationsLoader.h
+        include/antares/study/parts/reserves/SymmetryCollectorVisitor.h
+        include/antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h
+        parts/reserves/makeGroupsofSymmetriesFromString.cpp
 )
 source_group("study\\part\\reserves" FILES ${SRC_STUDY_PART_RESERVES})
 

@@ -510,9 +510,9 @@ namespace Benchmarking
 class DurationCollector;
 }
 
-namespace reserve
+namespace Antares::Data
 {
-enum class Type
+enum class ReserveType
 {
     DOWN = 0,
     UP = 1
@@ -525,21 +525,21 @@ struct ReserveTypeData
     T down;
 
     // Optional: array-style access
-    T& operator[](reserve::Type type)
+    T& operator[](ReserveType type)
     {
-        return (type == reserve::Type::UP) ? up : down;
+        return (type == ReserveType::UP) ? up : down;
     }
 
-    const T& operator[](reserve::Type type) const
+    const T& operator[](ReserveType type) const
     {
-        return (type == reserve::Type::UP) ? up : down;
+        return (type == ReserveType::UP) ? up : down;
     }
 };
 
-inline auto filter(Type type)
+inline auto filter(ReserveType type)
 {
     return std::views::filter([type](const auto& r) { return r.type == type; });
 }
-} // namespace reserve
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

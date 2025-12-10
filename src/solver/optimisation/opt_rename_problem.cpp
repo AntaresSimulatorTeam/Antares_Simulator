@@ -24,8 +24,6 @@
 #include <map>
 #include <string>
 
-using namespace reserve;
-
 const std::string HOUR("hour");
 const std::string DAY("day");
 const std::string WEEK("week");
@@ -230,13 +228,13 @@ void VariableNamer::ParticipationOfSTStorageStoreToReserve(unsigned int variable
                                              reserveName);
 }
 
-void VariableNamer::ParticipationOfSTStorageToReserve(Type type,
+void VariableNamer::ParticipationOfSTStorageToReserve(ReserveType type,
                                                       unsigned int variable,
                                                       const std::string& clusterName,
                                                       const std::string& reserveName)
 {
     SetSTStorageClusterAndReserveElementName(variable,
-                                             type == Type::UP
+                                             type == ReserveType::UP
                                                ? "ParticipationOfSTStorageToUpReserve"
                                                : "ParticipationOfSTStorageToDownReserve",
                                              clusterName,
@@ -263,12 +261,12 @@ void VariableNamer::ParticipationOfHydroStoreToReserve(unsigned int variable,
                                   reserveName);
 }
 
-void VariableNamer::ParticipationOfHydroToReserve(Type type,
+void VariableNamer::ParticipationOfHydroToReserve(ReserveType type,
                                                   unsigned int variable,
                                                   const std::string& clusterName,
                                                   const std::string& reserveName)
 {
-    if (type == Type::UP)
+    if (type == ReserveType::UP)
     {
         SetHydroAndReserveElementName(variable,
                                       "ParticipationOfHydroToUpReserve",
@@ -658,12 +656,11 @@ void ConstraintNamer::POutBoundMax(unsigned int constraint, const std::string& c
 void ConstraintNamer::STReserveParticipation(unsigned int constraint,
                                              const std::string& clusterName,
                                              const std::string& reserveName,
-                                             Type type)
+                                             ReserveType type)
 {
     SetSTStorageClusterAndReserveElementName(constraint,
-                                             type == reserve ::Type::UP
-                                               ? "STReserveUpParticipation"
-                                               : "STReserveDownParticipation",
+                                             type == ReserveType::UP ? "STReserveUpParticipation"
+                                                                     : "STReserveDownParticipation",
                                              clusterName,
                                              reserveName);
 }
@@ -714,15 +711,15 @@ void ConstraintNamer::STStoreCapacityThresholdsDown(unsigned int constraint,
 
 void ConstraintNamer::STStorageLevelReserveParticipation(unsigned int constraint,
                                                          const std::string& clusterName,
-                                                         reserve::Type type)
+                                                         ReserveType type)
 {
-    if (type == reserve::Type::DOWN)
+    if (type == ReserveType::DOWN)
     {
         SetSTStorageClusterElementName(constraint,
                                        "STStorageLevelReserveParticipationDown",
                                        clusterName);
     }
-    else if (type == reserve::Type::UP)
+    else if (type == ReserveType::UP)
     {
         SetSTStorageClusterElementName(constraint,
                                        "STStorageLevelReserveParticipationUP",
@@ -742,15 +739,15 @@ void ConstraintNamer::STEnergyStockLevelReserveParticipation(unsigned int constr
 
 void ConstraintNamer::STGlobalEnergyStockLevelReserveParticipation(unsigned int constraint,
                                                                    const std::string& clusterName,
-                                                                   reserve::Type type)
+                                                                   ReserveType type)
 {
-    if (type == reserve::Type::DOWN)
+    if (type == ReserveType::DOWN)
     {
         SetSTStorageClusterElementName(constraint,
                                        "STGlobalEnergyStockLevelReserveParticipationDown",
                                        clusterName);
     }
-    else if (type == reserve::Type::UP)
+    else if (type == ReserveType::UP)
     {
         SetSTStorageClusterElementName(constraint,
                                        "STGlobalEnergyStockLevelReserveParticipationUp",
@@ -762,14 +759,14 @@ void ConstraintNamer::STGlobalEnergyStockLevelReserveParticipation(unsigned int 
     }
 }
 
-void ConstraintNamer::HydroReserveParticipation(Type type,
+void ConstraintNamer::HydroReserveParticipation(ReserveType type,
                                                 unsigned int constraint,
                                                 const std::string& clusterName,
                                                 const std::string& reserveName)
 {
     SetHydroAndReserveElementName(constraint,
-                                  type == reserve ::Type::UP ? "HydroReserveUpParticipation"
-                                                             : "HydroReserveDownParticipation",
+                                  type == ReserveType::UP ? "HydroReserveUpParticipation"
+                                                          : "HydroReserveDownParticipation",
                                   clusterName,
                                   reserveName);
 }
@@ -812,13 +809,13 @@ void ConstraintNamer::HydroStoreCapacityThresholdsDown(unsigned int constraint,
     SetHydroElementName(constraint, "HydroStoreCapacityThresholdsDown", clusterName);
 }
 
-void ConstraintNamer::HydroLevelReserveParticipation(Type type,
+void ConstraintNamer::HydroLevelReserveParticipation(ReserveType type,
                                                      unsigned int constraint,
                                                      const std::string& clusterName)
 {
     SetHydroElementName(constraint,
-                        type == Type::UP ? "HydroLevelReserveParticipationUp"
-                                         : "HydroLevelReserveParticipationDown",
+                        type == ReserveType::UP ? "HydroLevelReserveParticipationUp"
+                                                : "HydroLevelReserveParticipationDown",
                         clusterName);
 }
 

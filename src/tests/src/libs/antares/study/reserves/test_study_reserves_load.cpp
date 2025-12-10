@@ -29,10 +29,12 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
+#include <antares/solver/simulation/simulation.h>
+#include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/study.h"
+
 using Antares::UnitTests::CaptureAntaresLogs;
 using namespace Antares::Data;
-using namespace reserve;
 
 void addThermalCluster(Data::Area* area, const std::string& name)
 {
@@ -52,6 +54,27 @@ void addShortTermStorage(Data::Area* area, const std::string& name)
 /*!
  * Study with one area named "A"
  */
+class OneProblemWithoutReservesOneArea
+{
+public:
+    OneProblemWithoutReservesOneArea()
+    {
+        study = std::make_unique<Study>();
+        areaA = study->areaAdd("A");
+    }
+
+    std::unique_ptr<Study> study;
+    Area* areaA;
+};
+
+class OneProblemWithoutReservesOneAreaWithLogger: public OneProblemWithoutReservesOneArea,
+                                                  public CaptureAntaresLogs
+{
+};
+
+/*!
+ * Study with one area named "A" and reserves
+ */
 class OneProblemWithReservesOneArea
 {
 public:
@@ -62,33 +85,33 @@ public:
         CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
-        tmpCapacityReservationUp.type = Type::UP;
+        tmpCapacityReservationUp.type = ReserveType::UP;
         tmpCapacityReservationUp.unsuppliedCost = 1;
-        tmpCapacityReservationUp.referenceActivationHours = 2;
+        tmpCapacityReservationUp.referenceActivationDuration = 2;
         tmpCapacityReservationUp.powerActivationRatio = 3;
         tmpCapacityReservationUp.energyActivationRatio = 4;
 
-        tmpCapacityReservationUpTwo.type = Type::UP;
+        tmpCapacityReservationUpTwo.type = ReserveType::UP;
         tmpCapacityReservationUpTwo.unsuppliedCost = 11;
-        tmpCapacityReservationUpTwo.referenceActivationHours = 12;
+        tmpCapacityReservationUpTwo.referenceActivationDuration = 12;
         tmpCapacityReservationUpTwo.powerActivationRatio = 13;
         tmpCapacityReservationUpTwo.energyActivationRatio = 14;
 
-        tmpCapacityReservationUpThree.type = Type::UP;
+        tmpCapacityReservationUpThree.type = ReserveType::UP;
         tmpCapacityReservationUpThree.unsuppliedCost = 21;
-        tmpCapacityReservationUpThree.referenceActivationHours = 22;
+        tmpCapacityReservationUpThree.referenceActivationDuration = 22;
         tmpCapacityReservationUpThree.powerActivationRatio = 23;
         tmpCapacityReservationUpThree.energyActivationRatio = 24;
 
-        tmpCapacityReservationDown.type = Type::DOWN;
+        tmpCapacityReservationDown.type = ReserveType::DOWN;
         tmpCapacityReservationDown.unsuppliedCost = 5;
-        tmpCapacityReservationDown.referenceActivationHours = 6;
+        tmpCapacityReservationDown.referenceActivationDuration = 6;
         tmpCapacityReservationDown.powerActivationRatio = 7;
         tmpCapacityReservationDown.energyActivationRatio = 8;
 
-        tmpCapacityReservationDownTwo.type = Type::DOWN;
+        tmpCapacityReservationDownTwo.type = ReserveType::DOWN;
         tmpCapacityReservationDownTwo.unsuppliedCost = 15;
-        tmpCapacityReservationDownTwo.referenceActivationHours = 16;
+        tmpCapacityReservationDownTwo.referenceActivationDuration = 16;
         tmpCapacityReservationDownTwo.powerActivationRatio = 17;
         tmpCapacityReservationDownTwo.energyActivationRatio = 18;
 
@@ -108,7 +131,6 @@ public:
 
     std::unique_ptr<Study> study;
     Area* areaA;
-    PROBLEME_HEBDO problem;
     CapacityReservation tmpCapacityReservationUp;
     CapacityReservation tmpCapacityReservationUpTwo;
     CapacityReservation tmpCapacityReservationUpThree;
@@ -116,8 +138,8 @@ public:
     CapacityReservation tmpCapacityReservationDownTwo;
 };
 
-class OneProblemWithReservesOneArea_withLogger: public OneProblemWithReservesOneArea,
-                                                public CaptureAntaresLogs
+class OneProblemWithReservesOneAreaWithLogger: public OneProblemWithReservesOneArea,
+                                               public CaptureAntaresLogs
 {
 };
 
@@ -128,34 +150,36 @@ struct OneProblemWithReservesTwoAreas
 {
     OneProblemWithReservesTwoAreas()
     {
+        problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
         study = std::make_unique<Study>();
         areaA = study->areaAdd("A");
         areaB = study->areaAdd("B");
         CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
+        study->parameters.reservesEnabled = true;
 
-        tmpCapacityReservationUp.type = Type::UP;
+        tmpCapacityReservationUp.type = ReserveType::UP;
         tmpCapacityReservationUp.unsuppliedCost = 1;
-        tmpCapacityReservationUp.referenceActivationHours = 2;
+        tmpCapacityReservationUp.referenceActivationDuration = 2;
         tmpCapacityReservationUp.powerActivationRatio = 3;
         tmpCapacityReservationUp.energyActivationRatio = 4;
 
-        tmpCapacityReservationDown.type = Type::DOWN;
+        tmpCapacityReservationDown.type = ReserveType::DOWN;
         tmpCapacityReservationDown.unsuppliedCost = 5;
-        tmpCapacityReservationDown.referenceActivationHours = 6;
+        tmpCapacityReservationDown.referenceActivationDuration = 6;
         tmpCapacityReservationDown.powerActivationRatio = 7;
         tmpCapacityReservationDown.energyActivationRatio = 8;
 
-        tmpCapacityReservationUpB.type = Type::UP;
+        tmpCapacityReservationUpB.type = ReserveType::UP;
         tmpCapacityReservationUpB.unsuppliedCost = 11;
-        tmpCapacityReservationUpB.referenceActivationHours = 12;
+        tmpCapacityReservationUpB.referenceActivationDuration = 12;
         tmpCapacityReservationUpB.powerActivationRatio = 13;
         tmpCapacityReservationUpB.energyActivationRatio = 14;
 
-        tmpCapacityReservationDownB.type = Type::DOWN;
+        tmpCapacityReservationDownB.type = ReserveType::DOWN;
         tmpCapacityReservationDownB.unsuppliedCost = 15;
-        tmpCapacityReservationDownB.referenceActivationHours = 16;
+        tmpCapacityReservationDownB.referenceActivationDuration = 16;
         tmpCapacityReservationDownB.powerActivationRatio = 17;
         tmpCapacityReservationDownB.energyActivationRatio = 18;
 
@@ -172,10 +196,10 @@ struct OneProblemWithReservesTwoAreas
           .areaCapacityReservations.emplace("ReserveDown", tmpCapacityReservationDownB);
     }
 
+    std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     std::unique_ptr<Study> study;
     Area* areaA;
     Area* areaB;
-    PROBLEME_HEBDO problem;
     CapacityReservation tmpCapacityReservationUp;
     CapacityReservation tmpCapacityReservationDown;
 
@@ -183,14 +207,14 @@ struct OneProblemWithReservesTwoAreas
     CapacityReservation tmpCapacityReservationDownB;
 };
 
-BOOST_AUTO_TEST_SUITE(reserves_operations)
+BOOST_AUTO_TEST_SUITE(reserves_operations_load)
 
 BOOST_AUTO_TEST_CASE(reserve_add)
 {
     auto study = std::make_unique<Study>();
     const auto areaA = study->areaAdd("A");
     CapacityReservation tmpCapacityReservationUp;
-    tmpCapacityReservationUp.type = Type::UP;
+    tmpCapacityReservationUp.type = ReserveType::UP;
     tmpCapacityReservationUp.unsuppliedCost = 0;
     areaA->allCapacityReservations = AllCapacityReservations();
     areaA->allCapacityReservations.value()
@@ -232,7 +256,7 @@ BOOST_FIXTURE_TEST_CASE(reserve_one_area, OneProblemWithReservesOneArea)
                       1);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
                         .areaCapacityReservations.at("ReserveUp")
-                        .referenceActivationHours,
+                        .referenceActivationDuration,
                       2);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
                         .areaCapacityReservations.at("ReserveUp")
@@ -249,7 +273,7 @@ BOOST_FIXTURE_TEST_CASE(reserve_one_area, OneProblemWithReservesOneArea)
                       5);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
                         .areaCapacityReservations.at("ReserveDown")
-                        .referenceActivationHours,
+                        .referenceActivationDuration,
                       6);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
                         .areaCapacityReservations.at("ReserveDown")
@@ -329,8 +353,27 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_No_Symmetries
                       6.6);
 }
 
+BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_Bad_Parameter,
+                        OneProblemWithReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    addThermalCluster(areaA, "cluster1");
+    addThermalCluster(areaA, "cluster2");
+
+    std::ofstream file(studyPath / "myreserve.ini");
+    file << "[ReserveUp]\n";
+    file << "cluster-name = cluster1\n";
+    file << "bad = 9.9\n";
+    file.close();
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 1);
+    BOOST_CHECK(
+      getWarnings().contains("A : invalid property in thermal reserves implementation : bad"));
+}
+
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -457,7 +500,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Cluster_Symmetry,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -486,7 +529,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Cluster_Symme
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Reserve_Symmetry,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -516,7 +559,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Reserve_Symme
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Cluster_Participation,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -547,7 +590,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Cluster_Parti
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Reserve_Load,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -573,7 +616,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Reserve_Load,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Delete_Double_Sym_Participation,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -604,7 +647,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Delete_Double_Sym
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_No_Cluster_Provided,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -631,7 +674,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_No_Cluster_Provid
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Cluster_Participation,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -667,7 +710,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Cluster_Pa
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Only_One_Symmetry,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -692,19 +735,19 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Only_One_Symmetry
     file.close();
     BOOST_CHECK_EXCEPTION(
       areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini"),
-      std::out_of_range,
-      checkMessage("Must have two distinct reserves to participate to a symmetry"));
+      std::runtime_error,
+      checkMessage("Must have at least two distinct reserves to participate to a symmetry"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
     std::ofstream file(studyPath / "myreserve.ini");
     file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown, MyReserve]\n";
+    file << "cluster1 = [ReserveUp, ReserveDown, ReserveDownTwo]\n";
     file << "\n";
     file << "[ReserveUp]\n";
     file << "cluster-name = cluster1\n";
@@ -713,6 +756,13 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
     file << "max-power-off = 7.7\n";
     file << "participation-cost-off = 6.6\n";
     file << "\n";
+    file << "[ReserveDownTwo]\n";
+    file << "cluster-name = cluster1\n";
+    file << "max-power = 1.1\n";
+    file << "participation-cost = 2.2\n";
+    file << "max-power-off = 3.3\n";
+    file << "participation-cost-off = 4.4\n";
+    file << "\n";
     file << "[ReserveDown]\n";
     file << "cluster-name = cluster1\n";
     file << "max-power = 1.1\n";
@@ -720,14 +770,42 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
     file << "max-power-off = 3.3\n";
     file << "participation-cost-off = 4.4\n";
     file.close();
-    BOOST_CHECK_EXCEPTION(
-      areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini"),
-      std::out_of_range,
-      checkMessage("Must have two distinct reserves to participate to a symmetry"));
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
+                        ->reserveParticipationContainer.value()
+                        .symmetricalIndices("ReserveUp")
+                        .size(),
+                      1);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
+                        ->reserveParticipationContainer.value()
+                        .symmetricalIndices("ReserveDown")
+                        .size(),
+                      1);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
+                        ->reserveParticipationContainer.value()
+                        .symmetricalIndices("ReserveDownTwo")
+                        .size(),
+                      1);
+    int symUp = areaA->thermal.list.findInAll("cluster1")
+                  ->reserveParticipationContainer.value()
+                  .symmetricalIndices("ReserveUp")
+                  .at(0);
+    int symDown = areaA->thermal.list.findInAll("cluster1")
+                    ->reserveParticipationContainer.value()
+                    .symmetricalIndices("ReserveDown")
+                    .at(0);
+    int symDownTwo = areaA->thermal.list.findInAll("cluster1")
+                       ->reserveParticipationContainer.value()
+                       .symmetricalIndices("ReserveDownTwo")
+                       .at(0);
+    BOOST_CHECK_EQUAL(symUp, symDown);
+    BOOST_CHECK_EQUAL(symUp, symDownTwo); // all of them are participating to the same symmetry
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Symmetry_Same_Line,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -753,12 +831,12 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Symmetry_S
     file.close();
     BOOST_CHECK_EXCEPTION(
       areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini"),
-      std::out_of_range,
-      checkMessage("Must have two distinct reserves to participate to a symmetry"));
+      std::runtime_error,
+      checkMessage("Must have at least two distinct reserves to participate to a symmetry"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Cluster_Participation_No_Init,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -769,13 +847,13 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Cluster_Participa
     file.close();
     BOOST_CHECK_EXCEPTION(
       areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini"),
-      std::out_of_range,
+      std::runtime_error,
       checkMessage(
         "Area A, cluster1 : trying to add symmetries without any reserves participations"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_Symmetries,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -847,12 +925,12 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_no_reserve,
     file.close();
     BOOST_CHECK_EXCEPTION(
       areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini"),
-      std::out_of_range,
+      std::runtime_error,
       checkMessage("Area A, hydro : trying to add symmetries without any reserves participations"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_missing_reserve,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -865,7 +943,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_missing_reserve,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_cluster,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -886,6 +964,23 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_cluster,
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
     BOOST_CHECK(getErrors().contains(
       "A : invalid cluster name for hydro symmetry cluster1 please use 'hydro' or 'lt'"));
+}
+
+BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_property,
+                        OneProblemWithReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+
+    std::ofstream file(studyPath / "myreserve.ini");
+    file << "[ReserveUp]\n";
+    file << "bad = 9.9\n";
+    file << "\n";
+    file.close();
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 1);
+    BOOST_CHECK(
+      getWarnings().contains("A : invalid property in hydro reserves implementation : bad"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_reserve,
@@ -915,7 +1010,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_reserve,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_Symmetries,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -971,7 +1066,7 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_Symmetries,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_cluster_symmetry,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::ofstream file(studyPath / "myreserve.ini");
@@ -987,7 +1082,7 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_cluster_symmetry,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_no_reserves,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
@@ -1002,7 +1097,7 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_no_reserves,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_reserve,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
@@ -1024,7 +1119,7 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_reserve,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_No_Cluster_Provided,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
@@ -1043,7 +1138,7 @@ BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_No_Cluster_Provided,
 }
 
 BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_Invalid_Cluster,
-                        OneProblemWithReservesOneArea_withLogger)
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
@@ -1058,6 +1153,268 @@ BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_Invalid_Cluster,
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
     BOOST_CHECK(
       getErrors().contains("A : missing cluster cluster4 when loading STS reserve participations"));
+}
+
+BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
+                        OneProblemWithoutReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::filesystem::create_directories(studyPath / "reserves" / "a");
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
+    file << "[ReserveUp]\n";
+    file.close();
+    BOOST_CHECK_EXCEPTION(
+      accessForTests::loadReservesParameters(studyPath, *areaA),
+      std::runtime_error,
+      checkMessage("Could not open " + (studyPath / "reserves" / "a" / "ReserveUp.txt").string()));
+}
+
+BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::filesystem::create_directories(studyPath / "reserves" / "a");
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
+    file << "[ReserveUp]\n";
+    file.close();
+
+    std::ofstream fileNeeds(studyPath / "reserves" / "a" / "ReserveUp.txt");
+    fileNeeds << "\n";
+    fileNeeds.close();
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.has_value(), false);
+    accessForTests::loadReservesParameters(studyPath, *areaA);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.has_value(), true);
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().referenceGlobalActivationDuration.up,
+                      1);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().referenceGlobalActivationDuration.down,
+                      1);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().maxGlobalEnergyActivationRatio.up, 1);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+                      1);
+    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByName("ReserveUp") != nullptr);
+    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->type
+                == ReserveType::DOWN);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->energyActivationRatio,
+      1);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->powerActivationRatio,
+      0);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
+                        .getReserveByName("ReserveUp")
+                        ->referenceActivationDuration,
+                      1);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->spillageCost,
+      0);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->unsuppliedCost,
+      0);
+
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->need.size(),
+      0);
+}
+
+BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_ini, OneProblemWithoutReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::filesystem::create_directories(studyPath / "reserves" / "a");
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
+    file << "[ReserveUp]\n";
+    file << "a\n ";
+    file << "\n ";
+    file << "[globalparameters]\n";
+    file << "a\n ";
+    file.close();
+
+    std::ofstream fileNeeds(studyPath / "reserves" / "a" / "ReserveUp.txt");
+    fileNeeds << "\n";
+    fileNeeds.close();
+    accessForTests::loadReservesParameters(studyPath, *areaA);
+
+    BOOST_CHECK_EQUAL(getErrors().size(), 2);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+    BOOST_CHECK(getErrors().contains("INI content : unknown format for line \'a\'"));
+    BOOST_CHECK(getErrors().contains("Invalid INI file : "
+                                     + (studyPath / "reserves" / "a" / "reserves.ini").string()));
+}
+
+BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters, OneProblemWithoutReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::filesystem::create_directories(studyPath / "reserves" / "a");
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
+    file << "[ReserveUp]\n";
+    file << "a = a\n ";
+    file << "\n ";
+    file << "[globalparameters]\n";
+    file << "b = 2.1\n ";
+    file.close();
+
+    std::ofstream fileNeeds(studyPath / "reserves" / "a" / "ReserveUp.txt");
+    fileNeeds << "\n";
+    fileNeeds.close();
+    accessForTests::loadReservesParameters(studyPath, *areaA);
+
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 2);
+    BOOST_CHECK(
+      getWarnings().contains("A : invalid key a inside reserve parameters for ReserveUp"));
+    BOOST_CHECK(getWarnings().contains("A : invalid key b inside global reserve parameters"));
+}
+
+BOOST_FIXTURE_TEST_CASE(test_readReserve_ok, OneProblemWithoutReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::filesystem::create_directories(studyPath / "reserves" / "a");
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
+    file << "[ReserveUp]\n";
+    file << "type = up\n ";
+    file << "reference-activation-duration = 2\n ";
+    file << "energy-activation-ratio = 2.2\n ";
+    file << "power-activation-ratio = 3.3\n ";
+    file << "spillage-cost = 4.4\n ";
+    file << "failure-cost = 5.5\n ";
+    file << "\n ";
+    file << "[globalparameters]\n";
+    file << "energy-activation-ratio-up = 6.6\n ";
+    file << "energy-activation-ratio-down = 7.7\n ";
+    file << "reference-activation-duration-up = 8\n ";
+    file << "reference-activation-duration-down = 9\n ";
+    file << "[ReserveDown]\n";
+    file << "type = down\n ";
+    file.close();
+
+    std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "ReserveUp.txt");
+    fileNeedsUp << "2\n";
+    fileNeedsUp << "3\n";
+    fileNeedsUp.close();
+
+    std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "ReserveDown.txt");
+    fileNeedsDown << "4\n";
+    fileNeedsDown << "5\n";
+    fileNeedsDown << "6\n";
+    fileNeedsDown.close();
+    accessForTests::loadReservesParameters(studyPath, *areaA);
+
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().referenceGlobalActivationDuration.up,
+                      8);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().referenceGlobalActivationDuration.down,
+                      9);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                      6.6);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+                      7.7);
+    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByName("ReserveUp") != nullptr);
+    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByName("ReserveDown") != nullptr);
+    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->type
+                == ReserveType::UP);
+    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByName("ReserveDown")->type
+                == ReserveType::DOWN);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->energyActivationRatio,
+      2.2);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->powerActivationRatio,
+      3.3);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
+                        .getReserveByName("ReserveUp")
+                        ->referenceActivationDuration,
+                      2);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->spillageCost,
+      4.4);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->unsuppliedCost,
+      5.5);
+
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->need.size(),
+      2);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveDown")->need.size(),
+      3);
+
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->need.at(0),
+      2);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveUp")->need.at(1),
+      3);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByName("ReserveDown")->need.at(0),
+      4);
+}
+
+BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters_values,
+                        OneProblemWithoutReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::filesystem::create_directories(studyPath / "reserves" / "a");
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
+    file << "[ReserveUp]\n";
+    file << "type = aa\n ";
+    file << "reference-activation-duration = 1.1\n ";
+    file << "energy-activation-ratio = a\n ";
+    file << "power-activation-ratio = a\n ";
+    file << "spillage-cost = a\n ";
+    file << "failure-cost = a\n ";
+    file << "\n ";
+    file << "[globalparameters]\n";
+    file << "energy-activation-ratio-up = a\n ";
+    file << "energy-activation-ratio-down = a\n ";
+    file << "reference-activation-duration-up = 1.1\n ";
+    file << "reference-activation-duration-down = 1.1\n ";
+    file.close();
+
+    std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "ReserveUp.txt");
+    fileNeedsUp.close();
+
+    std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "ReserveDown.txt");
+    fileNeedsDown.close();
+    accessForTests::loadReservesParameters(studyPath, *areaA);
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 10);
+    BOOST_CHECK(getWarnings().contains("A: invalid type for reserve ReserveUp"));
+    BOOST_CHECK(
+      getWarnings().contains("A: invalid reference activation duration for reserve ReserveUp"));
+    BOOST_CHECK(getWarnings().contains("A: invalid energy activation ratio for reserve ReserveUp"));
+    BOOST_CHECK(
+      getWarnings().contains("A: invalid maximum activation ratio for reserve ReserveUp"));
+    BOOST_CHECK(getWarnings().contains("A: invalid spillage cost for reserve ReserveUp"));
+    BOOST_CHECK(getWarnings().contains("A: invalid failure cost for reserve ReserveUp"));
+    BOOST_CHECK(
+      getWarnings().contains("A: invalid maximum energy activation ratio for UP reserves"));
+    BOOST_CHECK(
+      getWarnings().contains("A: invalid maximum energy activation ratio for DOWN reserves"));
+    BOOST_CHECK(
+      getWarnings().contains("A: invalid reference energy activation duration for UP reserves"));
+    BOOST_CHECK(
+      getWarnings().contains("A: invalid reference energy activation duration for DOWN reserves"));
+}
+
+BOOST_FIXTURE_TEST_CASE(test_readReserve_duplicated, OneProblemWithoutReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::filesystem::create_directories(studyPath / "reserves" / "a");
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
+    file << "[ReserveUp]\n";
+    file << "\n ";
+    file << "[ReserveUp]\n";
+    file << "\n ";
+    file << "[globalparameters]\n";
+    file.close();
+
+    std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "ReserveUp.txt");
+    fileNeedsUp.close();
+    accessForTests::loadReservesParameters(studyPath, *areaA);
+    BOOST_CHECK_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+    BOOST_CHECK(getErrors().contains("A : reserve name already exists for reserve ReserveUp"));
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version

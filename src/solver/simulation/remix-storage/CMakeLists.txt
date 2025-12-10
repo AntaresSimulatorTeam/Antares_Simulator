@@ -26,8 +26,8 @@ target_include_directories(${local_target}
 set_target_properties(${local_target} PROPERTIES FOLDER storage-remix)
 
 target_link_libraries(${local_target}
-    PRIVATE
-    storage-for-remix-list-sort)
+		PRIVATE
+		storage-for-remix-list-sort)
 
 # Lib : sorting list of storage for remix
 add_library(storage-for-remix-list-sort)

@@ -26,16 +26,7 @@
 */
 #pragma once
 
-#include "../../variable.h"
-#include "./vCardReserveParticipationUnsuppliedSpilled.h"
-
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy::Reserves
 {
 
 /*!
@@ -43,9 +34,9 @@ namespace Economy
 */
 template<class NextT = Container::EndOfList>
 class ReserveParticipationUnsuppliedSpilled
-    : public Variable::IVariable<ReserveParticipationUnsuppliedSpilled<NextT>,
-                                 NextT,
-                                 VCardReserveParticipationUnsuppliedSpilled>
+    : public IVariable<ReserveParticipationUnsuppliedSpilled<NextT>,
+                       NextT,
+                       VCardReserveParticipationUnsuppliedSpilled>
 {
 public:
     //! Type of the next static variable
@@ -53,8 +44,7 @@ public:
     //! VCard
     typedef VCardReserveParticipationUnsuppliedSpilled VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ReserveParticipationUnsuppliedSpilled<NextT>, NextT, VCardType>
-      AncestorType;
+    typedef IVariable<ReserveParticipationUnsuppliedSpilled<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -75,7 +65,7 @@ public:
             count = ((VCardType::categoryDataLevel & CDataLevel
                       && VCardType::categoryFileLevel & CFile)
                        ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
+                          + static_cast<int>(VCardType::columnCount) * static_cast<int>(ResultsType::count))
                        : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
@@ -83,7 +73,7 @@ public:
 public:
     ReserveParticipationUnsuppliedSpilled() = default;
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void initializeFromArea(Study* study, Area* area)
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
@@ -213,7 +203,7 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
+    Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int column,
       unsigned int numSpace) const
     {
@@ -262,7 +252,4 @@ private:
 
 }; // class ReserveParticipationUnsuppliedSpilled
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy::Reserves

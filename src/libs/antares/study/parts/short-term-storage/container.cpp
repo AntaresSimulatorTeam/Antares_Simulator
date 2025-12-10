@@ -27,7 +27,7 @@
 #include <numeric>
 #include <string>
 
-#include <antares/study/parts/common/makeGroupsOfSymmetriesFromString.h>
+#include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include <antares/utils/utils.h>
 #include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/parts/short-term-storage/container.h"

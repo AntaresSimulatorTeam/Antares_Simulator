@@ -90,7 +90,7 @@ Nodes::Node* CloneVisitor::visit(const Nodes::VariableNode* variableNode)
 {
     return registry_.create<Nodes::VariableNode>(variableNode->value(),
                                                  variableNode->Index(),
-                                                 variableNode->timeIndex());
+                                                 variableNode->variability());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ParameterNode* parameterNode)

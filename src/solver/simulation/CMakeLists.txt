@@ -17,6 +17,7 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/solver.hxx
         include/antares/solver/simulation/numspace_manager.h
         include/antares/solver/simulation/random.h
+		include/antares/solver/simulation/forTestsOnlySimCalculEco.h
         numspace_manager.cpp
         include/antares/solver/simulation/timeseries-numbers.h
         sim_alloc_probleme_hebdo.cpp

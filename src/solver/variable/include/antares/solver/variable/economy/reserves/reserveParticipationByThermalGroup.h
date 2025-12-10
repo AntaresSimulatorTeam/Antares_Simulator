@@ -26,16 +26,7 @@
 */
 #pragma once
 
-#include "../../variable.h"
-#include "./vCardReserveParticipationByThermalGroup.h"
-
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy::Reserves
 {
 
 /*!
@@ -43,9 +34,9 @@ namespace Economy
 */
 template<class NextT = Container::EndOfList>
 class ReserveParticipationByThermalGroup
-    : public Variable::IVariable<ReserveParticipationByThermalGroup<NextT>,
-                                 NextT,
-                                 VCardReserveParticipationByThermalGroup>
+    : public IVariable<ReserveParticipationByThermalGroup<NextT>,
+                       NextT,
+                       VCardReserveParticipationByThermalGroup>
 {
 public:
     //! Type of the next static variable
@@ -53,8 +44,7 @@ public:
     //! VCard
     typedef VCardReserveParticipationByThermalGroup VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ReserveParticipationByThermalGroup<NextT>, NextT, VCardType>
-      AncestorType;
+    typedef IVariable<ReserveParticipationByThermalGroup<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -75,7 +65,7 @@ public:
             count = ((VCardType::categoryDataLevel & CDataLevel
                       && VCardType::categoryFileLevel & CFile)
                        ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
+                          + static_cast<int>(VCardType::columnCount) * static_cast<int>(ResultsType::count))
                        : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
@@ -83,7 +73,7 @@ public:
 public:
     ReserveParticipationByThermalGroup() = default;
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void initializeFromArea(Study* study, Area* area)
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
@@ -137,7 +127,7 @@ public:
         return pSize * ResultsType::count;
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    void initializeFromLink(Study* study, AreaLink* link)
     {
         // Next
         NextType::initializeFromAreaLink(study, link);
@@ -223,7 +213,7 @@ public:
             {
                 if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveName))
                 {
-                    for (auto group:
+                    for (const auto& group:
                          area->allCapacityReservations->reserveGroupPartThermal.at(reserveName))
                     {
                         pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
@@ -238,7 +228,7 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
+    Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int column,
       unsigned int numSpace) const
     {
@@ -299,7 +289,4 @@ private:
 
 }; // class ReserveParticipationByThermalGroup
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy::Reserves

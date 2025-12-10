@@ -27,7 +27,6 @@
 
 using namespace Antares;
 using namespace Antares::Data;
-using namespace reserve;
 
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                                                              int PremierPdtDeLIntervalle,
@@ -236,7 +235,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
         void setSTStorageReserveParticipationRightSides(
           const RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation,
           const CAPACITY_RESERVATION& reserve,
-          Type type)
+          ReserveType type)
         {
             const auto& CorrespondanceCntNativesCntOptim = problemeHebdo
                                                              ->CorrespondanceCntNativesCntOptim
@@ -264,20 +263,20 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             {
                 auto& cluster = problemeHebdo
                                   ->ShortTermStorage[pays][reserveParticipation.clusterIdInArea];
-                if (type == Type::UP)
+                if (type == ReserveType::UP)
                 {
                     double level_min = cluster.reservoirCapacity
                                        * cluster.series->lowerRuleCurve[pdtGlobal];
 
                     SecondMembre[cnt] = -reserve.energyActivationRatio
-                                        * reserve.maxActivationDuration * level_min;
+                                        * reserve.referenceActivationDuration * level_min;
                 }
                 else
                 {
                     double level_max = cluster.reservoirCapacity
                                        * cluster.series->upperRuleCurve[pdtGlobal];
                     SecondMembre[cnt] = reserve.energyActivationRatio
-                                        * reserve.maxActivationDuration * level_max;
+                                        * reserve.referenceActivationDuration * level_max;
                 }
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
@@ -357,7 +356,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
         void setHydroReserveParticipationRightSides(
           const RESERVE_PARTICIPATION_HYDRO& reserveParticipation,
           const CAPACITY_RESERVATION& reserve,
-          Type type)
+          ReserveType type)
         {
             const auto& CorrespondanceCntNativesCntOptim = problemeHebdo
                                                              ->CorrespondanceCntNativesCntOptim
@@ -384,18 +383,18 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             if (cnt >= 0)
             {
                 auto& hydroCluster = problemeHebdo->CaracteristiquesHydrauliques[pays];
-                if (type == Type::UP)
+                if (type == ReserveType::UP)
                 {
                     double level_min = hydroCluster.NiveauHoraireInf[pdtHebdo];
 
                     SecondMembre[cnt] = -reserve.energyActivationRatio
-                                        * reserve.maxActivationDuration * level_min;
+                                        * reserve.referenceActivationDuration * level_min;
                 }
                 else
                 {
                     double level_max = hydroCluster.NiveauHoraireSup[pdtHebdo];
                     SecondMembre[cnt] = reserve.energyActivationRatio
-                                        * reserve.maxActivationDuration * level_max;
+                                        * reserve.referenceActivationDuration * level_max;
                 }
 
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
@@ -427,7 +426,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                 reserveVariablesRightSidesSetter.setReserveRightSides(areaReserve);
 
                 // Thermal Cluster
-                if (areaReserve.type == Type::UP)
+                if (areaReserve.type == ReserveType::UP)
                 {
                     for (const auto& [clusterId, clusterReserveParticipation]:
                          areaReserve.AllThermalReservesParticipation)

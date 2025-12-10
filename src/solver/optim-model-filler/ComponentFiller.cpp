@@ -23,10 +23,11 @@
 #include <stdexcept>
 #include <variant>
 
+#include <antares/exception/RuntimeError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 
 namespace
 {
@@ -241,7 +242,7 @@ void AddVariableVisitor::operator()(const std::vector<double>& lb,
     }
 }
 
-ComponentFiller::ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+ComponentFiller::ComponentFiller(const Component& component,
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository,
                                  Modeler::Config::Location targetLocation,
@@ -283,12 +284,12 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         return;
     }
 
-    Expressions::Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_);
+    Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())
         {
-            return Expressions::Visitors::EvaluationResult(defaultValue);
+            return Visitors::EvaluationResult(defaultValue);
         }
         return evaluator.dispatch(node.RootNode());
     };
@@ -380,12 +381,11 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        const auto timeIndex = getConstraintTimeIndex(root_node, component_);
+        const auto variability = getVariability(root_node, component_);
 
-        optimEntityContainer_.registerConstraint(component_, timeIndex);
+        optimEntityContainer_.registerConstraint(component_, variability);
 
-        if (timeIndex == TimeIndex::VARYING_IN_TIME_ONLY
-            || timeIndex == TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+        if (isTimeDependent(variability))
         {
             addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx);
         }
@@ -396,33 +396,40 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
+void ComponentFiller::addStaticObjective(
+  const Optimization::TimeDependentLinearExpression& expression) const
+{
+    auto& pb = optimEntityContainer_.Problem();
+    const auto& solverVariables = optimEntityContainer_.getVariables();
+
+    for (const auto& [index, value]: expression[0])
+    {
+        pb.setObjectiveCoefficient(solverVariables[index].get(), value);
+    }
+}
+
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
     auto* model = component_.getModel();
-    const auto& solverVariables = optimEntityContainer_.getVariables();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
     for (const auto& objective: model->Objectives() | locationFilter())
     {
-        const auto linearExpression = visitor.visitMergeDuplicates(
-          objective.expression().RootNode());
+        const auto root_node = objective.expression().RootNode();
+        const auto linearExpression = visitor.visitMergeDuplicates(root_node);
 
-        auto& pb = optimEntityContainer_.Problem();
-        for (const auto& expr: linearExpression)
+        const auto variability = getVariability(root_node, component_);
+        if (isTimeDependent(variability))
         {
-            for (const auto& [index, value]: expr)
-            {
-                pb.setObjectiveCoefficient(solverVariables[static_cast<std::size_t>(index)].get(),
-                                           value);
-            }
+            throw Error::RuntimeError("Time dependent objectives are not supported in Antares.");
         }
+        addStaticObjective(linearExpression);
     }
 }
 
-TimeIndex ComponentFiller::getConstraintTimeIndex(const Nodes::Node* node,
-                                                  const Component& component) const
+VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const
 {
-    Expressions::Visitors::TimeIndexVisitor timeIndexVisitor(optimEntityContainer_, component);
-    return timeIndexVisitor.dispatch(node);
+    Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_, component);
+    return variability_visitor.dispatch(node);
 }
 } // namespace Antares::Optimisation

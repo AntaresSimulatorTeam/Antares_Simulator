@@ -25,7 +25,7 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
-#include <antares/study/parts/common/makeGroupsOfSymmetriesFromString.h>
+#include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include <antares/utils/utils.h>
 #include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"

@@ -29,7 +29,7 @@
 
 grammar SymmetryField;
 
-symmetryField: elementList (',' elementList)*;
+symmetryField: elementList (',' elementList)* EOF;
 
 elementList: '[' element (',' element)* ']';
 

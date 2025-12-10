@@ -1,4 +1,5 @@
 add_subdirectory(loadFiles)
+add_subdirectory(checks)
 
 add_library(mock-modeler-objects
         mockModelerObjects.cpp

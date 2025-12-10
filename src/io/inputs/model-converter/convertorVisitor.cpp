@@ -20,7 +20,6 @@
  */
 
 #include <ExprVisitor.h>
-#include <functional>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
@@ -97,6 +96,38 @@ NoPortWithThisId::NoPortWithThisId(const std::string& name):
 {
 }
 
+class AntaresErrorListener: public antlr4::BaseErrorListener
+{
+public:
+    void syntaxError(antlr4::Recognizer*,
+                     antlr4::Token*,
+                     size_t,
+                     size_t,
+                     const std::string& msg,
+                     std::exception_ptr) override
+    {
+        errors.push_back(msg);
+    }
+
+    void checkErrors(const std::string& expr) const
+    {
+        if (errors.empty())
+        {
+            return;
+        }
+
+        std::string fullMsg = "Error(s) while parsing expression: '" + expr + "'\n";
+        for (const auto& err: errors)
+        {
+            fullMsg += "  - " + err + "\n";
+        }
+        throw AntlrParsingError(fullMsg);
+    }
+
+private:
+    std::vector<std::string> errors;
+};
+
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
                                                   const YmlModel::Model& model)
 {
@@ -104,12 +135,25 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     {
         return {};
     }
+
+    // ANTLR setup
     antlr4::ANTLRInputStream input(exprStr);
     ExprLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     ExprParser parser(&tokens);
 
-    ExprParser::ExprContext* tree = parser.expr();
+    // error handling
+    AntaresErrorListener errorListener;
+    lexer.removeErrorListeners();  // remove antlr logs to keep ours
+    parser.removeErrorListeners(); // same
+    lexer.addErrorListener(&errorListener);
+    parser.addErrorListener(&errorListener);
+
+    // actual parsing
+    ExprParser::FullexprContext* tree = parser.fullexpr();
+    errorListener.checkErrors(exprStr);
+
+    // tree conversion
     Expressions::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
     auto root = std::any_cast<Node*>(visitor.visit(tree));
@@ -134,9 +178,10 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
     {
         if (param.id == identifier)
         {
-            return static_cast<Node*>(registry_.create<ParameterNode>(
-              param.id,
-              Optimisation::convertToTimeIndex(param.time_dependent, param.scenario_dependent)));
+            return static_cast<Node*>(
+              registry_.create<ParameterNode>(param.id,
+                                              Optimisation::variability(param.time_dependent,
+                                                                        param.scenario_dependent)));
         }
     }
 
@@ -146,10 +191,11 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         const auto& var = variables[index];
         if (var.id == identifier)
         {
-            return static_cast<Node*>(registry_.create<VariableNode>(
-              var.id,
-              index,
-              Optimisation::convertToTimeIndex(var.time_dependent, var.scenario_dependent)));
+            return static_cast<Node*>(
+              registry_.create<VariableNode>(var.id,
+                                             index,
+                                             Optimisation::variability(var.time_dependent,
+                                                                       var.scenario_dependent)));
         }
     }
     throw NoParameterOrVariableWithThisName(identifier);
@@ -280,7 +326,7 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
     return static_cast<Node*>(registry_.create<LiteralNode>(d));
 }
 
-std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndexContext* context)
+std::any ConvertorVisitor::visitTimeIndex(ExprParser::TimeIndexContext* context)
 {
     Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
     auto* index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
@@ -300,7 +346,7 @@ std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftC
     }
 }
 
-std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
+std::any ConvertorVisitor::visitTimeShift(ExprParser::TimeShiftContext* context)
 {
     return buildShiftNode(convertIdentifier(context->IDENTIFIER()->getText()), context->shift());
 }
@@ -343,7 +389,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
     {
         std::string params(constraintId.at(0)->getText());
 
-        for (int param = 1; param < constraintId.size(); param++)
+        for (unsigned param = 1; param < constraintId.size(); param++)
         {
             params += ", " + constraintId.at(param)->getText();
         }
@@ -378,7 +424,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         return node;
     }
 
-    throw NoConstraintWithThisName(model_.id, constraint_id);
+    throw DualNoConstraintWithThisName(model_.id, constraint_id);
 }
 
 std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)
@@ -392,7 +438,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     if (variableId.size() != 1) // -> > 1
     {
         std::string params(variableId.at(0)->getText());
-        for (int param = 1; param < variableId.size(); param++)
+        for (unsigned param = 1; param < variableId.size(); param++)
         {
             params += ", " + variableId.at(param)->getText();
         }
@@ -400,18 +446,18 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
                                     + params);
     }
 
-    std::vector<Node*> nodes;
-    try
+    unsigned index = 0;
+    for (const auto& var: model_.variables)
     {
-        nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+        if (var.id == variableId.at(0)->getText())
+        {
+            auto* varNode = registry_.create<VariableNode>(var.id, index);
+            return static_cast<Node*>(
+              registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode));
+        }
+        ++index;
     }
-    catch (const NoParameterOrVariableWithThisName&) // to print accurate message
-    {
-        throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
-    }
-
-    return static_cast<Node*>(
-      registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
+    throw ReducedCostNoVariableWithThisName(model_.id, variableId.at(0)->getText());
 }
 
 template<class T>
@@ -464,7 +510,7 @@ std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
 }
 
-std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
+std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
     auto* arglist = context->argList();
@@ -518,7 +564,7 @@ Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shif
     }
 }
 
-std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
+std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 {
     auto* from = NodeFromShiftContext(context->from->shift_expr());
 
@@ -529,7 +575,7 @@ std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumCont
     return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
 
-std::any ConvertorVisitor::visitAllTimeSum([[maybe_unused]] ExprParser::AllTimeSumContext* context)
+std::any ConvertorVisitor::visitAllTimeSum(ExprParser::AllTimeSumContext* context)
 {
     auto expr = std::any_cast<Node*>(context->expr()->accept(this));
     return static_cast<Node*>(registry_.create<AllTimeSumNode>(expr));
@@ -551,19 +597,17 @@ std::any ConvertorVisitor::visitUnsignedAtom(ExprParser::UnsignedAtomContext* co
     return context->atom()->accept(this);
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitRightAtom([[maybe_unused]] ExprParser::RightAtomContext* context)
+std::any ConvertorVisitor::visitRightAtom(ExprParser::RightAtomContext* context)
 {
     return context->atom()->accept(this);
 }
 
-std::any ConvertorVisitor::visitShift([[maybe_unused]] ExprParser::ShiftContext* context)
+std::any ConvertorVisitor::visitShift(ExprParser::ShiftContext* context)
 {
     return std::any_cast<Node*>(visit(context->shift_expr()));
 }
 
-std::any ConvertorVisitor::visitShiftAddsub(
-  [[maybe_unused]] ExprParser::ShiftAddsubContext* context)
+std::any ConvertorVisitor::visitShiftAddsub(ExprParser::ShiftAddsubContext* context)
 {
     Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
     Node* right = std::any_cast<Node*>(visit(context->right_expr()));
@@ -572,9 +616,7 @@ std::any ConvertorVisitor::visitShiftAddsub(
                        : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitShiftMuldiv(
-  [[maybe_unused]] ExprParser::ShiftMuldivContext* context)
+std::any ConvertorVisitor::visitShiftMuldiv(ExprParser::ShiftMuldivContext* context)
 {
     Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
     Node* right = std::any_cast<Node*>(visit(context->right_expr()));
@@ -590,9 +632,7 @@ std::any ConvertorVisitor::visitRightMuldiv(
     throw NotImplemented("Node right mul div not implemented yet");
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitSignedExpression(
-  [[maybe_unused]] ExprParser::SignedExpressionContext* context)
+std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionContext* context)
 {
     auto a = context->expr()->accept(this);
     if (context->op->getText() == "-")

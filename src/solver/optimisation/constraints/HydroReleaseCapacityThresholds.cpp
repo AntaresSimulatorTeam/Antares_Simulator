@@ -1,7 +1,5 @@
 #include "antares/solver/optimisation/constraints/HydroReleaseCapacityThresholds.h"
 
-using namespace reserve;
-
 void HydroReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
 {
     int globalClusterIdx = data.hydroOfArea[pays].GlobalHydroIndex;
@@ -20,7 +18,7 @@ void HydroReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation:
-                 data.areaReserves[pays].areaCapacityReservations | filter(Type::DOWN))
+                 data.areaReserves[pays].areaCapacityReservations | filter(ReserveType::DOWN))
             {
                 for (const auto& reserveParticipations:
                      capacityReservation.AllHydroReservesParticipation)
@@ -56,7 +54,7 @@ void HydroReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation:
-                 data.areaReserves[pays].areaCapacityReservations | filter(Type::UP))
+                 data.areaReserves[pays].areaCapacityReservations | filter(ReserveType::UP))
             {
                 for (const auto& reserveParticipations:
                      capacityReservation.AllHydroReservesParticipation)

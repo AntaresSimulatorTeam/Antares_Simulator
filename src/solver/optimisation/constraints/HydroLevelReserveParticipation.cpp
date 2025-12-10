@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/HydroLevelReserveParticipation.h"
-using namespace reserve;
 
 void HydroLevelReserveParticipation::add(int pays, int cluster, int pdt)
 {
@@ -22,7 +21,7 @@ void HydroLevelReserveParticipation::add(int pays, int cluster, int pdt)
         // P_{res} : power participation for reserve up res
         // R_{min,res} : max power participation ratio
         // R_down : min stock level
-        for (auto type: {Type::DOWN, Type::UP})
+        for (auto type: {ReserveType::DOWN, ReserveType::UP})
         {
             builder.updateHourWithinWeek(pdt);
             for (auto& capacityReservation:
@@ -40,7 +39,7 @@ void HydroLevelReserveParticipation::add(int pays, int cluster, int pdt)
             }
             if (builder.NumberOfVariables() > 0)
             {
-                builder.HydroLevel(globalClusterIdx, type == Type::DOWN ? 1. : -1.);
+                builder.HydroLevel(globalClusterIdx, type == ReserveType::DOWN ? 1. : -1.);
                 builder.lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
                   .reservesIndices.value()

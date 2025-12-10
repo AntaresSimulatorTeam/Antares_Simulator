@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/ThermalReserveParticipation.h"
-using namespace reserve;
 
 void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
 {
@@ -7,7 +6,7 @@ void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pd
                                                  .areaCapacityReservations[reserve];
 
     auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster];
-    bool offUnitParticipating = capacityReservation.type == Type::UP
+    bool offUnitParticipating = capacityReservation.type == ReserveType::UP
                                 && reserveParticipation.maxPowerOff > 0;
     if (!data.Simulation)
     {

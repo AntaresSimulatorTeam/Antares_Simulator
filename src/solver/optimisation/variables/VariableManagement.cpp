@@ -79,7 +79,7 @@ int& VariableManager::ThermalClusterReserveParticipation(unsigned int index,
       .thermalClusterParticipation[index];
 }
 
-int& VariableManager::STStorageClusterReserveParticipation(reserve::Type type,
+int& VariableManager::STStorageClusterReserveParticipation(ReserveType type,
                                                            unsigned int index,
                                                            unsigned int hourInWeek,
                                                            int offset,
@@ -116,7 +116,7 @@ int& VariableManager::STStorageStoreClusterReserveParticipation(unsigned int ind
       .STStorageStoreClusterParticipation[index];
 }
 
-int& VariableManager::HydroReserveParticipation(reserve::Type type,
+int& VariableManager::HydroReserveParticipation(ReserveType type,
                                                 unsigned int index,
                                                 unsigned int hourInWeek,
                                                 int offset,

@@ -124,25 +124,28 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/nearPriceCap.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
-        
+
         # Reserves
+        include/antares/solver/variable/economy/reserves/reserveParticipationBase.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationBase.hpp
+        include/antares/solver/variable/economy/reserves/reserveParticipationByDispatchableOffUnitsPlant.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationByDispatchableOnUnitsPlant.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationByHydro.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationBySTStorage.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationBySTStorageGroup.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationByThermalGroup.h
         include/antares/solver/variable/economy/reserves/reserveParticipationCost.h
         include/antares/solver/variable/economy/reserves/reserveParticipationMarginalCost.h
-	include/antares/solver/variable/economy/reserves/reserveParticipationByDispatchableOnUnitsPlant.h
-	include/antares/solver/variable/economy/reserves/vCardReserveParticipationByDispatchableOnUnitsPlant.h
-	include/antares/solver/variable/economy/reserves/reserveParticipationByDispatchableOffUnitsPlant.h
-	include/antares/solver/variable/economy/reserves/vCardReserveParticipationByDispatchableOffUnitsPlant.h
-	include/antares/solver/variable/economy/reserves/reserveParticipationBySTStorage.h
-        include/antares/solver/variable/economy/reserves/vCardReserveParticipationBySTStorage.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationTemplate.h
         include/antares/solver/variable/economy/reserves/reserveParticipationUnsuppliedSpilled.h
-	include/antares/solver/variable/economy/reserves/vCardReserveParticipationUnsuppliedSpilled.h
-	include/antares/solver/variable/economy/reserves/reserveParticipationByThermalGroup.h
-        include/antares/solver/variable/economy/reserves/vCardReserveParticipationByThermalGroup.h
-        include/antares/solver/variable/economy/reserves/reserveParticipationBySTStorageGroup.h
-        include/antares/solver/variable/economy/reserves/vCardReserveParticipationBySTStorageGroup.h
-        include/antares/solver/variable/economy/reserves/reserveParticipationByHydro.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationByDispatchableOffUnitsPlant.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationByDispatchableOnUnitsPlant.h
         include/antares/solver/variable/economy/reserves/vCardReserveParticipationByHydro.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationBySTStorage.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationBySTStorageGroup.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationByThermalGroup.h
         include/antares/solver/variable/economy/reserves/vCardReserveParticipationMarginalCost.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationUnsuppliedSpilled.h
 
         # Links
         include/antares/solver/variable/economy/links/flowLinear.h

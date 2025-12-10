@@ -75,9 +75,9 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
-static Model& getModel(const std::vector<Library>& libraries,
-                       const std::string& libraryId,
-                       const std::string& modelId)
+static const Model& getModel(const std::vector<Library>& libraries,
+                             const std::string& libraryId,
+                             const std::string& modelId)
 {
     auto lib = std::ranges::find_if(libraries,
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
@@ -101,19 +101,19 @@ static Component createComponent(const YmlSystem::Component& c,
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
-    Model& model = getModel(libraries, libraryId, modelId);
+    const Model& model = getModel(libraries, libraryId, modelId);
 
     ComponentBuilder component_builder;
 
     std::map<std::string, ParameterTypeAndValue> parameters;
     for (const auto& [id, time_dependent, scenario_dependent, value]: c.parameters)
     {
-        parameters.try_emplace(id,
-                               ParameterTypeAndValue{.id = id,
-                                                     .type = time_dependent
-                                                               ? ParameterType::TIMESERIE
-                                                               : ParameterType::CONSTANT,
-                                                     .value = value});
+        parameters.try_emplace(
+          id,
+          ParameterTypeAndValue{.id = id,
+                                .type = Optimisation::variability(time_dependent,
+                                                                  scenario_dependent),
+                                .value = value});
     }
 
     auto component = component_builder.withId(c.id)

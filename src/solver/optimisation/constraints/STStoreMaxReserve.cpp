@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/STStoreMaxReserve.h"
-using namespace reserve;
 
 void STStoreMaxReserve::add(int pays, int reserve, int cluster, int pdt)
 {

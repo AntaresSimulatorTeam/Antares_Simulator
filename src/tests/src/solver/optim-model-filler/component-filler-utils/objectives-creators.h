@@ -1,8 +1,8 @@
 #pragma once
 
+#include <antares/study/system-model/variabilityType.h>
 #include "antares/expressions/expression.h"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/modeler-optimisation-container/TimeIndex.h"
 #include "antares/study/system-model/objective.h"
 
 using namespace Antares;

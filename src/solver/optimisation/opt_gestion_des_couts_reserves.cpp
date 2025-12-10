@@ -25,7 +25,6 @@
 #include "antares/solver/simulation/simulation.h"
 
 #include "variables/VariableManagerUtils.h"
-using namespace reserve;
 
 void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                                              const int PremierPdtDeLIntervalle,
@@ -71,14 +70,14 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
 
         // Init costs for a Thermal cluster participation to a reserve up
         void initThermalReserveParticipationCosts(
-          Type type,
+          ReserveType type,
           const RESERVE_PARTICIPATION_THERMAL& reserveParticipation)
         {
             int var = variableManager.RunningThermalClusterReserveParticipation(
               reserveParticipation.globalIndexClusterParticipation,
               pdtHebdo);
             CoutLineaire[var] = reserveParticipation.participationCost;
-            if (type == Type::UP)
+            if (type == ReserveType::UP)
             {
                 var = variableManager.OffThermalClusterReserveParticipation(
                   reserveParticipation.globalIndexClusterParticipation,
@@ -89,7 +88,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
 
         // Init costs for a ShortTerm cluster participation to a reserve up
         void initSTStorageReserveParticipationCosts(
-          Type type,
+          ReserveType type,
           const RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation)
         {
             int var = variableManager.STStorageClusterReserveParticipation(
@@ -101,7 +100,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
 
         // Init costs for a Hydro participation to a reserve
         void initHydroReserveParticipationCosts(
-          Type type,
+          ReserveType type,
           const RESERVE_PARTICIPATION_HYDRO& reserveParticipation)
         {
             int var = variableManager.HydroReserveParticipation(

@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/HydroReserveParticipation.h"
-using namespace reserve;
 
 void HydroReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
 {
@@ -17,7 +16,7 @@ void HydroReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
         RESERVE_PARTICIPATION_HYDRO& reserveParticipation = capacityReservation
                                                               .AllHydroReservesParticipation
                                                                 [cluster];
-        bool isUpReserve = capacityReservation.type == Type::UP;
+        bool isUpReserve = capacityReservation.type == ReserveType::UP;
         builder.updateHourWithinWeek(pdt)
           .HydroReleaseReserveParticipation(reserveParticipation.globalIndexClusterParticipation,
                                             isUpReserve ? -1.0 : 1.0)

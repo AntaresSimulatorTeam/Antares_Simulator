@@ -51,7 +51,6 @@ nav:
               - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
               - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
               - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
-          - 'Appendix': 'user-guide/solver/08-appendix.md'
       - 'Modeler':
           - 'Overview': 'user-guide/modeler/01-overview-modeler.md'
           - 'Input files': 'user-guide/modeler/02-inputs.md'
@@ -61,6 +60,7 @@ nav:
           - 'Heuristics': 'user-guide/modeler/06-heuristics.md'
           - 'Standard library': 'user-guide/modeler/07-standard-library.md'
           - 'Command-line interface': 'user-guide/modeler/08-command-line.md'
+          - 'Expressions': 'user-guide/modeler/09-expressions.md'
       - 'Time-series generation':
           - 'Overview': 'user-guide/ts-generator/01-overview-tsgenerator.md'
           - 'Input files': 'user-guide/ts-generator/02-inputs.md'
@@ -133,4 +133,4 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
-copyright: Copyright &copy; 2007 - 2024 RTE
+copyright: Copyright &copy; 2007 - 2025 RTE

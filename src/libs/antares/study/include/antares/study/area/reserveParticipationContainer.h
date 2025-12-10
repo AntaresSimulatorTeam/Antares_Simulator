@@ -24,6 +24,8 @@
 
 #include <antares/study/area/reserveParticipation.h>
 
+namespace Antares::Data
+{
 template<typename T>
 concept DerivedFromReserveParticipationBase = std::is_base_of_v<ReserveParticipationBase, T>;
 
@@ -32,64 +34,48 @@ concept DerivedFromReserveParticipationBase = std::is_base_of_v<ReserveParticipa
 template<DerivedFromReserveParticipationBase T>
 class ReserveParticipationContainerBase
 {
-    struct ReserveParticipationWithName
-    {
-        T* reserveParticipation;
-        ReserveName reserveName;
-    };
-
 protected:
     std::map<ReserveName, T> reservesParticipations;
-    std::vector<std::vector<ReserveParticipationWithName>> reserveParticipationsSymmetries;
+    std::vector<std::set<ReserveName>> reserveParticipationsSymmetries;
 
 public:
     /// @brief Add a reserve participation to the container for a given reserve name
     /// @param reserveName name of the reserve for which the participation is added
     /// @param reserveParticipation reserve participation to add
-    void addReserveParticipation(ReserveName reserveName, const T& reserveParticipation)
+    void addReserveParticipation(const ReserveName& reserveName, const T& reserveParticipation)
     {
         reservesParticipations.emplace(reserveName, reserveParticipation);
     }
 
     /// @brief Add a reserve participation symmetry to the container
     /// @param names names of the reserves for which the participation is symmetrical
-    void addReserveParticipationSymmetry(std::set<ReserveName> names)
+    void addReserveParticipationSymmetry(const std::set<ReserveName>& names)
     {
-        auto symmetryRes = std::vector<ReserveParticipationWithName>();
-        for (auto name: names)
+        if (names.size() < 2)
         {
-            if (names.size() != 2)
+            throw std::runtime_error(
+              "Must have at least two distinct reserves to participate to a symmetry");
+        }
+        std::set<ReserveName> symmetryRes;
+        for (const auto& name: names)
+        {
+            if (auto it = reservesParticipations.find(name); it != reservesParticipations.end())
             {
-                throw std::out_of_range(
-                  "Must have two distinct reserves to participate to a symmetry");
-            }
-            if (reservesParticipations.contains(name))
-            {
-                symmetryRes.push_back(
-                  ReserveParticipationWithName{&reservesParticipations.at(name), name});
+                symmetryRes.insert({name});
             }
             else
             {
                 throw std::out_of_range("This entity is not participating to reserve " + name);
             }
         }
-        for (auto existingSymmetry: reserveParticipationsSymmetries)
+
+        // Check if symmetry already existed
+        if (std::find(reserveParticipationsSymmetries.begin(),
+                      reserveParticipationsSymmetries.end(),
+                      symmetryRes)
+            != reserveParticipationsSymmetries.end())
         {
-            int sameNamesCount = 0;
-            for (auto resSym: existingSymmetry)
-            {
-                for (auto name: names)
-                {
-                    if (name == (std::string)resSym.reserveName)
-                    {
-                        sameNamesCount++;
-                    }
-                }
-            }
-            if (sameNamesCount == 2) // The symmetry is already present
-            {
-                throw std::invalid_argument("Detected duplicate in reserves symmetries");
-            }
+            throw std::invalid_argument("Detected duplicate in reserves symmetries");
         }
         reserveParticipationsSymmetries.push_back(symmetryRes);
     }
@@ -97,18 +83,17 @@ public:
     /// @brief Get the indices of the lists that contains reserveParticipation to the reserve name
     /// @param name name of the reserve for which the participation is searched
     /// @return indices of the lists that contains reserveParticipation to the reserve name
-    std::vector<int> symmetricalIndices(ReserveName name) const
+    std::vector<int> symmetricalIndices(const ReserveName& name) const
     {
         std::vector<int> indices;
-        for (int i = 0; i < reserveParticipationsSymmetries.size(); i++)
+
+        for (int i = 0; const auto& list: reserveParticipationsSymmetries)
         {
-            for (auto reserveParticipation: reserveParticipationsSymmetries.at(i))
+            if (list.contains(name))
             {
-                if (reserveParticipation.reserveName == name)
-                {
-                    indices.push_back(i);
-                }
+                indices.push_back(i);
             }
+            ++i;
         }
 
         return indices;
@@ -130,7 +115,7 @@ public:
     /// @brief Returns true if cluster participates in a reserve with this name
     /// @param name name of the reserve
     /// @return true if cluster participates in a reserve with this name
-    bool isParticipatingInReserve(ReserveName name) const
+    bool isParticipatingInReserve(const ReserveName& name) const
     {
         return reservesParticipations.contains(name);
     }
@@ -140,7 +125,7 @@ public:
         return std::views::all(reservesParticipations);
     }
 
-    double reserveCost(ReserveName name) const
+    double reserveCost(const ReserveName& name) const
     {
         return reservesParticipations.at(name).participationCost;
     }
@@ -161,7 +146,7 @@ public:
     /// @brief Returns the cost of participation in a reserve when the cluster is off
     /// @param name name of the reserve
     /// @return the cost of participation in the reserve when the cluster is off
-    double reserveCostOff(ReserveName name) const
+    double reserveCostOff(const ReserveName& name) const
     {
         return reservesParticipations.at(name).participationCostOff;
     }
@@ -169,7 +154,7 @@ public:
     /// @brief Returns the maximum power that can be reserved when the cluster is off
     /// @param name name of the reserve
     /// @return the maximum power that can be reserved when the cluster is off
-    double reserveMaxPowerOff(ReserveName name) const
+    double reserveMaxPowerOff(const ReserveName& name) const
     {
         return reservesParticipations.at(name).maxPowerOff;
     }
@@ -177,7 +162,7 @@ public:
     /// @brief Returns the maximum power that can be reserved
     /// @param name name of the reserve
     /// @return the maximum power that can be reserved
-    double reserveMaxPower(ReserveName name) const
+    double reserveMaxPower(const ReserveName& name) const
     {
         return reservesParticipations.at(name).maxPower;
     }
@@ -191,7 +176,7 @@ public:
     /// @brief Returns the maximum release power that can be reserved
     /// @param name name of the reserve
     /// @return the maximum release power that can be reserved
-    double reserveMaxRelease(ReserveName name) const
+    double reserveMaxRelease(const ReserveName& name) const
     {
         return reservesParticipations.at(name).maxRelease;
     }
@@ -199,8 +184,10 @@ public:
     /// @brief Returns the maximum store power that can be reserved
     /// @param name name of the reserve
     /// @return the maximum store power that can be reserved
-    double reserveMaxStore(ReserveName name) const
+    double reserveMaxStore(const ReserveName& name) const
     {
         return reservesParticipations.at(name).maxStore;
     }
 };
+
+}; // namespace Antares::Data

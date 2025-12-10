@@ -25,7 +25,7 @@ namespace Antares::Optimisation
 /**
  * @brief Represents the time and scenario variation of a value.
  */
-enum class TimeIndex : unsigned int
+enum class VariabilityType : unsigned int
 {
     CONSTANT_IN_TIME_AND_SCENARIO = 0,
     VARYING_IN_TIME_ONLY = 1,
@@ -41,7 +41,7 @@ enum class TimeIndex : unsigned int
  *
  * @return The combined TimeIndex value.
  */
-constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
+constexpr VariabilityType operator|(const VariabilityType& left, const VariabilityType& right)
 {
     /*
      0 | x = x
@@ -50,8 +50,8 @@ constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
      1 | 2 = 3
      2 | 2 = 2
      */
-    return static_cast<TimeIndex>(static_cast<unsigned int>(left)
-                                  | static_cast<unsigned int>(right));
+    return static_cast<VariabilityType>(static_cast<unsigned int>(left)
+                                        | static_cast<unsigned int>(right));
 }
 
 // to silent warning, convert bool to unsigned int
@@ -60,10 +60,27 @@ static constexpr unsigned int convertBool(bool in)
     return in ? 1 : 0;
 }
 
-constexpr Optimisation::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
+constexpr VariabilityType variability(bool timedependent, bool scenariodependent)
 {
-    return static_cast<TimeIndex>((convertBool(scenariodependent) << 1)
-                                  | convertBool(timedependent));
+    return static_cast<VariabilityType>((convertBool(scenariodependent) << 1)
+                                        | convertBool(timedependent));
+}
+
+constexpr bool isTimeDependent(VariabilityType variability)
+{
+    return variability == VariabilityType::VARYING_IN_TIME_ONLY
+           || variability == VariabilityType::VARYING_IN_TIME_AND_SCENARIO;
+}
+
+constexpr bool isScenarioDependent(VariabilityType variability)
+{
+    return variability == VariabilityType::VARYING_IN_SCENARIO_ONLY
+           || variability == VariabilityType::VARYING_IN_TIME_AND_SCENARIO;
+}
+
+constexpr bool isTimeConstant(VariabilityType variability)
+{
+    return variability == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
 } // namespace Antares::Optimisation

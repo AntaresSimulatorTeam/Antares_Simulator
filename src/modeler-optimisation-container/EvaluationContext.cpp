@@ -94,8 +94,7 @@ std::span<const double> EvaluationContext::getParameterValue(const std::string& 
                           lastHour);
 }
 
-ModelerStudy::SystemModel::ParameterType EvaluationContext::getParameterType(
-  const std::string& key) const
+Optimisation::VariabilityType EvaluationContext::getParameterType(const std::string& key) const
 {
     const auto& parameters_types_and_values = component_->getParameterValues();
     return parameters_types_and_values.at(key).type;

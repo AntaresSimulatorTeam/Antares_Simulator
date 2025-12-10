@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/POutBounds.h"
-using namespace reserve;
 
 void POutBounds::add(int pays, int cluster, int pdt)
 {
@@ -19,18 +18,11 @@ void POutBounds::add(int pays, int cluster, int pdt)
         {
             builder.updateHourWithinWeek(pdt);
 
-            for (const auto& capacityReservation:
-                 data.areaReserves[pays].areaCapacityReservations | filter(Type::DOWN))
-            {
-                if (capacityReservation.AllThermalReservesParticipation.contains(cluster))
-                {
-                    auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation
-                                                   .at(cluster);
-                    builder.RunningThermalClusterReserveParticipation(
-                      reserveParticipation.globalIndexClusterParticipation,
-                      1);
-                }
-            }
+            ReserveData::addRunningThermalClusterReserveParticipationToBuilder(data,
+                                                                               pays,
+                                                                               cluster,
+                                                                               ReserveType::DOWN,
+                                                                               builder);
 
             if (builder.NumberOfVariables() > 0)
             {
@@ -57,18 +49,11 @@ void POutBounds::add(int pays, int cluster, int pdt)
         {
             builder.updateHourWithinWeek(pdt);
 
-            for (const auto& capacityReservation:
-                 data.areaReserves[pays].areaCapacityReservations | filter(Type::UP))
-            {
-                if (capacityReservation.AllThermalReservesParticipation.contains(cluster))
-                {
-                    auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation
-                                                   .at(cluster);
-                    builder.RunningThermalClusterReserveParticipation(
-                      reserveParticipation.globalIndexClusterParticipation,
-                      1);
-                }
-            }
+            ReserveData::addRunningThermalClusterReserveParticipationToBuilder(data,
+                                                                               pays,
+                                                                               cluster,
+                                                                               ReserveType::UP,
+                                                                               builder);
 
             if (builder.NumberOfVariables() > 0)
             {

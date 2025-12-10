@@ -1,6 +1,5 @@
 set(SOURCES
         parser.cpp
-        converter.cpp
         decoders.hxx
         include/antares/io/inputs/yml-optim-config/parser.h
 )

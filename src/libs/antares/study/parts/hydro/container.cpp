@@ -22,7 +22,7 @@
 #include "antares/study/parts/hydro/container.h"
 
 #include <antares/study/area/capacityReservation.h>
-#include <antares/study/parts/common/makeGroupsOfSymmetriesFromString.h>
+#include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 #include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"

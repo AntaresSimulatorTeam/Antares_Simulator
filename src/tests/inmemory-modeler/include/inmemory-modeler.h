@@ -23,8 +23,9 @@
 #include <string>
 #include <vector>
 
-#include "antares/modeler-optimisation-container/EvaluationContext.h"
-#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/expressions/nodes/VariableNode.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/data.h"
@@ -33,13 +34,14 @@
 #include "antares/study/system-model/model.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Optimisation;
 
 namespace Test::Modeler
 {
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type = ParameterType::CONSTANT);
+  const VariabilityType& type = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
 struct VariableData
 {
@@ -65,6 +67,8 @@ struct LinearProblemBuildingFixture
     std::vector<Component> components;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
     Antares::Modeler::Data modelerData;
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
+    std::unique_ptr<Antares::Optimisation::OptimEntityContainer> optimEntityContainer;
 
     void createModel(const std::string& modelId,
                      const std::vector<std::string>& parameterIds,
@@ -97,19 +101,21 @@ struct LinearProblemBuildingFixture
 
     Antares::Expressions::Nodes::Node* parameter(
       const std::string& paramId,
-      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
-        CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::VariabilityType& variability = Antares::Optimisation::
+        VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* variable(
       const std::string& varId,
       unsigned int index,
-      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
-        CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::VariabilityType& variability = Antares::Optimisation::
+        VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
                                                 Antares::Expressions::Nodes::Node* node2);
 
     Antares::Expressions::Nodes::Node* negate(Antares::Expressions::Nodes::Node* node);
+    Antares::Expressions::Nodes::Node* add(Antares::Expressions::Nodes::Node* node1,
+                                           Antares::Expressions::Nodes::Node* node2);
 
     void buildLinearProblem(
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,

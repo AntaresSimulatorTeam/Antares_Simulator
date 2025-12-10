@@ -11,16 +11,15 @@ set(SRC_Expressions
         nodes/FunctionNode.cpp
 
 
-
+        visitors/AstDOTStyleVisitor.cpp
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
         visitors/EvalVisitor.cpp
-        visitors/LinearityVisitor.cpp
-        visitors/TimeIndexVisitor.cpp
-        visitors/PrintVisitor.cpp
-        visitors/AstDOTStyleVisitor.cpp
         visitors/InvalidNode.cpp
+        visitors/LinearityVisitor.cpp
         visitors/NodeVisitor.cpp
+        visitors/PrintVisitor.cpp
+        visitors/VariabilityVisitor.cpp
 
 
         NodeRegistry.cpp
@@ -50,16 +49,16 @@ set(SRC_Expressions
         include/antares/expressions/nodes/FunctionNode.h
 
 
+        include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/CloneVisitor.h
         include/antares/expressions/visitors/CompareVisitor.h
         include/antares/expressions/visitors/EvalVisitor.h
+        include/antares/expressions/visitors/InvalidNode.h
         include/antares/expressions/visitors/LinearStatus.h
         include/antares/expressions/visitors/LinearityVisitor.h
         include/antares/expressions/visitors/NodeVisitor.h
         include/antares/expressions/visitors/PrintVisitor.h
-        include/antares/expressions/visitors/TimeIndexVisitor.h
-        include/antares/expressions/visitors/AstDOTStyleVisitor.h
-        include/antares/expressions/visitors/InvalidNode.h
+        include/antares/expressions/visitors/VariabilityVisitor.h
         include/antares/expressions/visitors/VariadicNodeFunctionVisit.h
 
         include/antares/expressions/Registry.hxx
@@ -84,6 +83,7 @@ target_include_directories(expressions
 target_link_libraries(expressions
         PUBLIC
         Boost::headers
+        Antares::antares-study-system-model
         Antares::logs
         fmt::fmt
         #TODO i need LinearProblemData
@@ -92,7 +92,6 @@ target_link_libraries(expressions
         Antares::modeler-optimisation-container
         Antares::optim-model-filler
         PRIVATE
-        Antares::antares-study-system-model
         Antares::exception
 )
 

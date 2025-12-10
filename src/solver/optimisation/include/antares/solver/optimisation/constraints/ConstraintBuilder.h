@@ -110,7 +110,7 @@ public:
                                                           int offset = 0,
                                                           int delta = 0);
 
-    ConstraintBuilder& STStorageClusterReserveParticipation(reserve::Type type,
+    ConstraintBuilder& STStorageClusterReserveParticipation(ReserveType type,
                                                             unsigned int index,
                                                             double coeff,
                                                             int offset = 0,
@@ -126,7 +126,7 @@ public:
                                                                  int offset = 0,
                                                                  int delta = 0);
 
-    ConstraintBuilder& HydroReserveParticipation(reserve::Type type,
+    ConstraintBuilder& HydroReserveParticipation(ReserveType type,
                                                  unsigned int index,
                                                  double coeff,
                                                  int offset = 0,
@@ -371,6 +371,8 @@ struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires;
 };
 
+using namespace Antares::Data;
+
 struct ReserveData
 {
     bool Simulation;
@@ -383,10 +385,9 @@ struct ReserveData
     int countNumberOfConstraintsForThermalReserves(int pays, int cluster)
     {
         int count = 0;
-        for (auto type: {reserve::Type::UP, reserve::Type::DOWN})
+        for (auto type: {ReserveType::UP, ReserveType::DOWN})
         {
-            if (std::ranges::any_of(areaReserves[pays].areaCapacityReservations
-                                      | reserve::filter(type),
+            if (std::ranges::any_of(areaReserves[pays].areaCapacityReservations | filter(type),
                                     [&](const auto& r) {
                                         return r.AllThermalReservesParticipation.count(cluster) > 0;
                                     }))
@@ -401,13 +402,12 @@ struct ReserveData
                                                  bool accountForGlobalActivationDuration = false)
     {
         int count = 0;
-        for (auto type: {reserve::Type::UP, reserve::Type::DOWN})
+        for (auto type: {ReserveType::UP, ReserveType::DOWN})
         {
             if (!accountForGlobalActivationDuration
                 || areaReserves[pays].referenceGlobalActivationDuration[type])
             {
-                if (std::ranges::any_of(areaReserves[pays].areaCapacityReservations
-                                          | reserve::filter(type),
+                if (std::ranges::any_of(areaReserves[pays].areaCapacityReservations | filter(type),
                                         [&](const auto& r)
                                         { return r.AllHydroReservesParticipation.size() > 0; }))
                 {
@@ -425,20 +425,42 @@ struct ReserveData
       bool accountForGlobalActivationDuration = false)
     {
         int count = 0;
-        for (auto type: {reserve::Type::UP, reserve::Type::DOWN})
+        for (auto type: {ReserveType::UP, ReserveType::DOWN})
         {
             if (!accountForGlobalActivationDuration
                 || areaReserves[pays].referenceGlobalActivationDuration[type])
             {
-                if (std::ranges::any_of(
-                      areaReserves[pays].areaCapacityReservations | reserve::filter(type),
-                      [&](const auto& r)
-                      { return r.AllSTStorageReservesParticipation.count(cluster) > 0; }))
+                if (std::ranges::any_of(areaReserves[pays].areaCapacityReservations | filter(type),
+                                        [&](const auto& r) {
+                                            return r.AllSTStorageReservesParticipation.count(
+                                                     cluster)
+                                                   > 0;
+                                        }))
                 {
                     count++;
                 }
             }
         }
         return count;
+    }
+
+    static void addRunningThermalClusterReserveParticipationToBuilder(ReserveData& data,
+                                                                      int pays,
+                                                                      int cluster,
+                                                                      ReserveType type,
+                                                                      ConstraintBuilder& builder)
+    {
+        for (const auto& capacityReservation:
+             data.areaReserves[pays].areaCapacityReservations | filter(type))
+        {
+            if (capacityReservation.AllThermalReservesParticipation.contains(cluster))
+            {
+                auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation.at(
+                  cluster);
+                builder.RunningThermalClusterReserveParticipation(
+                  reserveParticipation.globalIndexClusterParticipation,
+                  1);
+            }
+        }
     }
 };

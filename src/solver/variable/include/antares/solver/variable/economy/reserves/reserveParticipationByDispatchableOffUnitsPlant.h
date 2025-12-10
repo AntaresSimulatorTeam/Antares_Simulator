@@ -26,27 +26,19 @@
 */
 #pragma once
 
-#include "../../variable.h"
-#include "./vCardReserveParticipationByDispatchableOffUnitsPlant.h"
+#include "reserveParticipationTemplate.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy::Reserves
 {
 
 /*!
-** \brief C02 Average value of the overrall OperatingCost emissions expected from all
-**   the thermal dispatchable clusters
+** \brief Reserve Participation from off units in thermal clusters
 */
 template<class NextT = Container::EndOfList>
 class ReserveParticipationByDispatchableOffUnitsPlant
-    : public Variable::IVariable<ReserveParticipationByDispatchableOffUnitsPlant<NextT>,
-                                 NextT,
-                                 VCardReserveParticipationByDispatchableOffUnitsPlant>
+    : public ReserveParticipationTemplate<ReserveParticipationByDispatchableOffUnitsPlant<NextT>,
+                                          VCardReserveParticipationByDispatchableOffUnitsPlant,
+                                          NextT>
 {
 public:
     //! Type of the next static variable
@@ -54,236 +46,75 @@ public:
     //! VCard
     typedef VCardReserveParticipationByDispatchableOffUnitsPlant VCardType;
     //! Ancestor
-    typedef Variable::
-      IVariable<ReserveParticipationByDispatchableOffUnitsPlant<NextT>, NextT, VCardType>
-        AncestorType;
+    typedef ReserveParticipationTemplate<ReserveParticipationByDispatchableOffUnitsPlant<NextT>,
+                                         VCardType,
+                                         NextT>
+      AncestorType;
 
-    //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
+    using AncestorType::pNbYearsParallel;
+    using AncestorType::pSize;
+    using AncestorType::pValuesForTheCurrentYear;
 
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
-
-    enum
-    {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
-
-    template<int CDataLevel, int CFile>
-    struct Statistics
-    {
-        enum
-        {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
-        };
-    };
-
-public:
     ReserveParticipationByDispatchableOffUnitsPlant() = default;
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    size_t getSizeFromArea(Study* /*study*/, Area* area)
     {
-        // Get the number of years in parallel
-        pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
-
-        // Get the number of thermal reserveParticipations
-        pSize = study->parameters.reservesEnabled ? area->thermal.list.reserveParticipationsCount()
-                                                  : 0;
-
-        if (pSize)
-        {
-            AncestorType::pResults.resize(pSize);
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace].resize(pSize);
-            }
-
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                for (unsigned int i = 0; i != pSize; ++i)
-                {
-                    pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
-                }
-            }
-
-            for (unsigned int i = 0; i != pSize; ++i)
-            {
-                AncestorType::pResults[i].initializeFromStudy(*study);
-                AncestorType::pResults[i].reset();
-            }
-        }
-        else
-        {
-            AncestorType::pResults.clear();
-        }
-
-        // Next
-        NextType::initializeFromArea(study, area);
+        return area->thermal.list.reserveParticipationsCount();
     }
 
-    size_t getMaxNumberColumns() const
+    void populateHourlyValues(State& state, unsigned int numSpace);
+
+    bool hasIndexMapping(const Study& study, const Area* area) const
     {
-        return pSize * ResultsType::count;
+        return study.parameters.reservesEnabled
+               && !study.runtime.reserveParticipationIndexMaps.value()
+                     .at(area->id)
+                     .thermalClusters.empty();
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    void buildReportForIndex(SurveyResults& results,
+                             uint i,
+                             int fileLevel,
+                             int precision,
+                             unsigned int numSpace) const
     {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
+        auto [reserveName, clusterName] = results.data.study.runtime.reserveParticipationIndexMaps
+                                            .value()
+                                            .at(results.data.area->id)
+                                            .thermalClusters.right.at(i);
+        results.variableCaption = reserveName + "_" + clusterName + "_off";
+        results.variableUnit = VCardType::Unit();
+        pValuesForTheCurrentYear[numSpace][i]
+          .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
     }
-
-    void simulationBegin()
-    {
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
-    }
-
-    void yearBegin(unsigned int year, unsigned int numSpace)
-    {
-        // Reset the values for the current year
-        for (unsigned int i = 0; i != pSize; ++i)
-        {
-            pValuesForTheCurrentYear[numSpace][i].reset();
-        }
-
-        // Next variable
-        NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
-    }
-
-    void yearEndBuild(State& state, unsigned int year)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year);
-    }
-
-    void yearEnd(unsigned int year, unsigned int numSpace)
-    {
-        // Merge all results for all thermal clusters
-        {
-            for (unsigned int i = 0; i < pSize; ++i)
-            {
-                // Compute all statistics for the current year (daily,weekly,monthly)
-                pValuesForTheCurrentYear[numSpace][i].computeStatisticsForTheCurrentYear();
-            }
-        }
-        // Next variable
-        NextType::yearEnd(year, numSpace);
-    }
-
-    void computeSummary(unsigned int year, unsigned int numSpace)
-    {
-        // Merge all those values with the global results
-
-        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                             AncestorType::pResults,
-                                             year);
-
-        // Next variable
-        NextType::computeSummary(year, numSpace);
-    }
-
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        // Get end year calculations
-        if (state.study.parameters.reservesEnabled
-            && state.study.runtime.reserveParticipationIndexMaps.value()
-                 .at(state.area->id)
-                 .thermalClusters.size())
-        {
-            for (auto& [clusterName, _]:
-                 state.reserveParticipationPerThermalClusterForYear[state.hourInTheYear])
-            {
-                for (const auto& [reserveName, reserveParticipation]:
-                     state.reserveParticipationPerThermalClusterForYear[state.hourInTheYear]
-                                                                       [clusterName])
-                {
-                    pValuesForTheCurrentYear
-                      [numSpace]
-                      [state.study.runtime.reserveParticipationIndexMaps.value()
-                         .at(state.area->id)
-                         .thermalClusters.left.at(std::make_pair(reserveName, clusterName))]
-                        .hour[state.hourInTheYear]
-                      = reserveParticipation.offUnitsParticipation;
-                }
-            }
-        }
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
-      unsigned int numSpace) const
-    {
-        return pValuesForTheCurrentYear[numSpace][column].hour;
-    }
-
-    void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
-                                      unsigned int numSpace) const
-    {
-        // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-        if (AncestorType::isPrinted[0])
-        {
-            assert(NULL != results.data.area);
-            const auto& thermal = results.data.area->thermal;
-
-            // Write the data for the current year
-            for (uint i = 0; i < pSize; ++i)
-            {
-                if (results.data.study.parameters.reservesEnabled
-                    && results.data.study.runtime.reserveParticipationIndexMaps.value()
-                         .at(results.data.area->id)
-                         .thermalClusters.size()) // Bimap is not empty
-                {
-                    auto [reserveName, clusterName] = results.data.study.runtime
-                                                        .reserveParticipationIndexMaps.value()
-                                                        .at(results.data.area->id)
-                                                        .thermalClusters.right.at(i);
-                    results.variableCaption = reserveName + "_" + clusterName
-                                              + "_off"; // VCardType::Caption();
-                    results.variableUnit = VCardType::Unit();
-                    pValuesForTheCurrentYear[numSpace][i]
-                      .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-                }
-            }
-        }
-    }
-
-private:
-    //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    size_t pSize = 0;
-    unsigned int pNbYearsParallel = 0;
 
 }; // class ReserveParticipationByDispatchableOffUnitsPlant
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+template<class NextT>
+void ReserveParticipationByDispatchableOffUnitsPlant<NextT>::populateHourlyValues(
+  /*non const*/ State& state,
+  unsigned int numSpace)
+{
+    if (hasIndexMapping(state.study, state.area))
+    {
+        for (const auto& clusterName:
+             state.reserveParticipationPerThermalClusterForYear[state.hourInTheYear]
+               | std::views::keys)
+        {
+            for (const auto& [reserveName, reserveParticipation]:
+                 state
+                   .reserveParticipationPerThermalClusterForYear[state.hourInTheYear][clusterName])
+            {
+                pValuesForTheCurrentYear[numSpace]
+                                        [state.study.runtime.reserveParticipationIndexMaps.value()
+                                           .at(state.area->id)
+                                           .thermalClusters.left.at(
+                                             std::make_pair(reserveName, clusterName))]
+                                          .hour[state.hourInTheYear]
+                  = reserveParticipation.offUnitsParticipation;
+            }
+        }
+    }
+}
+
+} // namespace Antares::Solver::Variable::Economy::Reserves

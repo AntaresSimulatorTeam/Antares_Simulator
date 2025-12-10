@@ -35,10 +35,14 @@
 // it collides with a #include <windows.h> somewhere in Yuni
 // clang-format off
 #include <unit_test_utils.h>
+
+#include "antares/io/inputs/model-converter/ForbiddenNodes.h"
+#include "antares/io/inputs/model-converter/NodeChecker.h"
 // clang-format on
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::ModelConverter;
 
 class ExpressionToNodeConvertorEmptyModel
 {
@@ -435,7 +439,7 @@ BOOST_AUTO_TEST_CASE(dualExpression)
     // constraints
     std::string expression = "dual(constraintA)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode");
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::dual");
     auto dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dualNode->typeToString(), "dual");
 
@@ -519,7 +523,7 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
 
     std::string expression = "reduced_cost(varB)";
     auto expr = converter.run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode");
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::reduced_cost");
     auto reducedCostNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(reducedCostNode->typeToString(), "reduced_cost");
     const auto* variableNode = dynamic_cast<Nodes::VariableNode*>(
@@ -623,7 +627,7 @@ BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
     ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "^";
-    BOOST_CHECK_THROW(converter.run(expression), std::bad_any_cast);
+    BOOST_CHECK_THROW(converter.run(expression), AntlrParsingError);
 }
 
 BOOST_AUTO_TEST_CASE(WrongPowerExpression)
@@ -644,7 +648,7 @@ BOOST_AUTO_TEST_CASE(WrongPowerExpression)
 
     std::string expression = "varA^_";
     BOOST_CHECK_EXCEPTION(converter.run(expression),
-                          Antares::IO::Inputs::ModelConverter::NoParameterOrVariableWithThisName,
+                          NoParameterOrVariableWithThisName,
                           checkMessage("No parameter or variable found for this identifier: _"));
 }
 
@@ -749,4 +753,142 @@ BOOST_AUTO_TEST_CASE(MinOperatorWrongNumberOfParameter)
     BOOST_CHECK_EXCEPTION(converter.run(expression),
                           std::invalid_argument,
                           checkMessage("min operator expect at least 2 operands got 1"));
+}
+
+BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "min(varB, reduced_cost(varB))";
+
+    // forbid variable in min
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addForbiddenFor<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
+    auto node = converter.run(expression);
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage(
+                            "'min' is not allowed to contain 'variable(varB)' in this context '"
+                            + expression + "'"));
+}
+
+BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "max(reduced_cost(varB), pmin, varA)";
+    // forbid variable in max
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addForbiddenFor<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
+    auto node = converter.run(expression);
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage(
+                            "'max' is not allowed to contain 'variable(varB)' in this context '"
+                            + expression + "'"));
+}
+
+BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignLT)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varA <= 38";
+    // forbid <= Globally
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addGlobalForbidden<Nodes::LessThanOrEqualNode>();
+    auto node = converter.run(expression);
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'expression with <=' is not allowed in this context '"
+                                       + expression + "'"));
+}
+
+BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignGT)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varA >= 38";
+    // forbid <= Globally
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
+    auto node = converter.run(expression);
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'expression with >=' is not allowed in this context '"
+                                       + expression + "'"));
+}
+
+BOOST_AUTO_TEST_CASE(ExpressionThatNotContainEqualSign)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
+                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ""}},
+      .extra_outputs = {}};
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
+
+    std::string expression = "varA = 38";
+    // forbid <= Globally
+    ModelConverter::ForbiddenNodes forbidden;
+    forbidden.addGlobalForbidden<Nodes::EqualNode>();
+    auto node = converter.run(expression);
+    BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
+                          ModelConverter::BadContextComposition,
+                          checkMessage("'expression with =' is not allowed in this context '"
+                                       + expression + "'"));
 }

@@ -26,21 +26,24 @@
 
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters(
   std::vector<Antares::ModelerStudy::SystemModel::Parameter> params);
+
 Antares::ModelerStudy::SystemModel::Model createModelWithParameters();
+
 Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
+
 Antares::ModelerStudy::SystemModel::Component createComponent(
-  Antares::ModelerStudy::SystemModel::Model& model,
+  const Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id = "component",
   unsigned index = 0);
+
 Antares::ModelerStudy::SystemModel::Component createComponent(
-  Antares::ModelerStudy::SystemModel::Model& model,
+  const Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id,
   std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> parameter_values,
   unsigned index = 0);
 
 std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
-build_context_parameter_with(
-  const std::string& id,
-  const std::string& value,
-  const Antares::ModelerStudy::SystemModel::ParameterType& type = Antares::ModelerStudy::
-    SystemModel::ParameterType::CONSTANT);
+build_context_parameter_with(const std::string& id,
+                             const std::string& value,
+                             const Antares::Optimisation::VariabilityType& type = Antares::
+                               Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);

@@ -26,26 +26,16 @@
 */
 #pragma once
 
-#include "../../variable.h"
-#include "./vCardReserveParticipationMarginalCost.h"
-
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy::Reserves
 {
 
 /*!
 ** \brief Reserve participation unsupplied and spilled volumes for an area
 */
 template<class NextT = Container::EndOfList>
-class ReserveParticipationMarginalCost
-    : public Variable::IVariable<ReserveParticipationMarginalCost<NextT>,
-                                 NextT,
-                                 VCardReserveParticipationMarginalCost>
+class ReserveParticipationMarginalCost: public IVariable<ReserveParticipationMarginalCost<NextT>,
+                                                         NextT,
+                                                         VCardReserveParticipationMarginalCost>
 {
 public:
     //! Type of the next static variable
@@ -53,8 +43,7 @@ public:
     //! VCard
     typedef VCardReserveParticipationMarginalCost VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ReserveParticipationMarginalCost<NextT>, NextT, VCardType>
-      AncestorType;
+    typedef IVariable<ReserveParticipationMarginalCost<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -75,7 +64,7 @@ public:
             count = ((VCardType::categoryDataLevel & CDataLevel
                       && VCardType::categoryFileLevel & CFile)
                        ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
+                          + static_cast<int>(VCardType::columnCount) * static_cast<int>(ResultsType::count))
                        : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
@@ -83,7 +72,7 @@ public:
 public:
     ReserveParticipationMarginalCost() = default;
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void initializeFromArea(Study* study, Area* area)
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
@@ -133,7 +122,7 @@ public:
         return pSize * ResultsType::count;
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    void initializeFromLink(Study* study, AreaLink* link)
     {
         // Next
         NextType::initializeFromAreaLink(study, link);
@@ -226,7 +215,7 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
+    Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int column,
       unsigned int numSpace) const
     {
@@ -270,7 +259,4 @@ private:
 
 }; // class ReserveParticipationMarginalCost
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy::Reserves

@@ -184,10 +184,14 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
 
 BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // param = {0,1,2}
-    // 5 + sum( t-2 .. t+1, param) -->
-    // t = 0 : 5 +param.at(-2) + param.at(-1) + param.at(0) + param.at(1) --> 5 +1 + 2 + 0 + 1 = 9
-    // t = 1 : 5 +param.at(-1) + param.at(0) + param.at(1) + param.at(2) --> 5 + 2+0+1+2 = 10
+    // param = {0, 1, 2}
+    // 5 + sum( t-2 .. t+1, param) :
+    //
+    // t = 0 :
+    // 5 + param[-2] + param[-1] + param[0] + param[1] = 5 + (1 + 2 + 0 + 1) = 9
+    //
+    // t = 1 :
+    // 5 +param[-1] + param[0] + param[1] + param[2] --> 5 + (2 + 0 + 1 + 2) = 10
     Node* from = create<LiteralNode>(-2.);
     Node* to = create<LiteralNode>(1.);
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
@@ -209,9 +213,8 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
 
 BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // param = {0,1,2}
-    // 5 + sum(param) -->
-    // 5 +param.at(0) + param.at(1) + param.at(2)  --> 5 + 0 + 1  + 2  = 8
+    // param = {0, 1, 2}
+    // 5 + sum(param) = 5 + param[0] + param[1] + param[2] = 5 + (0 + 1 + 2)  = 8
 
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<AllTimeSumNode>(create<ParameterNode>("param_ts")));
@@ -256,14 +259,6 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
     };
     checkAt(0);
     checkAt(1);
-}
-
-BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
-                        VisitorFixture<ReadLinearExpressionVisitor>)
-{
-    ParameterNode p("param_ts", Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-
-    BOOST_CHECK_THROW(visitor().dispatch(&p), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, VisitorFixture<ReadLinearExpressionVisitor>)

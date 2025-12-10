@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/STReserveParticipation.h"
-using namespace reserve;
 
 void STReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
 {
@@ -23,14 +22,14 @@ void STReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
         builder.updateHourWithinWeek(pdt)
           .STStorageReleaseClusterReserveParticipation(
             reserveParticipation.globalIndexClusterParticipation,
-            capacityReservation.type == Type::UP ? -1.0 : 1.0)
+            capacityReservation.type == ReserveType::UP ? -1.0 : 1.0)
           .STStorageStoreClusterReserveParticipation(
             reserveParticipation.globalIndexClusterParticipation,
-            capacityReservation.type == Type::UP ? -1.0 : 1.0)
+            capacityReservation.type == ReserveType::UP ? -1.0 : 1.0)
           .STStorageClusterReserveParticipation(
             capacityReservation.type,
             reserveParticipation.globalIndexClusterParticipation,
-            capacityReservation.type == Type::UP ? 1.0 : -1.0)
+            capacityReservation.type == ReserveType::UP ? 1.0 : -1.0)
           .equalTo();
 
         ConstraintNamer namer(builder.data.NomDesContraintes);

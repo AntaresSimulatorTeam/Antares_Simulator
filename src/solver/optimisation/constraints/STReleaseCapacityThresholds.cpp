@@ -1,7 +1,5 @@
 #include "antares/solver/optimisation/constraints/STReleaseCapacityThresholds.h"
 
-using namespace reserve;
-
 void STReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
 {
     int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
@@ -20,7 +18,7 @@ void STReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation:
-                 data.areaReserves[pays].areaCapacityReservations | filter(Type::DOWN))
+                 data.areaReserves[pays].areaCapacityReservations | filter(ReserveType::DOWN))
             {
                 if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
                 {
@@ -55,7 +53,7 @@ void STReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation:
-                 data.areaReserves[pays].areaCapacityReservations | filter(Type::UP))
+                 data.areaReserves[pays].areaCapacityReservations | filter(ReserveType::UP))
             {
                 if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
                 {

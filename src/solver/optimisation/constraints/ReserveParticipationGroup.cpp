@@ -46,7 +46,6 @@
 #include "antares/solver/optimisation/constraints/STStoreMaxReserve.h"
 #include "antares/solver/optimisation/constraints/SymmetryReserveParticipation.h"
 #include "antares/solver/optimisation/constraints/ThermalReserveParticipation.h"
-using namespace reserve;
 
 ReserveParticipationGroup::ReserveParticipationGroup(PROBLEME_HEBDO* problemeHebdo,
                                                      bool simulation,
@@ -122,7 +121,7 @@ void ReserveParticipationGroup::BuildConstraints()
                             // 16 bis
                             pMaxReserve.add(pays, reserve, clusterId, pdt);
 
-                            if (areaReserve.type == Type::UP
+                            if (areaReserve.type == ReserveType::UP
                                 && clusterReserveParticipation.maxPowerOff > 0)
                             {
                                 // 16 ter

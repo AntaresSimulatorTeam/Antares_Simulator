@@ -27,23 +27,26 @@
 #include <set>
 #include <vector>
 
+#include <antares/logs/logs.h>
 #include <antares/study/fwd.h>
 
 namespace fs = std::filesystem;
-
 //! Name of a reserve
 using ReserveName = std::string;
+
+namespace Antares::Data
+{
 
 /// @brief Represents an area capacity reservation using it's name, it's failure cost and it's
 /// spillage cost
 struct CapacityReservation
 {
-    reserve::Type type{reserve::Type::DOWN};
+    ReserveType type{ReserveType::DOWN};
     double unsuppliedCost = 0.;
     double spillageCost = 0.;
     double powerActivationRatio = 0.;
     double energyActivationRatio = 1.;
-    int referenceActivationHours = 1.;
+    int referenceActivationDuration = 1.;
     std::vector<double> need = {};
 
     void loadNeedFromFile(const fs::path& path)
@@ -54,19 +57,28 @@ struct CapacityReservation
             throw std::runtime_error("Could not open " + path.string());
         }
         double x;
+        std::vector<double> tmp;
 
         while (file >> x)
         {
-            need.push_back(x);
+            tmp.push_back(x);
         }
+
+        if (!file.eof())
+        {
+            logs.error() << "Invalid numeric data in " << path.string();
+            throw std::runtime_error("Invalid data in " + path.string());
+        }
+
+        need = std::move(tmp);
     }
 };
 
 /// @brief Stores all the Capacity reservations in two maps for the up and down reserves
 struct AllCapacityReservations
 {
-    reserve::ReserveTypeData<double> maxGlobalEnergyActivationRatio{1., 1.};
-    reserve::ReserveTypeData<int> referenceGlobalActivationDuration{1, 1};
+    ReserveTypeData<double> maxGlobalEnergyActivationRatio{1., 1.};
+    ReserveTypeData<int> referenceGlobalActivationDuration{1, 1};
 
     std::map<std::string /*reserveName*/, std::set<std::string /*name of the group*/>>
       reserveGroupPartThermal;
@@ -78,7 +90,7 @@ struct AllCapacityReservations
     /// @brief Check if the capacity reservation name already exist in the reserves
     /// @param name
     /// @return true if the capacity reservation already existed
-    bool contains(ReserveName name) const
+    bool contains(const ReserveName& name) const
     {
         return areaCapacityReservations.contains(name);
     }
@@ -87,12 +99,13 @@ struct AllCapacityReservations
     /// @param name
     /// @return the capacity reservation reference if the reserve was found, and a nullptr
     /// otherwise
-    const CapacityReservation* getReserveByName(std::string name) const
+    const CapacityReservation* getReserveByName(const std::string& name) const
     {
-        if (areaCapacityReservations.contains(name))
+        if (auto it = areaCapacityReservations.find(name); it != areaCapacityReservations.end())
         {
-            return &areaCapacityReservations.at(name);
+            return &it->second;
         }
+
         return nullptr;
     }
 
@@ -102,15 +115,5 @@ struct AllCapacityReservations
     {
         return areaCapacityReservations.size();
     }
-
-    /// @brief Returns lower case, no space string
-    /// @param name
-    /// @return A string usable for file naming
-    static std::string toFilename(std::string name)
-    {
-        std::string file_name = name;
-        std::replace(file_name.begin(), file_name.end(), ' ', '_');
-        std::transform(file_name.begin(), file_name.end(), file_name.begin(), ::tolower);
-        return file_name;
-    }
 };
+} // namespace Antares::Data

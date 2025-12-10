@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/HydroEnergyLevelReserveParticipation.h"
-using namespace reserve;
 
 void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserve, int pdt)
 {
@@ -7,7 +6,7 @@ void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserv
     CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
                                                   .areaCapacityReservations[reserve];
 
-    if (capacityReservation.maxActivationDuration > 0)
+    if (capacityReservation.referenceActivationDuration > 0)
     {
         if (!data.Simulation)
         {
@@ -19,7 +18,7 @@ void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserv
             // R_{min,res} : max power participation ratio
             // R_up : max stock level
             {
-                double sign = capacityReservation.type == Type::UP ? -1. : 1.;
+                double sign = capacityReservation.type == ReserveType::UP ? -1. : 1.;
 
                 RESERVE_PARTICIPATION_HYDRO& reserveParticipation = capacityReservation
                                                                       .AllHydroReservesParticipation
@@ -27,7 +26,7 @@ void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserv
 
                 builder.updateHourWithinWeek(pdt);
 
-                for (int t = 0; t < capacityReservation.maxActivationDuration; t++)
+                for (int t = 0; t < capacityReservation.referenceActivationDuration; t++)
                 {
                     builder.HydroReserveParticipation(
                       capacityReservation.type,

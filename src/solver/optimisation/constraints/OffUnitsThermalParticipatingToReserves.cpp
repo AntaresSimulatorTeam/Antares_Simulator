@@ -1,5 +1,4 @@
 #include "antares/solver/optimisation/constraints/OffUnitsThermalParticipatingToReserves.h"
-using namespace reserve;
 
 void OffUnitsThermalParticipatingToReserves::add(int pays, int reserve, int cluster, int pdt)
 {

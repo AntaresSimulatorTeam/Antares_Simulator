@@ -42,11 +42,11 @@ void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& pat
     of << out;
 }
 
-OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
+OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName):
+    mpSolver_(MPSolverFactory(isMip, solverName)),
+    objective_(mpSolver_->MutableObjective()),
+    isLP_(!isMip)
 {
-    mpSolver_ = MPSolverFactory(isMip, solverName);
-    objective_ = mpSolver_->MutableObjective();
-    isLP_ = !isMip; // we don't care about pure integer prob
 }
 
 LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
@@ -181,6 +181,16 @@ double OrtoolsLinearProblem::getObjectiveCoefficient(
   const LinearProblemApi::IMipVariable* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
+}
+
+void OrtoolsLinearProblem::setObjectiveOffset(double objectiveOffset)
+{
+    objective_->SetOffset(objectiveOffset);
+}
+
+double OrtoolsLinearProblem::getObjectiveOffset() const
+{
+    return objective_->offset();
 }
 
 void OrtoolsLinearProblem::setMinimization()

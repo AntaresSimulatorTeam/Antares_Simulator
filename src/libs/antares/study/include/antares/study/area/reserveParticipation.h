@@ -22,6 +22,9 @@
 
 #include <antares/study/area/capacityReservation.h>
 
+namespace Antares::Data
+{
+
 /// @brief Base struct for reserve participation
 struct ReserveParticipationBase
 {
@@ -44,3 +47,4 @@ struct StorageClusterReserveParticipation: ReserveParticipationBase
     double maxRelease = 0;
     double maxStore = 0;
 };
+} // namespace Antares::Data

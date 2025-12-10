@@ -53,4 +53,4 @@ library:
           expression: gen2_p <= gen2_up * gen2_max_p
       objective-contributions:
         - id: objective
-          expression: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost
+          expression: sum(gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)
