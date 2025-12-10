@@ -27,21 +27,16 @@
 #include "antares/study/system-model/connection.h"
 
 #include "model.h"
+#include "variabilityType.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
-enum class ParameterType : unsigned int
-{
-    CONSTANT = 0,
-    TIMESERIES = 1
-    // TODO: add varying_in_scenario_only, varying_in_time_and_scenario, and handle them in visitors
-};
 
 // this struct contains more or less the same infos as the one in system.h
 struct ParameterTypeAndValue
 {
     std::string id;
-    ParameterType type;
+    Optimisation::VariabilityType type;
     std::string value;
 };
 
@@ -53,7 +48,7 @@ class ComponentData final
 {
 public:
     std::string id;
-    Model* model = nullptr;
+    const Model* model = nullptr;
     std::map<std::string, ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
     unsigned index = 0;
@@ -81,7 +76,7 @@ public:
         return data_.id;
     }
 
-    Model* getModel() const
+    const Model* getModel() const
     {
         return data_.model;
     }
@@ -136,7 +131,7 @@ class ComponentBuilder final
 {
 public:
     ComponentBuilder& withId(std::string_view id);
-    ComponentBuilder& withModel(Model* model);
+    ComponentBuilder& withModel(const Model* model);
     ComponentBuilder& withIndex(unsigned int index);
     ComponentBuilder& withParameterValues(
       std::map<std::string, ParameterTypeAndValue> parameter_values);

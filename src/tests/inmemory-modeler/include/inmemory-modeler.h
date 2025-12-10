@@ -34,13 +34,14 @@
 #include "antares/study/system-model/model.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Optimisation;
 
 namespace Test::Modeler
 {
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type = ParameterType::CONSTANT);
+  const VariabilityType& type = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
 struct VariableData
 {

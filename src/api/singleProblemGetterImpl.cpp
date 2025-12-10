@@ -37,6 +37,8 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/writer/i_writer.h"
 
+#include "fmt/format.h"
+
 namespace
 {
 constexpr int optimizationNumber = 1;  // the 1st optim is available for now
@@ -44,7 +46,6 @@ constexpr int numeroDeLIntervalle = 0; // simplex-range = week
 constexpr int numSpace = 0;            // full sequential
 constexpr int PremierPdtDeLIntervalle = 0;
 constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
-const std::string kName = "my-name";         // Arbitrary
 Antares::Solver::NullResultWriter gResultWriter;
 Benchmarking::DurationCollector gDurationCollector;
 
@@ -53,6 +54,11 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
     Antares::FileTreeStudyLoader loader(studyPath);
     auto study = loader.load();
     return study;
+}
+
+std::string problemName(const WeeklyProblemId& id)
+{
+    return fmt::format("problem-{}-{}.txt", id.year, id.week);
 }
 } // namespace
 
@@ -162,8 +168,22 @@ void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path
     OPT_ExportStructures(&pb_, *writer);
 }
 
+void fillLinksProperties(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)
+{
+    const auto& studyruntime = study.runtime;
+    for (uint k = 0; k < studyruntime.interconnectionsCount(); ++k)
+    {
+        const auto* lnk = studyruntime.areaLink[k];
+        pb.CoutDeTransport[k].IntercoGereeAvecDesCouts = lnk->useHurdlesCost;
+    }
+}
+
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
 {
+    // IntercoGereeAvecDesCouts needs to be initialized
+    // before building variable list and the common matrix
+    fillLinksProperties(pb_, *study_);
+
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(&pb_);
 
     auto builder_data = NewGetConstraintBuilderFromProblemHebdo(&pb_);
@@ -248,7 +268,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                                     optimizationNumber);
 
     OPT_InitialiserLesCoutsLineaire(&pb_, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
-    return translator_.translate(pb_.ProblemeAResoudre.get(), kName);
+    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)

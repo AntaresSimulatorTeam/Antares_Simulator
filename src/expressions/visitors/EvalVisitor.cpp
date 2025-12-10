@@ -114,16 +114,14 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->variability() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
-    {
-        std::string msg = "Parameter " + node->value() + " is declared constant in time and"
-                          + " scenario in library but not in system";
-        throw std::invalid_argument(msg);
-    }
-    if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
+    if (systemParameter.type == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return EvaluationResult{evalContext_.getSystemParameterValueAsDouble(node->value())};
+    }
+    if (systemParameter.type == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    {
+        return EvaluationResult(
+          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0));
     }
 
     unsigned year = fillContext_.getYear();
