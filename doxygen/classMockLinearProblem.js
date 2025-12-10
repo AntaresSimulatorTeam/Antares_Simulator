@@ -18,6 +18,7 @@ var classMockLinearProblem =
     [ "isMinimization", "classMockLinearProblem.html#ae920d2fbdb93c8aef5643c517f17d1c7", null ],
     [ "lookupConstraint", "classMockLinearProblem.html#a816ce02d8c528d6cfcc69b396a00a978", null ],
     [ "lookupVariable", "classMockLinearProblem.html#a40d0f4749eb153198f335943a469398d", null ],
+    [ "objectiveValue", "classMockLinearProblem.html#aea0b961c1663e57f3f7f83218def9199", null ],
     [ "setMaximization", "classMockLinearProblem.html#a4562e02de024ff6c13df264d363aab9a", null ],
     [ "setMinimization", "classMockLinearProblem.html#a278425f71e237e9bdf318631d60543fc", null ],
     [ "setObjectiveCoefficient", "classMockLinearProblem.html#a0d5d32dc23d27e63cdfff60669abaf8a", null ],

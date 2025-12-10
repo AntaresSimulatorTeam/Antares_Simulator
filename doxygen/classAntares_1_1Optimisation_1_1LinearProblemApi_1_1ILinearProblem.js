@@ -18,6 +18,7 @@ var classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem =
     [ "isMinimization", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a0ce44b552d8f0e29bcb18fa11b97d795", null ],
     [ "lookupConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a87d7a87f1192abc67d1ce397bae60603", null ],
     [ "lookupVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a92b343c97279ae3c94cd66a805a243e2", null ],
+    [ "objectiveValue", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a22b9b1cadb91fad9b0447d0272644f42", null ],
     [ "setMaximization", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a583f449567f5e0521df4b072e02e0dab", null ],
     [ "setMinimization", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a59b06a4998978cb5f2b775ed519500f8", null ],
     [ "setObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a25dfff44a3d369c82cf2b507b34f5b87", null ],

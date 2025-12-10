@@ -20,10 +20,12 @@ var classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearPr
     [ "lookupConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aa36387991bb3d9a25a47631f9114a98e", null ],
     [ "lookupVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aa953f9df0f202626a7fbd5b9f1905e45", null ],
     [ "MpSolver", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab70a7e12d68626340bb4f11515e72121", null ],
+    [ "objectiveValue", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a475bea5fb1cccacb6e90e399af1c7b92", null ],
     [ "setMaximization", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#adb27c35d60176747dc2fc0b0a6208c2c", null ],
     [ "setMinimization", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab33feeaee7a419af07af27d33f012425", null ],
     [ "setObjectiveCoefficient", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab41e6e0ace04662a545d9994998a4abd", null ],
     [ "setObjectiveOffset", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aae6631b7fac7dabb949d5b63ba8ac914", null ],
+    [ "solution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#af80c5fe8d3ed97c061b80de622acd8c0", null ],
     [ "solve", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a88ed3d6317fca4f49260a612490f996d", null ],
     [ "variableCount", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#acdc3201becddac071a8afba456b067e8", null ],
     [ "Write", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a78ff9aa8f5abee6c80ef8bdfbe0f821d", null ]
