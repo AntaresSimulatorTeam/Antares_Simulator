@@ -911,6 +911,8 @@ var namespaces_dup =
         [ "Nodes", null, [
           [ "ASTPreOrderIterator", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIterator.html", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIterator" ],
           [ "AST", "classAntares_1_1Expressions_1_1Nodes_1_1AST.html", "classAntares_1_1Expressions_1_1Nodes_1_1AST" ],
+          [ "ASTPreOrderIteratorConst", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIteratorConst.html", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIteratorConst" ],
+          [ "ASTconst", "classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html", "classAntares_1_1Expressions_1_1Nodes_1_1ASTconst" ],
           [ "AllTimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode" ],
           [ "BinaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode" ],
           [ "ComparisonNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComparisonNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1ComparisonNode" ],
@@ -1149,8 +1151,8 @@ var namespaces_dup =
             [ "NotImplemented", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NotImplemented.html", null ],
             [ "NoPortWithThisId", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId" ],
             [ "NoParameterOrVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName" ],
-            [ "NoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName" ],
-            [ "NoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName" ],
+            [ "ReducedCostNoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName" ],
+            [ "DualNoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName" ],
             [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
             [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes" ],
             [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException" ],
@@ -1294,13 +1296,22 @@ var namespaces_dup =
         [ "new_check_allocation", "new__check_8hxx.html#af621f5a9f76d218541543ce2a2156f9c", null ]
       ] ],
       [ "Modeler", null, [
+        [ "Checks", null, [
+          [ "LocationError", "classAntares_1_1Modeler_1_1Checks_1_1LocationError.html", null ],
+          [ "checkExpression", "checkLocation_8cpp.html#a4c879766e0d6681f9efae09961fbb9ec", null ],
+          [ "checkFunctionNode", "checkLocation_8cpp.html#a05e7d68df8e2069fa58f9c19e291f094", null ],
+          [ "checkLocations", "checkLocation_8cpp.html#a5bc388ee181e2924f4809213ffe625ff", null ],
+          [ "checkModel", "checkLocation_8cpp.html#af177f9b2e97d73dab34c0afa01b541ee", null ]
+        ] ],
         [ "Config", null, [
           [ "Location", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7", [
             [ "MASTER", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7a89a1533c37ec9254f22b5e0f29c9c0ff", null ],
             [ "MASTER_AND_SUBPROBLEMS", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7ad7980d7942431594b42f9f74d6fe92c8", null ],
             [ "SUBPROBLEMS", "optimConfig_8h.html#afbf80f67919e32e3774950a60d3289f7ae5f1fb19e86a7c3fdabd4fcabbbaa4bd", null ]
           ] ],
-          [ "AreLocationsCompatible", "optimConfig_8h.html#aac06171c757f28b9f391dfba28a3c110", null ]
+          [ "AreLocationsCompatibleForExpressions", "optimConfig_8h.html#a673147ddf14a8a839f789bff16100fef", null ],
+          [ "AreLocationsCompatibleForFillers", "optimConfig_8h.html#a42ff53c586a9da538a124c5186192035", null ],
+          [ "LocationToStr", "optimConfig_8h.html#a047186325c8fbd0b7ddc0b21b31f9342", null ]
         ] ],
         [ "FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", "classAntares_1_1Modeler_1_1FileWriter" ],
         [ "Data", "structAntares_1_1Modeler_1_1Data.html", "structAntares_1_1Modeler_1_1Data" ],

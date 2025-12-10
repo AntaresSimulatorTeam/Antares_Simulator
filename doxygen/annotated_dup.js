@@ -407,6 +407,8 @@ var annotated_dup =
         [ "Nodes", null, [
           [ "ASTPreOrderIterator", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIterator.html", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIterator" ],
           [ "AST", "classAntares_1_1Expressions_1_1Nodes_1_1AST.html", "classAntares_1_1Expressions_1_1Nodes_1_1AST" ],
+          [ "ASTPreOrderIteratorConst", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIteratorConst.html", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIteratorConst" ],
+          [ "ASTconst", "classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html", "classAntares_1_1Expressions_1_1Nodes_1_1ASTconst" ],
           [ "AllTimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode" ],
           [ "BinaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1BinaryNode" ],
           [ "ComparisonNode", "classAntares_1_1Expressions_1_1Nodes_1_1ComparisonNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1ComparisonNode" ],
@@ -486,8 +488,8 @@ var annotated_dup =
             [ "NotImplemented", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NotImplemented.html", null ],
             [ "NoPortWithThisId", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId" ],
             [ "NoParameterOrVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName" ],
-            [ "NoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoVariableWithThisName" ],
-            [ "NoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoConstraintWithThisName" ],
+            [ "ReducedCostNoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName" ],
+            [ "DualNoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName" ],
             [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
             [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes" ],
             [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException" ],
@@ -565,6 +567,9 @@ var annotated_dup =
         [ "Settings", "classAntares_1_1Map_1_1Settings.html", null ]
       ] ],
       [ "Modeler", null, [
+        [ "Checks", null, [
+          [ "LocationError", "classAntares_1_1Modeler_1_1Checks_1_1LocationError.html", null ]
+        ] ],
         [ "FileWriter", "classAntares_1_1Modeler_1_1FileWriter.html", "classAntares_1_1Modeler_1_1FileWriter" ],
         [ "Data", "structAntares_1_1Modeler_1_1Data.html", "structAntares_1_1Modeler_1_1Data" ]
       ] ],
@@ -1518,8 +1523,8 @@ var annotated_dup =
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", "classColumnBasedStorage" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
+    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],

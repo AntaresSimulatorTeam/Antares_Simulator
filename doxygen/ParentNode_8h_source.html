@@ -186,15 +186,16 @@ $(document).ready(function(){initNavTree('ParentNode_8h_source.html',''); initRe
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> std::vector&lt;Node*&gt;&amp; <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html#a1a483a734b5fcf9a0d7748b7a2f0f267">getOperands</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Node</a>* operator[](std::size_t idx) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">size_t</span> size() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::vector&lt;Node*&gt; operands_ = {};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;} <span class="comment">// namespace Antares::Expressions::Nodes</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> std::vector&lt;const Node*&gt; getConstOperands() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Node</a>* operator[](std::size_t idx) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">size_t</span> size() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    std::vector&lt;Node*&gt; operands_ = {};</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;};</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;} <span class="comment">// namespace Antares::Expressions::Nodes</span></div>
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1Node_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a></div><div class="ttdoc">Base class for nodes in a syntax tree.</div><div class="ttdef"><b>Definition:</b> Node.h:30</div></div>
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1ParentNode_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html">Antares::Expressions::Nodes::ParentNode</a></div><div class="ttdef"><b>Definition:</b> ParentNode.h:41</div></div>
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1ParentNode_html_a1a483a734b5fcf9a0d7748b7a2f0f267"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html#a1a483a734b5fcf9a0d7748b7a2f0f267">Antares::Expressions::Nodes::ParentNode::getOperands</a></div><div class="ttdeci">const std::vector&lt; Node * &gt; &amp; getOperands() const</div><div class="ttdoc">Retrieves the operands of the parent node.</div><div class="ttdef"><b>Definition:</b> ParentNode.cpp:31</div></div>
