@@ -397,13 +397,12 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
-void ComponentFiller::addStaticObjective(
-  const Optimization::TimeDependentLinearExpression& expression) const
+void ComponentFiller::addStaticObjective(const Optimization::LinearExpression& expression) const
 {
     auto& pb = optimEntityContainer_.Problem();
     const auto& solverVariables = optimEntityContainer_.getVariables();
 
-    for (const auto& [index, value]: expression[0])
+    for (const auto& [index, value]: expression)
     {
         pb.setObjectiveCoefficient(solverVariables[index].get(), value);
     }
@@ -418,15 +417,14 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     for (const auto& objective: model->Objectives() | locationFilter())
     {
         const auto root_node = objective.expression().RootNode();
-        const auto linearExpression = visitor.visitMergeDuplicates(root_node);
-
         const auto variability = getVariability(root_node, component_);
         if (isTimeDependent(variability))
         {
             throw Error::RuntimeError("Time dependent objectives are not supported in Antares.");
         }
+        const auto linearExpression = visitor.visitMergeDuplicates(root_node)[0];
         addStaticObjective(linearExpression);
-        objectiveOffset += linearExpression.constant()[0];
+        objectiveOffset += linearExpression.constant();
     }
     auto& pb = optimEntityContainer_.Problem();
     pb.setObjectiveOffset(objectiveOffset);

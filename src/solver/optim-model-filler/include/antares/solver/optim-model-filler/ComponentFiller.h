@@ -98,7 +98,7 @@ private:
                                      const std::string& constraint_id,
                                      const LinearProblemApi::FillContext& ctx) const;
 
-    void addStaticObjective(const Optimization::TimeDependentLinearExpression& expression) const;
+    void addStaticObjective(const Optimization::LinearExpression& expression) const;
 
     VariabilityType getVariability(const Nodes::Node* node,
                                    const ModelerStudy::SystemModel::Component& component) const;
