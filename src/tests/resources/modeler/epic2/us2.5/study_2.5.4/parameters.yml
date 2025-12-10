@@ -1,4 +1,4 @@
-solver: scip
+solver: xpress
 solver-logs: false
 solver-parameters: 
 no-output: false

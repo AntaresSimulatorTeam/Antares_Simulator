@@ -120,6 +120,19 @@ jobs:
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
 
+    - name: Set-up Xpress with pip
+      shell: bash
+      run: |
+        python -m pip install --no-cache-dir "xpress==9.6.0"
+        SITE_PACKAGE="${{ env.pythonLocation }}\Lib\site-packages"
+        XPRESS_DIR="$SITE_PACKAGE\xpresslibs"
+        cp -r $XPRESS_DIR/lib $XPRESS_DIR/bin
+        mkdir -p $SITE_PACKAGE/xpress/bin
+        cp $SITE_PACKAGE/xpress/license/community-xpauth.xpr $XPRESS_DIR/bin/xpauth.xpr
+        cp $SITE_PACKAGE/xpress/license/community-xpauth.xpr $XPRESS_DIR/lib/xpauth.xpr
+        echo "XPRESSDIR=$XPRESS_DIR" >> $GITHUB_ENV
+        echo "$XPRESS_DIR/bin" >> $GITHUB_PATH
+
     - name: Enable git longpaths
       run: git config --system core.longpaths true
 

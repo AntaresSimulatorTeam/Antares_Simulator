@@ -1,4 +1,4 @@
-solver: scip
+solver: xpress
 solver-logs: true
 solver-parameters: THREADS 1
 no-output: false
