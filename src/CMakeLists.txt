@@ -181,9 +181,6 @@ endif ()
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
-set(BUILD_UI OFF CACHE BOOL "Build antares ui simulator" FORCE)
-message(STATUS "Build antares ui simulator: ${BUILD_UI}")
-
 option(BUILD_TOOLS "Build antares tools" OFF)
 message(STATUS "Build antares tools: ${BUILD_TOOLS}")
 
