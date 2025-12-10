@@ -184,16 +184,18 @@ void Modeler::run() const
     {
         writer_.init(simulationTableSuffix);
         auto output = writer_.outputPath();
+        if (parameters.exportMps)
+        {
+            // 1-1.mps
+            Write(subproblem, output / "1-1.mps");
+            // master.mps
+            Write(master_problem, output / "master.mps");
 
-        // 1-1.mps
-        Write(subproblem, output / "1-1.mps");
-        // master.mps
-        Write(master_problem, output / "master.mps");
-
-        // structure.txt
-        BendersDecompositionWriter writer(bendersDecomposition);
-        std::ofstream of(output / "structure.txt");
-        writer.write(of);
+            // structure.txt
+            BendersDecompositionWriter writer(bendersDecomposition);
+            std::ofstream of(output / "structure.txt");
+            writer.write(of);
+        }
     }
 
     logs.info() << "Launching resolution...";

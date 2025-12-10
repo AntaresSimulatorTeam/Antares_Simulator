@@ -38,6 +38,7 @@ struct convert<Antares::Solver::ModelerParameters>
         rhs.solverLogs = node["solver-logs"].as<bool>(false);
         rhs.solverParameters = node["solver-parameters"].as<std::string>();
         rhs.noOutput = node["no-output"].as<bool>(false);
+        rhs.exportMps = node["export-mps"].as<bool>(false);
         rhs.firstTimeStep = node["first-time-step"].as<unsigned int>(0);
         // TODO check this value
         rhs.lastTimeStep = node["last-time-step"].as<unsigned int>(167);
