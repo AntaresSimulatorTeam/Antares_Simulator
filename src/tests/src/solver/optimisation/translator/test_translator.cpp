@@ -126,7 +126,6 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.NombreDeVariables = 3;
     problemHebdo.NombreDeContraintes = 2;
-    problemHebdo.TypeDeVariable = {0, 1, 2};
     problemHebdo.IndicesDebutDeLigne = {0, 3};
     problemHebdo.NombreDeTermesDesLignes = {3, 3};
     problemHebdo.NomDesVariables = {"a", "b", "c"};
@@ -138,7 +137,6 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
 
     BOOST_CHECK_EQUAL(ret.VariablesCount, problemHebdo.NombreDeVariables);
     BOOST_CHECK_EQUAL(ret.ConstraintesCount, problemHebdo.NombreDeContraintes);
-    BOOST_CHECK(std::ranges::equal(ret.VariablesType, problemHebdo.TypeDeVariable));
     BOOST_CHECK(ret.ConstraintsMatrixCoeff == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
     BOOST_CHECK(std::ranges::equal(ret.ColumnIndexes, problemHebdo.IndicesColonnes));
     auto expectedMdeb = problemHebdo.IndicesDebutDeLigne;
