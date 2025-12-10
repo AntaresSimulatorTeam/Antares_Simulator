@@ -7,8 +7,6 @@ var structAntares_1_1Solver_1_1ConstantDataFromAntares =
     [ "ConstraintsMatrixCoeff", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#af9fb2c8e16c9d2386c2c91fafeda848b", null ],
     [ "ConstraintsMeaning", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#adc9c31a9de5f9a8382e341a04404904a", null ],
     [ "Mdeb", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a34a1c1aaf9c2b92ee3e8984c22bcfd4a", null ],
-    [ "NotNullTermCount", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a5f31e9cea5d21f1311176e1f173d7478", null ],
     [ "VariablesCount", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#aa14d6319a62d65c5b574bf07313dce49", null ],
-    [ "VariablesMeaning", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#aab62cfda12c1f04e97368ff7e9ff4dd8", null ],
-    [ "VariablesType", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#a42c5937ebc93142c27f5b788d85909dd", null ]
+    [ "VariablesMeaning", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#aab62cfda12c1f04e97368ff7e9ff4dd8", null ]
 ];
