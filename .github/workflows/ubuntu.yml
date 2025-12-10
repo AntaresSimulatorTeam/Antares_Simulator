@@ -106,7 +106,7 @@ jobs:
       id: setup-python
       uses: actions/setup-python@v6
       with:
-        python-version: ${ { env.PYTHON_VERSION } }
+        python-version: ${{env.PYTHON_VERSION}}
 
     - name: Install dependencies
       run: |
