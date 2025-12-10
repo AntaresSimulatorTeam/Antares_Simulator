@@ -32,8 +32,6 @@
 
 BrandingText "      Antares_Simulator for Windows  "
 
-!define ANTARES_BIN "antares-ui-simulator.exe"
-
 
 
 
@@ -45,7 +43,6 @@ SetCompressor /SOLID /FINAL lzma
 SetCompressorDictSize 8 ; seems the same results 8 or 32
 
 !include "MUI2.nsh"
-!include "@PROJECT_SOURCE_DIR@\distrib\win32\ui.nsh"
 !insertmacro MUI_LANGUAGE "English" ;first language is the default language
 ;!insertmacro MUI_LANGUAGE "French"
 ;!insertmacro MUI_LANGUAGE "German"
@@ -201,12 +198,6 @@ InstType "$(LngInstallLite)"
 
 
 
-;Function LaunchLink
-;	ExecShell "" "$INSTDIR\${ANTARES_BIN}"
-;FunctionEnd
-
-
-
 ; Specific macro/functions depending on the compiler
 ;!include "${COMPILER_INCLUDE}.nsi"
 
@@ -290,10 +281,6 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 ;	!insertmacro AppendCoreFiles
 
 	${SetOutPath} "$INSTDIR\bin"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "antares-ui-simulator.exe"
-	
-	;.ddl are available only with shared dependencies link FileOptionnal used
-	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "*.dll"
 	
 	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-solver.exe"
 	${FileOptionnal} "${ANTARES_BUILD_DIR}\solver\${TARGET}"      "*.dll"
@@ -303,43 +290,14 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${File} "${ANTARES_BUILD_DIR}\tools\finder\${TARGET}"         "antares-study-finder.exe"
 	${File} "${ANTARES_BUILD_DIR}\tools\ts-generator\${TARGET}"        "antares-ts-generator.exe"
 	${File} "${ANTARES_BUILD_DIR}\tools\config\${TARGET}"         "antares-config.exe"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\icons"   "study.ico"
 	
 	;Add system runtime libs (defined in src/CMakeList.txt)
 	File @SYSTEM_RUNTIME_LIBS_STR@
 	
 ;	!insertmacro AppendCoreFiles
-
-	${SetOutPath} "$INSTDIR\Resources\Animations"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\animations" "*.gif"
-
-	${SetOutPath} "$INSTDIR\Resources\Icons"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\icons" "*.ico"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\icons" "*.png"
-	${SetOutPath} "$INSTDIR\Resources\Images"
-	${SetOutPath} "$INSTDIR\Resources\Images\128x128"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\128x128" "*.png"
-	${SetOutPath} "$INSTDIR\Resources\Images\64x64"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\64x64" "*.png"
-	${SetOutPath} "$INSTDIR\Resources\Images\32x32"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\32x32" "*.png"
-	${SetOutPath} "$INSTDIR\Resources\Images\48x48"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\48x48" "*.png"
-	${SetOutPath} "$INSTDIR\Resources\Images\16x16"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\16x16" "*.png"
-	${SetOutPath} "$INSTDIR\Resources\Images\Misc"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.png"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.gif"
-	${SetOutPath} "$INSTDIR\Resources\Help"
-	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-examples-library.pdf"
 	
 	${SetOutPath} "$INSTDIR\Documentation"
 	CreateShortCut "$INSTDIR\\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
-
-	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares" "Antares Study ${CMAKE_SIMPLE_VERSION}"
-	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares-output" "Antares Study Results ${CMAKE_SIMPLE_VERSION}"
-
-	CreateShortCut "$INSTDIR\antares-ui-simulator.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" ""
 ${Mementosectionend}
 
 
@@ -357,16 +315,6 @@ ${MementoSection} "$(LngResSources)" SecSources
 ${Mementosectionend}
 
 
-
-${MementoSection} "$(LngDesktopLink)" SecDekstopShortcuts
-	SetShellVarContext all
-	SetDetailsPrint textonly
-	DetailPrint "$(LngResInstallDesktopLink)"
-	SetDetailsPrint listonly
-	CreateShortCut "$DESKTOP\Antares ${CMAKE_VERSION}.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" "$INSTDIR\Resources\Icons\study.ico"
-${Mementosectionend}
-
-
 ${MementoSection} "Menu Shortcuts" SecMenuShortcuts
 	SetShellVarContext all
 	SetDetailsPrint textonly
@@ -378,7 +326,6 @@ ${MementoSection} "Menu Shortcuts" SecMenuShortcuts
 	CreateDirectory "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}"
 	CreateDirectory "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation"
 	${SetOutPath} "$INSTDIR\"
-	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Antares Simulator ${PRODUCT_VERSION}.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" "$INSTDIR\Resources\Icons\study.ico"
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer reference guide (PDF).lnk" "$INSTDIR\Resources\Help\data-organizer-reference-guide.pdf" "" ""
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer troubleshooting (PDF).lnk" "$INSTDIR\Resources\Help\data-organizer-troubleshooting.pdf" "" ""
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
@@ -396,11 +343,9 @@ section -post
 
 	WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "InstallDir" $INSTDIR
 	WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "Version" "${PRODUCT_VERSION}"
-	WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\bin\${ANTARES_BIN}"
 
 	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayName" "${PRODUCT_NAME}"
 	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninstall-${CMAKE_SIMPLE_VERSION}.exe"
-	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\bin\${ANTARES_BIN}"
 	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
 	#WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
 	WriteRegStr HKLM "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
@@ -419,7 +364,6 @@ sectionend
 !insertmacro MUI_DESCRIPTION_TEXT ${SecCore} "The core files required by Antares"
 #!insertmacro MUI_DESCRIPTION_TEXT ${SecSources} "Source files"
 !insertmacro MUI_DESCRIPTION_TEXT ${SecMenuShortcuts} "Create a shortcut in the Start Menu"
-!insertmacro MUI_DESCRIPTION_TEXT ${SecDekstopShortcuts} "Create a shortcut to the Desktop"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;--------------------------------
@@ -527,8 +471,6 @@ section Uninstall
 
 
 	delete "$INSTDIR\${UninstLog}"
-	delete "$INSTDIR\bin\${ANTARES_BIN}"
-	delete "$INSTDIR\antares-ui-simulator.lnk"
 	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Antares Simulator ${PRODUCT_VERSION}.lnk"
 	delete "$INSTDIR\Documentation\Data Organizer reference guide (PDF).lnk"
 	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer reference guide (PDF).lnk"
