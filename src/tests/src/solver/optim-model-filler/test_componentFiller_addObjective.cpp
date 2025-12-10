@@ -226,9 +226,10 @@ BOOST_AUTO_TEST_CASE(
       {{"x", ValueType::FLOAT, literal(-5), literal(10), true, false}},
       {},
       objective);
-    createComponent("model",
-                    "componentA",
-                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIES)});
+    createComponent(
+      "model",
+      "componentA",
+      {build_context_parameter_with("param", "bounds", VariabilityType::VARYING_IN_TIME_ONLY)});
 
     FillContext ctx{0, 2, 0, 2, 0};
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
@@ -254,10 +255,11 @@ BOOST_AUTO_TEST_CASE(
       {{"x", ValueType::FLOAT, literal(-5), literal(10), false, false}},
       {},
       objective);
-    createComponent("model",
-                    "componentA",
-                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIES)},
-                    "scenario_group");
+    createComponent(
+      "model",
+      "componentA",
+      {build_context_parameter_with("param", "bounds", VariabilityType::VARYING_IN_SCENARIO_ONLY)},
+      "scenario_group");
 
     FillContext ctx{0, 0, 0, 0, 0};
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 1);
@@ -289,10 +291,11 @@ BOOST_AUTO_TEST_CASE(
       {{"x", ValueType::FLOAT, literal(-5), literal(10), true, false}},
       {},
       objective);
-    createComponent("model",
-                    "componentA",
-                    {build_context_parameter_with("param", "bounds", ParameterType::TIMESERIES)},
-                    "scenario_group");
+    createComponent(
+      "model",
+      "componentA",
+      {build_context_parameter_with("param", "bounds", VariabilityType::VARYING_IN_TIME_ONLY)},
+      "scenario_group");
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);
@@ -326,10 +329,11 @@ BOOST_AUTO_TEST_CASE(var_and_param_both_varying_in_time_and_scenario_with_differ
       {{"x", ValueType::FLOAT, literal(-5), literal(100), true, true}},
       {},
       objective);
-    createComponent("model",
-                    "componentA",
-                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIES)},
-                    "scenarioX");
+    createComponent(
+      "model",
+      "componentA",
+      {build_context_parameter_with("param", "param_ts", VariabilityType::VARYING_IN_TIME_ONLY)},
+      "scenarioX");
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
 
@@ -381,9 +385,10 @@ BOOST_AUTO_TEST_CASE(two_expressions_one_with_time_varying_param_one_with_consta
       {{"x", ValueType::FLOAT, literal(-5), literal(100), true, false}},
       {},
       objective);
-    createComponent("model",
-                    "componentA",
-                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIES)});
+    createComponent(
+      "model",
+      "componentA",
+      {build_context_parameter_with("param", "param_ts", VariabilityType::VARYING_IN_TIME_ONLY)});
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
 
@@ -423,9 +428,10 @@ BOOST_AUTO_TEST_CASE(multiple_objectives_in_model)
       {{"x", ValueType::FLOAT, literal(-5), literal(100), true, false}},
       {},
       objectives);
-    createComponent("model",
-                    "componentA",
-                    {build_context_parameter_with("param", "param_ts", ParameterType::TIMESERIES)});
+    createComponent(
+      "model",
+      "componentA",
+      {build_context_parameter_with("param", "param_ts", VariabilityType::VARYING_IN_TIME_ONLY)});
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
 
