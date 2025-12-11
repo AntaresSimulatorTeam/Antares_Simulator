@@ -93,7 +93,7 @@ void createIndividualFileSeries(const fs::path& path, unsigned int size)
 
 void createFileSeries(double value, unsigned int size)
 {
-    fs::path folder = fs::temp_directory_path();
+    fs::path folder = fs::temp_directory_path() / "blabla";
 
     createIndividualFileSeries(folder / "PMAX-injection.txt", value, size);
     createIndividualFileSeries(folder / "PMAX-withdrawal.txt", value, size);
@@ -110,7 +110,7 @@ void createFileSeries(double value, unsigned int size)
 
 void createFileSeries(unsigned int size)
 {
-    fs::path folder = fs::temp_directory_path();
+    fs::path folder = fs::temp_directory_path() / "blabla";
 
     createIndividualFileSeries(folder / "PMAX-injection.txt", size);
     createIndividualFileSeries(folder / "PMAX-withdrawal.txt", size);
@@ -128,7 +128,7 @@ void createFileSeries(unsigned int size)
 
 void createIniFile(bool enabled)
 {
-    fs::path folder = fs::temp_directory_path();
+    fs::path folder = fs::temp_directory_path() / "blabla";
 
     std::ofstream outfile;
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -148,7 +148,7 @@ void createIniFile(bool enabled)
 
 void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
 {
-    fs::path folder = fs::temp_directory_path();
+    fs::path folder = fs::temp_directory_path() / "blabla";
 
     std::ofstream outfile;
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -165,7 +165,7 @@ void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
 
 void createIniFileWrongValue()
 {
-    fs::path folder = fs::temp_directory_path();
+    fs::path folder = fs::temp_directory_path() / "blabla";
 
     std::ofstream outfile;
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -185,7 +185,7 @@ void createIniFileWrongValue()
 
 void createEmptyIniFile()
 {
-    fs::path folder = fs::temp_directory_path();
+    fs::path folder = fs::temp_directory_path() / "blabla";
 
     std::ofstream outfile;
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -195,7 +195,7 @@ void createEmptyIniFile()
 
 void removeIniFile()
 {
-    fs::remove(fs::temp_directory_path() / "list.ini");
+    fs::remove(fs::temp_directory_path() / "blabla" / "list.ini");
 }
 } // namespace
 
@@ -208,22 +208,15 @@ struct Fixture
     Fixture(const Fixture&& f) = delete;
     Fixture& operator=(const Fixture& f) = delete;
     Fixture& operator=(const Fixture&& f) = delete;
-    Fixture() = default;
+    Fixture()
+    {
+        folder = fs::temp_directory_path() / "blabla";
+        fs::create_directories(folder);
+    }
 
     ~Fixture()
     {
-        fs::remove(folder / "PMAX-injection.txt");
-        fs::remove(folder / "PMAX-withdrawal.txt");
-        fs::remove(folder / "inflows.txt");
-        fs::remove(folder / "lower-rule-curve.txt");
-        fs::remove(folder / "upper-rule-curve.txt");
-
-        fs::remove(folder / "cost-injection.txt");
-        fs::remove(folder / "cost-withdrawal.txt");
-        fs::remove(folder / "cost-level.txt");
-
-        fs::remove(folder / "cost-variation-injection.txt");
-        fs::remove(folder / "cost-variation-withdrawal.txt");
+        fs::remove_all(folder);
     }
 
     bool loadFromFolder(StudyVersion version)
@@ -231,7 +224,8 @@ struct Fixture
         return series.loadFromFolder(folder, version);
     }
 
-    fs::path folder = fs::temp_directory_path();
+    fs::path folder;
+
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
@@ -386,11 +380,11 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
 
     BOOST_CHECK(cluster.loadSeries(folder, StudyVersion::latest()));
     BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
-    BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
-                && cluster.series->inflows.getCoefficient(0, 2756) == 0.5
-                && cluster.series->lowerRuleCurve[6392] == 0.5
-                && cluster.series->costVariationInjection[15] == 0.5
-                && cluster.series->costVariationWithdrawal[756] == 0.5);
+    BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5);
+    BOOST_CHECK(cluster.series->inflows.getCoefficient(0, 2756) == 0.5);
+    BOOST_CHECK(cluster.series->lowerRuleCurve[6392] == 0.5);
+    BOOST_CHECK(cluster.series->costVariationInjection[15] == 0.5);
+    BOOST_CHECK(cluster.series->costVariationWithdrawal[756] == 0.5);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
@@ -645,8 +639,8 @@ BOOST_AUTO_TEST_SUITE(LoadingAdditionalConstraints)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 {
-    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
@@ -667,13 +661,13 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0]->name,
                       "constraint1");
 
-    std::filesystem::remove_all(testPath);
+    fs::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
 {
-    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "ClusterA");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "ClusterA");
 
     std::ofstream iniFile(testPath / "ClusterA" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
@@ -690,7 +684,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
     bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
-    std::filesystem::remove_all(testPath);
+    fs::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
@@ -702,8 +696,8 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
 {
-    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
@@ -720,13 +714,13 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
     bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
-    std::filesystem::remove_all(testPath);
+    fs::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
 {
-    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
@@ -755,13 +749,13 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
     BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
     BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
-    std::filesystem::remove_all(testPath);
+    fs::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
 {
-    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << R"([constraint1]
@@ -816,13 +810,13 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, 0), 0.0);
     BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
 
-    std::filesystem::remove_all(testPath);
+    fs::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
 {
-    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
@@ -843,13 +837,13 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
     BOOST_CHECK_EQUAL(constraintRhs.timeSeries.height, HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
 
-    std::filesystem::remove_all(testPath);
+    fs::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 {
-    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
@@ -869,13 +863,13 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 
     bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
-    std::filesystem::remove_all(testPath);
+    fs::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
 {
-    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
@@ -899,7 +893,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
     bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
-    std::filesystem::remove_all(testPath);
+    fs::remove_all(testPath);
 }
 
 BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
@@ -909,8 +903,8 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
                      op)
 {
     // Define the path for the test data
-    std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "clustera");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "clustera");
 
     // Write the `.ini` file for this test case
     std::ofstream iniFile(testPath / "clustera" / "additional-constraints.ini");
@@ -966,8 +960,8 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 BOOST_AUTO_TEST_CASE(Load_disabled)
 {
     // Define the path for the test data
-    std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "clustera");
+    fs::path testPath = fs::temp_directory_path() / "test_data";
+    fs::create_directories(testPath / "clustera");
 
     // Write the `.ini` file for this test case
     std::ofstream iniFile(testPath / "clustera" / "additional-constraints.ini");
