@@ -526,7 +526,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(AdditionalConstraintsTests)
+BOOST_AUTO_TEST_SUITE(VaidatingAdditionalConstraints)
 
 BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 {
@@ -619,6 +619,10 @@ BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
     BOOST_CHECK_EQUAL(ok, true);
     BOOST_CHECK(error_msg.empty());
 }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(LoadingAdditionalConstraints)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 {
