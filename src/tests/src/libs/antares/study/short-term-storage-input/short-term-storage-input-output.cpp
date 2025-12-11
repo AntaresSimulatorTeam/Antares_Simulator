@@ -91,63 +91,6 @@ void createIndividualFileSeries(const fs::path& path, unsigned int size)
     outfile.close();
 }
 
-void createIniFile(bool enabled)
-{
-    fs::path folder = fs::temp_directory_path() / "blabla";
-
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
-    outfile << "[area]" << std::endl;
-    outfile << "name = area" << std::endl;
-    outfile << "group = PSP_open" << std::endl;
-    outfile << "injectionnominalcapacity = 870.000000" << std::endl;
-    outfile << "withdrawalnominalcapacity = 900.000000" << std::endl;
-    outfile << "reservoircapacity = 31200.000000" << std::endl;
-    outfile << "efficiency = 0.75" << std::endl;
-    outfile << "efficiencywithdrawal = 0.9" << std::endl;
-    outfile << "initiallevel = 0.50000" << std::endl;
-    outfile << "enabled = " << (enabled ? "true" : "false") << std::endl;
-    outfile.close();
-}
-
-void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
-{
-    fs::path folder = fs::temp_directory_path() / "blabla";
-
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
-    outfile << "[area]" << std::endl;
-    outfile << "name = area" << std::endl;
-    outfile << "group = PSP_open" << std::endl;
-    outfile << "penalize-variation-injection = " << std::boolalpha
-            << penaltyCostOnVariation.injection << std::endl;
-    outfile << "penalize-variation-withdrawal = " << std::boolalpha
-            << penaltyCostOnVariation.withdrawal << std::endl;
-    outfile.close();
-}
-
-void createIniFileWrongValue()
-{
-    fs::path folder = fs::temp_directory_path() / "blabla";
-
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
-    outfile << "[area]" << std::endl;
-    outfile << "name = area" << std::endl;
-    outfile << "group = abcde" << std::endl;
-    outfile << "injectionnominalcapacity = -870.000000" << std::endl;
-    outfile << "withdrawalnominalcapacity = -900.000000" << std::endl;
-    outfile << "reservoircapacity = -31200.000000" << std::endl;
-    outfile << "efficiency = 4" << std::endl;
-    outfile << "efficiencywithdrawal = -2" << std::endl;
-    outfile << "initiallevel = -0.50000" << std::endl;
-
-    outfile.close();
-}
-
 void createEmptyIniFile()
 {
     fs::path folder = fs::temp_directory_path() / "blabla";
@@ -156,11 +99,6 @@ void createEmptyIniFile()
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
     outfile.close();
-}
-
-void removeIniFile()
-{
-    fs::remove(fs::temp_directory_path() / "blabla" / "list.ini");
 }
 } // namespace
 
@@ -181,7 +119,9 @@ struct Fixture
 
     void createFileSeries(double value, unsigned int size);
     void createFileSeries(unsigned int size);
-   
+    void createIniFileWrongValue();
+    void createIniFile(bool enabled);
+    void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation);
 
     ~Fixture()
     {
@@ -232,6 +172,56 @@ void Fixture::createFileSeries(unsigned int size)
 
     createIndividualFileSeries(folder / "cost-variation-injection.txt", size);
     createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", size);
+}
+
+void Fixture::createIniFile(bool enabled)
+{
+    std::ofstream iniFile;
+    iniFile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
+
+    iniFile << "[area]" << std::endl;
+    iniFile << "name = area" << std::endl;
+    iniFile << "group = PSP_open" << std::endl;
+    iniFile << "injectionnominalcapacity = 870.000000" << std::endl;
+    iniFile << "withdrawalnominalcapacity = 900.000000" << std::endl;
+    iniFile << "reservoircapacity = 31200.000000" << std::endl;
+    iniFile << "efficiency = 0.75" << std::endl;
+    iniFile << "efficiencywithdrawal = 0.9" << std::endl;
+    iniFile << "initiallevel = 0.50000" << std::endl;
+    iniFile << "enabled = " << (enabled ? "true" : "false") << std::endl;
+    iniFile.close();
+}
+
+void Fixture::createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
+{
+    std::ofstream iniFile;
+    iniFile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
+
+    iniFile << "[area]" << std::endl;
+    iniFile << "name = area" << std::endl;
+    iniFile << "group = PSP_open" << std::endl;
+    iniFile << "penalize-variation-injection = " << std::boolalpha
+            << penaltyCostOnVariation.injection << std::endl;
+    iniFile << "penalize-variation-withdrawal = " << std::boolalpha
+            << penaltyCostOnVariation.withdrawal << std::endl;
+    iniFile.close();
+}
+
+void Fixture::createIniFileWrongValue()
+{
+    std::ofstream iniFile;
+    iniFile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
+
+    iniFile << "[area]" << std::endl;
+    iniFile << "name = area" << std::endl;
+    iniFile << "group = abcde" << std::endl;
+    iniFile << "injectionnominalcapacity = -870.000000" << std::endl;
+    iniFile << "withdrawalnominalcapacity = -900.000000" << std::endl;
+    iniFile << "reservoircapacity = -31200.000000" << std::endl;
+    iniFile << "efficiency = 4" << std::endl;
+    iniFile << "efficiencywithdrawal = -2" << std::endl;
+    iniFile << "initiallevel = -0.50000" << std::endl;
+    iniFile.close();
 }
 
 // ==================
@@ -478,10 +468,9 @@ BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 
-    removeIniFile();
+    fs::remove(folder / "list.ini");
 
     BOOST_CHECK(container.saveToFolder(folder.string()));
-
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 }
 
