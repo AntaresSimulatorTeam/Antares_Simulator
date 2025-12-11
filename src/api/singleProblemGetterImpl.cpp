@@ -77,7 +77,6 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
                                     pb_,
                                     /* NombreDePasDeTemps = */ 168,
                                     numSpace);
-    study_->runtime.initializeReservesIndexMaps(*study, pb_);
 
     Antares::Solver::Simulation::regenerateTimeSeries(*study_, gResultWriter, gDurationCollector);
 

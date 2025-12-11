@@ -335,6 +335,7 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(Study& study, const PROBLEME
     reserveParticipationIndexMaps.emplace();
     for (const auto& area: study.areas | std::views::values)
     {
+        reserveParticipationIndexMaps.value().emplace(area->id, ReserveIndexMap{});
         for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
         {
             loadReserveParticipations(area, reserve);
