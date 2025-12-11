@@ -526,7 +526,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(VaidatingAdditionalConstraints)
+BOOST_AUTO_TEST_SUITE(ValidatingAdditionalConstraints)
 
 BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 {
