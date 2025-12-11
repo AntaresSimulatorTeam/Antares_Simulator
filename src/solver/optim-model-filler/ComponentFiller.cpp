@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <numeric>
 #include <ranges>
 #include <stdexcept>
 #include <variant>
@@ -331,7 +332,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 }
 
 void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constraint,
-                                          const std::string& constraint_id)
+                                          const std::string& constraint_id) const
 {
     auto* ct = optimEntityContainer_.Problem().addConstraint(linear_constraint.lb[0],
                                                              linear_constraint.ub[0],
@@ -348,7 +349,7 @@ void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constra
 
 void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                                   const std::string& constraint_id,
-                                                  const LinearProblemApi::FillContext& ctx)
+                                                  const LinearProblemApi::FillContext& ctx) const
 {
     auto& pb = optimEntityContainer_.Problem();
     const auto dims = getDimensions(ctx);
@@ -396,13 +397,12 @@ void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
     }
 }
 
-void ComponentFiller::addStaticObjective(
-  const Optimization::TimeDependentLinearExpression& expression) const
+void ComponentFiller::addStaticObjective(const Optimization::LinearExpression& expression) const
 {
     auto& pb = optimEntityContainer_.Problem();
     const auto& solverVariables = optimEntityContainer_.getVariables();
 
-    for (const auto& [index, value]: expression[0])
+    for (const auto& [index, value]: expression)
     {
         pb.setObjectiveCoefficient(solverVariables[index].get(), value);
     }
@@ -413,18 +413,21 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     auto* model = component_.getModel();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
 
+    double objectiveOffset = 0.0;
     for (const auto& objective: model->Objectives() | locationFilter())
     {
         const auto root_node = objective.expression().RootNode();
-        const auto linearExpression = visitor.visitMergeDuplicates(root_node);
-
         const auto variability = getVariability(root_node, component_);
         if (isTimeDependent(variability))
         {
             throw Error::RuntimeError("Time dependent objectives are not supported in Antares.");
         }
+        const auto linearExpression = visitor.visitMergeDuplicates(root_node)[0];
         addStaticObjective(linearExpression);
+        objectiveOffset += linearExpression.constant();
     }
+    auto& pb = optimEntityContainer_.Problem();
+    pb.setObjectiveOffset(objectiveOffset);
 }
 
 VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const

@@ -83,6 +83,13 @@ struct LinearProblemBuildingFixture
       const std::vector<ConstraintData>& constraintsData,
       Antares::Expressions::Nodes::Node* objective = nullptr);
 
+    void createModelWithMultipleObjectives(
+      const std::string& modelId,
+      std::vector<Parameter>,
+      const std::vector<VariableData>& variablesData,
+      const std::vector<ConstraintData>& constraintsData,
+      std::vector<Antares::Expressions::Nodes::Node*> objectives);
+
     void createModelWithOneFloatVar(const std::string& modelId,
                                     const std::vector<std::string>& parameterIds,
                                     const std::string& varId,
@@ -112,10 +119,11 @@ struct LinearProblemBuildingFixture
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
                                                 Antares::Expressions::Nodes::Node* node2);
-
-    Antares::Expressions::Nodes::Node* negate(Antares::Expressions::Nodes::Node* node);
     Antares::Expressions::Nodes::Node* add(Antares::Expressions::Nodes::Node* node1,
                                            Antares::Expressions::Nodes::Node* node2);
+    Antares::Expressions::Nodes::Node* Sum(Antares::Expressions::Nodes::Node* node);
+
+    Antares::Expressions::Nodes::Node* negate(Antares::Expressions::Nodes::Node* node);
 
     void buildLinearProblem(
       Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,
