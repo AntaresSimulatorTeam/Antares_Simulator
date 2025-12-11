@@ -92,7 +92,7 @@ public:
     bool loadFromStudy(Study& study);
 
     void initializeRandomNumberGenerators(const Parameters& parameters);
-    void initializeReservesIndexMaps(Study& study, const PROBLEME_HEBDO& problem);
+    void initializeReservesIndexMaps(const Study& study, const PROBLEME_HEBDO& problem);
 
 public:
     //! The number of years to process

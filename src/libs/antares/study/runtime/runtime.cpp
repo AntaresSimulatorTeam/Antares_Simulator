@@ -304,7 +304,8 @@ void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& param
     }
 }
 
-void StudyRuntimeInfos::initializeReservesIndexMaps(Study& study, const PROBLEME_HEBDO& problem)
+void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
+                                                    const PROBLEME_HEBDO& problem)
 {
     auto loadReserveParticipations = [&](const Area* area, const CAPACITY_RESERVATION& reserve)
     {
