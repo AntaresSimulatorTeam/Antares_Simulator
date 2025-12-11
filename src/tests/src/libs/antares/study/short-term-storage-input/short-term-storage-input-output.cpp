@@ -141,6 +141,9 @@ struct Fixture
     ShortTermStorage::STStorageInput container;
 
     PenaltyCostOnVariation penaltyCostOnVariation;
+
+private:
+    std::ofstream iniFile_;
 };
 
 void Fixture::createFileSeries(double value, unsigned int size)
@@ -176,52 +179,49 @@ void Fixture::createFileSeries(unsigned int size)
 
 void Fixture::createIniFile(bool enabled)
 {
-    std::ofstream iniFile;
-    iniFile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
+    iniFile_.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
-    iniFile << "[area]" << std::endl;
-    iniFile << "name = area" << std::endl;
-    iniFile << "group = PSP_open" << std::endl;
-    iniFile << "injectionnominalcapacity = 870.000000" << std::endl;
-    iniFile << "withdrawalnominalcapacity = 900.000000" << std::endl;
-    iniFile << "reservoircapacity = 31200.000000" << std::endl;
-    iniFile << "efficiency = 0.75" << std::endl;
-    iniFile << "efficiencywithdrawal = 0.9" << std::endl;
-    iniFile << "initiallevel = 0.50000" << std::endl;
-    iniFile << "enabled = " << (enabled ? "true" : "false") << std::endl;
-    iniFile.close();
+    iniFile_ << "[area]" << std::endl;
+    iniFile_ << "name = area" << std::endl;
+    iniFile_ << "group = PSP_open" << std::endl;
+    iniFile_ << "injectionnominalcapacity = 870.000000" << std::endl;
+    iniFile_ << "withdrawalnominalcapacity = 900.000000" << std::endl;
+    iniFile_ << "reservoircapacity = 31200.000000" << std::endl;
+    iniFile_ << "efficiency = 0.75" << std::endl;
+    iniFile_ << "efficiencywithdrawal = 0.9" << std::endl;
+    iniFile_ << "initiallevel = 0.50000" << std::endl;
+    iniFile_ << "enabled = " << (enabled ? "true" : "false") << std::endl;
+    iniFile_.close();
 }
 
 void Fixture::createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
 {
-    std::ofstream iniFile;
-    iniFile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
+    iniFile_.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
-    iniFile << "[area]" << std::endl;
-    iniFile << "name = area" << std::endl;
-    iniFile << "group = PSP_open" << std::endl;
-    iniFile << "penalize-variation-injection = " << std::boolalpha
+    iniFile_ << "[area]" << std::endl;
+    iniFile_ << "name = area" << std::endl;
+    iniFile_ << "group = PSP_open" << std::endl;
+    iniFile_ << "penalize-variation-injection = " << std::boolalpha
             << penaltyCostOnVariation.injection << std::endl;
-    iniFile << "penalize-variation-withdrawal = " << std::boolalpha
+    iniFile_ << "penalize-variation-withdrawal = " << std::boolalpha
             << penaltyCostOnVariation.withdrawal << std::endl;
-    iniFile.close();
+    iniFile_.close();
 }
 
 void Fixture::createIniFileWrongValue()
 {
-    std::ofstream iniFile;
-    iniFile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
+    iniFile_.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
-    iniFile << "[area]" << std::endl;
-    iniFile << "name = area" << std::endl;
-    iniFile << "group = abcde" << std::endl;
-    iniFile << "injectionnominalcapacity = -870.000000" << std::endl;
-    iniFile << "withdrawalnominalcapacity = -900.000000" << std::endl;
-    iniFile << "reservoircapacity = -31200.000000" << std::endl;
-    iniFile << "efficiency = 4" << std::endl;
-    iniFile << "efficiencywithdrawal = -2" << std::endl;
-    iniFile << "initiallevel = -0.50000" << std::endl;
-    iniFile.close();
+    iniFile_ << "[area]" << std::endl;
+    iniFile_ << "name = area" << std::endl;
+    iniFile_ << "group = abcde" << std::endl;
+    iniFile_ << "injectionnominalcapacity = -870.000000" << std::endl;
+    iniFile_ << "withdrawalnominalcapacity = -900.000000" << std::endl;
+    iniFile_ << "reservoircapacity = -31200.000000" << std::endl;
+    iniFile_ << "efficiency = 4" << std::endl;
+    iniFile_ << "efficiencywithdrawal = -2" << std::endl;
+    iniFile_ << "initiallevel = -0.50000" << std::endl;
+    iniFile_.close();
 }
 
 // ==================
