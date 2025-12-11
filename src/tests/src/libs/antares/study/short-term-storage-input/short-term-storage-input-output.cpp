@@ -526,6 +526,9 @@ BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+// Test data for parameterization
+namespace bdata = boost::unit_test::data;
+
 BOOST_AUTO_TEST_SUITE(ValidatingAdditionalConstraints)
 
 BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
@@ -615,6 +618,27 @@ BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
 
     constraints.constraints = {constraint1, constraint2};
 
+    auto [ok, error_msg] = validate(constraints);
+    BOOST_CHECK_EQUAL(ok, true);
+    BOOST_CHECK(error_msg.empty());
+}
+
+BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
+                     bdata::make({"injection", "withdrawal", "netting"})
+                       ^ bdata::make({"less", "equal", "greater"}),
+                     variable,
+                     op)
+{
+    ShortTermStorage::AdditionalConstraints
+      constraints("name", "name", "clusterA", variable, op, true, {});
+
+    // Create constraints with valid hours
+    constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{1, 2, 3}});
+    constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{50, 100, 150}});
+    constraints.constraints.push_back(
+      ShortTermStorage::SingleAdditionalConstraint{{120, 121, 122}});
+
+    // Validate the constraints
     auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, true);
     BOOST_CHECK(error_msg.empty());
@@ -881,30 +905,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
-}
-
-// Test data for parameterization
-namespace bdata = boost::unit_test::data;
-
-BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
-                     bdata::make({"injection", "withdrawal", "netting"})
-                       ^ bdata::make({"less", "equal", "greater"}),
-                     variable,
-                     op)
-{
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "name", "clusterA", variable, op, true, {});
-
-    // Create constraints with valid hours
-    constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{1, 2, 3}});
-    constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{50, 100, 150}});
-    constraints.constraints.push_back(
-      ShortTermStorage::SingleAdditionalConstraint{{120, 121, 122}});
-
-    // Validate the constraints
-    auto [ok, error_msg] = validate(constraints);
-    BOOST_CHECK_EQUAL(ok, true);
-    BOOST_CHECK(error_msg.empty());
 }
 
 BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
