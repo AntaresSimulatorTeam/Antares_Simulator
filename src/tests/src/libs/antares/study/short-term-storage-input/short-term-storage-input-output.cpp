@@ -48,11 +48,6 @@ struct PenaltyCostOnVariation
     bool withdrawal = false;
 };
 
-fs::path getFolder()
-{
-    return fs::temp_directory_path();
-}
-
 void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned int size)
 {
     series.maxInjectionModulation.resize(size, value);
@@ -98,7 +93,7 @@ void createIndividualFileSeries(const fs::path& path, unsigned int size)
 
 void createFileSeries(double value, unsigned int size)
 {
-    fs::path folder = getFolder();
+    fs::path folder = fs::temp_directory_path();
 
     createIndividualFileSeries(folder / "PMAX-injection.txt", value, size);
     createIndividualFileSeries(folder / "PMAX-withdrawal.txt", value, size);
@@ -115,7 +110,7 @@ void createFileSeries(double value, unsigned int size)
 
 void createFileSeries(unsigned int size)
 {
-    fs::path folder = getFolder();
+    fs::path folder = fs::temp_directory_path();
 
     createIndividualFileSeries(folder / "PMAX-injection.txt", size);
     createIndividualFileSeries(folder / "PMAX-withdrawal.txt", size);
@@ -133,7 +128,7 @@ void createFileSeries(unsigned int size)
 
 void createIniFile(bool enabled)
 {
-    fs::path folder = getFolder();
+    fs::path folder = fs::temp_directory_path();
 
     std::ofstream outfile;
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -153,7 +148,7 @@ void createIniFile(bool enabled)
 
 void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
 {
-    fs::path folder = getFolder();
+    fs::path folder = fs::temp_directory_path();
 
     std::ofstream outfile;
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -170,7 +165,7 @@ void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
 
 void createIniFileWrongValue()
 {
-    fs::path folder = getFolder();
+    fs::path folder = fs::temp_directory_path();
 
     std::ofstream outfile;
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -190,7 +185,7 @@ void createIniFileWrongValue()
 
 void createEmptyIniFile()
 {
-    fs::path folder = getFolder();
+    fs::path folder = fs::temp_directory_path();
 
     std::ofstream outfile;
     outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -200,7 +195,7 @@ void createEmptyIniFile()
 
 void removeIniFile()
 {
-    fs::remove(getFolder() / "list.ini");
+    fs::remove(fs::temp_directory_path() / "list.ini");
 }
 } // namespace
 
@@ -236,7 +231,7 @@ struct Fixture
         return series.loadFromFolder(folder, version);
     }
 
-    fs::path folder = getFolder();
+    fs::path folder = fs::temp_directory_path();
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
@@ -650,7 +645,7 @@ BOOST_AUTO_TEST_SUITE(LoadingAdditionalConstraints)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 {
-    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
     std::filesystem::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
@@ -677,7 +672,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
 {
-    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
     std::filesystem::create_directories(testPath / "ClusterA");
 
     std::ofstream iniFile(testPath / "ClusterA" / "additional-constraints.ini");
@@ -707,7 +702,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
 {
-    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
     std::filesystem::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
@@ -730,7 +725,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
 {
-    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
     std::filesystem::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
@@ -765,7 +760,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
 
 BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
 {
-    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
     std::filesystem::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
@@ -826,7 +821,7 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
 {
-    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
     std::filesystem::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
@@ -853,7 +848,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 {
-    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
     std::filesystem::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
@@ -879,7 +874,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
 {
-    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::path testPath = fs::temp_directory_path() / "test_data";
     std::filesystem::create_directories(testPath / "cluster1");
 
     std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
