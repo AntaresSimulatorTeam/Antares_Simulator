@@ -93,7 +93,7 @@ static void importShortTermStorages(Data::Parameters parameters,
     {
         int areaReserveIndex = 0;
         int areaClusterParticipationIndex = 0;
-        auto* area = areas[areaIndex];
+        const auto* area = areas[areaIndex];
         ShortTermStorageOut[areaIndex].resize(area->shortTermStorage.count());
         int storageIndex = 0;
         for (const auto& st: area->shortTermStorage.storagesByIndex)

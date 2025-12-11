@@ -99,7 +99,10 @@ bool Economy::simulationBegin()
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
-            study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
+            if (study.parameters.reservesEnabled)
+            {
+                study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
+            }
 
             auto* simulationsTables = simulationTables_.empty() ? nullptr
                                                                 : &simulationTables_[numSpace];
