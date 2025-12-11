@@ -28,19 +28,13 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include <yuni/io/file.h>
-
 #include "antares/antares/constants.h"
 #include "antares/study/parts/short-term-storage/additionalConstraints.h"
 #include "antares/study/parts/short-term-storage/container.h"
 
-using namespace std;
 using namespace Antares::Data;
 
 namespace fs = std::filesystem;
-
-namespace
-{
 
 struct PenaltyCostOnVariation
 {
@@ -91,26 +85,11 @@ void createIndividualFileSeries(const fs::path& path, unsigned int size)
     outfile.close();
 }
 
-void createEmptyIniFile()
-{
-    fs::path folder = fs::temp_directory_path() / "blabla";
-
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
-    outfile.close();
-}
-} // namespace
-
 // =================
 // The fixture
 // =================
 struct Fixture
 {
-    Fixture(const Fixture& f) = delete;
-    Fixture(const Fixture&& f) = delete;
-    Fixture& operator=(const Fixture& f) = delete;
-    Fixture& operator=(const Fixture&& f) = delete;
     Fixture()
     {
         folder = fs::temp_directory_path() / "blabla";
@@ -122,6 +101,7 @@ struct Fixture
     void createIniFileWrongValue();
     void createIniFile(bool enabled);
     void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation);
+    void createEmptyIniFile();
 
     ~Fixture()
     {
@@ -202,9 +182,15 @@ void Fixture::createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation
     iniFile_ << "name = area" << std::endl;
     iniFile_ << "group = PSP_open" << std::endl;
     iniFile_ << "penalize-variation-injection = " << std::boolalpha
-            << penaltyCostOnVariation.injection << std::endl;
+             << penaltyCostOnVariation.injection << std::endl;
     iniFile_ << "penalize-variation-withdrawal = " << std::boolalpha
-            << penaltyCostOnVariation.withdrawal << std::endl;
+             << penaltyCostOnVariation.withdrawal << std::endl;
+    iniFile_.close();
+}
+
+void Fixture::createEmptyIniFile()
+{
+    iniFile_.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
     iniFile_.close();
 }
 
