@@ -91,41 +91,6 @@ void createIndividualFileSeries(const fs::path& path, unsigned int size)
     outfile.close();
 }
 
-void createFileSeries(double value, unsigned int size)
-{
-    fs::path folder = fs::temp_directory_path() / "blabla";
-
-    createIndividualFileSeries(folder / "PMAX-injection.txt", value, size);
-    createIndividualFileSeries(folder / "PMAX-withdrawal.txt", value, size);
-    createIndividualFileSeries(folder / "inflows.txt", value, size);
-    createIndividualFileSeries(folder / "lower-rule-curve.txt", value, size);
-    createIndividualFileSeries(folder / "upper-rule-curve.txt", value, size);
-
-    createIndividualFileSeries(folder / "cost-injection.txt", value, size);
-    createIndividualFileSeries(folder / "cost-withdrawal.txt", value, size);
-    createIndividualFileSeries(folder / "cost-level.txt", value, size);
-    createIndividualFileSeries(folder / "cost-variation-injection.txt", value, size);
-    createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", value, size);
-}
-
-void createFileSeries(unsigned int size)
-{
-    fs::path folder = fs::temp_directory_path() / "blabla";
-
-    createIndividualFileSeries(folder / "PMAX-injection.txt", size);
-    createIndividualFileSeries(folder / "PMAX-withdrawal.txt", size);
-    createIndividualFileSeries(folder / "inflows.txt", size);
-    createIndividualFileSeries(folder / "lower-rule-curve.txt", size);
-    createIndividualFileSeries(folder / "upper-rule-curve.txt", size);
-
-    createIndividualFileSeries(folder / "cost-injection.txt", size);
-    createIndividualFileSeries(folder / "cost-withdrawal.txt", size);
-    createIndividualFileSeries(folder / "cost-level.txt", size);
-
-    createIndividualFileSeries(folder / "cost-variation-injection.txt", size);
-    createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", size);
-}
-
 void createIniFile(bool enabled)
 {
     fs::path folder = fs::temp_directory_path() / "blabla";
@@ -214,6 +179,10 @@ struct Fixture
         fs::create_directories(folder);
     }
 
+    void createFileSeries(double value, unsigned int size);
+    void createFileSeries(unsigned int size);
+   
+
     ~Fixture()
     {
         fs::remove_all(folder);
@@ -233,6 +202,37 @@ struct Fixture
 
     PenaltyCostOnVariation penaltyCostOnVariation;
 };
+
+void Fixture::createFileSeries(double value, unsigned int size)
+{
+    createIndividualFileSeries(folder / "PMAX-injection.txt", value, size);
+    createIndividualFileSeries(folder / "PMAX-withdrawal.txt", value, size);
+    createIndividualFileSeries(folder / "inflows.txt", value, size);
+    createIndividualFileSeries(folder / "lower-rule-curve.txt", value, size);
+    createIndividualFileSeries(folder / "upper-rule-curve.txt", value, size);
+
+    createIndividualFileSeries(folder / "cost-injection.txt", value, size);
+    createIndividualFileSeries(folder / "cost-withdrawal.txt", value, size);
+    createIndividualFileSeries(folder / "cost-level.txt", value, size);
+    createIndividualFileSeries(folder / "cost-variation-injection.txt", value, size);
+    createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", value, size);
+}
+
+void Fixture::createFileSeries(unsigned int size)
+{
+    createIndividualFileSeries(folder / "PMAX-injection.txt", size);
+    createIndividualFileSeries(folder / "PMAX-withdrawal.txt", size);
+    createIndividualFileSeries(folder / "inflows.txt", size);
+    createIndividualFileSeries(folder / "lower-rule-curve.txt", size);
+    createIndividualFileSeries(folder / "upper-rule-curve.txt", size);
+
+    createIndividualFileSeries(folder / "cost-injection.txt", size);
+    createIndividualFileSeries(folder / "cost-withdrawal.txt", size);
+    createIndividualFileSeries(folder / "cost-level.txt", size);
+
+    createIndividualFileSeries(folder / "cost-variation-injection.txt", size);
+    createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", size);
+}
 
 // ==================
 // Tests section
