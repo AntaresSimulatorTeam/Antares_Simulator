@@ -400,8 +400,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
     BOOST_CHECK(properties.validate());
     BOOST_CHECK(!properties.penalizeVariationInjection);
     BOOST_CHECK(!properties.penalizeVariationWithdrawal);
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variation_injection,
@@ -415,8 +413,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variat
     auto& properties = container.storagesByIndex[0].properties;
 
     BOOST_CHECK(properties.penalizeVariationInjection);
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variation_withdrawal,
@@ -430,8 +426,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variat
     auto& properties = container.storagesByIndex[0].properties;
 
     BOOST_CHECK(properties.penalizeVariationWithdrawal);
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -447,8 +441,6 @@ BOOST_FIXTURE_TEST_CASE(
 
     BOOST_CHECK(properties.penalizeVariationInjection);
     BOOST_CHECK(properties.penalizeVariationWithdrawal);
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_disabled_load, Fixture)
@@ -462,8 +454,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_disabled_load, Fixture)
     BOOST_CHECK(!properties.enabled);
     BOOST_CHECK_EQUAL(container.count(), 0);
     BOOST_CHECK(properties.validate());
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_wrong_value, Fixture)
@@ -472,8 +462,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_wrong_value, Fixture)
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
     BOOST_CHECK(!container.storagesByIndex[0].properties.validate());
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
@@ -481,8 +469,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
     createEmptyIniFile();
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
-
-    removeIniFile();
 }
 
 #ifdef BUILD_UI
@@ -497,8 +483,6 @@ BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
     BOOST_CHECK(container.saveToFolder(folder.string()));
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
