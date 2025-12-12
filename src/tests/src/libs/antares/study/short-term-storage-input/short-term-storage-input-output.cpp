@@ -43,7 +43,7 @@ struct PenaltyCostOnVariation
     bool withdrawal = false;
 };
 
-void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned int size)
+void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned size)
 {
     series.maxInjectionModulation.resize(size, value);
     series.maxWithdrawalModulation.resize(size, value);
@@ -60,11 +60,11 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
     series.costVariationWithdrawal.resize(size, value);
 }
 
-void createIndividualFileSeries(const fs::path& path, double value, unsigned int size)
+void createIndividualFileSeries(const fs::path& path, double value, unsigned size)
 {
     std::ofstream outfile(path);
 
-    for (unsigned int i = 0; i < size; i++)
+    for (unsigned i = 0; i < size; i++)
     {
         outfile << value << std::endl;
     }
@@ -72,12 +72,12 @@ void createIndividualFileSeries(const fs::path& path, double value, unsigned int
     outfile.close();
 }
 
-void createIndividualFileSeries(const fs::path& path, unsigned int size)
+void createIndividualFileSeries(const fs::path& path, unsigned size)
 {
     std::ofstream outfile;
     outfile.open(path, std::ofstream::out | std::ofstream::trunc);
 
-    for (unsigned int i = 0; i < size; i++)
+    for (unsigned i = 0; i < size; i++)
     {
         double value = i * 0.0001;
         outfile << value << std::endl;
@@ -108,8 +108,8 @@ struct WorkDirCreationFixture
 struct Fixture: public WorkDirCreationFixture
 {
     Fixture() = default;
-    void createFileSeries(double value, unsigned int size);
-    void createFileSeries(unsigned int size);
+    void createFileSeries(double value, unsigned size);
+    void createFileSeries(unsigned size);
     void createIniFileWrongValue();
     void createIniFile(bool enabled);
     void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation);
@@ -126,7 +126,7 @@ private:
     std::ofstream iniFile_;
 };
 
-void Fixture::createFileSeries(double value, unsigned int size)
+void Fixture::createFileSeries(double value, unsigned size)
 {
     createIndividualFileSeries(work_dir / "PMAX-injection.txt", value, size);
     createIndividualFileSeries(work_dir / "PMAX-withdrawal.txt", value, size);
@@ -141,7 +141,7 @@ void Fixture::createFileSeries(double value, unsigned int size)
     createIndividualFileSeries(work_dir / "cost-variation-withdrawal.txt", value, size);
 }
 
-void Fixture::createFileSeries(unsigned int size)
+void Fixture::createFileSeries(unsigned size)
 {
     createIndividualFileSeries(work_dir / "PMAX-injection.txt", size);
     createIndividualFileSeries(work_dir / "PMAX-withdrawal.txt", size);
@@ -674,7 +674,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraint
     makeIniFile({{"my_constr", "injection", "less", "[1,2,3]"}});
 
     std::ofstream rhsFile(sts_dir / "rhs_my_constr.txt");
-    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (unsigned i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
     }
@@ -699,7 +699,7 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixtur
                  {"constraint2", "withdrawal", "greater", "[5,33]"}});
 
     std::ofstream rhsFile(sts_dir / "rhs_constraint1.txt");
-    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (unsigned i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
     }
@@ -800,7 +800,7 @@ BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
     makeIniFile({{"my_constr", variable, op, "[1,2,3]"}});
 
     std::ofstream rhsFile(sts_dir / "rhs_my_constr.txt");
-    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (unsigned i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
     }
