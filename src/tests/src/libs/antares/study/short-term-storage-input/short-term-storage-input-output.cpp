@@ -603,12 +603,17 @@ struct AdditionalConstraintsFixture: public WorkDirCreationFixture
     void makeIniFile(const std::vector<IniConstraint>& ini_constraints);
 
     fs::path sts_dir;
+    STStorageInput storageInput;
+    STStorageCluster sts;
 };
 
 AdditionalConstraintsFixture::AdditionalConstraintsFixture()
 {
     sts_dir = work_dir / "my-sts";
     fs::create_directories(sts_dir);
+
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
 }
 
 void AdditionalConstraintsFixture::makeIniFile(const std::vector<IniConstraint>& ini_constraints)
@@ -629,11 +634,6 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditionalConstrain
 {
     makeIniFile({{"my_constr", "injection", "less", "[1,2,3]"}});
 
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
-
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0]->name, "my_constr");
@@ -642,11 +642,6 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditionalConstrain
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, AdditionalConstraintsFixture)
 {
     makeIniFile({{"my_constr", "injection", "less", "[0,1]"}}); // Invalid hours
-
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
 
     BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
@@ -661,11 +656,6 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, AdditionalC
 {
     makeIniFile({{"my_constr", "invalid", "less", "[1,2,3]"}}); // Invalid variable
 
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
-
     BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
@@ -679,11 +669,6 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraint
         rhsFile << i << "\n";
     }
     rhsFile.close();
-
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
@@ -704,11 +689,6 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixtur
         rhsFile << i << "\n";
     }
     rhsFile.close();
-
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 2);
@@ -743,11 +723,6 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditionalCons
 {
     makeIniFile({{"my_constr", "injection", "less", "[1,2,3]"}});
 
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
-
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
     const auto& constraintRhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
@@ -763,11 +738,6 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile, AdditionalCo
     rhsFile << "1.0\n2.0\ninvalid\n4.0\n"; // Malformed line
     rhsFile.close();
 
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
-
     BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
@@ -781,11 +751,6 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, AdditionalC
         rhsFile << i << "\n";
     }
     rhsFile.close();
-
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
 
     BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
@@ -805,12 +770,6 @@ BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
         rhsFile << i << "\n";
     }
     rhsFile.close();
-
-    // Setup storage input and sts
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 1);
@@ -834,12 +793,6 @@ BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
 BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditionalConstraintsFixture)
 {
     makeIniFile({{"my_constr", "injection", "less", "[1,2,3]", "false"}});
-
-    // Setup storage input and sts
-    STStorageInput storageInput;
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 0);
