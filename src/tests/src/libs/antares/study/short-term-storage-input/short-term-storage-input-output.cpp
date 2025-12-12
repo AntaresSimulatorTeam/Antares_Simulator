@@ -588,6 +588,11 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(LoadingAdditionalConstraints)
 
+struct AdditionalConstraintsFixture: public WorkDirCreationFixture
+{
+
+};
+
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, WorkDirCreationFixture)
 {
     fs::create_directories(work_dir / "cluster1");
@@ -824,17 +829,15 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, WorkDirCrea
     BOOST_CHECK_EQUAL(result, false);
 }
 
-BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
-                     bdata::make({"injection", "withdrawal", "netting"})
-                       * bdata::make({"less", "equal", "greater"}),
-                     variable,
-                     op)
+BOOST_DATA_TEST_CASE_F(WorkDirCreationFixture,
+                       Validate_AllVariableOperatorCombinationsFromFile,
+                       bdata::make({"injection", "withdrawal", "netting"})
+                         * bdata::make({"less", "equal", "greater"}),
+                       variable,
+                       op)
 {
-    // Define the path for the test data
-    fs::path work_dir = fs::temp_directory_path() / "test_data";
     fs::create_directories(work_dir / "cluster1");
 
-    // Write the `.ini` file for this test case
     std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=" << variable << "\n";
@@ -843,7 +846,6 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    // Write the `rhs_constraint1.txt` file
     std::ofstream rhsFile(work_dir / "cluster1" / "rhs_constraint1.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
@@ -857,32 +859,25 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    // Load constraints from the `.ini` file
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 1);
 
-    // Assertions
-    BOOST_CHECK_EQUAL(result, true);
-    // Validate loaded constraints
-    auto& built_cluster = storageInput.storagesByIndex[0];
-    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 1);
+    auto& sts = storageInput.storagesByIndex[0];
+    BOOST_REQUIRE_EQUAL(sts.additionalConstraints.size(), 1);
 
-    const auto& loadedConstraint = *built_cluster.additionalConstraints[0];
+    const auto loadedConstraint = sts.additionalConstraints[0];
+    BOOST_CHECK_EQUAL(loadedConstraint->variable, variable);
+    BOOST_CHECK_EQUAL(loadedConstraint->operatorType, op);
 
-    // Check variable, operator type, and rhs values
-    BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
-    BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
-    const auto& rhs = loadedConstraint.rhs();
+    const auto& rhs = loadedConstraint->rhs();
     BOOST_REQUIRE_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
 
-    unsigned int i = 0;
-    do
+    unsigned i = 0;
+    while (i < HOURS_PER_YEAR)
     {
-        BOOST_CHECK_CLOSE(rhs.getCoefficient(0, i), i * 1.0, 0.001);
-        // Check rhs values within a tolerance
-
+        BOOST_CHECK_CLOSE(rhs.getCoefficient(0, i), i, 0.001 /* tolerance */);
         i += HOURS_PER_YEAR / 5;
-    } while (i < HOURS_PER_YEAR);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(Load_disabled, WorkDirCreationFixture)
