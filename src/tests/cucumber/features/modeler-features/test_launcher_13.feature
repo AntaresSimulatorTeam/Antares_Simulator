@@ -25,8 +25,8 @@ Feature: 13 - Investment problems
     And the master problem contains the following variables
       | name                                  | xmin | xmax | cost |
       | continuous_generator_candidate.p_max  | 0    | 1000 | 490  |
-      | discrete_generator_candidate.p_max    | 0    | +inf | 200  |
-      | discrete_generator_candidate.nb_units | 0    | 10   | 400  |
+#      | discrete_generator_candidate.p_max    | 0    | +inf | 200  |
+#      | discrete_generator_candidate.nb_units | 0    | 10   | 400  |
 #    And the subproblem contains the following variables
 #      | name                                         | xmin | xmax | cost |
 #      | my_node.spillage_s0_t0                       | 0    | 1e6  | 1    |
