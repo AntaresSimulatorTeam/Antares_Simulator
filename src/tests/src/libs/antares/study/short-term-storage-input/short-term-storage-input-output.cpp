@@ -619,7 +619,7 @@ AdditionalConstraintsFixture::AdditionalConstraintsFixture()
 void AdditionalConstraintsFixture::makeIniFile(const std::vector<IniConstraint>& ini_constraints)
 {
     std::ofstream iniFile(sts_dir / "additional-constraints.ini");
-    for (const auto& c : ini_constraints)
+    for (const auto& c: ini_constraints)
     {
         iniFile << "[" + c.name + "]\n";
         iniFile << "variable=" + c.variable + "\n";
