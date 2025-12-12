@@ -614,12 +614,9 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditionalConstrain
     cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
-
-    BOOST_CHECK_EQUAL(result, true);
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0]->name,
-                      "my_constr");
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0]->name, "my_constr");
 }
 
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, AdditionalConstraintsFixture)
@@ -636,15 +633,13 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, AdditionalConstr
     cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
-    BOOST_CHECK_EQUAL(result, false);
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 {
     STStorageInput storageInput;
-    bool result = storageInput.loadAdditionalConstraints("nonexistent_path");
-    BOOST_CHECK_EQUAL(result, true);
+    BOOST_CHECK(storageInput.loadAdditionalConstraints("nonexistent_path"));
 }
 
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, AdditionalConstraintsFixture)
@@ -661,8 +656,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, AdditionalC
     cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
-    BOOST_CHECK_EQUAL(result, false);
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraintsFixture)
@@ -674,7 +668,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraint
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    std::ofstream rhsFile(sts_dir / "rhs_constraint1.txt");
+    std::ofstream rhsFile(sts_dir / "rhs_my_constr.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -682,17 +676,16 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraint
     rhsFile.close();
 
     STStorageInput storageInput;
-    STStorageCluster cluster;
-    cluster.id = "my-sts";
-    storageInput.storagesByIndex.push_back(cluster);
+    STStorageCluster sts;
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
 
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
-    BOOST_CHECK_EQUAL(result, true);
-    const auto& constraint1Rhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
-    BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
-    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
+    const auto& rhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
+    BOOST_CHECK_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixture)
@@ -716,36 +709,34 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixtur
     rhsFile.close();
 
     STStorageInput storageInput;
-    STStorageCluster cluster;
-    cluster.id = "my-sts";
-    storageInput.storagesByIndex.push_back(cluster);
+    STStorageCluster sts;
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
 
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
-
-    BOOST_CHECK_EQUAL(result, true);
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 2);
 
     //------- constraint1 ----------
-    const auto& constraint1 = *storageInput.storagesByIndex[0].additionalConstraints[0];
-    BOOST_CHECK_EQUAL(constraint1.name, "constraint1");
-    BOOST_CHECK_EQUAL(constraint1.operatorType, "less");
-    BOOST_CHECK_EQUAL(constraint1.variable, "injection");
-    BOOST_CHECK_EQUAL(constraint1.cluster_id, cluster.id);
+    const auto& constraint1 = storageInput.storagesByIndex[0].additionalConstraints[0];
+    BOOST_CHECK_EQUAL(constraint1->name, "constraint1");
+    BOOST_CHECK_EQUAL(constraint1->operatorType, "less");
+    BOOST_CHECK_EQUAL(constraint1->variable, "injection");
+    BOOST_CHECK_EQUAL(constraint1->cluster_id, sts.id);
 
-    const auto& constraint1Rhs = constraint1.rhs();
+    const auto& constraint1Rhs = constraint1->rhs();
     BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
     BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
     //------- constraint2 ----------
 
-    const auto& constraint2 = *storageInput.storagesByIndex[0].additionalConstraints[1];
-    BOOST_CHECK_EQUAL(constraint2.name, "constraint2");
-    BOOST_CHECK_EQUAL(constraint2.operatorType, "greater");
-    BOOST_CHECK_EQUAL(constraint2.variable, "withdrawal");
-    BOOST_CHECK_EQUAL(constraint2.cluster_id, cluster.id);
+    const auto& constraint2 = storageInput.storagesByIndex[0].additionalConstraints[1];
+    BOOST_CHECK_EQUAL(constraint2->name, "constraint2");
+    BOOST_CHECK_EQUAL(constraint2->operatorType, "greater");
+    BOOST_CHECK_EQUAL(constraint2->variable, "withdrawal");
+    BOOST_CHECK_EQUAL(constraint2->cluster_id, sts.id);
 
-    const auto& constraint2Rhs = constraint2.rhs();
+    const auto& constraint2Rhs = constraint2->rhs();
     BOOST_CHECK_EQUAL(constraint2Rhs.timeSeries.height, HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, 0), 0.0);
     BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
@@ -761,13 +752,12 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditionalCons
     iniFile.close();
 
     STStorageInput storageInput;
-    STStorageCluster cluster;
-    cluster.id = "my-sts";
-    storageInput.storagesByIndex.push_back(cluster);
+    STStorageCluster sts;
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
 
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
-    BOOST_CHECK_EQUAL(result, true);
     const auto& constraintRhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
     BOOST_CHECK_EQUAL(constraintRhs.timeSeries.height, HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
@@ -787,12 +777,11 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile, AdditionalCo
     rhsFile.close();
 
     STStorageInput storageInput;
-    STStorageCluster cluster;
-    cluster.id = "my-sts";
-    storageInput.storagesByIndex.push_back(cluster);
+    STStorageCluster sts;
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
 
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
-    BOOST_CHECK_EQUAL(result, false);
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, AdditionalConstraintsFixture)
@@ -812,12 +801,11 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, AdditionalC
     rhsFile.close();
 
     STStorageInput storageInput;
-    STStorageCluster cluster;
-    cluster.id = "my-sts";
-    storageInput.storagesByIndex.push_back(cluster);
+    STStorageCluster sts;
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
 
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
-    BOOST_CHECK_EQUAL(result, false);
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
 BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
@@ -842,19 +830,17 @@ BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
     }
     rhsFile.close();
 
-    // Setup storage input and cluster
+    // Setup storage input and sts
     STStorageInput storageInput;
-    STStorageCluster cluster;
-    cluster.id = "my-sts";
-    storageInput.storagesByIndex.push_back(cluster);
+    STStorageCluster sts;
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 1);
+    BOOST_REQUIRE_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
 
-    auto& sts = storageInput.storagesByIndex[0];
-    BOOST_REQUIRE_EQUAL(sts.additionalConstraints.size(), 1);
-
-    const auto loadedConstraint = sts.additionalConstraints[0];
+    const auto loadedConstraint = storageInput.storagesByIndex[0].additionalConstraints[0];
     BOOST_CHECK_EQUAL(loadedConstraint->variable, variable);
     BOOST_CHECK_EQUAL(loadedConstraint->operatorType, op);
 
@@ -879,21 +865,15 @@ BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditionalConstraintsFixture)
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    // Setup storage input and cluster
+    // Setup storage input and sts
     STStorageInput storageInput;
-    STStorageCluster cluster;
-    cluster.id = "my-sts";
-    storageInput.storagesByIndex.push_back(cluster);
+    STStorageCluster sts;
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
 
-    // Load constraints from the `.ini` file
-    bool result = storageInput.loadAdditionalConstraints(work_dir);
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 0);
-
-    // Assertions
-    BOOST_CHECK_EQUAL(result, true);
-    // Validate loaded constraints
-    auto& built_cluster = storageInput.storagesByIndex[0];
-    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 0);
+    BOOST_REQUIRE_EQUAL(sts.additionalConstraints.size(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
