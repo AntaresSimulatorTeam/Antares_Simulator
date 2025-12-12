@@ -424,7 +424,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         return node;
     }
 
-    throw NoConstraintWithThisName(model_.id, constraint_id);
+    throw DualNoConstraintWithThisName(model_.id, constraint_id);
 }
 
 std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)
@@ -446,18 +446,18 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
                                     + params);
     }
 
-    std::vector<Node*> nodes;
-    try
+    unsigned index = 0;
+    for (const auto& var: model_.variables)
     {
-        nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+        if (var.id == variableId.at(0)->getText())
+        {
+            auto* varNode = registry_.create<VariableNode>(var.id, index);
+            return static_cast<Node*>(
+              registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode));
+        }
+        ++index;
     }
-    catch (const NoParameterOrVariableWithThisName&) // to print accurate message
-    {
-        throw NoVariableWithThisName(model_.id, context->expr(0)->getText());
-    }
-
-    return static_cast<Node*>(
-      registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, nodes.at(0)));
+    throw ReducedCostNoVariableWithThisName(model_.id, variableId.at(0)->getText());
 }
 
 template<class T>

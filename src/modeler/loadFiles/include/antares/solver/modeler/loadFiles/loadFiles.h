@@ -51,9 +51,6 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeri
 Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath);
 
-void loadOptimConfig(const std::filesystem::path& studyPath,
-                     std::vector<ModelerStudy::SystemModel::Library>& libraries);
-
 void handleYamlError(const YAML::Exception& e, const std::string& filename);
 
 /// Generic error class for all loading errors to catch in the main

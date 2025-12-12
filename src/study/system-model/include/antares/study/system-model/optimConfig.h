@@ -30,19 +30,10 @@ enum class Location
     SUBPROBLEMS
 };
 
-constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
-{
-    switch (rhs)
-    {
-    case Location::MASTER:
-        return lhs == Location::MASTER || lhs == Location::MASTER_AND_SUBPROBLEMS;
-    case Location::SUBPROBLEMS:
-        return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
-    case Location::MASTER_AND_SUBPROBLEMS:
-        return true;
-    default:
-        return false;
-    }
-}
+const char* LocationToStr(Location loc);
+
+bool AreLocationsCompatibleForFillers(Location lhs, Location rhs);
+// stricter for MASTER_AND_SUBPROLEMS
+bool AreLocationsCompatibleForExpressions(Location lhs, Location rhs);
 
 } // namespace Antares::Modeler::Config

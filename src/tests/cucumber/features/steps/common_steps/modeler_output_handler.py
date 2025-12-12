@@ -19,6 +19,7 @@ class invest_problems:
         self.subproblem = subproblem
         self.structure = structure
 
+
 class modeler_output_handler:
     def __init__(self, simulation_table_location, output_location=None):
         self.simulation_table = modeler_output_handler.__read_simulation_table(simulation_table_location)
@@ -54,7 +55,7 @@ class modeler_output_handler:
             df[col] = df[col].astype(float)
         return df
 
-    def get_simulation_table_entry(self, component : str, output : str, block : int, timestep : int, scenario : int):
+    def get_simulation_table_entry(self, component: str, output: str, block: int, timestep: int, scenario: int):
         df = self.simulation_table[(self.simulation_table["component"] == component)
                                    & (self.simulation_table["output"] == output)]
         if not pd.isna(block):
@@ -68,7 +69,8 @@ class modeler_output_handler:
         else:
             df = df[df["scenario_index"] == scenario]
         if len(df) != 1:
-            raise LookupError(f"Simulation table contains {len(df)} row(s) (expected 1) for component '{component}', output '{output}', block '{block}', timestep '{timestep}', scenario '{scenario}'")
+            raise LookupError(
+                f"Simulation table contains {len(df)} row(s) (expected 1) for component '{component}', output '{output}', block '{block}', timestep '{timestep}', scenario '{scenario}'")
         return df["value"].iloc[0]
 
     def get_objective_value(self):
@@ -76,3 +78,19 @@ class modeler_output_handler:
         if len(df) != 1:
             raise LookupError(f"Simulation table contains no or multiple objective values")
         return df["value"].iloc[0]
+
+    def get_objective_values_by_block(self):
+        """
+        Returns a dictionary mapping block number to objective value.
+        Each block represents a time step in the optimization.
+        """
+        df = self.simulation_table[(self.simulation_table["output"] == "OBJECTIVE_VALUE")]
+        if df.empty:
+            raise LookupError(f"Simulation table contains no objective values")
+        # Group by block and get the objective value for each block
+        result = {}
+        for _, row in df.iterrows():
+            block = int(row["block"])
+            value = row["value"]
+            result[block] = value
+        return result

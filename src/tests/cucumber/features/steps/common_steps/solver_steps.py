@@ -389,6 +389,144 @@ def ckeck_log_exists(context, log):
     raise AssertionError(f"Log '{log}' is not reported in the logs")
 
 
+def _initialize_multi_study_context(context):
+    """Initialize context for multiple study simulations"""
+    if not hasattr(context, 'multi_studies'):
+        context.multi_studies = []
+
+
+def _store_simulation_result(context, study_index: int):
+    """Store simulation results for a given study index"""
+    result = {
+        'index': study_index,
+        'path': context.study_path,
+        'return_code': context.return_code,
+        'logs_out': context.logs_out,
+        'logs_err': context.logs_err,
+        'output_path': context.output_path,
+        'soh': context.soh,
+        'moh': context.moh if hasattr(context, 'moh') else None
+    }
+    context.multi_studies.append(result)
+
+
+def _run_study_at_index(context, study_index: int, study_path: Path):
+    """Run a single study and store its results"""
+    context.study_path = study_path
+    init_simulation(context)
+    context.named_mps_problems = False
+    context.parallel = False
+    run_simulation(context)
+    _store_simulation_result(context, study_index)
+
+
+@given('the study path {study_num:d} is "{string}"')
+def nth_study_path_is(context, study_num, string):
+    """Generic step to define the Nth study path"""
+    _initialize_multi_study_context(context)
+    study_path = Path(context.config.userdata["resources-path"]) / Path(string.replace("/", os.sep))
+    assert study_path.exists(), f"Study path {study_num} ({study_path}) does not exist"
+
+    if not hasattr(context, 'study_paths'):
+        context.study_paths = []
+
+    # Extend list if necessary to accommodate the index
+    while len(context.study_paths) < study_num:
+        context.study_paths.append(None)
+
+    # Store at index (1-based to 0-based conversion)
+    context.study_paths[study_num - 1] = study_path
+
+
+@when('I run antares simulator on all studies')
+def run_antares_on_all_studies(context):
+    """Run simulator on all defined studies"""
+    _initialize_multi_study_context(context)
+
+    assert hasattr(context, 'study_paths'), "No study paths defined"
+    assert len(context.study_paths) > 0, "No study paths defined"
+
+    # Run all studies
+    for idx, study_path in enumerate(context.study_paths):
+        assert study_path is not None, f"Study path at index {idx} is not defined"
+        _run_study_at_index(context, idx, study_path)
+
+
+@then('all simulations succeed')
+def all_simulations_succeed(context):
+    """Check that all simulations succeeded"""
+    assert hasattr(context, 'multi_studies'), "No simulations were run"
+    assert len(context.multi_studies) > 0, "No simulations were run"
+
+    failures = []
+    for study in context.multi_studies:
+        if study['return_code'] != 0:
+            failures.append(
+                f"Study {study['index'] + 1} (path: {study['path']}) failed with return code {study['return_code']}: "
+                f"\nSTDOUT: \n{study['logs_out']} \n STDERR: \n{study['logs_err']}"
+            )
+
+    if failures:
+        raise AssertionError("\n\n".join(failures))
+
+
+@then('for each time step, all studies have the same objective value')
+def compare_objective_values_all_studies(context):
+    """Compare objective values across all studies to ensure they are identical"""
+    assert hasattr(context, 'multi_studies'), "No simulations were run"
+    assert len(context.multi_studies) > 1, f"Need at least 2 studies to compare, found {len(context.multi_studies)}"
+
+    # Collect all objective values
+    all_objectives = []
+    for study in context.multi_studies:
+        assert study['moh'] is not None, \
+            f"Study {study['index'] + 1} (path: {study['path']}) does not have modeler outputs (simulation_table)"
+        objectives = study['moh'].get_objective_values_by_block()
+        all_objectives.append({
+            'index': study['index'],
+            'path': study['path'],
+            'objectives': objectives
+        })
+
+    # Use first study as reference
+    reference = all_objectives[0]
+    reference_blocks = set(reference['objectives'].keys())
+
+    # Compare each study against the reference
+    all_mismatches = []
+    for study_data in all_objectives[1:]:
+        study_blocks = set(study_data['objectives'].keys())
+
+        # Check blocks match
+        if reference_blocks != study_blocks:
+            all_mismatches.append(
+                f"Study {study_data['index'] + 1} has different blocks. "
+                f"Reference: {sorted(reference_blocks)}, Study: {sorted(study_blocks)}"
+            )
+            continue
+
+        # Compare values for each block
+        mismatches = []
+        for block in sorted(reference_blocks):
+            ref_value = reference['objectives'][block]
+            study_value = study_data['objectives'][block]
+            if not np.isclose(ref_value, study_value, rtol=1e-9, atol=1e-9):
+                mismatches.append(
+                    f"  Block {block}: reference={ref_value}, study {study_data['index'] + 1}={study_value}, "
+                    f"diff={abs(ref_value - study_value)}"
+                )
+
+        if mismatches:
+            all_mismatches.append(
+                f"Study {study_data['index'] + 1} (path: {study_data['path']}) differs from reference:\n" +
+                "\n".join(mismatches)
+            )
+
+    if all_mismatches:
+        error_msg = "Objective values differ between studies:\n\n" + "\n\n".join(all_mismatches)
+        raise AssertionError(error_msg)
+
+
 @then(
     'in area "{area}", during year {year:d}, hourly value of "{var_name}" for hour {hour:d} is equal to {expected_value:d}')
 def check_hourly_variable_value(context, area, year, var_name, hour, expected_value):

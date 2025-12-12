@@ -61,15 +61,12 @@ struct ConstantDataFromAntares
     // IndicesColonnes.size()=
     // CoefficientsDeLaMatriceDesContraintes.size()
 
-    std::vector<unsigned> VariablesType; // Variables entières ou biniaires
     std::vector<unsigned> Mdeb; // Indique dans les indices dans le vecteur IndicesColonnes qui
     // correspondent au début de chaque ligne. Ex : Mdeb[3] = 8 et
     // Mdeb[4] = 13 -> Les termes IndicesColonnes[8] à
     // IndicesColonnes[12] correspondent à des Id de colonnes de la
     // ligne 3 de la matrice (en supposant que les lignes sont indexées
     // à partir de 0)
-    std::vector<unsigned> NotNullTermCount; // Nombre de termes non nuls sur chaque ligne.
-    // Inutile car NbTerm[i] = Mdeb[i+1] - Mdeb[i]
     std::vector<unsigned> ColumnIndexes; // Id des colonnes des termes de
     // CoefficientsDeLaMatriceDesContraintes : Ex
     // IndicesColonnes[3] = 8 ->

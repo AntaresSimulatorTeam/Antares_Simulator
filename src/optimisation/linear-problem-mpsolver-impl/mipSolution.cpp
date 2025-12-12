@@ -26,8 +26,7 @@
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& status,
-                                       operations_research::MPSolver* solver):
+OrtoolsMipSolution::OrtoolsMipSolution(MPSolver::ResultStatus& status, MPSolver* solver):
     status_(status),
     mpSolver_(solver)
 {
@@ -41,13 +40,13 @@ LinearProblemApi::MipStatus OrtoolsMipSolution::getStatus() const
 {
     switch (status_)
     {
-    case operations_research::MPSolver::ResultStatus::OPTIMAL:
+    case MPSolver::ResultStatus::OPTIMAL:
         return LinearProblemApi::MipStatus::OPTIMAL;
-    case operations_research::MPSolver::ResultStatus::FEASIBLE:
+    case MPSolver::ResultStatus::FEASIBLE:
         return LinearProblemApi::MipStatus::FEASIBLE;
-    case operations_research::MPSolver::ResultStatus::UNBOUNDED:
+    case MPSolver::ResultStatus::UNBOUNDED:
         return LinearProblemApi::MipStatus::UNBOUNDED;
-    case operations_research::MPSolver::ResultStatus::INFEASIBLE:
+    case MPSolver::ResultStatus::INFEASIBLE:
         return LinearProblemApi::MipStatus::INFEASIBLE;
     default:
         logs.warning() << "Solve returned an error status";
