@@ -88,32 +88,31 @@ void createIndividualFileSeries(const fs::path& path, unsigned int size)
 // =================
 // The fixture
 // =================
-struct Fixture
+struct FileCreationFixture
 {
-    Fixture()
+    FileCreationFixture()
     {
         folder = fs::temp_directory_path() / "blabla";
         fs::create_directories(folder);
     }
 
+    ~FileCreationFixture()
+    {
+        fs::remove_all(folder);
+    }
+
+    fs::path folder;
+};
+
+struct Fixture: public FileCreationFixture
+{
+    Fixture() = default;
     void createFileSeries(double value, unsigned int size);
     void createFileSeries(unsigned int size);
     void createIniFileWrongValue();
     void createIniFile(bool enabled);
     void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation);
     void createEmptyIniFile();
-
-    ~Fixture()
-    {
-        fs::remove_all(folder);
-    }
-
-    bool loadFromFolder(StudyVersion version)
-    {
-        return series.loadFromFolder(folder, version);
-    }
-
-    fs::path folder;
 
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
@@ -160,7 +159,6 @@ void Fixture::createFileSeries(unsigned int size)
 void Fixture::createIniFile(bool enabled)
 {
     iniFile_.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
     iniFile_ << "[area]" << std::endl;
     iniFile_ << "name = area" << std::endl;
     iniFile_ << "group = PSP_open" << std::endl;
@@ -177,7 +175,6 @@ void Fixture::createIniFile(bool enabled)
 void Fixture::createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
 {
     iniFile_.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
     iniFile_ << "[area]" << std::endl;
     iniFile_ << "name = area" << std::endl;
     iniFile_ << "group = PSP_open" << std::endl;
@@ -197,7 +194,6 @@ void Fixture::createEmptyIniFile()
 void Fixture::createIniFileWrongValue()
 {
     iniFile_.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
     iniFile_ << "[area]" << std::endl;
     iniFile_ << "name = area" << std::endl;
     iniFile_ << "group = abcde" << std::endl;
@@ -232,7 +228,7 @@ void checkSizeFirst(const TimeSeries& series, double value)
 BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
 {
     createFileSeries(0); // Empty files
-    loadFromFolder(StudyVersion(9, 2));
+    series.loadFromFolder(folder, StudyVersion(9, 2));
     series.fillDefaultSeriesIfEmpty();
 
     // version<9.2
@@ -263,21 +259,24 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 {
     createFileSeries(1.0, 8760);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
-    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1 && series.maxInjectionModulation[8759] == 1
-                && series.upperRuleCurve[1343] == 1 && series.costVariationInjection[0] == 1
-                && series.costVariationWithdrawal[0] == 1);
+    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1);
+    BOOST_CHECK(series.maxInjectionModulation[8759] == 1);
+    BOOST_CHECK(series.upperRuleCurve[1343] == 1);
+    BOOST_CHECK(series.costVariationInjection[0] == 1);
+    BOOST_CHECK(series.costVariationWithdrawal[0] == 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
 {
     createFileSeries(1.0, 8760);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
-    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1 && series.maxInjectionModulation[8759] == 1
-                && series.upperRuleCurve[1343]);
+    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1);
+    BOOST_CHECK(series.maxInjectionModulation[8759] == 1);
+    BOOST_CHECK(series.upperRuleCurve[1343]);
 
     // New elements should NOT be loaded if the study version is < 9.2
     BOOST_CHECK(series.costVariationInjection.empty());
@@ -288,7 +287,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values_880, Fixtur
 {
     createFileSeries(8760);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
 }
 
@@ -296,7 +295,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values, Fixture)
 {
     createFileSeries(8760);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
@@ -304,7 +303,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_negative_value, Fixture)
 {
     createFileSeries(-247.0, 8760);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion::latest()));
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
@@ -312,7 +311,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big, Fixture)
 {
     createFileSeries(1.0, 9000);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
@@ -320,7 +319,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big_880, Fixture)
 {
     createFileSeries(1.0, 9000);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
 }
 
@@ -328,13 +327,13 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_small, Fixture)
 {
     createFileSeries(1.0, 100);
 
-    BOOST_CHECK(!loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(!series.loadFromFolder(folder, StudyVersion::latest()));
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_empty, Fixture)
 {
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion::latest()));
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
@@ -467,7 +466,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
     BOOST_CHECK(series.saveToFolder(folder.string()));
     resizeFillVectors(series, 0, 0);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(folder, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 #endif
