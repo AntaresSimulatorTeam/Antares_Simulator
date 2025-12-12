@@ -142,6 +142,12 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
                 return false;
             }
         }
+        else
+        {
+            logs.error() << "Constraint " << additionalConstraints->name << " : "
+                         << "has a wrong key : " << key;
+            return false;
+        }
     }
     return true;
 }
@@ -176,11 +182,11 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             {
                 logs.info() << "Additional constraints disabled for ST "
                             << additionalConstraints->cluster_id;
-                return true;
+                continue;
             }
 
-            if (const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
-                !readRHS(rhsPath, additionalConstraints->rhs()))
+            const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
+            if (!readRHS(rhsPath, additionalConstraints->rhs()))
             {
                 logs.error() << "Error while reading rhs file: " << rhsPath;
                 return false;
@@ -194,16 +200,13 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             }
 
             auto it = std::ranges::find_if(storagesByIndex,
-                                           [&additionalConstraints](const STStorageCluster& cluster)
-                                           {
-                                               return cluster.id
-                                                      == additionalConstraints->cluster_id;
-                                           });
+                                           [&additionalConstraints](const STStorageCluster& sts)
+                                           { return sts.id == additionalConstraints->cluster_id; });
             if (it == storagesByIndex.end())
             {
-                logs.warning() << " from file " << pathIni;
-                logs.warning() << "Constraint " << section->name
-                               << " does not reference an existing cluster";
+                logs.error() << "From file  : " << pathIni;
+                logs.error() << "Constraint '" << section->name
+                             << "' does not reference an existing cluster";
                 return false;
             }
             else
@@ -215,7 +218,6 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             }
         }
     }
-
     return true;
 }
 
