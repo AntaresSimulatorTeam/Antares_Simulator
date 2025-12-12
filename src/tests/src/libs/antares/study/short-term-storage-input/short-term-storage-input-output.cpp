@@ -832,4 +832,34 @@ BOOST_FIXTURE_TEST_CASE(multiple_sts__one_sts_has_no_additional_constraint__all_
     BOOST_REQUIRE_EQUAL(constr_2b->id, "constr_2b");
 }
 
+BOOST_FIXTURE_TEST_CASE(one_sts_with_many_constraints_one_is_disabled__all_constr_fully_loaded,
+                        WorkDirCreationFixture)
+{
+    STStorageInput storageInput;
+
+    STStorageCluster sts;
+    sts.id = "my-sts";
+    storageInput.storagesByIndex.push_back(sts);
+    fs::path sts_dir = work_dir / "my-sts";
+    fs::create_directories(sts_dir);
+
+    makeAddConstraintsIniFile(sts_dir,
+                              {{"constr_1", "withdrawal", "less", "[1]", "false"}, // Disabled
+                               {"constr_2", "injection", "less", "[1,6]"},
+                               {"constr_3", "netting", "greater", "[1,3]"}});
+    makeRHSforConstraint(sts_dir, HOURS_PER_YEAR, "constr_2");
+    makeRHSforConstraint(sts_dir, HOURS_PER_YEAR, "constr_3");
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
+
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 2);
+    BOOST_REQUIRE_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 2);
+
+    const auto& constr_2 = storageInput.storagesByIndex[0].additionalConstraints[0];
+    const auto& constr_3 = storageInput.storagesByIndex[0].additionalConstraints[1];
+
+    BOOST_REQUIRE_EQUAL(constr_2->id, "constr_2");
+    BOOST_REQUIRE_EQUAL(constr_3->id, "constr_3");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
