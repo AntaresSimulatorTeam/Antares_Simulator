@@ -676,7 +676,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraint
     std::ofstream rhsFile(sts_dir / "rhs_my_constr.txt");
     for (unsigned i = 0; i < HOURS_PER_YEAR; ++i)
     {
-        rhsFile << i * 1.0 << "\n";
+        rhsFile << i << "\n";
     }
     rhsFile.close();
 
@@ -701,7 +701,7 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixtur
     std::ofstream rhsFile(sts_dir / "rhs_constraint1.txt");
     for (unsigned i = 0; i < HOURS_PER_YEAR; ++i)
     {
-        rhsFile << i * 1.0 << "\n";
+        rhsFile << i << "\n";
     }
     rhsFile.close();
 
@@ -778,7 +778,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, AdditionalC
     std::ofstream rhsFile(sts_dir / "rhs_my_constr.txt");
     for (int i = 0; i < 10; ++i)
     {
-        rhsFile << i * 1.0 << "\n";
+        rhsFile << i << "\n";
     }
     rhsFile.close();
 
@@ -802,7 +802,7 @@ BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
     std::ofstream rhsFile(sts_dir / "rhs_my_constr.txt");
     for (unsigned i = 0; i < HOURS_PER_YEAR; ++i)
     {
-        rhsFile << i * 1.0 << "\n";
+        rhsFile << i << "\n";
     }
     rhsFile.close();
 
