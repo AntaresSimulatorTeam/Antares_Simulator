@@ -209,11 +209,14 @@ void Modeler::run() const
     case MipStatus::OPTIMAL:
     case MipStatus::FEASIBLE:
     {
-        writer_.writeSimulationTable(subproblem,
-                                     *solution,
-                                     data,
-                                     subproblem_builder.getOptimEntityContainer(),
-                                     timeScenarioCtx);
+        if (!parameters.noOutput)
+        {
+            writer_.writeSimulationTable(subproblem,
+                                         *solution,
+                                         data,
+                                         subproblem_builder.getOptimEntityContainer(),
+                                         timeScenarioCtx);
+        }
     }
     break;
     default:
