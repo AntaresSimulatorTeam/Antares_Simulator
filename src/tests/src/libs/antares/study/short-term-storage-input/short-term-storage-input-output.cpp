@@ -590,14 +590,19 @@ BOOST_AUTO_TEST_SUITE(LoadingAdditionalConstraints)
 
 struct AdditionalConstraintsFixture: public WorkDirCreationFixture
 {
-
+    AdditionalConstraintsFixture();
+    fs::path sts_dir;
 };
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, WorkDirCreationFixture)
+AdditionalConstraintsFixture::AdditionalConstraintsFixture()
 {
-    fs::create_directories(work_dir / "cluster1");
+    sts_dir = work_dir / "my-sts";
+    fs::create_directories(sts_dir);
+}
 
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditionalConstraintsFixture)
+{
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
@@ -606,7 +611,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, WorkDirCreationFixt
 
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(work_dir);
@@ -617,11 +622,9 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, WorkDirCreationFixt
                       "constraint1");
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, WorkDirCreationFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, AdditionalConstraintsFixture)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
@@ -630,7 +633,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, WorkDirCreationF
 
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(work_dir);
@@ -644,11 +647,9 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
     BOOST_CHECK_EQUAL(result, true);
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, WorkDirCreationFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, AdditionalConstraintsFixture)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=invalid\n"; // Invalid variable
     iniFile << "operator=less\n";
@@ -657,25 +658,23 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, WorkDirCrea
 
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(work_dir);
     BOOST_CHECK_EQUAL(result, false);
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, WorkDirCreationFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraintsFixture)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    std::ofstream rhsFile(work_dir / "cluster1" / "rhs_constraint1.txt");
+    std::ofstream rhsFile(sts_dir / "rhs_constraint1.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -684,7 +683,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, WorkDirCreationFixtu
 
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(work_dir);
@@ -696,11 +695,9 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, WorkDirCreationFixtu
     BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, WorkDirCreationFixture)
+BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixture)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << R"([constraint1]
                   variable=injection
                   operator=less
@@ -711,7 +708,7 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, WorkDirCreationFixture)
                   hours=[5,33])";
     iniFile.close();
 
-    std::ofstream rhsFile(work_dir / "cluster1" / "rhs_constraint1.txt");
+    std::ofstream rhsFile(sts_dir / "rhs_constraint1.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -720,7 +717,7 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, WorkDirCreationFixture)
 
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(work_dir);
@@ -754,11 +751,9 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, WorkDirCreationFixture)
     BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, WorkDirCreationFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditionalConstraintsFixture)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
@@ -767,7 +762,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, WorkDirCreatio
 
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(work_dir);
@@ -778,42 +773,38 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, WorkDirCreatio
     BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile, WorkDirCreationFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile, AdditionalConstraintsFixture)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    std::ofstream rhsFile(work_dir / "cluster1" / "rhs_constraint1.txt");
+    std::ofstream rhsFile(sts_dir / "rhs_constraint1.txt");
     rhsFile << "1.0\n2.0\ninvalid\n4.0\n"; // Malformed line
     rhsFile.close();
 
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(work_dir);
     BOOST_CHECK_EQUAL(result, false);
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, WorkDirCreationFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, AdditionalConstraintsFixture)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    std::ofstream rhsFile(work_dir / "cluster1" / "rhs_constraint1.txt");
+    std::ofstream rhsFile(sts_dir / "rhs_constraint1.txt");
     for (int i = 0; i < 10; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -822,23 +813,21 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, WorkDirCrea
 
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(work_dir);
     BOOST_CHECK_EQUAL(result, false);
 }
 
-BOOST_DATA_TEST_CASE_F(WorkDirCreationFixture,
+BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
                        Validate_AllVariableOperatorCombinationsFromFile,
                        bdata::make({"injection", "withdrawal", "netting"})
                          * bdata::make({"less", "equal", "greater"}),
                        variable,
                        op)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=" << variable << "\n";
     iniFile << "operator=" << op << "\n";
@@ -846,7 +835,7 @@ BOOST_DATA_TEST_CASE_F(WorkDirCreationFixture,
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    std::ofstream rhsFile(work_dir / "cluster1" / "rhs_constraint1.txt");
+    std::ofstream rhsFile(sts_dir / "rhs_constraint1.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
@@ -856,7 +845,7 @@ BOOST_DATA_TEST_CASE_F(WorkDirCreationFixture,
     // Setup storage input and cluster
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
@@ -880,11 +869,9 @@ BOOST_DATA_TEST_CASE_F(WorkDirCreationFixture,
     }
 }
 
-BOOST_FIXTURE_TEST_CASE(Load_disabled, WorkDirCreationFixture)
+BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditionalConstraintsFixture)
 {
-    fs::create_directories(work_dir / "cluster1");
-
-    std::ofstream iniFile(work_dir / "cluster1" / "additional-constraints.ini");
+    std::ofstream iniFile(sts_dir / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
@@ -895,7 +882,7 @@ BOOST_FIXTURE_TEST_CASE(Load_disabled, WorkDirCreationFixture)
     // Setup storage input and cluster
     STStorageInput storageInput;
     STStorageCluster cluster;
-    cluster.id = "cluster1";
+    cluster.id = "my-sts";
     storageInput.storagesByIndex.push_back(cluster);
 
     // Load constraints from the `.ini` file
