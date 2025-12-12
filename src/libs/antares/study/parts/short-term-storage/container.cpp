@@ -156,7 +156,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         if (!ini.open(pathIni, false))
         {
             logs.info() << "There is no: " << pathIni;
-            return true;
+            continue;
         }
 
         for (auto* section = ini.firstSection; section; section = section->next)
