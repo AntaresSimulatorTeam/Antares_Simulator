@@ -1,11 +1,26 @@
 Antares Changelog
 =================
 
-8.8.17 (10/2025)
+8.8.19 (12/2025)
 --------------------
 ## Bugfix
 
 - Fix infeasability in hydro heuristic with mingen [ANT-3755] (#3152)
+- Don't throw an error for empty reservoir [ANT-4212] (#3291)
+
+8.8.18 (10/2025)
+--------------------
+## Bugfix
+
+- 8.8 Fix segfault when exporting binding constraints (#2955)
+
+8.8.17 (06/2025)
+--------------------
+## Bugfix
+- Hydro monthly heuristic : add a new overflow optimization variable [ANT-3236] (#2819)
+- or-tools : update to v9.13 [ANT-3350] (#2859)
+- Fix/yuni limit cpu 8.8 (#2833)
+- Force the export for criterion files in Expansion mode [ANT-3137] (#2822)
 
 8.8.16 (05/2025)
 --------------------
