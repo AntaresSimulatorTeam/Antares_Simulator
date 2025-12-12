@@ -346,11 +346,6 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                 {
                     ret = property->value.to<double>(area->hydro.reservoirCapacity) && ret;
-                    if (area->hydro.reservoirCapacity < 1e-6)
-                    {
-                        logs.error() << area->id << ": Invalid reservoir capacity.";
-                        area->hydro.reservoirCapacity = 0.;
-                    }
                 }
                 else
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
