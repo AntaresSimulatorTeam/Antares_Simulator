@@ -110,7 +110,7 @@ bool HydroInputsChecker::checkRuleCurves(uint year)
 
           const auto& tsIndex = area.hydro.series->ruleCurves.timeseriesNumbers[year];
 
-          for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
+          for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
           {
               if (minRuleCurves[day] < 0 || avgRuleCurves[day] < 0
                   || minRuleCurves[day] > maxRuleCurves[day] || avgRuleCurves[day] > 1.
