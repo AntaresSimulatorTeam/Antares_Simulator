@@ -43,6 +43,8 @@ public:
         return "economy";
     }
 
+    static constexpr Data::SimulationMode mode = Data::SimulationMode::Economy;
+
 public:
     //! \name Constructor & Destructor
     //@{
@@ -86,11 +88,6 @@ protected:
 
     void simulationEnd();
 
-    /*!
-    ** \brief Prepare clusters in 'must-run' mode
-    */
-    void prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year);
-
     void initializeState(Variable::State& state, uint numSpace);
     OptimisationsSimulationTable& getSimulationTable(uint numSpace);
     std::string getSimulationTableHeader() const;
@@ -102,7 +99,7 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     std::vector<Optimization::WeeklyOptimization> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
-    IResultWriter& resultWriter;
+    IResultWriter& resultWriter_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 
     std::vector<OptimisationsSimulationTable> simulationTables_;

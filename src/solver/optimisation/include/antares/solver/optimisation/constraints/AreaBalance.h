@@ -29,7 +29,7 @@ struct AreaBalanceData
     const std::vector<int>& IndexDebutIntercoExtremite;
     const std::vector<int>& IndexSuivantIntercoExtremite;
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
-    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
+    const std::vector<::AREA_INPUT>& ShortTermStorage;
 };
 
 /*!

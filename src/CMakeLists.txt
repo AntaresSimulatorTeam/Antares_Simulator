@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI 9)
 set(ANTARES_VERSION_LO 3)
-set(ANTARES_VERSION_REVISION 1)
+set(ANTARES_VERSION_REVISION 2)
 
 # Beta release
 set(ANTARES_BETA 0)
@@ -276,6 +276,8 @@ if (BUILD_UI)
     add_compile_definitions(BUILD_UI)
     add_subdirectory(ui)  #all antares ui libs + antares simulator
 endif ()
+
+
 add_subdirectory(api)
 add_subdirectory(io)
 add_subdirectory(libs)   #antares-core fswalker

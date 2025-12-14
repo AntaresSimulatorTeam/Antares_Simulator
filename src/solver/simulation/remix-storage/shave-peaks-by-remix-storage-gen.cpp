@@ -1,7 +1,7 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
-#include <ranges>
 #include <set>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -9,10 +9,23 @@
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
 
 constexpr unsigned maxNbLoops = 1000;
-const std::string error_msg_start = "Remix storage input : ";
+const std::string shave_peak_remix_storage_error_msg_start = "Remix storage input : ";
 
 namespace Antares::Solver::Simulation
 {
+
+void collectRemixDebugInfo(const ListStorageForRemix& storagesForRemix, std::stringstream& stream)
+{
+    for (auto& storage: storagesForRemix)
+    {
+        unsigned hour = 0;
+        for (auto& withdrawal: storage->withdrawal())
+        {
+            stream << storage->name() << " " << hour << " " << withdrawal << std::endl;
+            hour++;
+        }
+    }
+}
 
 void checkInput(const std::vector<double>& Load,
                 const std::vector<double>& UnsupE,
@@ -28,12 +41,14 @@ void checkInput(const std::vector<double>& Load,
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
     {
-        throw std::invalid_argument(error_msg_start + "arrays of different sizes");
+        throw std::invalid_argument(shave_peak_remix_storage_error_msg_start
+                                    + "arrays of different sizes");
     }
 
     if (!Load.size())
     {
-        throw std::invalid_argument(error_msg_start + "all arrays of sizes 0");
+        throw std::invalid_argument(shave_peak_remix_storage_error_msg_start
+                                    + "all arrays of sizes 0");
     }
 }
 
@@ -41,7 +56,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
                                     std::vector<double>& UnsupE,
                                     const std::vector<double>& Spillage,
                                     const std::vector<double>& DTG_MRG,
-                                    ListStorageForRemix& listStorage)
+                                    ListStorageForRemix listStorage)
 {
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;

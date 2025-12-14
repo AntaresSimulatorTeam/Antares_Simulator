@@ -11,9 +11,10 @@ set(TARGET_LIBS #No alias
         # it is available for everything
 
         solver_api # What we want to export
+	single_problem_api
 
-        # solver_api
         study
+        scenario-builder-utils
         study-loader
         file-tree-study-loader
         antares-solver-simulation
@@ -22,7 +23,6 @@ set(TARGET_LIBS #No alias
         array
         date
         inifile
-        stdcxx
         StudyUtils
         utils
         correlation
@@ -39,7 +39,6 @@ set(TARGET_LIBS #No alias
 
         # study-loader : nothing
 
-        # file-tree-study-loader
         application
 
         # run-mode
@@ -51,7 +50,7 @@ set(TARGET_LIBS #No alias
         model_antares
         antares-solver-ts-generator
         shave-peaks-by-remix-storage-gen
-		storage-for-remix-list-sort
+        storage-for-remix-list-sort
 
         # lps : nothing
 
@@ -110,7 +109,9 @@ set(TARGET_LIBS #No alias
         modeler-simulation-table
         scenario-builder-antlr
         scenario-group-parser
-        modeler-optim-config
+        yml-optim-config
+        enums
+        modeler-checks
 )
 
 install(TARGETS ${TARGET_LIBS}

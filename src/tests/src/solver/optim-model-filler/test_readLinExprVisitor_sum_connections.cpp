@@ -249,7 +249,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     auto demandComponent = componentBuilder.withId("D")
                              .withModel(&demandModel)
                              .withParameterValues(
-                               {{"demand", {"demand", ParameterType::CONSTANT, "5"}}})
+                               {{"demand", {"demand", Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "5"}}})
                              .withScenarioGroupId("scenario_group")
                              .build();
     // Section connexions

@@ -115,7 +115,8 @@ public:
           Nodes::TimeShiftNode,
           Nodes::TimeIndexNode,
           Nodes::TimeSumNode,
-          Nodes::AllTimeSumNode>();
+          Nodes::AllTimeSumNode,
+          Nodes::FunctionNode>();
 
         try
         {
@@ -292,5 +293,16 @@ public:
      * @return The result of processing the AllTimeSumNode.
      */
     virtual R visit(const Nodes::AllTimeSumNode*, Args... args) = 0;
+
+    /**
+     * @brief Visits a FunctionNode.
+     *
+     * @param node A pointer to the FunctionNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the DualNode.
+     */
+    virtual R visit(const Nodes::FunctionNode*, Args... args) = 0;
 };
+
 } // namespace Antares::Expressions::Visitors

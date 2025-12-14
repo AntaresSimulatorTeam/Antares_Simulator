@@ -46,7 +46,8 @@ struct InputFixture
                                  init_level,
                                  capacity,
                                  pumpEff,
-                                 reservoirManagement);
+                                 reservoirManagement,
+                                 "hydro");
     }
 
     void callRemixStorageAlgorithm()

@@ -25,6 +25,7 @@
 
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/random.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/economy/dispatchable-generation-margin.h" // for OP.MRG
@@ -56,7 +57,7 @@ void SetInitialHydroLevel(Data::Study& study,
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
-                                     std::vector<std::vector<double>>& thermalNoises,
+                                     const std::vector<std::vector<double>>& thermalNoises,
                                      unsigned int year);
 
 /*!
@@ -88,7 +89,8 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
                            const Data::Parameters& params,
                            uint numSpace,
-                           uint hourInYear);
+                           uint hourInYear,
+                           IResultWriter& resultWriter);
 
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only
@@ -129,6 +131,11 @@ int retrieveAverageNTC(const Data::Study& study,
 
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
                                     Antares::Solver::Variable::State& state);
+
+void prepareClustersInMustRunMode(Data::Study& study,
+                                  Data::Area::ScratchMap& scratchmap,
+                                  uint year,
+                                  Data::SimulationMode mode);
 
 } // namespace Antares::Solver::Simulation
 

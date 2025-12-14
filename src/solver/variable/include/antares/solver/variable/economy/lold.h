@@ -25,16 +25,11 @@
 namespace Antares::Solver::Variable::Economy
 {
 
-struct LOLDTraits
+struct LOLDTraits: public LOLD_Base_Traits
 {
     static std::string Caption()
     {
         return "LOLD";
-    }
-
-    static std::string Unit()
-    {
-        return "Hours";
     }
 
     static std::string Description()
@@ -48,9 +43,9 @@ struct LOLDTraits
     }
 };
 
-using VCardLOLD = VCardLOLD_Base<LOLDTraits>;
+using VCardLOLD = VCard_Base<LOLDTraits>;
 
 template<class NextT = Container::EndOfList>
-using LOLD = LOLD_Base<LOLDTraits, NextT>;
+using LOLD = Economy_Base<LOLDTraits, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy

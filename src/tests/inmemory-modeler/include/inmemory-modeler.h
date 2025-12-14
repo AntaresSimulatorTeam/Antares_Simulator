@@ -23,8 +23,9 @@
 #include <string>
 #include <vector>
 
-#include "antares/modeler-optimisation-container/EvaluationContext.h"
-#include "antares/modeler-optimisation-container/TimeIndex.h"
+#include "antares/expressions/nodes/VariableNode.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/data.h"
@@ -32,19 +33,20 @@
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 
+using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Optimisation;
+
 namespace Test::Modeler
 {
-auto build_context_parameter_with(
+std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const Antares::ModelerStudy::SystemModel::ParameterType& type = Antares::ModelerStudy::
-    SystemModel::ParameterType::CONSTANT)
-  -> std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>;
+  const VariabilityType& type = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
 struct VariableData
 {
     std::string id;
-    Antares::ModelerStudy::SystemModel::ValueType type;
+    ValueType type;
     Antares::Expressions::Nodes::Node* lb;
     Antares::Expressions::Nodes::Node* ub;
     bool timeDependent = true;
@@ -59,12 +61,14 @@ struct ConstraintData
 
 struct LinearProblemBuildingFixture
 {
-    std::unordered_map<std::string, Antares::ModelerStudy::SystemModel::Model> models;
-    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodes;
-    std::vector<Antares::ModelerStudy::SystemModel::Component> components;
+    std::unordered_map<std::string, Model> models;
+    Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodeRegistry;
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
+    std::vector<Component> components;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
     Antares::Modeler::Data modelerData;
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
+    std::unique_ptr<Antares::Optimisation::OptimEntityContainer> optimEntityContainer;
 
     void createModel(const std::string& modelId,
                      const std::vector<std::string>& parameterIds,
@@ -74,10 +78,17 @@ struct LinearProblemBuildingFixture
 
     void createModelWithSystemModelParameter(
       const std::string& modelId,
-      std::vector<Antares::ModelerStudy::SystemModel::Parameter>,
+      std::vector<Parameter>,
       const std::vector<VariableData>& variablesData,
       const std::vector<ConstraintData>& constraintsData,
       Antares::Expressions::Nodes::Node* objective = nullptr);
+
+    void createModelWithMultipleObjectives(
+      const std::string& modelId,
+      std::vector<Parameter>,
+      const std::vector<VariableData>& variablesData,
+      const std::vector<ConstraintData>& constraintsData,
+      std::vector<Antares::Expressions::Nodes::Node*> objectives);
 
     void createModelWithOneFloatVar(const std::string& modelId,
                                     const std::vector<std::string>& parameterIds,
@@ -88,29 +99,29 @@ struct LinearProblemBuildingFixture
                                     Antares::Expressions::Nodes::Node* objective = nullptr,
                                     bool time_dependent = false);
 
-    void createComponent(
-      const std::string& modelId,
-      const std::string& componentId,
-      std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
-        parameterValues
-      = {},
-      std::string scenarioGroupId = "");
+    void createComponent(const std::string& modelId,
+                         const std::string& componentId,
+                         std::map<std::string, ParameterTypeAndValue> parameterValues = {},
+                         std::string scenarioGroupId = "");
 
     Antares::Expressions::Nodes::Node* literal(double value);
 
     Antares::Expressions::Nodes::Node* parameter(
       const std::string& paramId,
-      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
-        CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::VariabilityType& variability = Antares::Optimisation::
+        VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* variable(
       const std::string& varId,
       unsigned int index,
-      const Antares::Optimisation::TimeIndex& timeIndex = Antares::Optimisation::TimeIndex::
-        CONSTANT_IN_TIME_AND_SCENARIO);
+      const Antares::Optimisation::VariabilityType& variability = Antares::Optimisation::
+        VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
                                                 Antares::Expressions::Nodes::Node* node2);
+    Antares::Expressions::Nodes::Node* add(Antares::Expressions::Nodes::Node* node1,
+                                           Antares::Expressions::Nodes::Node* node2);
+    Antares::Expressions::Nodes::Node* Sum(Antares::Expressions::Nodes::Node* node);
 
     Antares::Expressions::Nodes::Node* negate(Antares::Expressions::Nodes::Node* node);
 
@@ -126,10 +137,9 @@ struct LinearProblemBuildingFixture
 
     Antares::Modeler::Data& getModelerData()
     {
-        Antares::ModelerStudy::SystemModel::SystemBuilder systemBuilder;
+        SystemBuilder systemBuilder;
         auto system = systemBuilder.withId("system").withComponents(std::move(components)).build();
-        modelerData.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
-          std::move(system));
+        modelerData.system = std::make_unique<System>(std::move(system));
         modelerData.dataSeries = std::make_unique<
           Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
         return modelerData;

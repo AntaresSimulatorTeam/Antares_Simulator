@@ -49,6 +49,7 @@ public:
     const operations_research::MPVariable* getMpVar() const;
     LinearProblemApi::MipBasisStatus getMipBasisStatus() const override;
     double solutionValue() const override;
+    double reducedCost() const override;
     ~OrtoolsMipVariable() override = default;
 
     explicit OrtoolsMipVariable(operations_research::MPVariable*);

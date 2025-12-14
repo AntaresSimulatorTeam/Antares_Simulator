@@ -1,9 +1,10 @@
 add_subdirectory(loadFiles)
-add_subdirectory(optimConfig)
+add_subdirectory(checks)
 
 add_library(mock-modeler-objects
         mockModelerObjects.cpp
         mockModelerObjects.h
+        UtilMocks.h
         )
 
 target_link_libraries(mock-modeler-objects
@@ -12,6 +13,7 @@ target_link_libraries(mock-modeler-objects
   Antares::antares-study-system-model
         expressions
         expressions-iterators
+        linear-problem-mpsolver-impl
     )
 
 target_include_directories(

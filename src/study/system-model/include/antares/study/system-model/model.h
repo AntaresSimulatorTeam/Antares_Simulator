@@ -21,10 +21,12 @@
 #pragma once
 
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 #include <antares/expressions/expression.h>
 
+#include "connection.h"
 #include "constraint.h"
 #include "extraOutput.h"
 #include "objective.h"
@@ -88,7 +90,6 @@ public:
 
     const std::vector<Variable>& Variables() const
     {
-        // TODO : convert to vector?
         return variables_;
     }
 

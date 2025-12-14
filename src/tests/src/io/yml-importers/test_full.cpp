@@ -25,7 +25,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/expressions/nodes/Node.h"
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/io/inputs/yml-model/parser.h"
@@ -42,7 +41,6 @@ void checkParameter(const SystemModel::Parameter& parameter,
                     bool timeDependent,
                     bool scenarioDependent)
 {
-    std::cout << "Parameter: " << parameter.Id() << std::endl;
     BOOST_CHECK_EQUAL(parameter.Id(), name);
     BOOST_CHECK_EQUAL(parameter.isTimeDependent(), timeDependent);
     BOOST_CHECK_EQUAL(parameter.isScenarioDependent(), scenarioDependent);
@@ -265,9 +263,9 @@ library:
         - id: Number of units variation
           expression: nb_on = nb_on + nb_start - nb_stop
         - id: Min up time
-          expression: t-d_min_up + 1 <= nb_on
+          expression: d_min_up[t + 1] <= nb_on
         - id: Min down time
-          expression: t-d_min_down + 1 <= nb_units_max - nb_on
+          expression: d_min_down[t + 1] <= nb_units_max - nb_on
       objective-contributions:
         - id: objective
           expression: cost * generation 
@@ -505,10 +503,10 @@ library:
                         "nb_on = nb_on + nb_start - nb_stop");
         checkConstraint(*getConstraint(model6.Constraints(), "Min up time"),
                         "Min up time",
-                        "t-d_min_up + 1 <= nb_on");
+                        "d_min_up[t + 1] <= nb_on");
         checkConstraint(*getConstraint(model6.Constraints(), "Min down time"),
                         "Min down time",
-                        "t-d_min_down + 1 <= nb_units_max - nb_on");
+                        "d_min_down[t + 1] <= nb_units_max - nb_on");
         BOOST_CHECK_EQUAL(model6.Objectives()[0].expression().Value(), "cost * generation");
     }
     catch (const YAML::Exception& e)

@@ -37,7 +37,8 @@ public:
                             uint numSpace,
                             AreaList& areas,
                             const Data::Parameters& params,
-                            Calendar& calendar);
+                            Calendar& calendar,
+                            IResultWriter& resultWriter);
 
     virtual ~AdqPatchPostProcessList() = default;
 };

@@ -21,8 +21,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
-
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/system.h"
@@ -32,6 +30,7 @@
 // clang-format off
 #include <unit_test_utils.h>
 // clang-format on
+#include <boost/test/unit_test.hpp>
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs::ModelConverter;

@@ -25,7 +25,7 @@
 
 #include <boost/algorithm/string/join.hpp>
 
-#include <antares/antares/Enum.hpp>
+#include <antares/enums/Enum.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
@@ -35,6 +35,10 @@ using namespace operations_research;
 
 const std::string XPRESS_PARAMS = "THREADS 1";
 const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
+const std::string GUROBI_PARAMS
+  = "Threads 1"; // See
+                 // https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#threads
+                 // for Gurobi threads (and other) parameter reference
 
 using Antares::Solver::Optimization::SingleOptimOptions;
 
@@ -101,6 +105,14 @@ static void TuneSolverSpecificOptions(MPSolver* solver,
     case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING:
     {
         specificParams = SCIP_PARAMS + ", " + solverParameters;
+        status = solver->SetSolverSpecificParametersAsString(specificParams);
+        checkSetSolverSpecificParameters(status, solverName, specificParams);
+        break;
+    }
+    case MPSolver::GUROBI_LINEAR_PROGRAMMING:
+    case MPSolver::GUROBI_MIXED_INTEGER_PROGRAMMING:
+    {
+        specificParams = GUROBI_PARAMS + "\n" + solverParameters;
         status = solver->SetSolverSpecificParametersAsString(specificParams);
         checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
@@ -401,6 +413,5 @@ MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
         throw std::invalid_argument("Solver " + solverName + " (" + *internalSolverName
                                     + ") could not be loaded by OR-Tools MPSolver.");
     }
-
     return solver;
 }

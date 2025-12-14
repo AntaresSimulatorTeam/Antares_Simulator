@@ -19,7 +19,10 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <sstream>
 #define WIN32_LEAN_AND_MEAN
+
+#include <fstream>
 
 #include <boost/test/unit_test.hpp>
 
@@ -90,11 +93,12 @@ public:
         Node* div = registry_.create<DivisionNode>(parameterNode3, lit3);
         Node* timeSumNode = registry_.create<TimeSumNode>(from, to, div);
 
-        return registry_.create<SumNode>(gt,
-                                         timeIndexNode,
-                                         timeShiftNode,
-                                         timeSumNode,
-                                         alltimeSimNode);
+        Node* dual = registry_.create<FunctionNode>(FunctionNodeType::dual,
+                                                    registry_.create<ParameterNode>("constraint"),
+                                                    registry_.create<LiteralNode>(0));
+
+        return registry_
+          .create<SumNode>(gt, timeIndexNode, timeShiftNode, timeSumNode, alltimeSimNode, dual);
     }
 
     static std::string expectedDotContent()
@@ -248,7 +252,13 @@ node[style = filled]
   33 [label="Param(div)", shape="box", style="filled, solid", color="wheat"];
   32 -> 34;
   34 [label="365.000000", shape="box", style="filled, solid", color="lightgray"];
-label="AST Diagram(Total nodes : 34)"
+  1 -> 35;
+  35 [label="dual", shape="hexagon", style="filled, solid", color="aqua"];
+  35 -> 36;
+  36 [label="Param(constraint)", shape="box", style="filled, solid", color="wheat"];
+  35 -> 37;
+  37 [label="0.000000", shape="box", style="filled, solid", color="lightgray"];
+label="AST Diagram(Total nodes : 37)"
 labelloc = "t"
 subgraph cluster_legend {
 label = "Legend";
@@ -262,18 +272,20 @@ legend_AllTimeSumNode -> legend_DivisionNode [style=invis];
 legend_DivisionNode [ label =" DivisionNode: 2"]
 legend_DivisionNode -> legend_EqualNode [style=invis];
 legend_EqualNode [ label =" EqualNode: 1"]
-legend_EqualNode -> legend_GreaterThanOrEqualNode [style=invis];
+legend_EqualNode -> legend_FunctionNode::dual [style=invis];
+legend_FunctionNode::dual [ label =" FunctionNode::dual: 1"]
+legend_FunctionNode::dual -> legend_GreaterThanOrEqualNode [style=invis];
 legend_GreaterThanOrEqualNode [ label =" GreaterThanOrEqualNode: 1"]
 legend_GreaterThanOrEqualNode -> legend_LessThanOrEqualNode [style=invis];
 legend_LessThanOrEqualNode [ label =" LessThanOrEqualNode: 1"]
 legend_LessThanOrEqualNode -> legend_LiteralNode [style=invis];
-legend_LiteralNode [ label =" LiteralNode: 8"]
+legend_LiteralNode [ label =" LiteralNode: 9"]
 legend_LiteralNode -> legend_MultiplicationNode [style=invis];
 legend_MultiplicationNode [ label =" MultiplicationNode: 2"]
 legend_MultiplicationNode -> legend_NegationNode [style=invis];
 legend_NegationNode [ label =" NegationNode: 1"]
 legend_NegationNode -> legend_ParameterNode [style=invis];
-legend_ParameterNode [ label =" ParameterNode: 7"]
+legend_ParameterNode [ label =" ParameterNode: 8"]
 legend_ParameterNode -> legend_PortFieldNode [style=invis];
 legend_PortFieldNode [ label =" PortFieldNode: 1"]
 legend_PortFieldNode -> legend_PortFieldSumNode [style=invis];
@@ -318,7 +330,6 @@ BOOST_FIXTURE_TEST_CASE(
 
     AstDOTStyleVisitor astGraphVisitor;
     astGraphVisitor(dotContentStream, makeBiggerExpression());
-
     BOOST_CHECK_EQUAL(dotContentStream.str(), expectedForBiggerDotContent());
 }
 

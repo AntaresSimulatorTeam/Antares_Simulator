@@ -425,6 +425,28 @@ struct CompareBindingConstraintName final
     }
 };
 
+namespace Enum
+{
+template<>
+inline const std::initializer_list<std::string>& getNames<Antares::Data::BindingConstraint::Type>()
+{
+    static const std::initializer_list<std::string> il = {"unknown", "hourly", "daily", "weekly"};
+    return il;
+}
+
+template<>
+inline const std::initializer_list<std::string>&
+getNames<Antares::Data::BindingConstraint::Operator>()
+{
+    static const std::initializer_list<std::string> il = {"unknown",
+                                                          "equality",
+                                                          "less",
+                                                          "greater",
+                                                          "both"};
+    return il;
+}
+} // namespace Enum
+
 } // namespace Antares::Data
 
 #include "BindingConstraint.hxx"

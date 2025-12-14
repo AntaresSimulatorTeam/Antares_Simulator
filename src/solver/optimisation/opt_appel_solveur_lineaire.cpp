@@ -19,13 +19,12 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <chrono>
 #include <mutex>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_utils.h>
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/ISimulationTable.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
@@ -56,7 +55,6 @@ using Solver::Optimization::SingleOptimOptions;
 
 struct SimplexResult
 {
-    bool success = false;
     TIME_MEASURE timeMeasure;
     mpsWriterFactory mps_writer_factory;
     double objectiveValue;
@@ -86,7 +84,9 @@ static void fillModelerComponents(
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
-                                            modelerData->scenarioGroupRepository));
+                                            modelerData->scenarioGroupRepository,
+                                            Modeler::Config::Location::SUBPROBLEMS,
+                                            nullptr));
     }
 }
 
@@ -115,9 +115,6 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             globalLast,
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
-
-static Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data = Optimisation::
-  LinearProblemDataImpl::LinearProblemData();
 
 // Returns a non-owning pointer
 MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
@@ -154,8 +151,7 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
 
     measure.tick();
 
-    logs.info();
-    logs.info() << "Modeler build took " << measure.toStringInSeconds();
+    logs.debug() << "Modeler build took " << measure.toStringInSeconds();
 
     return ortoolsProblem.getMpSolver();
 }
@@ -180,13 +176,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
-    const Optimisation::LinearProblemApi::ILinearProblemData* modelerDataSeries = hasModelerData
-                                                                                    ? modelerData
-                                                                                        ->dataSeries
-                                                                                        .get()
-                                                                                    : nullptr;
-    const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
-      = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
+    const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
+                                                                 : nullptr;
+    const ScenarioGroupRepository* modelerScenarioGroupRepository = hasModelerData
+                                                                      ? &modelerData
+                                                                           ->scenarioGroupRepository
+                                                                      : nullptr;
 
     OptimEntityContainer optimEntityContainer(ortoolsProblem,
                                               modelerDataSeries,
@@ -216,7 +211,10 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
 
     measure.tick();
-    logs.info() << "Solved in " << measure.toStringInSeconds();
+    logs.info() << fmt::format("Problem {}-{} solved in {}",
+                               problemeHebdo->weekInTheYear,
+                               problemeHebdo->year,
+                               measure.toStringInSeconds());
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
@@ -232,8 +230,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
-            return {.success = false,
-                    .timeMeasure = timeMeasure,
+            return {.timeMeasure = timeMeasure,
                     .mps_writer_factory = mps_writer_factory,
                     .objectiveValue = 0};
         }
@@ -259,10 +256,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             true);
     }
 
-    return {.success = true,
-            .timeMeasure = timeMeasure,
+    return {.timeMeasure = timeMeasure,
             .mps_writer_factory = mps_writer_factory,
-            .objectiveValue = solver != nullptr ? getObjectiveValue(solver) : 0};
+            .objectiveValue = getObjectiveValue(solver)};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
@@ -335,9 +331,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
-        const Optimisation::LinearProblemApi::ILinearProblemData* modelerDataSeries
-          = hasModelerData ? modelerData->dataSeries.get() : nullptr;
-        const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
+        const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
+                                                                     : nullptr;
+        const ScenarioGroupRepository* modelerScenarioGroupRepository
           = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
         OptimEntityContainer optimEntityContainer(infeasibleProblem,

@@ -22,6 +22,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace Antares::Solver::Simulation
@@ -29,6 +30,16 @@ namespace Antares::Solver::Simulation
 class IStorageForRemix
 {
 public:
+    IStorageForRemix(std::string name):
+        name_(name)
+    {
+    }
+
+    const std::string& name() const
+    {
+        return name_;
+    }
+
     virtual ~IStorageForRemix() = default;
     virtual double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const = 0;
     virtual void update() = 0;
@@ -37,6 +48,7 @@ public:
 
 private:
     virtual void checkInput(size_t size) = 0;
+    std::string name_;
 };
 
 using ListStorageForRemix = std::vector<std::shared_ptr<IStorageForRemix>>;

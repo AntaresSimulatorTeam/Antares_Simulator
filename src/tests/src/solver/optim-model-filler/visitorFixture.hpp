@@ -8,7 +8,7 @@
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
-#include "../../expressions/UtilMocks.h"
+#include "UtilMocks.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
@@ -69,7 +69,6 @@ struct VisitorFixture: Registry<Node>
     {
         optimContainer.addFromSystemComponents(components);
         auto& optimComponent = optimContainer.getOptimComponent(0);
-        optimComponent.index = 0;
         optimComponent.modelVariableGlobalIndices = {0, 1, 2};
         {
             optimContainer.addStartColumn();
@@ -90,17 +89,15 @@ private:
     SystemModel::Component setupComponent()
     {
         return setComponentParameterValues(
-          {{"param_3", SystemModel::ParameterType::CONSTANT, "3."},
-           {"param_m5", SystemModel::ParameterType::CONSTANT, "-5."},
-           {"param_ts", SystemModel::ParameterType::TIMESERIE, "0_1_2"},
-           {"param1", SystemModel::ParameterType::CONSTANT, "-2."},
-           {"param2", SystemModel::ParameterType::CONSTANT, "8."}});
+          {{"param_3", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "3."},
+           {"param_m5", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "-5."},
+           {"param_ts", VariabilityType::VARYING_IN_TIME_ONLY, "0_1_2"},
+           {"param1", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "-2."},
+           {"param2", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "8."}});
     }
 
     SystemModel::Component setComponentParameterValues(
-      const std::vector<
-        std::tuple<std::string, Antares::ModelerStudy::SystemModel::ParameterType, std::string>>&
-        values)
+      const std::vector<std::tuple<std::string, VariabilityType, std::string>>& values)
     {
         std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> map;
         std::vector<SystemModel::Parameter> parameters;

@@ -38,7 +38,7 @@ Economy::Economy(Data::Study& study,
                  Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
-    resultWriter(resultWriter),
+    resultWriter_(resultWriter),
     simulationObserver_(simulationObserver),
     simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
 {
@@ -103,7 +103,7 @@ bool Economy::simulationBegin()
                                                                 : &simulationTables_[numSpace];
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
-                                            resultWriter,
+                                            resultWriter_,
                                             simulationObserver_.get(),
                                             simulationsTables);
 
@@ -113,7 +113,8 @@ bool Economy::simulationBegin()
               numSpace,
               study.areas,
               study.parameters,
-              study.calendar);
+              study.calendar,
+              resultWriter_);
         }
     }
 
@@ -272,27 +273,6 @@ void Economy::simulationEnd()
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
-    }
-}
-
-void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
-{
-    for (uint i = 0; i < study.areas.size(); ++i)
-    {
-        auto& area = *study.areas[i];
-        auto& scratchpad = scratchmap.at(&area);
-
-        std::ranges::fill(scratchpad.mustrunSum, 0);
-
-        auto& mrs = scratchpad.mustrunSum;
-        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-            {
-                mrs[h] += availableProduction[h];
-            }
-        }
     }
 }
 

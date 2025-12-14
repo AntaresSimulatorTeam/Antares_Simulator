@@ -1,5 +1,7 @@
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 
+#include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
+
 namespace Antares::Solver::Simulation
 {
 
@@ -14,7 +16,8 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                     const double initLevel,
                                                     const double reservoirCapacity,
                                                     const double pumpEfficiency,
-                                                    bool reservoirManagement)
+                                                    bool reservoirManagement,
+                                                    const std::string& name)
 {
     if (!reservoirManagement)
     {
@@ -37,7 +40,8 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                        upRuleCurve,
                                                        initLevel,
                                                        generationEff,
-                                                       pumpEfficiency);
+                                                       pumpEfficiency,
+                                                       name);
 }
 
 std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawal,
@@ -50,7 +54,8 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                   const std::vector<double>& upRuleCurve,
                                                   const double initLevel,
                                                   const double withdrawalEff,
-                                                  const double injectionEff)
+                                                  const double injectionEff,
+                                                  const std::string& name)
 {
     size_t size = withdrawal.size();
 
@@ -69,7 +74,8 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                        upRuleCurve,
                                                        initLevel,
                                                        withdrawalEff,
-                                                       injectionEff);
+                                                       injectionEff,
+                                                       name);
 }
 
 } // namespace Antares::Solver::Simulation

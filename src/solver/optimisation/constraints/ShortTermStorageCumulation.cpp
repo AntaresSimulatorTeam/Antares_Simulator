@@ -33,7 +33,7 @@ struct CumulationConstraint
 
 CumulationConstraint makeCumulationConstraint(const std::string& variable,
                                               ConstraintBuilder& builder,
-                                              const ShortTermStorage::PROPERTIES& props)
+                                              const PROPERTIES& props)
 {
     if (variable == "withdrawal")
     {

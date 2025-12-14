@@ -55,6 +55,78 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, VisitorFixture<ReadLinearExpressionVisito
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_max_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* max = create<FunctionNode>(FunctionNodeType::max, five, six);
+    auto linear_expression = visitor().dispatch(max);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 6.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_min_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* min = create<FunctionNode>(FunctionNodeType::min, five, six);
+    auto linear_expression = visitor().dispatch(min);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, five, six);
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), std::pow(5, 6));
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_0, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0);
+    Node* eight = create<LiteralNode>(8);
+    Node* zero = create<LiteralNode>(0.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, zero); // (8*variable)^0
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_1, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0);
+    Node* eight = create<LiteralNode>(8);
+    Node* one = create<LiteralNode>(1.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, one); // (8*variable)^1
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK(linear_expression[0].hasCoefs());
+    BOOST_CHECK_EQUAL(linear_expression[0].begin()->second, 8);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple__non_linear_linear,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0);
+    Node* eight = create<LiteralNode>(8);
+    Node* six = create<LiteralNode>(6.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, six); // (8*variable)^6
+    BOOST_CHECK_THROW(visitor().dispatch(pow), std::invalid_argument);
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // 5 + param(3) = 8
@@ -62,6 +134,30 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpre
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 8.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit__max_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // 5 + param(3) = 8
+    Node* maxNode = create<FunctionNode>(FunctionNodeType::max,
+                                         create<LiteralNode>(5.),
+                                         create<ParameterNode>("param_3"));
+    auto linear_expression = visitor().dispatch(maxNode);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit__min_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // 5 + param(3) = 8
+    Node* minNode = create<FunctionNode>(FunctionNodeType::min,
+                                         create<LiteralNode>(5.),
+                                         create<ParameterNode>("param_3"));
+    auto linear_expression = visitor().dispatch(minNode);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 3.);
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
@@ -88,10 +184,14 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
 
 BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // param = {0,1,2}
-    // 5 + sum( t-2 .. t+1, param) -->
-    // t = 0 : 5 +param.at(-2) + param.at(-1) + param.at(0) + param.at(1) --> 5 +1 + 2 + 0 + 1 = 9
-    // t = 1 : 5 +param.at(-1) + param.at(0) + param.at(1) + param.at(2) --> 5 + 2+0+1+2 = 10
+    // param = {0, 1, 2}
+    // 5 + sum( t-2 .. t+1, param) :
+    //
+    // t = 0 :
+    // 5 + param[-2] + param[-1] + param[0] + param[1] = 5 + (1 + 2 + 0 + 1) = 9
+    //
+    // t = 1 :
+    // 5 +param[-1] + param[0] + param[1] + param[2] --> 5 + (2 + 0 + 1 + 2) = 10
     Node* from = create<LiteralNode>(-2.);
     Node* to = create<LiteralNode>(1.);
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
@@ -113,9 +213,8 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
 
 BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // param = {0,1,2}
-    // 5 + sum(param) -->
-    // 5 +param.at(0) + param.at(1) + param.at(2)  --> 5 + 0 + 1  + 2  = 8
+    // param = {0, 1, 2}
+    // 5 + sum(param) = 5 + param[0] + param[1] + param[2] = 5 + (0 + 1 + 2)  = 8
 
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<AllTimeSumNode>(create<ParameterNode>("param_ts")));
@@ -160,14 +259,6 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
     };
     checkAt(0);
     checkAt(1);
-}
-
-BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
-                        VisitorFixture<ReadLinearExpressionVisitor>)
-{
-    ParameterNode p("param_ts", Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-
-    BOOST_CHECK_THROW(visitor().dispatch(&p), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, VisitorFixture<ReadLinearExpressionVisitor>)
@@ -270,6 +361,20 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
     BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
                           Antares::Error::InvalidArgumentError,
                           checkMessage("ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
+
+    node = create<FunctionNode>(FunctionNodeType::dual,
+                                create<ParameterNode>("constraint1"),
+                                create<LiteralNode>(0));
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
+                          Antares::Error::InvalidArgumentError,
+                          checkMessage(
+                            "A linear expression can't contain extra output operator dual."));
+
+    node = create<FunctionNode>(FunctionNodeType::reduced_cost, create<VariableNode>("var", 0));
+    BOOST_CHECK_EXCEPTION(
+      visitor().dispatch(node),
+      Antares::Error::InvalidArgumentError,
+      checkMessage("A linear expression can't contain extra output operator reduced_cost."));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -37,4 +37,4 @@ library:
           expression: gen1_p <= 1.5 * gen1_max_p[t-1]
       objective-contributions:
         - id: objective
-          expression: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost
+          expression: sum(gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)

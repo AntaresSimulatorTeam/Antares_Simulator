@@ -47,8 +47,8 @@ public:
     //! Simplex optimizatio range
     Yuni::CString<32, false> simplexOptimRange;
 
-    //! Ignore error/warnings
-    int ignoreWarningsErrors = 0;
+    //! Ignore loading errors
+    bool ignoreLoadingErrors = false;
     //! Ignore constraints
     bool ignoreConstraints = false;
 

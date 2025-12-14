@@ -46,7 +46,8 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
   uint numSpace,
   AreaList& areas,
   const Data::Parameters& params,
-  Calendar& calendar)
+  Calendar& calendar,
+  IResultWriter& resultWriter)
 {
     if (adqPatchParams.enabled)
     {
@@ -55,7 +56,8 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
                                                          numSpace,
                                                          areas,
                                                          params,
-                                                         calendar);
+                                                         calendar,
+                                                         resultWriter);
     }
     else
     {
@@ -63,7 +65,8 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
                                                     numSpace,
                                                     areas,
                                                     params,
-                                                    calendar);
+                                                    calendar,
+                                                    resultWriter);
     }
 }
 

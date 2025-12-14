@@ -43,4 +43,5 @@ class TimeIndexNode;
 class TimeSumNode;
 class ParentNode;
 class AllTimeSumNode;
+class FunctionNode;
 } // namespace Antares::Expressions::Nodes

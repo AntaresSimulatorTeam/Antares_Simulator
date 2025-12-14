@@ -42,7 +42,7 @@ struct LibraryObjects
                            .variables = {},
                            .ports = {},
                            .port_field_definitions = {},
-                           .constraints = {{"constraint1", "cost"}},
+                           .constraints = {{"constraint1", "cost", "subproblems"}},
                            .binding_constraints = {},
                            .objectives = {},
                            .extra_outputs = {}};
@@ -244,7 +244,7 @@ static const auto libraryYaml_2 = R"(
                   definition: -demand
     )"s;
 
-static const auto systemYaml = R"(
+static const auto systemYml = R"(
         system:
           id: system1
           description: basic description
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
     libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_1)));
     libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_2)));
 
-    YmlSystem::System systemObj = parserSystem.parse(systemYaml);
+    YmlSystem::System systemObj = parserSystem.parse(systemYml);
     auto systemModel = SystemConverter::convert(systemObj, libraries);
 
     const auto& components = systemModel.Components();
@@ -341,7 +341,7 @@ struct PrepareYaml
     YmlSystem::Parser parserSystem;
     std::vector<SystemModel::Library> libraries;
 
-    std::string system = systemYaml;
+    std::string system = systemYml;
 
     PrepareYaml()
     {

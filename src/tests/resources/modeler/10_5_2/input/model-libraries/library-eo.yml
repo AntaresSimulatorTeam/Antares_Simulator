@@ -1,0 +1,97 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+library:
+  id: library-eo
+  description: Library for test cases on extra-outputs
+
+
+  port-types:
+    - id: flow
+      description: A port which transfers power flow
+      fields:
+        - id: flow
+
+  models:
+    - id: area
+      parameters:
+        - id: spillage_cost
+        - id: ens_cost
+      variables:
+        - id: spillage
+          lower-bound: 0
+          upper-bound: 1000000
+          variable-type: continuous
+        - id: unsupplied_energy
+          lower-bound: 0
+          upper-bound: 1000000
+          variable-type: continuous
+      ports:
+        - id: balance_port
+          type: flow
+      binding-constraints:
+        - id: balance
+          expression: sum_connections(balance_port.flow) = spillage - unsupplied_energy
+      objective-contributions:
+        - id: operational_objective
+          expression: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)
+      extra-outputs:
+        - id: spill_cost_contribution
+          expression: spillage_cost * spillage
+        - id: ens_cost_contribution
+          expression: ens_cost * unsupplied_energy
+        - id: price
+          expression: dual(balance)
+
+    - id: load
+      parameters:
+        - id: load_value
+          time-dependent: true
+          scenario-dependent: false
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: -load_value
+
+
+    - id: simple_gen
+      parameters:
+        - id: p_max_cluster # timeseries that takes outages into account
+          scenario-dependent: false
+          time-dependent: false
+        - id: marginal_generation_cost
+          scenario-dependent: false
+          time-dependent: true
+      variables:
+        - id: generation
+          lower-bound: 0.0
+          upper-bound: p_max_cluster
+          variable-type: continuous
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+
+      objective-contributions:
+        - id: operational_objective
+          expression: sum(marginal_generation_cost * generation)
+      extra-outputs:
+        - id: generation_reduced_cost
+          expression: reduced_cost(generation)
+        
+
+    

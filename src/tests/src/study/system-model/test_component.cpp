@@ -21,14 +21,17 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <unit_test_utils.h>
-
-#include <boost/test/unit_test.hpp>
-
 #include "antares/expressions/nodes/LiteralNode.h"
 #include "antares/study/system-model/component.h"
+// If we don't turn clang-format off here, some antlr4 header does not compile :
+// it collides with a #include <windows.h> somewhere in Yuni
+// clang-format off
+#include <unit_test_utils.h>
+// clang-format on
+#include <boost/test/unit_test.hpp>
 
 using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Optimisation;
 
 struct ComponentBuilderCreationFixture
 {
@@ -55,7 +58,7 @@ BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentBuilderCreationFixture)
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type = ParameterType::CONSTANT)
+  const VariabilityType& type = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
@@ -201,7 +204,7 @@ BOOST_AUTO_TEST_CASE(fail_on_missing_wrong_param)
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
                           checkMessage(
-                            "The component \"component\" has no value for parameter 'param1'"));
+                            "The component 'component' has no value for parameter 'param1'"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_too_many_params1)
@@ -230,6 +233,58 @@ BOOST_AUTO_TEST_CASE(fail_on_too_many_params2)
                           std::invalid_argument,
                           checkMessage(
                             "The component \"component\" has 1 parameter(s), but its model has 0"));
+}
+
+BOOST_AUTO_TEST_CASE(param_variability_scenario_mismatch)
+{
+    Model model = createModelWithParameters();
+    auto component = component_builder.withId("component")
+                       .withModel(&model)
+                       .withParameterValues(
+                         {build_context_parameter_with("param1",
+                                                       "3",
+                                                       VariabilityType::VARYING_IN_SCENARIO_ONLY),
+                          build_context_parameter_with("param2", "3")})
+                       .withScenarioGroupId("scenario_group");
+    BOOST_CHECK_EXCEPTION(component_builder.build(),
+                          std::invalid_argument,
+                          checkMessage("Model 'model': Component 'component': Parameter 'param1': "
+                                       "Scenario dependance mismatch between model and system"));
+}
+
+BOOST_AUTO_TEST_CASE(param_variability_time_mismatch)
+{
+    Model model = createModelWithParameters();
+    auto component = component_builder.withId("component")
+                       .withModel(&model)
+                       .withParameterValues(
+                         {build_context_parameter_with("param1", "3"),
+                          build_context_parameter_with("param2",
+                                                       "3",
+                                                       VariabilityType::VARYING_IN_TIME_ONLY)})
+                       .withScenarioGroupId("scenario_group");
+    BOOST_CHECK_EXCEPTION(component_builder.build(),
+                          std::invalid_argument,
+                          checkMessage("Model 'model': Component 'component': Parameter 'param2': "
+                                       "Time dependance mismatch between model and system"));
+}
+
+BOOST_AUTO_TEST_CASE(param_variability_time_and_scenario_mismatch)
+{
+    Model model = createModelWithParameters();
+    auto component = component_builder.withId("component")
+                       .withModel(&model)
+                       .withParameterValues({build_context_parameter_with(
+                                               "param1",
+                                               "3",
+                                               VariabilityType::VARYING_IN_TIME_AND_SCENARIO),
+                                             build_context_parameter_with("param2", "3")})
+                       .withScenarioGroupId("scenario_group");
+    BOOST_CHECK_EXCEPTION(component_builder.build(),
+                          std::invalid_argument,
+                          checkMessage(
+                            "Model 'model': Component 'component': Parameter 'param1': "
+                            "Time and Scenario dependance mismatch between model and system"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_unexisting_port)
