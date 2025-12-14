@@ -114,11 +114,7 @@ std::unique_ptr<RuleCurvesLoader> RuleCurvesLoaderService::createRuleCurvesLoade
     {
     case Parameters::Compatibility::HydroRuleCurves::Single:
     {
-        return std::make_unique<StandardRuleCurvesLoader>(filePath,
-                                                          areaID,
-                                                          max,
-                                                          avg,
-                                                          min);
+        return std::make_unique<StandardRuleCurvesLoader>(filePath, areaID, max, avg, min);
     }
     case Parameters::Compatibility::HydroRuleCurves::Scenarized:
     {
