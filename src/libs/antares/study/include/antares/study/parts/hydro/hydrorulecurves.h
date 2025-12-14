@@ -57,12 +57,6 @@ public:
     */
     explicit RuleCurves(TimeSeriesNumbers& timeseriesNumbers);
 
-    bool forceReload(bool reload = false) const;
-
-    void markAsModified() const;
-
-    bool saveToFolder(const std::string& areaID, const std::string& folder) const;
-
     void averageTimeSeries();
 
     TimeSeriesNumbers& timeseriesNumbers;
@@ -177,10 +171,7 @@ private:
     std::unique_ptr<RuleCurvesLoader> createRuleCurvesLoader(
       Parameters::Compatibility::HydroRuleCurves hydroRuleCurves,
       const std::filesystem::path& filePath,
-      const std::string& areaID,
-      TimeSeries& max,
-      TimeSeries& avg,
-      TimeSeries& min);
+      const std::string& areaID);
 };
 } // namespace Data
 } // namespace Antares

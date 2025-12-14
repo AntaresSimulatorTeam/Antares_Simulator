@@ -105,20 +105,25 @@ bool StandardRuleCurvesLoader::load()
 std::unique_ptr<RuleCurvesLoader> RuleCurvesLoaderService::createRuleCurvesLoader(
   Parameters::Compatibility::HydroRuleCurves hydroRuleCurves,
   const std::filesystem::path& filePath,
-  const std::string& areaID,
-  TimeSeries& max,
-  TimeSeries& avg,
-  TimeSeries& min)
+  const std::string& areaID)
 {
     switch (hydroRuleCurves)
     {
     case Parameters::Compatibility::HydroRuleCurves::Single:
     {
-        return std::make_unique<StandardRuleCurvesLoader>(filePath, areaID, max, avg, min);
+        return std::make_unique<StandardRuleCurvesLoader>(filePath,
+                                                          areaID,
+                                                          ruleCurves_.max,
+                                                          ruleCurves_.avg,
+                                                          ruleCurves_.min);
     }
     case Parameters::Compatibility::HydroRuleCurves::Scenarized:
     {
-        return std::make_unique<ScenarizedRuleCurvesLoader>(filePath, areaID, max, avg, min);
+        return std::make_unique<ScenarizedRuleCurvesLoader>(filePath,
+                                                            areaID,
+                                                            ruleCurves_.max,
+                                                            ruleCurves_.avg,
+                                                            ruleCurves_.min);
     }
     default:
         throw std::invalid_argument("Value not supported for hydro rule curves compatibility");
@@ -132,12 +137,7 @@ bool RuleCurvesLoaderService::LoadFromFolder(
 {
     bool ret = true;
 
-    auto loader = createRuleCurvesLoader(hydroRuleCurves,
-                                         folder,
-                                         areaID,
-                                         ruleCurves_.max,
-                                         ruleCurves_.avg,
-                                         ruleCurves_.min);
+    auto loader = createRuleCurvesLoader(hydroRuleCurves, folder, areaID);
     ret = loader->load();
 
     return ret;
