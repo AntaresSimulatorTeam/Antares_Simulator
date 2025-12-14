@@ -93,10 +93,6 @@ public:
     **
     ** Merely a matrix of 3 * DAYS_PER_YEAR values
     */
-
-    // The buffer facilitates communication with the UI.
-    // This functionality will no longer be required once the UI is fully deprecated.
-    Matrix<double> standardRuleCurvesGUI;
 };
 
 class RuleCurvesLoader
@@ -134,20 +130,16 @@ class StandardRuleCurvesLoader: public RuleCurvesLoader
 public:
     StandardRuleCurvesLoader(const std::filesystem::path& baseFolder,
                              const std::string& areaID,
-                             Matrix<double>& standardRuleCurvesGUI,
                              TimeSeries& max,
                              TimeSeries& avg,
                              TimeSeries& min):
-        RuleCurvesLoader(baseFolder, areaID, max, avg, min),
-        standardRuleCurvesMatrixGUI_(standardRuleCurvesGUI)
+        RuleCurvesLoader(baseFolder, areaID, max, avg, min)
 
     {
     }
 
 private:
-    Matrix<double>& standardRuleCurvesMatrixGUI_;
     bool load() final;
-    void copyRuleCurvesFromBuffer();
 };
 
 class ScenarizedRuleCurvesLoader: public RuleCurvesLoader
@@ -179,7 +171,6 @@ public:
 
     bool LoadFromFolder(const std::string& areaID,
                         const std::filesystem::path& folder,
-                        bool usedBySolver,
                         Parameters::Compatibility::HydroRuleCurves hydroRuleCurves);
 
 private:
@@ -187,7 +178,6 @@ private:
       Parameters::Compatibility::HydroRuleCurves hydroRuleCurves,
       const std::filesystem::path& filePath,
       const std::string& areaID,
-      Matrix<double>& standardRuleCurvesGUI,
       TimeSeries& max,
       TimeSeries& avg,
       TimeSeries& min);

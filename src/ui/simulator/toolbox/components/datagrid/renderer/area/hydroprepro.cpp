@@ -223,12 +223,14 @@ bool HydroPrepro::valid() const
 }
 
 bool HydroPrepro::circularShiftRowsUntilDate(MonthName month, uint daymonth)
-{
+{   
+    // Added for compilation puprose, can be deleted with UI
+/*
     if (pArea)
     {
-        pArea->hydro.series->ruleCurves.standardRuleCurvesGUI.circularShiftRows(month);
-    }
-    return MatrixAncestorType::circularShiftRowsUntilDate(month, daymonth);
+        pArea->hydro.series->ruleCurves.standardRuleCurves.circularShiftRows(month);
+    }*/
+    return MatrixAncestorType::circularShiftRowsUntilDate(MonthName::january, 0);
 }
 
 void HydroPrepro::onStudyClosed()
