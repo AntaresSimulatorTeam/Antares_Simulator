@@ -175,11 +175,11 @@ void Modeler::run() const
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
-    const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
 
     // if simulation table or mps are requested
     if (!parameters.noOutput || parameters.exportMps)
     {
+        const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
         writer_.init(simulationTableSuffix);
     }
     if (parameters.exportMps)
