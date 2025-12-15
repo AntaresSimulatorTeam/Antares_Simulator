@@ -623,6 +623,9 @@ void makeRHSforConstraint(fs::path& dir, unsigned nb_lines, const std::string& c
     rhsFile.close();
 }
 
+// =========================================
+// Fixture : AdditionalConstraintsFixture
+// =========================================
 struct AdditionalConstraintsFixture: public WorkDirCreationFixture
 {
     AdditionalConstraintsFixture();
@@ -646,6 +649,10 @@ void AdditionalConstraintsFixture::makeIniFile(const std::vector<IniConstraint>&
 {
     makeAddConstraintsIniFile(sts_dir, ini_constraints);
 }
+
+// =========================================
+// Test on loading additional constraints
+// =========================================
 
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditionalConstraintsFixture)
 {
@@ -706,23 +713,22 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixtur
     BOOST_CHECK_EQUAL(constraint1->variable, "injection");
     BOOST_CHECK_EQUAL(constraint1->cluster_id, sts.id);
 
-    const auto& constraint1Rhs = constraint1->rhs();
-    BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
-    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
+    const auto& rhs1 = constraint1->rhs();
+    BOOST_CHECK_EQUAL(rhs1.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs1.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(rhs1.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
     //------- constraint2 ----------
-
     const auto& constraint2 = storageInput.storagesByIndex[0].additionalConstraints[1];
     BOOST_CHECK_EQUAL(constraint2->name, "constraint2");
     BOOST_CHECK_EQUAL(constraint2->operatorType, "greater");
     BOOST_CHECK_EQUAL(constraint2->variable, "withdrawal");
     BOOST_CHECK_EQUAL(constraint2->cluster_id, sts.id);
 
-    const auto& constraint2Rhs = constraint2->rhs();
-    BOOST_CHECK_EQUAL(constraint2Rhs.timeSeries.height, HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, 0), 0.0);
-    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
+    const auto& rhs2 = constraint2->rhs();
+    BOOST_CHECK_EQUAL(rhs2.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs2.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(rhs2.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditionalConstraintsFixture)
@@ -797,8 +803,6 @@ BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditionalConstraintsFixture)
 BOOST_FIXTURE_TEST_CASE(multiple_sts__one_sts_has_no_additional_constraint__all_constr_fully_loaded,
                         WorkDirCreationFixture)
 {
-    // We expect that all the consraints are fully loaded, despite the fact that
-    // a STS hasn't got any.
     STStorageInput storageInput;
 
     STStorageCluster sts1;
