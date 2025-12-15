@@ -252,13 +252,13 @@ BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
     resizeFillVectors(series, 0.0, 12);
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 
-    resizeFillVectors(series, 0.0, 8760);
+    resizeFillVectors(series, 0.0, HOURS_PER_YEAR);
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 {
-    createFileSeries(1.0, 8760);
+    createFileSeries(1.0, HOURS_PER_YEAR);
 
     BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
@@ -271,7 +271,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
 {
-    createFileSeries(1.0, 8760);
+    createFileSeries(1.0, HOURS_PER_YEAR);
 
     BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
@@ -286,7 +286,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values_880, Fixture)
 {
-    createFileSeries(8760);
+    createFileSeries(HOURS_PER_YEAR);
 
     BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
@@ -294,7 +294,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values_880, Fixtur
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values, Fixture)
 {
-    createFileSeries(8760);
+    createFileSeries(HOURS_PER_YEAR);
 
     BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
@@ -302,7 +302,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_negative_value, Fixture)
 {
-    createFileSeries(-247.0, 8760);
+    createFileSeries(-247.0, HOURS_PER_YEAR);
 
     BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
@@ -352,7 +352,7 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_vector_fill, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
 {
-    createFileSeries(0.5, 8760);
+    createFileSeries(0.5, HOURS_PER_YEAR);
 
     BOOST_CHECK(cluster.loadSeries(work_dir, StudyVersion::latest()));
     BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
@@ -462,7 +462,7 @@ BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
 {
-    resizeFillVectors(series, 0.123456789, 8760);
+    resizeFillVectors(series, 0.123456789, HOURS_PER_YEAR);
 
     BOOST_CHECK(series.saveToFolder(work_dir.string()));
     resizeFillVectors(series, 0, 0);

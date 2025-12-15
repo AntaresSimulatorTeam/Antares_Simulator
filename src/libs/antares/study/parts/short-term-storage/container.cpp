@@ -100,7 +100,7 @@ static std::vector<SingleAdditionalConstraint> makeConstraints(std::string& hour
 
 static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
 {
-    const bool ret = loadFile(rhsPath, rhsSeries, /*.average =*/false);
+    const bool ret = loadFile(rhsPath, rhsSeries);
     if (ret)
     {
         fillIfEmpty(rhsSeries, 0.0);
