@@ -154,7 +154,7 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
 
 bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 {
-    for (const auto& sts: storagesByIndex)
+    for (auto& sts: storagesByIndex)
     {
         auto data_path = parentPath / sts.id;
         IniFile ini;
@@ -199,23 +199,9 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 return false;
             }
 
-            auto it = std::ranges::find_if(storagesByIndex,
-                                           [&additionalConstraints](const STStorageCluster& sts)
-                                           { return sts.id == additionalConstraints->cluster_id; });
-            if (it == storagesByIndex.end())
-            {
-                logs.error() << "From file  : " << pathIni;
-                logs.error() << "Constraint '" << section->name
-                             << "' does not reference an existing cluster";
-                return false;
-            }
-            else
-            {
-                logs.info() << "Loaded ST additional constraint "
-                            << additionalConstraints->cluster_id << "/"
-                            << additionalConstraints->name;
-                it->additionalConstraints.push_back(additionalConstraints);
-            }
+            logs.info() << "Loaded ST additional constraint " << additionalConstraints->cluster_id
+                        << "/" << additionalConstraints->name;
+            sts.additionalConstraints.push_back(additionalConstraints);
         }
     }
     return true;

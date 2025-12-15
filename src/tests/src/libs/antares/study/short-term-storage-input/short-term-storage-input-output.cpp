@@ -659,6 +659,15 @@ AdditConstrFixture<nb_sts>::AdditConstrFixture()
 // =========================================
 // Test on loading additional constraints
 // =========================================
+BOOST_FIXTURE_TEST_CASE(constraint_has_a_unknown_key___loading_returns_false, AdditConstrFixture<1>)
+{
+    std::ofstream iniFile(pathsToSTS[0] / "additional-constraints.ini");
+    iniFile << "[some constraint]\n";
+    iniFile << "blabla=some value\n";
+    iniFile.close();
+
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
+}
 
 BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditConstrFixture<1>)
 {
@@ -798,16 +807,6 @@ BOOST_DATA_TEST_CASE_F(AdditConstrFixture<1>,
         BOOST_CHECK_CLOSE(rhs.getCoefficient(0, i), i, 0.001 /* tolerance */);
         i += HOURS_PER_YEAR / 5;
     }
-}
-
-BOOST_FIXTURE_TEST_CASE(constraint_has_a_unknown_key___loading_returns_false, AdditConstrFixture<1>)
-{
-    std::ofstream iniFile(pathsToSTS[0] / "additional-constraints.ini");
-    iniFile << "[some constraint]\n";
-    iniFile << "blabla=some value\n";
-    iniFile.close();
-
-    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
 BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditConstrFixture<1>)
