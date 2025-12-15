@@ -51,7 +51,7 @@ public:
         return portTypes_;
     }
 
-    std::unordered_map<std::string, Model>& Models() const
+    const std::unordered_map<std::string, Model>& Models() const
     {
         return *models_;
     }
