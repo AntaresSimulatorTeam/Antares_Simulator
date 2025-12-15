@@ -180,22 +180,24 @@ void Modeler::run() const
 
     const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
 
-    if (!parameters.noOutput)
+    // if simulation table or mps are requested
+    if (!parameters.noOutput || parameters.exportMps)
     {
         writer_.init(simulationTableSuffix);
+    }
+    if (parameters.exportMps)
+    {
         auto output = writer_.outputPath();
-        if (parameters.exportMps)
-        {
-            // 1-1.mps
-            Write(subproblem, output / "1-1.mps");
-            // master.mps
-            Write(master_problem, output / "master.mps");
 
-            // structure.txt
-            BendersDecompositionWriter writer(bendersDecomposition);
-            std::ofstream of(output / "structure.txt");
-            writer.write(of);
-        }
+        // 1-1.mps
+        Write(subproblem, output / "1-1.mps");
+        // master.mps
+        Write(master_problem, output / "master.mps");
+
+        // structure.txt
+        BendersDecompositionWriter writer(bendersDecomposition);
+        std::ofstream of(output / "structure.txt");
+        writer.write(of);
     }
 
     logs.info() << "Launching resolution...";
