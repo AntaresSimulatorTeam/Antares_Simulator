@@ -149,7 +149,7 @@ jobs:
 
     - name: Both previous archives upload
       if: ${{ success() }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: ubuntu-targz
         path: _build/*.tar.gz
@@ -227,7 +227,7 @@ jobs:
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
@@ -390,7 +390,7 @@ jobs:
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Installer deb upload push
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: deb
         path: _build/*.deb

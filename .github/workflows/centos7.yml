@@ -139,7 +139,7 @@ jobs:
         docker rm $container_id
 
     - name: Push artifacts
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: centos-targz
         path: archive/*.tar.gz
