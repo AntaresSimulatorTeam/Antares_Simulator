@@ -39,7 +39,7 @@ jobs:
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
 
