@@ -32,17 +32,20 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                  AreaList& areas,
                                                  const Data::Parameters& params,
                                                  Calendar& calendar,
-                                                 IResultWriter& resultWriter):
+                                                 IResultWriter& writer):
     interfacePostProcessList(problemeHebdo, numSpace)
 {
     post_process_list.push_back(
       std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, numSpace_, areas));
 
-    post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
-                                                                           areas,
-                                                                           params,
-                                                                           numSpace,
-                                                                           resultWriter));
+    post_process_list.push_back(
+      std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_, areas, params, numSpace, writer));
+    post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
+                                                                          areas,
+                                                                          numSpace_,
+                                                                          writer,
+                                                                          "before"));
+
     post_process_list.push_back(
       std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
                                                          problemeHebdo_,
@@ -53,6 +56,12 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
       std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
       std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
+
+    post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
+                                                                          areas,
+                                                                          numSpace_,
+                                                                          writer,
+                                                                          "after"));
     post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));
     post_process_list.push_back(

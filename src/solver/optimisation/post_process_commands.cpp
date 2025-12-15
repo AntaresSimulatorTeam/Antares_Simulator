@@ -21,6 +21,8 @@
 
 #include "antares/solver/optimisation/post_process_commands.h"
 
+#include <fmt/format.h>
+
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -346,36 +348,56 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
 WriteDebugAdequacyPatch::WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
                                                  AreaList& areas,
                                                  unsigned int numSpace,
-                                                 IResultWriter& writer):
+                                                 IResultWriter& writer,
+                                                 std::string beforeOrAfter):
     basePostProcessCommand(problemeHebdo),
     areas_(areas),
     numSpace_(numSpace),
-    writer_(writer)
+    writer_(writer),
+    beforeOrAfter_(beforeOrAfter)
 {
 }
 
 void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
 {
     std::stringstream stream;
+    auto writeResultLine = [&stream](const std::string& areaName,
+                                     unsigned hour,
+                                     const std::string& varName,
+                                     double value)
+    { stream << fmt::format("{} {} {} {}\n", areaName, hour, varName, value); };
+
     areas_.each(
-      [this, &stream](const Data::Area& area)
+      [this, &writeResultLine](const Data::Area& area)
       {
           auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
           const auto& scratchpad = area.scratchpad[numSpace_];
-          for (uint hour = 0; hour < Constants::nbHoursInAWeek; ++hour)
+
+          // Write all results
+          for (unsigned hour = 0; hour < Constants::nbHoursInAWeek; ++hour)
           {
-              stream << area.name << " " << hour << " DENS "
-                     << problemeHebdo_->ResultatsHoraires[area.index].ValeursHorairesDENS[hour];
-              stream << area.name << " " << hour << " UnsuppliedEnergyCSR "
-                     << hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour];
-              stream << area.name << " " << hour << " MRGPriceCSR "
-                     << hourlyResults.CoutsMarginauxHorairesCSR[hour];
-              stream << area.name << " " << hour << " DTGmrg "
-                     << scratchpad.dispatchableGenerationMargin[hour];
+              writeResultLine(
+                area.name,
+                hour,
+                "DENS",
+                problemeHebdo_->ResultatsHoraires[area.index].ValeursHorairesDENS[hour]);
+              writeResultLine(area.name,
+                              hour,
+                              "UnsuppliedEnergyCSR",
+                              hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour]);
+              writeResultLine(area.name,
+                              hour,
+                              "MRGPriceCSR",
+                              hourlyResults.CoutsMarginauxHorairesCSR[hour]);
+              writeResultLine(area.name,
+                              hour,
+                              "DTGmrg",
+                              scratchpad.dispatchableGenerationMargin[hour]);
           }
       });
 
-    std::string filename("adequacy-patch-" + std::to_string(opt_runtime_data.year) + "-"
+    std::string filename("adequacy-patch-" + beforeOrAfter_ + "-"
+                         + std::to_string(opt_runtime_data.year) + "-"
                          + std::to_string(opt_runtime_data.week) + ".csv");
     std::string s = stream.str();
     writer_.addEntryFromBuffer(filename, s);

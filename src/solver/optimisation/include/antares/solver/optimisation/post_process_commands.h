@@ -133,7 +133,8 @@ public:
     WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
                             AreaList& areas,
                             unsigned int numSpace,
-                            IResultWriter& writer);
+                            IResultWriter& writer,
+                            std::string beforeOrAfter);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -141,6 +142,7 @@ private:
     const AreaList& areas_;
     unsigned int numSpace_ = 0;
     IResultWriter& writer_;
+    const std::string beforeOrAfter_;
 };
 
 } // namespace Antares::Solver::Simulation
