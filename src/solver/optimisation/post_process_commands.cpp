@@ -339,21 +339,33 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
     return sumENS;
 }
 
-void writeAdquacyPatchDebugInfos(PROBLEME_HEBDO* problemeHebdo,
-                                 AreaList& areas,
-                                 unsigned int numSpace,
-                                 IResultWriter& writer)
+// --------------------------------------
+//  Debug for adequacy patch values
+// --------------------------------------
+//
+WriteDebugAdequacyPatch::WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
+                                                 AreaList& areas,
+                                                 unsigned int numSpace,
+                                                 IResultWriter& writer):
+    basePostProcessCommand(problemeHebdo),
+    areas_(areas),
+    numSpace_(numSpace),
+    writer_(writer)
+{
+}
+
+void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
 {
     std::stringstream stream;
-    areas.each(
-      [&stream, &problemeHebdo, &numSpace, &writer](const Data::Area& area)
+    areas_.each(
+      [this, &stream](const Data::Area& area)
       {
-          auto& hourlyResults = problemeHebdo->ResultatsHoraires[area.index];
-          const auto& scratchpad = area.scratchpad[numSpace];
+          auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
+          const auto& scratchpad = area.scratchpad[numSpace_];
           for (uint hour = 0; hour < Constants::nbHoursInAWeek; ++hour)
           {
               stream << area.name << " " << hour << " DENS "
-                     << problemeHebdo->ResultatsHoraires[area.index].ValeursHorairesDENS[hour];
+                     << problemeHebdo_->ResultatsHoraires[area.index].ValeursHorairesDENS[hour];
               stream << area.name << " " << hour << " UnsuppliedEnergyCSR "
                      << hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour];
               stream << area.name << " " << hour << " MRGPriceCSR "
@@ -363,10 +375,10 @@ void writeAdquacyPatchDebugInfos(PROBLEME_HEBDO* problemeHebdo,
           }
       });
 
-    std::string filename("adequacy-patch-" + std::to_string(problemeHebdo->year) + "-"
-                         + std::to_string(problemeHebdo->weekInTheYear) + ".csv");
+    std::string filename("adequacy-patch-" + std::to_string(opt_runtime_data.year) + "-"
+                         + std::to_string(opt_runtime_data.week) + ".csv");
     std::string s = stream.str();
-    writer.addEntryFromBuffer(filename, s);
+    writer_.addEntryFromBuffer(filename, s);
 }
 
 } // namespace Antares::Solver::Simulation
