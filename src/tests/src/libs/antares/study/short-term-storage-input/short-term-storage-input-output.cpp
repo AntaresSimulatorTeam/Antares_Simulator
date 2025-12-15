@@ -800,6 +800,16 @@ BOOST_DATA_TEST_CASE_F(AdditConstrFixture<1>,
     }
 }
 
+BOOST_FIXTURE_TEST_CASE(constraint_has_a_unknown_key___loading_returns_false, AdditConstrFixture<1>)
+{
+    std::ofstream iniFile(pathsToSTS[0] / "additional-constraints.ini");
+    iniFile << "[some constraint]\n";
+    iniFile << "blabla=some value\n";
+    iniFile.close();
+
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
+}
+
 BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditConstrFixture<1>)
 {
     makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]", "false"}});
