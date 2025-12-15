@@ -25,7 +25,7 @@ jobs:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_COMPILERCHECK: content
       CCACHE_BASEDIR: ${{ github.workspace }}
-      CCACHE_SLOPPINESS: time_macros,include_file_mtime
+      CCACHE_SLOPPINESS: time_macros
 
     steps:
     # Disk space on / is insufficient, leading to errors
