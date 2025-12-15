@@ -339,4 +339,34 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
     return sumENS;
 }
 
+void writeAdquacyPatchDebugInfos(PROBLEME_HEBDO* problemeHebdo,
+                                 AreaList& areas,
+                                 unsigned int numSpace,
+                                 IResultWriter& writer)
+{
+    std::stringstream stream;
+    areas.each(
+      [&stream, &problemeHebdo, &numSpace, &writer](const Data::Area& area)
+      {
+          auto& hourlyResults = problemeHebdo->ResultatsHoraires[area.index];
+          const auto& scratchpad = area.scratchpad[numSpace];
+          for (uint hour = 0; hour < Constants::nbHoursInAWeek; ++hour)
+          {
+              stream << area.name << " " << hour << " DENS "
+                     << problemeHebdo->ResultatsHoraires[area.index].ValeursHorairesDENS[hour];
+              stream << area.name << " " << hour << " UnsuppliedEnergyCSR "
+                     << hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour];
+              stream << area.name << " " << hour << " MRGPriceCSR "
+                     << hourlyResults.CoutsMarginauxHorairesCSR[hour];
+              stream << area.name << " " << hour << " DTGmrg "
+                     << scratchpad.dispatchableGenerationMargin[hour];
+          }
+      });
+
+    std::string filename("adequacy-patch-" + std::to_string(problemeHebdo->year) + "-"
+                         + std::to_string(problemeHebdo->weekInTheYear) + ".csv");
+    std::string s = stream.str();
+    writer.addEntryFromBuffer(filename, s);
+}
+
 } // namespace Antares::Solver::Simulation
