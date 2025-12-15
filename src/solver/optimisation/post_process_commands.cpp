@@ -376,23 +376,23 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
           // Write all results
           for (unsigned hour = 0; hour < Constants::nbHoursInAWeek; ++hour)
           {
-              writeResultLine(
-                area.name,
-                hour,
-                "DENS",
-                problemeHebdo_->ResultatsHoraires[area.index].ValeursHorairesDENS[hour]);
+              writeResultLine(area.name, hour, "DENS", hourlyResults.ValeursHorairesDENS[hour]);
               writeResultLine(area.name,
                               hour,
                               "UnsuppliedEnergyCSR",
                               hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour]);
               writeResultLine(area.name,
                               hour,
+                              "MRGPrice",
+                              hourlyResults.CoutsMarginauxHoraires[hour]);
+              writeResultLine(area.name,
+                              hour,
                               "MRGPriceCSR",
                               hourlyResults.CoutsMarginauxHorairesCSR[hour]);
               writeResultLine(area.name,
                               hour,
-                              "DTGmrg",
-                              scratchpad.dispatchableGenerationMargin[hour]);
+                              "DTGmrgCSR",
+                              hourlyResults.ValeursHorairesDtgMrgCsr[hour]);
           }
       });
 
