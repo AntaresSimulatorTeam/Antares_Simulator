@@ -597,7 +597,7 @@ struct IniConstraint
     std::string enabled = "true";
 };
 
-void makeAddConstraintsIniFile(fs::path& dir, const std::vector<IniConstraint>& ini_constraints)
+void makeAdditConstrIniFile(fs::path& dir, const std::vector<IniConstraint>& ini_constraints)
 {
     std::ofstream iniFile(dir / "additional-constraints.ini");
     for (const auto& c: ini_constraints)
@@ -624,48 +624,55 @@ void makeRHSforConstraint(fs::path& dir, unsigned nb_lines, const std::string& c
 }
 
 // =========================================
-// Fixture : AdditionalConstraintsFixture
+// Fixture : AdditConstrFixture
 // =========================================
-struct AdditionalConstraintsFixture: public WorkDirCreationFixture
-{
-    AdditionalConstraintsFixture();
-    void makeIniFile(const std::vector<IniConstraint>& ini_constraints);
 
-    fs::path sts_dir;
+template<unsigned nb_sts>
+struct AdditConstrFixture: public WorkDirCreationFixture
+{
+    AdditConstrFixture();
+
     STStorageInput storageInput;
-    STStorageCluster sts;
+    std::vector<fs::path> pathsToSTS;
+    std::vector<std::string> sts_names;
 };
 
-AdditionalConstraintsFixture::AdditionalConstraintsFixture()
+template<unsigned nb_sts>
+AdditConstrFixture<nb_sts>::AdditConstrFixture()
 {
-    sts_dir = work_dir / "my-sts";
-    fs::create_directories(sts_dir);
+    for (unsigned i = 1; i <= nb_sts; i++)
+    {
+        std::string sts_name = "my-sts-" + std::to_string(i);
+        sts_names.push_back(sts_name);
 
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
-}
+        fs::path sts_dir = work_dir / sts_name;
+        pathsToSTS.push_back(work_dir / sts_name); // Storing path tp STS data
 
-void AdditionalConstraintsFixture::makeIniFile(const std::vector<IniConstraint>& ini_constraints)
-{
-    makeAddConstraintsIniFile(sts_dir, ini_constraints);
+        fs::create_directories(sts_dir);
+
+        STStorageCluster sts;
+        sts.id = sts_name;
+        storageInput.storagesByIndex.push_back(sts);
+    }
 }
 
 // =========================================
 // Test on loading additional constraints
 // =========================================
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditConstrFixture<1>)
 {
-    makeIniFile({{"my_constr", "injection", "less", "[1,2,3]"}});
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0]->name, "my_constr");
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, AdditConstrFixture<1>)
 {
-    makeIniFile({{"my_constr", "injection", "less", "[0,1]"}}); // Invalid hours
+    makeAdditConstrIniFile(pathsToSTS[0],
+                           {{"my_constr", "injection", "less", "[0,1]"}}); // Invalid hours
 
     BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
@@ -676,17 +683,18 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
     BOOST_CHECK(storageInput.loadAdditionalConstraints("nonexistent_path"));
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, AdditConstrFixture<1>)
 {
-    makeIniFile({{"my_constr", "invalid", "less", "[1,2,3]"}}); // Invalid variable
+    makeAdditConstrIniFile(pathsToSTS[0],
+                           {{"my_constr", "invalid", "less", "[1,2,3]"}}); // Invalid variable
 
     BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditConstrFixture<1>)
 {
-    makeIniFile({{"my_constr", "injection", "less", "[1,2,3]"}});
-    makeRHSforConstraint(sts_dir, HOURS_PER_YEAR, "my_constr");
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "my_constr");
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
@@ -696,12 +704,13 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditionalConstraint
     BOOST_CHECK_EQUAL(rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditConstrFixture<1>)
 {
-    makeIniFile({{"constraint1", "injection", "less", "[1,2,3]"},
-                 {"constraint2", "withdrawal", "greater", "[5,33]"}});
+    makeAdditConstrIniFile(pathsToSTS[0],
+                           {{"constraint1", "injection", "less", "[1,2,3]"},
+                            {"constraint2", "withdrawal", "greater", "[5,33]"}});
 
-    makeRHSforConstraint(sts_dir, HOURS_PER_YEAR, "constraint1");
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "constraint1");
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 2);
@@ -711,7 +720,7 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixtur
     BOOST_CHECK_EQUAL(constraint1->name, "constraint1");
     BOOST_CHECK_EQUAL(constraint1->operatorType, "less");
     BOOST_CHECK_EQUAL(constraint1->variable, "injection");
-    BOOST_CHECK_EQUAL(constraint1->cluster_id, sts.id);
+    BOOST_CHECK_EQUAL(constraint1->cluster_id, sts_names[0]);
 
     const auto& rhs1 = constraint1->rhs();
     BOOST_CHECK_EQUAL(rhs1.timeSeries.height, HOURS_PER_YEAR);
@@ -723,7 +732,7 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixtur
     BOOST_CHECK_EQUAL(constraint2->name, "constraint2");
     BOOST_CHECK_EQUAL(constraint2->operatorType, "greater");
     BOOST_CHECK_EQUAL(constraint2->variable, "withdrawal");
-    BOOST_CHECK_EQUAL(constraint2->cluster_id, sts.id);
+    BOOST_CHECK_EQUAL(constraint2->cluster_id, sts_names[0]);
 
     const auto& rhs2 = constraint2->rhs();
     BOOST_CHECK_EQUAL(rhs2.timeSeries.height, HOURS_PER_YEAR);
@@ -731,9 +740,9 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditionalConstraintsFixtur
     BOOST_CHECK_EQUAL(rhs2.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditConstrFixture<1>)
 {
-    makeIniFile({{"my_constr", "injection", "less", "[1,2,3]"}});
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
@@ -742,35 +751,35 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditionalCons
     BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile, AdditConstrFixture<1>)
 {
-    makeIniFile({{"my_constr", "injection", "less", "[1,2,3]"}});
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
 
-    std::ofstream rhsFile(sts_dir / "rhs_my_constr.txt");
+    std::ofstream rhsFile(pathsToSTS[0] / "rhs_my_constr.txt");
     rhsFile << "1.0\n2.0\ninvalid\n4.0\n"; // Malformed line
     rhsFile.close();
 
     BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
-BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, AdditConstrFixture<1>)
 {
-    makeIniFile({{"my_constr", "injection", "less", "[1,2,3]"}});
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
 
-    makeRHSforConstraint(sts_dir, 10, "my_constr");
+    makeRHSforConstraint(pathsToSTS[0], 10, "my_constr");
 
     BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
 }
 
-BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
+BOOST_DATA_TEST_CASE_F(AdditConstrFixture<1>,
                        Validate_AllVariableOperatorCombinationsFromFile,
                        bdata::make({"injection", "withdrawal", "netting"})
                          * bdata::make({"less", "equal", "greater"}),
                        variable,
                        op)
 {
-    makeIniFile({{"my_constr", variable, op, "[1,2,3]"}});
-    makeRHSforConstraint(sts_dir, HOURS_PER_YEAR, "my_constr");
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", variable, op, "[1,2,3]"}});
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "my_constr");
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 1);
@@ -791,37 +800,24 @@ BOOST_DATA_TEST_CASE_F(AdditionalConstraintsFixture,
     }
 }
 
-BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditionalConstraintsFixture)
+BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditConstrFixture<1>)
 {
-    makeIniFile({{"my_constr", "injection", "less", "[1,2,3]", "false"}});
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]", "false"}});
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 0);
-    BOOST_REQUIRE_EQUAL(sts.additionalConstraints.size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(multiple_sts__one_sts_has_no_additional_constraint__all_constr_fully_loaded,
-                        WorkDirCreationFixture)
+                        AdditConstrFixture<2> /* 2 STS are built here */)
 {
-    STStorageInput storageInput;
-
-    STStorageCluster sts1;
-    sts1.id = "my-sts-1";
-    storageInput.storagesByIndex.push_back(sts1);
-    fs::path sts_dir_1 = work_dir / "my-sts-1";
-    fs::create_directories(sts_dir_1);
-
-    STStorageCluster sts2;
-    sts2.id = "my-sts-2";
-    storageInput.storagesByIndex.push_back(sts2);
-    fs::path sts_dir_2 = work_dir / "my-sts-2";
-    fs::create_directories(sts_dir_2);
-
-    makeAddConstraintsIniFile(sts_dir_2,
-                              {{"constr_2a", "injection", "less", "[1]"},
-                               {"constr_2b", "netting", "greater", "[1,3]"}});
-    makeRHSforConstraint(sts_dir_2, HOURS_PER_YEAR, "constr_2a");
-    makeRHSforConstraint(sts_dir_2, HOURS_PER_YEAR, "constr_2b");
+    // Fixture builds 2 short term storage here. 
+    // We make 2 constraints for the first one.
+    makeAdditConstrIniFile(pathsToSTS[1],
+                           {{"constr_2a", "injection", "less", "[1]"},
+                            {"constr_2b", "netting", "greater", "[1,3]"}});
+    makeRHSforConstraint(pathsToSTS[1], HOURS_PER_YEAR, "constr_2a");
+    makeRHSforConstraint(pathsToSTS[1], HOURS_PER_YEAR, "constr_2b");
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
@@ -837,22 +833,14 @@ BOOST_FIXTURE_TEST_CASE(multiple_sts__one_sts_has_no_additional_constraint__all_
 }
 
 BOOST_FIXTURE_TEST_CASE(one_sts_with_many_constraints_one_is_disabled__all_constr_fully_loaded,
-                        WorkDirCreationFixture)
+                        AdditConstrFixture<1> /* 1 sts here */)
 {
-    STStorageInput storageInput;
-
-    STStorageCluster sts;
-    sts.id = "my-sts";
-    storageInput.storagesByIndex.push_back(sts);
-    fs::path sts_dir = work_dir / "my-sts";
-    fs::create_directories(sts_dir);
-
-    makeAddConstraintsIniFile(sts_dir,
-                              {{"constr_1", "withdrawal", "less", "[1]", "false"}, // Disabled
-                               {"constr_2", "injection", "less", "[1,6]"},
-                               {"constr_3", "netting", "greater", "[1,3]"}});
-    makeRHSforConstraint(sts_dir, HOURS_PER_YEAR, "constr_2");
-    makeRHSforConstraint(sts_dir, HOURS_PER_YEAR, "constr_3");
+    makeAdditConstrIniFile(pathsToSTS[0],
+                           {{"constr_1", "withdrawal", "less", "[1]", "false"}, // Disabled
+                            {"constr_2", "injection", "less", "[1,6]"},
+                            {"constr_3", "netting", "greater", "[1,3]"}});
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "constr_2");
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "constr_3");
 
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
