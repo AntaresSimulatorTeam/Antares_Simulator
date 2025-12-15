@@ -102,7 +102,7 @@ public:
         return {.solver = "sirius",
                 .solverLogs = false,
                 .solverParameters = "DUMMY",
-                .noOutput = true,
+                .noOutput = false,
                 .firstTimeStep = timeSteps.first,
                 .lastTimeStep = timeSteps.second};
     }
