@@ -820,7 +820,7 @@ BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditConstrFixture<1>)
 BOOST_FIXTURE_TEST_CASE(multiple_sts__one_sts_has_no_additional_constraint__all_constr_fully_loaded,
                         AdditConstrFixture<2> /* 2 STS are built here */)
 {
-    // Fixture builds 2 short term storage here. 
+    // Fixture builds 2 short term storage here.
     // We make 2 constraints for the first one.
     makeAdditConstrIniFile(pathsToSTS[1],
                            {{"constr_2a", "injection", "less", "[1]"},
