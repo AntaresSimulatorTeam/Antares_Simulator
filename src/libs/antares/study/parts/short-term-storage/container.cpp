@@ -152,7 +152,7 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
     return true;
 }
 
-bool STStorageInput::loadAdditionalConstraintsFromIni(const std::filesystem::path& parentPath)
+bool STStorageInput::loadAdditionalConstraintsFromIni(const fs::path& parentPath)
 {
     for (auto& sts: storagesByIndex)
     {
@@ -200,7 +200,7 @@ bool STStorageInput::loadAdditionalConstraintsFromIni(const std::filesystem::pat
     return true;
 }
 
-bool STStorageInput::loadAdditionalConstraintsRHS(const std::filesystem::path& parentPath)
+bool STStorageInput::loadAdditionalConstraintsRHS(const fs::path& parentPath)
 {
     for (auto& sts: storagesByIndex)
     {
