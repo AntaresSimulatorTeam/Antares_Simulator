@@ -582,7 +582,6 @@ var hierarchy =
     [ "FirstDecoratorT", null, [
       [ "Antares::Solver::Variable::Results< FirstDecoratorT, DecoratorForSpatialAggregateT >", "classAntares_1_1Solver_1_1Variable_1_1Results.html", null ]
     ] ],
-    [ "Fixture", "classFixture.html", null ],
     [ "FixtureEmptyProblem", "structFixtureEmptyProblem.html", [
       [ "FixtureFeasibleProblem", "structFixtureFeasibleProblem.html", null ],
       [ "FixtureInfeasibleProblem", "structFixtureInfeasibleProblem.html", null ]
@@ -999,6 +998,7 @@ var hierarchy =
     [ "Antares::Data::Parameters::IncludeOptions", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html", null ],
     [ "Antares::Optimization::InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
     [ "JIT::Informations", "classJIT_1_1Informations.html", null ],
+    [ "IniConstraint", "structIniConstraint.html", null ],
     [ "Antares::IniFile", "classAntares_1_1IniFile.html", null ],
     [ "InputFixture< size >", "structInputFixture.html", null ],
     [ "Antares::Window::Inspector::InspectorData", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html", null ],
@@ -1440,6 +1440,7 @@ var hierarchy =
     [ "Antares::Window::Inspector::PConstraintName", "structAntares_1_1Window_1_1Inspector_1_1PConstraintName.html", null ],
     [ "Antares::Window::Inspector::PConstraintType", "structAntares_1_1Window_1_1Inspector_1_1PConstraintType.html", null ],
     [ "PDISP_ET_COUTS_HORAIRES_PAR_PALIER", "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html", null ],
+    [ "PenaltyCostOnVariation", "structPenaltyCostOnVariation.html", null ],
     [ "Antares::Window::Inspector::PLinkArea< Orientation >", "structAntares_1_1Window_1_1Inspector_1_1PLinkArea.html", null ],
     [ "Antares::Window::Inspector::PLinkColor", "structAntares_1_1Window_1_1Inspector_1_1PLinkColor.html", null ],
     [ "Antares::Window::Inspector::PLinkComments", "structAntares_1_1Window_1_1Inspector_1_1PLinkComments.html", null ],
@@ -2099,6 +2100,10 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::WindTag", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html", null ],
     [ "Antares::Solver::Variable::Economy::WindTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html", [
       [ "Antares::Solver::Variable::Economy::GenerationTraits< WindTag >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits_3_01WindTag_01_4.html", null ]
+    ] ],
+    [ "WorkDirCreationFixture", "structWorkDirCreationFixture.html", [
+      [ "AdditConstrFixture< nb_sts >", "structAdditConstrFixture.html", null ],
+      [ "Fixture", "classFixture.html", null ]
     ] ],
     [ "wxApp", null, [
       [ "Antares::Application", "classAntares_1_1Application.html", null ]

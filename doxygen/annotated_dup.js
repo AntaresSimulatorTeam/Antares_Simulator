@@ -1493,6 +1493,7 @@ var annotated_dup =
       ] ]
     ] ],
     [ "AbstractStartUpCostsGroup", "classAbstractStartUpCostsGroup.html", "classAbstractStartUpCostsGroup" ],
+    [ "AdditConstrFixture", "structAdditConstrFixture.html", "structAdditConstrFixture" ],
     [ "AdequacyPatchRuntimeData", "classAdequacyPatchRuntimeData.html", "classAdequacyPatchRuntimeData" ],
     [ "ALL_MUST_RUN_GENERATION", "structALL__MUST__RUN__GENERATION.html", "structALL__MUST__RUN__GENERATION" ],
     [ "AnalysisMock", "classAnalysisMock.html", "classAnalysisMock" ],
@@ -1617,6 +1618,7 @@ var annotated_dup =
     [ "I_MPS_writer", "classI__MPS__writer.html", "classI__MPS__writer" ],
     [ "IColumn", "classIColumn.html", "classIColumn" ],
     [ "IItem", "classIItem.html", "classIItem" ],
+    [ "IniConstraint", "structIniConstraint.html", "structIniConstraint" ],
     [ "InMemoryLoader", "classInMemoryLoader.html", "classInMemoryLoader" ],
     [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", "classInMemoryStudyLoader" ],
     [ "InMemoryWriter", "classInMemoryWriter.html", "classInMemoryWriter" ],
@@ -1692,6 +1694,7 @@ var annotated_dup =
     [ "PathList", "classPathList.html", "classPathList" ],
     [ "PathListIterator", "classPathListIterator.html", "classPathListIterator" ],
     [ "PDISP_ET_COUTS_HORAIRES_PAR_PALIER", "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html", "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER" ],
+    [ "PenaltyCostOnVariation", "structPenaltyCostOnVariation.html", "structPenaltyCostOnVariation" ],
     [ "PMaxDispatchableGeneration", "classPMaxDispatchableGeneration.html", "classPMaxDispatchableGeneration" ],
     [ "PMinDispatchableGeneration", "classPMinDispatchableGeneration.html", "classPMinDispatchableGeneration" ],
     [ "PMinMaxDispatchableGenerationGroup", "classPMinMaxDispatchableGenerationGroup.html", "classPMinMaxDispatchableGenerationGroup" ],
@@ -1801,5 +1804,6 @@ var annotated_dup =
     [ "VariableNamer", "classVariableNamer.html", "classVariableNamer" ],
     [ "VARIABLES_DUALES_INTERCONNEXIONS", "structVARIABLES__DUALES__INTERCONNEXIONS.html", "structVARIABLES__DUALES__INTERCONNEXIONS" ],
     [ "Vec3", "structVec3.html", "structVec3" ],
-    [ "VisitorFixture", "structVisitorFixture.html", "structVisitorFixture" ]
+    [ "VisitorFixture", "structVisitorFixture.html", "structVisitorFixture" ],
+    [ "WorkDirCreationFixture", "structWorkDirCreationFixture.html", "structWorkDirCreationFixture" ]
 ];

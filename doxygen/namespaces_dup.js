@@ -413,14 +413,13 @@ var namespaces_dup =
           [ "HoursCollectorVisitor", "classAntares_1_1Data_1_1ShortTermStorage_1_1HoursCollectorVisitor.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1HoursCollectorVisitor" ],
           [ "CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener" ],
           [ "GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours" ],
-          [ "fillIfEmpty", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a6a9536353d101348d6e0cea9a3042855", null ],
+          [ "fillIfEmpty", "libs_2antares_2study_2parts_2short-term-storage_2series_8cpp.html#a6a9536353d101348d6e0cea9a3042855", null ],
           [ "fillIfEmpty", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a2dd8e02fcd42eb2bcf12580d84e3e3e8", null ],
           [ "loadFile", "libs_2antares_2study_2parts_2short-term-storage_2series_8cpp.html#a4962670e8610fc649842fa6e24047379", null ],
-          [ "loadFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a268d69b2741f80354b516dc298b51a1f", null ],
-          [ "loadFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a480972f3cf5982323a75cd699eecc883", null ],
+          [ "loadFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a5b32cb3861953782a0f92557715f81dc", null ],
           [ "makeGroupsOfHours", "makeGroupsOfHoursFromString_8h.html#a7b2bda6a6499c17a8307745c24191347", null ],
           [ "validate", "additionalConstraints_8h.html#a90b7bb23c7be952dd66742310df027f5", null ],
-          [ "writeVectorToFile", "libs_2antares_2study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#aeb138d0608f278cb40944db7441933fe", null ]
+          [ "writeVectorToFile", "libs_2antares_2study_2parts_2short-term-storage_2series_8cpp.html#aeb138d0608f278cb40944db7441933fe", null ]
         ] ],
         [ "Solar", null, [
           [ "Container", "classAntares_1_1Data_1_1Solar_1_1Container.html", "classAntares_1_1Data_1_1Solar_1_1Container" ],
