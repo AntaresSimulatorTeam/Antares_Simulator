@@ -59,7 +59,7 @@ void FileWriter::writeSimulationTable(
   const Optimisation::OptimEntityContainer& variableContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
-    SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
+    IO::SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
     IO::FillSimulationTable(simulationTable,
                             linearProblem,
                             solution.getObjectiveValue(),

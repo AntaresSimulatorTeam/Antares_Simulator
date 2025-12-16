@@ -21,7 +21,8 @@
 #pragma once
 
 #include "SimulationTableEntry.h"
-
+namespace Antares::IO
+{
 class ISimulationTable
 {
 public:
@@ -31,8 +32,9 @@ public:
 
     virtual void clear() = 0;
 
-    virtual std::string buffer() const = 0;
+    [[nodiscard]] virtual std::string buffer() const = 0;
 
     /// Write the table to the given file path, using the concrete export format
     virtual void write() = 0;
 };
+} // namespace Antares::IO

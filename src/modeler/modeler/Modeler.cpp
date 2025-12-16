@@ -30,6 +30,7 @@
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
+#include "antares/io/outputs/MPSWriter.h"
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
@@ -187,9 +188,10 @@ void Modeler::run() const
 
         // 1-1.mps
         Write(subproblem, output / "1-1.mps");
+        WriteMPS(subproblem, output / "1-1-custom.mps", "1-1");
         // master.mps
         Write(master_problem, output / "master.mps");
-
+        WriteMPS(master_problem, output / "master-custom.mps", "master");
         // structure.txt
         BendersDecompositionWriter writer(bendersDecomposition);
         std::ofstream of(output / "structure.txt");

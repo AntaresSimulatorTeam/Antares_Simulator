@@ -394,7 +394,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 
         // The target folder
         String newPath;
-        newPath << ImplementationType::Name() << IO::Separator;
+        newPath << ImplementationType::Name() << Yuni::IO::Separator;
         if (synthesis)
         {
             newPath << "mc-all";
@@ -403,7 +403,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
         {
             CString<10, false> tmp;
             tmp = (year + 1);
-            newPath << "mc-ind" << IO::Separator << "00000";
+            newPath << "mc-ind" << Yuni::IO::Separator << "00000";
             newPath.overwriteRight(tmp);
         }
 

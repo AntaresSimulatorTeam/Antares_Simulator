@@ -20,30 +20,10 @@
 */
 #pragma once
 
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include <filesystem>
 
-namespace Antares::Solver
-{
-class IResultWriter;
-}
+#include "antares/optimisation/linear-problem-api/linearProblem.h"
 
-class OptimisationsSimulationTable
-{
-public:
-    void clear();
-
-    std::pair<std::string, std::string> moveBuffers();
-
-    void write();
-
-    void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
-    Antares::IO::ISimulationTable* firstOptimSimulationTable();
-    Antares::IO::ISimulationTable* secondOptimSimulationTable();
-    [[nodiscard]] std::string getHeader() const;
-
-private:
-    Antares::IO::SimulationTableCsv firstOptimSimulationTable_;
-    Antares::IO::SimulationTableCsv secondOptimSimulationTable_;
-    std::string firstOptimBuffer_;
-    std::string secondOptimBuffer_;
-};
+void WriteMPS(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
+              const std::filesystem::path& path,
+              const std::string& name);

@@ -412,10 +412,10 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
 
 } // namespace
 
-class EmptySimulationTable final: public ISimulationTable
+class EmptySimulationTable final: public Antares::IO::ISimulationTable
 {
 public:
-    void addEntry(const SimulationTableEntry& entry) override
+    void addEntry(const Antares::IO::SimulationTableEntry& entry) override
     {
     }
 
@@ -423,7 +423,7 @@ public:
     {
     }
 
-    std::string buffer() const override
+    [[nodiscard]] std::string buffer() const override
     {
         return "";
     }

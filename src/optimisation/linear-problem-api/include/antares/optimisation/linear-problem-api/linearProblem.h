@@ -76,7 +76,7 @@ public:
     virtual double getObjectiveCoefficient(const IMipVariable* var) const = 0;
 
     virtual void setObjectiveOffset(double objectiveOffset) = 0;
-    virtual double getObjectiveOffset() const = 0;
+    [[nodiscard]] virtual double getObjectiveOffset() const = 0;
 
     /// Sets the optimization direction to minimize
     virtual void setMinimization() = 0;

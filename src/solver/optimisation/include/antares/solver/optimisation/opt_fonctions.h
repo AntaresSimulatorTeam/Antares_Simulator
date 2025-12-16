@@ -25,6 +25,7 @@
 #include <antares/solver/utils/opt_period_string_generator.h>
 #include <antares/writer/i_writer.h>
 #include "antares/config/config.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/study/parameters/adq-patch-params.h"
@@ -76,7 +77,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int,
                          const OptPeriodStringGenerator&,
                          Antares::Solver::IResultWriter& writer,
-                         ISimulationTable* simulationTable);
+                         Antares::IO::ISimulationTable* simulationTable);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

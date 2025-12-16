@@ -25,13 +25,14 @@
 #include <vector>
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
-
+namespace Antares::IO
+{
 class IColumn
 {
 public:
     virtual ~IColumn() = default;
-    virtual std::string toString(size_t index) const = 0;
-    virtual size_t size() const = 0;
+    [[nodiscard]] virtual std::string toString(size_t index) const = 0;
+    [[nodiscard]] virtual size_t size() const = 0;
     virtual void reserve(size_t capacity) = 0;
     virtual void clear() = 0;
 };
@@ -67,7 +68,7 @@ static std::string FormatValue(const U& v)
     {
         return FromDouble(v);
     }
-    else if constexpr (std::is_same_v<U, Antares::Optimisation::LinearProblemApi::MipBasisStatus>)
+    else if constexpr (std::is_same_v<U, Optimisation::LinearProblemApi::MipBasisStatus>)
     {
         return StatusToString(v);
     }
@@ -92,7 +93,7 @@ public:
         data_.push_back(value);
     }
 
-    std::string toString(size_t index) const override
+    [[nodiscard]] std::string toString(size_t index) const override
     {
         return FormatValue(data_.at(index));
     }
@@ -102,7 +103,7 @@ public:
         return data_.at(index);
     }
 
-    size_t size() const override
+    [[nodiscard]] size_t size() const override
     {
         return data_.size();
     }
@@ -134,3 +135,4 @@ using IntegralColumn = TypedColumn<T>;
 using DoubleColumn = TypedColumn<double>;
 template<typename T>
 using OptionalColumn = TypedColumn<std::optional<T>>;
+} // namespace Antares::IO

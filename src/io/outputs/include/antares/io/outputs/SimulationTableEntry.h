@@ -24,6 +24,8 @@
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
 
+namespace Antares::IO
+{
 struct SimulationTableEntry
 {
     unsigned int block;
@@ -35,3 +37,4 @@ struct SimulationTableEntry
     std::optional<double> value;
     std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus> status;
 };
+} // namespace Antares::IO
