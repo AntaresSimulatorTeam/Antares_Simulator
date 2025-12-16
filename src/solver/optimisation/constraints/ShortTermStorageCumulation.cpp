@@ -74,6 +74,7 @@ char ConvertSense(const std::string& sense)
 void ShortTermStorageCumulation::add(int pays)
 {
     ConstraintNamer namer(builder.data.NomDesContraintes);
+    namer.UpdateTimeStep(builder.data.weekInTheYear);
     namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
     for (const auto& storage: data.ShortTermStorage[pays])
