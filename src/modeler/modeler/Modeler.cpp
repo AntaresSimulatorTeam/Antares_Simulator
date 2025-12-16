@@ -175,7 +175,6 @@ void Modeler::run() const
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
-
     // if simulation table or mps are requested
     if (!parameters.noOutput || parameters.exportMps)
     {
