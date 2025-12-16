@@ -177,7 +177,6 @@ bool STStorageInput::loadAdditionalConstraintsFromIni(const fs::path& parentPath
                 return false;
             }
 
-            // We don't want load RHS and link the STS time if the constraint is disabled
             if (!additionalConstraints->enabled)
             {
                 logs.info() << "Additional constraints disabled for ST "
