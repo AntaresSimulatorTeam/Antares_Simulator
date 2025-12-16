@@ -100,7 +100,7 @@ static std::vector<SingleAdditionalConstraint> makeConstraints(std::string& hour
 
 static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
 {
-    const bool ret = loadFile(rhsPath, rhsSeries, /*.average =*/false);
+    const bool ret = loadFile(rhsPath, rhsSeries);
     if (ret)
     {
         fillIfEmpty(rhsSeries, 0.0);
@@ -142,13 +142,19 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
                 return false;
             }
         }
+        else
+        {
+            logs.error() << "Constraint " << additionalConstraints->name << " : "
+                         << "has a wrong key : " << key;
+            return false;
+        }
     }
     return true;
 }
 
 bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 {
-    for (const auto& sts: storagesByIndex)
+    for (auto& sts: storagesByIndex)
     {
         auto data_path = parentPath / sts.id;
         IniFile ini;
@@ -156,7 +162,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         if (!ini.open(pathIni, false))
         {
             logs.info() << "There is no: " << pathIni;
-            return true;
+            continue;
         }
 
         for (auto* section = ini.firstSection; section; section = section->next)
@@ -176,11 +182,11 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             {
                 logs.info() << "Additional constraints disabled for ST "
                             << additionalConstraints->cluster_id;
-                return true;
+                continue;
             }
 
-            if (const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
-                !readRHS(rhsPath, additionalConstraints->rhs()))
+            const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
+            if (!readRHS(rhsPath, additionalConstraints->rhs()))
             {
                 logs.error() << "Error while reading rhs file: " << rhsPath;
                 return false;
@@ -193,29 +199,11 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 return false;
             }
 
-            auto it = std::ranges::find_if(storagesByIndex,
-                                           [&additionalConstraints](const STStorageCluster& cluster)
-                                           {
-                                               return cluster.id
-                                                      == additionalConstraints->cluster_id;
-                                           });
-            if (it == storagesByIndex.end())
-            {
-                logs.warning() << " from file " << pathIni;
-                logs.warning() << "Constraint " << section->name
-                               << " does not reference an existing cluster";
-                return false;
-            }
-            else
-            {
-                logs.info() << "Loaded ST additional constraint "
-                            << additionalConstraints->cluster_id << "/"
-                            << additionalConstraints->name;
-                it->additionalConstraints.push_back(additionalConstraints);
-            }
+            logs.info() << "Loaded ST additional constraint " << additionalConstraints->cluster_id
+                        << "/" << additionalConstraints->name;
+            sts.additionalConstraints.push_back(additionalConstraints);
         }
     }
-
     return true;
 }
 

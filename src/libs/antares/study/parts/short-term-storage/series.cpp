@@ -40,39 +40,6 @@ Series::Series():
 {
 }
 
-bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
-{
-    bool ret = true;
-
-    ret = loadFile(folder / "PMAX-injection.txt", maxInjectionModulation) && ret;
-    ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-
-    if (auto path = folder / "inflows.txt"; std::filesystem::exists(path))
-    {
-        ret = inflows.loadFromFile(path, false, Matrix<>::optImmediate) && ret;
-    }
-    else
-    {
-        logs.info() << "Optional file not found: " << path
-                    << ", default values will be used if needed";
-    }
-
-    ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
-    ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
-    if (studyVersion >= StudyVersion(9, 2))
-    {
-        ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
-        ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
-        ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
-
-        ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
-
-        ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
-    }
-
-    return ret;
-}
-
 bool loadFile(const fs::path& path, std::vector<double>& vect)
 {
     logs.debug() << "  :: loading file " << path;
@@ -126,15 +93,48 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
     return true;
 }
 
-bool loadFile(const std::filesystem::path& file, TimeSeries& series, const bool average)
+bool loadFile(const std::filesystem::path& file, TimeSeries& series)
 {
     logs.debug() << "  :: loading file " << file;
     if (std::filesystem::is_regular_file(file))
     {
-        return series.loadFromFile(file, average);
+        return series.loadFromFile(file, false);
     }
     logs.info() << "Optional file not found: " << file << ", default values will be used if needed";
     return true;
+}
+
+bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
+{
+    bool ret = true;
+
+    ret = loadFile(folder / "PMAX-injection.txt", maxInjectionModulation) && ret;
+    ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
+
+    if (auto path = folder / "inflows.txt"; std::filesystem::exists(path))
+    {
+        ret = inflows.loadFromFile(path, false, Matrix<>::optImmediate) && ret;
+    }
+    else
+    {
+        logs.info() << "Optional file not found: " << path
+                    << ", default values will be used if needed";
+    }
+
+    ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
+    if (studyVersion >= StudyVersion(9, 2))
+    {
+        ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
+        ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
+        ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
+
+        ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
+
+        ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
+    }
+
+    return ret;
 }
 
 void fillIfEmpty(std::vector<double>& v, double value)
@@ -171,6 +171,27 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(costVariationWithdrawal, 0.0);
 }
 
+bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
+{
+    try
+    {
+        std::ofstream fout(path);
+        fout << std::setprecision(14);
+
+        for (const auto& x: vect)
+        {
+            fout << x << '\n';
+        }
+    }
+    catch (...)
+    {
+        logs.error() << "Error while trying to save series file: " << path;
+        return false;
+    }
+
+    return true;
+}
+
 bool Series::saveToFolder(const std::string& folder) const
 {
     logs.debug() << "Saving series into folder: " << folder;
@@ -199,27 +220,6 @@ bool Series::saveToFolder(const std::string& folder) const
     checkWrite("cost-variation-withdrawal.txt", costVariationWithdrawal);
 
     return ret;
-}
-
-bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
-{
-    try
-    {
-        std::ofstream fout(path);
-        fout << std::setprecision(14);
-
-        for (const auto& x: vect)
-        {
-            fout << x << '\n';
-        }
-    }
-    catch (...)
-    {
-        logs.error() << "Error while trying to save series file: " << path;
-        return false;
-    }
-
-    return true;
 }
 
 bool Series::validate(const std::string& id, StudyVersion studyVersion) const
