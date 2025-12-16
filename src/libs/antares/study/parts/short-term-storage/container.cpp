@@ -152,7 +152,7 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
     return true;
 }
 
-bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+bool STStorageInput::loadAdditionalConstraintsFromIni(const fs::path& parentPath)
 {
     for (auto& sts: storagesByIndex)
     {
@@ -177,19 +177,11 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 return false;
             }
 
-            // We don't want load RHS and link the STS time if the constraint is disabled
             if (!additionalConstraints->enabled)
             {
                 logs.info() << "Additional constraints disabled for ST "
                             << additionalConstraints->cluster_id;
                 continue;
-            }
-
-            const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
-            if (!readRHS(rhsPath, additionalConstraints->rhs()))
-            {
-                logs.error() << "Error while reading rhs file: " << rhsPath;
-                return false;
             }
 
             if (auto [ok, error_msg] = ShortTermStorage::validate(*additionalConstraints); !ok)
@@ -205,6 +197,29 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         }
     }
     return true;
+}
+
+bool STStorageInput::loadAdditionalConstraintsRHS(const fs::path& parentPath)
+{
+    for (auto& sts: storagesByIndex)
+    {
+        auto data_path = parentPath / sts.id;
+        for (auto& additionalConstraints: sts.additionalConstraints)
+        {
+            const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
+            if (!readRHS(rhsPath, additionalConstraints->rhs()))
+            {
+                logs.error() << "Error while reading rhs file: " << rhsPath;
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+{
+    return loadAdditionalConstraintsFromIni(parentPath) && loadAdditionalConstraintsRHS(parentPath);
 }
 
 bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion studyVersion) const
