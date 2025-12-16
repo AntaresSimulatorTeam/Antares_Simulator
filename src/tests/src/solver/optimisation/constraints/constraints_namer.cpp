@@ -9,6 +9,8 @@
 
 constexpr std::size_t kNbConstraints = 2;
 
+// TODO add more tests
+
 BOOST_AUTO_TEST_CASE(cumulation_constraint)
 {
     int constraintGlobalIndex = 0;
