@@ -26,6 +26,7 @@ jobs:
       CCACHE_COMPILERCHECK: content
       CCACHE_BASEDIR: ${{ github.workspace }}
       CCACHE_SLOPPINESS: time_macros,include_file_mtime
+      PYTHON_VERSION: "3.12"
 
     steps:
     # Disk space on / is insufficient, leading to errors
@@ -104,7 +105,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: 3.12
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install gcovr
       run: sudo pip install gcovr==5.0 #5.1 generate issues with sonarcloud report parsing
@@ -113,6 +114,18 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip3 install -r src/tests/examples/requirements.txt
+
+    - name: Set-up Xpress with pip for Ubuntu
+      shell: bash
+      run: |
+        python -m pip install "xpress==9.6.0"
+        XPRESS_DIR=${{ env.pythonLocation }}/lib/python${{ env.PYTHON_VERSION }}/site-packages/xpresslibs
+        echo "XPRESSDIR=$XPRESS_DIR" >> $GITHUB_ENV
+        echo $XPRESS_DIR
+        ls -l $XPRESS_DIR/lib/libxprs.so.45
+        echo "XPAUTH_PATH=${{ env.pythonLocation }}/lib/python${{ env.PYTHON_VERSION }}/site-packages/xpress/license/community-xpauth.xpr" >> $GITHUB_ENV
+        echo "Create symbolic link for XPRESS library file because it is missing in the Python installation"
+        ln -s $XPRESS_DIR/lib/libxprs.so.45 $XPRESS_DIR/lib/libxprs.so        
 
     - name: Read simtest version
       run: |
