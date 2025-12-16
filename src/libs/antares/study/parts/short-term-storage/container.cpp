@@ -152,7 +152,7 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
     return true;
 }
 
-bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+bool STStorageInput::loadAdditionalConstraintsFromIni(const std::filesystem::path& parentPath)
 {
     for (auto& sts: storagesByIndex)
     {
@@ -185,13 +185,6 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 continue;
             }
 
-            const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
-            if (!readRHS(rhsPath, additionalConstraints->rhs()))
-            {
-                logs.error() << "Error while reading rhs file: " << rhsPath;
-                return false;
-            }
-
             if (auto [ok, error_msg] = ShortTermStorage::validate(*additionalConstraints); !ok)
             {
                 logs.error() << "Invalid constraint in section: " << section->name;
@@ -205,6 +198,29 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         }
     }
     return true;
+}
+
+bool STStorageInput::loadAdditionalConstraintsRHS(const std::filesystem::path& parentPath)
+{
+    for (auto& sts: storagesByIndex)
+    {
+        auto data_path = parentPath / sts.id;
+        for (auto& additionalConstraints: sts.additionalConstraints)
+        {
+            const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
+            if (!readRHS(rhsPath, additionalConstraints->rhs()))
+            {
+                logs.error() << "Error while reading rhs file: " << rhsPath;
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+{
+    return loadAdditionalConstraintsFromIni(parentPath) && loadAdditionalConstraintsRHS(parentPath);
 }
 
 bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion studyVersion) const
