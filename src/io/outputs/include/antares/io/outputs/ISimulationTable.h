@@ -21,7 +21,7 @@
 #pragma once
 
 #include "SimulationTableEntry.h"
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 class ISimulationTable
 {

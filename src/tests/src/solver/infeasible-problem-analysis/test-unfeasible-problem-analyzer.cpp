@@ -48,6 +48,7 @@ using Antares::Optimization::UnfeasibilityAnalysis;
 using Antares::Optimization::UnfeasiblePbAnalyzer;
 using Antares::Optimization::VariableBounds;
 using Antares::Optimization::VariablesBoundsConsistency;
+using namespace Antares::IO::Outputs;
 
 bool variableEquals(const VariableBounds& lhs, const VariableBounds& rhs)
 {
@@ -412,10 +413,10 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
 
 } // namespace
 
-class EmptySimulationTable final: public Antares::IO::ISimulationTable
+class EmptySimulationTable final: public ISimulationTable
 {
 public:
-    void addEntry(const Antares::IO::SimulationTableEntry& entry) override
+    void addEntry(const SimulationTableEntry& entry) override
     {
     }
 

@@ -56,7 +56,7 @@ using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::IO;
+using namespace Antares::IO::Outputs;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
 

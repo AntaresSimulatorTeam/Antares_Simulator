@@ -22,7 +22,7 @@
 #include "antares/io/outputs/SimulationTableCsv.h"
 
 #include "antares/io/outputs/SimulationTableEntry.h"
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 SimulationTableCsv::SimulationTableCsv()
 

@@ -56,7 +56,7 @@ namespace Antares::ModelerStudy::SystemModel
 class Component;
 }
 
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 struct TimeBlock
 {

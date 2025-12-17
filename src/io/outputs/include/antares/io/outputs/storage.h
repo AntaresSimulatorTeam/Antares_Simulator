@@ -4,7 +4,7 @@
 
 #include "antares/io/outputs/columns.h"
 
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 class ColumnBasedStorage
 {

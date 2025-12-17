@@ -24,7 +24,7 @@
 #include <fstream>
 
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 class MPSWriter
 {
@@ -36,8 +36,8 @@ public:
 
 private:
     const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
-    const std::string& name_;
     std::ofstream out_;
+    const std::string& name_;
     //--//
     void writeHeader();
     void writeName();

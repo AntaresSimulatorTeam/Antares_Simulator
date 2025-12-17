@@ -37,13 +37,13 @@ public:
     void write();
 
     void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
-    Antares::IO::ISimulationTable* firstOptimSimulationTable();
-    Antares::IO::ISimulationTable* secondOptimSimulationTable();
+    Antares::IO::Outputs::ISimulationTable* firstOptimSimulationTable();
+    Antares::IO::Outputs::ISimulationTable* secondOptimSimulationTable();
     [[nodiscard]] std::string getHeader() const;
 
 private:
-    Antares::IO::SimulationTableCsv firstOptimSimulationTable_;
-    Antares::IO::SimulationTableCsv secondOptimSimulationTable_;
+    Antares::IO::Outputs::SimulationTableCsv firstOptimSimulationTable_;
+    Antares::IO::Outputs::SimulationTableCsv secondOptimSimulationTable_;
     std::string firstOptimBuffer_;
     std::string secondOptimBuffer_;
 };

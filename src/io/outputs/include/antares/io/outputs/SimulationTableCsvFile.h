@@ -24,7 +24,7 @@
 
 #include "SimulationTableCsv.h"
 
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 class SimulationTableCsvFile final: public SimulationTableCsv
 {

@@ -49,6 +49,7 @@ using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::IO;
+using namespace Antares::IO::Outputs;
 
 using Solver::IResultWriter;
 using Solver::Optimization::SingleOptimOptions;

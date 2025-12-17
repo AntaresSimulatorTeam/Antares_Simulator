@@ -36,7 +36,7 @@
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,

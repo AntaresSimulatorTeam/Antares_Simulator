@@ -22,7 +22,7 @@
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 
 #include <antares/logs/logs.h>
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outputFolder,
                                                const std::string& simulationId):

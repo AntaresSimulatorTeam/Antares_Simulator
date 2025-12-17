@@ -23,7 +23,7 @@
 #include <cmath>
 
 using namespace Antares::Optimisation::LinearProblemApi;
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 char ConstraintSense(const double& lb, const double& ub, const double& infinity)
 {
@@ -63,7 +63,7 @@ bool IsBoolean(const IMipVariable& variable)
            && std::floor(variable.getUb()) == 1.0;
 }
 
-MPSWriter::MPSWriter(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
+MPSWriter::MPSWriter(const ILinearProblem& lp,
                      const std::filesystem::path& path,
                      const std::string& name):
     linearProblem_(lp),

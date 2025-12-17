@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 class IColumn
 {

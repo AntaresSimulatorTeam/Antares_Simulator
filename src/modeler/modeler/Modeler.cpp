@@ -188,10 +188,10 @@ void Modeler::run() const
 
         // 1-1.mps
         Write(subproblem, output / "1-1.mps");
-        IO::MPSWriter(subproblem, output / "1-1-custom.mps", "1-1").write();
+        IO::Outputs::MPSWriter(subproblem, output / "1-1-custom.mps", "1-1").write();
         // master.mps
         Write(master_problem, output / "master.mps");
-        IO::MPSWriter(master_problem, output / "master-custom.mps", "master").write();
+        IO::Outputs::MPSWriter(master_problem, output / "master-custom.mps", "master").write();
         // structure.txt
         BendersDecompositionWriter writer(bendersDecomposition);
         std::ofstream of(output / "structure.txt");

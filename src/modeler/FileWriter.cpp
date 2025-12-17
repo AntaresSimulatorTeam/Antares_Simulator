@@ -59,15 +59,15 @@ void FileWriter::writeSimulationTable(
   const Optimisation::OptimEntityContainer& variableContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
-    IO::SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
-    IO::FillSimulationTable(simulationTable,
-                            linearProblem,
-                            solution.getObjectiveValue(),
-                            modelerData,
-                            variableContainer,
-                            fillContext,
-                            0,
-                            IO::TimeConversionMode::SingleBlock);
+    IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
+    IO::Outputs::FillSimulationTable(simulationTable,
+                                     linearProblem,
+                                     solution.getObjectiveValue(),
+                                     modelerData,
+                                     variableContainer,
+                                     fillContext,
+                                     0,
+                                     IO::Outputs::TimeConversionMode::SingleBlock);
     simulationTable.writeHeader();
     simulationTable.write();
 }
