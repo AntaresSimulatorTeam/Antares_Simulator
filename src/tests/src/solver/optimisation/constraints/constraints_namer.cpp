@@ -7,14 +7,14 @@
 
 #include <boost/test/unit_test.hpp>
 
-constexpr std::size_t kNbConstraints = 2;
+constexpr std::size_t nbConstraints = 2;
 
 // TODO add more tests
 
 BOOST_AUTO_TEST_CASE(cumulation_constraint)
 {
     int constraintGlobalIndex = 0;
-    std::vector<std::string> constraintNames(kNbConstraints);
+    std::vector<std::string> constraintNames(nbConstraints);
 
     ConstraintNamer namer(constraintNames);
     namer.UpdateArea("fr");
