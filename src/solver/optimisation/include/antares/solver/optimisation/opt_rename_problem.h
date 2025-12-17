@@ -19,12 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "opt_export_structure.h"
-
-const std::string SEPARATOR = "::";
-const std::string AREA_SEP = "$$";
+#include <string>
+#include <vector>
 
 class TargetVectorUpdater
 {
@@ -165,11 +162,11 @@ public:
 
     void ShortTermStorageCostVariation(const std::string& constraint_name,
                                        unsigned int constraint,
-                                       const std::string& short_term_name);
+                                       const std::string& sts_name);
 
     void ShortTermStorageCumulation(const std::string& constraint_type,
                                     unsigned int constraint,
-                                    const std::string& short_term_name,
+                                    const std::string& sts_name,
                                     const std::string& constraint_name);
 
 private:
@@ -177,18 +174,3 @@ private:
                                  const std::string& name,
                                  const std::string& type);
 };
-
-inline std::string TimeIdentifier(unsigned int timeStep, const std::string& timeStepType)
-{
-    return timeStepType + "<" + std::to_string(timeStep) + ">";
-}
-
-inline std::string ShortTermStorageCumulationIdentifier(const std::string& name)
-{
-    return "Constraint<" + name + ">";
-}
-
-inline std::string LocationIdentifier(const std::string& location, const std::string& locationType)
-{
-    return locationType + "<" + location + ">";
-}

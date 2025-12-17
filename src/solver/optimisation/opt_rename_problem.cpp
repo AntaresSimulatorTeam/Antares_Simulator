@@ -21,8 +21,11 @@
 
 #include "antares/solver/optimisation/opt_rename_problem.h"
 
+#include <algorithm>
 #include <map>
-#include <string>
+
+const std::string SEP = "::";
+const std::string AREA_SEP = "$$";
 
 const std::string HOUR("hour");
 const std::string DAY("day");
@@ -33,11 +36,26 @@ const std::map<std::string, std::string> BindingConstraintTimeGranularity = {{HO
 const std::string LINK("link");
 const std::string AREA("area");
 
+std::string TimeIdentifier(unsigned timeStep, const std::string& timeStepType)
+{
+    return timeStepType + "<" + std::to_string(timeStep) + ">";
+}
+
+std::string ShortTermStorageCumulationIdentifier(const std::string& name)
+{
+    return "Constraint<" + name + ">";
+}
+
+std::string LocationIdentifier(const std::string& location, const std::string& locationType)
+{
+    return locationType + "<" + location + ">";
+}
+
 std::string BuildName(const std::string& name,
                       const std::string& location,
                       const std::string& additional_identifier)
 {
-    std::string result = name + SEPARATOR + location + SEPARATOR + additional_identifier;
+    std::string result = name + SEP + location + SEP + additional_identifier;
     std::replace(result.begin(), result.end(), ' ', '*');
     return result;
 }
@@ -76,8 +94,8 @@ void VariableNamer::SetAreaVariableName(unsigned int variable,
                                         int layerIndex)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName(variableType,
-                                                 LocationIdentifier(area_, AREA) + SEPARATOR
-                                                   + "Layer<" + std::to_string(layerIndex) + ">",
+                                                 LocationIdentifier(area_, AREA) + SEP + "Layer<"
+                                                   + std::to_string(layerIndex) + ">",
                                                  TimeIdentifier(timeStep_, HOUR)),
                                        variable);
 }
@@ -86,7 +104,7 @@ void Namer::SetThermalClusterElementName(unsigned int variable,
                                          const std::string& elementType,
                                          const std::string& clusterName)
 {
-    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<"
+    const auto location = LocationIdentifier(area_, AREA) + SEP + "ThermalCluster" + "<"
                           + clusterName + ">";
 
     targetUpdater_.UpdateTargetAtIndex(BuildName(elementType,
@@ -154,7 +172,7 @@ void VariableNamer::SetShortTermStorageVariableName(unsigned int variable,
                                                     const std::string& variableType,
                                                     const std::string& shortTermStorageName)
 {
-    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<"
+    const auto location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
                           + shortTermStorageName + ">";
     targetUpdater_.UpdateTargetAtIndex(BuildName(variableType,
                                                  location,
@@ -383,7 +401,7 @@ void ConstraintNamer::ConsistenceNODU(unsigned int constraint, const std::string
 void ConstraintNamer::ShortTermStorageLevel(unsigned int constraint, const std::string& name)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("Level",
-                                                 LocationIdentifier(area_, AREA) + SEPARATOR
+                                                 LocationIdentifier(area_, AREA) + SEP
                                                    + "ShortTermStorage" + "<" + name + ">",
                                                  TimeIdentifier(timeStep_, HOUR)),
                                        constraint);
@@ -411,26 +429,25 @@ void ConstraintNamer::BindingConstraintWeek(unsigned int constraint, const std::
 
 void ConstraintNamer::ShortTermStorageCostVariation(const std::string& constraint_name,
                                                     unsigned int constraint,
-                                                    const std::string& short_term_name)
+                                                    const std::string& sts_name)
 {
-    targetUpdater_.UpdateTargetAtIndex(BuildName(constraint_name,
-                                                 LocationIdentifier(area_, AREA) + SEPARATOR
-                                                   + "ShortTermStorage" + "<" + short_term_name
-                                                   + ">",
-                                                 TimeIdentifier(timeStep_, HOUR)),
-                                       constraint);
+    std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
+                           + sts_name + ">";
+    std::string time = TimeIdentifier(timeStep_, HOUR);
+    std::string name = BuildName(constraint_name, location, time);
+
+    targetUpdater_.UpdateTargetAtIndex(name, constraint);
 }
 
 void ConstraintNamer::ShortTermStorageCumulation(const std::string& constraint_type,
                                                  unsigned int constraint,
-                                                 const std::string& short_term_name,
+                                                 const std::string& sts_name,
                                                  const std::string& constraint_name)
 {
-    targetUpdater_.UpdateTargetAtIndex(BuildName(constraint_type,
-                                                 LocationIdentifier(area_, AREA) + SEPARATOR
-                                                   + "ShortTermStorage" + "<" + short_term_name
-                                                   + ">" + SEPARATOR + "Constraint" + "<"
-                                                   + constraint_name + ">",
-                                                 TimeIdentifier(timeStep_, WEEK)),
-                                       constraint);
+    std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
+                           + sts_name + ">" + SEP + "Constraint" + "<" + constraint_name + ">";
+    std::string time = TimeIdentifier(timeStep_, WEEK);
+    std::string name = BuildName(constraint_type, location, time);
+
+    targetUpdater_.UpdateTargetAtIndex(name, constraint);
 }
