@@ -23,7 +23,28 @@
 #include <filesystem>
 
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
+namespace Antares::IO
+{
+class MPSWriter
+{
+public:
+    explicit MPSWriter(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
+                       const std::filesystem::path& path,
+                       const std::string& name);
+    void write();
 
-void WriteMPS(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
-              const std::filesystem::path& path,
-              const std::string& name);
+private:
+    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
+    const std::string& name_;
+    std::ofstream out_;
+    //--//
+    void writeHeader();
+    void writeName();
+    void writeRows();
+    void writeColumns();
+    void writeRhs();
+    void writeBounds();
+    void writeEnd();
+};
+
+} // namespace Antares::IO
