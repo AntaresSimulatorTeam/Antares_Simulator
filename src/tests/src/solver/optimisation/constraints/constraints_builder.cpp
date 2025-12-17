@@ -125,10 +125,10 @@ struct STScumulativeConstaintFixture
 struct ConstraintBuilderDataFixture
 {
     // Const data in ConstraintBuilderData
-    const int32_t nbTimeStepsOptim = 50;
-    const uint32_t NombreDePasDeTemps = 168;
-    const std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
-    const uint32_t weekInTheYear = 1;
+    int32_t nbTimeStepsOptim = 50;
+    uint32_t NombreDePasDeTemps = 168;
+    std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
+    uint32_t weekInTheYear = 1;
 
     std::vector<double> Pi = std::vector(2 * nbTimeStepsOptim, 0.0);
     std::vector<int> Colonne = std::vector(2 * nbTimeStepsOptim, 0);
@@ -162,11 +162,9 @@ struct ConstraintBuilderDataFixture
         }
     }
 
-    ConstraintBuilderData InitializeConstraintBuilderData()
+    ConstraintBuilderData makeConstraintBuilderData()
     {
         set_correspondances_des_variables();
-
-        // Create the mock ConstraintBuilderData object
         return {Pi,
                 Colonne,
                 nombreDeContraintes,
@@ -186,8 +184,6 @@ struct ConstraintBuilderDataFixture
                 weekInTheYear,
                 NombreDePasDeTemps};
     }
-
-    ConstraintBuilderData constraint_builder_data = InitializeConstraintBuilderData();
 };
 
 struct ConstraintBuilderFixture: public STScumulativeConstaintFixture,
@@ -197,6 +193,7 @@ struct ConstraintBuilderFixture: public STScumulativeConstaintFixture,
 
 BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 {
+    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
     ConstraintBuilder builder(constraint_builder_data);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
@@ -246,6 +243,7 @@ BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, ConstraintBuilderFixture)
 {
+    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
     ConstraintBuilder builder(constraint_builder_data);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
@@ -295,6 +293,7 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
 {
+    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
     ConstraintBuilder builder(constraint_builder_data);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
@@ -343,6 +342,7 @@ BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, ConstraintBuilderFixture)
 {
+    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
     ConstraintBuilder builder(constraint_builder_data);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
@@ -374,34 +374,35 @@ BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, ConstraintBuilderFixture)
     BOOST_CHECK_EQUAL(builder.data.Sens[3], '>');
 }
 
-// BOOST_FIXTURE_TEST_CASE(multiple_areas_and_week_12, ConstraintBuilderFixture)
-//{
-//     ConstraintBuilder builder(constraint_builder_data);
-//     builder.data.weekInTheYear = 12;
-//
-//     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
-//
-//     // Add constraints for multiple areas
-//     cumulation.add(0); // CountryA
-//     cumulation.add(1); // CountryB
-//
-//     // Check if the number of constraints increased correctly
-//     BOOST_CHECK_EQUAL(builder.data.nombreDeContraintes, 4);
-//
-//     // Verify the names of the constraints for both countries
-//     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
-//                       "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
-//                       "addc1_withdrawal_0>::week<12>");
-//     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
-//                       "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
-//                       "addc1_withdrawal_1>::week<12>");
-//     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[2],
-//                       "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
-//                       "injection_0>::week<1>");
-//     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[3],
-//                       "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
-//                       "injection_1>::week<12>");
-// }
+BOOST_FIXTURE_TEST_CASE(week_is_set_to_12___all_constraints_receive_correct_names,
+                        ConstraintBuilderFixture)
+{
+    weekInTheYear = 12;
+    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
+    ConstraintBuilder builder(constraint_builder_data);
+    ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
+
+    // Add constraints for multiple areas
+    cumulation.add(0); // CountryA
+    cumulation.add(1); // CountryB
+
+    // Check if the number of constraints increased correctly
+    BOOST_CHECK_EQUAL(builder.data.nombreDeContraintes, 4);
+
+    // Verify the names of the constraints for both countries
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
+                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
+                      "addc1_withdrawal_0>::week<12>");
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
+                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
+                      "addc1_withdrawal_1>::week<12>");
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[2],
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
+                      "injection_0>::week<12>");
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[3],
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
+                      "injection_1>::week<12>");
+}
 
 void SetupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
                        int numberOfAreas,
