@@ -20,7 +20,9 @@
 */
 #include "antares/io/outputs/MPSWriter.h"
 
+#include <cmath>
 #include <fstream>
+
 using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::IO
 {
