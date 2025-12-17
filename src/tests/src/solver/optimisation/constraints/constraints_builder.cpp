@@ -120,7 +120,7 @@ struct STScumulativeConstaintFixture
 #pragma GCC diagnostic pop
     }
 
-    ShortTermStorageCumulativeConstraintData shorttermstoragecumulativeconstraintdata
+    ShortTermStorageCumulativeConstraintData STScumulativeConstraintData
       = InitializeShortTermStorageCumulativeConstraintData();
 };
 
@@ -142,7 +142,6 @@ struct ConstraintBuilderDataFixture
     int IncrementDAllocationMatriceDesContraintes = 10;
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
 
-    //.S {{.SIM_ShortTermStorage = {.InjectionVariable = {0,1}, .WithdrawalVariable = {2,3} } }};
     const int32_t NombreDePasDeTempsPourUneOptimisation = nombreDePasDeTempsPourUneOptimisation;
     // Example value
     std::vector<int> NumeroDeVariableStockFinal = std::vector<int>(10, -1);
@@ -157,12 +156,6 @@ struct ConstraintBuilderDataFixture
     void set_correspondances_des_variables()
     {
         CorrespondanceVarNativesVarOptim.resize(nombreDePasDeTempsPourUneOptimisation);
-        // for every timestep the same indices
-        // .InjectionVariable = {0, 1} :
-        // --> storage 1 --> injection index = 0
-        // --> storage 2 --> injection index = 1
-        // --> storage 3 --> injection index = 1
-
         for (auto i = 0; i < nombreDePasDeTempsPourUneOptimisation; i++)
         {
 #pragma GCC diagnostic push
@@ -210,7 +203,7 @@ struct ConstraintBuilderFixture: public STScumulativeConstaintFixture,
 BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 {
     ConstraintBuilder builder(constraint_builder_data);
-    ShortTermStorageCumulation cumulation(builder, shorttermstoragecumulativeconstraintdata);
+    ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryA" (index 0)
     cumulation.add(0);
@@ -248,20 +241,18 @@ BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
     BOOST_CHECK_EQUAL(builder.data.Sens[1], '<');
 
     // 4. Validate correspondence mapping
-    BOOST_CHECK_EQUAL(
-      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
-        .ShortTermStorageCumulation[addc1_withdrawal_constraints[0].globalIndex],
-      0);
-    BOOST_CHECK_EQUAL(
-      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
-        .ShortTermStorageCumulation[addc1_withdrawal_constraints[1].globalIndex],
-      1);
+    BOOST_CHECK_EQUAL(STScumulativeConstraintData.CorrespondanceCntNativesCntOptimHebdomadaires
+                        .ShortTermStorageCumulation[addc1_withdrawal_constraints[0].globalIndex],
+                      0);
+    BOOST_CHECK_EQUAL(STScumulativeConstraintData.CorrespondanceCntNativesCntOptimHebdomadaires
+                        .ShortTermStorageCumulation[addc1_withdrawal_constraints[1].globalIndex],
+                      1);
 }
 
 BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, ConstraintBuilderFixture)
 {
     ConstraintBuilder builder(constraint_builder_data);
-    ShortTermStorageCumulation cumulation(builder, shorttermstoragecumulativeconstraintdata);
+    ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryB" (index 1)
     cumulation.add(1);
@@ -299,20 +290,18 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, ConstraintBuilderFixture)
     BOOST_CHECK_EQUAL(builder.data.Sens[1], '>');
 
     // 4. Validate correspondence mapping
-    BOOST_CHECK_EQUAL(
-      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
-        .ShortTermStorageCumulation[addc2_injection_constraints[0].globalIndex],
-      0);
-    BOOST_CHECK_EQUAL(
-      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
-        .ShortTermStorageCumulation[addc2_injection_constraints[1].globalIndex],
-      1);
+    BOOST_CHECK_EQUAL(STScumulativeConstraintData.CorrespondanceCntNativesCntOptimHebdomadaires
+                        .ShortTermStorageCumulation[addc2_injection_constraints[0].globalIndex],
+                      0);
+    BOOST_CHECK_EQUAL(STScumulativeConstraintData.CorrespondanceCntNativesCntOptimHebdomadaires
+                        .ShortTermStorageCumulation[addc2_injection_constraints[1].globalIndex],
+                      1);
 }
 
 BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
 {
     ConstraintBuilder builder(constraint_builder_data);
-    ShortTermStorageCumulation cumulation(builder, shorttermstoragecumulativeconstraintdata);
+    ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryC" (index 2)
     cumulation.add(2);
@@ -349,20 +338,18 @@ BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
     BOOST_CHECK_EQUAL(builder.data.Sens[1], '=');
 
     // 4. Validate correspondence mapping
-    BOOST_CHECK_EQUAL(
-      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
-        .ShortTermStorageCumulation[addc3_netting_constraints[0].globalIndex],
-      0);
-    BOOST_CHECK_EQUAL(
-      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
-        .ShortTermStorageCumulation[addc3_netting_constraints[1].globalIndex],
-      1);
+    BOOST_CHECK_EQUAL(STScumulativeConstraintData.CorrespondanceCntNativesCntOptimHebdomadaires
+                        .ShortTermStorageCumulation[addc3_netting_constraints[0].globalIndex],
+                      0);
+    BOOST_CHECK_EQUAL(STScumulativeConstraintData.CorrespondanceCntNativesCntOptimHebdomadaires
+                        .ShortTermStorageCumulation[addc3_netting_constraints[1].globalIndex],
+                      1);
 }
 
 BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, ConstraintBuilderFixture)
 {
     ConstraintBuilder builder(constraint_builder_data);
-    ShortTermStorageCumulation cumulation(builder, shorttermstoragecumulativeconstraintdata);
+    ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Add constraints for multiple areas
     cumulation.add(0); // CountryA
@@ -397,7 +384,7 @@ BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, ConstraintBuilderFixture)
 //     ConstraintBuilder builder(constraint_builder_data);
 //     builder.data.weekInTheYear = 12;
 //
-//     ShortTermStorageCumulation cumulation(builder, shorttermstoragecumulativeconstraintdata);
+//     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 //
 //     // Add constraints for multiple areas
 //     cumulation.add(0); // CountryA
