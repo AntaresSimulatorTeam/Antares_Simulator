@@ -41,8 +41,6 @@
 
 using namespace Antares::Data::ShortTermStorage;
 
-const int nombreDePasDeTempsPourUneOptimisation = 50;
-
 struct STScumulativeConstaintFixture
 {
     STScumulativeConstaintFixture():
@@ -126,37 +124,34 @@ struct STScumulativeConstaintFixture
 
 struct ConstraintBuilderDataFixture
 {
-    std::vector<double> Pi = std::vector(2 * nombreDePasDeTempsPourUneOptimisation, 0.0);
-    // Placeholder for coefficients
-    std::vector<int> Colonne = std::vector(2 * nombreDePasDeTempsPourUneOptimisation, 0);
-    // Placeholder for column indices
+    // Const data in ConstraintBuilderData
+    const int32_t nbTimeStepsOptim = 50;
+    const uint32_t NombreDePasDeTemps = 168;
+    const std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
+    const uint32_t weekInTheYear = 1;
+
+    std::vector<double> Pi = std::vector(2 * nbTimeStepsOptim, 0.0);
+    std::vector<int> Colonne = std::vector(2 * nbTimeStepsOptim, 0);
     int nombreDeContraintes = 0;
     int nombreDeTermesDansLaMatriceDeContrainte = 0;
     std::vector<int> IndicesDebutDeLigne = std::vector(4, 0);
     std::vector<double> CoefficientsDeLaMatriceDesContraintes;
-    //= std::vector(100, 0.0); // Plain vector
     std::vector<int> IndicesColonnes;
-    //= std::vector<int> (100, 0); // Plain vector for column indices
     std::vector<int> NombreDeTermesDesLignes = std::vector<int>(4, 0);
-    std::string Sens = std::string(4, '='); // Placeholder for constraint senses
+    std::string Sens = std::string(4, '=');
     int IncrementDAllocationMatriceDesContraintes = 10;
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
 
-    const int32_t NombreDePasDeTempsPourUneOptimisation = nombreDePasDeTempsPourUneOptimisation;
-    // Example value
     std::vector<int> NumeroDeVariableStockFinal = std::vector<int>(10, -1);
     std::vector<std::vector<int>> NumeroDeVariableDeTrancheDeStock = std::vector<std::vector<int>>(
       10,
       std::vector<int>(5, -1));
     std::vector<std::string> NomDesContraintes = std::vector<std::string>(100, "");
-    const std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
-    uint32_t weekInTheYear = 1;              // Example week
-    const uint32_t NombreDePasDeTemps = 168; // Example number of time steps in a week
 
     void set_correspondances_des_variables()
     {
-        CorrespondanceVarNativesVarOptim.resize(nombreDePasDeTempsPourUneOptimisation);
-        for (auto i = 0; i < nombreDePasDeTempsPourUneOptimisation; i++)
+        CorrespondanceVarNativesVarOptim.resize(nbTimeStepsOptim);
+        for (auto i = 0; i < nbTimeStepsOptim; i++)
         {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
@@ -183,7 +178,7 @@ struct ConstraintBuilderDataFixture
                 Sens,
                 IncrementDAllocationMatriceDesContraintes,
                 CorrespondanceVarNativesVarOptim,
-                NombreDePasDeTempsPourUneOptimisation,
+                nbTimeStepsOptim,
                 NumeroDeVariableStockFinal,
                 NumeroDeVariableDeTrancheDeStock,
                 NomDesContraintes,
