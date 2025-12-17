@@ -21,7 +21,6 @@
 #include "antares/io/outputs/MPSWriter.h"
 
 #include <cmath>
-#include <fstream>
 
 using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::IO
@@ -171,13 +170,20 @@ void MPSWriter::writeBounds()
             out_ << " BV " << bnd << " " << varName << "\n";
             continue;
         }
+
+        if (lb == 0.0 && ub == INF) // this case is the default
+        {
+            // out_ << " PL " << bnd << " " << varName << "\n";
+            continue;
+        }
+
         if (isInt)
         {
             if (lb == -INF)
             {
                 out_ << " MI " << bnd << " " << varName << "\n";
             }
-            else if (lb != 0.0 || ub == INF)
+            else if (lb != 0.0)
             {
                 out_ << " LI " << bnd << " " << varName << " " << lb << "\n";
             }
@@ -197,7 +203,7 @@ void MPSWriter::writeBounds()
                 out_ << " LO " << bnd << " " << varName << " " << lb << "\n";
             }
 
-            else if (ub != INF)
+            if (ub != INF)
             {
                 out_ << " UP " << bnd << " " << varName << " " << ub << "\n";
             }

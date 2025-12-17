@@ -21,6 +21,7 @@
 #pragma once
 
 #include <filesystem>
+#include <fstream>
 
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 namespace Antares::IO
