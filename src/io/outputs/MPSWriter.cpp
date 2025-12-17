@@ -132,7 +132,7 @@ void MPSWriter::writeRhs()
     {
         out_ << "    RHS1  " << "OBJ" << "  " << -objOffset << "\n";
     }
-    for (const auto& c: constraints)
+    for (const auto& c: linearProblem_.getConstraints())
     {
         if (const auto rhs = ConstraintRhs(c->getLb(), c->getUb(), INF);
             std::abs(rhs) != INF && std::abs(rhs) != 0.)
@@ -208,7 +208,7 @@ void MPSWriter::writeBounds()
 void MPSWriter::writeName()
 {
     /* ========= NAME ========= */
-    out_ << "NAME " << name << "\n";
+    out_ << "NAME " << name_ << "\n";
 }
 
 void MPSWriter::writeEnd()
