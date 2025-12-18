@@ -32,8 +32,9 @@ void FlowDissociation::add(int pdt, int interco)
         const auto destination = builder.data
                                    .NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
         ConstraintNamer namer(builder.data.NomDesContraintes);
+        namer.updateExtremities(origin, destination);
         namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
-        namer.FlowDissociation(builder.data.nombreDeContraintes, origin, destination);
+        namer.FlowDissociation(builder.data.nombreDeContraintes);
 
         builder.updateHourWithinWeek(pdt);
         builder.NTCDirect(interco, 1.0)

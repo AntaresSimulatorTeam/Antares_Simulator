@@ -57,9 +57,19 @@ std::string Namer::TimeIdentifier(const std::string& timeStepType)
     return timeStepType + "<" + std::to_string(timeStep_) + ">";
 }
 
+std::string Namer::linkLocation()
+{
+    return LocationIdentifier(origin_ + AREA_SEP + destination_, LINK);
+}
+
+std::string Namer::areaLocation()
+{
+    return LocationIdentifier(area_, AREA);
+}
+
 void Namer::SetLinkElementName(unsigned elementIndex, const std::string& elementType)
 {
-    std::string location = LocationIdentifier(origin_ + AREA_SEP + destination_, LINK);
+    std::string location = linkLocation();
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
@@ -89,8 +99,7 @@ void VariableNamer::SetAreaVariableName(unsigned varIndex,
                                         const std::string& variableType,
                                         int layerIndex)
 {
-    std::string location = LocationIdentifier(area_, AREA) + SEP + "Layer<"
-                           + std::to_string(layerIndex) + ">";
+    std::string location = areaLocation() + SEP + "Layer<" + std::to_string(layerIndex) + ">";
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(variableType, location, time);
     names_[varIndex] = name;
@@ -100,8 +109,7 @@ void Namer::SetThermalClusterElementName(unsigned varIndex,
                                          const std::string& elementType,
                                          const std::string& clusterName)
 {
-    std::string location = LocationIdentifier(area_, AREA) + SEP + "ThermalCluster" + "<"
-                           + clusterName + ">";
+    std::string location = areaLocation() + SEP + "ThermalCluster" + "<" + clusterName + ">";
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
@@ -135,30 +143,18 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned varIndex,
     SetThermalClusterElementName(varIndex, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
-void VariableNamer::NTCDirect(unsigned varIndex,
-                              const std::string& origin,
-                              const std::string& destination)
+void VariableNamer::NTCDirect(unsigned varIndex)
 {
-    origin_ = origin;
-    destination_ = destination;
     SetLinkElementName(varIndex, "NTCDirect");
 }
 
-void VariableNamer::IntercoDirectCost(unsigned varIndex,
-                                      const std::string& origin,
-                                      const std::string& destination)
+void VariableNamer::IntercoDirectCost(unsigned varIndex)
 {
-    origin_ = origin;
-    destination_ = destination;
     SetLinkElementName(varIndex, "IntercoDirectCost");
 }
 
-void VariableNamer::IntercoIndirectCost(unsigned varIndex,
-                                        const std::string& origin,
-                                        const std::string& destination)
+void VariableNamer::IntercoIndirectCost(unsigned varIndex)
 {
-    origin_ = origin;
-    destination_ = destination;
     SetLinkElementName(varIndex, "IntercoIndirectCost");
 }
 
@@ -166,8 +162,7 @@ void VariableNamer::SetShortTermStorageVariableName(unsigned varIndex,
                                                     const std::string& variableType,
                                                     const std::string& sts_name)
 {
-    std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
-                           + sts_name + ">";
+    std::string location = areaLocation() + SEP + "ShortTermStorage" + "<" + sts_name + ">";
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(variableType, location, time);
     names_[varIndex] = name;
@@ -260,21 +255,13 @@ void VariableNamer::AreaBalance(unsigned varIndex)
     SetAreaElementNameHour(varIndex, "AreaBalance");
 }
 
-void ConstraintNamer::FlowDissociation(unsigned constrIndex,
-                                       const std::string& origin,
-                                       const std::string& destination)
+void ConstraintNamer::FlowDissociation(unsigned constrIndex)
 {
-    origin_ = origin;
-    destination_ = destination;
     SetLinkElementName(constrIndex, "FlowDissociation");
 }
 
-void ConstraintNamer::CsrFlowDissociation(unsigned constrIndex,
-                                          const std::string& origin,
-                                          const std::string& destination)
+void ConstraintNamer::CsrFlowDissociation(unsigned constrIndex)
 {
-    origin_ = origin;
-    destination_ = destination;
     SetLinkElementName(constrIndex, "CsrFlowDissociation");
 }
 
@@ -389,8 +376,7 @@ void ConstraintNamer::ConsistenceNODU(unsigned constrIndex, const std::string& c
 
 void ConstraintNamer::ShortTermStorageLevel(unsigned constrIndex, const std::string& sts_name)
 {
-    std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
-                           + sts_name + ">";
+    std::string location = areaLocation() + SEP + "ShortTermStorage" + "<" + sts_name + ">";
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName("Level", location, time);
     names_[constrIndex] = name;
@@ -420,8 +406,7 @@ void ConstraintNamer::ShortTermStorageCostVariation(const std::string& constrain
                                                     unsigned constrIndex,
                                                     const std::string& sts_name)
 {
-    std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
-                           + sts_name + ">";
+    std::string location = areaLocation() + SEP + "ShortTermStorage" + "<" + sts_name + ">";
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(constraint_name, location, time);
     names_[constrIndex] = name;
@@ -432,8 +417,8 @@ void ConstraintNamer::ShortTermStorageCumulation(const std::string& constraint_t
                                                  const std::string& sts_name,
                                                  const std::string& constraint_name)
 {
-    std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
-                           + sts_name + ">" + SEP + "Constraint" + "<" + constraint_name + ">";
+    std::string location = areaLocation() + SEP + "ShortTermStorage" + "<" + sts_name + ">" + SEP
+                           + "Constraint" + "<" + constraint_name + ">";
     std::string time = TimeIdentifier(WEEK);
     std::string name = BuildName(constraint_type, location, time);
     names_[constrIndex] = name;

@@ -51,7 +51,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                                   [problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
             const auto destination = problemeHebdo->NomsDesPays
                                        [problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-            variableNamer.NTCDirect(NombreDeVariables, origin, destination);
+            variableNamer.updateExtremities(origin, destination);
+            variableNamer.NTCDirect(NombreDeVariables);
             NombreDeVariables++;
 
             if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
@@ -59,12 +60,12 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 variableManager.IntercoDirectCost(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoDirectCost(NombreDeVariables, origin, destination);
+                variableNamer.IntercoDirectCost(NombreDeVariables);
                 NombreDeVariables++;
                 variableManager.IntercoIndirectCost(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoIndirectCost(NombreDeVariables, origin, destination);
+                variableNamer.IntercoIndirectCost(NombreDeVariables);
                 NombreDeVariables++;
             }
         }

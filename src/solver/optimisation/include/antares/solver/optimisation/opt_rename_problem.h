@@ -41,6 +41,12 @@ public:
         area_ = area;
     }
 
+    void updateExtremities(const std::string& origin, const std::string& destination)
+    {
+        origin_ = origin;
+        destination_ = destination;
+    }
+
 protected:
     void SetLinkElementName(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType);
@@ -52,13 +58,15 @@ protected:
                                       const std::string& variableType,
                                       const std::string& clusterName);
     std::string TimeIdentifier(const std::string& timeStepType);
+    std::string linkLocation();
+    std::string areaLocation();
 
-    std::string origin_;
-    std::string destination_;
-    std::string area_;
     std::vector<std::string>& names_;
 
 private:
+    std::string origin_;
+    std::string destination_;
+    std::string area_;
     unsigned timeStep_ = 0;
 };
 
@@ -71,13 +79,9 @@ public:
     void NumberStoppingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void NumberBreakingDownDispatchableUnits(unsigned varIndex, const std::string& clusterName);
-    void NTCDirect(unsigned varIndex, const std::string& origin, const std::string& destination);
-    void IntercoDirectCost(unsigned varIndex,
-                           const std::string& origin,
-                           const std::string& destination);
-    void IntercoIndirectCost(unsigned varIndex,
-                             const std::string& origin,
-                             const std::string& destination);
+    void NTCDirect(unsigned varIndex);
+    void IntercoDirectCost(unsigned varIndex);
+    void IntercoIndirectCost(unsigned varIndex);
     void ShortTermStorageInjection(unsigned varIndex, const std::string& sts_name);
     void ShortTermStorageWithdrawal(unsigned varIndex, const std::string& sts_name);
     void ShortTermStorageLevel(unsigned varIndex, const std::string& sts_name);
@@ -108,10 +112,7 @@ class ConstraintNamer: public Namer
 public:
     using Namer::Namer;
 
-    void FlowDissociation(unsigned constrIndex,
-                          const std::string& origin,
-                          const std::string& destination);
-
+    void FlowDissociation(unsigned constrIndex);
     void AreaBalance(unsigned constrIndex);
     void FictiveLoads(unsigned constrIndex);
     void HydroPower(unsigned constrIndex);
@@ -134,10 +135,7 @@ public:
     void BindingConstraintHour(unsigned constrIndex, const std::string& name);
     void BindingConstraintDay(unsigned constrIndex, const std::string& name);
     void BindingConstraintWeek(unsigned constrIndex, const std::string& name);
-    void CsrFlowDissociation(unsigned constrIndex,
-                             const std::string& origin,
-                             const std::string& destination);
-
+    void CsrFlowDissociation(unsigned constrIndex);
     void CsrAreaBalance(unsigned constrIndex);
     void CsrBindingConstraintHour(unsigned constrIndex, const std::string& name);
 
