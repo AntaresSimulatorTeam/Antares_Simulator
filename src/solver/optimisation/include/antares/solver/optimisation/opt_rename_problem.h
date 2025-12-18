@@ -42,14 +42,14 @@ public:
     }
 
 protected:
-    void SetLinkElementName(unsigned varIndex, const std::string& varIndexType);
-    void SetAreaElementNameHour(unsigned varIndex, const std::string& varIndexType);
-    void SetAreaElementNameWeek(unsigned varIndex, const std::string& varIndexType);
+    void SetLinkElementName(unsigned varIndex, const std::string& variableType);
+    void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType);
+    void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType);
     void SetAreaElementName(unsigned varIndex,
-                            const std::string& varIndexType,
+                            const std::string& variableType,
                             const std::string& timeStepType);
     void SetThermalClusterElementName(unsigned varIndex,
-                                      const std::string& varIndexType,
+                                      const std::string& variableType,
                                       const std::string& clusterName);
 
     unsigned timeStep_ = 0;
@@ -94,9 +94,9 @@ public:
     void AreaBalance(unsigned varIndex);
 
 private:
-    void SetAreaVariableName(unsigned varIndex, const std::string& varIndexType, int layerIndex);
+    void SetAreaVariableName(unsigned varIndex, const std::string& variableType, int layerIndex);
     void SetShortTermStorageVariableName(unsigned varIndex,
-                                         const std::string& varIndexType,
+                                         const std::string& variableType,
                                          const std::string& sts_name);
 };
 
@@ -142,7 +142,7 @@ public:
                                        unsigned constrIndex,
                                        const std::string& sts_name);
 
-    void ShortTermStorageCumulation(const std::string& constrIndex_type,
+    void ShortTermStorageCumulation(const std::string& constraint_type,
                                     unsigned constrIndex,
                                     const std::string& sts_name,
                                     const std::string& constrIndex_name);
