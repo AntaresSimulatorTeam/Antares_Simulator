@@ -1,6 +1,6 @@
 set(SOURCES
         FileWriter.cpp
-        include/antares/solver/modeler/FileWriter/FileWriter.h
+        include/antares/solver/modeler/fileWriter/FileWriter.h
 
 )
 
