@@ -36,11 +36,6 @@ const std::map<std::string, std::string> BindingConstraintTimeGranularity = {{HO
 const std::string LINK("link");
 const std::string AREA("area");
 
-std::string TimeIdentifier(unsigned timeStep, const std::string& timeStepType)
-{
-    return timeStepType + "<" + std::to_string(timeStep) + ">";
-}
-
 std::string ShortTermStorageCumulationIdentifier(const std::string& name)
 {
     return "Constraint<" + name + ">";
@@ -60,10 +55,15 @@ std::string BuildName(const std::string& name,
     return result;
 }
 
+std::string Namer::TimeIdentifier(const std::string& timeStepType)
+{
+    return timeStepType + "<" + std::to_string(timeStep_) + ">";
+}
+
 void Namer::SetLinkElementName(unsigned elementIndex, const std::string& elementType)
 {
     std::string location = LocationIdentifier(origin_ + AREA_SEP + destination_, LINK);
-    std::string time = TimeIdentifier(timeStep_, HOUR);
+    std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
 }
@@ -83,7 +83,7 @@ void Namer::SetAreaElementName(unsigned elementIndex,
                                const std::string& timeStepType)
 {
     std::string location = LocationIdentifier(area_, AREA);
-    std::string time = TimeIdentifier(timeStep_, timeStepType);
+    std::string time = TimeIdentifier(timeStepType);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
 }
@@ -94,7 +94,7 @@ void VariableNamer::SetAreaVariableName(unsigned varIndex,
 {
     std::string location = LocationIdentifier(area_, AREA) + SEP + "Layer<"
                            + std::to_string(layerIndex) + ">";
-    std::string time = TimeIdentifier(timeStep_, HOUR);
+    std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(variableType, location, time);
     names_[varIndex] = name;
 }
@@ -105,7 +105,7 @@ void Namer::SetThermalClusterElementName(unsigned varIndex,
 {
     std::string location = LocationIdentifier(area_, AREA) + SEP + "ThermalCluster" + "<"
                            + clusterName + ">";
-    std::string time = TimeIdentifier(timeStep_, HOUR);
+    std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
 }
@@ -171,7 +171,7 @@ void VariableNamer::SetShortTermStorageVariableName(unsigned varIndex,
 {
     std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
                            + sts_name + ">";
-    std::string time = TimeIdentifier(timeStep_, HOUR);
+    std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(variableType, location, time);
     names_[varIndex] = name;
 }
@@ -351,7 +351,7 @@ void ConstraintNamer::nameWithTimeGranularity(unsigned constrIndex,
                                               const std::string& type)
 {
     std::string granularity = BindingConstraintTimeGranularity.at(type);
-    std::string time = TimeIdentifier(timeStep_, type);
+    std::string time = TimeIdentifier(type);
     std::string changed_name = BuildName(name, granularity, time);
     names_[constrIndex] = changed_name;
 }
@@ -394,7 +394,7 @@ void ConstraintNamer::ShortTermStorageLevel(unsigned constrIndex, const std::str
 {
     std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
                            + sts_name + ">";
-    std::string time = TimeIdentifier(timeStep_, HOUR);
+    std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName("Level", location, time);
     names_[constrIndex] = name;
 }
@@ -425,7 +425,7 @@ void ConstraintNamer::ShortTermStorageCostVariation(const std::string& constrain
 {
     std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
                            + sts_name + ">";
-    std::string time = TimeIdentifier(timeStep_, HOUR);
+    std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(constraint_name, location, time);
     names_[constrIndex] = name;
 }
@@ -437,7 +437,7 @@ void ConstraintNamer::ShortTermStorageCumulation(const std::string& constraint_t
 {
     std::string location = LocationIdentifier(area_, AREA) + SEP + "ShortTermStorage" + "<"
                            + sts_name + ">" + SEP + "Constraint" + "<" + constraint_name + ">";
-    std::string time = TimeIdentifier(timeStep_, WEEK);
+    std::string time = TimeIdentifier(WEEK);
     std::string name = BuildName(constraint_type, location, time);
     names_[constrIndex] = name;
 }

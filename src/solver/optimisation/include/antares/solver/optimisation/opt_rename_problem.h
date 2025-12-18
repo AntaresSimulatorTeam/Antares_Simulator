@@ -51,12 +51,15 @@ protected:
     void SetThermalClusterElementName(unsigned varIndex,
                                       const std::string& variableType,
                                       const std::string& clusterName);
+    std::string TimeIdentifier(const std::string& timeStepType);
 
-    unsigned timeStep_ = 0;
     std::string origin_;
     std::string destination_;
     std::string area_;
     std::vector<std::string>& names_;
+
+private:
+    unsigned timeStep_ = 0;
 };
 
 class VariableNamer: public Namer
