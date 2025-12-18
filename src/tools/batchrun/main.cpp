@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <iostream>
 #include <map>
 #include <string>
 
@@ -149,7 +148,7 @@ int main(int argc, const char* argv[])
                 }
 
                 cmd.clear();
-                if (not System::windows)
+                if (!Yuni::System::windows)
                 {
                     cmd << "nice ";
                 }
