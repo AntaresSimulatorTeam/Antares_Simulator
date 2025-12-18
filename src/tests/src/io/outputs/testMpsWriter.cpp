@@ -35,10 +35,7 @@ using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
 using namespace std;
-using namespace Antares::Optimization;
-using namespace Antares::Optimisation;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
-using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Solver;
 using namespace Antares::IO::Outputs; //
 namespace fs = std::filesystem;
 
@@ -49,15 +46,30 @@ struct MpsWriterTestFixture
     const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "resources"
                                / "modeler";
 
-    static void run(const fs::path& studyPath)
+    static Modeler build(const fs::path& studyPath)
     {
-        Antares::Solver::LoadFiles::FileLoader loader(studyPath);
-        Antares::Modeler::FileWriter writer(studyPath);
-        Antares::Solver::Modeler modeler(loader, writer);
+        LoadFiles::FileLoader loader(studyPath);
+        Modeler::FileWriter writer(studyPath);
+        return  {loader, writer};
+        
+    }
+    static void checkMPS(const fs::path& studyPath, Modeler& modeler)
+    {
+       
         modeler.run();
-
         checkProblem(modeler.masterProblem(), studyPath / "output" / "master.mps");
         checkProblem(modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
+    }
+
+      static void checkProblem(const std::unique_ptr<ILinearProblem>& originalProblem,
+                             const fs::path& mpsPath)
+    {
+        operations_research::mb::ModelBuilderHelper fromMps;
+        fromMps.ImportFromMpsFile(mpsPath.string());
+        checkProblemType(originalProblem, fromMps);
+        checkVariables(originalProblem, fromMps);
+        checkConstraints(originalProblem, fromMps);
+        checkObjective(originalProblem, fromMps);
     }
 
     static void checkProblemType(const unique_ptr<ILinearProblem>& originalProblem,
@@ -125,21 +137,14 @@ struct MpsWriterTestFixture
         }
     }
 
-    static void checkProblem(const std::unique_ptr<ILinearProblem>& originalProblem,
-                             const fs::path& mpsPath)
-    {
-        operations_research::mb::ModelBuilderHelper fromMps;
-        fromMps.ImportFromMpsFile(mpsPath.string());
-        checkProblemType(originalProblem, fromMps);
-        checkVariables(originalProblem, fromMps);
-        checkConstraints(originalProblem, fromMps);
-        checkObjective(originalProblem, fromMps);
-    }
+  
 };
 
 BOOST_FIXTURE_TEST_CASE(TestALLModelerStudiesMps, MpsWriterTestFixture)
 {
-    auto dirFilter = std::views::filter(static_cast<bool (*)(const fs::path&)>(&fs::is_directory));
+    auto dirFilter = std::views::filter([](const fs::directory_entry& entry) {
+        return entry.is_directory();
+    });
     for (const auto& entry: fs::directory_iterator(resources) | dirFilter)
     {
         if (entry.path().stem() == "epic_2")
@@ -147,10 +152,13 @@ BOOST_FIXTURE_TEST_CASE(TestALLModelerStudiesMps, MpsWriterTestFixture)
             for (const auto& subEntry:
                  fs::directory_iterator(resources / "epic_2" / "us2.5") | dirFilter)
             {
-                run(subEntry.path());
+                auto modeler = build(subEntry.path());
+                checkMPS(subEntry.path(), modeler);
             }
+            continue;
         }
-        run(entry.path());
+        auto modeler = build(entry.path());
+        checkMPS(entry.path(), modeler);
     }
 }
 
