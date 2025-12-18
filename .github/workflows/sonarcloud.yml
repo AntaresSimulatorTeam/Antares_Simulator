@@ -1,7 +1,6 @@
 name: SonarCloud
 
 on:
-  pull_request:
   push:
     branches:
     - develop
@@ -104,7 +103,7 @@ jobs:
     - name: Configure
       run: |
         cmake -B _build -S src \
-        -DCMAKE_C_COMPILER=/usr/bin/g++-11
+        -DCMAKE_C_COMPILER=/usr/bin/gcc-11
         -DCMAKE_CXX_COMPILER=/usr/bin/g++-11
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
