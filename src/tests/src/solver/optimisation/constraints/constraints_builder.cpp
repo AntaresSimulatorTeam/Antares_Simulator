@@ -86,13 +86,13 @@ struct STScumulativeConstaintFixture
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-    PROPERTIES sts_propertes_1 = {.additionalConstraints = {addc1_withdrawal},
+    PROPERTIES sts_properties_1 = {.additionalConstraints = {addc1_withdrawal},
                                   .clusterGlobalIndex = 0,
                                   .name = "cluster_1"};
-    PROPERTIES sts_propertes_2 = {.additionalConstraints = {addc2_injection},
+    PROPERTIES sts_properties_2 = {.additionalConstraints = {addc2_injection},
                                   .clusterGlobalIndex = 1,
                                   .name = "cluster_2"};
-    PROPERTIES sts_propertes_3 = {.injectionEfficiency = 45,
+    PROPERTIES sts_properties_3 = {.injectionEfficiency = 45,
                                   .withdrawalEfficiency = 2025,
                                   .additionalConstraints = {addc3_netting},
                                   .clusterGlobalIndex = 2,
@@ -100,9 +100,9 @@ struct STScumulativeConstaintFixture
 #pragma GCC diagnostic pop
 
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
-    std::vector<::AREA_INPUT> shortTermStorage = {{sts_propertes_1},
-                                                  {sts_propertes_2},
-                                                  {sts_propertes_3}};
+    std::vector<::AREA_INPUT> shortTermStorage = {{sts_properties_1},
+                                                  {sts_properties_2},
+                                                  {sts_properties_3}};
 
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires{
       {},
@@ -320,9 +320,9 @@ BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
     BOOST_CHECK_EQUAL(builder.data.IndicesDebutDeLigne[1], 4); // Check next line index
 
     // Verify that the correct variables and values were updated in the matrix
-    BOOST_CHECK_EQUAL(builder.data.Pi[0], sts_propertes_3.injectionEfficiency);
+    BOOST_CHECK_EQUAL(builder.data.Pi[0], sts_properties_3.injectionEfficiency);
     // Verify the first term's coefficient (adjust based on actual expected values)
-    BOOST_CHECK_EQUAL(builder.data.Pi[1], -sts_propertes_3.withdrawalEfficiency);
+    BOOST_CHECK_EQUAL(builder.data.Pi[1], -sts_properties_3.withdrawalEfficiency);
     // Verify the first term's coefficient (adjust based on actual expected values)
     BOOST_CHECK_EQUAL(builder.data.Colonne[0], 4); // Verify the first term's column index
     BOOST_CHECK_EQUAL(builder.data.Colonne[1], 5); // Verify the first term's column index
