@@ -24,10 +24,8 @@
 #include <string>
 
 #include <yuni/core/getopt.h>
-#include <yuni/core/nullable.h>
 #include <yuni/core/string.h>
 
-#include <antares/antares/version.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
@@ -51,19 +49,19 @@ namespace // anonymous
 class MyStudyFinder final: public Data::StudyFinder
 {
 public:
-    void onStudyFound(const String& folder, const Data::StudyVersion&) override
+    void onStudyFound(const Yuni::String& folder, const Data::StudyVersion&) override
     {
         logs.info() << "Found: " << folder;
         list.push_back(folder);
     }
 
 public:
-    String::Vector list;
+    Yuni::String::Vector list;
 };
 
 } // anonymous namespace
 
-String sendToNull()
+Yuni::String sendToNull()
 {
 #ifdef __linux__
     return " > /dev/null";
@@ -104,7 +102,7 @@ int main(int argc, const char* argv[])
         // Source Folder
         logs.debug() << "Folder : `" << optInput << '`';
 
-        String solver;
+        Yuni::String solver;
         Solver::FindLocation(solver);
         if (solver.empty())
         {
@@ -127,10 +125,10 @@ int main(int argc, const char* argv[])
             logs.info() << "Starting...";
 
             // The folder that contains the solver
-            String dirname;
+            Yuni::String dirname;
             Yuni::IO::parent_path(dirname, solver);
 
-            String cmd;
+            Yuni::String cmd;
 
             uint studyIndx = 0;
             foreach (auto& studypath, finder.list)
