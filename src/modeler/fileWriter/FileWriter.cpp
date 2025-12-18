@@ -29,8 +29,8 @@
 #include <antares/study/system-model/component.h>
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
-
-#include "modeler/include/antares/solver/modeler/Modeler.h"
+#include "antares/solver/modeler/Modeler.h"
+#include "antares/solver/modeler/fileWriter/FileWriter.h"
 
 namespace Antares::Modeler
 {

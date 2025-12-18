@@ -24,7 +24,7 @@
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/simulation/solver.h"
 
-#include "FileWriter.h"
+#include "fileWriter/include/solver/modeler/fileWriter/FileWriter.h"
 
 using namespace Antares;
 

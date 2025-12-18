@@ -20,7 +20,7 @@
 #pragma once
 #include <filesystem>
 
-#include "modeler/include/antares/solver/modeler/IWriter.h"
+#include "antares/solver/modeler/IWriter.h"
 
 namespace Antares::Optimisation::LinearProblemApi
 {
