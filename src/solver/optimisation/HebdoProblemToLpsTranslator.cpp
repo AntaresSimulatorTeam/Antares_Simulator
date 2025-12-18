@@ -43,6 +43,15 @@ void copy(const T& in, U& out)
 {
     std::ranges::copy(in, std::back_inserter(out));
 }
+
+template<class T>
+void resizeIfLargerThan(T& in, std::size_t size)
+{
+    if (in.size() > size)
+    {
+        in.resize(size);
+    }
+}
 } // namespace
 
 WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(
@@ -60,7 +69,7 @@ WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(
     copy(problem->Xmin, ret.Xmin);
     copy(problem->SecondMembre, ret.RHS);
     copy(problem->Sens, ret.Direction);
-
+    resizeIfLargerThan(ret.Direction, problem->NombreDeContraintes);
     copy(name, ret.name);
 
     return ret;
@@ -103,16 +112,24 @@ ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(
     ret.CoeffCount = problem->IndicesDebutDeLigne[problem->NombreDeContraintes - 1]
                      + problem->NombreDeTermesDesLignes[problem->NombreDeContraintes - 1];
 
-    copy(problem->TypeDeVariable, ret.VariablesType);
-
     copy(problem->CoefficientsDeLaMatriceDesContraintes, ret.ConstraintsMatrixCoeff);
     ret.ConstraintsMatrixCoeff.resize(ret.CoeffCount);
     copy(problem->IndicesColonnes, ret.ColumnIndexes);
     ret.ColumnIndexes.resize(ret.CoeffCount);
+
     copy(problem->IndicesDebutDeLigne, ret.Mdeb);
+    resizeIfLargerThan(ret.Mdeb, ret.ConstraintesCount);
+    // Add a final coeff
     ret.Mdeb.push_back(ret.CoeffCount);
     copy(problem->NomDesVariables, ret.VariablesMeaning);
+
     copy(problem->NomDesContraintes, ret.ConstraintsMeaning);
+
+    // Until the problem is built, the number of variables & constraints is a rough estimate
+    // It is then updated to the exact number resp. ret.VariablesCount and ret.ConstraintesCount.
+    // To avoid wasting memory and errors, we resize ret.VariablesMeaning and ret.ConstraintsMeaning
+    resizeIfLargerThan(ret.VariablesMeaning, ret.VariablesCount);
+    resizeIfLargerThan(ret.ConstraintsMeaning, ret.ConstraintesCount);
     return ret;
 }
 

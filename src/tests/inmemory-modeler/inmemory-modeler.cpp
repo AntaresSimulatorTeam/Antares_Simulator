@@ -37,7 +37,7 @@ namespace Test::Modeler
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type)
+  const VariabilityType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
@@ -50,21 +50,22 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     std::vector<std::unique_ptr<LinearProblemApi::LinearProblemFiller>> fillers;
     // All LP variables coordinates (component id, variable id, scenario, time step)
 
-    ScenarioGroupRepository scenario_group_repo;
     for (auto& scenario: scenarios)
     {
         auto name = scenario->group();
-        scenario_group_repo.addScenario(name, std::move(scenario));
+        scenarioGroupRepo.addScenario(name, std::move(scenario));
     }
     pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
-    OptimEntityContainer optimEntityContainer(*pb, &dummy_data, &scenario_group_repo);
-    optimEntityContainer.addFromSystemComponents(components);
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb,
+                                                                  &dummy_data,
+                                                                  &scenarioGroupRepo);
+    optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
     {
         auto cf = std::make_unique<ComponentFiller>(
           component,
-          optimEntityContainer,
-          scenario_group_repo,
+          *optimEntityContainer,
+          scenarioGroupRepo,
           Antares::Modeler::Config::Location::SUBPROBLEMS);
         fillers.push_back(std::move(cf));
     }
@@ -109,16 +110,16 @@ Nodes::Node* LinearProblemBuildingFixture::literal(double value)
 }
 
 Nodes::Node* LinearProblemBuildingFixture::parameter(const std::string& paramId,
-                                                     const TimeIndex& timeIndex)
+                                                     const VariabilityType& variability)
 {
-    return nodeRegistry.create<Nodes::ParameterNode>(paramId, timeIndex);
+    return nodeRegistry.create<Nodes::ParameterNode>(paramId, variability);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::variable(const std::string& varId,
                                                     unsigned index,
-                                                    const TimeIndex& timeIndex)
+                                                    const VariabilityType& variability)
 {
-    return nodeRegistry.create<Nodes::VariableNode>(varId, index, timeIndex);
+    return nodeRegistry.create<Nodes::VariableNode>(varId, index, variability);
 }
 
 Nodes::Node* LinearProblemBuildingFixture::multiply(Nodes::Node* node1, Nodes::Node* node2)
@@ -131,6 +132,16 @@ Nodes::Node* LinearProblemBuildingFixture::negate(Nodes::Node* node)
     return nodeRegistry.create<Nodes::NegationNode>(node);
 }
 
+Nodes::Node* LinearProblemBuildingFixture::add(Nodes::Node* node1, Nodes::Node* node2)
+{
+    return nodeRegistry.create<Nodes::SumNode>(node1, node2);
+}
+
+Nodes::Node* LinearProblemBuildingFixture::Sum(Nodes::Node* node)
+{
+    return nodeRegistry.create<Nodes::AllTimeSumNode>(node);
+}
+
 void LinearProblemBuildingFixture::createModel(const std::string& modelId,
                                                const std::vector<std::string>& parameterIds,
                                                const std::vector<VariableData>& variablesData,
@@ -140,7 +151,7 @@ void LinearProblemBuildingFixture::createModel(const std::string& modelId,
     std::vector<Parameter> parameters;
     for (const auto& parameter_id: std::move(parameterIds))
     {
-        parameters.emplace_back(parameter_id, TimeDependent::NO, ScenarioDependent::NO);
+        parameters.emplace_back(parameter_id, TimeDependent::YES, ScenarioDependent::YES);
     }
     createModelWithSystemModelParameter(modelId,
                                         parameters,
@@ -189,6 +200,49 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
         objectives.emplace_back("objective", createExpression(objective, nodeRegistry));
         model_builder.withObjectives(std::move(objectives));
     }
+    auto model = model_builder.build();
+    models[modelId] = std::move(model);
+}
+
+void LinearProblemBuildingFixture::createModelWithMultipleObjectives(
+  const std::string& modelId,
+  std::vector<Parameter> parameters,
+  const std::vector<VariableData>& variablesData,
+  const std::vector<ConstraintData>& constraintsData,
+  std::vector<Nodes::Node*> objectiveNodes)
+{
+    std::vector<Variable> variables;
+    for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
+    {
+        variables.emplace_back(id,
+                               createExpression(lb, nodeRegistry),
+                               createExpression(ub, nodeRegistry),
+                               type,
+                               fromBool<TimeDependent>(timeDependent),
+                               fromBool<ScenarioDependent>(scenarioDependent));
+    }
+    std::vector<Constraint> constraints;
+    for (const auto& [id, expression]: constraintsData)
+    {
+        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+    }
+
+    std::vector<Objective> objectives;
+    int objIndex = 0;
+    for (auto* objectiveNode: objectiveNodes)
+    {
+        objectives.emplace_back("objective_" + std::to_string(objIndex),
+                                createExpression(objectiveNode, nodeRegistry));
+        objIndex++;
+    }
+
+    ModelBuilder model_builder;
+    model_builder.withId(modelId)
+      .withParameters(std::move(parameters))
+      .withVariables(std::move(variables))
+      .withConstraints(std::move(constraints))
+      .withObjectives(std::move(objectives));
+
     auto model = model_builder.build();
     models[modelId] = std::move(model);
 }

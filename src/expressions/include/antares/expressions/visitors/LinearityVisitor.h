@@ -22,6 +22,9 @@
 
 #include "antares/expressions/visitors/LinearStatus.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
+#include "antares/study/system-model/component.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -32,6 +35,10 @@ class LinearityVisitor: public NodeVisitor<LinearStatus>
 {
 public:
     std::string name() const override;
+
+    explicit LinearityVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
+                              const Optimisation::LinearProblemApi::FillContext& fillContext,
+                              const ModelerStudy::SystemModel::Component& component);
 
 private:
     LinearStatus visit(const Nodes::SumNode* add) override;
@@ -51,7 +58,12 @@ private:
     LinearStatus visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     LinearStatus visit(const Nodes::TimeSumNode* timeSumNode) override;
     LinearStatus visit(const Nodes::AllTimeSumNode* timeSumNode) override;
-    LinearStatus visit(const Nodes::ReducedCostNode* node) override;
-    LinearStatus visit(const Nodes::DualNode* node) override;
+    static LinearStatus handleReducedCost(const Nodes::FunctionNode* node);
+    static LinearStatus handleDual(const Nodes::FunctionNode* node);
+    LinearStatus handlePow(const Nodes::FunctionNode* node);
+    LinearStatus visit(const Nodes::FunctionNode* node) override;
+    const Optimisation::OptimEntityContainer& optimEntityContainer_;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
+    const ModelerStudy::SystemModel::Component& component_;
 };
 } // namespace Antares::Expressions::Visitors

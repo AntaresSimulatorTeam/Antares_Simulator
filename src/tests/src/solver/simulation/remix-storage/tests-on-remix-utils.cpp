@@ -42,7 +42,6 @@ public:
     void update() override;
     const std::vector<double>& initWithdrawal() const override;
     std::vector<double>& withdrawal() override;
-
     int id();
 
 private:
@@ -53,6 +52,7 @@ private:
 };
 
 StorageMock::StorageMock(int id):
+    IStorageForRemix("whatever name"),
     id_(id)
 {
 }

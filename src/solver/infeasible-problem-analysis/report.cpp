@@ -22,19 +22,13 @@
 
 #include <algorithm>
 #include <regex>
-#include <typeindex>
 
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
   const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
-    buildConstraintsFromSlackVars(slackVariables);
-}
-
-void InfeasibleProblemReport::buildConstraintsFromSlackVars(
-  const std::vector<const operations_research::MPVariable*>& slackVariables)
-{
+    // Build constraints from slack variables (one constraint per slack variable)
     const ConstraintsFactory constraintsFactory;
     for (const auto* slackVar: slackVariables)
     {
@@ -49,18 +43,14 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars(
 bool lessTypeName(const std::shared_ptr<WatchedConstraint> a,
                   const std::shared_ptr<WatchedConstraint> b)
 {
-    const WatchedConstraint* a_raw = a.get();
-    const WatchedConstraint* b_raw = b.get();
     // TODO Compiler-dependent behavior
-    return std::type_index(typeid(*a_raw)) < std::type_index(typeid(*b_raw));
+    return typeid(*a).before(typeid(*b));
 }
 
 bool sameType(const std::shared_ptr<WatchedConstraint> a,
               const std::shared_ptr<WatchedConstraint> b)
 {
-    const WatchedConstraint* a_raw = a.get();
-    const WatchedConstraint* b_raw = b.get();
-    return std::type_index(typeid(*a_raw)) == std::type_index(typeid(*b_raw));
+    return typeid(*a) == typeid(*b);
 }
 
 bool greaterValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)
@@ -99,7 +89,7 @@ void InfeasibleProblemReport::storeInfeasibilityCauses()
     }
 }
 
-std::vector<std::string> InfeasibleProblemReport::getLogs()
+const std::vector<std::string>& InfeasibleProblemReport::getLogs() const
 {
     return report_;
 }

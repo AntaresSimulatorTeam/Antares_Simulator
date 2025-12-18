@@ -22,21 +22,20 @@ expr
     | portFieldExpr                            # portField
     | '-' expr                                 # negation
     | '(' expr ')'                             # expression
+    | <assoc=right> expr '^' expr              # power
     | expr op=('/' | '*') expr                 # muldiv
     | expr op=('+' | '-') expr                 # addsub
     | expr COMPARISON expr                     # comparison
     | 'sum' '(' expr ')'                       # allTimeSum
     | 'sum_connections' '(' portFieldExpr ')'           # portFieldSum
     | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
-    | 'dual' '(' IDENTIFIER ')'                # dual
-    | 'reduced_cost' '(' IDENTIFIER ')'        # reducedCost
-    | IDENTIFIER '(' expr ')'                  # function
+    | IDENTIFIER '(' argList? ')'              # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex
     | '(' expr ')' '[' shift ']'               # timeShiftExpr
     | '(' expr ')' '[' expr ']'                # timeIndexExpr
     ;
-
+argList : expr (',' expr)* ;
 atom
     : NUMBER                                   # number
     | IDENTIFIER                               # identifier
@@ -58,14 +57,16 @@ shift: TIME shift_expr?;
 //       shift expressions than on their left-most part
 //       (port fields, nested time shifts and so on).
 shift_expr
-    : shift_expr op=('*' | '/') right_expr     # shiftMuldiv
+    : <assoc=right> shift_expr '^' right_expr  # shiftPower
+    | shift_expr op=('*' | '/') right_expr     # shiftMuldiv
     | shift_expr op=('+' | '-') right_expr     # shiftAddsub
     | op=('+' | '-') atom                      # signedAtom
     | op=('+' | '-') '(' expr ')'              # signedExpression
     ;
 
 right_expr
-    : right_expr op=('/' | '*') right_expr     # rightMuldiv
+    : <assoc=right> right_expr '^' right_expr  # rightPower
+    | right_expr op=('/' | '*') right_expr     # rightMuldiv
     | '(' expr ')'                             # rightExpression
     | atom                                     # rightAtom
     ;

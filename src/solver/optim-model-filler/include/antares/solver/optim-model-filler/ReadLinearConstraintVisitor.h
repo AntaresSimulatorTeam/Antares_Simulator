@@ -82,8 +82,7 @@ private:
     LinearConstraint visit(const Expressions::Nodes::TimeIndexNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::TimeSumNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::AllTimeSumNode* node) override;
-    LinearConstraint visit(const Expressions::Nodes::ReducedCostNode* node) override;
-    LinearConstraint visit(const Expressions::Nodes::DualNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::FunctionNode* node) override;
 
     ReadLinearExpressionVisitor linear_expression_visitor_;
 };

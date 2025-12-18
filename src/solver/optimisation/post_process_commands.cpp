@@ -75,18 +75,25 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
 RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                                    AreaList& areas,
                                                    const Data::Parameters& params,
-                                                   unsigned int numSpace):
+                                                   unsigned int numSpace,
+                                                   IResultWriter& resultWriter):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     numSpace_(numSpace),
-    params_(params)
+    params_(params),
+    resultWriter_(resultWriter)
 {
 }
 
 void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
-    RemixHydroForAllAreas(area_list_, *problemeHebdo_, params_, numSpace_, hourInYear);
+    RemixHydroForAllAreas(area_list_,
+                          *problemeHebdo_,
+                          params_,
+                          numSpace_,
+                          hourInYear,
+                          resultWriter_);
 }
 
 // ----------------------------------

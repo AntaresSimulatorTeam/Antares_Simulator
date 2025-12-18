@@ -155,14 +155,12 @@ bool CompareVisitor::visit(const Nodes::AllTimeSumNode* alltimeSumNode, const No
     return compareParentNode(*this, alltimeSumNode, other);
 }
 
-bool CompareVisitor::visit(const Nodes::ReducedCostNode* node, const Nodes::Node* other)
+bool CompareVisitor::visit(const Nodes::FunctionNode* node, const Nodes::Node* other)
 {
-    return compareGetValue(node, other);
-}
-
-bool CompareVisitor::visit(const Nodes::DualNode* node, const Nodes::Node* other)
-{
-    return compareGetValue(node, other);
+    auto typeAndChildrenComparison = compareParentNode(*this, node, other);
+    // we also need to compare the type of the function max, min etc..
+    const auto* other_node = dynamic_cast<const Nodes::FunctionNode*>(other);
+    return typeAndChildrenComparison && node->type() == other_node->type();
 }
 
 std::string CompareVisitor::name() const

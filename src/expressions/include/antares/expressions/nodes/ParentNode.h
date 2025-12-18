@@ -72,6 +72,7 @@ public:
      * @return A vector of pointers to the operands of the parent node.
      */
     const std::vector<Node*>& getOperands() const;
+    const std::vector<const Node*> getConstOperands() const;
 
     Node* operator[](std::size_t idx) const;
 

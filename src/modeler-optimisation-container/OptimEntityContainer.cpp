@@ -45,14 +45,14 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
     unsigned variableGlobalIndex = 0;
     for (const auto& component: components)
     {
-        auto* model = component.getModel();
+        const auto* model = component.getModel();
         const auto& variables = model->Variables();
         std::vector<unsigned int> modelVariableGlobalIndices;
 
         modelVariableGlobalIndices.reserve(variables.size());
         for (const auto& variable: variables)
         {
-            if (AreLocationsCompatible(variable.location(), targetLocation))
+            if (AreLocationsCompatibleForFillers(variable.location(), targetLocation))
             {
                 modelVariableGlobalIndices.push_back(variableGlobalIndex);
                 ++variableGlobalIndex;
@@ -74,12 +74,12 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
 }
 
 void OptimEntityContainer::registerConstraint(const Component& component,
-                                              const TimeIndex& timeIndex)
+                                              const VariabilityType& variability)
 {
     unsigned gLobalIndex = constraintGLobalIndex();
     auto& optimComponent = getOptimComponent(component.Index());
     optimComponent.modelConstraintsGlobalIndices.push_back(gLobalIndex);
-    optimComponent.modelConstraintsTimeIndex.push_back(timeIndex);
+    optimComponent.modelConstraintsVariability.push_back(variability);
     addStartLine();
 }
 } // namespace Antares::Optimisation

@@ -42,11 +42,11 @@ void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& pat
     of << out;
 }
 
-OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
+OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName):
+    mpSolver_(MPSolverFactory(isMip, solverName)),
+    objective_(mpSolver_->MutableObjective()),
+    isLP_(!isMip)
 {
-    mpSolver_ = MPSolverFactory(isMip, solverName);
-    objective_ = mpSolver_->MutableObjective();
-    isLP_ = !isMip; // we don't care about pure integer prob
 }
 
 LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
@@ -183,6 +183,16 @@ double OrtoolsLinearProblem::getObjectiveCoefficient(
     return objective_->GetCoefficient(getMpVar(var));
 }
 
+void OrtoolsLinearProblem::setObjectiveOffset(double objectiveOffset)
+{
+    objective_->SetOffset(objectiveOffset);
+}
+
+double OrtoolsLinearProblem::getObjectiveOffset() const
+{
+    return objective_->offset();
+}
+
 void OrtoolsLinearProblem::setMinimization()
 {
     objective_->SetMinimization();
@@ -219,6 +229,20 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 
     solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_);
     return solution_.get();
+}
+
+OrtoolsMipSolution* OrtoolsLinearProblem::solution(bool verboseSolver)
+{
+    if (!solution_)
+    {
+        solve(verboseSolver);
+    }
+    return solution_.get();
+}
+
+double OrtoolsLinearProblem::objectiveValue() const
+{
+    return ::getObjectiveValue(mpSolver_);
 }
 
 double OrtoolsLinearProblem::infinity() const

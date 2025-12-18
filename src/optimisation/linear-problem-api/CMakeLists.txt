@@ -20,6 +20,9 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)
 
 target_include_directories(${PROJ}
         PUBLIC

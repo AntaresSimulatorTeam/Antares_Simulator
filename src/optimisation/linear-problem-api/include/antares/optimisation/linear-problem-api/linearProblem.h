@@ -75,6 +75,9 @@ public:
     virtual void setObjectiveCoefficient(IMipVariable* var, double coefficient) = 0;
     virtual double getObjectiveCoefficient(const IMipVariable* var) const = 0;
 
+    virtual void setObjectiveOffset(double objectiveOffset) = 0;
+    virtual double getObjectiveOffset() const = 0;
+
     /// Sets the optimization direction to minimize
     virtual void setMinimization() = 0;
     /// Sets the optimization direction to maximize
@@ -89,6 +92,8 @@ public:
     // Definition of infinity
     [[nodiscard]] virtual double infinity() const = 0;
     virtual bool isLP() const = 0;
+
+    virtual double objectiveValue() const = 0;
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi

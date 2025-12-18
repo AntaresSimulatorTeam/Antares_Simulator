@@ -40,12 +40,12 @@ Model createModelWithoutParameters()
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type)
+  const Antares::Optimisation::VariabilityType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
 
-Component createComponent(Model& model, const std::string& id, unsigned index)
+Component createComponent(const Model& model, const std::string& id, unsigned index)
 {
     ComponentBuilder component_builder;
     return component_builder.withId(id)
@@ -56,7 +56,7 @@ Component createComponent(Model& model, const std::string& id, unsigned index)
       .build();
 }
 
-Component createComponent(Model& model,
+Component createComponent(const Model& model,
                           const std::string& id,
                           std::map<std::string, ParameterTypeAndValue> parameter_values,
                           unsigned index)

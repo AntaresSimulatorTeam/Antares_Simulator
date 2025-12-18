@@ -42,7 +42,7 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeri
     catch (const std::exception& e)
     {
         // data-series are not mandatory
-        logs.info() << "Data-series could not be loaded: " << e.what();
+        logs.warning() << "Data-series could not be loaded: " << e.what();
         return std::make_unique<Optimisation::LinearProblemDataImpl::LinearProblemData>();
     }
 }

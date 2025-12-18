@@ -24,7 +24,7 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_utils.h>
-#include "antares/expressions/visitors/TimeIndexVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/ISimulationTable.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
@@ -176,13 +176,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
-    const Optimisation::LinearProblemApi::ILinearProblemData* modelerDataSeries = hasModelerData
-                                                                                    ? modelerData
-                                                                                        ->dataSeries
-                                                                                        .get()
-                                                                                    : nullptr;
-    const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
-      = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
+    const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
+                                                                 : nullptr;
+    const ScenarioGroupRepository* modelerScenarioGroupRepository = hasModelerData
+                                                                      ? &modelerData
+                                                                           ->scenarioGroupRepository
+                                                                      : nullptr;
 
     OptimEntityContainer optimEntityContainer(ortoolsProblem,
                                               modelerDataSeries,
@@ -332,9 +331,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
-        const Optimisation::LinearProblemApi::ILinearProblemData* modelerDataSeries
-          = hasModelerData ? modelerData->dataSeries.get() : nullptr;
-        const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
+        const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
+                                                                     : nullptr;
+        const ScenarioGroupRepository* modelerScenarioGroupRepository
           = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
         OptimEntityContainer optimEntityContainer(infeasibleProblem,

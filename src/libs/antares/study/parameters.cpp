@@ -622,6 +622,10 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     {
         return ConvertCStrToResultFormat(value, d.resultFormat);
     }
+    if (key == "remix-storage-debug")
+    {
+        return value.to<bool>(d.remixStorageDebug);
+    }
     return false;
 }
 
@@ -1748,6 +1752,10 @@ void Parameters::saveToINI(IniFile& ini) const
         if (hydroDebug)
         {
             section->add("hydro-debug", hydroDebug);
+        }
+        if (remixStorageDebug)
+        {
+            section->add("remix-storage-debug", remixStorageDebug);
         }
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
         ParametersSaveResultFormat(section, resultFormat);
