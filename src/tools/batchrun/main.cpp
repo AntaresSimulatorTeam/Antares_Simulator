@@ -42,7 +42,6 @@
 #include <process.h>
 #endif
 
-using namespace Yuni;
 using namespace Antares;
 
 namespace fs = std::filesystem;
@@ -129,7 +128,7 @@ int main(int argc, const char* argv[])
 
             // The folder that contains the solver
             String dirname;
-            IO::parent_path(dirname, solver);
+            Yuni::IO::parent_path(dirname, solver);
 
             String cmd;
 
@@ -188,7 +187,7 @@ int main(int argc, const char* argv[])
                 }
 
                 // Changing the current working directory
-                IO::Directory::Current::Set(dirname);
+                Yuni::IO::Directory::Current::Set(dirname);
                 // Executing the converter
                 if (optVerbose)
                 {
