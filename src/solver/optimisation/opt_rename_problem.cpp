@@ -32,6 +32,9 @@ const std::string DAY("day");
 const std::string WEEK("week");
 const std::string LINK("link");
 const std::string AREA("area");
+const std::map<std::string, std::string> TimeGranularity = {{HOUR, "hourly"},
+                                                            {DAY, "daily"},
+                                                            {WEEK, "weekly"}};
 
 std::string ShortTermStorageCumulationIdentifier(const std::string& name)
 {
@@ -360,7 +363,7 @@ void ConstraintNamer::nameWithTimeGranularity(unsigned constrIndex,
                                               const std::string& name,
                                               const std::string& type)
 {
-    std::string granularity = "hourly";
+    std::string granularity = TimeGranularity.at(type);
     std::string time = TimeIdentifier(type);
     std::string changed_name = BuildName(name, granularity, time);
     names()[constrIndex] = changed_name;
