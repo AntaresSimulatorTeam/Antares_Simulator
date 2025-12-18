@@ -46,7 +46,6 @@ BOOST_AUTO_TEST_SUITE(ValidateMps)
 
 struct MpsWriterTestFixture
 {
-    MpsWriterTestFixture();
     const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "resources"
                                / "modeler";
 
