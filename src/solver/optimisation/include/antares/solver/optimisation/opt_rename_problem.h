@@ -26,26 +26,10 @@
 class Namer
 {
 public:
-    explicit Namer(std::vector<std::string>& target_names):
-        names_(target_names)
-    {
-    }
-
-    void UpdateTimeStep(unsigned timeStep)
-    {
-        timeStep_ = timeStep;
-    }
-
-    void UpdateArea(const std::string& area)
-    {
-        area_ = area;
-    }
-
-    void updateExtremities(const std::string& origin, const std::string& destination)
-    {
-        origin_ = origin;
-        destination_ = destination;
-    }
+    explicit Namer(std::vector<std::string>& target_names);
+    void UpdateTimeStep(unsigned timeStep);
+    void UpdateArea(const std::string& area);
+    void updateExtremities(const std::string& origin, const std::string& destination);
 
 protected:
     void SetLinkElementName(unsigned varIndex, const std::string& variableType);
@@ -60,14 +44,14 @@ protected:
     std::string TimeIdentifier(const std::string& timeStepType);
     std::string linkLocation();
     std::string areaLocation();
-
-    std::vector<std::string>& names_;
+    std::vector<std::string>& names();
 
 private:
     std::string origin_;
     std::string destination_;
     std::string area_;
     unsigned timeStep_ = 0;
+    std::vector<std::string>& names_;
 };
 
 class VariableNamer: public Namer
@@ -138,11 +122,9 @@ public:
     void CsrFlowDissociation(unsigned constrIndex);
     void CsrAreaBalance(unsigned constrIndex);
     void CsrBindingConstraintHour(unsigned constrIndex, const std::string& name);
-
     void ShortTermStorageCostVariation(const std::string& constrIndex_name,
                                        unsigned constrIndex,
                                        const std::string& sts_name);
-
     void ShortTermStorageCumulation(const std::string& constraint_type,
                                     unsigned constrIndex,
                                     const std::string& sts_name,
