@@ -21,10 +21,9 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/Modeler.h>
+#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/simulation/solver.h"
-
-#include "fileWriter/include/solver/modeler/fileWriter/FileWriter.h"
 
 using namespace Antares;
 

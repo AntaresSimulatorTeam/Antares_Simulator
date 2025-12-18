@@ -18,7 +18,7 @@
 // You should have received a copy of the Mozilla Public Licence 2.0
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
-#include "FileWriter.h"
+#include "antares/solver/modeler/fileWriter/FileWriter.h"
 
 #include <fstream>
 
@@ -30,7 +30,6 @@
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 
 namespace Antares::Modeler
 {

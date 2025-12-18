@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
     InMemoryLoader inMemoryLoader;
     InMemoryWriter inMemoryWriter;
 
-    const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.run();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 0);
 }
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10)
 
     InMemoryWriter inMemoryWriter;
 
-    const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.run();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 5);
 }
@@ -299,7 +299,7 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
 
     InMemoryWriter inMemoryWriter;
 
-    const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.run();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 2);
 }
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
 
     InMemoryWriter inMemoryWriter;
 
-    const Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Antares::Solver::Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.run();
     BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 3);
 }
