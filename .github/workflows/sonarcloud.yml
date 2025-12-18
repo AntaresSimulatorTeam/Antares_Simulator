@@ -22,6 +22,10 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
       BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
       #config in env to be accessible at each step
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_COMPILERCHECK: content
+      CCACHE_BASEDIR: ${{ github.workspace }}
+      CCACHE_SLOPPINESS: time_macros,include_file_mtime
 
     steps:
     # Disk space on / is insufficient, leading to errors
@@ -55,6 +59,30 @@ jobs:
     - name: Config OR-Tools URL
       run: |
         echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
+
+    - name: Install ccache
+      run: sudo apt-get install -y ccache
+
+      # Can't use ubuntu cache. Cache hit is only single digit %
+    - name: Restore ccache cache
+      id: cache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: sonar-${{ matrix.os }}-v1-${{ github.event.pull_request.head.ref || github.ref_name }}
+        restore-keys: |
+          ${{ matrix.os }}-v1
+
+    - name: Configure ccache
+      run: |
+        # Ensure directory exists and point ccache at it
+        mkdir -p ${{ env.CCACHE_DIR }}
+        # Increase size to reduce evictions; adjust to suit your CI quota
+        ccache --set-config=max_size=5G
+        ccache --set-config=compression=true
+        ccache --show-config || true
+        ccache -p
+      shell: bash
 
     - name: Install Build Wrapper
       uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v6.0.0
@@ -103,8 +131,8 @@ jobs:
     - name: Configure
       run: |
         cmake -B _build -S src \
-        -DCMAKE_C_COMPILER=/usr/bin/gcc-12
-        -DCMAKE_CXX_COMPILER=/usr/bin/g++-12
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCODE_COVERAGE=ON \
@@ -227,4 +255,26 @@ jobs:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
+    - name: Display ccache statistics
+      if: always()
+      run: ccache -s
+
+      # Delete the old cache on hit to emulate a cache update. See
+      # https://github.com/actions/cache/issues/342.
+    - name: Delete old cache
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_DEBUG: api gh cache delete
+      if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
+      # Using `--repo` makes it so that this step doesn't require checking out the
+      # repo first.
+      run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
+
+    - name: Save ccache cache
+      if: ${{ !cancelled() }}
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{ steps.cache.outputs.cache-primary-key }}
 
