@@ -87,16 +87,16 @@ struct STScumulativeConstaintFixture
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     PROPERTIES sts_properties_1 = {.additionalConstraints = {addc1_withdrawal},
-                                  .clusterGlobalIndex = 0,
-                                  .name = "cluster_1"};
+                                   .clusterGlobalIndex = 0,
+                                   .name = "cluster_1"};
     PROPERTIES sts_properties_2 = {.additionalConstraints = {addc2_injection},
-                                  .clusterGlobalIndex = 1,
-                                  .name = "cluster_2"};
+                                   .clusterGlobalIndex = 1,
+                                   .name = "cluster_2"};
     PROPERTIES sts_properties_3 = {.injectionEfficiency = 45,
-                                  .withdrawalEfficiency = 2025,
-                                  .additionalConstraints = {addc3_netting},
-                                  .clusterGlobalIndex = 2,
-                                  .name = "cluster_3"};
+                                   .withdrawalEfficiency = 2025,
+                                   .additionalConstraints = {addc3_netting},
+                                   .clusterGlobalIndex = 2,
+                                   .name = "cluster_3"};
 #pragma GCC diagnostic pop
 
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
