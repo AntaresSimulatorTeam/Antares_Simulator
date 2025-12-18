@@ -73,11 +73,6 @@ void Namer::updateExtremities(const std::string& origin, const std::string& dest
     destination_ = destination;
 }
 
-void Namer::updateName(const unsigned index, const std::string& name)
-{
-    names_[index] = name;
-}
-
 std::string Namer::TimeIdentifier(const std::string& timeStepType)
 {
     return timeStepType + "<" + std::to_string(timeStep_) + ">";
@@ -91,6 +86,11 @@ std::string Namer::linkLocation()
 std::string Namer::areaLocation()
 {
     return LocationIdentifier(area_, AREA);
+}
+
+std::vector<std::string>& Namer::names()
+{
+    return names_;
 }
 
 void Namer::SetLinkElementName(unsigned elementIndex, const std::string& elementType)
