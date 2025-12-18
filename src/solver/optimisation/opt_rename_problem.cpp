@@ -30,9 +30,6 @@ const std::string AREA_SEP = "$$";
 const std::string HOUR("hour");
 const std::string DAY("day");
 const std::string WEEK("week");
-const std::map<std::string, std::string> BindingConstraintTimeGranularity = {{HOUR, "hourly"},
-                                                                             {DAY, "daily"},
-                                                                             {WEEK, "weekly"}};
 const std::string LINK("link");
 const std::string AREA("area");
 
@@ -350,7 +347,7 @@ void ConstraintNamer::nameWithTimeGranularity(unsigned constrIndex,
                                               const std::string& name,
                                               const std::string& type)
 {
-    std::string granularity = BindingConstraintTimeGranularity.at(type);
+    std::string granularity = "hourly";
     std::string time = TimeIdentifier(type);
     std::string changed_name = BuildName(name, granularity, time);
     names_[constrIndex] = changed_name;
