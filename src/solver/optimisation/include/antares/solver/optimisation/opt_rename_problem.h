@@ -37,11 +37,11 @@ protected:
     void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType);
     void SetAreaElementName(unsigned varIndex,
                             const std::string& variableType,
-                            const std::string& timeStepType);
+                            const std::string& timeGranularity);
     void SetThermalClusterElementName(unsigned varIndex,
                                       const std::string& variableType,
                                       const std::string& clusterName);
-    std::string TimeIdentifier(const std::string& timeStepType);
+    std::string TimeIdentifier(const std::string& timeGranularity);
     std::string linkLocation();
     std::string areaLocation();
     std::vector<std::string>& names();
@@ -121,7 +121,6 @@ public:
     void BindingConstraintWeek(unsigned constrIndex, const std::string& name);
     void CsrFlowDissociation(unsigned constrIndex);
     void CsrAreaBalance(unsigned constrIndex);
-    void CsrBindingConstraintHour(unsigned constrIndex, const std::string& name);
     void ShortTermStorageCostVariation(const std::string& constrIndex_name,
                                        unsigned constrIndex,
                                        const std::string& sts_name);
@@ -129,9 +128,8 @@ public:
                                     unsigned constrIndex,
                                     const std::string& sts_name,
                                     const std::string& constrIndex_name);
-
 private:
-    void nameWithTimeGranularity(unsigned constrIndex,
-                                 const std::string& name,
-                                 const std::string& type);
+    void BindingConstraint(unsigned constrIndex,
+                           const std::string& name,
+                           const std::pair<std::string, std::string>& timeGranularity);
 };

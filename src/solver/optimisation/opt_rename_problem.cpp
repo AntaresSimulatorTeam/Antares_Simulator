@@ -32,9 +32,6 @@ const std::string DAY("day");
 const std::string WEEK("week");
 const std::string LINK("link");
 const std::string AREA("area");
-const std::map<std::string, std::string> TimeGranularity = {{HOUR, "hourly"},
-                                                            {DAY, "daily"},
-                                                            {WEEK, "weekly"}};
 
 std::string ShortTermStorageCumulationIdentifier(const std::string& name)
 {
@@ -76,9 +73,9 @@ void Namer::updateExtremities(const std::string& origin, const std::string& dest
     destination_ = destination;
 }
 
-std::string Namer::TimeIdentifier(const std::string& timeStepType)
+std::string Namer::TimeIdentifier(const std::string& timeGranularity)
 {
-    return timeStepType + "<" + std::to_string(timeStep_) + ">";
+    return timeGranularity + "<" + std::to_string(timeStep_) + ">";
 }
 
 std::string Namer::linkLocation()
@@ -116,10 +113,10 @@ void Namer::SetAreaElementNameWeek(unsigned elementIndex, const std::string& ele
 
 void Namer::SetAreaElementName(unsigned elementIndex,
                                const std::string& elementType,
-                               const std::string& timeStepType)
+                               const std::string& timeGranularity)
 {
     std::string location = LocationIdentifier(area_, AREA);
-    std::string time = TimeIdentifier(timeStepType);
+    std::string time = TimeIdentifier(timeGranularity);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
 }
@@ -359,14 +356,28 @@ void ConstraintNamer::FinalStockExpression(unsigned constrIndex)
     SetAreaElementNameHour(constrIndex, "FinalStockExpression");
 }
 
-void ConstraintNamer::nameWithTimeGranularity(unsigned constrIndex,
-                                              const std::string& name,
-                                              const std::string& type)
+void ConstraintNamer::BindingConstraint(unsigned constrIndex,
+                                        const std::string& name,
+                                        const std::pair<std::string, std::string>& timeGranularity)
 {
-    std::string granularity = TimeGranularity.at(type);
-    std::string time = TimeIdentifier(type);
-    std::string changed_name = BuildName(name, granularity, time);
-    names()[constrIndex] = changed_name;
+    std::string time = TimeIdentifier(timeGranularity.first);
+    std::string new_name = BuildName(name, timeGranularity.second, time);
+    names()[constrIndex] = new_name;
+}
+
+void ConstraintNamer::BindingConstraintHour(unsigned constrIndex, const std::string& name)
+{
+    BindingConstraint(constrIndex, name, {HOUR, "hourly"});
+}
+
+void ConstraintNamer::BindingConstraintDay(unsigned constrIndex, const std::string& name)
+{
+    BindingConstraint(constrIndex, name, {DAY, "daily"});
+}
+
+void ConstraintNamer::BindingConstraintWeek(unsigned constrIndex, const std::string& name)
+{
+    BindingConstraint(constrIndex, name, {WEEK, "weekly"});
 }
 
 void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(unsigned constrIndex,
@@ -409,26 +420,6 @@ void ConstraintNamer::ShortTermStorageLevel(unsigned constrIndex, const std::str
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName("Level", location, time);
     names()[constrIndex] = name;
-}
-
-void ConstraintNamer::BindingConstraintHour(unsigned constrIndex, const std::string& name)
-{
-    nameWithTimeGranularity(constrIndex, name, HOUR);
-}
-
-void ConstraintNamer::CsrBindingConstraintHour(unsigned constrIndex, const std::string& name)
-{
-    nameWithTimeGranularity(constrIndex, name, HOUR);
-}
-
-void ConstraintNamer::BindingConstraintDay(unsigned constrIndex, const std::string& name)
-{
-    nameWithTimeGranularity(constrIndex, name, DAY);
-}
-
-void ConstraintNamer::BindingConstraintWeek(unsigned constrIndex, const std::string& name)
-{
-    nameWithTimeGranularity(constrIndex, name, WEEK);
 }
 
 void ConstraintNamer::ShortTermStorageCostVariation(const std::string& constraint_name,
