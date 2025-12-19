@@ -294,8 +294,7 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
     std::vector<double> values = {2, 3, 4};
     data_series_repository.addDataSeries(std::make_unique<LinearProblemDataImpl::TimeSeriesSet>(
       constantTimeSeriesSets("GROUPA", values, 1)));
-    inMemoryLoader.data = std::make_unique<
-      LinearProblemDataImpl::LinearProblemData>(
+    inMemoryLoader.data = std::make_unique<LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
     InMemoryWriter inMemoryWriter;
@@ -316,8 +315,7 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
     std::vector<double> values = {2, 3, 4};
     data_series_repository.addDataSeries(std::make_unique<LinearProblemDataImpl::TimeSeriesSet>(
       constantTimeSeriesSets("GROUPA", values, 1)));
-    inMemoryLoader.data = std::make_unique<
-      LinearProblemDataImpl::LinearProblemData>(
+    inMemoryLoader.data = std::make_unique<LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
     inMemoryLoader.addScenario("GROUPA", 0, 2); // Year 0, timeseriesNumber 1

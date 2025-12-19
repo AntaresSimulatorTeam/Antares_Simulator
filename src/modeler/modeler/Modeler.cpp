@@ -185,11 +185,12 @@ void Modeler::run()
         auto output = writer_.outputPath();
 
         // 1-1.mps
-        Write(*(static_cast<OrtoolsLinearProblem*>(subproblem_1_1.get())), output / "1-1.mps");
-        IO::Outputs::MPSWriter(*subproblem_1_1, output / "1-1-custom.mps", "1-1").write();
+        // Write(*(static_cast<OrtoolsLinearProblem*>(subproblem_1_1.get())), output / "1-1.mps");
+        IO::Outputs::MPSWriter(*subproblem_1_1, output / "1-1.mps", "1-1").write();
         // master.mps
-        Write(*(static_cast<OrtoolsLinearProblem*>(masterProblem_.get())), output / "master.mps");
-        IO::Outputs::MPSWriter(*masterProblem_, output / "master-custom.mps", "master").write();
+        // Write(*(static_cast<OrtoolsLinearProblem*>(masterProblem_.get())), output /
+        // "master.mps");
+        IO::Outputs::MPSWriter(*masterProblem_, output / "master.mps", "master").write();
         // structure.txt
         BendersDecompositionWriter writer(bendersDecomposition);
         std::ofstream of(output / "structure.txt");
