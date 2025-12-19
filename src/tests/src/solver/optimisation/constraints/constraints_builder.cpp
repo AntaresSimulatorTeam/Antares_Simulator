@@ -227,10 +227,10 @@ BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, BB)
     // Verify that the constraint names are correctly generated and stored
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
                       "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
-                      "addc1_withdrawal_0>"); // Assuming this is the generated name
+                      "addc1_withdrawal_0>::week<1>"); // Assuming this is the generated name
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
                       "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
-                      "addc1_withdrawal_1>"); // Check the second constraint
+                      "addc1_withdrawal_1>::week<1>"); // Check the second constraint
     //
     // // Verify that the correct number of terms have been added to the matrix
     BOOST_CHECK_EQUAL(builder.data.nombreDeTermesDansLaMatriceDeContrainte, 4);
@@ -278,10 +278,10 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, BB)
     // Verify that the constraint names are correctly generated and stored
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
                       "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
-                      "injection_0>"); // Assuming this is the generated name
+                      "injection_0>::week<1>"); // Assuming this is the generated name
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
                       "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
-                      "injection_1>"); // Check the second constraint
+                      "injection_1>::week<1>"); // Check the second constraint
     //
     // // Verify that the correct number of terms have been added to the matrix
     BOOST_CHECK_EQUAL(builder.data.nombreDeTermesDansLaMatriceDeContrainte, 4);
@@ -329,10 +329,10 @@ BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, BB)
     // Verify that the constraint names are correctly generated and stored
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
                       "NettingSum::area<CountryC>::ShortTermStorage<cluster_3>::Constraint<addc3_"
-                      "netting_0>"); // Assuming this is the generated name
+                      "netting_0>::week<1>"); // Assuming this is the generated name
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
                       "NettingSum::area<CountryC>::ShortTermStorage<cluster_3>::Constraint<addc3_"
-                      "netting_1>"); // Check the second constraint
+                      "netting_1>::week<1>"); // Check the second constraint
     //
     // // Verify that the correct number of terms have been added to the matrix
     BOOST_CHECK_EQUAL(builder.data.nombreDeTermesDansLaMatriceDeContrainte, 8);
@@ -378,18 +378,18 @@ BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, BB)
     BOOST_CHECK_EQUAL(builder.data.nombreDeContraintes, 4);
 
     // Verify the names of the constraints for both countries
-    BOOST_CHECK_EQUAL(
-      builder.data.NomDesContraintes[0],
-      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_0>");
-    BOOST_CHECK_EQUAL(
-      builder.data.NomDesContraintes[1],
-      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_1>");
-    BOOST_CHECK_EQUAL(
-      builder.data.NomDesContraintes[2],
-      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_0>");
-    BOOST_CHECK_EQUAL(
-      builder.data.NomDesContraintes[3],
-      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_1>");
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
+                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
+                      "addc1_withdrawal_0>::week<1>");
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
+                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
+                      "addc1_withdrawal_1>::week<1>");
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[2],
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
+                      "injection_0>::week<1>");
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[3],
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
+                      "injection_1>::week<1>");
 
     // Check if the sense of constraints was updated correctly for all areas
     BOOST_CHECK_EQUAL(builder.data.Sens[0], '<');
