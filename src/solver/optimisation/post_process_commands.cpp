@@ -364,8 +364,8 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
     auto writeResultLine = [&stream](const std::string& areaName,
                                      unsigned hour,
                                      const std::string& varName,
-                                     double value)
-    { stream << fmt::format("{} {} {} {}\n", areaName, hour, varName, value); };
+                                     std::vector<double>& variable)
+    { stream << fmt::format("{} {} {} {}\n", areaName, hour, varName, variable[hour]); };
 
     areas_.each(
       [this, &writeResultLine](const Data::Area& area)
@@ -374,25 +374,21 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
           const auto& scratchpad = area.scratchpad[numSpace_];
 
           // Write all results
-          for (unsigned hour = 0; hour < Constants::nbHoursInAWeek; ++hour)
+          for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
           {
-              writeResultLine(area.name, hour, "DENS", hourlyResults.ValeursHorairesDENS[hour]);
-              writeResultLine(area.name,
-                              hour,
+              const std::string& id = area.name;
+              writeResultLine(id, h, "DENS", hourlyResults.ValeursHorairesDENS);
+              writeResultLine(id,
+                              h,
                               "UnsuppliedEnergyCSR",
-                              hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour]);
-              writeResultLine(area.name,
-                              hour,
-                              "MRGPrice",
-                              hourlyResults.CoutsMarginauxHoraires[hour]);
-              writeResultLine(area.name,
-                              hour,
-                              "MRGPriceCSR",
-                              hourlyResults.CoutsMarginauxHorairesCSR[hour]);
-              writeResultLine(area.name,
-                              hour,
-                              "DTGmrgCSR",
-                              hourlyResults.ValeursHorairesDtgMrgCsr[hour]);
+                              hourlyResults.ValeursHorairesDeDefaillancePositiveCSR);
+              writeResultLine(id, h, "MRGPrice", hourlyResults.CoutsMarginauxHoraires);
+              writeResultLine(id, h, "MRGPriceCSR", hourlyResults.CoutsMarginauxHorairesCSR);
+              writeResultLine(id, h, "DTGmrgCSR", hourlyResults.ValeursHorairesDtgMrgCsr);
+              writeResultLine(id,
+                              h,
+                              "SPIL. ENRG",
+                              hourlyResults.ValeursHorairesDeDefaillanceNegative);
           }
       });
 
