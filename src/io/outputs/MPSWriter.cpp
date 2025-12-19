@@ -22,6 +22,8 @@
 
 #include <cmath>
 
+#include <antares/logs/logs.h>
+
 using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::IO::Outputs
 {
@@ -67,10 +69,15 @@ MPSWriter::MPSWriter(const ILinearProblem& lp,
                      const std::filesystem::path& path,
                      const std::string& name):
     linearProblem_(lp),
-    out_(path),
+
     name_(name)
 
 {
+    if (lp.variableCount() == 0)
+    {
+        logs.warning() << "Linear problem '" << name << "' contains no variables.";
+    }
+    out_.open(path.string());
     if (!out_.is_open())
     {
         throw std::runtime_error("Cannot open MPS file: " + path.string());
@@ -225,6 +232,11 @@ void MPSWriter::writeEnd()
 
 void MPSWriter::write()
 {
+    if (linearProblem_.variableCount() == 0)
+    {
+        logs.warning() << "mps will not be produced for empty linear problem '" << name_ << "'.";
+        return;
+    }
     writeHeader();
 
     writeName();
