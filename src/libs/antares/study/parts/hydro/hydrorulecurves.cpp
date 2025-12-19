@@ -19,16 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <algorithm>
-
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-
-#include <antares/exception/LoadingError.hpp>
-#include <antares/inifile/inifile.h>
-#include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/hydrorulecurves.h>
-#include "antares/study/study.h"
 
 namespace fs = std::filesystem;
 
@@ -60,7 +51,7 @@ void RuleCurves::averageTimeSeries()
 
 bool ScenarizedRuleCurvesLoader::load()
 {
-    const std::filesystem::path path = baseFolder_ / "series" / areaID_;
+    const fs::path path = baseFolder_ / "series" / areaID_;
     Matrix<>::BufferType fileContent;
 
     bool ret = true;
@@ -77,20 +68,19 @@ bool ScenarizedRuleCurvesLoader::load()
 
 bool StandardRuleCurvesLoader::load()
 {
-    const std::filesystem::path filePath = baseFolder_ / "common" / "capacity"
-                                           / std::string("reservoir_" + areaID_ + ".txt");
+    const fs::path filePath = baseFolder_ / "common" / "capacity"
+                              / std::string("reservoir_" + areaID_ + ".txt");
 
     Matrix<double> standardRuleCurves;
     standardRuleCurves.reset(3L, DAYS_PER_YEAR, true);
 
     Matrix<>::BufferType fileContent;
-    bool ret = true;
 
-    ret = standardRuleCurves.loadFromCSVFile(filePath.string(),
-                                             3,
-                                             DAYS_PER_YEAR,
-                                             Matrix<>::optFixedSize,
-                                             &fileContent);
+    bool ret = standardRuleCurves.loadFromCSVFile(filePath.string(),
+                                                  3,
+                                                  DAYS_PER_YEAR,
+                                                  Matrix<>::optFixedSize,
+                                                  &fileContent);
 
     min_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
     min_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::minimum]);
@@ -104,7 +94,7 @@ bool StandardRuleCurvesLoader::load()
 
 std::unique_ptr<RuleCurvesLoader> RuleCurvesLoaderService::createRuleCurvesLoader(
   Parameters::Compatibility::HydroRuleCurves hydroRuleCurves,
-  const std::filesystem::path& filePath,
+  const fs::path& filePath,
   const std::string& areaID)
 {
     switch (hydroRuleCurves)
@@ -132,14 +122,11 @@ std::unique_ptr<RuleCurvesLoader> RuleCurvesLoaderService::createRuleCurvesLoade
 
 bool RuleCurvesLoaderService::LoadFromFolder(
   const std::string& areaID,
-  const std::filesystem::path& folder,
+  const fs::path& folder,
   Parameters::Compatibility::HydroRuleCurves hydroRuleCurves)
 {
-    bool ret = true;
-
     auto loader = createRuleCurvesLoader(hydroRuleCurves, folder, areaID);
-    ret = loader->load();
-
+    bool ret = loader->load();
     return ret;
 }
 
