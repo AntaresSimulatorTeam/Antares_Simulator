@@ -227,7 +227,7 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = std::make_unique<Modeler::Data>(Solver::LoadFiles::loadAll(folder));
+        modelerInput_ = std::make_unique<Solver::ModelerData>(Solver::LoadFiles::loadAll(folder));
         checkModelerDataCompatibility();
     }
     catch (const Error::LoadingError& e)

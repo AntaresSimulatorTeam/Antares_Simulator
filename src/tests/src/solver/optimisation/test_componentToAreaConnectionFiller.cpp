@@ -131,7 +131,7 @@ system:
 struct ComponentToAreaConnectionFillerFixture
 {
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
-    std::unique_ptr<Modeler::Data> modelerData;
+    std::unique_ptr<Solver::ModelerData> modelerData;
     std::vector<Library> libraries;
     LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
     ScenarioGroupRepository scenarioGroupRepository;
@@ -166,7 +166,7 @@ struct ComponentToAreaConnectionFillerFixture
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml);
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-        modelerData = std::make_unique<Modeler::Data>();
+        modelerData = std::make_unique<Solver::ModelerData>();
         modelerData->system = std::make_unique<System>(std::move(system));
         problemeHebdo->modelerData = modelerData.get();
     }

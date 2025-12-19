@@ -28,13 +28,14 @@
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
-#include "antares/solver/modeler/data.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimisation;
+using namespace Antares::Solver;
 
 namespace Test::Modeler
 {
@@ -66,7 +67,7 @@ struct LinearProblemBuildingFixture
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
     std::vector<Component> components;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
-    Antares::Modeler::Data modelerData;
+    ModelerData modelerData;
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
     std::unique_ptr<Antares::Optimisation::OptimEntityContainer> optimEntityContainer;
 
@@ -135,7 +136,7 @@ struct LinearProblemBuildingFixture
 
     void buildLinearProblem();
 
-    Antares::Modeler::Data& getModelerData()
+    ModelerData& getModelerData()
     {
         SystemBuilder systemBuilder;
         auto system = systemBuilder.withId("system").withComponents(std::move(components)).build();

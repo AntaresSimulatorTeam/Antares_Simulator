@@ -75,7 +75,7 @@ static void logProblemSize(const MPSolver* mpSolver)
 
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
-  Modeler::Data* modelerData,
+  Solver::ModelerData* modelerData,
   OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
@@ -86,7 +86,7 @@ static void fillModelerComponents(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
-                                            Modeler::Config::Location::SUBPROBLEMS,
+                                            Solver::Config::Location::SUBPROBLEMS,
                                             nullptr));
     }
 }
@@ -308,13 +308,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         else
         {
-            problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
@@ -334,8 +334,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         bool hasModelerData = modelerData != nullptr;
         const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                      : nullptr;
-        const ScenarioGroupRepository* modelerScenarioGroupRepository
-          = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
+        const ScenarioGroupRepository*
+          modelerScenarioGroupRepository = hasModelerData ? &modelerData->scenarioGroupRepository
+                                                          : nullptr;
 
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,

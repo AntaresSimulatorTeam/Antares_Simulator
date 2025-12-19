@@ -24,14 +24,14 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/checks/checkLocation.h>
-#include <antares/solver/modeler/data.h>
 
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Modeler::Config;
+using namespace Antares::Solver::Config;
 
-namespace Antares::Modeler::Checks
+namespace Antares::Solver::Checks
 {
 
 void checkModel(const Model& model, const System& system)
@@ -65,7 +65,7 @@ void checkModel(const Model& model, const System& system)
     }
 }
 
-void checkLocations(const Modeler::Data& data)
+void checkLocations(const Solver::ModelerData& data)
 {
     for (const auto& lib: data.libraries)
     {
@@ -220,4 +220,4 @@ void checkExpression(const Node* expression,
         checkFunctionNode(node, model, exprStr);
     }
 }
-} // namespace Antares::Modeler::Checks
+} // namespace Antares::Solver::Checks

@@ -246,7 +246,7 @@ void AddVariableVisitor::operator()(const std::vector<double>& lb,
 ComponentFiller::ComponentFiller(const Component& component,
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepository,
-                                 Modeler::Config::Location targetLocation,
+                                 Solver::Config::Location targetLocation,
                                  BendersDecomposition* bendersDecomposition):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
@@ -323,7 +323,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
 
         // Add common variables
         if (bendersDecomposition_
-            && variable.location() == Modeler::Config::Location::MASTER_AND_SUBPROBLEMS)
+            && variable.location() == Solver::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
             bendersDecomposition_->collectConnectionVariables(variableNames.names(),
                                                               pb.variableCount());

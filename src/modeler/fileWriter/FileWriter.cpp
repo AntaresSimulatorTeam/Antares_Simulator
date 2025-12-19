@@ -31,7 +31,7 @@
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
 
-namespace Antares::Modeler
+namespace Antares::Solver
 {
 void FileWriter::init(const std::string& simulationId)
 {
@@ -54,7 +54,7 @@ const std::filesystem::path& FileWriter::outputPath() const
 void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
   const Optimisation::LinearProblemApi::IMipSolution& solution,
-  const Data& modelerData,
+  const ModelerData& modelerData,
   const Optimisation::OptimEntityContainer& variableContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
@@ -76,4 +76,4 @@ FileWriter::FileWriter(std::filesystem::path path):
 {
 }
 
-} // namespace Antares::Modeler
+} // namespace Antares::Solver

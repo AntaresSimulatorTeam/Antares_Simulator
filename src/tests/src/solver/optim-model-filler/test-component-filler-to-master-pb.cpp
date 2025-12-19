@@ -21,7 +21,7 @@ using namespace Antares::Expressions::Nodes;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
-using namespace Antares::Modeler::Config;
+using namespace Antares::Solver::Config;
 
 template<class VariablesCreator, class ObjectivesCreator, class ConstraintsCreators>
 class FactoryFixture

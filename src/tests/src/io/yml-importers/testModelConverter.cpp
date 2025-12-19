@@ -35,7 +35,7 @@
 using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::YmlModel;
 using namespace Antares::ModelerStudy;
-using namespace Antares::Modeler::Config;
+using namespace Antares::Solver::Config;
 
 struct Fixture
 {

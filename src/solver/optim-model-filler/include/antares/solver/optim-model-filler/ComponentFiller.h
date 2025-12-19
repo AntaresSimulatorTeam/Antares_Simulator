@@ -82,7 +82,7 @@ public:
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository,
-                             Modeler::Config::Location targetLocation,
+                             Solver::Config::Location targetLocation,
                              BendersDecomposition* bendersDecomposition = nullptr);
 
     void addVariables(const LinearProblemApi::FillContext& ctx) override;
@@ -106,7 +106,7 @@ private:
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
-    const Modeler::Config::Location targetLocation_;
+    const Solver::Config::Location targetLocation_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
 
     // Filter to keep only items compatible with the target location

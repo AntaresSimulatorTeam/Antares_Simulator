@@ -123,7 +123,7 @@ public:
 
     void addFromSystemComponents(
       const std::vector<Antares::ModelerStudy::SystemModel::Component>& component,
-      Modeler::Config::Location targetLocation = Modeler::Config::Location::SUBPROBLEMS);
+      Solver::Config::Location targetLocation = Solver::Config::Location::SUBPROBLEMS);
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
                             const VariabilityType& variability);
 

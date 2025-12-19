@@ -21,7 +21,7 @@
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/solver/modeler/parameters/modelerParameters.h"
 
-#include "data.h"
+#include "ModelerData.h"
 
 namespace Antares::Solver
 {
@@ -63,6 +63,6 @@ private:
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
     ModelerParameters parameters_;
-    Antares::Modeler::Data data_;
+    ModelerData data_;
 };
 } // namespace Antares::Solver

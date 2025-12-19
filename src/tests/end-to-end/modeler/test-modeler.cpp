@@ -36,10 +36,12 @@
 #include "inmemory-modeler.h"
 
 using namespace Antares::Expressions;
+using namespace Antares::Solver;
+using namespace Antares::Optimisation;
 using PTV = Antares::ModelerStudy::SystemModel::ParameterTypeAndValue;
-using VV = Antares::Optimisation::VariabilityType;
+using VV = VariabilityType;
 
-class ConstantDataSeries: public Antares::Optimisation::LinearProblemApi::ILinearProblemData
+class ConstantDataSeries: public LinearProblemApi::ILinearProblemData
 {
 public:
     explicit ConstantDataSeries(double value):
@@ -81,7 +83,7 @@ Antares::ModelerStudy::SystemModel::Component copyComponent(
       .build();
 }
 
-class DefaultScenario final: public Antares::Optimisation::LinearProblemApi::IScenario
+class DefaultScenario final: public LinearProblemApi::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -107,7 +109,7 @@ public:
                 .lastTimeStep = timeSteps.second};
     }
 
-    Antares::Modeler::Data loadAll() override
+    ModelerData loadAll() override
     {
         auto objective = fixture.variable("x", 0);
         auto var_node = fixture.variable("x", 0);
@@ -173,8 +175,7 @@ public:
 
     void addScenario(const std::string& str, int year, int timeSeriesNumber)
     {
-        auto scenario = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
-          str);
+        auto scenario = std::make_unique<LinearProblemDataImpl::Scenario>(str);
         scenario->setTimeSerieNumber(year, timeSeriesNumber);
         scenarioGroupRepository.addScenario(str, std::move(scenario));
     }
@@ -182,13 +183,13 @@ public:
     Models models;
     std::vector<Antares::ModelerStudy::SystemModel::Component> components;
     Test::Modeler::LinearProblemBuildingFixture fixture;
-    std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblemData>
+    std::unique_ptr<LinearProblemApi::ILinearProblemData>
       data = std::make_unique<ConstantDataSeries>(0.);
     Nodes::Node* lower_bound = fixture.literal(0.0);
     bool timeDependent{false};
     std::map<std::string, PTV> parameters{};
     std::vector<std::string> parameterIds{};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository{};
+    ScenarioGroupRepository scenarioGroupRepository{};
     std::unordered_map<std::string, std::string> groupes;
     std::pair<unsigned int, unsigned int> timeSteps{0, 0};
 };
@@ -214,12 +215,11 @@ public:
         return dummy;
     }
 
-    void writeSimulationTable(
-      const Antares::Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-      const Antares::Optimisation::LinearProblemApi::IMipSolution& solution,
-      const Antares::Modeler::Data& modelerData,
-      const Antares::Optimisation::OptimEntityContainer& variableContainer,
-      const Antares::Optimisation::LinearProblemApi::FillContext& fillContext) const override
+    void writeSimulationTable(const LinearProblemApi::ILinearProblem& linearProblem,
+                              const LinearProblemApi::IMipSolution& solution,
+                              const ModelerData& modelerData,
+                              const OptimEntityContainer& variableContainer,
+                              const LinearProblemApi::FillContext& fillContext) const override
     {
         solution_.objectiveValue = solution.getObjectiveValue();
     }
@@ -257,10 +257,11 @@ struct TSDimensions
     int nCols{1};
 };
 
-Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet
-constantTimeSeriesSets(const std::string& id, std::span<double> values, unsigned int nRows = 1)
+LinearProblemDataImpl::TimeSeriesSet constantTimeSeriesSets(const std::string& id,
+                                                            std::span<double> values,
+                                                            unsigned int nRows = 1)
 {
-    Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet timeSeriesSet(id, nRows);
+    LinearProblemDataImpl::TimeSeriesSet timeSeriesSet(id, nRows);
     for (double value: values)
     {
         if (nRows == 0)
@@ -274,8 +275,9 @@ constantTimeSeriesSets(const std::string& id, std::span<double> values, unsigned
     return timeSeriesSet;
 }
 
-Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet
-constantTimeSeriesSet(const std::string& id, double value = 0., TSDimensions dims = {1, 1})
+LinearProblemDataImpl::TimeSeriesSet constantTimeSeriesSet(const std::string& id,
+                                                           double value = 0.,
+                                                           TSDimensions dims = {1, 1})
 {
     std::vector<double> values(dims.nCols, value);
     return constantTimeSeriesSets(id, values, dims.nRows);
@@ -288,13 +290,12 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
     inMemoryLoader.setLowerBoundToParameter("paramA");
     inMemoryLoader.addParameter("paramA");
 
-    Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository data_series_repository;
+    LinearProblemDataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
-    data_series_repository.addDataSeries(
-      std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
-        constantTimeSeriesSets("GROUPA", values, 1)));
+    data_series_repository.addDataSeries(std::make_unique<LinearProblemDataImpl::TimeSeriesSet>(
+      constantTimeSeriesSets("GROUPA", values, 1)));
     inMemoryLoader.data = std::make_unique<
-      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
+      LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
     InMemoryWriter inMemoryWriter;
@@ -311,13 +312,12 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
     inMemoryLoader.setLowerBoundToParameter("paramA");
     inMemoryLoader.addParameter("paramA");
 
-    Antares::Optimisation::LinearProblemDataImpl::DataSeriesRepository data_series_repository;
+    LinearProblemDataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
-    data_series_repository.addDataSeries(
-      std::make_unique<Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet>(
-        constantTimeSeriesSets("GROUPA", values, 1)));
+    data_series_repository.addDataSeries(std::make_unique<LinearProblemDataImpl::TimeSeriesSet>(
+      constantTimeSeriesSets("GROUPA", values, 1)));
     inMemoryLoader.data = std::make_unique<
-      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(
+      LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
     inMemoryLoader.addScenario("GROUPA", 0, 2); // Year 0, timeseriesNumber 1

@@ -602,6 +602,6 @@ public:
       ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
-    Modeler::Data* modelerData = nullptr;
+    Solver::ModelerData* modelerData = nullptr;
 };
 #endif

@@ -21,7 +21,7 @@
 
 #include "antares/study/system-model/optimConfig.h"
 
-namespace Antares::Modeler::Config
+namespace Antares::Solver::Config
 {
 
 const char* LocationToStr(Location loc)
@@ -70,4 +70,4 @@ bool AreLocationsCompatibleForExpressions(Location lhs, Location rhs)
     }
 }
 
-} // namespace Antares::Modeler::Config
+} // namespace Antares::Solver::Config

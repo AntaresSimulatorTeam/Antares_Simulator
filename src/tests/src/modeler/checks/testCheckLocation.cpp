@@ -34,9 +34,9 @@
 // clang-format on
 
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Modeler::Checks;
+using namespace Antares::Solver::Checks;
 using namespace Antares::Expressions::Nodes;
-using namespace Antares::Modeler::Config;
+using namespace Antares::Solver::Config;
 
 struct Fixture
 {

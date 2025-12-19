@@ -31,6 +31,7 @@
 
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
+using namespace Antares::Solver;
 
 namespace Test::Modeler
 {
@@ -66,7 +67,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
           component,
           *optimEntityContainer,
           scenarioGroupRepo,
-          Antares::Modeler::Config::Location::SUBPROBLEMS);
+                                                    Config::Location::SUBPROBLEMS);
         fillers.push_back(std::move(cf));
     }
     LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);

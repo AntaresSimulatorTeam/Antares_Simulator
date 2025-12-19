@@ -25,7 +25,7 @@
 #include <vector>
 #include <yaml-cpp/yaml.h>
 
-#include <antares/solver/modeler/data.h>
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
@@ -34,7 +34,7 @@ namespace Antares::Solver::LoadFiles
 {
 
 /// Load the libraries, system and dataseries
-Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath);
+ModelerData loadAll(const std::filesystem::path& studyPath);
 
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 

@@ -35,7 +35,7 @@ class Constraint final
 public:
     Constraint(std::string id,
                Expression expression,
-               Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
+               Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS):
         id_(std::move(id)),
         expression_(std::move(expression)),
         location_(location)
@@ -52,7 +52,7 @@ public:
         return expression_;
     }
 
-    [[nodiscard]] Modeler::Config::Location location() const
+    [[nodiscard]] Solver::Config::Location location() const
     {
         return location_;
     }
@@ -60,7 +60,7 @@ public:
 private:
     std::string id_;
     Expression expression_;
-    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;
+    Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

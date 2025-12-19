@@ -30,7 +30,6 @@
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Inputs;
-using namespace Antares::Modeler;
 
 namespace Antares::Solver::LoadFiles
 {

@@ -48,18 +48,16 @@ BOOST_AUTO_TEST_SUITE(ValidateMps)
 
 struct MpsWriterTestFixture
 {
-   
-
-    static Antares::Solver::Modeler build(const fs::path& studyPath)
+    static Modeler build(const fs::path& studyPath)
     {
         LoadFiles::FileLoader loader(studyPath);
-        Modeler::FileWriter writer(studyPath);
+        FileWriter writer(studyPath);
         return  {loader, writer};
         
     }
-    static void checkMPS(const fs::path& studyPath, Antares::Solver::Modeler& modeler)
+
+    static void checkMPS(const fs::path& studyPath, Modeler& modeler)
     {
-       
         modeler.run();
         checkProblem(modeler.masterProblem(), studyPath / "output" / "master.mps");
         checkProblem(modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");

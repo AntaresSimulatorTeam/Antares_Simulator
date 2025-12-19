@@ -55,11 +55,11 @@ int main(int argc, const char** argv)
     try
     {
         LoadFiles::FileLoader loader(studyPath);
-        Antares::Modeler::FileWriter writer(studyPath);
-        Antares::Solver::Modeler modeler(loader, writer);
+        Solver::FileWriter writer(studyPath);
+        Solver::Modeler modeler(loader, writer);
         modeler.run();
     }
-    catch (const Antares::Solver::Modeler::ModelerError& e)
+    catch (const Solver::Modeler::ModelerError& e)
     {
         logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;

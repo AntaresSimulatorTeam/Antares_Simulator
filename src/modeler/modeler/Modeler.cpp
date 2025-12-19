@@ -77,7 +77,7 @@ public:
 
     ~SystemLinearProblemBuilder() = default;
 
-    void build(const FillContext& timeScenarioCtx, Antares::Modeler::Config::Location location)
+    void build(const FillContext& timeScenarioCtx, Config::Location location)
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         const auto& components = system_->Components();
@@ -85,11 +85,11 @@ public:
 
         for (const auto& component: components)
         {
-            auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      optimEntityContainer_,
-                                                                      scenarioGroupRepository_,
-                                                                      location,
-                                                                      bendersDecomposition_);
+            auto cf = std::make_unique<ComponentFiller>(component,
+                                                        optimEntityContainer_,
+                                                        scenarioGroupRepository_,
+                                                        location,
+                                                        bendersDecomposition_);
             fillers.push_back(std::move(cf));
         }
 
@@ -97,15 +97,15 @@ public:
         linear_problem_builder.build(timeScenarioCtx);
     }
 
-    [[nodiscard]] const Optimisation::OptimEntityContainer& getOptimEntityContainer() const
+    [[nodiscard]] const OptimEntityContainer& getOptimEntityContainer() const
     {
         return optimEntityContainer_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
-    Optimisation::OptimEntityContainer optimEntityContainer_;
+    const ScenarioGroupRepository& scenarioGroupRepository_;
+    OptimEntityContainer optimEntityContainer_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
@@ -147,7 +147,7 @@ void Modeler::run()
                                              &bendersDecomposition);
 
     bendersDecomposition.setCurrentProblemId("master");
-    masterBuilder.build(timeScenarioCtx, Antares::Modeler::Config::Location::MASTER);
+    masterBuilder.build(timeScenarioCtx, Config::Location::MASTER);
 
     // Subproblem
     subproblems_.emplace_back(std::make_unique<OrtoolsLinearProblem>(isMip, parameters_.solver));
@@ -163,7 +163,7 @@ void Modeler::run()
                                                  &bendersDecomposition);
 
     bendersDecomposition.setCurrentProblemId("1-1");
-    subproblemBuilder.build(timeScenarioCtx, Antares::Modeler::Config::Location::SUBPROBLEMS);
+    subproblemBuilder.build(timeScenarioCtx, Config::Location::SUBPROBLEMS);
 
     logs.info() << "Linear problem provided";
 

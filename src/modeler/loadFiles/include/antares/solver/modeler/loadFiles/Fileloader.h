@@ -32,7 +32,7 @@ public:
 
     ModelerParameters loadParameters() override;
 
-    Antares::Modeler::Data loadAll() override;
+    ModelerData loadAll() override;
 
     std::filesystem::path studyPath_;
 };
