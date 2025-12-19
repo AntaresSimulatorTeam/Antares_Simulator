@@ -35,25 +35,29 @@ using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 
 using namespace std;
+using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::IO::Outputs; //
 namespace fs = std::filesystem;
-
+ const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "resources"
+                               / "modeler";
+auto dirFilter = std::views::filter([](const fs::directory_entry& entry) {
+        return entry.is_directory();
+    });
 BOOST_AUTO_TEST_SUITE(ValidateMps)
 
 struct MpsWriterTestFixture
 {
-    const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "resources"
-                               / "modeler";
+   
 
-    static Modeler build(const fs::path& studyPath)
+    static Antares::Solver::Modeler build(const fs::path& studyPath)
     {
         LoadFiles::FileLoader loader(studyPath);
         Modeler::FileWriter writer(studyPath);
         return  {loader, writer};
         
     }
-    static void checkMPS(const fs::path& studyPath, Modeler& modeler)
+    static void checkMPS(const fs::path& studyPath, Antares::Solver::Modeler& modeler)
     {
        
         modeler.run();
@@ -78,9 +82,13 @@ struct MpsWriterTestFixture
         bool isLp = true;
         for (int vi = 0; vi < fromMps.num_variables(); ++vi)
         {
-            isLp &= !fromMps.VarIsIntegral(vi);
+            if (fromMps.VarIsIntegral(vi)){
+               isLp = false;
+               break;
+            }
         }
         BOOST_CHECK(isLp == originalProblem->isLP());
+
     }
 
     static void checkVariables(const unique_ptr<ILinearProblem>& originalProblem,
@@ -138,23 +146,33 @@ struct MpsWriterTestFixture
     }
 
   
+
+
+
+
+ static void checkEpic2Studies()
+ {
+
+      for (const auto& subEntry:
+                  fs::directory_iterator(resources / "epic_2" / "us2.5") | dirFilter)
+             {
+                 auto modeler = build(subEntry.path());
+                 checkMPS(subEntry.path(), modeler);
+             }
+ }
+
 };
+
+
 
 BOOST_FIXTURE_TEST_CASE(TestALLModelerStudiesMps, MpsWriterTestFixture)
 {
-    auto dirFilter = std::views::filter([](const fs::directory_entry& entry) {
-        return entry.is_directory();
-    });
+    
     for (const auto& entry: fs::directory_iterator(resources) | dirFilter)
     {
         if (entry.path().stem() == "epic_2")
         {
-            for (const auto& subEntry:
-                 fs::directory_iterator(resources / "epic_2" / "us2.5") | dirFilter)
-            {
-                auto modeler = build(subEntry.path());
-                checkMPS(subEntry.path(), modeler);
-            }
+           checkEpic2Studies();
             continue;
         }
         auto modeler = build(entry.path());
