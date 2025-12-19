@@ -380,6 +380,10 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
               writeResultLine(id, h, "DENS", hourlyResults.ValeursHorairesDENS);
               writeResultLine(id,
                               h,
+                              "UnsuppliedEnergy",
+                              hourlyResults.ValeursHorairesDeDefaillancePositive);
+              writeResultLine(id,
+                              h,
                               "UnsuppliedEnergyCSR",
                               hourlyResults.ValeursHorairesDeDefaillancePositiveCSR);
               writeResultLine(id, h, "MRGPrice", hourlyResults.CoutsMarginauxHoraires);
@@ -387,7 +391,7 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
               writeResultLine(id, h, "DTGmrgCSR", hourlyResults.ValeursHorairesDtgMrgCsr);
               writeResultLine(id,
                               h,
-                              "SPIL. ENRG",
+                              "SpilledEnergy",
                               hourlyResults.ValeursHorairesDeDefaillanceNegative);
           }
       });
