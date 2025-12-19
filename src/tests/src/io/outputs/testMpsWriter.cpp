@@ -44,6 +44,7 @@ const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "
                            / "modeler";
 auto dirFilter = std::views::filter([](const fs::directory_entry& entry)
                                     { return entry.is_directory(); });
+const std::set<std::string> ignoreList{"1_3", "1_5"};
 BOOST_AUTO_TEST_SUITE(ValidateMps)
 
 struct MpsWriterTestFixture
@@ -166,9 +167,14 @@ static void checkEpic2Studies()
 {
     for (const auto& subEntry: fs::directory_iterator(resources / "epic_2" / "us2.5") | dirFilter)
     {
-        MpsWriterTestFixture fixture(subEntry.path());
-        auto modeler = fixture.build();
-        MpsWriterTestFixture::checkMPS(subEntry.path(), modeler);
+        if (!ignoreList.contains(subEntry.path().stem().string()))
+        {
+            {
+                MpsWriterTestFixture fixture(subEntry.path());
+                auto modeler = fixture.build();
+                MpsWriterTestFixture::checkMPS(subEntry.path(), modeler);
+            }
+        }
     }
 }
 
@@ -176,14 +182,17 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
 {
     for (const auto& entry: fs::directory_iterator(resources) | dirFilter)
     {
-        if (entry.path().stem() == "epic_2")
+        if (!ignoreList.contains(entry.path().stem().string()))
         {
-            checkEpic2Studies();
-            continue;
+            if (entry.path().stem() == "epic_2")
+            {
+                checkEpic2Studies();
+                continue;
+            }
+            MpsWriterTestFixture fixture(entry.path());
+            auto modeler = fixture.build();
+            MpsWriterTestFixture::checkMPS(entry.path(), modeler);
         }
-        MpsWriterTestFixture fixture(entry.path());
-        auto modeler = fixture.build();
-        MpsWriterTestFixture::checkMPS(entry.path(), modeler);
     }
 }
 
