@@ -393,6 +393,14 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
                               h,
                               "SpilledEnergy",
                               hourlyResults.ValeursHorairesDeDefaillanceNegative);
+              for (const auto& l: area.links)
+              {
+                  writeResultLine(
+                    id,
+                    h,
+                    fmt::format("->{}_ValeursNTC", area.name, l.second->with->name),
+                    problemeHebdo_->ValeursDeNTC[l.second->index].ValeurDeNTCOrigineVersExtremite);
+              }
           }
       });
 
