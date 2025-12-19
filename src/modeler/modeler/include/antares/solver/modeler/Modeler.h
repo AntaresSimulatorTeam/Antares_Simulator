@@ -60,7 +60,7 @@ public:
     }
 
 private:
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_;
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
     ModelerParameters parameters_;
     ModelerData data_;
