@@ -128,6 +128,7 @@ public:
                                     unsigned constrIndex,
                                     const std::string& sts_name,
                                     const std::string& constrIndex_name);
+
 private:
     void BindingConstraint(unsigned constrIndex,
                            const std::string& name,
