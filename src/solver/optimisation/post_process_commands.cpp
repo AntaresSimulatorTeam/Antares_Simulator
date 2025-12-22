@@ -386,22 +386,40 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
                                     r.ValeursHorairesDeDefaillanceNegative[h]);
           }
       });
+    std::string filename = fmt::format("adequacy-patch-{}-{}-{}.csv",
+                                       beforeOrAfter_,
+                                       opt_runtime_data.year,
+                                       opt_runtime_data.week);
 
-    std::string filename("adequacy-patch-" + beforeOrAfter_ + "-"
-                         + std::to_string(opt_runtime_data.year) + "-"
-                         + std::to_string(opt_runtime_data.week) + ".csv");
     std::string s = stream.str();
     writer_.addEntryFromBuffer(filename, s);
 
     stream = std::stringstream();
     stream << "Link Hour Flow\n";
-    /*for (const auto& l: area.links)*/
-    /*{*/
-    /*    writeResultLine(id,*/
-    /*                    h,*/
-    /*                    fmt::format("->{}_ValeursNTC", area.name,l.second->with->name),*/
-    /*                    problemeHebdo_->ValeursDeNTC[l.second->index].ValeurDuFlux);*/
-    /*}*/
+    areas_.each(
+      [this, &stream](const Data::Area& area)
+      {
+          for (const auto& l: area.links)
+          {
+              for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
+              {
+                  stream << fmt::format(
+                    "{}/{} {} {}\n",
+                    area.name,
+                    l.second->with->name,
+                    h,
+                    problemeHebdo_->ValeursDeNTC[h].ValeurDuFlux[l.second->index]);
+              }
+          }
+      });
+
+    filename = fmt::format("adequacy-patch-links-{}-{}-{}.csv",
+                           beforeOrAfter_,
+                           opt_runtime_data.year,
+                           opt_runtime_data.week);
+
+    s = stream.str();
+    writer_.addEntryFromBuffer(filename, s);
 }
 
 } // namespace Antares::Solver::Simulation
