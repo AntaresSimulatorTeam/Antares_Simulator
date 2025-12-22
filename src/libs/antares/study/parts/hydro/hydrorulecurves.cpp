@@ -126,8 +126,6 @@ bool RuleCurvesLoaderService::LoadFromFolder(
   Parameters::Compatibility::HydroRuleCurves hydroRuleCurves)
 {
     auto loader = createRuleCurvesLoader(hydroRuleCurves, folder, areaID);
-    bool ret = loader->load();
-    return ret;
+    return loader->load();
 }
-
 } // namespace Antares::Data
