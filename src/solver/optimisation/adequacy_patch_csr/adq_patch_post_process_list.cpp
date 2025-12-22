@@ -40,11 +40,15 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
 
     post_process_list.push_back(
       std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_, areas, params, numSpace, writer));
-    post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
-                                                                          areas,
-                                                                          numSpace_,
-                                                                          writer,
-                                                                          "before"));
+
+    if (params.adqPatchDebug)
+    {
+        post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
+                                                                              areas,
+                                                                              numSpace_,
+                                                                              writer,
+                                                                              "before"));
+    }
 
     post_process_list.push_back(
       std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
@@ -57,11 +61,14 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
     post_process_list.push_back(
       std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
 
-    post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
-                                                                          areas,
-                                                                          numSpace_,
-                                                                          writer,
-                                                                          "after"));
+    if (params.adqPatchDebug)
+    {
+        post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
+                                                                              areas,
+                                                                              numSpace_,
+                                                                              writer,
+                                                                              "after"));
+    }
     post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));
     post_process_list.push_back(
