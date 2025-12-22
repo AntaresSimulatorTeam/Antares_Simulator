@@ -184,6 +184,8 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     // before building variable list and the common matrix
     fillLinksProperties(pb_, *study_);
 
+    OPT_NumeroDeJourDuPasDeTemps(&pb_);
+
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(&pb_);
 
     auto builder_data = NewGetConstraintBuilderFromProblemHebdo(&pb_);
