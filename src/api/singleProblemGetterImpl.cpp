@@ -58,7 +58,7 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
 
 std::string problemName(const WeeklyProblemId& id)
 {
-    return fmt::format("problem-{}-{}.txt", id.year, id.week);
+    return fmt::format("problem-{}-{}", id.year, id.week);
 }
 } // namespace
 
