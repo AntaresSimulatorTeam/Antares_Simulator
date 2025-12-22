@@ -359,7 +359,6 @@ WriteDebugAdequacyPatch::WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
 {
 }
 
-
 void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
 {
     writeAreaData(opt_runtime_data);
