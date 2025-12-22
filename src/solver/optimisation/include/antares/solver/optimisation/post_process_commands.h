@@ -139,6 +139,9 @@ public:
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
+    void writeAreaData(const optRuntimeData& opt_runtime_data);
+    void writeLinkData(const optRuntimeData& opt_runtime_data);
+
     const AreaList& areas_;
     unsigned int numSpace_ = 0;
     IResultWriter& writer_;

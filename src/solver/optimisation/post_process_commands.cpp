@@ -359,7 +359,14 @@ WriteDebugAdequacyPatch::WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
 {
 }
 
+
 void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
+{
+    writeAreaData(opt_runtime_data);
+    writeLinkData(opt_runtime_data);
+}
+
+void WriteDebugAdequacyPatch::writeAreaData(const optRuntimeData& opt_runtime_data)
 {
     std::stringstream stream;
     stream << "Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice MRGPriceCSR DTGmrgCSR "
@@ -393,8 +400,11 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
 
     std::string s = stream.str();
     writer_.addEntryFromBuffer(filename, s);
+}
 
-    stream = std::stringstream();
+void WriteDebugAdequacyPatch::writeLinkData(const optRuntimeData& opt_runtime_data)
+{
+    std::stringstream stream;
     stream << "Link Hour Flow\n";
     areas_.each(
       [this, &stream](const Data::Area& area)
@@ -413,12 +423,12 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
           }
       });
 
-    filename = fmt::format("adequacy-patch-links-{}-{}-{}.csv",
-                           beforeOrAfter_,
-                           opt_runtime_data.year,
-                           opt_runtime_data.week);
+    std::string filename = fmt::format("adequacy-patch-links-{}-{}-{}.csv",
+                                       beforeOrAfter_,
+                                       opt_runtime_data.year,
+                                       opt_runtime_data.week);
 
-    s = stream.str();
+    std::string s = stream.str();
     writer_.addEntryFromBuffer(filename, s);
 }
 
