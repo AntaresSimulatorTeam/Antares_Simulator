@@ -22,6 +22,7 @@
 #include "antares/solver/optimisation/post_process_commands.h"
 
 #include <fmt/format.h>
+#include <sstream>
 
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
@@ -361,46 +362,28 @@ WriteDebugAdequacyPatch::WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
 void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
 {
     std::stringstream stream;
-    auto writeResultLine = [&stream](const std::string& areaName,
-                                     unsigned hour,
-                                     const std::string& varName,
-                                     std::vector<double>& variable)
-    { stream << fmt::format("{} {} {} {}\n", areaName, hour, varName, variable[hour]); };
+    stream << "Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice MRGPriceCSR DTGmrgCSR "
+              "SpilledEnergy\n";
 
     areas_.each(
-      [this, &writeResultLine](const Data::Area& area)
+      [this, &stream](const Data::Area& area)
       {
-          auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
+          std::string areaName = area.name;
+          auto& r = problemeHebdo_->ResultatsHoraires[area.index];
           const auto& scratchpad = area.scratchpad[numSpace_];
 
-          // Write all results
           for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
           {
-              const std::string& id = area.name;
-              writeResultLine(id, h, "DENS", hourlyResults.ValeursHorairesDENS);
-              writeResultLine(id,
-                              h,
-                              "UnsuppliedEnergy",
-                              hourlyResults.ValeursHorairesDeDefaillancePositive);
-              writeResultLine(id,
-                              h,
-                              "UnsuppliedEnergyCSR",
-                              hourlyResults.ValeursHorairesDeDefaillancePositiveCSR);
-              writeResultLine(id, h, "MRGPrice", hourlyResults.CoutsMarginauxHoraires);
-              writeResultLine(id, h, "MRGPriceCSR", hourlyResults.CoutsMarginauxHorairesCSR);
-              writeResultLine(id, h, "DTGmrgCSR", hourlyResults.ValeursHorairesDtgMrgCsr);
-              writeResultLine(id,
-                              h,
-                              "SpilledEnergy",
-                              hourlyResults.ValeursHorairesDeDefaillanceNegative);
-              for (const auto& l: area.links)
-              {
-                  writeResultLine(
-                    id,
-                    h,
-                    fmt::format("->{}_ValeursNTC", area.name, l.second->with->name),
-                    problemeHebdo_->ValeursDeNTC[l.second->index].ValeurDeNTCOrigineVersExtremite);
-              }
+              stream << fmt::format("{} {} {} {} {} {} {} {} {}\n",
+                                    areaName,
+                                    h,
+                                    r.ValeursHorairesDENS[h],
+                                    r.ValeursHorairesDeDefaillancePositive[h],
+                                    r.ValeursHorairesDeDefaillancePositiveCSR[h],
+                                    r.CoutsMarginauxHoraires[h],
+                                    r.CoutsMarginauxHorairesCSR[h],
+                                    r.ValeursHorairesDtgMrgCsr[h],
+                                    r.ValeursHorairesDeDefaillanceNegative[h]);
           }
       });
 
@@ -409,6 +392,16 @@ void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
                          + std::to_string(opt_runtime_data.week) + ".csv");
     std::string s = stream.str();
     writer_.addEntryFromBuffer(filename, s);
+
+    stream = std::stringstream();
+    stream << "Link Hour Flow\n";
+    /*for (const auto& l: area.links)*/
+    /*{*/
+    /*    writeResultLine(id,*/
+    /*                    h,*/
+    /*                    fmt::format("->{}_ValeursNTC", area.name,l.second->with->name),*/
+    /*                    problemeHebdo_->ValeursDeNTC[l.second->index].ValeurDuFlux);*/
+    /*}*/
 }
 
 } // namespace Antares::Solver::Simulation
