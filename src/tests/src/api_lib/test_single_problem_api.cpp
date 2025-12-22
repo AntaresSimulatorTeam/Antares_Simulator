@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(constantData.ConstraintsMatrixCoeff[1], -1);
 
     const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
-    BOOST_CHECK_EQUAL(firstWeekData.name, "problem-0-1");
+    BOOST_CHECK_EQUAL(firstWeekData.name, "problem-1-1--optim-nb-1");
 
     // COST
     BOOST_CHECK_CLOSE(firstWeekData.LinearCost[dispatchableVariable],
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                       3048.5130614352684,
                       EPSILON); // random initial level
 
-    BOOST_CHECK_EQUAL(secondWeekData.name, "problem-0-2");
+    BOOST_CHECK_EQUAL(secondWeekData.name, "problem-1-2--optim-nb-1");
 }
 BOOST_AUTO_TEST_SUITE_END()
 
