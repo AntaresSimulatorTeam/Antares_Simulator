@@ -350,12 +350,12 @@ WriteDebugAdequacyPatch::WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
                                                  AreaList& areas,
                                                  unsigned int numSpace,
                                                  IResultWriter& writer,
-                                                 std::string beforeOrAfter):
+                                                 std::string fileLabel):
     basePostProcessCommand(problemeHebdo),
     areas_(areas),
     numSpace_(numSpace),
     writer_(writer),
-    beforeOrAfter_(beforeOrAfter)
+    fileLabel_(fileLabel)
 {
 }
 
@@ -392,8 +392,8 @@ void WriteDebugAdequacyPatch::writeAreaData(const optRuntimeData& opt_runtime_da
                                     r.ValeursHorairesDeDefaillanceNegative[h]);
           }
       });
-    std::string filename = fmt::format("adequacy-patch-{}-{}-{}.csv",
-                                       beforeOrAfter_,
+    std::string filename = fmt::format("adequacy-patch-areas-{}-{}-{}.csv",
+                                       fileLabel_,
                                        opt_runtime_data.year,
                                        opt_runtime_data.week);
 
@@ -423,7 +423,7 @@ void WriteDebugAdequacyPatch::writeLinkData(const optRuntimeData& opt_runtime_da
       });
 
     std::string filename = fmt::format("adequacy-patch-links-{}-{}-{}.csv",
-                                       beforeOrAfter_,
+                                       fileLabel_,
                                        opt_runtime_data.year,
                                        opt_runtime_data.week);
 

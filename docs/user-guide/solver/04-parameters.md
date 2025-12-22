@@ -276,7 +276,7 @@ Format is CSV with spaces as separator.
 - **Default value:** `false`
     - `false`: Doesn't create the files
     - `true`: Output 2 types of debug files, the first one for regular variables and the second one for link variables:
-         - adequacy-patch-*before|after*-*year*-*week*.csv 
+         - adequacy-patch-areas-*before|after*-*year*-*week*.csv 
          - adequacy-patch-links-*before|after*-*year*-*week*.csv 
 
 Each type of file is created before and after adequacy patch process (4 files per week). Files are named accordingly. Format is CSV with spaces as separator.
