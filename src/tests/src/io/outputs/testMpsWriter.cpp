@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
         }
         if (!ignoreList.contains(entry.path().stem().string()))
         {
-            if (entry.path().stem() == "epic_2")
+            if (const auto& path = entry.path(); path.stem() == "epic_2")
             {
                 checkEpic2Studies();
                 continue;

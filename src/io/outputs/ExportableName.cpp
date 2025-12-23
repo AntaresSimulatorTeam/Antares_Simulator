@@ -18,36 +18,27 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
-
-#include <filesystem>
-#include <fstream>
-
-#include "antares/optimisation/linear-problem-api/linearProblem.h"
 namespace Antares::IO::Outputs
 {
-class MPSWriter
+std::string MakeExportableName(const std::string& name,
+                               const std::string& forbiddenFirstChars,
+                               const std::string& forbiddenChars,
+                               bool* foundForbiddenChar)
 {
-public:
-    explicit MPSWriter(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
-                       const std::filesystem::path& path,
-                       const std::string& name);
-    void write();
+    *foundForbiddenChar = name.empty()
+                          || forbiddenFirstChars.find(name.front()) != std::string::npos;
 
-private:
-    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
-    std::ofstream out_;
-    const std::string& name_;
-    //--//
-    void writeHeader();
-    void writeName();
-    void writeRows();
-    void writeColumns();
-    void writeRhs();
-    void writeBounds();
-    void writeEnd();
-    const std::string forbiddenFirstChars = "$.0123456789";
-    const std::string forbiddenChars = " +-*/<>=:\\";
-};
+    std::string exportable = *foundForbiddenChar ? "_" + name : name;
 
-} // namespace Antares::IO
+    for (char& c: exportable)
+    {
+        if (forbiddenChars.find(c) != std::string::npos)
+        {
+            c = '_';
+            *foundForbiddenChar = true;
+        }
+    }
+
+    return exportable;
+}
+} // namespace Antares::IO::Outputs
