@@ -386,8 +386,8 @@ void WriteDebugAdequacyPatch::writeAreaData(const optRuntimeData& opt_runtime_da
                                     r.ValeursHorairesDENS[h],
                                     r.ValeursHorairesDeDefaillancePositive[h],
                                     r.ValeursHorairesDeDefaillancePositiveCSR[h],
-                                    r.CoutsMarginauxHoraires[h],
-                                    r.CoutsMarginauxHorairesCSR[h],
+                                    -r.CoutsMarginauxHoraires[h],
+                                    -r.CoutsMarginauxHorairesCSR[h],
                                     r.ValeursHorairesDtgMrgCsr[h],
                                     r.ValeursHorairesDeDefaillanceNegative[h]);
           }
