@@ -84,6 +84,9 @@ jobs:
         ccache -p
       shell: bash
 
+    - name: Install Build Wrapper
+      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v6.0.0
+
     - name: Install libraries
       run: |
         sudo apt-get update
@@ -139,9 +142,6 @@ jobs:
         -DMZ_CODE_COVERAGE=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
-
-    - name: Install Build Wrapper
-      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v6.0.0
 
     - name: Build
       run: |
