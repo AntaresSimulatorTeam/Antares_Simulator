@@ -26,6 +26,8 @@
 #include <string>
 #include <vector>
 
+#include "ortools/linear_solver/linear_solver.h"
+
 namespace Antares::Solver
 {
 
@@ -98,6 +100,7 @@ struct WeeklyDataFromAntares
     std::vector<double> RHS; // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
     std::string name;
+    operations_research::MPSolver* solver_;
 
     auto operator<=>(const WeeklyDataFromAntares& other) const = default;
 };

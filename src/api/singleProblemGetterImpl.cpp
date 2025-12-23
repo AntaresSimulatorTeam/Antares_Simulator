@@ -28,7 +28,9 @@
 #include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
+#include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -38,6 +40,7 @@
 #include "antares/writer/i_writer.h"
 
 #include "fmt/format.h"
+using namespace Optimisation::LinearProblemApi;
 
 namespace
 {
@@ -56,10 +59,6 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
     return study;
 }
 
-std::string problemName(const WeeklyProblemId& id)
-{
-    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
-}
 } // namespace
 
 namespace Antares::Solver::Implementation
@@ -192,7 +191,6 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrix linearProblemMatrix(&pb_, builder);
     linearProblemMatrix.Run();
-
     return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
 }
 
@@ -270,6 +268,41 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                                     optimizationNumber);
 
     OPT_InitialiserLesCoutsLineaire(&pb_, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+
+    {
+        const auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
+
+        const int opt = optimizationNumber - 1;
+        assert(opt >= 0 && opt < 2);
+        // OptimizationStatistics& optimizationStatistics = pb_.optimizationStatistics[opt];
+        // TIME_MEASURE timeMeasure;
+        SingleOptimOptions options;
+        Antares::Optimization::LegacyOrtoolsLinearProblem ortoolsProblem(
+          pb_.ProblemeAResoudre->isMIP(),
+          options.solverName);
+        Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
+                                                                               numeroDeLIntervalle);
+        const auto& modelerData = pb_.modelerData;
+        bool hasModelerData = modelerData != nullptr;
+        const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
+                                                                     : nullptr;
+        const Optimisation::ScenarioGroupRepository*
+          modelerScenarioGroupRepository = hasModelerData ? &modelerData->scenarioGroupRepository
+                                                          : nullptr;
+
+        Optimisation::OptimEntityContainer optimEntityContainer(ortoolsProblem,
+                                                                modelerDataSeries,
+                                                                modelerScenarioGroupRepository);
+
+        auto* solver = fillAndGetMpSolver(ortoolsProblem,
+                                          fillCtx,
+                                          &pb_,
+                                          optimEntityContainer,
+                                          true); // TODO
+
+        ProblemeAResoudre->ProblemesSpx[numeroDeLIntervalle].reset(solver);
+    }
+
     return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
 }
 

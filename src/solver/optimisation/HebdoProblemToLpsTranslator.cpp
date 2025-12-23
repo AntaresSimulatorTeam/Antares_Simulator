@@ -71,6 +71,7 @@ WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(
     copy(problem->Sens, ret.Direction);
     resizeIfLargerThan(ret.Direction, problem->NombreDeContraintes);
     copy(name, ret.name);
+    ret.solver_ = problem->ProblemesSpx[0].get();
 
     return ret;
 }

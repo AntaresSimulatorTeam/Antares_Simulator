@@ -22,6 +22,7 @@
 #pragma once
 
 #include <filesystem>
+#include <fmt/format.h>
 #include <memory>
 
 #include "antares/solver/lps/LpsFromAntares.h"
@@ -34,6 +35,11 @@ class SingleProblemGetter;
 
 namespace Antares::Solver
 {
+inline std::string problemName(const WeeklyProblemId& id)
+{
+    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
+}
+
 class SingleProblemGetter final
 {
 public:

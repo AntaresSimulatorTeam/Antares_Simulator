@@ -2,6 +2,8 @@
 
 #include "antares/api/singleProblemGetter.h"
 
+#include "private/singleProblemGetterImpl.h"
+
 constexpr int kMaxDisplay = 10'000;
 
 // This is a temporary client for singleProblemGetter.h for testing & debugging purposes
@@ -35,19 +37,39 @@ unsigned int toInt(const char* in)
 }
 
 int main(int argc, char** argv)
-{
-    if (argc != 4)
+{ // dirty options reader
+    if (argc < 4 || argc > 5)
     {
-        std::cerr << "Usage \n" << argv[0] << " path/to/study year week\n";
+        std::cerr << "Usage \n" << argv[0] << " path/to/study year week [--mps]\n";
         return 1;
     }
 
     const unsigned int year = toInt(argv[2]);
     const unsigned int week = toInt(argv[3]);
+    bool writeMps = false;
+    if (argc == 5 && std::string(argv[4]) != "--mps")
+    {
+        std::cerr << "skipped unknown option " << argv[4] << std::endl;
+    }
+    else
+    {
+        writeMps = true;
+    }
 
     Antares::Solver::SingleProblemGetter getter(argv[1]);
     auto constant = getter.getConstantData();
     auto weekly = getter.getWeeklyData({year, week});
+    if (writeMps)
+    {
+        std::string mps;
+        weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
+
+        std::cout << "******************************** BEGIN MPS ********************************"
+                  << std::endl;
+        std::cout << mps << std::endl;
+        std::cout << "******************************** END MPS ********************************"
+                  << std::endl;
+    }
 
     print_side_by_side(constant.VariablesCount,
                        constant.VariablesMeaning,
