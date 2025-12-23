@@ -32,6 +32,43 @@
 
 namespace Antares::API
 {
+
+static void logTotalTime(unsigned duration)
+{
+    std::chrono::milliseconds d(duration);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
+    d -= hours;
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
+    d -= minutes;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
+
+    Antares::logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus",
+                                      hours.count(),
+                                      minutes.count(),
+                                      seconds.count());
+}
+
+void writeSimulationInfos(const Data::Study& study,
+                          Benchmarking::DurationCollector& durationCollector,
+                          const Benchmarking::OptimizationInfo& optimizationInfo,
+                          IResultWriter* resultWriter)
+{
+    logTotalTime(durationCollector.getTime("total"));
+    Benchmarking::StudyInfoCollector study_info_collector(study);
+    Benchmarking::SimulationInfoCollector simulation_info_collector(optimizationInfo);
+
+    // Fill file content with data retrieved by collectors
+    Benchmarking::FileContent file_content;
+    durationCollector.toFileContent(file_content);
+    study_info_collector.toFileContent(file_content);
+    simulation_info_collector.toFileContent(file_content);
+
+    // Flush previous info into a record file
+    const std::string exec_info_path = "execution_info.ini";
+    std::string content = file_content.saveToBufferAsIni();
+    resultWriter->addEntryFromBuffer(exec_info_path, content);
+}
+
 SimulationResults APIInternal::run(
   const IStudyLoader& study_loader,
   const std::filesystem::path& output,
@@ -91,15 +128,20 @@ SimulationResults APIInternal::execute(
     }
 
     SimulationObserver simulationObserver;
-    optimizationInfo = simulationRun(*study_,
-                                     settings,
-                                     durationCollector,
-                                     *resultWriter,
-                                     simulationObserver);
+    durationCollector("total") << [&]
+    {
+        optimizationInfo = simulationRun(*study_,
+                                         settings,
+                                         durationCollector,
+                                         *resultWriter,
+                                         simulationObserver);
+    };
+    logs.notice() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
 
+    writeSimulationInfos(*study_, durationCollector, optimizationInfo, resultWriter.get());
     return {.antares_problems = simulationObserver.acquireLps(), .error{}};
 }
 } // namespace Antares::API
