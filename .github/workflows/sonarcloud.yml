@@ -22,6 +22,7 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
       BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
       #config in env to be accessible at each step
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_COMPILERCHECK: content
       CCACHE_BASEDIR: ${{ github.workspace }}
       CCACHE_SLOPPINESS: time_macros,include_file_mtime
@@ -74,6 +75,8 @@ jobs:
 
     - name: Configure ccache
       run: |
+        # Ensure directory exists and point ccache at it
+        mkdir -p ${{ env.CCACHE_DIR }}
         # Increase size to reduce evictions; adjust to suit your CI quota
         ccache --set-config=max_size=5G
         ccache --set-config=compression=true
