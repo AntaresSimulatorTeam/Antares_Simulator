@@ -130,7 +130,7 @@ void MPSWriter::writeColumns()
             if (const auto coef = c->getCoefficient(var.get()); coef != 0.0)
             {
                 out_ << "    " << exportableVariablesNames_.at(i) << "  "
-                     << exportableConstraintsNames_.at(i) << "  " << coef << "\n";
+                     << exportableConstraintsNames_.at(j) << "  " << coef << "\n";
             }
             ++j;
         }

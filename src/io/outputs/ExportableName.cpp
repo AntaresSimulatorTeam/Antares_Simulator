@@ -18,27 +18,58 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include "antares/io/outputs/ExportableName.h"
+
+#include "antares/logs/logs.h"
+
 namespace Antares::IO::Outputs
 {
-std::string MakeExportableName(const std::string& name,
-                               const std::string& forbiddenFirstChars,
-                               const std::string& forbiddenChars,
-                               bool* foundForbiddenChar)
-{
-    *foundForbiddenChar = name.empty()
-                          || forbiddenFirstChars.find(name.front()) != std::string::npos;
+const static std::string_view forbiddenFirstChars = "$.0123456789";
+const static std::string_view forbiddenChars = " +-*/<>=:\\";
 
-    std::string exportable = *foundForbiddenChar ? "_" + name : name;
+std::string MakeExportableName(const std::string& name)
+{
+    bool foundForbiddenChar = name.empty()
+                              || forbiddenFirstChars.find(name.front()) != std::string::npos;
+
+    std::string exportable = foundForbiddenChar ? "_" + name : name;
 
     for (char& c: exportable)
     {
         if (forbiddenChars.find(c) != std::string::npos)
         {
             c = '_';
-            *foundForbiddenChar = true;
+            foundForbiddenChar = true;
         }
+    }
+    if (foundForbiddenChar)
+    {
+        logs.info() << "forbidden char(s) found in id '" << name << "', replaced with '_'";
     }
 
     return exportable;
 }
+
+std::string NameManager::MakeUniqueName(const std::string& name)
+{
+    std::string result = name;
+    int n = lastN_;
+
+    while (!names_.insert(result).second)
+    {
+        result = name + "_" + std::to_string(n);
+        ++n;
+    }
+
+    lastN_ = n;
+    return result;
+}
+
+std::string MakeMpsSafeUniqueName(const std::string& originalName, NameManager& nameManager)
+{
+    const std::string exportable = MakeExportableName(originalName);
+
+    return nameManager.MakeUniqueName(exportable);
+}
+
 } // namespace Antares::IO::Outputs
