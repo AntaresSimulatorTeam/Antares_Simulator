@@ -3,6 +3,7 @@ set(SOURCES
         SimulationTableCsvFile.cpp
         SimulationTableGenerator.cpp
         MPSWriter.cpp
+        ExportableName.cpp
         include/antares/io/outputs/SimulationTableEntry.h
         include/antares/io/outputs/ISimulationTable.h
         include/antares/io/outputs/SimulationTableCsv.h
@@ -11,6 +12,7 @@ set(SOURCES
         include/antares/io/outputs/columns.h
         include/antares/io/outputs/storage.h
         include/antares/io/outputs/MPSWriter.h
+        include/antares/io/outputs/ExportableName.h
 )
 
 # Create the library

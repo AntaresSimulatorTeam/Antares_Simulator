@@ -23,6 +23,7 @@
 #include <cmath>
 
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/ExportableName.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::IO::Outputs
@@ -82,6 +83,8 @@ MPSWriter::MPSWriter(const ILinearProblem& lp,
     {
         throw std::runtime_error("Cannot open MPS file: " + path.string());
     }
+    exportableConstraintsNames_ = extractNames(lp.getConstraints());
+    exportableVariablesNames_ = extractNames(lp.getVariables());
 }
 
 void MPSWriter::writeHeader()
@@ -96,11 +99,12 @@ void MPSWriter::writeRows()
     /* ========= ROWS ========= */
     out_ << "ROWS\n";
     out_ << " N  OBJ\n";
-
+    int i = 0;
     for (const auto& constraints = linearProblem_.getConstraints(); const auto& c: constraints)
     {
         out_ << " " << ConstraintSense(c->getLb(), c->getUb(), linearProblem_.infinity()) << "  "
-             << c->getName() << "\n";
+             << exportableConstraintsNames_.at(i) << "\n";
+        ++i;
     }
 }
 
@@ -109,23 +113,28 @@ void MPSWriter::writeColumns()
     /* ========= COLUMNS ========= */
     out_ << "COLUMNS\n";
 
+    int i = 0;
     for (const auto& vars = linearProblem_.getVariables(); const auto& var: vars)
     {
         if (const auto coef = linearProblem_.getObjectiveCoefficient(var.get()); coef != 0.0)
         {
             // TODO
-            out_ << "    " << var->getName() << "  OBJ  "
+            out_ << "    " << exportableVariablesNames_.at(i) << "  OBJ  "
                  << (linearProblem_.isMinimization() ? coef : -coef) << "\n";
         }
 
         // constraints
+        int j = 0;
         for (const auto& c: linearProblem_.getConstraints())
         {
             if (const auto coef = c->getCoefficient(var.get()); coef != 0.0)
             {
-                out_ << "    " << var->getName() << "  " << c->getName() << "  " << coef << "\n";
+                out_ << "    " << exportableVariablesNames_.at(i) << "  "
+                     << exportableConstraintsNames_.at(i) << "  " << coef << "\n";
             }
+            ++j;
         }
+        ++i;
     }
 }
 
@@ -138,13 +147,15 @@ void MPSWriter::writeRhs()
     {
         out_ << "    RHS1  " << "OBJ" << "  " << -objOffset << "\n";
     }
+    int i = 0;
     for (const auto& c: linearProblem_.getConstraints())
     {
         if (const auto rhs = ConstraintRhs(c->getLb(), c->getUb(), INF);
             std::abs(rhs) != INF && std::abs(rhs) != 0.)
         {
-            out_ << "    RHS1  " << c->getName() << "  " << rhs << "\n";
+            out_ << "    RHS1  " << exportableConstraintsNames_.at(i) << "  " << rhs << "\n";
         }
+        ++i;
     }
 }
 
@@ -153,9 +164,11 @@ void MPSWriter::writeBounds()
     const double INF = linearProblem_.infinity();
     /* ========= BOUNDS ========= */
     out_ << "BOUNDS\n";
+    int i = 0;
     for (const auto& var: linearProblem_.getVariables())
     {
-        const auto varName = var->getName();
+        const auto varName = exportableVariablesNames_.at(i);
+        ++i;
         const std::string bnd = "BND1";
 
         const double lb = var->getLb();

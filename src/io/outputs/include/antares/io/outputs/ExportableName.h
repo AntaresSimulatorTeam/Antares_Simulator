@@ -20,28 +20,25 @@
 */
 #pragma once
 #include <string>
+#include <unordered_set>
 
 namespace Antares::IO::Outputs
 {
 std::string MakeExportableName(const std::string& name,
                                const std::string& forbiddenFirstChars,
                                const std::string& forbiddenChars,
-                               bool* foundForbiddenChar)
+                               bool* foundForbiddenChar);
+
+class NameManager
 {
-    *foundForbiddenChar = name.empty()
-                          || forbiddenFirstChars.find(name.front()) != std::string::npos;
+public:
+    std::string MakeUniqueName(const std::string& name);
 
-    std::string exportable = *foundForbiddenChar ? "_" + name : name;
+private:
+    std::unordered_set<std::string> names_;
+    int lastN_ = 1;
+};
 
-    for (char& c: exportable)
-    {
-        if (forbiddenChars.find(c) != std::string::npos)
-        {
-            c = '_';
-            *foundForbiddenChar = true;
-        }
-    }
+std::string MakeMpsSafeUniqueName(const std::string& originalName, NameManager& nameManager);
 
-    return exportable;
-}
 } // namespace Antares::IO::Outputs

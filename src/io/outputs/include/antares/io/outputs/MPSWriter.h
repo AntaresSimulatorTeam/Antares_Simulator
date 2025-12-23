@@ -24,11 +24,17 @@
 #include <fstream>
 
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
+
+#include "ExportableName.h"
+
 namespace Antares::IO::Outputs
 {
 class MPSWriter
 {
 public:
+    template<class T>
+    std::vector<std::string> extractNames(const std::vector<std::unique_ptr<T>>& elements);
+
     explicit MPSWriter(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
                        const std::filesystem::path& path,
                        const std::string& name);
@@ -38,6 +44,8 @@ private:
     const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
     std::ofstream out_;
     const std::string& name_;
+    std::vector<std::string> exportableConstraintsNames_;
+    std::vector<std::string> exportableVariablesNames_;
     //--//
     void writeHeader();
     void writeName();
@@ -46,8 +54,18 @@ private:
     void writeRhs();
     void writeBounds();
     void writeEnd();
-    const std::string forbiddenFirstChars = "$.0123456789";
-    const std::string forbiddenChars = " +-*/<>=:\\";
 };
+
+template<class T>
+std::vector<std::string> MPSWriter::extractNames(const std::vector<std::unique_ptr<T>>& elements)
+{
+    std::vector<std::string> names(elements.size());
+    NameManager nameManager;
+    std::ranges::transform(elements,
+                           names.begin(),
+                           [&nameManager](const std::unique_ptr<T>& element)
+                           { return MakeMpsSafeUniqueName(element->getName(), nameManager); });
+    return names;
+}
 
 } // namespace Antares::IO
