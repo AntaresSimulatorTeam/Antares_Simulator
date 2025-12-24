@@ -22,6 +22,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <ranges>
 
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 

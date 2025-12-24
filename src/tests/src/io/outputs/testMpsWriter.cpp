@@ -108,10 +108,12 @@ struct MpsWriterTestFixture
     {
         BOOST_CHECK_EQUAL(originalProblem->variableCount(), fromMps.num_variables());
         const auto& origVariables = originalProblem->getVariables();
+        NameManager nameManager;
         for (int vi = 0; vi < fromMps.num_variables(); ++vi)
         {
             const auto& origVariable = origVariables.at(vi);
-            BOOST_CHECK_EQUAL(origVariable->getName(), fromMps.VarName(vi));
+            BOOST_CHECK_EQUAL(MakeMpsSafeUniqueName(origVariable->getName(), nameManager),
+                              fromMps.VarName(vi));
             BOOST_CHECK_EQUAL(origVariable->isInteger(), fromMps.VarIsIntegral(vi));
             BOOST_CHECK_EQUAL(origVariable->getLb(), fromMps.VarLowerBound(vi));
             BOOST_CHECK_EQUAL(origVariable->getUb(), fromMps.VarUpperBound(vi));
@@ -125,10 +127,12 @@ struct MpsWriterTestFixture
         const auto& origVariables = originalProblem->getVariables();
         const auto& origConstraints = originalProblem->getConstraints();
 
+        NameManager nameManager;
         for (int ci = 0; ci < fromMps.num_constraints(); ++ci)
         {
             const auto& origConstraint = origConstraints.at(ci);
-            BOOST_CHECK_EQUAL(origConstraint->getName(), fromMps.ConstraintName(ci));
+            BOOST_CHECK_EQUAL(MakeMpsSafeUniqueName(origConstraint->getName(), nameManager),
+                              fromMps.ConstraintName(ci));
             BOOST_CHECK_EQUAL(origConstraint->getLb(), fromMps.ConstraintLowerBound(ci));
             BOOST_CHECK_EQUAL(origConstraint->getUb(), fromMps.ConstraintUpperBound(ci));
 
