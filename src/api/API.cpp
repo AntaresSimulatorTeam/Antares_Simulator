@@ -136,7 +136,6 @@ SimulationResults APIInternal::execute(
                                          *resultWriter,
                                          simulationObserver);
     };
-    logs.notice() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
