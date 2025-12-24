@@ -390,20 +390,21 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
     {
         throw std::invalid_argument("dual operator expects exactly one constraint id got nothing");
     }
-    const auto constraintId = context->expr();
+    const auto constraints_ids = context->expr();
 
-    if (constraintId.size() != 1) // -> > 1
+    if (constraints_ids.size() != 1) // -> > 1
     {
-        std::string params(constraintId.at(0)->getText());
-
-        for (unsigned param = 1; param < constraintId.size(); param++)
+        std::string params = constraints_ids.at(0)->getText();
+        for (unsigned param = 1; param < constraints_ids.size(); param++)
         {
-            params += ", " + constraintId.at(param)->getText();
+            params += ", " + constraints_ids.at(param)->getText();
         }
         throw std::invalid_argument("dual operator expects exactly one constraint id got: "
                                     + params);
     }
-    const std::string constraint_id = constraintId.at(0)->getText();
+
+    const std::string constraint_id = constraints_ids.at(0)->getText();
+
     unsigned index = 0;
     const auto search_constraint = [&](const auto& constraints) -> Node*
     {
@@ -441,22 +442,24 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
         throw std::invalid_argument(
           "reduced_cost operator expects exactly one variable id got nothing");
     }
-    const auto variableId = context->expr();
-    if (variableId.size() != 1) // -> > 1
+    const auto variables_ids = context->expr();
+    if (variables_ids.size() != 1) // -> > 1
     {
-        std::string params(variableId.at(0)->getText());
-        for (unsigned param = 1; param < variableId.size(); param++)
+        std::string params(variables_ids.at(0)->getText());
+        for (unsigned param = 1; param < variables_ids.size(); param++)
         {
-            params += ", " + variableId.at(param)->getText();
+            params += ", " + variables_ids.at(param)->getText();
         }
         throw std::invalid_argument("reduced_cost operator expects exactly one variable id got: "
                                     + params);
     }
 
+    const std::string variable_id = variables_ids.at(0)->getText();
+
     unsigned index = 0;
     for (const auto& var: model_.variables)
     {
-        if (var.id == variableId.at(0)->getText())
+        if (var.id == variable_id)
         {
             auto* varNode = registry_.create<VariableNode>(var.id, index);
             return static_cast<Node*>(
@@ -464,7 +467,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
         }
         ++index;
     }
-    throw ReducedCostNoVariableWithThisName(model_.id, variableId.at(0)->getText());
+    throw ReducedCostNoVariableWithThisName(model_.id, variable_id);
 }
 
 std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
