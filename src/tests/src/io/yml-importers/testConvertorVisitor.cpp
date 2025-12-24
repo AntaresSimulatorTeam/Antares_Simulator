@@ -21,8 +21,6 @@
 #include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
-#include <any>
-
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -69,15 +67,17 @@ static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
     return dynamic_cast<Nodes::LiteralNode*>(n);
 }
 
-BOOST_FIXTURE_TEST_CASE(empty_expression, ExpressionToNodeConvertorEmptyModel)
+BOOST_AUTO_TEST_CASE(empty_expression)
 {
-    BOOST_CHECK_EQUAL(run("").node, nullptr);
+    BOOST_CHECK_EQUAL(convertExpressionToNode("", {} /* empty model*/).node, nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(negation, ExpressionToNodeConvertorEmptyModel)
+BOOST_AUTO_TEST_CASE(negation)
 {
     std::string expression = "-7";
-    auto expr = run(expression);
+
+    auto expr = convertExpressionToNode(expression, {} /* empty model*/);
+
     BOOST_CHECK_EQUAL(expr.node->name(), "NegationNode");
     auto* nodeNeg = dynamic_cast<Nodes::NegationNode*>(expr.node);
     BOOST_REQUIRE(nodeNeg);
@@ -97,26 +97,15 @@ BOOST_AUTO_TEST_CASE(identifier)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
-    {
-        std::string expression = "param1";
-        auto expr = converter.run(expression);
-        BOOST_CHECK_EQUAL(expr.node->name(), "ParameterNode");
-    }
+    std::string expression = "param1";
+    auto expr = convertExpressionToNode(expression, model);
 
-    {
-        std::string expression = "varP";
-        auto expr = converter.run(expression);
-        BOOST_CHECK_EQUAL(expr.node->name(), "VariableNode");
-    }
-}
+    BOOST_CHECK_EQUAL(expr.node->name(), "ParameterNode");
 
-bool expectedMessage(const std::runtime_error& ex)
-{
-    BOOST_CHECK_EQUAL(ex.what(),
-                      std::string("No parameter or variable found for this identifier: abc"));
-    return true;
+    expression = "varP";
+    expr = convertExpressionToNode(expression, model);
+    BOOST_CHECK_EQUAL(expr.node->name(), "VariableNode");
 }
 
 BOOST_AUTO_TEST_CASE(identifierNotFound)
@@ -134,17 +123,18 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
-    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::runtime_error,
-                          expectedMessage);
+                          checkMessage("No parameter or variable found for this identifier: abc"));
 }
 
-BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertorEmptyModel)
+BOOST_AUTO_TEST_CASE(addTwoLiterals)
 {
     const std::string expression = "1 + 2";
-    auto expr = run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "SumNode");
 
+    auto expr = convertExpressionToNode(expression, {} /* empty model*/);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "SumNode");
     auto* nodeSum = dynamic_cast<Nodes::SumNode*>(expr.node);
     BOOST_REQUIRE(nodeSum);
     const auto& operands = nodeSum->getOperands();
@@ -152,15 +142,16 @@ BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertorEmptyModel)
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
 }
 
-BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel)
+BOOST_AUTO_TEST_CASE(addThreeLiterals)
 {
     /*
       Desired behavior
-      "1+2+3" -> SumNode(1,2,3)
+      "1 + 2 + 3" -> SumNode(1,2,3)
     */
 
     const std::string expression = "1 + 2 + 3";
-    auto expr = run(expression);
+
+    auto expr = convertExpressionToNode(expression, {} /* empty model*/);
 
     auto* nodeSum = dynamic_cast<Nodes::SumNode*>(expr.node);
     BOOST_REQUIRE(nodeSum);
@@ -171,36 +162,39 @@ BOOST_FIXTURE_TEST_CASE(addThreeLiterals, ExpressionToNodeConvertorEmptyModel)
     BOOST_CHECK_EQUAL(toLiteral(operands[2])->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertorEmptyModel)
+BOOST_AUTO_TEST_CASE(subtractTwoLiterals)
 {
     const std::string expression = "6 - 3";
-    auto expr = run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "SubtractionNode");
 
+    auto expr = convertExpressionToNode(expression, {} /* empty model*/);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "SubtractionNode");
     auto* nodeSub = dynamic_cast<Nodes::SubtractionNode*>(expr.node);
     BOOST_REQUIRE(nodeSub);
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->left())->value(), 6);
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(multiplyTwoLiterals, ExpressionToNodeConvertorEmptyModel)
+BOOST_AUTO_TEST_CASE(multiplyTwoLiterals)
 {
     std::string expression = "1 * 2";
-    auto expr = run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "MultiplicationNode");
 
+    auto expr = convertExpressionToNode(expression, {} /* empty model*/);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "MultiplicationNode");
     auto* nodeMult = dynamic_cast<Nodes::MultiplicationNode*>(expr.node);
     BOOST_REQUIRE(nodeMult);
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->left())->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->right())->value(), 2);
 }
 
-BOOST_FIXTURE_TEST_CASE(divideTwoLiterals, ExpressionToNodeConvertorEmptyModel)
+BOOST_AUTO_TEST_CASE(divideTwoLiterals)
 {
     const std::string expression = "6 / 3";
-    auto expr = run(expression);
-    BOOST_CHECK_EQUAL(expr.node->name(), "DivisionNode");
 
+    auto expr = convertExpressionToNode(expression, {} /* empty model*/);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "DivisionNode");
     auto* nodeDiv = dynamic_cast<Nodes::DivisionNode*>(expr.node);
     BOOST_REQUIRE(nodeDiv);
     BOOST_CHECK_EQUAL(toLiteral(nodeDiv->left())->value(), 6);
@@ -210,15 +204,15 @@ BOOST_FIXTURE_TEST_CASE(divideTwoLiterals, ExpressionToNodeConvertorEmptyModel)
 BOOST_FIXTURE_TEST_CASE(comparison, ExpressionToNodeConvertorEmptyModel)
 {
     std::string expression = "1 = 2";
-    auto expr = run(expression);
+    auto expr = convertExpressionToNode(expression, {} /* empty model*/);
     BOOST_CHECK_EQUAL(expr.node->name(), "EqualNode");
 
     expression = "1 <= 5";
-    expr = run(expression);
+    expr = convertExpressionToNode(expression, {} /* empty model*/);
     BOOST_CHECK_EQUAL(expr.node->name(), "LessThanOrEqualNode");
 
     expression = "8364 >= 27";
-    expr = run(expression);
+    expr = convertExpressionToNode(expression, {} /* empty model*/);
     BOOST_CHECK_EQUAL(expr.node->name(), "GreaterThanOrEqualNode");
 
     auto* nodeGreater = dynamic_cast<Nodes::GreaterThanOrEqualNode*>(expr.node);
@@ -239,15 +233,13 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .binding_constraints = {},
                           .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
-
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "port1.field1";
-    auto expr = converter.run(expression);
+    auto expr = convertExpressionToNode(expression, model);
 
     BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldNode");
 
     expression = "port2.field1";
-    BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
+    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(portfieldSum)
@@ -263,20 +255,20 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
                           .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
 
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "sum_connections(port1.field1)";
-    auto expr = converter.run(expression);
+    auto expr = convertExpressionToNode(expression, model);
 
     BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldSumNode");
     auto portFieldSumNode = dynamic_cast<Nodes::PortFieldSumNode*>(expr.node);
     BOOST_REQUIRE(portFieldSumNode);
     BOOST_CHECK_EQUAL(portFieldSumNode->getPortName(), "port1");
     BOOST_CHECK_EQUAL(portFieldSumNode->getFieldName(), "field1");
+
     expression = "port2.field1";
-    BOOST_CHECK_THROW(converter.run(expression), std::runtime_error);
+    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), std::runtime_error);
 }
 
-ExpressionToNodeConvertorEmptyModel createMediumExpression()
+YmlModel::Model createYmlModel()
 {
     YmlModel::Model model{
       .id = "model0",
@@ -290,7 +282,7 @@ ExpressionToNodeConvertorEmptyModel createMediumExpression()
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
 
-    return {std::move(model)};
+    return model;
 }
 
 std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& registry)
@@ -316,7 +308,7 @@ BOOST_AUTO_TEST_CASE(medium_expression)
     Registry<Nodes::Node> registry;
 
     const auto [expression, div] = expected_expression(registry);
-    const auto expr = createMediumExpression().run(expression);
+    const auto expr = convertExpressionToNode(expression, createYmlModel());
 
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, div));
@@ -327,8 +319,8 @@ BOOST_AUTO_TEST_CASE(NumericalTimeIndexExpresion)
     Registry<Nodes::Node> registry;
 
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[12]";
-    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+    const auto expressionWithTimeIndex = "(" + expression + ")" + "[12]";
+    auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* time_index = registry.create<Nodes::LiteralNode>(12);
     auto* timeIndexNode = registry.create<Nodes::TimeIndexNode>(div, time_index);
@@ -342,8 +334,8 @@ BOOST_AUTO_TEST_CASE(TimeIndexExpresion)
     Registry<Nodes::Node> registry;
 
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[param1]";
-    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+    const auto expressionWithTimeIndex = "(" + expression + ")" + "[param1]";
+    auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* time_index = registry.create<Nodes::ParameterNode>("param1");
     auto* timeIndexNode = registry.create<Nodes::TimeIndexNode>(div, time_index);
@@ -357,8 +349,8 @@ BOOST_AUTO_TEST_CASE(TimeShiftExpression)
     Registry<Nodes::Node> registry;
 
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[t-89]";
-    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+    const auto expressionWithTimeIndex = "(" + expression + ")" + "[t-89]";
+    auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* lit = registry.create<Nodes::LiteralNode>(89);
     auto* neg = registry.create<Nodes::NegationNode>(lit);
@@ -373,8 +365,8 @@ BOOST_AUTO_TEST_CASE(TimeShiftExpressionMul)
     Registry<Nodes::Node> registry;
 
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithNumericalTimeIndex = "(" + expression + ")" + "[t-89*param1]";
-    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+    const auto expressionWithTimeIndex = "(" + expression + ")" + "[t-89*param1]";
+    auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* lit = registry.create<Nodes::LiteralNode>(89);
     auto* neg = registry.create<Nodes::NegationNode>(lit);
@@ -391,10 +383,9 @@ BOOST_AUTO_TEST_CASE(TimeSumExpression)
 {
     Registry<Nodes::Node> registry;
 
-    const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithNumericalTimeIndex = "sum(t-89*param1 .. t+(param1/89)," + expression
-                                                  + ")";
-    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+    const auto [e, div] = expected_expression(registry);
+    const auto expressionWithTimeIndex = "sum(t-89*param1 .. t+(param1/89)," + e + ")";
+    auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* lit = registry.create<Nodes::LiteralNode>(89);
     auto* neg = registry.create<Nodes::NegationNode>(lit);
@@ -413,8 +404,8 @@ BOOST_AUTO_TEST_CASE(AlltimeSumExpression)
     Registry<Nodes::Node> registry;
 
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithNumericalTimeIndex = "sum(" + expression + ")";
-    auto expr = createMediumExpression().run(expressionWithNumericalTimeIndex);
+    const auto expressionWithTimeIndex = "sum(" + expression + ")";
+    auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     const auto* timeSumNode = registry.create<Nodes::AllTimeSumNode>(div);
 
@@ -502,7 +493,8 @@ BOOST_AUTO_TEST_CASE(WrongDualExpression)
     BOOST_CHECK_EXCEPTION(
       converter.run(expression),
       std::invalid_argument,
-      checkMessage("dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0"));
+      checkMessage(
+        "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)

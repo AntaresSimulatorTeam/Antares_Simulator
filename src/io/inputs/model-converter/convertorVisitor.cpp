@@ -412,7 +412,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         {
             if (c.id == constraint_id)
             {
-                auto* constraintIdNode = registry_.create<ParameterNode>(c.id);
+                auto* constraintIdNode = registry_.create<ParameterNode>(constraint_id);
                 auto* constraintIndex = registry_.create<LiteralNode>(index);
                 return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::dual,
                                                                          constraintIdNode,
@@ -461,7 +461,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     {
         if (var.id == variable_id)
         {
-            auto* varNode = registry_.create<VariableNode>(var.id, index);
+            auto* varNode = registry_.create<VariableNode>(variable_id, index);
             return static_cast<Node*>(
               registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode));
         }
