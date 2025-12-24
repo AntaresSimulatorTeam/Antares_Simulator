@@ -480,7 +480,7 @@ BOOST_AUTO_TEST_CASE(EmptyDualExpression)
     BOOST_CHECK_EXCEPTION(converter.run(expression),
                           std::invalid_argument,
                           checkMessage(
-                            "dual operator expect exactly one constraint id got nothing"));
+                            "dual operator expects exactly one constraint id got nothing"));
 }
 
 BOOST_AUTO_TEST_CASE(WrongDualExpression)
@@ -502,7 +502,7 @@ BOOST_AUTO_TEST_CASE(WrongDualExpression)
     BOOST_CHECK_EXCEPTION(
       converter.run(expression),
       std::invalid_argument,
-      checkMessage("dual operator expect exactly one constraint id got: constraintA, e^(iPi)+1=0"));
+      checkMessage("dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0"));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
@@ -558,7 +558,7 @@ BOOST_AUTO_TEST_CASE(reducedCostExpressionTwoVariables)
     BOOST_CHECK_EXCEPTION(converter.run(expression),
                           std::invalid_argument,
                           checkMessage(
-                            "reduced_cost operator expect exactly one variable id got: varB, 2"));
+                            "reduced_cost operator expects exactly one variable id got: varB, 2"));
 }
 
 BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
@@ -582,7 +582,7 @@ BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
     BOOST_CHECK_EXCEPTION(converter.run(expression),
                           std::invalid_argument,
                           checkMessage(
-                            "reduced_cost operator expect exactly one variable id got nothing"));
+                            "reduced_cost operator expects exactly one variable id got nothing"));
 }
 
 BOOST_AUTO_TEST_CASE(ValidPowerExpression)
@@ -730,7 +730,7 @@ BOOST_AUTO_TEST_CASE(MaxOperatorWrongNumberOfParameter)
     std::string expression = "max(varB)";
     BOOST_CHECK_EXCEPTION(converter.run(expression),
                           std::invalid_argument,
-                          checkMessage("max operator expect at least 2 operands got 1"));
+                          checkMessage("max operator expects at least 2 operands got 1"));
 }
 
 BOOST_AUTO_TEST_CASE(MinOperatorWrongNumberOfParameter)
@@ -752,7 +752,7 @@ BOOST_AUTO_TEST_CASE(MinOperatorWrongNumberOfParameter)
     std::string expression = "min(varB)";
     BOOST_CHECK_EXCEPTION(converter.run(expression),
                           std::invalid_argument,
-                          checkMessage("min operator expect at least 2 operands got 1"));
+                          checkMessage("min operator expects at least 2 operands got 1"));
 }
 
 BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)

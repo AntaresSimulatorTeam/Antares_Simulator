@@ -329,7 +329,7 @@ std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 {
-    double d = stod(context->getText());
+    double d = std::stod(context->getText());
     return static_cast<Node*>(registry_.create<LiteralNode>(d));
 }
 
@@ -388,7 +388,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 {
     if (!context)
     {
-        throw std::invalid_argument("dual operator expect exactly one constraint id got nothing");
+        throw std::invalid_argument("dual operator expects exactly one constraint id got nothing");
     }
     const auto constraintId = context->expr();
 
@@ -400,7 +400,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         {
             params += ", " + constraintId.at(param)->getText();
         }
-        throw std::invalid_argument("dual operator expect exactly one constraint id got: "
+        throw std::invalid_argument("dual operator expects exactly one constraint id got: "
                                     + params);
     }
     const std::string constraint_id = constraintId.at(0)->getText();
@@ -439,7 +439,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
     if (!context)
     {
         throw std::invalid_argument(
-          "reduced_cost operator expect exactly one variable id got nothing");
+          "reduced_cost operator expects exactly one variable id got nothing");
     }
     const auto variableId = context->expr();
     if (variableId.size() != 1) // -> > 1
@@ -449,7 +449,7 @@ std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context
         {
             params += ", " + variableId.at(param)->getText();
         }
-        throw std::invalid_argument("reduced_cost operator expect exactly one variable id got: "
+        throw std::invalid_argument("reduced_cost operator expects exactly one variable id got: "
                                     + params);
     }
 
@@ -472,7 +472,7 @@ std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw std::invalid_argument("max operator expect at least 2 operands got "
+        throw std::invalid_argument("max operator expects at least 2 operands got "
                                     + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
@@ -483,7 +483,7 @@ std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw std::invalid_argument("min operator expect at least 2 operands got "
+        throw std::invalid_argument("min operator expects at least 2 operands got "
                                     + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
