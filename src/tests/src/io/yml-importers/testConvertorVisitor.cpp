@@ -42,26 +42,6 @@ using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::ModelConverter;
 
-class ExpressionToNodeConvertorEmptyModel
-{
-public:
-    ExpressionToNodeConvertorEmptyModel(YmlModel::Model&& model):
-        model_(std::move(model))
-    {
-    }
-
-    // Empty model
-    ExpressionToNodeConvertorEmptyModel() = default;
-
-    NodeRegistry run(const std::string& input)
-    {
-        return ModelConverter::convertExpressionToNode(input, model_);
-    }
-
-private:
-    const YmlModel::Model model_;
-};
-
 static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
 {
     return dynamic_cast<Nodes::LiteralNode*>(n);
@@ -201,7 +181,7 @@ BOOST_AUTO_TEST_CASE(divideTwoLiterals)
     BOOST_CHECK_EQUAL(toLiteral(nodeDiv->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison, ExpressionToNodeConvertorEmptyModel)
+BOOST_AUTO_TEST_CASE(comparison)
 {
     std::string expression = "1 = 2";
     auto expr = convertExpressionToNode(expression, {} /* empty model*/);
@@ -425,31 +405,30 @@ BOOST_AUTO_TEST_CASE(dualExpression)
                           .binding_constraints = {{"constraintB", ""}},
                           .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     // constraints
     std::string expression = "dual(constraintA)";
-    auto expr = converter.run(expression);
+    auto expr = convertExpressionToNode(expression, model);
+
     BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::dual");
     auto dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dualNode->typeToString(), "dual");
-
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(dualNode->getOperands().at(0))->value(),
                       "constraintA");
 
     // binding constraints
     expression = "dual(constraintB)";
-    expr = converter.run(expression);
+    expr = convertExpressionToNode(expression, model);
+
     dualNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::ParameterNode*>(dualNode->getOperands().at(0))->value(),
                       "constraintB");
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::LiteralNode*>(dualNode->getOperands().at(1))->value(), 1);
-
     std::string badExpression = "dual(abc)";
-    BOOST_CHECK_EXCEPTION(converter.run(badExpression),
+    std::string expected_msg = "dual called with unknown constraint 'abc' in model 'model0'";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
                           std::runtime_error,
-                          checkMessage(
-                            "dual called with unknown constraint 'abc' in model 'model0'"));
+                          checkMessage(expected_msg));
 }
 
 BOOST_AUTO_TEST_CASE(EmptyDualExpression)
@@ -464,14 +443,12 @@ BOOST_AUTO_TEST_CASE(EmptyDualExpression)
                           .binding_constraints = {{"constraintB", ""}},
                           .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
-    // constraints
     std::string expression = "dual()";
-    BOOST_CHECK_EXCEPTION(converter.run(expression),
+    std::string expected_msg = "dual operator expects exactly one constraint id got nothing";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
-                          checkMessage(
-                            "dual operator expects exactly one constraint id got nothing"));
+                          checkMessage(expected_msg));
 }
 
 BOOST_AUTO_TEST_CASE(WrongDualExpression)
@@ -486,15 +463,12 @@ BOOST_AUTO_TEST_CASE(WrongDualExpression)
                           .binding_constraints = {{"constraintB", ""}},
                           .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
-    // constraints
     std::string expression = "dual(constraintA, e^(iPi) + 1 = 0)";
-    BOOST_CHECK_EXCEPTION(
-      converter.run(expression),
-      std::invalid_argument,
-      checkMessage(
-        "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0"));
+    auto err_msg = "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpression)
@@ -511,10 +485,9 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "reduced_cost(varB)";
-    auto expr = converter.run(expression);
+    auto expr = convertExpressionToNode(expression, model);
     BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::reduced_cost");
     auto reducedCostNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(reducedCostNode->typeToString(), "reduced_cost");
@@ -524,10 +497,10 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
     BOOST_CHECK_EQUAL(variableNode->Index(), 1);
 
     std::string badExpression = "reduced_cost(abc)";
-    BOOST_CHECK_EXCEPTION(converter.run(badExpression),
+    std::string err_msg = "reduced_cost called with unknown variable 'abc' in model 'model0'";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
                           std::runtime_error,
-                          checkMessage(
-                            "reduced_cost called with unknown variable 'abc' in model 'model0'"));
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(reducedCostExpressionTwoVariables)
@@ -544,13 +517,12 @@ BOOST_AUTO_TEST_CASE(reducedCostExpressionTwoVariables)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "reduced_cost(varB, 2)";
-    BOOST_CHECK_EXCEPTION(converter.run(expression),
+    std::string err_msg = "reduced_cost operator expects exactly one variable id got: varB, 2";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
-                          checkMessage(
-                            "reduced_cost operator expects exactly one variable id got: varB, 2"));
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
@@ -567,14 +539,13 @@ BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     // constraints
     std::string expression = "reduced_cost()";
-    BOOST_CHECK_EXCEPTION(converter.run(expression),
+    std::string err_msg = "reduced_cost operator expects exactly one variable id got nothing";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
-                          checkMessage(
-                            "reduced_cost operator expects exactly one variable id got nothing"));
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(ValidPowerExpression)
@@ -591,10 +562,9 @@ BOOST_AUTO_TEST_CASE(ValidPowerExpression)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "varB^2";
-    auto expr = converter.run(expression);
+    auto expr = convertExpressionToNode(expression, model);
     auto* powerNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(powerNode->getOperands().at(0))->value(),
                       "varB");
@@ -616,10 +586,9 @@ BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "^";
-    BOOST_CHECK_THROW(converter.run(expression), AntlrParsingError);
+    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), AntlrParsingError);
 }
 
 BOOST_AUTO_TEST_CASE(WrongPowerExpression)
@@ -636,10 +605,9 @@ BOOST_AUTO_TEST_CASE(WrongPowerExpression)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "varA^_";
-    BOOST_CHECK_EXCEPTION(converter.run(expression),
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           NoParameterOrVariableWithThisName,
                           checkMessage("No parameter or variable found for this identifier: _"));
 }
@@ -658,10 +626,9 @@ BOOST_AUTO_TEST_CASE(ValidMinExpression)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "min(varB, 2, pmin)";
-    auto expr = converter.run(expression);
+    auto expr = convertExpressionToNode(expression, model);
     auto* minNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(minNode->getOperands().at(0))->value(),
                       "varB");
@@ -684,10 +651,10 @@ BOOST_AUTO_TEST_CASE(ValidMaxExpression)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "min(varB, 2, pmin, varA, varB^pmin)";
-    auto expr = converter.run(expression);
+    auto expr = convertExpressionToNode(expression, model);
+
     auto* maxNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(maxNode->getOperands().at(0))->value(),
                       "varB");
@@ -717,10 +684,9 @@ BOOST_AUTO_TEST_CASE(MaxOperatorWrongNumberOfParameter)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "max(varB)";
-    BOOST_CHECK_EXCEPTION(converter.run(expression),
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
                           checkMessage("max operator expects at least 2 operands got 1"));
 }
@@ -739,10 +705,9 @@ BOOST_AUTO_TEST_CASE(MinOperatorWrongNumberOfParameter)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "min(varB)";
-    BOOST_CHECK_EXCEPTION(converter.run(expression),
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
                           checkMessage("min operator expects at least 2 operands got 1"));
 }
@@ -761,19 +726,20 @@ BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "min(varB, reduced_cost(varB))";
 
     // forbid variable in min
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addForbiddenFor<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
-    auto node = converter.run(expression);
+
+    auto node = convertExpressionToNode(expression, model);
+
+    auto err_msg = "'min' is not allowed to contain 'variable(varB)' in this context '" + expression
+                   + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
                           ModelConverter::BadContextComposition,
-                          checkMessage(
-                            "'min' is not allowed to contain 'variable(varB)' in this context '"
-                            + expression + "'"));
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
@@ -790,18 +756,17 @@ BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "max(reduced_cost(varB), pmin, varA)";
     // forbid variable in max
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addForbiddenFor<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
-    auto node = converter.run(expression);
+    auto node = convertExpressionToNode(expression, model);
+    std::string err_msg = "'max' is not allowed to contain 'variable(varB)' in this context '"
+                          + expression + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
                           ModelConverter::BadContextComposition,
-                          checkMessage(
-                            "'max' is not allowed to contain 'variable(varB)' in this context '"
-                            + expression + "'"));
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignLT)
@@ -818,17 +783,17 @@ BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignLT)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "varA <= 38";
     // forbid <= Globally
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::LessThanOrEqualNode>();
-    auto node = converter.run(expression);
+    auto node = convertExpressionToNode(expression, model);
+    std::string err_msg = "'expression with <=' is not allowed in this context '" + expression
+                          + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
                           ModelConverter::BadContextComposition,
-                          checkMessage("'expression with <=' is not allowed in this context '"
-                                       + expression + "'"));
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignGT)
@@ -845,17 +810,17 @@ BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignGT)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "varA >= 38";
     // forbid <= Globally
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
-    auto node = converter.run(expression);
+    auto node = convertExpressionToNode(expression, model);
+    std::string err_msg = "'expression with >=' is not allowed in this context '" + expression
+                          + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
                           ModelConverter::BadContextComposition,
-                          checkMessage("'expression with >=' is not allowed in this context '"
-                                       + expression + "'"));
+                          checkMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(ExpressionThatNotContainEqualSign)
@@ -872,15 +837,14 @@ BOOST_AUTO_TEST_CASE(ExpressionThatNotContainEqualSign)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
-    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
     std::string expression = "varA = 38";
     // forbid <= Globally
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::EqualNode>();
-    auto node = converter.run(expression);
+    auto node = convertExpressionToNode(expression, model);
+    std::string err_msg = "'expression with =' is not allowed in this context '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
                           ModelConverter::BadContextComposition,
-                          checkMessage("'expression with =' is not allowed in this context '"
-                                       + expression + "'"));
+                          checkMessage(err_msg));
 }
