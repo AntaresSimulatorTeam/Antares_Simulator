@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "yuni/core/getopt/parser.h"
+
 #include "antares/api/singleProblemGetter.h"
 
 #include "private/singleProblemGetterImpl.h"
@@ -35,6 +37,53 @@ unsigned int toInt(const char* in)
 {
     return strtoul(in, nullptr, 10);
 }
+struct ApiOptions
+{
+    std::filesystem::path studyFolder = "";
+    std::filesystem::path outputFolder = "";
+    unsigned int year = -1;
+    unsigned int week = -1;
+    bool writeMps = false;
+};
+
+// Boost.ProgramOptions is another candidate
+Yuni::GetOpt::Parser Parser(ApiOptions& options)
+{
+    Yuni::GetOpt::Parser parser;
+    std::string tmp;
+    parser.addFlag(tmp, 'i', "input", "Study folder");
+    options.studyFolder = tmp;
+    tmp.clear();
+    parser.add(tmp, 'o', "output", "Output folder");
+    options.outputFolder = tmp;
+    parser.add(options.year, 'y', "year", "year");
+    parser.add(options.week, 'w', "week", "week");
+    return parser;
+}
+
+bool ParseOptions(ApiOptions& options, int argc, const char* argv[])
+{
+    auto parser = Parser(options);
+    switch (parser.operator()(argc, argv))
+    {
+    case Yuni::GetOpt::ReturnCode::error:
+        throw Error::CommandLineArguments(parser.errors());
+    case Yuni::GetOpt::ReturnCode::help:
+        pStudy = nullptr;
+        return false;
+    default:
+        return true;
+    }
+}
+
+void ValidateOptions(const ApiOptions& options)
+{
+    if (options.studyFolder.empty())
+    {
+        throw std::invalid_argument(
+          "Study Folder is empty, please enter valid study path checkout --help");
+    }
+}
 
 int main(int argc, char** argv)
 { // dirty options reader
@@ -46,20 +95,20 @@ int main(int argc, char** argv)
 
     const unsigned int year = toInt(argv[2]);
     const unsigned int week = toInt(argv[3]);
-    bool writeMps = false;
+    bool printMps = false;
     if (argc == 5 && std::string(argv[4]) != "--mps")
     {
         std::cerr << "skipped unknown option " << argv[4] << std::endl;
     }
     else
     {
-        writeMps = true;
+        printMps = true;
     }
 
     Antares::Solver::SingleProblemGetter getter(argv[1]);
     auto constant = getter.getConstantData();
     auto weekly = getter.getWeeklyData({year, week});
-    if (writeMps)
+    if (printMps)
     {
         std::string mps;
         weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
