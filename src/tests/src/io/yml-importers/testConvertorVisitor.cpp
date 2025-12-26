@@ -294,10 +294,13 @@ BOOST_AUTO_TEST_CASE(medium_expression)
     BOOST_CHECK(cmp.dispatch(expr.node, div));
 }
 
-BOOST_AUTO_TEST_CASE(NumericalTimeIndexExpresion)
+struct RegistryHolder
 {
     Registry<Nodes::Node> registry;
+};
 
+BOOST_FIXTURE_TEST_CASE(NumericalTimeIndexExpresion, RegistryHolder)
+{
     const auto [expression, div] = expected_expression(registry);
     const auto expressionWithTimeIndex = "(" + expression + ")" + "[12]";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
@@ -309,10 +312,8 @@ BOOST_AUTO_TEST_CASE(NumericalTimeIndexExpresion)
     BOOST_CHECK(cmp.dispatch(expr.node, timeIndexNode));
 }
 
-BOOST_AUTO_TEST_CASE(TimeIndexExpresion)
+BOOST_FIXTURE_TEST_CASE(TimeIndexExpresion, RegistryHolder)
 {
-    Registry<Nodes::Node> registry;
-
     const auto [expression, div] = expected_expression(registry);
     const auto expressionWithTimeIndex = "(" + expression + ")" + "[param1]";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
@@ -324,10 +325,8 @@ BOOST_AUTO_TEST_CASE(TimeIndexExpresion)
     BOOST_CHECK(cmp.dispatch(expr.node, timeIndexNode));
 }
 
-BOOST_AUTO_TEST_CASE(TimeShiftExpression)
+BOOST_FIXTURE_TEST_CASE(TimeShiftExpression, RegistryHolder)
 {
-    Registry<Nodes::Node> registry;
-
     const auto [expression, div] = expected_expression(registry);
     const auto expressionWithTimeIndex = "(" + expression + ")" + "[t-89]";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
@@ -340,10 +339,8 @@ BOOST_AUTO_TEST_CASE(TimeShiftExpression)
     BOOST_CHECK(cmp.dispatch(expr.node, timeShiftNode));
 }
 
-BOOST_AUTO_TEST_CASE(TimeShiftExpressionMul)
+BOOST_FIXTURE_TEST_CASE(TimeShiftExpressionMul, RegistryHolder)
 {
-    Registry<Nodes::Node> registry;
-
     const auto [expression, div] = expected_expression(registry);
     const auto expressionWithTimeIndex = "(" + expression + ")" + "[t-89*param1]";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
@@ -359,10 +356,8 @@ BOOST_AUTO_TEST_CASE(TimeShiftExpressionMul)
     BOOST_CHECK(cmp.dispatch(expr.node, timeShiftNode));
 }
 
-BOOST_AUTO_TEST_CASE(TimeSumExpression)
+BOOST_FIXTURE_TEST_CASE(TimeSumExpression, RegistryHolder)
 {
-    Registry<Nodes::Node> registry;
-
     const auto [e, div] = expected_expression(registry);
     const auto expressionWithTimeIndex = "sum(t-89*param1 .. t+(param1/89)," + e + ")";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
@@ -379,10 +374,8 @@ BOOST_AUTO_TEST_CASE(TimeSumExpression)
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
 }
 
-BOOST_AUTO_TEST_CASE(AlltimeSumExpression)
+BOOST_FIXTURE_TEST_CASE(AlltimeSumExpression, RegistryHolder)
 {
-    Registry<Nodes::Node> registry;
-
     const auto [expression, div] = expected_expression(registry);
     const auto expressionWithTimeIndex = "sum(" + expression + ")";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
