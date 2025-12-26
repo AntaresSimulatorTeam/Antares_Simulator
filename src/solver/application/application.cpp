@@ -502,7 +502,6 @@ void Application::writeExecutionInfo()
         return;
     }
 
-    logTotalTime("Total year by year writing time", pDurationCollector.getTime("yby_export"));
     logTotalTime("Total simulation time", pDurationCollector.getTime(totalSimulationKey));
     logTotalTime("Total execution time", pDurationCollector.getTime("total_exec"));
 
