@@ -131,7 +131,7 @@ int main(int argc, const char** argv)
             application.writeExecutionInfo();
         };
 
-        Antares::Solver::logTotalTime(durationCollector.getTime("total_exec"));
+        Antares::Solver::logTotalTime("Total execution time", durationCollector.getTime("total_exec"));
 
         return EXIT_SUCCESS;
     }

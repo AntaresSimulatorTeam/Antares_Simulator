@@ -497,7 +497,8 @@ void Application::writeExecutionInfo()
         return;
     }
 
-    logTotalTime(pDurationCollector.getTime(totalTimeKey));
+    logTotalTime("Total year by year writing time", pDurationCollector.getTime("yby_export"));
+    logTotalTime("Total simulation time", pDurationCollector.getTime(totalTimeKey));
     if (pErrorCount == 0 && pWarningCount > 0)
     {
         logs.warning()
