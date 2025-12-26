@@ -436,7 +436,7 @@ BOOST_AUTO_TEST_CASE(EmptyDualExpression)
                           .extra_outputs = {}};
 
     std::string expression = "dual()";
-    std::string expected_msg = "dual operator expects exactly one constraint id got nothing";
+    std::string expected_msg = "dual operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
                           checkMessage(expected_msg));
@@ -533,7 +533,7 @@ BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
 
     // constraints
     std::string expression = "reduced_cost()";
-    std::string err_msg = "reduced_cost operator expects exactly one variable id got nothing";
+    std::string err_msg = "reduced_cost operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
                           checkMessage(err_msg));

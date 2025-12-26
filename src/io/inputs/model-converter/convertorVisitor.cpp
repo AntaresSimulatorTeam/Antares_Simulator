@@ -385,10 +385,6 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
 
 std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 {
-    if (!context)
-    {
-        throw std::invalid_argument("dual operator expects exactly one constraint id got nothing");
-    }
     const auto constraints_ids = context->expr();
 
     if (constraints_ids.size() != 1) // -> > 1
@@ -436,11 +432,6 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)
 {
-    if (!context)
-    {
-        throw std::invalid_argument(
-          "reduced_cost operator expects exactly one variable id got nothing");
-    }
     const auto variables_ids = context->expr();
     if (variables_ids.size() != 1) // -> > 1
     {
@@ -495,6 +486,13 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
     auto* arglist = context->argList();
+
+    if (!arglist)
+    {
+        std::string err_msg = functionName + " operator expects an argument, got nothing";
+        throw std::invalid_argument(err_msg);
+    }
+
     if (functionName == "reduced_cost")
     {
         return handleReducedCost(arglist);
@@ -510,10 +508,6 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     else if (functionName == "min")
     {
         return handleMin(arglist);
-    }
-    else if (functionName == "floor")
-    {
-        return handleFloor(arglist);
     }
 
     throw std::invalid_argument("Invalid function: '" + functionName + "'");
