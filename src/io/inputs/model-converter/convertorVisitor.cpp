@@ -81,7 +81,6 @@ private:
     std::any handleReducedCost(ExprParser::ArgListContext* context);
     std::any handleMax(ExprParser::ArgListContext* context);
     std::any handleMin(ExprParser::ArgListContext* arglist);
-    std::any handleFloor(ExprParser::ArgListContext* context);
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
     PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
@@ -490,12 +489,6 @@ std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
                                     + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
-}
-
-std::any ConvertorVisitor::handleFloor(ExprParser::ArgListContext* context)
-{
-    double blabla = 0.;
-    return blabla;
 }
 
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
