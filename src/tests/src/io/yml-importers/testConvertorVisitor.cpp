@@ -283,21 +283,19 @@ std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& 
     return {"(12 * (4 - 1) + param1) / -(42 + 3 + varP)", div};
 }
 
-BOOST_AUTO_TEST_CASE(medium_expression)
+struct RegistryHolder
 {
     Registry<Nodes::Node> registry;
+};
 
+BOOST_FIXTURE_TEST_CASE(medium_expression, RegistryHolder)
+{
     const auto [expression, div] = expected_expression(registry);
     const auto expr = convertExpressionToNode(expression, createYmlModel());
 
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, div));
 }
-
-struct RegistryHolder
-{
-    Registry<Nodes::Node> registry;
-};
 
 BOOST_FIXTURE_TEST_CASE(NumericalTimeIndexExpresion, RegistryHolder)
 {
