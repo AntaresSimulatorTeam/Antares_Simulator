@@ -71,7 +71,7 @@ public:
     */
     void resetProcessPriority() const;
 
-    void writeExectutionInfo();
+    void writeExecutionInfo();
 
     /**
      * @brief /!\ Acquire the study. Leave Application object in an invalid state.

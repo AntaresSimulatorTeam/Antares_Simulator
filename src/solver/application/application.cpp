@@ -490,7 +490,7 @@ void Application::writeComment(Data::Study& study)
     }
 }
 
-void Application::writeExectutionInfo()
+void Application::writeExecutionInfo()
 {
     if (!pStudy)
     {

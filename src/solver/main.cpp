@@ -128,7 +128,7 @@ int main(int argc, const char** argv)
             Antares::Solver::Application application;
             application.prepare(argc, argv);
             application.execute();
-            application.writeExectutionInfo();
+            application.writeExecutionInfo();
         };
 
         Antares::Solver::logTotalTime(durationCollector.getTime("total_exec"));
