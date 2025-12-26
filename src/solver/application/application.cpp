@@ -48,7 +48,7 @@ namespace fs = std::filesystem;
 
 namespace
 {
-const char totalTimeKey[] = "total";
+const char totalSimulationKey[] = "total_simulation";
 
 void printSolvers()
 {
@@ -332,66 +332,71 @@ void Application::postParametersChecks() const
 
 void Application::prepare(int argc, const char* argv[])
 {
-    pArgc = argc;
-    pArgv = argv;
-
-    // Load the local policy settings
-    LocalPolicy::Open();
-    LocalPolicy::CheckRootPrefix(argv[0]);
-
-    Resources::Initialize(argc, argv);
-
-    // Options
-    Data::StudyLoadOptions options;
-    options.usedByTheSolver = true;
-
-    // Bind pSettings / options members to command line arguments
-    // Something like bind("--foo", options.foo);
-    // So that option.foo will be assigned <value>
-    // if the user provides --foo <value>.
-    // CAUTION
-    // The parser contains references to members of pSettings and options,
-    // don't de-allocate these.
-
-    if (!parseCommandLine(options)) // --help
+    pDurationCollector("loading") << [this, &argc, &argv]
     {
-        return;
-    }
+        pArgc = argc;
+        pArgv = argv;
 
-    if (!handleOptions(options)) // --version, --list-solvers
-    {
-        return;
-    }
+        // Load the local policy settings
+        LocalPolicy::Open();
+        LocalPolicy::CheckRootPrefix(argv[0]);
 
-    printPIDtoDisk(pSettings);
+        Resources::Initialize(argc, argv);
 
-    checkAndCorrectSettingsAndOptions(pSettings, options);
+        // Options
+        Data::StudyLoadOptions options;
+        options.usedByTheSolver = true;
 
-    checkStudyFolder(options.studyFolder);
-    pSettings.studyFolder = fixStudyFolder(options.studyFolder);
+        // Bind pSettings / options members to command line arguments
+        // Something like bind("--foo", options.foo);
+        // So that option.foo will be assigned <value>
+        // if the user provides --foo <value>.
+        // CAUTION
+        // The parser contains references to members of pSettings and options,
+        // don't de-allocate these.
 
-    auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
-    checkStudyVersion(version, pSettings.studyFolder);
+        if (!parseCommandLine(options)) // --help
+        {
+            return;
+        }
 
-    // Determine the log filename to use for this simulation
-    resetLogFilename();
+        if (!handleOptions(options)) // --version, --list-solvers
+        {
+            return;
+        }
 
-    readStudy_makeChecks_and_printThings(options);
+        printPIDtoDisk(pSettings);
 
-    // Check solver options
-    const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
-    bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
+        checkAndCorrectSettingsAndOptions(pSettings, options);
 
-    checkSolverOptions(options.solverOptions, milpRequired);
+        checkStudyFolder(options.studyFolder);
+        pSettings.studyFolder = fixStudyFolder(options.studyFolder);
 
-    // Set solver options from command line
-    pStudy->parameters.optOptions.initializeWith(options.solverOptions);
+        auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
+        checkStudyVersion(version, pSettings.studyFolder);
 
-    using namespace Antares::Solver::Optimization;
-    // TODO
-    pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
-                                                     ? ExportBehavior::Once
-                                                     : ExportBehavior::Never;
+        // Determine the log filename to use for this simulation
+        resetLogFilename();
+
+        readStudy_makeChecks_and_printThings(options);
+
+        // Check solver options
+        const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
+        bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
+
+        checkSolverOptions(options.solverOptions, milpRequired);
+
+        // Set solver options from command line
+        pStudy->parameters.optOptions.initializeWith(options.solverOptions);
+
+        using namespace Antares::Solver::Optimization;
+        // TODO
+        pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
+                                                         ? ExportBehavior::Once
+                                                         : ExportBehavior::Never;
+    };
+
+    logTotalTime("Total loading time", pDurationCollector.getTime("loading"));
 }
 
 void Application::onLogMessage(int level, const std::string& message)
@@ -427,7 +432,7 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    pDurationCollector(totalTimeKey) << [&]
+    pDurationCollector(totalSimulationKey) << [&]
     {
         pOptimizationInfo = simulationRun(*pStudy,
                                           pSettings,
@@ -498,7 +503,9 @@ void Application::writeExecutionInfo()
     }
 
     logTotalTime("Total year by year writing time", pDurationCollector.getTime("yby_export"));
-    logTotalTime("Total simulation time", pDurationCollector.getTime(totalTimeKey));
+    logTotalTime("Total simulation time", pDurationCollector.getTime(totalSimulationKey));
+    logTotalTime("Total execution time", pDurationCollector.getTime("total_exec"));
+
     if (pErrorCount == 0 && pWarningCount > 0)
     {
         logs.warning()

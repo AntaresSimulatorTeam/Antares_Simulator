@@ -106,8 +106,10 @@ int main(int argc, const char** argv)
 {
     try
     {
-        Benchmarking::DurationCollector durationCollector;
-        durationCollector("total_exec") << [&argc, &argv]
+        Antares::Solver::Application application;
+        auto& durationCollector = application.getDurationCollector();
+
+        durationCollector("total_exec") << [&application, &argc, &argv]
         {
             logs.info(ANTARES_LOGO);
             logs.info(MPL_ANNOUNCEMENT);
@@ -125,13 +127,11 @@ int main(int argc, const char** argv)
             // Getting real UTF8 arguments
             IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
             std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
-            Antares::Solver::Application application;
             application.prepare(argc, argv);
             application.execute();
-            application.writeExecutionInfo();
         };
 
-        Antares::Solver::logTotalTime("Total execution time", durationCollector.getTime("total_exec"));
+        application.writeExecutionInfo();
 
         return EXIT_SUCCESS;
     }

@@ -82,6 +82,11 @@ public:
         return std::move(pStudy);
     }
 
+    Benchmarking::DurationCollector& getDurationCollector()
+    {
+        return pDurationCollector;
+    }
+
 private:
     enum class LogType
     {
