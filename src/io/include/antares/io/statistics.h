@@ -109,19 +109,6 @@ public:
     }
 };
 
-class LogsDumper final
-{
-public:
-    LogsDumper()
-    {
-    }
-
-    ~LogsDumper()
-    {
-        DumpToLogs();
-    }
-};
-
 } // namespace Antares::Statistics
 
 #endif // __ANTARES_LIBS_IO_STATISTICS_H__
