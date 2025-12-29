@@ -271,9 +271,7 @@ EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 {
     const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
 
-    if (const auto timeIndex = varNode->variability();
-        timeIndex == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        || timeIndex == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (isTimeConstant(varNode->variability()))
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
@@ -281,7 +279,8 @@ EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
           1 /* single timestep*/);
         return EvaluationResult(componentVariables[0]->reducedCost());
     }
-    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+
+    // The variable depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> varValues(nbTimeStep, 0.0);
     const std::span componentVariables = optimContainer_.getComponentVariable(component_,

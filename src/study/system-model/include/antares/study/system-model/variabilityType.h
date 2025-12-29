@@ -80,7 +80,8 @@ constexpr bool isScenarioDependent(VariabilityType variability)
 
 constexpr bool isTimeConstant(VariabilityType variability)
 {
-    return variability == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+    return variability == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
+           || variability == VariabilityType::VARYING_IN_SCENARIO_ONLY;
 }
 
 } // namespace Antares::Optimisation
