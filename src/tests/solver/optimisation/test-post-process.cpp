@@ -11,6 +11,11 @@
 namespace
 {
 Benchmarking::DurationCollector gDurationCollector;
+const std::string fileLabel = "label";
+const optRuntimeData opt_runtime_data(/* year*/ 0,
+                                      /*week*/ 0,
+                                      /*hour in year*/ 5);
+
 constexpr unsigned int gNumSpace = 0;
 constexpr unsigned int gNumberTimeSteps = 168;
 } // namespace
@@ -22,16 +27,12 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_areas)
     StudyBuilder builder;
     builder.addAreaToStudy("FR");
     builder.addAreaToStudy("ES");
-
     Antares::Solver::InMemoryWriter writer(gDurationCollector);
-    const std::string fileLabel = "label";
+
     PROBLEME_HEBDO pb;
     SIM_AllocationProblemeHebdo(*builder.study, pb, gNumberTimeSteps);
 
     WriteDebugAdequacyPatch cmd(&pb, builder.study->areas, gNumSpace, writer, fileLabel);
-    const optRuntimeData opt_runtime_data(/* year*/ 0,
-                                          /*week*/ 0,
-                                          /*hour in year*/ 5);
     // FR, h=2
     pb.ResultatsHoraires[1].ValeursHorairesDENS[2] = 4.4;
     pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositive[2] = 6.6;
@@ -50,4 +51,31 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_areas)
     // Hour 3
     BOOST_CHECK(areaResults.find("ES 3 0 0 0 -0 -0 0 0\n") != std::string::npos);
     BOOST_CHECK(areaResults.find("FR 3 0 0 0 -0 -0 0 0\n") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(test_adq_patch_links)
+{
+    StudyBuilder builder;
+    auto* a1 = builder.addAreaToStudy("FR");
+    auto* a2 = builder.addAreaToStudy("ES");
+    auto link = AreaAddLinkBetweenAreas(a1, a2);
+
+    Antares::Solver::InMemoryWriter writer(gDurationCollector);
+
+    PROBLEME_HEBDO pb;
+    builder.study->initializeRuntimeInfos(); // Required for study.runtime.interconnectionsCount()
+    SIM_AllocationProblemeHebdo(*builder.study, pb, gNumberTimeSteps);
+
+    WriteDebugAdequacyPatch cmd(&pb, builder.study->areas, gNumSpace, writer, fileLabel);
+    // ES / FR, h=2
+    pb.ValeursDeNTC[2].ValeurDuFlux[0] = 4.4;
+
+    cmd.execute(opt_runtime_data);
+    const auto& contents = writer.getMap();
+    BOOST_REQUIRE(contents.contains("adequacy-patch-links-label-0-0.csv"));
+    const std::string& linkResults = contents.at("adequacy-patch-links-label-0-0.csv");
+    // Header
+    BOOST_CHECK(linkResults.find("Link Hour Flow\n") != std::string::npos);
+    // Hour 2
+    BOOST_CHECK(linkResults.find("ES/FR 2 4.4\n") != std::string::npos);
 }

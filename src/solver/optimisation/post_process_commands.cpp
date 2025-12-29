@@ -414,8 +414,8 @@ void WriteDebugAdequacyPatch::writeLinkData(const optRuntimeData& opt_runtime_da
               {
                   stream << fmt::format(
                     "{}/{} {} {}\n",
-                    area.name,
                     l.second->with->name,
+                    area.name,
                     h,
                     problemeHebdo_->ValeursDeNTC[h].ValeurDuFlux[l.second->index]);
               }
