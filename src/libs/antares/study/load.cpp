@@ -26,6 +26,8 @@
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
 
+#include "include/antares/study/fwd.h"
+
 namespace fs = std::filesystem;
 
 namespace Antares::Data
@@ -49,11 +51,13 @@ bool Study::internalLoadHeader(const fs::path& path)
     return true;
 }
 
-bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
+bool Study::loadFromFolder(const std::string& path,
+                           const StudyLoadOptions& options,
+                           Benchmarking::DurationCollector& durationCollector)
 {
     fs::path normPath = path;
     normPath = normPath.lexically_normal();
-    return internalLoadFromFolder(normPath, options);
+    return internalLoadFromFolder(normPath, options, durationCollector);
 }
 
 bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& options)
@@ -163,7 +167,9 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions& options)
+bool Study::internalLoadFromFolder(const fs::path& path,
+                                   const StudyLoadOptions& options,
+                                   Benchmarking::DurationCollector& durationCollector)
 {
     // IO statistics
     Statistics::LogsDumper statisticsDumper;

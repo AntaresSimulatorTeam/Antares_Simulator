@@ -140,7 +140,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         pDurationCollector("study_loading") << [this, &study, &options]
         {
-            if (study.loadFromFolder(pSettings.studyFolder, options))
+            if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
             {
                 logs.info() << "The study is loaded.";
                 logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
