@@ -656,3 +656,28 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
                           BadContextComposition,
                           checkMessage(err_msg));
 }
+
+BOOST_FIXTURE_TEST_CASE(floor_operator___nominal_case, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "floor(pmin)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    // Root node is a 'floor' node
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::floor");
+
+    auto FloorNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(FloorNode->typeToString(), "floor");
+
+    // Child node must be unique, and be the parameter node 'pmin' from the model
+    // ... Child node is unique
+    BOOST_CHECK_EQUAL(FloorNode->getOperands().size(), 1);
+    auto* childNode = FloorNode->getOperands()[0];
+
+    // ... Clild node is a parameter node
+    const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
+    BOOST_CHECK(paramNode);
+
+    // ... Child node is 'pmin' from the model
+    BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
+}
