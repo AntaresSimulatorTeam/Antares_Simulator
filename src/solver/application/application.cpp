@@ -329,39 +329,39 @@ void Application::postParametersChecks() const
 
 void Application::prepare(int argc, const char* argv[])
 {
-    pDurationCollector("loading") << [this, &argc, &argv]
+    pArgc = argc;
+    pArgv = argv;
+
+    // Load the local policy settings
+    LocalPolicy::Open();
+    LocalPolicy::CheckRootPrefix(argv[0]);
+
+    Resources::Initialize(argc, argv);
+
+    // Options
+    Data::StudyLoadOptions options;
+    options.usedByTheSolver = true;
+
+    // Bind pSettings / options members to command line arguments
+    // Something like bind("--foo", options.foo);
+    // So that option.foo will be assigned <value>
+    // if the user provides --foo <value>.
+    // CAUTION
+    // The parser contains references to members of pSettings and options,
+    // don't de-allocate these.
+
+    if (!parseCommandLine(options)) // --help
     {
-        pArgc = argc;
-        pArgv = argv;
+        return;
+    }
 
-        // Load the local policy settings
-        LocalPolicy::Open();
-        LocalPolicy::CheckRootPrefix(argv[0]);
+    if (!handleOptions(options)) // --version, --list-solvers
+    {
+        return;
+    }
 
-        Resources::Initialize(argc, argv);
-
-        // Options
-        Data::StudyLoadOptions options;
-        options.usedByTheSolver = true;
-
-        // Bind pSettings / options members to command line arguments
-        // Something like bind("--foo", options.foo);
-        // So that option.foo will be assigned <value>
-        // if the user provides --foo <value>.
-        // CAUTION
-        // The parser contains references to members of pSettings and options,
-        // don't de-allocate these.
-
-        if (!parseCommandLine(options)) // --help
-        {
-            return;
-        }
-
-        if (!handleOptions(options)) // --version, --list-solvers
-        {
-            return;
-        }
-
+    pDurationCollector("loading") << [this, &options]
+    {
         printPIDtoDisk(pSettings);
 
         checkAndCorrectSettingsAndOptions(pSettings, options);
