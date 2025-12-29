@@ -207,7 +207,13 @@ bool Economy::year(Progression::Task& progression,
             }
             optWriter.addTime(w, currentProblem.timeMeasure);
 
-            durationCollector("export_simulation_tables")
+            durationCollector("total_solve_time")
+              .addDuration(currentProblem.timeMeasure[0].solveTime
+                           + currentProblem.timeMeasure[1].solveTime);
+            durationCollector("total_update_time")
+              .addDuration(currentProblem.timeMeasure[0].updateTime
+                           + currentProblem.timeMeasure[1].updateTime);
+            durationCollector("total_export_simulation_tables")
               .addDuration(currentProblem.timeMeasure[0].simulationTableFillTime
                            + currentProblem.timeMeasure[1].simulationTableFillTime);
         }
