@@ -18,6 +18,12 @@ const optRuntimeData opt_runtime_data(/* year*/ 0,
 
 constexpr unsigned int gNumSpace = 0;
 constexpr unsigned int gNumberTimeSteps = 168;
+
+// TODO Use C++23's std::string::contains
+bool contains(const std::string& str, const std::string& substr)
+{
+    return str.find(substr) != std::string::npos;
+}
 } // namespace
 
 using namespace Antares::Solver::Simulation;
@@ -43,14 +49,14 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_areas)
     BOOST_REQUIRE(contents.contains("adequacy-patch-areas-label-0-0.csv"));
     const std::string& areaResults = contents.at("adequacy-patch-areas-label-0-0.csv");
     // Header
-    BOOST_CHECK(areaResults.find("Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice "
-                                 "MRGPriceCSR DTGmrgCSR SpilledEnergy\n")
-                != std::string::npos);
+    BOOST_CHECK(contains(areaResults,
+                         "Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice "
+                         "MRGPriceCSR DTGmrgCSR SpilledEnergy\n"));
     // Hour 2
-    BOOST_CHECK(areaResults.find("FR 2 4.4 6.6 7.6 -0 -0 0 0\n") != std::string::npos);
+    BOOST_CHECK(contains(areaResults, "FR 2 4.4 6.6 7.6 -0 -0 0 0\n"));
     // Hour 3
-    BOOST_CHECK(areaResults.find("ES 3 0 0 0 -0 -0 0 0\n") != std::string::npos);
-    BOOST_CHECK(areaResults.find("FR 3 0 0 0 -0 -0 0 0\n") != std::string::npos);
+    BOOST_CHECK(contains(areaResults, "ES 3 0 0 0 -0 -0 0 0\n"));
+    BOOST_CHECK(contains(areaResults, "FR 3 0 0 0 -0 -0 0 0\n"));
 }
 
 BOOST_AUTO_TEST_CASE(test_adq_patch_links)
@@ -75,7 +81,7 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_links)
     BOOST_REQUIRE(contents.contains("adequacy-patch-links-label-0-0.csv"));
     const std::string& linkResults = contents.at("adequacy-patch-links-label-0-0.csv");
     // Header
-    BOOST_CHECK(linkResults.find("Link Hour Flow\n") != std::string::npos);
+    BOOST_CHECK(contains(linkResults, "Link Hour Flow\n"));
     // Hour 2
-    BOOST_CHECK(linkResults.find("ES/FR 2 4.4\n") != std::string::npos);
+    BOOST_CHECK(contains(linkResults, "ES/FR 2 4.4\n"));
 }

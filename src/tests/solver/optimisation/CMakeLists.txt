@@ -4,5 +4,4 @@ add_boost_test(tests-post-process
         SRC test-post-process.cpp
         LIBS
         Antares::tests::in-memory-study
-        Antares::logs
-	model_antares)
+        model_antares)
