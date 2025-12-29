@@ -518,7 +518,7 @@ std::any ConvertorVisitor::handleFloor(ExprParser::ArgListContext* context)
     }
     catch (const std::invalid_argument& e)
     {
-        std::string err_msg = "Floor()'s argument is neither a parameter or a literal.";
+        std::string err_msg = "floor()'s argument is neither a parameter or a literal.";
         throw std::invalid_argument(err_msg);
     }
 }

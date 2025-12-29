@@ -702,3 +702,14 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
                           std::invalid_argument,
                           checkMessage(err_msg));
 }
+
+BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_a_var_as_arg,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "floor(varA)";
+
+    std::string err_msg = "floor()'s argument is neither a parameter or a literal.";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
