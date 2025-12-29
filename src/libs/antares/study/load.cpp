@@ -194,7 +194,7 @@ bool Study::internalLoadFromFolder(const fs::path& path,
 
     bool ret = true;
 
-    durationCollector("study_loading") << [this, &path, &options, &ret]
+    durationCollector("study_loading") << [this, &options, &ret]
     {
         // -------------------------
         // Logical cores
