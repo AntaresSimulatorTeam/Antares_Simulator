@@ -384,7 +384,7 @@ BOOST_FIXTURE_TEST_CASE(AlltimeSumExpression, RegistryHolder)
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
 }
 
-BOOST_AUTO_TEST_CASE(dualExpression)
+struct SupplyModelForDualOperator
 {
     YmlModel::Model model{.id = "model0",
                           .description = "description",
@@ -396,7 +396,10 @@ BOOST_AUTO_TEST_CASE(dualExpression)
                           .binding_constraints = {{"constraintB", ""}},
                           .objectives = {{"objective-id", ""}},
                           .extra_outputs = {}};
+};
 
+BOOST_FIXTURE_TEST_CASE(dualExpression, SupplyModelForDualOperator)
+{
     // constraints
     std::string expression = "dual(constraintA)";
     auto expr = convertExpressionToNode(expression, model);
@@ -422,19 +425,8 @@ BOOST_AUTO_TEST_CASE(dualExpression)
                           checkMessage(expected_msg));
 }
 
-BOOST_AUTO_TEST_CASE(EmptyDualExpression)
+BOOST_FIXTURE_TEST_CASE(EmptyDualExpression, SupplyModelForDualOperator)
 {
-    YmlModel::Model model{.id = "model0",
-                          .description = "description",
-                          .parameters = {},
-                          .variables = {},
-                          .ports = {},
-                          .port_field_definitions = {},
-                          .constraints = {{"constraintA", ""}},
-                          .binding_constraints = {{"constraintB", ""}},
-                          .objectives = {{"objective-id", ""}},
-                          .extra_outputs = {}};
-
     std::string expression = "dual()";
     std::string expected_msg = "dual operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
@@ -442,19 +434,8 @@ BOOST_AUTO_TEST_CASE(EmptyDualExpression)
                           checkMessage(expected_msg));
 }
 
-BOOST_AUTO_TEST_CASE(WrongDualExpression)
+BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
 {
-    YmlModel::Model model{.id = "model0",
-                          .description = "description",
-                          .parameters = {},
-                          .variables = {},
-                          .ports = {},
-                          .port_field_definitions = {},
-                          .constraints = {{"constraintA", ""}},
-                          .binding_constraints = {{"constraintB", ""}},
-                          .objectives = {{"objective-id", ""}},
-                          .extra_outputs = {}};
-
     std::string expression = "dual(constraintA, e^(iPi) + 1 = 0)";
     auto err_msg = "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
@@ -462,12 +443,12 @@ BOOST_AUTO_TEST_CASE(WrongDualExpression)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(reducedCostExpression)
+struct SupplyModelForFunctionalOperator
 {
     YmlModel::Model model{
       .id = "model0",
       .description = "description",
-      .parameters = {},
+      .parameters = {{"pmin", true, false}},
       .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
                     {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
       .ports = {},
@@ -476,9 +457,14 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
+};
 
+BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
+{
     std::string expression = "reduced_cost(varB)";
+
     auto expr = convertExpressionToNode(expression, model);
+
     BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::reduced_cost");
     auto reducedCostNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(reducedCostNode->typeToString(), "reduced_cost");
@@ -494,21 +480,8 @@ BOOST_AUTO_TEST_CASE(reducedCostExpression)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(reducedCostExpressionTwoVariables)
+BOOST_FIXTURE_TEST_CASE(reducedCostExpressionTwoVariables, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "reduced_cost(varB, 2)";
     std::string err_msg = "reduced_cost operator expects exactly one variable id got: varB, 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
@@ -516,22 +489,8 @@ BOOST_AUTO_TEST_CASE(reducedCostExpressionTwoVariables)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
+BOOST_FIXTURE_TEST_CASE(EmptyReducedCostExpression, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
-    // constraints
     std::string expression = "reduced_cost()";
     std::string err_msg = "reduced_cost operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
@@ -539,23 +498,12 @@ BOOST_AUTO_TEST_CASE(EmptyReducedCostExpression)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ValidPowerExpression)
+BOOST_FIXTURE_TEST_CASE(ValidPowerExpression, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "varB^2";
+
     auto expr = convertExpressionToNode(expression, model);
+
     auto* powerNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(powerNode->getOperands().at(0))->value(),
                       "varB");
@@ -563,63 +511,26 @@ BOOST_AUTO_TEST_CASE(ValidPowerExpression)
                       2);
 }
 
-BOOST_AUTO_TEST_CASE(EmptyPowerExpression)
+BOOST_FIXTURE_TEST_CASE(EmptyPowerExpression, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "^";
     BOOST_CHECK_THROW(convertExpressionToNode(expression, model), AntlrParsingError);
 }
 
-BOOST_AUTO_TEST_CASE(WrongPowerExpression)
+BOOST_FIXTURE_TEST_CASE(WrongPowerExpression, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "varA^_";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           NoParameterOrVariableWithThisName,
                           checkMessage("No parameter or variable found for this identifier: _"));
 }
 
-BOOST_AUTO_TEST_CASE(ValidMinExpression)
+BOOST_FIXTURE_TEST_CASE(ValidMinExpression, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "min(varB, 2, pmin)";
+
     auto expr = convertExpressionToNode(expression, model);
+
     auto* minNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
     BOOST_CHECK_EQUAL(dynamic_cast<Nodes::VariableNode*>(minNode->getOperands().at(0))->value(),
                       "varB");
@@ -628,22 +539,10 @@ BOOST_AUTO_TEST_CASE(ValidMinExpression)
                       "pmin");
 }
 
-BOOST_AUTO_TEST_CASE(ValidMaxExpression)
+BOOST_FIXTURE_TEST_CASE(ValidMaxExpression, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "min(varB, 2, pmin, varA, varB^pmin)";
+
     auto expr = convertExpressionToNode(expression, model);
 
     auto* maxNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
@@ -661,63 +560,24 @@ BOOST_AUTO_TEST_CASE(ValidMaxExpression)
                       "pmin");
 }
 
-BOOST_AUTO_TEST_CASE(MaxOperatorWrongNumberOfParameter)
+BOOST_FIXTURE_TEST_CASE(MaxOperatorWrongNumberOfParameter, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "max(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
                           checkMessage("max operator expects at least 2 operands got 1"));
 }
 
-BOOST_AUTO_TEST_CASE(MinOperatorWrongNumberOfParameter)
+BOOST_FIXTURE_TEST_CASE(MinOperatorWrongNumberOfParameter, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "min(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
                           checkMessage("min operator expects at least 2 operands got 1"));
 }
 
-BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
+BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "min(varB, reduced_cost(varB))";
 
     // forbid variable in min
@@ -733,26 +593,14 @@ BOOST_AUTO_TEST_CASE(MinWithForbiddenNode)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
+BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "max(reduced_cost(varB), pmin, varA)";
     // forbid variable in max
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addForbiddenFor<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
     auto node = convertExpressionToNode(expression, model);
+
     std::string err_msg = "'max' is not allowed to contain 'variable(varB)' in this context '"
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
@@ -760,25 +608,13 @@ BOOST_AUTO_TEST_CASE(MaxWithForbiddenNode)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignLT)
+BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "varA <= 38";
     // forbid <= Globally
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::LessThanOrEqualNode>();
+
     auto node = convertExpressionToNode(expression, model);
     std::string err_msg = "'expression with <=' is not allowed in this context '" + expression
                           + "'";
@@ -787,26 +623,14 @@ BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignLT)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignGT)
+BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "varA >= 38";
     // forbid <= Globally
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
     auto node = convertExpressionToNode(expression, model);
+
     std::string err_msg = "'expression with >=' is not allowed in this context '" + expression
                           + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
@@ -814,26 +638,14 @@ BOOST_AUTO_TEST_CASE(ExpressionThatNotContainComparisonSignGT)
                           checkMessage(err_msg));
 }
 
-BOOST_AUTO_TEST_CASE(ExpressionThatNotContainEqualSign)
+BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctionalOperator)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
-
     std::string expression = "varA = 38";
     // forbid <= Globally
     ModelConverter::ForbiddenNodes forbidden;
     forbidden.addGlobalForbidden<Nodes::EqualNode>();
     auto node = convertExpressionToNode(expression, model);
+
     std::string err_msg = "'expression with =' is not allowed in this context '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
                           ModelConverter::BadContextComposition,

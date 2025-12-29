@@ -32,6 +32,7 @@ namespace Antares::IO::Inputs::ModelConverter
 {
 
 using namespace Antares::Expressions::Nodes;
+using namespace Antares::Optimisation;
 
 /// Visitor to convert ANTLR expressions to Antares::Expressions::Nodes
 class ConvertorVisitor final: public ExprVisitor
@@ -41,7 +42,7 @@ public:
 
     std::any visit(antlr4::tree::ParseTree* tree) override;
 
-    Node* convertIdentifier(const std::string& identifier) const;
+    Node* convertIdentifier(const std::string& identifier) const; // gp : should be private
     std::any visitIdentifier(ExprParser::IdentifierContext* context) override;
     std::any visitMuldiv(ExprParser::MuldivContext* context) override;
     std::any visitFullexpr(ExprParser::FullexprContext* context) override;
@@ -187,8 +188,8 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         {
             return static_cast<Node*>(
               registry_.create<ParameterNode>(param.id,
-                                              Optimisation::variability(param.time_dependent,
-                                                                        param.scenario_dependent)));
+                                              variability(param.time_dependent,
+                                                          param.scenario_dependent)));
         }
     }
 
@@ -201,8 +202,8 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
             return static_cast<Node*>(
               registry_.create<VariableNode>(var.id,
                                              index,
-                                             Optimisation::variability(var.time_dependent,
-                                                                       var.scenario_dependent)));
+                                             variability(var.time_dependent,
+                                                         var.scenario_dependent)));
         }
     }
     throw NoParameterOrVariableWithThisName(identifier);
@@ -485,8 +486,41 @@ std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::handleFloor(ExprParser::ArgListContext* context)
 {
-    double blabla = 0.;
-    return blabla;
+    const auto args = context->expr();
+    auto size = args.size();
+    if (size > 1)
+    {
+        std::string err_msg = "Floor() expects 1 argument, but has " + std::to_string(size);
+        throw std::invalid_argument(err_msg);
+    }
+
+    const auto arg_as_str = args[0]->getText();
+
+    // Try to create a parameter node
+    for (const auto& param: model_.parameters)
+    {
+        if (param.id == arg_as_str)
+        {
+            auto* paramNode = registry_.create<ParameterNode>(
+              param.id,
+              variability(param.time_dependent, param.scenario_dependent));
+
+            return static_cast<Node*>(
+              registry_.create<FunctionNode>(FunctionNodeType::floor, paramNode));
+        }
+    }
+
+    // Try to create a literal node
+    try
+    {
+        const double arg_as_d = std::stod(arg_as_str);
+        return registry_.create<LiteralNode>(arg_as_d);
+    }
+    catch (const std::invalid_argument& e)
+    {
+        std::string err_msg = "Floor()'s argument is neither a parameter or a literal.";
+        throw std::invalid_argument(err_msg);
+    }
 }
 
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
@@ -494,7 +528,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     const auto functionName = context->IDENTIFIER()->getText();
     auto* arglist = context->argList();
 
-    if (!arglist)
+    if (!arglist || !arglist->expr().size())
     {
         std::string err_msg = functionName + " operator expects an argument, got nothing";
         throw std::invalid_argument(err_msg);
@@ -515,6 +549,10 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     else if (functionName == "min")
     {
         return handleMin(arglist);
+    }
+    else if (functionName == "floor")
+    {
+        return handleFloor(arglist);
     }
 
     throw std::invalid_argument("Invalid function: '" + functionName + "'");
