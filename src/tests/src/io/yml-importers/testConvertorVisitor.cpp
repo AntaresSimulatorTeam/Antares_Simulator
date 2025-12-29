@@ -681,3 +681,24 @@ BOOST_FIXTURE_TEST_CASE(floor_operator___nominal_case, SupplyModelForFunctionalO
     // ... Child node is 'pmin' from the model
     BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
 }
+
+BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "floor()";
+
+    std::string err_msg = "floor operator expects an argument, got nothing";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "floor(pmin, 5)";
+
+    std::string err_msg = "floor() expects 1 argument, but has 2";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}

@@ -490,7 +490,7 @@ std::any ConvertorVisitor::handleFloor(ExprParser::ArgListContext* context)
     auto size = args.size();
     if (size > 1)
     {
-        std::string err_msg = "Floor() expects 1 argument, but has " + std::to_string(size);
+        std::string err_msg = "floor() expects 1 argument, but has " + std::to_string(size);
         throw std::invalid_argument(err_msg);
     }
 
