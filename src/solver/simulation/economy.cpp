@@ -210,7 +210,7 @@ bool Economy::year(Progression::Task& progression,
             durationCollector("total_solve_time")
               .addDuration(currentProblem.timeMeasure[0].solveTime
                            + currentProblem.timeMeasure[1].solveTime);
-            durationCollector("total_update_time")
+            durationCollector("total_problem_build_time")
               .addDuration(currentProblem.timeMeasure[0].updateTime
                            + currentProblem.timeMeasure[1].updateTime);
             durationCollector("total_export_simulation_tables")
