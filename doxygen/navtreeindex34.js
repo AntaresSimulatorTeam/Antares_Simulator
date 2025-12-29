@@ -1,5 +1,9 @@
 var NAVTREEINDEX34 =
 {
+"classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html#a2ff025a2f7983c376533f350d5c14ed8":[8,0,0,22,0,2,1],
+"classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html#a87900435fc86a5d0a3adfc2107833ada":[8,0,0,22,0,2,0],
+"classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html#aab69700c9932b5bea4e321d0c4931737":[8,0,0,22,0,2,2],
+"classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html":[8,0,0,22,0,0],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html#a0c1b75169fbed8a68cff7b51bdbaf1a7":[8,0,0,22,0,0,0],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html#a858e9bd5692e3406d0df8a17571331f6":[8,0,0,22,0,0,1],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html#a8f4a4a6dc611130d9246d92f7f008854":[8,0,0,22,0,0,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX34 =
 "classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html":[8,0,0,21,1,9],
 "classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html#a17564e3a82c11395e393d5397529bc09":[8,0,0,21,1,9,6],
 "classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html#a2251912eb231d616175b00981451c868":[8,0,0,21,1,9,5],
-"classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html#a29df13e735e5a4bb4d7ef78a93be3485":[8,0,0,21,1,9,3],
-"classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html#a5454c84b5f47b296f72442284508e74a":[8,0,0,21,1,9,2],
-"classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html#a7763631178f0267beb72085a01195088":[8,0,0,21,1,9,4],
-"classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html#ad7b01e73cc295fe9761d2ea6c78da1c6":[8,0,0,21,1,9,1],
-"classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html#ae0d504a8a0068d70a59db2dbefe32f34":[8,0,0,21,1,9,0]
+"classAntares_1_1Toolbox_1_1Filter_1_1Weekday.html#a29df13e735e5a4bb4d7ef78a93be3485":[8,0,0,21,1,9,3]
 };

@@ -176,10 +176,10 @@ $(document).ready(function(){initNavTree('in__memory__writer_8h_source.html','')
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> MapType&amp; getMap() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::mutex pMapMutex;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">// minizip-ng requires a void* as a zip handle.</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    MapType pEntries;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// State, to allow/prevent new jobs being added to the queue</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// prevent concurrent writes</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::mutex pMapMutex;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// storage</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    MapType pEntries;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; pDurationCollector;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;};</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>

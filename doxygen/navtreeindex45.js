@@ -1,5 +1,9 @@
 var NAVTREEINDEX45 =
 {
+"classTimeSeriesConfigurer.html#adb20a03277de3d723aee72bb0df2913a":[8,0,327,0],
+"classTypedColumn.html":[8,0,339],
+"classTypedColumn.html#a027ea725c6aebf26e994453a07a1b78a":[8,0,339,6],
+"classTypedColumn.html#a35758095aaafd161a0914f526c96292a":[8,0,339,3],
 "classTypedColumn.html#a8816a2e0c3f5702933990b8bc1168e07":[8,0,339,5],
 "classTypedColumn.html#aa6d5e8f2f533c8ae543428572236b1fa":[8,0,339,2],
 "classTypedColumn.html#abb0dc287452c190afea469e4fcd444ba":[8,0,339,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX45 =
 "classmodified__inode_1_1UserData.html#a544ffa1bd1cfee0b876590378b7cec50":[8,0,19,0,5],
 "classmodified__inode_1_1UserData.html#a65c4dbf98ce91b16ca70a440c01ca82d":[8,0,19,0,0],
 "classmodified__inode_1_1UserData.html#a6b2e8c902f9c3cae83c46cdfdb8544ee":[8,0,19,0,3],
-"classmodified__inode_1_1UserData.html#a8cdb7c13074af31c61c5b29790df4098":[8,0,19,0,1],
-"classmodified__inode_1_1UserData.html#ab6c3700937b241e7db3623935a4b35ac":[8,0,19,0,9],
-"classmodified__inode_1_1UserData.html#ae27a1c28916a5a7900bb853d078c9029":[8,0,19,0,4],
-"classmodified__inode_1_1UserData.html#aefa5b5c6bc54c39f3786c3ecb662245f":[8,0,19,0,2],
-"classmpsWriterFactory.html":[8,0,207]
+"classmodified__inode_1_1UserData.html#a8cdb7c13074af31c61c5b29790df4098":[8,0,19,0,1]
 };

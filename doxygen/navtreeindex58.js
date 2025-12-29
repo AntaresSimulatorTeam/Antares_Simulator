@@ -1,5 +1,9 @@
 var NAVTREEINDEX58 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9892d1ed37ca29747b62dc897a061747":[8,0,0,19,5,4,81,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9a598b2dfa52b0e1ea9c2bdfd77a86f9":[8,0,0,19,5,4,81,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#adc09543eb6b63a969bd71865ce10a7f0":[8,0,0,19,5,4,81,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html":[8,0,0,19,5,4,83],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a302633664a5a202db83a41b76cdf786c":[8,0,0,19,5,4,83,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a40d521f0dcce55431c0985c8d205f466":[8,0,0,19,5,4,83,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a8bec9973b19163101b17800656db563e":[8,0,0,19,5,4,83,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX58 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html#a09178644b4881df8b3f53976c1d60fb1":[8,0,0,19,5,6,0,9,0,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html#ac7c85e13045093f0799154c9238fa8a9":[8,0,0,19,5,6,0,9,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1SetsOfAreas_1_1Statistics.html":[8,0,0,19,5,40,0],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation.html":[8,0,0,19,5,25],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spati841a76f09dca40f27176e5114824b3ac.html":[8,0,0,19,5,28],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateMax_00_01VCardT_01_4.html":[8,0,0,19,5,30],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateOr_00_01VCardT_01_4.html":[8,0,0,19,5,27],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateSum_00_01VCardT_01_4.html":[8,0,0,19,5,26]
+"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation.html":[8,0,0,19,5,25]
 };

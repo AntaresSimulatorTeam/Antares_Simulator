@@ -89,7 +89,8 @@ var hierarchy =
       [ "Antares::Solver::Simulation::HydroLevelsFinalUpdatePostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1HydroLevelsFinalUpdatePostProcessCmd.html", null ],
       [ "Antares::Solver::Simulation::InterpolateWaterValuePostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1InterpolateWaterValuePostProcessCmd.html", null ],
       [ "Antares::Solver::Simulation::RemixHydroPostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1RemixHydroPostProcessCmd.html", null ],
-      [ "Antares::Solver::Simulation::UpdateMrgPriceAfterCSRcmd", "classAntares_1_1Solver_1_1Simulation_1_1UpdateMrgPriceAfterCSRcmd.html", null ]
+      [ "Antares::Solver::Simulation::UpdateMrgPriceAfterCSRcmd", "classAntares_1_1Solver_1_1Simulation_1_1UpdateMrgPriceAfterCSRcmd.html", null ],
+      [ "Antares::Solver::Simulation::WriteDebugAdequacyPatch", "classAntares_1_1Solver_1_1Simulation_1_1WriteDebugAdequacyPatch.html", null ]
     ] ],
     [ "Antares::Optimization::BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", null ],
     [ "Test::BasisStatus", "classTest_1_1BasisStatus.html", null ],
@@ -155,8 +156,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],

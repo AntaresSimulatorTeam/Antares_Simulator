@@ -1,5 +1,6 @@
 var NAVTREEINDEX25 =
 {
+"classAntares_1_1Optimization_1_1WatchedConstraint.html#aa56f7430698c979f9a5e7fd8930b5fa4":[8,0,0,17,6,2],
 "classAntares_1_1Optimization_1_1WatchedConstraint.html#aef1dcbf8d373b267495fa742f92032d6":[8,0,0,17,6,4],
 "classAntares_1_1Optimization_1_1WeeklyBC.html":[8,0,0,17,9],
 "classAntares_1_1Optimization_1_1WeeklyBC.html#a497bad2bcc0fc8ef3ee15598b4f51334":[8,0,0,17,9,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "classAntares_1_1Solver_1_1InMemoryWriter.html#a780b869ebc833b40d5e5325d8f920cbd":[8,0,0,19,10,7],
 "classAntares_1_1Solver_1_1InMemoryWriter.html#a8ae7bd258151fb6ec8bf030a3d04c862":[8,0,0,19,10,3],
 "classAntares_1_1Solver_1_1InMemoryWriter.html#ab7bc1488a14229fcfdb7c8256e3f431f":[8,0,0,19,10,4],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#ac0cc07c22638e1ed219588488c498607":[8,0,0,19,10,5],
-"classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html":[8,0,0,19,1,0,0]
+"classAntares_1_1Solver_1_1InMemoryWriter.html#ac0cc07c22638e1ed219588488c498607":[8,0,0,19,10,5]
 };

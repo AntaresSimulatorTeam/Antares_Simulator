@@ -1536,6 +1536,7 @@ var namespaces_dup =
           [ "InterpolateWaterValuePostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1InterpolateWaterValuePostProcessCmd.html", "classAntares_1_1Solver_1_1Simulation_1_1InterpolateWaterValuePostProcessCmd" ],
           [ "HydroLevelsFinalUpdatePostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1HydroLevelsFinalUpdatePostProcessCmd.html", "classAntares_1_1Solver_1_1Simulation_1_1HydroLevelsFinalUpdatePostProcessCmd" ],
           [ "CurtailmentSharingPostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html", "classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd" ],
+          [ "WriteDebugAdequacyPatch", "classAntares_1_1Solver_1_1Simulation_1_1WriteDebugAdequacyPatch.html", "classAntares_1_1Solver_1_1Simulation_1_1WriteDebugAdequacyPatch" ],
           [ "Adequacy", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy" ],
           [ "optRuntimeData", "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html", "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData" ],
           [ "basePostProcessCommand", "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand.html", "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand" ],

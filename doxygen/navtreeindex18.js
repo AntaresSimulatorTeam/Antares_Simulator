@@ -1,5 +1,6 @@
 var NAVTREEINDEX18 =
 {
+"classAntares_1_1Error_1_1Duplicates.html#acf8dc5e7f0b58cd0ef1e1976a2588762":[8,0,0,7,5,1],
 "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html":[8,0,0,7,24],
 "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html#a506b8f072799cf43c01939c556066e2e":[8,0,0,7,24,0],
 "classAntares_1_1Error_1_1IncompatibleFuelCostColumns.html":[8,0,0,7,25],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorDivisionException.html#a355a57faf256cf4075a590fc8ab45e00":[8,0,0,8,1,4,0],
 "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented.html":[8,0,0,8,1,5],
 "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented.html#acdf7de760e754128cdc93fbdcd995294":[8,0,0,8,1,5,0],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html":[8,0,0,8,1,6],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a023a72a3c86d86361a1d980516f74f9b":[8,0,0,8,1,6,8]
+"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html":[8,0,0,8,1,6]
 };
