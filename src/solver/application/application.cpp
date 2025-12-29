@@ -138,14 +138,11 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        pDurationCollector("study_loading") << [this, &study, &options]
+        if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
         {
-            if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
-            {
-                logs.info() << "The study is loaded.";
-                logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-            }
-        };
+            logs.info() << "The study is loaded.";
+            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+        }
 
         if (study.areas.empty())
         {
