@@ -457,6 +457,8 @@ struct SupplyModelForFunctionalOperator
       .binding_constraints = {},
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
+
+    ModelConverter::ForbiddenNodes forbidden;
 };
 
 BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
@@ -580,11 +582,10 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
 {
     std::string expression = "min(varB, reduced_cost(varB))";
 
-    // forbid variable in min
-    ModelConverter::ForbiddenNodes forbidden;
-    forbidden.addForbiddenFor<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
-
     auto node = convertExpressionToNode(expression, model);
+
+    // Forbid variable in min
+    forbidden.addForbiddenFor<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
 
     auto err_msg = "'min' is not allowed to contain 'variable(varB)' in this context '" + expression
                    + "'";
@@ -596,10 +597,11 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
 BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
 {
     std::string expression = "max(reduced_cost(varB), pmin, varA)";
-    // forbid variable in max
-    ModelConverter::ForbiddenNodes forbidden;
-    forbidden.addForbiddenFor<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
+
     auto node = convertExpressionToNode(expression, model);
+
+    // Forbid variable in max
+    forbidden.addForbiddenFor<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
 
     std::string err_msg = "'max' is not allowed to contain 'variable(varB)' in this context '"
                           + expression + "'";
@@ -611,11 +613,12 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelForFunctionalOperator)
 {
     std::string expression = "varA <= 38";
-    // forbid <= Globally
-    ModelConverter::ForbiddenNodes forbidden;
-    forbidden.addGlobalForbidden<Nodes::LessThanOrEqualNode>();
 
     auto node = convertExpressionToNode(expression, model);
+
+    // Forbid <= Globally
+    forbidden.addGlobalForbidden<Nodes::LessThanOrEqualNode>();
+
     std::string err_msg = "'expression with <=' is not allowed in this context '" + expression
                           + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
@@ -626,10 +629,11 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelForFunctionalOperator)
 {
     std::string expression = "varA >= 38";
-    // forbid <= Globally
-    ModelConverter::ForbiddenNodes forbidden;
-    forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
+
     auto node = convertExpressionToNode(expression, model);
+
+    // Forbid <= Globally
+    forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
 
     std::string err_msg = "'expression with >=' is not allowed in this context '" + expression
                           + "'";
@@ -641,10 +645,11 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctionalOperator)
 {
     std::string expression = "varA = 38";
-    // forbid <= Globally
-    ModelConverter::ForbiddenNodes forbidden;
-    forbidden.addGlobalForbidden<Nodes::EqualNode>();
+
     auto node = convertExpressionToNode(expression, model);
+
+    // Forbid <= Globally
+    forbidden.addGlobalForbidden<Nodes::EqualNode>();
 
     std::string err_msg = "'expression with =' is not allowed in this context '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ModelConverter::NodeChecker(forbidden, expression).dispatch(node.node),
