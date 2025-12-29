@@ -82,6 +82,7 @@ protected:
               std::list<uint>& failedWeekList,
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
+              Benchmarking::DurationCollector& durationCollector,
               const Antares::Data::Area::ScratchMap& scratchmap);
 
     void incrementProgression(Progression::Task& progression);

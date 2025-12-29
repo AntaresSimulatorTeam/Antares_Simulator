@@ -139,6 +139,7 @@ bool Adequacy::year(Progression::Task& progression,
                     std::list<uint>& failedWeekList,
                     const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                     OptimizationStatisticsWriter& optWriter,
+                    Benchmarking::DurationCollector& durationCollector,
                     const Antares::Data::Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
@@ -366,6 +367,10 @@ bool Adequacy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
+
+        durationCollector("export_simulation_tables")
+          .addDuration(currentProblem.timeMeasure[0].simulationTableFillTime
+                       + currentProblem.timeMeasure[1].simulationTableFillTime);
 
         ++progression;
     }

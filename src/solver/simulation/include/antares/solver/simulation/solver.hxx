@@ -172,6 +172,7 @@ public:
                                              failedWeekList,
                                              hydroManagement.ventilationResults(),
                                              optWriter,
+                                             pDurationCollector,
                                              scratchmap);
         if (!study.parameters.noOutput)
         {

@@ -245,6 +245,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
+        measure.reset();
         FillSimulationTable(*simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
@@ -254,6 +255,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             currentBlock,
                             timeConversionMode,
                             true);
+
+        measure.tick();
+        timeMeasure.simulationTableFillTime = measure.duration_ms();
     }
 
     return {.timeMeasure = timeMeasure,
