@@ -26,6 +26,10 @@
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 #include "antares/study/system-model/component.h"
 
+// ================================================================
+// The class LinearityVisitor is never used. Should be removed.
+// ================================================================
+
 namespace Antares::Expressions::Visitors
 {
 /**

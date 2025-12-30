@@ -31,6 +31,8 @@
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
 
+using namespace Antares::Optimisation;
+
 namespace Antares::Expressions::Visitors
 {
 
@@ -146,8 +148,8 @@ LinearStatus LinearityVisitor::handlePow(const Nodes::FunctionNode* node)
 
     // Check if exponent is constant in time and scenario
     VariabilityVisitor variability_visitor(optimEntityContainer_, component_);
-    auto exponentTimeIndex = variability_visitor.dispatch(operands[1]);
-    if (exponentTimeIndex != Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
+    auto exponentVariability = variability_visitor.dispatch(operands[1]);
+    if (exponentVariability != VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         PrintVisitor visitor;
         throw std::invalid_argument("exponent must be constant in time and scenario: "
@@ -201,8 +203,8 @@ std::string LinearityVisitor::name() const
     return "LinearityVisitor";
 }
 
-LinearityVisitor::LinearityVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
-                                   const Optimisation::LinearProblemApi::FillContext& fillContext,
+LinearityVisitor::LinearityVisitor(const OptimEntityContainer& optimEntityContainer,
+                                   const LinearProblemApi::FillContext& fillContext,
                                    const ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),
     fillContext_(fillContext),
