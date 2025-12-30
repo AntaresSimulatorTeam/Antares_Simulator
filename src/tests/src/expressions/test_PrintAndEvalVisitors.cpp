@@ -782,7 +782,7 @@ struct TimeDependentParameterFixture
                                                                &dummy_data,
                                                                &scenarioGroupRepo);
 
-    std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> visitor;
+    std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> evalVisitor;
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 1, 0, 1, 1};
 
     TimeDependentParameterFixture(
@@ -805,16 +805,16 @@ struct TimeDependentParameterFixture
         components.push_back(createComponent(model, compoName, additionnalParams));
         scenarioGroupRepo = makeScenarioGroupRepo(components.front());
         optimContainer.addFromSystemComponents(components);
-        visitor = std::make_unique<EvalVisitor>(optimContainer, ctx, components.front());
+        evalVisitor = std::make_unique<EvalVisitor>(optimContainer, ctx, components.front());
     }
 };
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, TimeDependentParameterFixture)
 {
-    const auto eval = visitor->dispatch(&paramNode).valuesAsVector();
+    const auto result = evalVisitor->dispatch(&paramNode).valuesAsVector();
 
-    BOOST_CHECK_EQUAL(eval[0], hour_0);
-    BOOST_CHECK_EQUAL(eval[1], hour_1);
+    BOOST_CHECK_EQUAL(result[0], hour_0);
+    BOOST_CHECK_EQUAL(result[1], hour_1);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
@@ -1269,7 +1269,7 @@ BOOST_FIXTURE_TEST_CASE(functionNode_max_timeDepdentParameter, TimeDependentPara
     const auto printed = printVisitor.dispatch(&max);
 
     BOOST_CHECK_EQUAL(printed, "max(22.000000, 8.000000, my-param)");
-    const auto& values = visitor->dispatch(&max).valuesAsVector();
+    const auto& values = evalVisitor->dispatch(&max).valuesAsVector();
     BOOST_CHECK_EQUAL(values.size(), 2 /*two timesteps*/);
     BOOST_CHECK_EQUAL(values[0], 22.0);
 }
@@ -1301,7 +1301,7 @@ BOOST_AUTO_TEST_CASE(functionNode_min_timeDepdentParameter)
     const auto printed = printVisitor.dispatch(&min);
 
     BOOST_CHECK_EQUAL(printed, "min(my-param, Param2)");
-    const auto& values = fixture.visitor->dispatch(&min).valuesAsVector();
+    const auto& values = fixture.evalVisitor->dispatch(&min).valuesAsVector();
     BOOST_CHECK_EQUAL(values.size(), 2 /*two timesteps*/);
     BOOST_CHECK_EQUAL(values[0], -400); // min(0, -400)
     BOOST_CHECK_EQUAL(values[1], 1);    // min(1, 1568)
@@ -1331,8 +1331,8 @@ BOOST_FIXTURE_TEST_CASE(functionNode_pow_timeDepdentParameter, TimeDependentPara
     const auto printed = printVisitor.dispatch(&pow);
 
     BOOST_CHECK_EQUAL(printed, "my-param^(2.000000)");
-    BOOST_CHECK_EQUAL(visitor->dispatch(&pow).value(0), std::pow(0, 2));
-    BOOST_CHECK_EQUAL(visitor->dispatch(&pow).value(1), std::pow(1, 2));
+    BOOST_CHECK_EQUAL(evalVisitor->dispatch(&pow).value(0), std::pow(0, 2));
+    BOOST_CHECK_EQUAL(evalVisitor->dispatch(&pow).value(1), std::pow(1, 2));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_node, MyDummyFixture)
