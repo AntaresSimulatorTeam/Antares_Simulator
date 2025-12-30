@@ -29,6 +29,22 @@
 
 namespace Antares::Expressions::Visitors
 {
+
+std::string trimAndFormat(const std::string& in)
+{
+    auto s = in;
+    // Trim left (remove leading whitespace)
+    auto it = std::ranges::find_if_not(s, [](unsigned char ch) { return std::isspace(ch); });
+    s.erase(s.begin(), it);
+
+    // Ensure it starts with '+' or '-'
+    if (!s.empty() && (s.front() != '-' && s.front() != '+'))
+    {
+        s.insert(s.begin(), '+');
+    }
+    return s;
+}
+
 std::string PrintVisitor::visit(const Nodes::SumNode* node)
 {
     const auto& operands = node->getOperands();
@@ -102,21 +118,6 @@ std::string PrintVisitor::visit(const Nodes::PortFieldNode* node)
 std::string PrintVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     return node->getPortName() + "." + node->getFieldName();
-}
-
-std::string PrintVisitor::trimAndFormat(const std::string& in)
-{
-    auto s = in;
-    // Trim left (remove leading whitespace)
-    auto it = std::ranges::find_if_not(s, [](unsigned char ch) { return std::isspace(ch); });
-    s.erase(s.begin(), it);
-
-    // Ensure it starts with '+' or '-'
-    if (!s.empty() && (s.front() != '-' && s.front() != '+'))
-    {
-        s.insert(s.begin(), '+');
-    }
-    return s;
 }
 
 std::string PrintVisitor::visit(const Nodes::TimeShiftNode* node)

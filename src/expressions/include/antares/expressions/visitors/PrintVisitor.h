@@ -24,6 +24,9 @@
 
 namespace Antares::Expressions::Visitors
 {
+
+std::string trimAndFormat(const std::string& in);
+
 /**
  * @brief Represents a visitor for printing nodes in a syntax tree as strings.
  */
@@ -31,7 +34,6 @@ class PrintVisitor: public NodeVisitor<std::string>
 {
 public:
     std::string name() const override;
-    static std::string trimAndFormat(const std::string& in);
 
 private:
     std::string visit(const Nodes::SumNode* node) override;

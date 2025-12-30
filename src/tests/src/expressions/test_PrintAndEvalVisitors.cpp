@@ -1553,38 +1553,38 @@ BOOST_AUTO_TEST_CASE(testLargeShiftValues)
 
 BOOST_AUTO_TEST_CASE(TrimLeadingWhitespace)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   example"), "+example");
+    BOOST_CHECK_EQUAL(trimAndFormat("   example"), "+example");
 }
 
 BOOST_AUTO_TEST_CASE(PreserveLeadingMinus)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   -value"), "-value");
+    BOOST_CHECK_EQUAL(trimAndFormat("   -value"), "-value");
 }
 
 BOOST_AUTO_TEST_CASE(PreserveLeadingPlus)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   +text"), "+text");
+    BOOST_CHECK_EQUAL(trimAndFormat("   +text"), "+text");
 }
 
 BOOST_AUTO_TEST_CASE(AddPlusIfNoSign)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("noSign"), "+noSign");
+    BOOST_CHECK_EQUAL(trimAndFormat("noSign"), "+noSign");
 }
 
 BOOST_AUTO_TEST_CASE(HandleAlreadySignedString)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("-already"), "-already");
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("+already"), "+already");
+    BOOST_CHECK_EQUAL(trimAndFormat("-already"), "-already");
+    BOOST_CHECK_EQUAL(trimAndFormat("+already"), "+already");
 }
 
 BOOST_AUTO_TEST_CASE(HandleOnlySpaces)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   "), "");
+    BOOST_CHECK_EQUAL(trimAndFormat("   "), "");
 }
 
 BOOST_AUTO_TEST_CASE(HandleEmptyString)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat(""), "");
+    BOOST_CHECK_EQUAL(trimAndFormat(""), "");
 }
 
 BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
