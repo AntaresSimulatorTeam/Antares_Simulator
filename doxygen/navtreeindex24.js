@@ -1,9 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aa953f9df0f202626a7fbd5b9f1905e45":[8,0,0,16,2,0,18],
-"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aae6631b7fac7dabb949d5b63ba8ac914":[8,0,0,16,2,0,24],
-"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab2dd3699d651f8cb791ddd6ce6b2ecb8":[8,0,0,16,2,0,15],
-"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab33feeaee7a419af07af27d33f012425":[8,0,0,16,2,0,22],
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab41e6e0ace04662a545d9994998a4abd":[8,0,0,16,2,0,23],
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab70a7e12d68626340bb4f11515e72121":[8,0,0,16,2,0,19],
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#abd4e8899aef33860e73beeb6b432309f":[8,0,0,16,2,0,13],
@@ -249,5 +245,9 @@ var NAVTREEINDEX24 =
 "classAntares_1_1Optimization_1_1WatchedConstraint.html#a4dc7424a3a4b4bc92be40e585da11744":[8,0,0,17,6,5],
 "classAntares_1_1Optimization_1_1WatchedConstraint.html#a4e6e4103dc7492cbeec18b3ca6efbe58":[8,0,0,17,6,1],
 "classAntares_1_1Optimization_1_1WatchedConstraint.html#a715b9fafa005a8b3805f50eae5646563":[8,0,0,17,6,0],
-"classAntares_1_1Optimization_1_1WatchedConstraint.html#aa24c6f7ccac21bb1c3621bbcdbc18998":[8,0,0,17,6,3]
+"classAntares_1_1Optimization_1_1WatchedConstraint.html#aa24c6f7ccac21bb1c3621bbcdbc18998":[8,0,0,17,6,3],
+"classAntares_1_1Optimization_1_1WatchedConstraint.html#aa56f7430698c979f9a5e7fd8930b5fa4":[8,0,0,17,6,2],
+"classAntares_1_1Optimization_1_1WatchedConstraint.html#aef1dcbf8d373b267495fa742f92032d6":[8,0,0,17,6,4],
+"classAntares_1_1Optimization_1_1WeeklyBC.html":[8,0,0,17,9],
+"classAntares_1_1Optimization_1_1WeeklyBC.html#a497bad2bcc0fc8ef3ee15598b4f51334":[8,0,0,17,9,0]
 };

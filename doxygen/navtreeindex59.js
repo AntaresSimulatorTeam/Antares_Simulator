@@ -1,13 +1,5 @@
 var NAVTREEINDEX59 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spati841a76f09dca40f27176e5114824b3ac.html":[8,0,0,19,5,28],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateMax_00_01VCardT_01_4.html":[8,0,0,19,5,30],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateOr_00_01VCardT_01_4.html":[8,0,0,19,5,27],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateSum_00_01VCardT_01_4.html":[8,0,0,19,5,26],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatib45dc589c9aad1010829c4d00b555bd9.html":[8,0,0,19,5,29],
-"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html":[8,0,0,19,5,15],
-"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html#aa5c566f07fbaf9cf9ece100d0df22113":[8,0,0,19,5,15,0],
-"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html":[8,0,0,19,5,17],
 "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html#a5a681bdf044ea51a190d0a65b5a561f9":[8,0,0,19,5,17,0],
 "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html":[8,0,0,19,5,16],
 "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html#a98be79698b15bf70b4a2d2455626fdca":[8,0,0,19,5,16,0],
@@ -249,5 +241,13 @@ var NAVTREEINDEX59 =
 "structAntares_1_1Window_1_1Inspector_1_1Unique.html":[8,0,0,25,1,0],
 "structAntares_1_1Window_1_1SortColor.html":[8,0,0,25,31],
 "structAntares_1_1Window_1_1SortColor.html#afd57fe258750985ef56db5bbc777f6be":[8,0,0,25,31,0],
-"structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html":[8,0,0,25,52,0,0]
+"structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html":[8,0,0,25,52,0,0],
+"structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html#afd3da9f999454f89e5faf80040a72bec":[8,0,0,25,52,0,0,0],
+"structAntares_1_1linkInfo_1_1addpWeight.html":[8,0,0,45,0],
+"structAntares_1_1linkInfo_1_1addpWeight.html#afa157028fda8f84bb438eb07a5269ca7":[8,0,0,45,0,0],
+"structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html":[8,0,0,45,1],
+"structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html#a560b4af655e4ed183f6f7e1fc6303e3c":[8,0,0,45,1,0],
+"structAntares_1_1linkInfo_1_1comparepWeight.html":[8,0,0,45,2],
+"structAntares_1_1linkInfo_1_1comparepWeight.html#a0eb145cecae847b457504f178dca2519":[8,0,0,45,2,0],
+"structAntares_1_1linkInfo_1_1comparepWeightWithImpedance.html":[8,0,0,45,3]
 };

@@ -1,9 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html#aebfeb5a7811db2531f5caaf883a4248d":[8,0,0,19,4,21,0],
-"classAntares_1_1Solver_1_1Simulation_1_1yearJob.html":[8,0,0,19,4,28],
-"classAntares_1_1Solver_1_1Simulation_1_1yearJob.html#a179a1bffce96e7f2aa8331f5df0081fb":[8,0,0,19,4,28,2],
-"classAntares_1_1Solver_1_1Simulation_1_1yearJob.html#a2f27d947396d37435e9dcd8749d7560d":[8,0,0,19,4,28,0],
 "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html#a404381340bdd3af81b3b026dd3e7efca":[8,0,0,19,4,28,4],
 "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html#a8db5faaee8b2d81fc757372fe475cb9f":[8,0,0,19,4,28,3],
 "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html#ae7690e3e431957b28603854d09107991":[8,0,0,19,4,28,1],
@@ -249,5 +245,9 @@ var NAVTREEINDEX27 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#a5747675414f980d416a3a8790988817f":[8,0,0,19,5,4,22,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#a63567916d91c6a55d43b99a8af1aaf51":[8,0,0,19,5,4,22,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#a6a5f9b5f0353cecea85cbd87b9cb6631":[8,0,0,19,5,4,22,16],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#a7743d83655384e2a86bf134417d177af":[8,0,0,19,5,4,22,17]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#a7743d83655384e2a86bf134417d177af":[8,0,0,19,5,4,22,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#a7acf850f2ba0d6c7e6461ca379e1a5ce":[8,0,0,19,5,4,22,15],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#aa5eecb46d6ccb71edaf632a58d2819cd":[8,0,0,19,5,4,22,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#ab7ff30337fb70865fe7df06a4ad2854e":[8,0,0,19,5,4,22,18],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html#abc3d423371baf80061d3765f2924befd":[8,0,0,19,5,4,22,4]
 };

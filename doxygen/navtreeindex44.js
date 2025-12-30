@@ -1,13 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"classScenarioBuilderParser.html#a2696a54e5b003bea243837318cf2f550":[8,0,270,13],
-"classScenarioBuilderParser.html#a2fb06facf71b071a5df175118c81a3b2":[8,0,270,6],
-"classScenarioBuilderParser.html#a32a6665cfca8b408e1cc0780e42a897a":[8,0,270,15],
-"classScenarioBuilderParser.html#a58f3d45bee2cb1f0b7c872d61753b641":[8,0,270,11],
-"classScenarioBuilderParser.html#a74e256c509d02983264bc58e1a9d2f95":[8,0,270,17],
-"classScenarioBuilderParser.html#a8bfbebd8593408c72745564fb50ef572":[8,0,270,7],
-"classScenarioBuilderParser.html#ab9a1a564b5e529454c5aaa55b7d92971":[8,0,270,9],
-"classScenarioBuilderParser.html#ac314e1b0490e3ce3c9a6f8fb776a89d8":[8,0,270,5],
 "classScenarioBuilderParser.html#af434135d1857c78184f0bf2805e90972":[8,0,270,16],
 "classScenarioBuilderParser.html#af6158871fb6a580a2f8279d8358af1d8":[8,0,270,10],
 "classScenarioBuilderParser.html#af8b97a05d130aca0bcab71f86af43bb2":[8,0,270,14],
@@ -249,5 +241,13 @@ var NAVTREEINDEX44 =
 "classTimeSeriesConfigurer.html#a1b41d4ee31d8ed634be783eead089e27":[8,0,327,5],
 "classTimeSeriesConfigurer.html#a32031f39f78c7938983319850a51afc3":[8,0,327,3],
 "classTimeSeriesConfigurer.html#a43c97c7242191a1dcf72edcd1c980bc2":[8,0,327,1],
-"classTimeSeriesConfigurer.html#ad9676e891021049bf0838df96cf9a345":[8,0,327,2]
+"classTimeSeriesConfigurer.html#ad9676e891021049bf0838df96cf9a345":[8,0,327,2],
+"classTimeSeriesConfigurer.html#adb20a03277de3d723aee72bb0df2913a":[8,0,327,0],
+"classTypedColumn.html":[8,0,339],
+"classTypedColumn.html#a027ea725c6aebf26e994453a07a1b78a":[8,0,339,6],
+"classTypedColumn.html#a35758095aaafd161a0914f526c96292a":[8,0,339,3],
+"classTypedColumn.html#a8816a2e0c3f5702933990b8bc1168e07":[8,0,339,5],
+"classTypedColumn.html#aa6d5e8f2f533c8ae543428572236b1fa":[8,0,339,2],
+"classTypedColumn.html#abb0dc287452c190afea469e4fcd444ba":[8,0,339,0],
+"classTypedColumn.html#ac78d38e299c54bd44933f1ace9b53ae9":[8,0,339,4]
 };

@@ -1,13 +1,5 @@
 var NAVTREEINDEX60 =
 {
-"structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html#afd3da9f999454f89e5faf80040a72bec":[8,0,0,25,52,0,0,0],
-"structAntares_1_1linkInfo_1_1addpWeight.html":[8,0,0,45,0],
-"structAntares_1_1linkInfo_1_1addpWeight.html#afa157028fda8f84bb438eb07a5269ca7":[8,0,0,45,0,0],
-"structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html":[8,0,0,45,1],
-"structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html#a560b4af655e4ed183f6f7e1fc6303e3c":[8,0,0,45,1,0],
-"structAntares_1_1linkInfo_1_1comparepWeight.html":[8,0,0,45,2],
-"structAntares_1_1linkInfo_1_1comparepWeight.html#a0eb145cecae847b457504f178dca2519":[8,0,0,45,2,0],
-"structAntares_1_1linkInfo_1_1comparepWeightWithImpedance.html":[8,0,0,45,3],
 "structAntares_1_1linkInfo_1_1comparepWeightWithImpedance.html#a74b31db9956be398941a87985312e4c9":[8,0,0,45,3,0],
 "structAreaBalanceData.html":[8,0,42],
 "structAreaBalanceData.html#a20c3f61835bc421234b0d98082cd4e70":[8,0,42,3],
@@ -249,5 +241,13 @@ var NAVTREEINDEX60 =
 "structCsrBindingConstraintHourData.html#af14807ac8053e066b5c9fe583d3b7309":[8,0,94,2],
 "structCsrBindingConstraintHourData.html#af74bdea5c2a860adeca6467c6e0814cb":[8,0,94,4],
 "structCsrFlowDissociationData.html":[8,0,96],
-"structCsrFlowDissociationData.html#a265585c099ccfd554b8a3fcccc83a012":[8,0,96,1]
+"structCsrFlowDissociationData.html#a265585c099ccfd554b8a3fcccc83a012":[8,0,96,1],
+"structCsrFlowDissociationData.html#a302cad09aaa374a645ac3040d92e3370":[8,0,96,3],
+"structCsrFlowDissociationData.html#a33d49b1768bc4ccb9aba4337f4622650":[8,0,96,6],
+"structCsrFlowDissociationData.html#a437cbc94b012a9acb58a787f6eb0dea6":[8,0,96,2],
+"structCsrFlowDissociationData.html#a99b40eb333618c461b87c125e2045201":[8,0,96,0],
+"structCsrFlowDissociationData.html#acf0b85ed962447402e8701eb8c06526e":[8,0,96,5],
+"structCsrFlowDissociationData.html#af590589d8a533f78817f12f230616736":[8,0,96,4],
+"structCsvCreationFixture.html":[8,0,97],
+"structCsvCreationFixture.html#a511c24c7f011d1bec6f8da48aaf77474":[8,0,97,1]
 };

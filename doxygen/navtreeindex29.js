@@ -1,9 +1,5 @@
 var NAVTREEINDEX29 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#afd8aa192ad644a2884e6b9e11cbc38c5":[8,0,0,19,5,4,52,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html":[8,0,0,19,5,4,54],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a004b7670b1397b7caf212106f183d490":[8,0,0,19,5,4,54,19],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a03c4f4e2a83a17e559ee89c885e19e85":[8,0,0,19,5,4,54,20],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a0c311fc556322636d9d0cb3aabca5756":[8,0,0,19,5,4,54,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a1b16f32565207a8c66334ca0ae63ba32":[8,0,0,19,5,4,54,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html#a24398322dd1b7124a0b7712d4e83349f":[8,0,0,19,5,4,54,11],
@@ -249,5 +245,9 @@ var NAVTREEINDEX29 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a1a8b757a6027bdc93d67e4cd5c640e87":[8,0,0,19,5,4,80,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a2a549d497fa5e4f18ec05ad2d3eb4c3e":[8,0,0,19,5,4,80,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a2d34c2a5b74fb48970b694e7840895e1":[8,0,0,19,5,4,80,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a2e30a174ef3fa2a56c9b861babbbe833":[8,0,0,19,5,4,80,18]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a2e30a174ef3fa2a56c9b861babbbe833":[8,0,0,19,5,4,80,18],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a45b7a399c8fb83b77e28241dada4eb59":[8,0,0,19,5,4,80,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a45dcdebb707f57d01958095847b9ee81":[8,0,0,19,5,4,80,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a5379bd27ae7c83234bcfb7b5604906a5":[8,0,0,19,5,4,80,19],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a5a87d069c14c8a33eeda0c327a8b38d3":[8,0,0,19,5,4,80,9]
 };

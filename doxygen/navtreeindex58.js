@@ -1,13 +1,5 @@
 var NAVTREEINDEX58 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9892d1ed37ca29747b62dc897a061747":[8,0,0,19,5,4,81,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9a598b2dfa52b0e1ea9c2bdfd77a86f9":[8,0,0,19,5,4,81,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#adc09543eb6b63a969bd71865ce10a7f0":[8,0,0,19,5,4,81,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html":[8,0,0,19,5,4,83],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a302633664a5a202db83a41b76cdf786c":[8,0,0,19,5,4,83,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a40d521f0dcce55431c0985c8d205f466":[8,0,0,19,5,4,83,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a8bec9973b19163101b17800656db563e":[8,0,0,19,5,4,83,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#aba1f664d92c74a7cabd341407f00ad87":[8,0,0,19,5,4,83,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#acc29c80c78c55d05467af14d7e244da2":[8,0,0,19,5,4,83,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html":[8,0,0,19,5,4,85],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html#a1d338bac2b286e79e6d7e77dd15c9c20":[8,0,0,19,5,4,85,4],
@@ -249,5 +241,13 @@ var NAVTREEINDEX58 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html#a09178644b4881df8b3f53976c1d60fb1":[8,0,0,19,5,6,0,9,0,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html#ac7c85e13045093f0799154c9238fa8a9":[8,0,0,19,5,6,0,9,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1SetsOfAreas_1_1Statistics.html":[8,0,0,19,5,40,0],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation.html":[8,0,0,19,5,25]
+"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation.html":[8,0,0,19,5,25],
+"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spati841a76f09dca40f27176e5114824b3ac.html":[8,0,0,19,5,28],
+"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateMax_00_01VCardT_01_4.html":[8,0,0,19,5,30],
+"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateOr_00_01VCardT_01_4.html":[8,0,0,19,5,27],
+"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateSum_00_01VCardT_01_4.html":[8,0,0,19,5,26],
+"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatib45dc589c9aad1010829c4d00b555bd9.html":[8,0,0,19,5,29],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html":[8,0,0,19,5,15],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html#aa5c566f07fbaf9cf9ece100d0df22113":[8,0,0,19,5,15,0],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html":[8,0,0,19,5,17]
 };

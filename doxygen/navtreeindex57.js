@@ -1,13 +1,5 @@
 var NAVTREEINDEX57 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#aac4a857b4236eaf769e72ca3c6465e2c":[8,0,0,19,5,0,0,2],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#ac0b0985d8f11135aa86fd4bfd956ae09":[8,0,0,19,5,0,0,1],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[8,0,0,19,5,0,2],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a1d2dfffc8dbf3e6b2debbac2abef063d":[8,0,0,19,5,0,2,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a8cd0653f9b095636f0e5217a394d3762":[8,0,0,19,5,0,2,1],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0":[8,0,0,19,5,0,2,4],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a992390dd588e93253efbda96291fe50e":[8,0,0,19,5,0,2,2],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363":[8,0,0,19,5,0,2,3],
 "structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[8,0,0,19,5,8,0],
 "structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[8,0,0,19,5,10,0],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[8,0,0,19,5,1,0],
@@ -249,5 +241,13 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html#ae4fe1fe2b8ec36c1f59a747d3d8d192a":[8,0,0,19,5,4,79,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html":[8,0,0,19,5,4,81],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a44f62fefc94791bbf5fef297e66415c9":[8,0,0,19,5,4,81,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a780167a642bf5aa2c6300dfade007828":[8,0,0,19,5,4,81,4]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a780167a642bf5aa2c6300dfade007828":[8,0,0,19,5,4,81,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9892d1ed37ca29747b62dc897a061747":[8,0,0,19,5,4,81,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9a598b2dfa52b0e1ea9c2bdfd77a86f9":[8,0,0,19,5,4,81,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#adc09543eb6b63a969bd71865ce10a7f0":[8,0,0,19,5,4,81,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html":[8,0,0,19,5,4,83],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a302633664a5a202db83a41b76cdf786c":[8,0,0,19,5,4,83,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a40d521f0dcce55431c0985c8d205f466":[8,0,0,19,5,4,83,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#a8bec9973b19163101b17800656db563e":[8,0,0,19,5,4,83,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#aba1f664d92c74a7cabd341407f00ad87":[8,0,0,19,5,4,83,4]
 };

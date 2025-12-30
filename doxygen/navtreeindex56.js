@@ -1,13 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structAntares_1_1DebugData.html#ab042fc820c9b72dafce5191f8480acf6":[8,0,0,55,11],
-"structAntares_1_1DebugData.html#acb9e4450ee009e74ae692eea1f823b09":[8,0,0,55,16],
-"structAntares_1_1DebugData.html#ad68e2d98afa1e0ecddbc96fce81124c5":[8,0,0,55,14],
-"structAntares_1_1DebugData.html#ad7b05b74e5583b83da3f993fff6c2441":[8,0,0,55,17],
-"structAntares_1_1DebugData.html#aed31d73aebaa435279fc513e3c2fbbf2":[8,0,0,55,24],
-"structAntares_1_1DebugData.html#af0006010003f36ea2549da62f94ae2a5":[8,0,0,55,0],
-"structAntares_1_1DebugData.html#af9eab29c11cf8f088af338fdf60dd29a":[8,0,0,55,7],
-"structAntares_1_1DebugData.html#afbb4737b8a6574e52d04fb82a2c8cce6":[8,0,0,55,5],
 "structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html":[8,0,0,8,1,0],
 "structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html#a59d6031a3d6d9e5076e56b5ab2a68796":[8,0,0,8,1,0,2],
 "structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html#a8cd8f4883f7d0e4808d8dee4b542af39":[8,0,0,8,1,0,1],
@@ -249,5 +241,13 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[8,0,0,19,5,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a3199272e542da6cf04e649fcbc2ff0e8":[8,0,0,19,5,0,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a854c5d2699f58392bf9403bf3446e5a6":[8,0,0,19,5,0,0,3],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[8,0,0,19,5,0,0,4]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[8,0,0,19,5,0,0,4],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#aac4a857b4236eaf769e72ca3c6465e2c":[8,0,0,19,5,0,0,2],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#ac0b0985d8f11135aa86fd4bfd956ae09":[8,0,0,19,5,0,0,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[8,0,0,19,5,0,2],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a1d2dfffc8dbf3e6b2debbac2abef063d":[8,0,0,19,5,0,2,0],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a8cd0653f9b095636f0e5217a394d3762":[8,0,0,19,5,0,2,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0":[8,0,0,19,5,0,2,4],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a992390dd588e93253efbda96291fe50e":[8,0,0,19,5,0,2,2],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363":[8,0,0,19,5,0,2,3]
 };

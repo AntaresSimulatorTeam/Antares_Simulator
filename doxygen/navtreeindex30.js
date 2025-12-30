@@ -1,9 +1,5 @@
 var NAVTREEINDEX30 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a45b7a399c8fb83b77e28241dada4eb59":[8,0,0,19,5,4,80,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a45dcdebb707f57d01958095847b9ee81":[8,0,0,19,5,4,80,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a5379bd27ae7c83234bcfb7b5604906a5":[8,0,0,19,5,4,80,19],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a5a87d069c14c8a33eeda0c327a8b38d3":[8,0,0,19,5,4,80,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a5d112727ad943b0905b0eb674e8d61a0":[8,0,0,19,5,4,80,16],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a6b6d4d0f664e57609a2f187e2c0416d1":[8,0,0,19,5,4,80,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html#a7651af5b9bb542dcd6ac3fa117e1db7f":[8,0,0,19,5,4,80,7],
@@ -249,5 +245,9 @@ var NAVTREEINDEX30 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#ae9ef57135b65f49f45a8d1ef7e149add":[8,0,0,19,5,4,102,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#aeaf48884f4eb23702c142dda86531340":[8,0,0,19,5,4,102,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html":[8,0,0,19,5,4,104],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a09877357065dfee4878d76417d4fe1b7":[8,0,0,19,5,4,104,21]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a09877357065dfee4878d76417d4fe1b7":[8,0,0,19,5,4,104,21],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a1241ef86f108556fab2a8ee12ba142bc":[8,0,0,19,5,4,104,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a1f1869ba44349a733183aa2df4fbf8f2":[8,0,0,19,5,4,104,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a34512208af1b2497db15593dcf5cac60":[8,0,0,19,5,4,104,16],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a417e78791cc72664a2750487cf556b9a":[8,0,0,19,5,4,104,3]
 };
