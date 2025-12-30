@@ -23,6 +23,8 @@
 #include <numeric>
 #include <ranges>
 
+#include <boost/algorithm/string.hpp>
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/expressions/visitors/VariadicNodeFunctionVisit.h>
@@ -142,47 +144,37 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
     return "sum(" + dispatch(node->child()) + ")";
 }
 
-std::string PrintVisitor::handleReducedCost(const Nodes::FunctionNode* node)
+std::string handleReducedCost(const Nodes::FunctionNode* node)
 {
     const auto* varIdNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
     return "reduced_cost(" + varIdNode->value() + ")";
+}
+
+std::string handleDual(const Nodes::FunctionNode* node)
+{
+    const auto* cstrIdNode = dynamic_cast<Nodes::ParameterNode*>(node->getOperands().at(0));
+    return "dual(" + cstrIdNode->value() + ")";
 }
 
 // TODO rename
 std::string PrintVisitor::ProcessOtherFunction(const Nodes::FunctionNode* node)
 {
     std::string ret;
-    if (node->size() >= 2)
+    std::string nodeType = node->typeToString();
+    if (node->size() < 2)
     {
-        ret = node->typeToString() + "(";
+        std::string err_msg = nodeType + " must have at least 2 children";
+        throw std::invalid_argument(err_msg);
     }
-    else
-    {
-        throw std::invalid_argument(
-          "variadic Function printing: node must have at least 2 children");
-    }
+
     const auto children = variadicFunction(*this, node);
-    for (size_t i = 0; i < children.size(); ++i)
-    {
-        ret += children[i];
-        if (i != children.size() - 1)
-        {
-            ret += ", ";
-        }
-    }
-    ret += ")";
-    return ret;
+    return nodeType + "(" + boost::algorithm::join(children, ", ") + ")";
 }
 
 std::string PrintVisitor::handlePow(const Nodes::FunctionNode* node)
 {
-    return dispatch(node->getOperands().front()) + "^(" + dispatch(node->getOperands().at(1)) + ")";
-}
-
-std::string PrintVisitor::handleDual(const Nodes::FunctionNode* node)
-{
-    const auto* cstrIdNode = dynamic_cast<Nodes::ParameterNode*>(node->getOperands().at(0));
-    return "dual(" + cstrIdNode->value() + ")";
+    const auto& operands = node->getOperands();
+    return dispatch(operands[0]) + "^(" + dispatch(operands[1]) + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
