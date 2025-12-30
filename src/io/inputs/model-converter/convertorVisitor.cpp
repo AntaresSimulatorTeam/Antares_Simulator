@@ -552,7 +552,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     }
     else if (functionName == "floor")
     {
-        return handleFloor(arglist);
+        return handleFloor(arglist); // gp : rename into floorIntoNode
     }
 
     throw std::invalid_argument("Invalid function: '" + functionName + "'");

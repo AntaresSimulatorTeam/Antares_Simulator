@@ -48,8 +48,43 @@ public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
 
+class EvalResultTypeError: public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
+class EvalResultTimeIndexOutOfRange: public std::out_of_range
+{
+public:
+    using std::out_of_range::out_of_range;
+};
+
 static constexpr double DEFAULT_THRESHOLD = 1e-16;
 
+struct SafeDivides
+{
+    explicit SafeDivides(double threshold = DEFAULT_THRESHOLD):
+        threshold_(threshold)
+    {
+    }
+
+    double operator()(double lhs, double rhs) const
+    {
+        if (std::abs(rhs) <= threshold_)
+        {
+            throw EvalVisitorDivisionException(lhs, rhs, "Division by zero");
+        }
+        return lhs / rhs;
+    }
+
+private:
+    double threshold_;
+};
+
+// gp : Many methods defined in class declaration.
+// gp : They should be declared here but defined in .cpp file.
+// gp : it would make EvaluationResult interface much more readable.
 class EvaluationResult
 {
 public:
@@ -96,26 +131,6 @@ public:
     size_t size() const;
     double value(unsigned i) const;
 
-    struct SafeDivides
-    {
-        explicit SafeDivides(double threshold = DEFAULT_THRESHOLD):
-            threshold_(threshold)
-        {
-        }
-
-        double operator()(double lhs, double rhs) const
-        {
-            if (std::abs(rhs) <= threshold_)
-            {
-                throw EvalVisitorDivisionException(lhs, rhs, "Division by zero");
-            }
-            return lhs / rhs;
-        }
-
-    private:
-        double threshold_;
-    };
-
     EvaluationResult operator/(const EvaluationResult& right) const
     {
         return evaluateBinaryOperation(right, SafeDivides{});
@@ -130,18 +145,6 @@ public:
     {
         return value_;
     }
-
-    class EvalResultTypeError: public std::runtime_error
-    {
-    public:
-        using std::runtime_error::runtime_error;
-    };
-
-    class EvalResultTimeIndexOutOfRange: public std::out_of_range
-    {
-    public:
-        using std::out_of_range::out_of_range;
-    };
 
     double valueAsDouble() const
     {
@@ -170,6 +173,9 @@ public:
         throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
+    // gp : Some of these functions don't have to be member functions
+    // gp : as they are specific to a given context. 
+    // gp : They could be free function instead.
     EvaluationResult operator[](int timeIndex) const;
     EvaluationResult timeShift(int time_shift) const;
     EvaluationResult timeSum(int from, int to) const;
@@ -178,19 +184,12 @@ public:
     template<typename Op>
     EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
 
-private:
-    std::variant<double, std::vector<double>> value_;
-    explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
-
     template<typename Op>
     EvaluationResult evaluateUnaryOperation(Op op) const;
 
-    static double shift(double value, int)
-    {
-        return value;
-    }
-
-    static std::vector<double> shift(const std::vector<double>& values, int shiftValue);
+private:
+    std::variant<double, std::vector<double>> value_;
+    explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
 };
 
 template<typename BinaryOp>
@@ -360,5 +359,6 @@ private:
     EvaluationResult handleReducedCost(const Nodes::FunctionNode* node);
     EvaluationResult handleDual(const Nodes::FunctionNode* node);
     EvaluationResult handlePow(const Nodes::FunctionNode* node);
+    EvaluationResult evaluateFloorNode(const Nodes::FunctionNode* node);
 };
 } // namespace Antares::Expressions::Visitors

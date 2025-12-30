@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnSingleValue)
 {
     EvaluationResult res1(5.0);
     EvaluationResult res2 = -res1;
-    BOOST_CHECK_THROW((void)res2.valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res2.valuesAsVector(), EvalResultTypeError);
     BOOST_CHECK_EQUAL(std::get<double>(res2.value()), -5.0);
 }
 
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnVector)
 {
     EvaluationResult res1({5.0, 986.});
     EvaluationResult res2 = -res1;
-    BOOST_CHECK_THROW(res2.valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW(res2.valueAsDouble(), EvalResultTypeError);
 
     const std::vector<double> expected_result{-5.0, -986.};
 
@@ -294,7 +294,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket)
     const EvaluationResult res1(vec);
 
     BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
-    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvalResultTypeError);
     BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), vec[0]);
     BOOST_CHECK_EQUAL(res1[1].valueAsDouble(), vec[1]);
     BOOST_CHECK_EQUAL(res1[2].valueAsDouble(), vec[2]);
@@ -305,8 +305,8 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket_one_value)
     const EvaluationResult res1(2025.03);
 
     BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
-    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
-    BOOST_CHECK_THROW((void)res1[0].getValueInVector(0), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].getValueInVector(0), EvalResultTypeError);
     BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[10].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[2000].valueAsDouble(), 2025.03);
@@ -322,7 +322,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_invalid_index)
     for (const int size = static_cast<int>(vec.size());
          const auto& invalidIndex: {-40, size, size + 56})
     {
-        BOOST_CHECK_THROW(res1[invalidIndex], EvaluationResult::EvalResultTimeIndexOutOfRange);
+        BOOST_CHECK_THROW(res1[invalidIndex], EvalResultTimeIndexOutOfRange);
     }
 }
 
@@ -330,8 +330,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_DoubleValue)
 {
     const EvaluationResult eval(4.0);
     const EvaluationResult shiftedEval = eval.timeShift(2);
-    BOOST_CHECK_THROW((void)eval.timeShift(2).valuesAsVector(),
-                      EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)eval.timeShift(2).valuesAsVector(), EvalResultTypeError);
     BOOST_CHECK_NO_THROW(eval.timeShift(2).valueAsDouble());
 
     BOOST_CHECK_EQUAL(eval.timeShift(2).valueAsDouble(), 4.0);
@@ -345,7 +344,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_PositiveShift)
 {
     EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
 
-    BOOST_CHECK_THROW(eval.timeShift(2).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW(eval.timeShift(2).valueAsDouble(), EvalResultTypeError);
     BOOST_CHECK_NO_THROW((void)eval.timeShift(2).valuesAsVector());
     const auto res = eval.timeShift(1).valuesAsVector();
     const std::vector<double> expected{2.0, 3.0, 1.0};
@@ -383,15 +382,14 @@ BOOST_AUTO_TEST_CASE(TimeSum_DoubleValue)
     const EvaluationResult sum = eval.timeSum(-2, 2);
     BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
 
-    BOOST_CHECK_THROW((void)eval.timeSum(-1, 0).valuesAsVector(),
-                      EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)eval.timeSum(-1, 0).valuesAsVector(), EvalResultTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_PositiveShift)
 {
     const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
     const auto sum = eval.timeSum(0, 2).valuesAsVector();
-    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvalResultTypeError);
     const std::vector<double> expected(3.0, 1.0 + 2.0 + 3.0);
 
     BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
@@ -401,7 +399,7 @@ BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_NegativeShift)
 {
     const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
     const auto sum = eval.timeSum(-1, 0).valuesAsVector();
-    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvalResultTypeError);
 
     const std::vector<double> expected{3.0 + 1.0, 1.0 + 2.0, 2.0 + 3.0};
 
@@ -414,7 +412,7 @@ BOOST_AUTO_TEST_CASE(AlltimeSum_DoubleValue)
     const EvaluationResult sum = eval.alltimeSum(5);
     BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
 
-    BOOST_CHECK_THROW((void)sum.valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)sum.valuesAsVector(), EvalResultTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue)
@@ -427,7 +425,7 @@ BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue)
 BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue_OutOfRange)
 {
     const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
-    BOOST_CHECK_THROW(eval.alltimeSum(4), EvaluationResult::EvalResultTimeIndexOutOfRange);
+    BOOST_CHECK_THROW(eval.alltimeSum(4), EvalResultTimeIndexOutOfRange);
 }
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
@@ -769,7 +767,7 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
 struct TimeDependentParameterFixture
 
 {
-    ParameterNode root = ParameterNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode = ParameterNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     unsigned hour_0 = 0;
@@ -785,7 +783,7 @@ struct TimeDependentParameterFixture
                                                                &scenarioGroupRepo);
 
     std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> visitor;
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, hour_1, hour_0, hour_1, hour_1};
+    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 1, 0, 1, 1};
 
     TimeDependentParameterFixture(
       std::map<std::string, ParameterTypeAndValue> additionnalParams = {})
@@ -813,7 +811,7 @@ struct TimeDependentParameterFixture
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, TimeDependentParameterFixture)
 {
-    const auto eval = visitor->dispatch(&root).valuesAsVector();
+    const auto eval = visitor->dispatch(&paramNode).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0);
     BOOST_CHECK_EQUAL(eval[1], hour_1);
@@ -827,7 +825,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
                       13.0);
     BOOST_CHECK_THROW(
       (void)defaultComponentEvalVisitor->dispatch(&time_shift_node).valuesAsVector(),
-      EvaluationResult::EvalResultTypeError);
+      EvalResultTypeError);
 }
 
 template<typename NodeType>
@@ -1265,7 +1263,7 @@ BOOST_FIXTURE_TEST_CASE(functionNode_max_timeDepdentParameter, TimeDependentPara
 {
     LiteralNode num1(22.0);
     LiteralNode num2(8);
-    auto max = FunctionNode(FunctionNodeType::max, &num1, &num2, &root);
+    auto max = FunctionNode(FunctionNodeType::max, &num1, &num2, &paramNode);
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&max);
@@ -1297,7 +1295,7 @@ BOOST_AUTO_TEST_CASE(functionNode_min_timeDepdentParameter)
     fixture.dummy_data.addParams(
       std::make_pair<std::string, std::vector<double>>("P2", {-400, 1568}));
     ParameterNode second("Param2", VariabilityType::VARYING_IN_TIME_ONLY);
-    auto min = FunctionNode(FunctionNodeType::min, &fixture.root, &second);
+    auto min = FunctionNode(FunctionNodeType::min, &fixture.paramNode, &second);
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&min);
@@ -1327,7 +1325,7 @@ BOOST_FIXTURE_TEST_CASE(functionNode_pow, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(functionNode_pow_timeDepdentParameter, TimeDependentParameterFixture)
 {
     LiteralNode num2(2);
-    auto pow = FunctionNode(FunctionNodeType::pow, &root, &num2);
+    auto pow = FunctionNode(FunctionNodeType::pow, &paramNode, &num2);
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&pow);

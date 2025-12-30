@@ -244,6 +244,20 @@ EvaluationResult EvalVisitor::handlePow(const Nodes::FunctionNode* node)
                                         { return std::pow(a, b); });
 }
 
+struct Floor
+{
+    double operator()(double d) const
+    {
+        return std::floor(d);
+    }
+};
+
+EvaluationResult EvalVisitor::evaluateFloorNode(const Nodes::FunctionNode* node)
+{
+    auto* floor_arg = node->getOperands()[0];
+    return dispatch(floor_arg).evaluateUnaryOperation(Floor());
+}
+
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())
@@ -262,6 +276,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
                               { return *std::min_element(elements.begin(), elements.end()); });
     case Nodes::FunctionNodeType::pow:
         return handlePow(node);
+    case Nodes::FunctionNodeType::floor:
+        return evaluateFloorNode(node);
     default:
         return EvaluationResult(0);
     }
@@ -282,7 +298,7 @@ EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
 
     // The variable depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
-    std::vector<double> varValues(nbTimeStep, 0.0);
+    std::vector<double> varValues(nbTimeStep, 0.);
     const std::span componentVariables = optimContainer_.getComponentVariable(component_,
                                                                               varNode->Index(),
                                                                               nbTimeStep);
@@ -346,6 +362,16 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
+double shift(double value, int)
+{
+    return value;
+}
+
+std::vector<double> shift(const std::vector<double>& values, int timeShift)
+{
+    return shiftVector(values, timeShift);
+}
+
 EvaluationResult EvaluationResult::timeShift(int time_shift) const
 {
     return EvaluationResult(
@@ -386,11 +412,6 @@ EvaluationResult EvaluationResult::operator[](int timeIndex) const
         throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
     }
     return EvaluationResult(vec.at(timeIndex));
-}
-
-std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int timeShift)
-{
-    return shiftVector(values, timeShift);
 }
 
 } // namespace Antares::Expressions::Visitors
