@@ -144,34 +144,11 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
     return "sum(" + dispatch(node->child()) + ")";
 }
 
-std::string visitUnaryFunctionArg(const Nodes::FunctionNode* node)
-{
-    std::string nodeType = node->typeToString();
-    const auto* leafNode = dynamic_cast<Nodes::Leaf<std::string>*>(node->getOperands()[0]);
-    return nodeType + "(" + leafNode->value() + ")";
-}
-
-std::string PrintVisitor::visitFunctionMultipleArgs(const Nodes::FunctionNode* node)
+std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
 {
     std::string nodeType = node->typeToString();
     const auto children = variadicFunction(*this, node);
     return nodeType + "(" + boost::algorithm::join(children, ", ") + ")";
-}
-
-std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
-{
-    switch (node->type())
-    {
-    case Nodes::FunctionNodeType::reduced_cost:
-    case Nodes::FunctionNodeType::dual:
-        return visitUnaryFunctionArg(node);
-    case Nodes::FunctionNodeType::max:
-    case Nodes::FunctionNodeType::min:
-    case Nodes::FunctionNodeType::pow:
-        return visitFunctionMultipleArgs(node);
-    default:
-        return "";
-    }
 }
 
 std::string PrintVisitor::name() const

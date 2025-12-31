@@ -54,8 +54,5 @@ private:
     std::string visit(const Nodes::TimeSumNode* node) override;
     std::string visit(const Nodes::AllTimeSumNode* node) override;
     std::string visit(const Nodes::FunctionNode* node) override;
-
-private:
-    std::string visitFunctionMultipleArgs(const Nodes::FunctionNode* node);
 };
 } // namespace Antares::Expressions::Visitors
