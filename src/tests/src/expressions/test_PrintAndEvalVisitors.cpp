@@ -1471,6 +1471,20 @@ BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
     BOOST_CHECK(printVisitor.dispatch(reducedCost) == "reduced_cost(var)");
 }
 
+BOOST_FIXTURE_TEST_CASE(print_floor_applied_to_a_literal, MyDummyFixture)
+{
+    Node* floor_node = create<FunctionNode>(FunctionNodeType::floor, create<LiteralNode>(2.3));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(floor_node) == "floor(2.300000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_floor_applied_to_a_parameter, MyDummyFixture)
+{
+    Node* floor_node = create<FunctionNode>(FunctionNodeType::floor, create<ParameterNode>("p"));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(floor_node) == "floor(p)");
+}
+
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
 {
     std::vector<int> emptyVector;
