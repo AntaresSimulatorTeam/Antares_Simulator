@@ -35,21 +35,17 @@ concept HasSizeMethod = requires(const T& t) {
 };
 
 template<HasSizeMethod T>
-std::size_t getMaxSize(const std::vector<T>& elements)
+std::size_t getMaxSize(const std::vector<T>& v)
 {
-    std::size_t maxSize = 0;
-    for (const auto& element: elements)
-    {
-        maxSize = std::max(maxSize, element.size());
-    }
-    return maxSize;
+    return std::ranges::max_element(v, {}, [](const T& e) { return e.size(); })->size();
 }
 
 template<class R>
 std::vector<R> visitFunctionArgs(NodeVisitor<R>& visitor, const Nodes::FunctionNode* node)
 {
-    std::vector<R> result;
     auto visit_operand = [&](auto& operand) { return visitor.dispatch(operand); };
+
+    std::vector<R> result;
     std::ranges::transform(node->getOperands(), std::back_inserter(result), visit_operand);
     return result;
 }
