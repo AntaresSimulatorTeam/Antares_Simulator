@@ -71,9 +71,9 @@ private:
 CreateEvalVisitor::CreateEvalVisitor():
     linearProblem_(true),
     fillCtx_(0, 2, 0, 2, 0),
-    model_(createModelWithParameters(
-      {Parameter("p", TimeDependent::YES, ScenarioDependent::NO),
-       Parameter("p-const", TimeDependent::NO, ScenarioDependent::NO)})),
+    model_(
+      createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO),
+                                 Parameter("p-const", TimeDependent::NO, ScenarioDependent::NO)})),
     component_(createComponent(
       model_,
       "component-id",

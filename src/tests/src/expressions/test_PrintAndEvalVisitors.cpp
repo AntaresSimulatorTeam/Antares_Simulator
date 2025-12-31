@@ -1317,7 +1317,7 @@ BOOST_FIXTURE_TEST_CASE(functionNode_pow, MyDummyFixture)
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(pow);
 
-    BOOST_CHECK_EQUAL(printed, "22.000000^(2.000000)");
+    BOOST_CHECK_EQUAL(printed, "pow(22.000000, 2.000000)");
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(pow).valueAsDouble(),
                       std::pow(num1, num2));
 }
@@ -1330,7 +1330,7 @@ BOOST_FIXTURE_TEST_CASE(functionNode_pow_timeDepdentParameter, TimeDependentPara
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&pow);
 
-    BOOST_CHECK_EQUAL(printed, "my-param^(2.000000)");
+    BOOST_CHECK_EQUAL(printed, "pow(my-param, 2.000000)");
     BOOST_CHECK_EQUAL(evalVisitor->dispatch(&pow).value(0), std::pow(0, 2));
     BOOST_CHECK_EQUAL(evalVisitor->dispatch(&pow).value(1), std::pow(1, 2));
 }

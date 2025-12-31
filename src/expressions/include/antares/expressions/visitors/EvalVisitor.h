@@ -174,7 +174,7 @@ public:
     }
 
     // gp : Some of these functions don't have to be member functions
-    // gp : as they are specific to a given context. 
+    // gp : as they are specific to a given context.
     // gp : They could be free function instead.
     EvaluationResult operator[](int timeIndex) const;
     EvaluationResult timeShift(int time_shift) const;

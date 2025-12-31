@@ -56,7 +56,6 @@ private:
     std::string visit(const Nodes::FunctionNode* node) override;
 
 private:
-    std::string ProcessOtherFunction(const Nodes::FunctionNode* node);
-    std::string handlePow(const Nodes::FunctionNode* node);
+    std::string visitFunctionMultipleArgs(const Nodes::FunctionNode* node);
 };
 } // namespace Antares::Expressions::Visitors

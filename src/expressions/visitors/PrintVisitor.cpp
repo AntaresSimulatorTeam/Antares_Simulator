@@ -144,37 +144,18 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
     return "sum(" + dispatch(node->child()) + ")";
 }
 
-std::string handleReducedCost(const Nodes::FunctionNode* node)
+std::string visitUnaryFunctionArg(const Nodes::FunctionNode* node)
 {
-    const auto* varIdNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
-    return "reduced_cost(" + varIdNode->value() + ")";
-}
-
-std::string handleDual(const Nodes::FunctionNode* node)
-{
-    const auto* cstrIdNode = dynamic_cast<Nodes::ParameterNode*>(node->getOperands().at(0));
-    return "dual(" + cstrIdNode->value() + ")";
-}
-
-// TODO rename
-std::string PrintVisitor::ProcessOtherFunction(const Nodes::FunctionNode* node)
-{
-    std::string ret;
     std::string nodeType = node->typeToString();
-    if (node->size() < 2)
-    {
-        std::string err_msg = nodeType + " must have at least 2 children";
-        throw std::invalid_argument(err_msg);
-    }
+    const auto* leafNode = dynamic_cast<Nodes::Leaf<std::string>*>(node->getOperands()[0]);
+    return nodeType + "(" + leafNode->value() + ")";
+}
 
+std::string PrintVisitor::visitFunctionMultipleArgs(const Nodes::FunctionNode* node)
+{
+    std::string nodeType = node->typeToString();
     const auto children = variadicFunction(*this, node);
     return nodeType + "(" + boost::algorithm::join(children, ", ") + ")";
-}
-
-std::string PrintVisitor::handlePow(const Nodes::FunctionNode* node)
-{
-    const auto& operands = node->getOperands();
-    return dispatch(operands[0]) + "^(" + dispatch(operands[1]) + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
@@ -182,14 +163,12 @@ std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
     switch (node->type())
     {
     case Nodes::FunctionNodeType::reduced_cost:
-        return handleReducedCost(node);
     case Nodes::FunctionNodeType::dual:
-        return handleDual(node);
+        return visitUnaryFunctionArg(node);
     case Nodes::FunctionNodeType::max:
     case Nodes::FunctionNodeType::min:
-        return ProcessOtherFunction(node);
     case Nodes::FunctionNodeType::pow:
-        return handlePow(node);
+        return visitFunctionMultipleArgs(node);
     default:
         return "";
     }
