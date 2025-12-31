@@ -97,11 +97,6 @@ private:
     // ------------
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
-
-    // Data members
-    // ------------
-    Expressions::Registry<Node>& registry_;
-    const YmlModel::Model& model_;
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
@@ -521,7 +516,7 @@ std::any ConvertorVisitor::handleFloor(ExprParser::ArgListContext* context)
         const double arg_as_d = std::stod(arg_as_str);
         return registry_.create<LiteralNode>(arg_as_d);
     }
-    catch (const std::invalid_argument& e)
+    catch (const std::invalid_argument&)
     {
         std::string err_msg = "floor()'s argument is neither a parameter or a literal.";
         throw std::invalid_argument(err_msg);
