@@ -21,7 +21,7 @@
 #pragma once
 #include <span>
 
-#include <antares/expressions/visitors/VariadicNodeFunctionVisit.h>
+#include <antares/expressions/visitors/visitFunctionNodeArgs.h>
 
 #include "LinearExpression.h"
 

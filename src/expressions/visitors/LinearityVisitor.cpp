@@ -29,7 +29,7 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/PrintVisitor.h"
 #include "antares/expressions/visitors/VariabilityVisitor.h"
-#include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
+#include "antares/expressions/visitors/visitFunctionNodeArgs.h"
 
 using namespace Antares::Optimisation;
 

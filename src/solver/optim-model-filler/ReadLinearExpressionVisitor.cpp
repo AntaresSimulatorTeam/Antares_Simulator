@@ -27,7 +27,7 @@
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
-#include "antares/expressions/visitors/VariadicNodeFunctionVisit.h"
+#include "antares/expressions/visitors/visitFunctionNodeArgs.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
