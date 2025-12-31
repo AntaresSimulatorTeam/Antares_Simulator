@@ -91,7 +91,12 @@ private:
     std::any ProcessChildren(const std::vector<T*>& exprContexts);
 
     template<class T>
-    std::any processPower(std::vector<T*> exprContexts);
+    std::any processPower(const std::vector<T*>& exprContexts);
+
+    // Data members
+    // ------------
+    Expressions::Registry<Node>& registry_;
+    const YmlModel::Model& model_;
 
     // Data members
     // ------------
@@ -672,7 +677,7 @@ std::any ConvertorVisitor::visitRightExpression(ExprParser::RightExpressionConte
 }
 
 template<class T>
-std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts)
+std::any ConvertorVisitor::processPower(const std::vector<T*>& exprContexts)
 {
     const auto powerExpr = std::any_cast<std::vector<Node*>>(ProcessChildren(exprContexts));
     return static_cast<Node*>(

@@ -307,6 +307,7 @@ BOOST_AUTO_TEST_CASE(single_link_ntc_ts_numbers)
     Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
 
     // Erase TS numbers for repeatability (no randomness)
+    link->timeseriesNumbers.reset(5);
     for (int ii = 0; ii < 5; ii++)
     {
         link->timeseriesNumbers[ii] = ii % 3;

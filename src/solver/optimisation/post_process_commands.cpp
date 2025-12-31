@@ -21,6 +21,9 @@
 
 #include "antares/solver/optimisation/post_process_commands.h"
 
+#include <fmt/format.h>
+#include <sstream>
+
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -337,6 +340,95 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
         }
     }
     return sumENS;
+}
+
+// --------------------------------------
+//  Debug for adequacy patch values
+// --------------------------------------
+//
+WriteDebugAdequacyPatch::WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
+                                                 AreaList& areas,
+                                                 unsigned int numSpace,
+                                                 IResultWriter& writer,
+                                                 std::string fileLabel):
+    basePostProcessCommand(problemeHebdo),
+    areas_(areas),
+    numSpace_(numSpace),
+    writer_(writer),
+    fileLabel_(fileLabel)
+{
+}
+
+void WriteDebugAdequacyPatch::execute(const optRuntimeData& opt_runtime_data)
+{
+    writeAreaData(opt_runtime_data);
+    writeLinkData(opt_runtime_data);
+}
+
+void WriteDebugAdequacyPatch::writeAreaData(const optRuntimeData& opt_runtime_data)
+{
+    std::stringstream stream;
+    stream << "Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice MRGPriceCSR DTGmrgCSR "
+              "SpilledEnergy\n";
+
+    areas_.each(
+      [this, &stream](const Data::Area& area)
+      {
+          std::string areaName = area.name;
+          auto& r = problemeHebdo_->ResultatsHoraires[area.index];
+          const auto& scratchpad = area.scratchpad[numSpace_];
+
+          for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
+          {
+              stream << fmt::format("{} {} {} {} {} {} {} {} {}\n",
+                                    areaName,
+                                    h,
+                                    r.ValeursHorairesDENS[h],
+                                    r.ValeursHorairesDeDefaillancePositive[h],
+                                    r.ValeursHorairesDeDefaillancePositiveCSR[h],
+                                    -r.CoutsMarginauxHoraires[h],
+                                    -r.CoutsMarginauxHorairesCSR[h],
+                                    r.ValeursHorairesDtgMrgCsr[h],
+                                    r.ValeursHorairesDeDefaillanceNegative[h]);
+          }
+      });
+    std::string filename = fmt::format("adequacy-patch-areas-{}-{}-{}.csv",
+                                       fileLabel_,
+                                       opt_runtime_data.year,
+                                       opt_runtime_data.week);
+
+    std::string s = stream.str();
+    writer_.addEntryFromBuffer(filename, s);
+}
+
+void WriteDebugAdequacyPatch::writeLinkData(const optRuntimeData& opt_runtime_data)
+{
+    std::stringstream stream;
+    stream << "Link Hour Flow\n";
+    areas_.each(
+      [this, &stream](const Data::Area& area)
+      {
+          for (const auto& l: area.links)
+          {
+              for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
+              {
+                  stream << fmt::format(
+                    "{}/{} {} {}\n",
+                    l.second->with->name,
+                    area.name,
+                    h,
+                    problemeHebdo_->ValeursDeNTC[h].ValeurDuFlux[l.second->index]);
+              }
+          }
+      });
+
+    std::string filename = fmt::format("adequacy-patch-links-{}-{}-{}.csv",
+                                       fileLabel_,
+                                       opt_runtime_data.year,
+                                       opt_runtime_data.week);
+
+    std::string s = stream.str();
+    writer_.addEntryFromBuffer(filename, s);
 }
 
 } // namespace Antares::Solver::Simulation

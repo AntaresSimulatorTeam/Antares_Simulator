@@ -4,6 +4,11 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 9.3.4
+#### Improvements
+* Various fixes for the "single problem API" (#3313, #3311, #3312, #3309)
+* Bump SonarSource/sonarqube-scan-action from 6.0.0 to 7.0.0 (#3295)
+
 ### 9.3.3
 
 #### New features
