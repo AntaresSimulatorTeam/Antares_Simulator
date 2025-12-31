@@ -267,11 +267,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::dual:
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
-        return applyOperation(variadicFunction(*this, node),
+        return applyOperation(visitFunctionArgs(*this, node),
                               [](const auto& elements)
                               { return *std::max_element(elements.begin(), elements.end()); });
     case Nodes::FunctionNodeType::min:
-        return applyOperation(variadicFunction(*this, node),
+        return applyOperation(visitFunctionArgs(*this, node),
                               [](const auto& elements)
                               { return *std::min_element(elements.begin(), elements.end()); });
     case Nodes::FunctionNodeType::pow:

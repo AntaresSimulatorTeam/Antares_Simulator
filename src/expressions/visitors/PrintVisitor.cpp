@@ -147,8 +147,8 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
 std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
 {
     std::string nodeType = node->typeToString();
-    const auto children = variadicFunction(*this, node);
-    return nodeType + "(" + boost::algorithm::join(children, ", ") + ")";
+    const auto args_as_string = visitFunctionArgs(*this, node);
+    return nodeType + "(" + boost::algorithm::join(args_as_string, ", ") + ")";
 }
 
 std::string PrintVisitor::name() const

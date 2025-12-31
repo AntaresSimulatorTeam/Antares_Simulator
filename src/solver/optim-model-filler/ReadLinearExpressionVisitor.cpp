@@ -323,14 +323,14 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
     {
-        auto exprs(Visitors::variadicFunction(*this, node));
+        auto exprs(Visitors::visitFunctionArgs(*this, node));
         return applyOperation(exprs,
                               [](const auto& elements)
                               { return *std::max_element(elements.begin(), elements.end()); });
     }
     case Nodes::FunctionNodeType::min:
     {
-        auto exprs(Visitors::variadicFunction(*this, node));
+        auto exprs(Visitors::visitFunctionArgs(*this, node));
         return applyOperation(exprs,
                               [](const auto& elements)
                               { return *std::min_element(elements.begin(), elements.end()); });

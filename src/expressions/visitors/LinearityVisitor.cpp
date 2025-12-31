@@ -186,7 +186,7 @@ LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
     case Nodes::FunctionNodeType::min:
-        return applyOperation(variadicFunction(*this, node),
+        return applyOperation(visitFunctionArgs(*this, node),
                               [](const auto& elements)
                               { return *std::max_element(elements.begin(), elements.end()); });
 
