@@ -221,8 +221,8 @@ BOOST_AUTO_TEST_CASE(variability_of_the_dual_of_constraint___case_constant)
 
     // gp : missing a constraint in the optimEntityContainer to test this case
     BOOST_CHECK(true); // avoiding warning about no check
-    //BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&dualNode),
-    //                  VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    // BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&dualNode),
+    //                   VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 }
 
 BOOST_AUTO_TEST_CASE(variability_of_power_operator___case_varying_in_scenario_only)

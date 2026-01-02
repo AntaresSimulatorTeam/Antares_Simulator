@@ -21,6 +21,7 @@
 #pragma once
 
 #include <vector>
+#include <ranges>
 
 namespace Antares::Expressions::Visitors
 {
