@@ -268,20 +268,20 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Al
     return TimeDependentLinearExpression(std::move(ret));
 }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::handleReducedCost(
+TimeDependentLinearExpression visitReducedCost(
   const Nodes::FunctionNode*)
 {
     throw Error::InvalidArgumentError(
       "A linear expression can't contain extra output operator reduced_cost.");
 }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::handleDual(const Nodes::FunctionNode*)
+TimeDependentLinearExpression visitDual(const Nodes::FunctionNode*)
 {
     throw Error::InvalidArgumentError(
       "A linear expression can't contain extra output operator dual.");
 }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::handlePow(
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visitPower(
   const Nodes::FunctionNode* node)
 {
     auto ret(dispatch(node->getOperands().front()));
@@ -303,25 +303,21 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Fu
     switch (node->type())
     {
     case Nodes::FunctionNodeType::reduced_cost:
-        return handleReducedCost(node);
+        return visitReducedCost(node);
     case Nodes::FunctionNodeType::dual:
-        return handleDual(node);
+        return visitDual(node);
     case Nodes::FunctionNodeType::max:
     {
-        auto exprs(visitChildrenNodes(node));
-        return applyOperation(exprs,
-                              [](const auto& elements)
-                              { return *std::max_element(elements.begin(), elements.end()); });
+        return applyOperation(visitChildrenNodes(node),
+                              [](const auto& v) { return *std::ranges::max_element(v); });
     }
     case Nodes::FunctionNodeType::min:
     {
-        auto exprs(visitChildrenNodes(node));
-        return applyOperation(exprs,
-                              [](const auto& elements)
-                              { return *std::min_element(elements.begin(), elements.end()); });
+        return applyOperation(visitChildrenNodes(node),
+                              [](const auto& v) { return *std::ranges::min_element(v); });
     }
     case Nodes::FunctionNodeType::pow:
-        return handlePow(node);
+        return visitPower(node);
     default:
         throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
     }
