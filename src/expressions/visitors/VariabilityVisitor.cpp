@@ -149,8 +149,7 @@ Optimisation::VariabilityType VariabilityVisitor::visit(
 
 Optimisation::VariabilityType VariabilityVisitor::visitReducedCost(const Nodes::FunctionNode* node)
 {
-    const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
-    return varNode->variability();
+    return dispatch(node->getOperands()[0]);
 }
 
 Optimisation::VariabilityType VariabilityVisitor::visitDual(const Nodes::FunctionNode* node)
@@ -183,6 +182,7 @@ Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNod
         return visitDual(node);
     case Nodes::FunctionNodeType::max:
     case Nodes::FunctionNodeType::min:
+    case Nodes::FunctionNodeType::floor:
         return visitChildrenNodes(node);
     case Nodes::FunctionNodeType::pow:
         return visitPow(node);
