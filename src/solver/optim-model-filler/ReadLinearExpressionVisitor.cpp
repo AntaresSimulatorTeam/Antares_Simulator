@@ -268,8 +268,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Al
     return TimeDependentLinearExpression(std::move(ret));
 }
 
-TimeDependentLinearExpression visitReducedCost(
-  const Nodes::FunctionNode*)
+TimeDependentLinearExpression visitReducedCost(const Nodes::FunctionNode*)
 {
     throw Error::InvalidArgumentError(
       "A linear expression can't contain extra output operator reduced_cost.");
