@@ -20,8 +20,8 @@
 */
 #pragma once
 
+#include <algorithm>
 #include <vector>
-#include <ranges>
 
 namespace Antares::Expressions::Visitors
 {
