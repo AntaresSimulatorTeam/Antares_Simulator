@@ -31,7 +31,7 @@
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 
-#include "visitFunctionNodeArgs.h"
+#include "HelpVisitNode.h"
 
 namespace Antares::Expressions::Visitors
 {

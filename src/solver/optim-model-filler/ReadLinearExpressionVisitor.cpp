@@ -27,7 +27,7 @@
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/EvalVisitor.h"
-#include "antares/expressions/visitors/visitFunctionNodeArgs.h"
+#include "antares/expressions/visitors/HelpVisitNode.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
@@ -323,14 +323,14 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
     {
-        auto exprs(Visitors::visitFunctionArgs(*this, node));
+        auto exprs(visitFunctionArgs(node));
         return applyOperation(exprs,
                               [](const auto& elements)
                               { return *std::max_element(elements.begin(), elements.end()); });
     }
     case Nodes::FunctionNodeType::min:
     {
-        auto exprs(Visitors::visitFunctionArgs(*this, node));
+        auto exprs(visitFunctionArgs(node));
         return applyOperation(exprs,
                               [](const auto& elements)
                               { return *std::min_element(elements.begin(), elements.end()); });

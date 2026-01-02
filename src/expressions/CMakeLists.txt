@@ -59,7 +59,7 @@ set(SRC_Expressions
         include/antares/expressions/visitors/NodeVisitor.h
         include/antares/expressions/visitors/PrintVisitor.h
         include/antares/expressions/visitors/VariabilityVisitor.h
-        include/antares/expressions/visitors/visitFunctionNodeArgs.h
+        include/antares/expressions/visitors/HelpVisitNode.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h

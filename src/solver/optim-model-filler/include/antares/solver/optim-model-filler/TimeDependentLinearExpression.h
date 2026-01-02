@@ -21,7 +21,7 @@
 #pragma once
 #include <span>
 
-#include <antares/expressions/visitors/visitFunctionNodeArgs.h>
+#include <antares/expressions/visitors/HelpVisitNode.h>
 
 #include "LinearExpression.h"
 
@@ -79,6 +79,10 @@ private:
     std::vector<LinearExpression> v_;
 };
 
+// gp : Multiple applyOperation on vectors. Avoid code duplication ?
+// gp : Note : getMaxSize is used inside each occurrences.
+// gp : So if there is code duplication on applyOperation, it should be defined
+// gp : at the same location.
 template<class Op>
 TimeDependentLinearExpression applyOperation(const std::vector<TimeDependentLinearExpression>& lhs,
                                              Op op)

@@ -20,11 +20,7 @@
 */
 #pragma once
 
-#include <algorithm>
-#include <ranges>
-
-#include <antares/expressions/nodes/FunctionNode.h>
-#include <antares/expressions/visitors/NodeVisitor.h>
+#include <vector>
 
 namespace Antares::Expressions::Visitors
 {
@@ -40,13 +36,4 @@ std::size_t getMaxSize(const std::vector<T>& v)
     return std::ranges::max_element(v, {}, [](const T& e) { return e.size(); })->size();
 }
 
-template<class R>
-std::vector<R> visitFunctionArgs(NodeVisitor<R>& visitor, const Nodes::FunctionNode* node)
-{
-    auto visit_operand = [&](auto& operand) { return visitor.dispatch(operand); };
-
-    std::vector<R> result;
-    std::ranges::transform(node->getOperands(), std::back_inserter(result), visit_operand);
-    return result;
-}
 } // namespace Antares::Expressions::Visitors
