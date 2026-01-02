@@ -40,7 +40,6 @@ public:
     std::string name() const override;
 
 private:
-    Optimisation::VariabilityType processParentNode(const Nodes::ParentNode* node);
     Optimisation::VariabilityType visit(const Nodes::SumNode* add) override;
     Optimisation::VariabilityType visit(const Nodes::SubtractionNode* add) override;
     Optimisation::VariabilityType visit(const Nodes::MultiplicationNode* add) override;
@@ -58,10 +57,12 @@ private:
     Optimisation::VariabilityType visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     Optimisation::VariabilityType visit(const Nodes::TimeSumNode* timeSumNode) override;
     Optimisation::VariabilityType visit(const Nodes::AllTimeSumNode* timeSumNode) override;
-    Optimisation::VariabilityType handleReducedCost(const Nodes::FunctionNode* node);
-    Optimisation::VariabilityType handleDual(const Nodes::FunctionNode* node);
-    Optimisation::VariabilityType handlePow(const Nodes::FunctionNode* node);
     Optimisation::VariabilityType visit(const Nodes::FunctionNode* node) override;
+
+    Optimisation::VariabilityType visitReducedCost(const Nodes::FunctionNode* node);
+    Optimisation::VariabilityType visitDual(const Nodes::FunctionNode* node);
+    Optimisation::VariabilityType visitPow(const Nodes::FunctionNode* node);
+    Optimisation::VariabilityType visitChildrenNodes(const Nodes::ParentNode* node);
 
     std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
 

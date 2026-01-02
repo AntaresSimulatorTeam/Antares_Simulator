@@ -30,7 +30,7 @@ using namespace Antares::ModelerStudy::SystemModel;
 namespace Antares::Expressions::Visitors
 {
 
-Optimisation::VariabilityType VariabilityVisitor::processParentNode(const Nodes::ParentNode* node)
+Optimisation::VariabilityType VariabilityVisitor::visitChildrenNodes(const Nodes::ParentNode* node)
 {
     const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
@@ -42,7 +42,7 @@ Optimisation::VariabilityType VariabilityVisitor::processParentNode(const Nodes:
 
 Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::SumNode* node)
 {
-    return processParentNode(node);
+    return visitChildrenNodes(node);
 }
 
 Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::SubtractionNode* sub)
@@ -147,21 +147,22 @@ Optimisation::VariabilityType VariabilityVisitor::visit(
     return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::VariabilityType VariabilityVisitor::handleReducedCost(const Nodes::FunctionNode* node)
+Optimisation::VariabilityType VariabilityVisitor::visitReducedCost(const Nodes::FunctionNode* node)
 {
     const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
     return varNode->variability();
 }
 
-Optimisation::VariabilityType VariabilityVisitor::handleDual(const Nodes::FunctionNode* node)
+Optimisation::VariabilityType VariabilityVisitor::visitDual(const Nodes::FunctionNode* node)
 {
-    const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
-    unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
-    const auto& [_, timeIndex] = optimEntityContainer_.getConstraintData(component_, cstrIndex);
-    return timeIndex;
+    const auto constraintIndexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
+    unsigned int constraintIndex = static_cast<unsigned int>(constraintIndexNode->value());
+    const auto& [_, variability] = optimEntityContainer_.getConstraintData(component_,
+                                                                           constraintIndex);
+    return variability;
 }
 
-Optimisation::VariabilityType VariabilityVisitor::handlePow(const Nodes::FunctionNode* node)
+Optimisation::VariabilityType VariabilityVisitor::visitPow(const Nodes::FunctionNode* node)
 {
     if (const auto* exponent = node->getOperands().at(1);
         dispatch(exponent) != Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
@@ -177,16 +178,15 @@ Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNod
     switch (node->type())
     {
     case Nodes::FunctionNodeType::reduced_cost:
-        return handleReducedCost(node);
+        return visitReducedCost(node);
     case Nodes::FunctionNodeType::dual:
-        return handleDual(node);
+        return visitDual(node);
     case Nodes::FunctionNodeType::max:
     case Nodes::FunctionNodeType::min:
-        return processParentNode(node);
+        return visitChildrenNodes(node);
     case Nodes::FunctionNodeType::pow:
-        return handlePow(node);
+        return visitPow(node);
     default:
-        // TODO
         return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
     }
 }

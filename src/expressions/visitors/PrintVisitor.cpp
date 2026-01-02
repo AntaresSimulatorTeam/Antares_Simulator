@@ -27,7 +27,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
-#include <antares/expressions/visitors/visitFunctionNodeArgs.h>
+#include <antares/expressions/visitors/HelpVisitNode.h>
 
 namespace Antares::Expressions::Visitors
 {
