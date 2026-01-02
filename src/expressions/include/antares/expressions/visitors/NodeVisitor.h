@@ -20,16 +20,16 @@
 */
 #pragma once
 
-#include <typeindex>
-#include <unordered_map>
 #include <algorithm>
 #include <ranges>
+#include <typeindex>
+#include <unordered_map>
 
 #include <antares/expressions/IName.h>
+#include <antares/expressions/nodes/FunctionNode.h>
 #include <antares/expressions/nodes/Node.h>
 #include <antares/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/expressions/visitors/InvalidNode.h>
-#include <antares/expressions/nodes/FunctionNode.h>
 
 namespace Antares::Expressions::Visitors
 {
@@ -309,14 +309,17 @@ public:
     virtual R visit(const Nodes::FunctionNode*, Args... args) = 0;
 
 protected:
-    std::vector<R> visitFunctionArgs(const Nodes::FunctionNode* node)
-    {
-        auto visit_operand = [&](auto& operand) { return dispatch(operand); };
-
-        std::vector<R> result;
-        std::ranges::transform(node->getOperands(), std::back_inserter(result), visit_operand);
-        return result;
-    }
+    std::vector<R> visitFunctionArgs(const Nodes::FunctionNode* node);
 };
+
+template<class R, class... Args>
+std::vector<R> NodeVisitor<R, Args...>::visitFunctionArgs(const Nodes::FunctionNode* node)
+{
+    std::vector<R> result;
+    std::ranges::transform(node->getOperands(),
+                           std::back_inserter(result),
+                           [this](auto& arg) { return dispatch(arg); });
+    return result;
+}
 
 } // namespace Antares::Expressions::Visitors
