@@ -18,7 +18,6 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <algorithm>
 #include <iostream>
 #include <numeric>
 #include <ranges>
@@ -26,8 +25,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/expressions/visitors/HelpVisitNode.h>
+#include <antares/expressions/visitors/PrintVisitor.h>
 
 namespace Antares::Expressions::Visitors
 {
@@ -49,17 +48,8 @@ std::string trimAndFormat(const std::string& in)
 
 std::string PrintVisitor::visit(const Nodes::SumNode* node)
 {
-    const auto& operands = node->getOperands();
-    if (operands.empty())
-    {
-        return "()";
-    }
-    return std::accumulate(std::next(std::begin(operands)),
-                           std::end(operands),
-                           "(" + dispatch(operands[0]),
-                           [this](std::string sum, Nodes::Node* operand)
-                           { return sum + "+" + dispatch(operand); })
-           + ")";
+    const auto args_as_string = visitChildrenNodes(node);
+    return "(" + boost::algorithm::join(args_as_string, "+") + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::SubtractionNode* node)
@@ -147,7 +137,7 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
 std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
 {
     std::string nodeType = node->typeToString();
-    const auto args_as_string = visitFunctionArgs(node);
+    const auto args_as_string = visitChildrenNodes(node);
     return nodeType + "(" + boost::algorithm::join(args_as_string, ", ") + ")";
 }
 

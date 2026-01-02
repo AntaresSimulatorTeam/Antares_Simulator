@@ -27,9 +27,9 @@
 #include <antares/expressions/visitors/InvalidNode.h>
 #include <antares/expressions/visitors/LinearStatus.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/expressions/visitors/HelpVisitNode.h"
 #include "antares/expressions/visitors/PrintVisitor.h"
 #include "antares/expressions/visitors/VariabilityVisitor.h"
-#include "antares/expressions/visitors/HelpVisitNode.h"
 
 using namespace Antares::Optimisation;
 
@@ -186,7 +186,7 @@ LinearStatus LinearityVisitor::visit(const Nodes::FunctionNode* node)
         return handleDual(node);
     case Nodes::FunctionNodeType::max:
     case Nodes::FunctionNodeType::min:
-        return applyOperation(visitFunctionArgs(node),
+        return applyOperation(visitChildrenNodes(node),
                               [](const auto& elements)
                               { return *std::max_element(elements.begin(), elements.end()); });
 

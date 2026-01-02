@@ -1168,7 +1168,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations_time_index_node
     evaluate_time_dependent_operation_on_TimeIndexNode<T>(&literal_node);
 }
 
-BOOST_FIXTURE_TEST_CASE(multiplication_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_multiplication_node, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;
     Node* mult = create<MultiplicationNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
@@ -1180,7 +1180,7 @@ BOOST_FIXTURE_TEST_CASE(multiplication_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(mult).valueAsDouble(), num1 * num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(division_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_division_node, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;
     Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
@@ -1192,7 +1192,7 @@ BOOST_FIXTURE_TEST_CASE(division_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(div).valueAsDouble(), num1 / num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(division_by_zero, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_division_by_zero, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 0.;
     Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
@@ -1233,7 +1233,7 @@ BOOST_FIXTURE_TEST_CASE(DivisionNodeFull, MyDummyFixture)
                       EvalVisitorDivisionException);
 }
 
-BOOST_FIXTURE_TEST_CASE(subtraction_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_subtraction_node, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;
     Node* sub = create<SubtractionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
@@ -1245,7 +1245,7 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(sub).valueAsDouble(), num1 - num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(functionNode_max, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_functionNode_max, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;
     Node* max = create<FunctionNode>(FunctionNodeType::max,

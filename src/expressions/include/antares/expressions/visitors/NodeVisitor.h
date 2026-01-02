@@ -309,11 +309,11 @@ public:
     virtual R visit(const Nodes::FunctionNode*, Args... args) = 0;
 
 protected:
-    std::vector<R> visitFunctionArgs(const Nodes::FunctionNode* node);
+    std::vector<R> visitChildrenNodes(const Nodes::ParentNode* node);
 };
 
 template<class R, class... Args>
-std::vector<R> NodeVisitor<R, Args...>::visitFunctionArgs(const Nodes::FunctionNode* node)
+std::vector<R> NodeVisitor<R, Args...>::visitChildrenNodes(const Nodes::ParentNode* node)
 {
     std::vector<R> result;
     std::ranges::transform(node->getOperands(),
