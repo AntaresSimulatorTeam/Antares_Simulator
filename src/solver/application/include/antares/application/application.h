@@ -33,6 +33,9 @@
 
 namespace Antares::Solver
 {
+
+const char totalSimulationKey[] = "total_simulation";
+
 class Application final: public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
 {
 public:
@@ -141,21 +144,6 @@ private:
     void postParametersChecks() const;
 }; // class Application
 
-inline void logTotalTime(const std::string& msg, unsigned duration)
-{
-    std::chrono::milliseconds d(duration);
-    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
-    d -= hours;
-    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
-    d -= minutes;
-    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
-
-    logs.info().appendFormat("%s: %02luh%02lum%02lus",
-                             msg.c_str(),
-                             hours.count(),
-                             minutes.count(),
-                             seconds.count());
-}
 void writeSimulationInfos(const Data::Study& study,
                           Benchmarking::DurationCollector& durationCollector,
                           const Benchmarking::OptimizationInfo& optimizationInfo,

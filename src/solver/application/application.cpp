@@ -48,7 +48,22 @@ namespace fs = std::filesystem;
 
 namespace
 {
-const char totalSimulationKey[] = "total_simulation";
+
+void logTotalTime(const std::string& msg, unsigned duration)
+{
+    std::chrono::milliseconds d(duration);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
+    d -= hours;
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
+    d -= minutes;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
+
+    logs.info().appendFormat("%s: %02luh%02lum%02lus",
+                             msg.c_str(),
+                             hours.count(),
+                             minutes.count(),
+                             seconds.count());
+}
 
 void printSolvers()
 {
@@ -499,7 +514,6 @@ void Application::writeExecutionInfo()
         return;
     }
 
-    logTotalTime("Total simulation time", pDurationCollector.getTime(totalSimulationKey));
     logTotalTime("Total execution time", pDurationCollector.getTime("total_exec"));
 
     if (pErrorCount == 0 && pWarningCount > 0)
@@ -529,7 +543,7 @@ void writeSimulationInfos(const Data::Study& study,
                           const Benchmarking::OptimizationInfo& optimizationInfo,
                           IResultWriter* resultWriter)
 {
-    logTotalTime(durationCollector.getTime("total"));
+    logTotalTime("Total simulation time", durationCollector.getTime(totalSimulationKey));
     Benchmarking::StudyInfoCollector study_info_collector(study);
     Benchmarking::SimulationInfoCollector simulation_info_collector(optimizationInfo);
 
