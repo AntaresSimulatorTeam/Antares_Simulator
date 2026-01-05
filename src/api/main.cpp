@@ -1,4 +1,5 @@
 #include <iostream>
+#include <coroutine>
 
 #include "yuni/core/getopt/parser.h"
 
@@ -6,6 +7,7 @@
 
 #include "private/singleProblemGetterImpl.h"
 
+using namespace Antares::Solver;
 constexpr int kMaxDisplay = 10'000;
 
 // This is a temporary client for singleProblemGetter.h for testing & debugging purposes
@@ -52,16 +54,21 @@ Yuni::GetOpt::Parser Parser(ApiOptions& options)
     Yuni::GetOpt::Parser parser;
     std::string tmp;
     parser.addFlag(tmp, 'i', "input", "Study folder");
+    std::cout<<" study folder: " << tmp << std::endl;
     options.studyFolder = tmp;
     tmp.clear();
     parser.add(tmp, 'o', "output", "Output folder");
     options.outputFolder = tmp;
     parser.add(options.year, 'y', "year", "year");
     parser.add(options.week, 'w', "week", "week");
+    parser.add(options.writeMps, 's', "--write-mps");
+    // tmp.clear();
+    // parser->remainingArguments(tmp);
+    // options.studyFolder = tmp;
     return parser;
 }
 
-bool ParseOptions(ApiOptions& options, int argc, const char* argv[])
+bool ParseOptions(ApiOptions& options, int argc,  const char* argv[])
 {
     auto parser = Parser(options);
     switch (parser.operator()(argc, argv))
@@ -83,31 +90,8 @@ void ValidateOptions(const ApiOptions& options)
           "Study Folder is empty, please enter valid study path checkout --help");
     }
 }
-
-int main(int argc, char** argv)
-{ // dirty options reader
-    if (argc < 4 || argc > 5)
-    {
-        std::cerr << "Usage \n" << argv[0] << " path/to/study year week [--mps]\n";
-        return 1;
-    }
-
-    const unsigned int year = toInt(argv[2]);
-    const unsigned int week = toInt(argv[3]);
-    bool printMps = false;
-    if (argc == 5 && std::string(argv[4]) != "--mps")
-    {
-        std::cerr << "skipped unknown option " << argv[4] << std::endl;
-    }
-    else
-    {
-        printMps = true;
-    }
-
-    Antares::Solver::SingleProblemGetter getter(argv[1]);
-    auto constant = getter.getConstantData();
-    auto weekly = getter.getWeeklyData({year, week});
-    if (printMps)
+void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly, const ApiOptions& options){
+      if (options.writeMps)
     {
         std::string mps;
         weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
@@ -128,5 +112,90 @@ int main(int argc, char** argv)
                        constant.ConstraintsMeaning,
                        weekly.Direction,
                        weekly.RHS);
+}
+
+
+template<typename T>
+struct Generator {
+    struct promise_type {
+        T current_value;
+        
+        Generator get_return_object() {
+            return Generator{std::coroutine_handle<promise_type>::from_promise(*this)};
+        }
+        std::suspend_always initial_suspend() { return {}; }
+        std::suspend_always final_suspend() noexcept { return {}; }
+        std::suspend_always yield_value(T value) {
+            current_value = value;
+            return {};
+        }
+        void return_void() {}
+        void unhandled_exception() { std::terminate(); }
+    };
+    
+    std::coroutine_handle<promise_type> handle;
+    
+    Generator(std::coroutine_handle<promise_type> h) : handle(h) {}
+    ~Generator() { if (handle) handle.destroy(); }
+    
+    bool next() {
+        handle.resume();
+        return !handle.done();
+    }
+    
+    T value() {
+        return handle.promise().current_value;
+    }
+};
+
+
+Generator<int> counter(int index, int nb) {
+    int start = index == -1 ? 0: index;
+    int end = index == -1 ? nb : index;
+    for (int i = start; i < end; ++i) {
+        co_yield i;
+    }
+}
+
+
+
+void printProblems(const ApiOptions& options)
+{
+
+    Antares::Solver::SingleProblemGetter getter(options.studyFolder);
+    auto constant = getter.getConstantData();
+    auto nbYears = getter.nbYears();
+    auto nbWeeks = getter.nbWeeks();
+    
+    auto yearGen = counter(options.year, nbYears);
+    while(yearGen.next()){
+        auto weekGen = counter(options.week, nbWeeks);
+        while(weekGen.next()){
+            auto weekly = getter.getWeeklyData({yearGen.value(), weekGen.value()});
+            printWeek(constant, weekly, options);
+        }
+    
+    }
+}
+
+int main(int argc, const char** argv)
+{ 
+    ApiOptions options;
+    try
+    {
+        if (!ParseOptions(options, argc, argv))
+        {
+            return 0;
+        }
+        ValidateOptions(options);
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error parsing options: " << e.what() << std::endl
+                    << "Use --help to display usage." << std::endl;
+        return 1;
+    }
+
+    printProblems(options);
     return 0;
 }

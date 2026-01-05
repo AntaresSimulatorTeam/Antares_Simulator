@@ -32,7 +32,8 @@ public:
 
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
-
+     int nbYears() const;
+     int nbWeeks() const;
 private:
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
@@ -45,5 +46,7 @@ private:
     std::optional<Antares::Solver::Simulation::randomNumbers>
       randomForParallelYears_; // Allow the use of std::optional<T>::emplace for delayed
                                // building
+    int nbYears_;
+    int nbWeeks_;
 };
 } // namespace Antares::Solver::Implementation

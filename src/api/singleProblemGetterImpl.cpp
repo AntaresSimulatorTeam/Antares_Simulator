@@ -128,18 +128,19 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
 
 void SingleProblemGetter::initializeRandomNumbers()
 {
-    int nbYears = 0;
+    nbYears_ = 0;
+    nbWeeks_ = study_->parameters.simulationDays.numberOfWeeks();
     std::map<unsigned int, bool> isYearPerformed; // TODO check year number
     for (uint year = 0; year < study_->parameters.nbYears; ++year)
     {
         isYearPerformed[year] = study_->parameters.yearsFilter[year];
         if (study_->parameters.yearsFilter[year])
         {
-            ++nbYears;
+            ++nbYears_;
         }
     }
 
-    randomForParallelYears_.emplace(nbYears, study_->parameters.power.fluctuations);
+    randomForParallelYears_.emplace(nbYears_, study_->parameters.power.fluctuations);
     randomForParallelYears_->allocate(*study_);
 
     MersenneTwister randomHydroGenerator;
@@ -403,5 +404,12 @@ YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
         areaIndex++;
     }
     return {hydroLevels, ventilationResults};
+}
+
+ int SingleProblemGetter::nbYears() const{
+return nbYears_;
+}
+ int SingleProblemGetter::nbWeeks() const{
+    return nbWeeks_;
 }
 } // namespace Antares::Solver::Implementation
