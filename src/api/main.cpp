@@ -1,7 +1,7 @@
 #include <iostream>
 #include <coroutine>
 #include <fstream>
-
+#include <mutex>
 #include "yuni/core/getopt/parser.h"
 
 #include "antares/api/singleProblemGetter.h"
@@ -100,9 +100,15 @@ void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAnta
                   << std::endl;
         if(!options.outputFolder.empty()){
             std::filesystem::path outputPath = options.outputFolder;
-            if(!std::filesystem::exists(outputPath)){
+            static std::once_flag once;
+           std::call_once(once,  [&outputPath]
+            {
+                if(std::filesystem::exists(outputPath)){
+                    std::filesystem::remove_all(outputPath);
+                }
                 std::filesystem::create_directories(outputPath);
-            }
+            });
+
             std::filesystem::path mpsFile = outputPath / (problemName(id)+".mps");
             std::ofstream ofs(mpsFile);
             ofs << mps;
@@ -159,7 +165,7 @@ struct Generator {
 Generator<int> counter(int index, int nb, bool zeroFirst) {
     int shift = zeroFirst ? 0 : 1;
     int start = index == -1 ? shift: index;
-    int end = index == -1 ? nb+shift : index+shift;
+    int end = index == -1 ? nb+shift : index+1;
     for (int i = start; i < end; ++i) {
         co_yield i;
     }
@@ -174,11 +180,15 @@ void printProblems(const ApiOptions& options)
     auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
     auto nbWeeks = getter.nbWeeks();
-        
+    std::cout << " * Number of years: " << nbYears << std::endl;
+    std::cout << " * Number of weeks per year: " << nbWeeks << std::endl;
     auto yearGen = counter(options.year, nbYears, true);
     while(yearGen.next()){
+        std::cout << " year: "<< yearGen.value() <<std::endl;
         auto weekGen = counter(options.week, nbWeeks, false);
         while(weekGen.next()){
+
+        std::cout << " week: "<< weekGen.value() <<std::endl;
             const WeeklyProblemId id = {yearGen.value(), weekGen.value()};
             auto weekly = getter.getWeeklyData(id);
             printWeek(constant, weekly, options, id);
