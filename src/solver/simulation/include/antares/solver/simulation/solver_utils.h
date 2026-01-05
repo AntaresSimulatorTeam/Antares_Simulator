@@ -27,6 +27,7 @@
 
 #include <antares/study/fwd.h>
 #include <antares/writer/i_writer.h>
+
 #include "sim_structure_probleme_economique.h"
 
 namespace Antares::Solver::Simulation
