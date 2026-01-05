@@ -69,7 +69,6 @@ bool ParseOptions(ApiOptions& options, int argc, const char* argv[])
     case Yuni::GetOpt::ReturnCode::error:
         throw Error::CommandLineArguments(parser.errors());
     case Yuni::GetOpt::ReturnCode::help:
-        pStudy = nullptr;
         return false;
     default:
         return true;

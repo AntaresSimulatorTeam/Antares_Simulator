@@ -25,6 +25,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <fmt/format.h>
 
 #include "ortools/linear_solver/linear_solver.h"
 
@@ -142,4 +143,8 @@ public:
     WeeklyDataByYearWeek weeklyProblems;
 };
 
+inline std::string problemName(const WeeklyProblemId& id)
+{
+    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
+}
 } // namespace Antares::Solver
