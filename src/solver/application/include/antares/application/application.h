@@ -136,4 +136,9 @@ private:
     void postParametersChecks() const;
 }; // class Application
 
+void writeSimulationInfos(const Data::Study& study,
+                          Benchmarking::DurationCollector& durationCollector,
+                          const Benchmarking::OptimizationInfo& optimizationInfo,
+                          IResultWriter* resultWriter);
+
 } // namespace Antares::Solver

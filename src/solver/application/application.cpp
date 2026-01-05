@@ -532,13 +532,21 @@ void Application::writeExectutionInfo()
         return;
     }
 
-    // Info collectors : they retrieve data from study and simulation
-    Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
-    Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo);
+    writeSimulationInfos(*pStudy, pDurationCollector, pOptimizationInfo, resultWriter.get());
+}
+
+void writeSimulationInfos(const Data::Study& study,
+                          Benchmarking::DurationCollector& durationCollector,
+                          const Benchmarking::OptimizationInfo& optimizationInfo,
+                          IResultWriter* resultWriter)
+{
+    logTotalTime(durationCollector.getTime("total"));
+    Benchmarking::StudyInfoCollector study_info_collector(study);
+    Benchmarking::SimulationInfoCollector simulation_info_collector(optimizationInfo);
 
     // Fill file content with data retrieved by collectors
     Benchmarking::FileContent file_content;
-    pDurationCollector.toFileContent(file_content);
+    durationCollector.toFileContent(file_content);
     study_info_collector.toFileContent(file_content);
     simulation_info_collector.toFileContent(file_content);
 
