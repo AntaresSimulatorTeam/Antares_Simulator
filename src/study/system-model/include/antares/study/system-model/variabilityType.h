@@ -84,4 +84,9 @@ constexpr bool isTimeConstant(VariabilityType variability)
            || variability == VariabilityType::VARYING_IN_SCENARIO_ONLY;
 }
 
+constexpr bool isConstant(VariabilityType variability)
+{
+    return variability == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+}
+
 } // namespace Antares::Optimisation

@@ -236,6 +236,8 @@ BOOST_AUTO_TEST_CASE(variability_of_power_operator___case_varying_in_scenario_on
                       VariabilityType::VARYING_IN_SCENARIO_ONLY);
 }
 
+// gp : unit tests for max and min function are missing.
+
 BOOST_AUTO_TEST_CASE(variability_of_floor_operator___case_constant)
 {
     LiteralNode literalNode(2.3);

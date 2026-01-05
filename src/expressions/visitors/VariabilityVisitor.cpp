@@ -26,78 +26,78 @@
 #include "antares/expressions/visitors/PrintVisitor.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Optimisation;
 
 namespace Antares::Expressions::Visitors
 {
 
-Optimisation::VariabilityType VariabilityVisitor::visitChildrenNodes(const Nodes::ParentNode* node)
+VariabilityType VariabilityVisitor::visitChildrenNodes(const Nodes::ParentNode* node)
 {
     const auto& operands = node->getOperands();
     return std::accumulate(std::begin(operands),
                            std::end(operands),
-                           Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-                           [this](Optimisation::VariabilityType sum, Nodes::Node* operand)
+                           VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
+                           [this](VariabilityType sum, Nodes::Node* operand)
                            { return sum | dispatch(operand); });
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::SumNode* node)
+VariabilityType VariabilityVisitor::visit(const Nodes::SumNode* node)
 {
     return visitChildrenNodes(node);
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::SubtractionNode* sub)
+VariabilityType VariabilityVisitor::visit(const Nodes::SubtractionNode* sub)
 {
     return dispatch(sub->left()) | dispatch(sub->right());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::MultiplicationNode* mult)
+VariabilityType VariabilityVisitor::visit(const Nodes::MultiplicationNode* mult)
 {
     return dispatch(mult->left()) | dispatch(mult->right());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::DivisionNode* div)
+VariabilityType VariabilityVisitor::visit(const Nodes::DivisionNode* div)
 {
     return dispatch(div->left()) | dispatch(div->right());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::EqualNode* equ)
+VariabilityType VariabilityVisitor::visit(const Nodes::EqualNode* equ)
 {
     return dispatch(equ->left()) | dispatch(equ->right());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::LessThanOrEqualNode* lt)
+VariabilityType VariabilityVisitor::visit(const Nodes::LessThanOrEqualNode* lt)
 {
     return dispatch(lt->left()) | dispatch(lt->right());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
+VariabilityType VariabilityVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
 {
     return dispatch(gt->left()) | dispatch(gt->right());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::VariableNode* var)
+VariabilityType VariabilityVisitor::visit(const Nodes::VariableNode* var)
 {
     return var->variability();
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
+VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
 {
     const auto systemParameter = context_.getParameter(param->value());
     return systemParameter.type;
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(
-  [[maybe_unused]] const Nodes::LiteralNode* lit)
+VariabilityType VariabilityVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)
 {
-    return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+    return VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::NegationNode* neg)
+VariabilityType VariabilityVisitor::visit(const Nodes::NegationNode* neg)
 {
     return dispatch(neg->child());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldNode* node)
+VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldNode* node)
 {
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
@@ -106,12 +106,12 @@ Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldNo
     return dispatch(nodeToVisit);
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
+VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
 
-    auto to_return = Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+    auto to_return = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
         auto* component = connexion_end.component();
@@ -124,35 +124,34 @@ Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSu
     return to_return;
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
+VariabilityType VariabilityVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode)
 {
     return dispatch(timeShiftNode->left());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(
+VariabilityType VariabilityVisitor::visit(
   [[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
 {
-    return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+    return VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
+VariabilityType VariabilityVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
 {
     // TODO  case from = to
     return dispatch(timeSumNode->expression());
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(
-  [[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
+VariabilityType VariabilityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
-    return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+    return VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visitReducedCost(const Nodes::FunctionNode* node)
+VariabilityType VariabilityVisitor::visitReducedCost(const Nodes::FunctionNode* node)
 {
     return dispatch(node->getOperands()[0]);
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visitDual(const Nodes::FunctionNode* node)
+VariabilityType VariabilityVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto constraintIndexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int constraintIndex = static_cast<unsigned int>(constraintIndexNode->value());
@@ -161,10 +160,10 @@ Optimisation::VariabilityType VariabilityVisitor::visitDual(const Nodes::Functio
     return variability;
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visitPow(const Nodes::FunctionNode* node)
+VariabilityType VariabilityVisitor::visitPow(const Nodes::FunctionNode* node)
 {
-    if (const auto* exponent = node->getOperands().at(1);
-        dispatch(exponent) != Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
+    const auto* exponent = node->getOperands().at(1);
+    if (!isConstant(dispatch(exponent)))
     {
         PrintVisitor visitor;
         throw std::runtime_error("This exponent must be constant in :" + visitor.dispatch(node));
@@ -172,7 +171,7 @@ Optimisation::VariabilityType VariabilityVisitor::visitPow(const Nodes::Function
     return dispatch(node->getOperands().at(0));
 }
 
-Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNode* node)
+VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())
     {
@@ -187,13 +186,12 @@ Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNod
     case Nodes::FunctionNodeType::pow:
         return visitPow(node);
     default:
-        return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+        return VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
     }
 }
 
-VariabilityVisitor::VariabilityVisitor(
-  const Optimisation::OptimEntityContainer& optimEntityContainer,
-  const ModelerStudy::SystemModel::Component& component):
+VariabilityVisitor::VariabilityVisitor(const OptimEntityContainer& optimEntityContainer,
+                                       const ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
     context_(optimEntityContainer.getEvaluationContext(component))
