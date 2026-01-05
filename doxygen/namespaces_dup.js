@@ -2007,7 +2007,8 @@ var namespaces_dup =
         [ "setApplicationResultWriter", "solver_2signal-handling_2common_8cpp.html#ae2fed9f7d2e4e0ab70cbc200785b5a36", null ],
         [ "simulationRun", "simulation-run_8h.html#ad10952af654466497e57a3b210d59841", null ],
         [ "storeTSnumbersForIntraModal", "timeseries-numbers_8cpp.html#a5f259f35215ac7c7a19f5114eeef6499", null ],
-        [ "WriteCommandLineIntoLogs", "write-command-line_8h.html#aeac6ffe045a4d6d3c056ea97b8b412f7", null ]
+        [ "WriteCommandLineIntoLogs", "write-command-line_8h.html#aeac6ffe045a4d6d3c056ea97b8b412f7", null ],
+        [ "writeSimulationInfos", "solver_2application_2application_8cpp.html#aade9a4b2cc9a0f036736774ce9354be4", null ]
       ] ],
       [ "Statistics", null, [
         [ "Updater", "classAntares_1_1Statistics_1_1Updater.html", "classAntares_1_1Statistics_1_1Updater" ],
