@@ -2924,6 +2924,8 @@ var namespaces_dup =
       [ "run_antares", "solver__steps_8py.html#a89814f960e3fcf649f35e2807c72d622", null ],
       [ "run_antares_on_all_studies", "solver__steps_8py.html#a7577735f21e19ee31788552d506c7b37", null ],
       [ "run_simulation", "solver__steps_8py.html#a6bf2916b2068ca7f1f59639da6388e00", null ],
+      [ "set_linear_solver", "solver__steps_8py.html#a9b57d898de72258c60168f75218628c4", null ],
+      [ "set_quadratic_solver", "solver__steps_8py.html#afca43bd690264fd540610109a4428819", null ],
       [ "should_check", "solver__steps_8py.html#a6806aab1c91a60f87fdff7e63085d6c7", null ],
       [ "simu_success", "solver__steps_8py.html#ae3273d3798a6a7ad65b8af0cf0ce32fc", null ],
       [ "solver_study_path_is", "solver__steps_8py.html#a152b6d3e3953a40aadbbb34b431c276e", null ],
