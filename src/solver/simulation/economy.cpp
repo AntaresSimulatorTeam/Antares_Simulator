@@ -27,6 +27,7 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/solver_utils.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -206,16 +207,7 @@ bool Economy::year(Progression::Task& progression,
                 state.optimalSolutionCost2 += currentProblem.coutOptimalSolution2[opt];
             }
             optWriter.addTime(w, currentProblem.timeMeasure);
-
-            durationCollector("total_solve_time")
-              .addDuration(currentProblem.timeMeasure[0].solveTime
-                           + currentProblem.timeMeasure[1].solveTime);
-            durationCollector("total_problem_build_time")
-              .addDuration(currentProblem.timeMeasure[0].updateTime
-                           + currentProblem.timeMeasure[1].updateTime);
-            durationCollector("total_export_simulation_tables")
-              .addDuration(currentProblem.timeMeasure[0].simulationTableFillTime
-                           + currentProblem.timeMeasure[1].simulationTableFillTime);
+            addTimeMeasure(durationCollector, currentProblem.timeMeasure);
         }
         catch (Data::AssertionError& ex)
         {

@@ -24,6 +24,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/io/outputs/ISimulationTable.h"
+#include "antares/solver/simulation/solver_utils.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -367,16 +368,7 @@ bool Adequacy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
-
-        durationCollector("total_solve_time")
-          .addDuration(currentProblem.timeMeasure[0].solveTime
-                       + currentProblem.timeMeasure[1].solveTime);
-        durationCollector("total_problem_build_time")
-          .addDuration(currentProblem.timeMeasure[0].updateTime
-                       + currentProblem.timeMeasure[1].updateTime);
-        durationCollector("total_export_simulation_tables")
-          .addDuration(currentProblem.timeMeasure[0].simulationTableFillTime
-                       + currentProblem.timeMeasure[1].simulationTableFillTime);
+        addTimeMeasure(durationCollector, currentProblem.timeMeasure);
 
         ++progression;
     }
