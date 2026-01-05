@@ -1,5 +1,6 @@
 #include <iostream>
 #include <coroutine>
+#include <fstream>
 
 #include "yuni/core/getopt/parser.h"
 
@@ -57,7 +58,7 @@ Yuni::GetOpt::Parser Parser(ApiOptions& options)
     parser.add(options.outputFolder, 'o', "output", "Output folder");
     parser.add(options.year, 'y', "year", "year");
     parser.add(options.week, 'w', "week", "week");
-    parser.add(options.writeMps, 's', "--write-mps");
+    parser.addFlag(options.writeMps, 's', "write-mps");
     
     parser.remainingArguments(options.studyFolder);
     return parser;
@@ -85,17 +86,28 @@ void ValidateOptions(const ApiOptions& options)
           "Study Folder is empty, please enter valid study path checkout --help");
     }
 }
-void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly, const ApiOptions& options){
+void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly, const ApiOptions& options, const WeeklyProblemId& id){
       if (options.writeMps)
     {
         std::string mps;
         weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
+        std::cout<<"Printing problem: "<<problemName(id)<<std::endl;
 
         std::cout << "******************************** BEGIN MPS ********************************"
                   << std::endl;
         std::cout << mps << std::endl;
         std::cout << "******************************** END MPS ********************************"
                   << std::endl;
+        if(!options.outputFolder.empty()){
+            std::filesystem::path outputPath = options.outputFolder;
+            if(!std::filesystem::exists(outputPath)){
+                std::filesystem::create_directories(outputPath);
+            }
+            std::filesystem::path mpsFile = outputPath / (problemName(id)+".mps");
+            std::ofstream ofs(mpsFile);
+            ofs << mps;
+            ofs.close();
+        }
     }
 
     print_side_by_side(constant.VariablesCount,
@@ -169,8 +181,7 @@ void printProblems(const ApiOptions& options)
         while(weekGen.next()){
             const WeeklyProblemId id = {yearGen.value(), weekGen.value()};
             auto weekly = getter.getWeeklyData(id);
-            std::cout<<"Printing problem: "<<problemName(id)<<std::endl;
-            printWeek(constant, weekly, options);
+            printWeek(constant, weekly, options, id);
         }
     
     }
