@@ -514,8 +514,6 @@ void Application::writeExecutionInfo()
         return;
     }
 
-    logTotalTime("Total execution time", pDurationCollector.getTime("total_exec"));
-
     if (pErrorCount == 0 && pWarningCount > 0)
     {
         logs.warning()
@@ -536,6 +534,8 @@ void Application::writeExecutionInfo()
     }
 
     writeSimulationInfos(*pStudy, pDurationCollector, pOptimizationInfo, resultWriter.get());
+
+    logTotalTime("Total execution time", pDurationCollector.getTime("full_exec"));
 }
 
 void writeSimulationInfos(const Data::Study& study,

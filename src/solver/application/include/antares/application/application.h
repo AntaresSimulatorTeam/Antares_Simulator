@@ -34,7 +34,7 @@
 namespace Antares::Solver
 {
 
-const char totalSimulationKey[] = "total_simulation";
+const char totalSimulationKey[] = "simulation";
 
 class Application final: public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
 {

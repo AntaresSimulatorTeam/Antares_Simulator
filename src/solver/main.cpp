@@ -109,7 +109,7 @@ int main(int argc, const char** argv)
         Antares::Solver::Application application;
         auto& durationCollector = application.getDurationCollector();
 
-        durationCollector("total_exec") << [&application, &argc, &argv]
+        durationCollector("full_exec") << [&application, &argc, &argv]
         {
             logs.info(ANTARES_LOGO);
             logs.info(MPL_ANNOUNCEMENT);

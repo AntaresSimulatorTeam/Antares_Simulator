@@ -201,7 +201,7 @@ public:
         // 9 - Write results for the current year
         if (yearByYear)
         {
-            pDurationCollector("total_yby_export") << [this, &numSpace]
+            pDurationCollector("yby_export") << [this, &numSpace]
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
@@ -217,7 +217,7 @@ public:
 
         yearsFailed[y] = yearFailed;
 
-        pDurationCollector("total_synthesis_compute") << [this, &numSpace, &state]
+        pDurationCollector("synthesis_compute") << [this, &numSpace, &state]
         {
             simulation_->variables.computeSummary(y, numSpace);
 

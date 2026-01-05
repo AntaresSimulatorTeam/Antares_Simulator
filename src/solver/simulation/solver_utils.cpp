@@ -46,11 +46,11 @@ namespace Antares::Solver::Simulation
 void addTimeMeasure(Benchmarking::DurationCollector& durationCollector,
                     const TIME_MEASURES& timeMeasure)
 {
-    durationCollector("total_solve_time")
+    durationCollector("solve_time")
       .addDuration(timeMeasure[0].solveTime + timeMeasure[1].solveTime);
-    durationCollector("total_problem_build_time")
+    durationCollector("problem_build_time")
       .addDuration(timeMeasure[0].updateTime + timeMeasure[1].updateTime);
-    durationCollector("total_export_simulation_tables")
+    durationCollector("export_simulation_tables")
       .addDuration(timeMeasure[0].simulationTableFillTime + timeMeasure[1].simulationTableFillTime);
 }
 
