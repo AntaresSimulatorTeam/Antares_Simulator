@@ -266,7 +266,24 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 - **Required:** no
 - **Default value:** `false`
     - `true`: Output files in format remix-*year*-*week*.csv containing withdrawal for all storages.  Each line of the file is associated to an hour and is formatted like this : *area*, *storage*, *hour*, *withdrawal*
-    - `false`: Doesn't create the folder
+    - `false`: Doesn't create the files
+
+Format is CSV with spaces as separator.
+
+#### adequacy-patch-debug
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+    - `false`: Doesn't create the files
+    - `true`: Output 2 types of debug files, the first one for regular variables and the second one for link variables:
+         - adequacy-patch-areas-*before|after*-*year*-*week*.csv 
+         - adequacy-patch-links-*before|after*-*year*-*week*.csv 
+
+Each type of file is created before and after adequacy patch process (4 files per week). Files are named accordingly. Format is CSV with spaces as separator.
+
+Regular variables files columns: *Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice MRGPriceCSR DTGmrgCSR SpilledEnergy*
+
+Link variables files columns: *Link Hour Flow*
 
 ---
 #### result-format

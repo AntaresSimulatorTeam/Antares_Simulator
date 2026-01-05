@@ -156,5 +156,9 @@ inline void logTotalTime(const std::string& msg, unsigned duration)
                              minutes.count(),
                              seconds.count());
 }
+void writeSimulationInfos(const Data::Study& study,
+                          Benchmarking::DurationCollector& durationCollector,
+                          const Benchmarking::OptimizationInfo& optimizationInfo,
+                          IResultWriter* resultWriter);
 
 } // namespace Antares::Solver
