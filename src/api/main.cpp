@@ -41,8 +41,8 @@ unsigned int toInt(const char* in)
 }
 struct ApiOptions
 {
-    std::filesystem::path studyFolder = "";
-    std::filesystem::path outputFolder = "";
+    std::string studyFolder = "";
+    std::string outputFolder = "";
     unsigned int year = -1;
     unsigned int week = -1;
     bool writeMps = false;
@@ -52,19 +52,14 @@ struct ApiOptions
 Yuni::GetOpt::Parser Parser(ApiOptions& options)
 {
     Yuni::GetOpt::Parser parser;
-    std::string tmp;
-    parser.addFlag(tmp, 'i', "input", "Study folder");
-    std::cout<<" study folder: " << tmp << std::endl;
-    options.studyFolder = tmp;
-    tmp.clear();
-    parser.add(tmp, 'o', "output", "Output folder");
-    options.outputFolder = tmp;
+    parser.addFlag(options.studyFolder, 'i', "input", "Study folder");
+    std::cout<<" study folder: " << options.studyFolder << std::endl;
+    parser.add(options.outputFolder, 'o', "output", "Output folder");
     parser.add(options.year, 'y', "year", "year");
     parser.add(options.week, 'w', "week", "week");
     parser.add(options.writeMps, 's', "--write-mps");
-    // tmp.clear();
-    // parser->remainingArguments(tmp);
-    // options.studyFolder = tmp;
+    
+    parser.remainingArguments(options.studyFolder);
     return parser;
 }
 
@@ -149,9 +144,10 @@ struct Generator {
 };
 
 
-Generator<int> counter(int index, int nb) {
-    int start = index == -1 ? 0: index;
-    int end = index == -1 ? nb : index;
+Generator<int> counter(int index, int nb, bool zeroFirst) {
+    int shift = zeroFirst ? 0 : 1;
+    int start = index == -1 ? shift: index;
+    int end = index == -1 ? nb+shift : index+shift;
     for (int i = start; i < end; ++i) {
         co_yield i;
     }
@@ -166,12 +162,14 @@ void printProblems(const ApiOptions& options)
     auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
     auto nbWeeks = getter.nbWeeks();
-    
-    auto yearGen = counter(options.year, nbYears);
+        
+    auto yearGen = counter(options.year, nbYears, true);
     while(yearGen.next()){
-        auto weekGen = counter(options.week, nbWeeks);
+        auto weekGen = counter(options.week, nbWeeks, false);
         while(weekGen.next()){
-            auto weekly = getter.getWeeklyData({yearGen.value(), weekGen.value()});
+            const WeeklyProblemId id = {yearGen.value(), weekGen.value()};
+            auto weekly = getter.getWeeklyData(id);
+            std::cout<<"Printing problem: "<<problemName(id)<<std::endl;
             printWeek(constant, weekly, options);
         }
     
