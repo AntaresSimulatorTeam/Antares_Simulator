@@ -47,6 +47,8 @@ static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
     return dynamic_cast<Nodes::LiteralNode*>(n);
 }
 
+BOOST_AUTO_TEST_SUITE(convertor_visitor)
+
 BOOST_AUTO_TEST_CASE(empty_expression)
 {
     BOOST_CHECK_EQUAL(convertExpressionToNode("", {} /* empty model*/).node, nullptr);
@@ -713,3 +715,5 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_a_var_as_arg,
                           std::invalid_argument,
                           checkMessage(err_msg));
 }
+
+BOOST_AUTO_TEST_SUITE_END()

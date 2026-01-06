@@ -528,7 +528,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     const auto functionName = context->IDENTIFIER()->getText();
     auto* arglist = context->argList();
 
-    if (!arglist || !arglist->expr().size())
+    if (!arglist || arglist->expr().empty())
     {
         std::string err_msg = functionName + " operator expects an argument, got nothing";
         throw std::invalid_argument(err_msg);
