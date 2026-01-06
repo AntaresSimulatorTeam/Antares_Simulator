@@ -192,22 +192,17 @@ def parse_structure(content):
 
 @then(u'the structure file contains the following entries')
 def check_structure(context):
-    print("a");
     structure = context.moh.problems.structure
     assert structure is not None, f"Structure is None"
-    print("b");
     actual = parse_structure(structure)
     expected = [row.as_dict() for row in context.table]
     # convert index to int
-    print("c");
     for row in expected:
         row["index"] = int(row["index"])
 
-    print("d");
     # Convert both lists to sets of tuples for easy comparison
     actual_set = {(a["problem"], a["variable"], a["index"]) for a in actual}
     expected_set = {(e["problem"], e["variable"], e["index"]) for e in expected}
-    print("e");
 
     missing = expected_set - actual_set
     extra = actual_set - expected_set
