@@ -486,41 +486,13 @@ std::any ConvertorVisitor::visitMin(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::visitFloor(ExprParser::ArgListContext* context)
 {
-    const auto args = context->expr();
-    auto size = args.size();
-    if (size > 1)
+    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+    if (size_t size = nodes.size(); size > 1)
     {
         std::string err_msg = "floor() expects 1 argument, but has " + std::to_string(size);
         throw std::invalid_argument(err_msg);
     }
-
-    const auto arg_as_str = args[0]->getText();
-
-    // Try to create a parameter node
-    for (const auto& param: model_.parameters)
-    {
-        if (param.id == arg_as_str)
-        {
-            auto* paramNode = registry_.create<ParameterNode>(
-              param.id,
-              variability(param.time_dependent, param.scenario_dependent));
-
-            return static_cast<Node*>(
-              registry_.create<FunctionNode>(FunctionNodeType::floor, paramNode));
-        }
-    }
-
-    // Try to create a literal node
-    try
-    {
-        const double arg_as_d = std::stod(arg_as_str);
-        return static_cast<Node*>(registry_.create<LiteralNode>(std::floor(arg_as_d)));
-    }
-    catch (const std::invalid_argument&)
-    {
-        std::string err_msg = "floor()'s argument is neither a parameter or a literal.";
-        throw std::invalid_argument(err_msg);
-    }
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::floor, nodes[0]));
 }
 
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
@@ -552,7 +524,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     }
     else if (functionName == "floor")
     {
-        return visitFloor(arglist); // gp : rename into floorIntoNode
+        return visitFloor(arglist);
     }
 
     throw std::invalid_argument("Invalid function: '" + functionName + "'");

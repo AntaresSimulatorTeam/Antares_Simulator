@@ -690,9 +690,23 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_applied_to_a_literal, SupplyModelForFunct
 
     auto expr = convertExpressionToNode(expression, model);
 
-    // Root node is a literal node (not a 'floor' node !)
-    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(expr.node);
-    BOOST_CHECK_EQUAL(literalNode->value(), 3.);
+    // Root node is a 'floor' node
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::floor");
+
+    auto FloorNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(FloorNode->typeToString(), "floor");
+
+    // Child node must be unique, and be the literal node '3.7' from the model
+    // ... Child node is unique
+    BOOST_CHECK_EQUAL(FloorNode->getOperands().size(), 1);
+    auto* childNode = FloorNode->getOperands()[0];
+
+    // ... Child node is a parameter node
+    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
+    BOOST_CHECK(literalNode);
+
+    // ... Child node is 'pmin' from the model
+    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
@@ -716,15 +730,15 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
                           checkMessage(err_msg));
 }
 
-BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_a_var_as_arg,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "floor(varA)";
-
-    std::string err_msg = "floor()'s argument is neither a parameter or a literal.";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
-                          checkMessage(err_msg));
-}
+// BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_a_var_as_arg,
+//                         SupplyModelForFunctionalOperator)
+//{
+//     std::string expression = "floor(varA)";
+//
+//     std::string err_msg = "floor()'s argument is neither a parameter or a literal.";
+//     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+//                           std::invalid_argument,
+//                           checkMessage(err_msg));
+// }
 
 BOOST_AUTO_TEST_SUITE_END()
