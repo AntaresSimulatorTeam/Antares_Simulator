@@ -676,12 +676,23 @@ BOOST_FIXTURE_TEST_CASE(floor_operator___nominal_case, SupplyModelForFunctionalO
     BOOST_CHECK_EQUAL(FloorNode->getOperands().size(), 1);
     auto* childNode = FloorNode->getOperands()[0];
 
-    // ... Clild node is a parameter node
+    // ... Child node is a parameter node
     const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
     BOOST_CHECK(paramNode);
 
     // ... Child node is 'pmin' from the model
     BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
+}
+
+BOOST_FIXTURE_TEST_CASE(floor_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "floor(3.7)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    // Root node is a literal node (not a 'floor' node !)
+    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(expr.node);
+    BOOST_CHECK_EQUAL(literalNode->value(), 3.);
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
