@@ -150,6 +150,11 @@ LinearExpression LinearExpression::operator-() const
     return ret;
 }
 
+void LinearExpression::constant(double c)
+{
+    constant_ = c;
+}
+
 double LinearExpression::constant() const
 {
     return constant_;

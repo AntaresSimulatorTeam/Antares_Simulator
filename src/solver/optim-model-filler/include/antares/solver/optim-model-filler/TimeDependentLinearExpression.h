@@ -31,7 +31,6 @@ class TimeDependentLinearExpression final
 {
 public:
     explicit TimeDependentLinearExpression(std::size_t nbTimesteps);
-
     explicit TimeDependentLinearExpression(const std::span<const double>& values);
 
     // Constant expression
@@ -56,21 +55,16 @@ public:
     const_iterator end() const;
 
     LinearExpression& operator[](std::size_t idx);
-
     const LinearExpression& operator[](std::size_t idx) const;
 
     TimeDependentLinearExpression& operator+=(const TimeDependentLinearExpression& other);
-
     TimeDependentLinearExpression& operator-=(const TimeDependentLinearExpression& other);
 
     void rotate(int shift);
 
     TimeDependentLinearExpression& operator*=(double factor);
-
     TimeDependentLinearExpression& operator*=(const TimeDependentLinearExpression& other);
-
     TimeDependentLinearExpression operator-() const;
-
     TimeDependentLinearExpression operator/(const TimeDependentLinearExpression& other) const;
 
 private:

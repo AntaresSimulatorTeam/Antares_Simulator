@@ -18,8 +18,9 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
+
+#include <cmath>
 
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
@@ -130,21 +131,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Va
     {
         return TimeDependentLinearExpression({{variableStart, 1.}}, 0.);
     }
-    if (isTimeDependent(node->variability())) /* scenario not
-                                                                              handled !*/
-    {
-        TimeDependentLinearExpression out(nbtimeSteps_);
 
-        auto variableIndex = variableStart;
-        for (int ts = 0; ts < nbtimeSteps_; ts++)
-        {
-            out[ts].addVariable(variableIndex, 1);
-            ++variableIndex;
-        }
-        return out;
+    // At this point, VariableNode is time dependent (scenario not handled)
+    TimeDependentLinearExpression out(nbtimeSteps_);
+    auto variableIndex = variableStart;
+    for (unsigned ts = 0; ts < nbtimeSteps_; ts++)
+    {
+        out[ts].addVariable(variableIndex, 1);
+        ++variableIndex;
     }
-    throw Error::InvalidArgumentError(
-      "the support of scenario dependent variables is not available for now");
+    return out;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::ParameterNode* node)
@@ -289,12 +285,30 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visitPower(
     {
         throw Error::InvalidArgumentError("exponent must be constant");
     }
+
     const auto& exponent = exponentExpr[0];
     for (auto& s: ret)
     {
         s ^= exponent;
     }
     return ret;
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visitFloor(
+  const Nodes::FunctionNode* node)
+{
+    auto expressions = dispatch(node->getOperands()[0]);
+    for (auto& expression: expressions)
+    {
+        // gp : should be removed when arg of floor operator applies to extra output as well.
+        if (expression.hasCoefs())
+        {
+            std::string err_msg = "floor operator: its argument is not constant, but has to be.";
+            throw std::invalid_argument(err_msg);
+        }
+        expression.constant(std::floor(expression.constant()));
+    }
+    return expressions;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::FunctionNode* node)
@@ -317,6 +331,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Fu
     }
     case Nodes::FunctionNodeType::pow:
         return visitPower(node);
+    case Nodes::FunctionNodeType::floor:
+        return visitFloor(node);
     default:
         throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
     }

@@ -110,17 +110,18 @@ public:
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::AllTimeSumNode* node) override;
 
-    Optimization::TimeDependentLinearExpression visitPower(const Nodes::FunctionNode* node);
-
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::FunctionNode* node) override;
 
 private:
+    Optimization::TimeDependentLinearExpression visitPower(const Nodes::FunctionNode* node);
+    Optimization::TimeDependentLinearExpression visitFloor(const Nodes::FunctionNode* node);
+
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Antares::ModelerStudy::SystemModel::Component& component_;
     const Antares::Optimisation::EvaluationContext& evalContext_;
     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
     Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
-    const int nbtimeSteps_;
+    const unsigned nbtimeSteps_;
 };
 } // namespace Antares::Optimisation

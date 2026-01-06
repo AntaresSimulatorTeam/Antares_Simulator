@@ -44,6 +44,7 @@ public:
     LinearExpression& operator^=(const LinearExpression& other);
 
     void addVariable(int index, double value);
+    void constant(double c);
     double constant() const;
 
     using const_iterator = std::vector<std::pair<int, double>>::const_iterator;

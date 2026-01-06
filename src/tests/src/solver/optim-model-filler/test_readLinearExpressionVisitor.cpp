@@ -90,11 +90,11 @@ BOOST_FIXTURE_TEST_CASE(visit_pow_two_literals, VisitorFixture<ReadLinearExpress
 
 BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_0, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    Node* variable = create<VariableNode>("variable", 0);
+    Node* variable = create<VariableNode>("variable", 0 /* index */);
     Node* eight = create<LiteralNode>(8);
     Node* zero = create<LiteralNode>(0.);
     Node* mult = create<MultiplicationNode>(eight, variable);
-    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, zero); // (8*variable)^0
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, zero); // (8 * variable)^0
     auto linear_expression = visitor().dispatch(pow);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 1);
@@ -107,7 +107,7 @@ BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_1, VisitorFixture<ReadLinearExpr
     Node* eight = create<LiteralNode>(8);
     Node* one = create<LiteralNode>(1.);
     Node* mult = create<MultiplicationNode>(eight, variable);
-    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, one); // (8*variable)^1
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, one); // (8 * variable)^1
     auto linear_expression = visitor().dispatch(pow);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0);
@@ -123,7 +123,7 @@ BOOST_FIXTURE_TEST_CASE(visit_pow_simple__non_linear_linear,
     Node* eight = create<LiteralNode>(8);
     Node* six = create<LiteralNode>(6.);
     Node* mult = create<MultiplicationNode>(eight, variable);
-    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, six); // (8*variable)^6
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, six); // (8 * variable)^6
     BOOST_CHECK_THROW(visitor().dispatch(pow), std::invalid_argument);
 }
 
@@ -139,7 +139,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpre
 
 BOOST_FIXTURE_TEST_CASE(visit__max_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // 5 + param(3) = 8
+    // max(5, param(3)) = 5
     Node* maxNode = create<FunctionNode>(FunctionNodeType::max,
                                          create<LiteralNode>(5.),
                                          create<ParameterNode>("param_3"));
@@ -151,7 +151,7 @@ BOOST_FIXTURE_TEST_CASE(visit__max_literal__param, VisitorFixture<ReadLinearExpr
 
 BOOST_FIXTURE_TEST_CASE(visit__min_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // 5 + param(3) = 8
+    // min(5, param(3)) = 3
     Node* minNode = create<FunctionNode>(FunctionNodeType::min,
                                          create<LiteralNode>(5.),
                                          create<ParameterNode>("param_3"));
@@ -159,6 +159,19 @@ BOOST_FIXTURE_TEST_CASE(visit__min_literal__param, VisitorFixture<ReadLinearExpr
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 3.);
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_constant_param, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(param(4.5)) = 4
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor,
+                                           create<ParameterNode>("four.five"));
+
+    auto linear_expression = visitor().dispatch(floorNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 4.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
