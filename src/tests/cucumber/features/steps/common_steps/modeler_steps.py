@@ -193,7 +193,7 @@ def parse_structure(content):
 @then(u'the structure file contains the following entries')
 def check_structure(context):
     structure = context.moh.problems.structure
-    assert structure is not None
+    assert structure is not None, f"Structure is None"
     actual = parse_structure(structure)
     expected = [row.as_dict() for row in context.table]
     # convert index to int
