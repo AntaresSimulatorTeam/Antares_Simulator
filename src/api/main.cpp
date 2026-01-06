@@ -89,7 +89,7 @@ void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAnta
     {
         std::string mps;
         weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
-        logs.info()<<"Printing problem: "<<problemName(id)<<std::endl;
+        logs.info()<<"Printing problem: "<<problemName(id)<<'\n';
 
         logs.info() << "******************************** BEGIN MPS ********************************"
                   ;
@@ -137,16 +137,16 @@ void printProblems(const ApiOptions& options)
     logs.info() << " * Number of weeks per year: " << nbWeeks ;
     int firstYear = options.year== -1 ? 0 : options.year;
     int lastYear = options.year == -1 ? nbYears : options.year + 1;
-     logs.info() << "Displaying problems for years [" << firstYear << "," << lastYear-1 << "]" <<std::endl;
-     logs.info() << " year: "<< year <<std::endl;
+     logs.info() << "Displaying problems for years [" << firstYear << "," << lastYear-1 << "]" <<'\n';
+     
     int firstWeek = options.week== -1 ? 1 : options.week;
     int lastWeek = options.week == -1 ? nbWeeks +1 : options.week + 1;
-    logs.info() << " Displaying problems for weeks [" << firstWeek << "," << lastWeek-1 << "]" <<std::endl;
+    logs.info() << " Displaying problems for weeks [" << firstWeek << "," << lastWeek-1 << "]" <<'\n';
     
      for(int year = firstYear; year < lastYear; ++year){
     
         for(int week = firstWeek; week < lastWeek; ++week){
-            logs.info() << " week: "<< week <<std::endl;
+            logs.info() << " week: "<< week <<'\n';
             const WeeklyProblemId id = {year, week};
             auto weekly = getter.getWeeklyData(id);
             printWeek(constant, weekly, options, id);
@@ -168,7 +168,7 @@ int main(int argc, const char** argv)
     }
     catch (const std::exception& e)
     {
-        logs.error() << "Error parsing options: " << e.what() << std::endl
+        logs.error() << "Error parsing options: " << e.what() << '\n'
                     << "Use --help to display usage." ;
         return 1;
     }
