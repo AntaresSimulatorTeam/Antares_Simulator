@@ -161,7 +161,21 @@ BOOST_FIXTURE_TEST_CASE(visit__min_literal__param, VisitorFixture<ReadLinearExpr
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_constant_param, VisitorFixture<ReadLinearExpressionVisitor>)
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(4.5) = 4
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor, create<LiteralNode>(4.5));
+
+    auto linear_expression = visitor().dispatch(floorNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 4.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // floor(param(4.5)) = 4
     Node* floorNode = create<FunctionNode>(FunctionNodeType::floor,
