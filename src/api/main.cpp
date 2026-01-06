@@ -1,12 +1,10 @@
 #include <iostream>
-#include <coroutine>
 #include <fstream>
 #include <mutex>
 #include "yuni/core/getopt/parser.h"
 
 #include "antares/api/singleProblemGetter.h"
 
-#include "private/singleProblemGetterImpl.h"
 
 using namespace Antares::Solver;
 constexpr int kMaxDisplay = 10'000;
@@ -128,51 +126,6 @@ void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAnta
 }
 
 
-template<typename T>
-struct Generator {
-    struct promise_type {
-        T current_value;
-        
-        Generator get_return_object() {
-            return Generator{std::coroutine_handle<promise_type>::from_promise(*this)};
-        }
-        std::suspend_always initial_suspend() { return {}; }
-        std::suspend_always final_suspend() noexcept { return {}; }
-        std::suspend_always yield_value(T value) {
-            current_value = value;
-            return {};
-        }
-        void return_void() {}
-        void unhandled_exception() { std::terminate(); }
-    };
-    
-    std::coroutine_handle<promise_type> handle;
-    
-    Generator(std::coroutine_handle<promise_type> h) : handle(h) {}
-    ~Generator() { if (handle) handle.destroy(); }
-    
-    bool next() {
-        handle.resume();
-        return !handle.done();
-    }
-    
-    T value() {
-        return handle.promise().current_value;
-    }
-};
-
-
-Generator<int> counter(int index, int nb, bool zeroFirst) {
-    int shift = zeroFirst ? 0 : 1;
-    int start = index == -1 ? shift: index;
-    int end = index == -1 ? nb+shift : index+1;
-    for (int i = start; i < end; ++i) {
-        co_yield i;
-    }
-}
-
-
-
 void printProblems(const ApiOptions& options)
 {
 
@@ -182,14 +135,19 @@ void printProblems(const ApiOptions& options)
     auto nbWeeks = getter.nbWeeks();
     std::cout << " * Number of years: " << nbYears << std::endl;
     std::cout << " * Number of weeks per year: " << nbWeeks << std::endl;
-    auto yearGen = counter(options.year, nbYears, true);
-    while(yearGen.next()){
-        std::cout << " year: "<< yearGen.value() <<std::endl;
-        auto weekGen = counter(options.week, nbWeeks, false);
-        while(weekGen.next()){
-
-        std::cout << " week: "<< weekGen.value() <<std::endl;
-            const WeeklyProblemId id = {yearGen.value(), weekGen.value()};
+    int firstYear = options.year== -1 ? 0 : options.year;
+    int lastYear = options.year == -1 ? nbYears : options.year + 1;
+     std::cout << "Displaying problems for years [" << firstYear << "," << lastYear-1 << "]" <<std::endl;
+     std::cout << " year: "<< year <<std::endl;
+    int firstWeek = options.week== -1 ? 1 : options.week;
+    int lastWeek = options.week == -1 ? nbWeeks +1 : options.week + 1;
+    std::cout << " Displaying problems for weeks [" << firstWeek << "," << lastWeek-1 << "]" <<std::endl;
+    
+     for(int year = firstYear; year < lastYear; ++year){
+    
+        for(int week = firstWeek; week < lastWeek; ++week){
+            std::cout << " week: "<< week <<std::endl;
+            const WeeklyProblemId id = {year, week};
             auto weekly = getter.getWeeklyData(id);
             printWeek(constant, weekly, options, id);
         }
