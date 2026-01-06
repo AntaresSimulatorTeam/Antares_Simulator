@@ -25,7 +25,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
@@ -104,7 +103,6 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
     initializeRandomNumbers();
-    ScenarioBuilderOwner(*study_).callScenarioBuilder();
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const

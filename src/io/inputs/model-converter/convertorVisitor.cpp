@@ -54,8 +54,6 @@ public:
     std::any visitNumber(ExprParser::NumberContext* context) override;
     std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override;
     std::any visitTimeShift(ExprParser::TimeShiftContext* context) override;
-    std::any handleMax(ExprParser::ArgListContext* context);
-    std::any handleMin(ExprParser::ArgListContext* arglist);
     std::any visitFunction(ExprParser::FunctionContext* context) override;
     std::any visitArgList(ExprParser::ArgListContext* context) override;
     std::any visitTimeSum(ExprParser::TimeSumContext* context) override;
@@ -72,23 +70,31 @@ public:
     std::any visitTimeIndexExpr(ExprParser::TimeIndexExprContext* context) override;
     std::any visitPortFieldExpr(ExprParser::PortFieldExprContext* context) override;
     std::any visitPortFieldSum(ExprParser::PortFieldSumContext* context) override;
-    std::any handleDual(ExprParser::ArgListContext* context);
-    std::any handleReducedCost(ExprParser::ArgListContext* context);
     std::any visitPower(ExprParser::PowerContext* context) override;
     std::any visitRightPower(ExprParser::RightPowerContext* context) override;
     std::any visitShiftPower(ExprParser::ShiftPowerContext* context) override;
 
 private:
-    Expressions::Registry<Node>& registry_;
-    const YmlModel::Model& model_;
-
+    // Methods
+    // -------
+    std::any handleDual(ExprParser::ArgListContext* context);
+    std::any handleReducedCost(ExprParser::ArgListContext* context);
+    std::any handleMax(ExprParser::ArgListContext* context);
+    std::any handleMin(ExprParser::ArgListContext* arglist);
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
     PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
+
     template<class T>
     std::any ProcessChildren(const std::vector<T*>& exprContexts);
+
     template<class T>
-    std::any processPower(std::vector<T*> exprContexts);
+    std::any processPower(const std::vector<T*>& exprContexts);
+
+    // Data members
+    // ------------
+    Expressions::Registry<Node>& registry_;
+    const YmlModel::Model& model_;
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
@@ -322,7 +328,7 @@ std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 {
-    double d = stod(context->getText());
+    double d = std::stod(context->getText());
     return static_cast<Node*>(registry_.create<LiteralNode>(d));
 }
 
@@ -379,24 +385,21 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
 
 std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 {
-    if (!context)
-    {
-        throw std::invalid_argument("dual operator expect exactly one constraint id got nothing");
-    }
-    const auto constraintId = context->expr();
+    const auto constraints_ids = context->expr();
 
-    if (constraintId.size() != 1) // -> > 1
+    if (constraints_ids.size() != 1) // -> > 1
     {
-        std::string params(constraintId.at(0)->getText());
-
-        for (unsigned param = 1; param < constraintId.size(); param++)
+        std::string params = constraints_ids.at(0)->getText();
+        for (unsigned param = 1; param < constraints_ids.size(); param++)
         {
-            params += ", " + constraintId.at(param)->getText();
+            params += ", " + constraints_ids.at(param)->getText();
         }
-        throw std::invalid_argument("dual operator expect exactly one constraint id got: "
+        throw std::invalid_argument("dual operator expects exactly one constraint id got: "
                                     + params);
     }
-    const std::string constraint_id = constraintId.at(0)->getText();
+
+    const std::string constraint_id = constraints_ids.at(0)->getText();
+
     unsigned index = 0;
     const auto search_constraint = [&](const auto& constraints) -> Node*
     {
@@ -404,7 +407,7 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
         {
             if (c.id == constraint_id)
             {
-                auto* constraintIdNode = registry_.create<ParameterNode>(c.id);
+                auto* constraintIdNode = registry_.create<ParameterNode>(constraint_id);
                 auto* constraintIndex = registry_.create<LiteralNode>(index);
                 return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::dual,
                                                                          constraintIdNode,
@@ -429,63 +432,32 @@ std::any ConvertorVisitor::handleDual(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::handleReducedCost(ExprParser::ArgListContext* context)
 {
-    if (!context)
+    const auto variables_ids = context->expr();
+    if (variables_ids.size() != 1) // -> > 1
     {
-        throw std::invalid_argument(
-          "reduced_cost operator expect exactly one variable id got nothing");
-    }
-    const auto variableId = context->expr();
-    if (variableId.size() != 1) // -> > 1
-    {
-        std::string params(variableId.at(0)->getText());
-        for (unsigned param = 1; param < variableId.size(); param++)
+        std::string params(variables_ids.at(0)->getText());
+        for (unsigned param = 1; param < variables_ids.size(); param++)
         {
-            params += ", " + variableId.at(param)->getText();
+            params += ", " + variables_ids.at(param)->getText();
         }
-        throw std::invalid_argument("reduced_cost operator expect exactly one variable id got: "
+        throw std::invalid_argument("reduced_cost operator expects exactly one variable id got: "
                                     + params);
     }
+
+    const std::string variable_id = variables_ids.at(0)->getText();
 
     unsigned index = 0;
     for (const auto& var: model_.variables)
     {
-        if (var.id == variableId.at(0)->getText())
+        if (var.id == variable_id)
         {
-            auto* varNode = registry_.create<VariableNode>(var.id, index);
+            auto* varNode = registry_.create<VariableNode>(variable_id, index);
             return static_cast<Node*>(
               registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode));
         }
         ++index;
     }
-    throw ReducedCostNoVariableWithThisName(model_.id, variableId.at(0)->getText());
-}
-
-template<class T>
-std::any ConvertorVisitor::processPower(std::vector<T*> exprContexts)
-{
-    const auto powerExpr = std::any_cast<std::vector<Node*>>(ProcessChildren(exprContexts));
-    return static_cast<Node*>(
-      registry_.create<FunctionNode>(FunctionNodeType::pow, powerExpr.at(0), powerExpr.at(1)));
-}
-
-std::any ConvertorVisitor::visitPower(ExprParser::PowerContext* context)
-{
-    auto exprContexts = context->expr();
-    return processPower(exprContexts);
-}
-
-std::any ConvertorVisitor::visitRightPower(ExprParser::RightPowerContext* context)
-{
-    auto exprContexts = context->right_expr();
-    return processPower(exprContexts);
-}
-
-std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* context)
-{
-    auto base = std::any_cast<Node*>(context->shift_expr()->accept(this));
-    auto exponent = std::any_cast<Node*>(context->right_expr()->accept(this));
-    return static_cast<Node*>(
-      registry_.create<FunctionNode>(FunctionNodeType::pow, base, exponent));
+    throw ReducedCostNoVariableWithThisName(model_.id, variable_id);
 }
 
 std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
@@ -493,7 +465,7 @@ std::any ConvertorVisitor::handleMax(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw std::invalid_argument("max operator expect at least 2 operands got "
+        throw std::invalid_argument("max operator expects at least 2 operands got "
                                     + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
@@ -504,7 +476,7 @@ std::any ConvertorVisitor::handleMin(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw std::invalid_argument("min operator expect at least 2 operands got "
+        throw std::invalid_argument("min operator expects at least 2 operands got "
                                     + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
@@ -514,6 +486,13 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
     auto* arglist = context->argList();
+
+    if (!arglist)
+    {
+        std::string err_msg = functionName + " operator expects an argument, got nothing";
+        throw std::invalid_argument(err_msg);
+    }
+
     if (functionName == "reduced_cost")
     {
         return handleReducedCost(arglist);
@@ -645,6 +624,34 @@ std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionCon
 std::any ConvertorVisitor::visitRightExpression(ExprParser::RightExpressionContext* context)
 {
     return context->expr()->accept(this);
+}
+
+template<class T>
+std::any ConvertorVisitor::processPower(const std::vector<T*>& exprContexts)
+{
+    const auto powerExpr = std::any_cast<std::vector<Node*>>(ProcessChildren(exprContexts));
+    return static_cast<Node*>(
+      registry_.create<FunctionNode>(FunctionNodeType::pow, powerExpr.at(0), powerExpr.at(1)));
+}
+
+std::any ConvertorVisitor::visitPower(ExprParser::PowerContext* context)
+{
+    auto exprContexts = context->expr();
+    return processPower(exprContexts);
+}
+
+std::any ConvertorVisitor::visitRightPower(ExprParser::RightPowerContext* context)
+{
+    auto exprContexts = context->right_expr();
+    return processPower(exprContexts);
+}
+
+std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* context)
+{
+    auto base = std::any_cast<Node*>(context->shift_expr()->accept(this));
+    auto exponent = std::any_cast<Node*>(context->right_expr()->accept(this));
+    return static_cast<Node*>(
+      registry_.create<FunctionNode>(FunctionNodeType::pow, base, exponent));
 }
 
 } // namespace Antares::IO::Inputs::ModelConverter
