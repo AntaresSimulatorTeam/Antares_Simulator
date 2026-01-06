@@ -36,10 +36,6 @@ void print_side_by_side(size_t n, const Vecs&... vecs)
     logs.info()<<"\n"<<oss.str();
 }
 
-unsigned int toInt(const char* in)
-{
-    return strtoul(in, nullptr, 10);
-}
 struct ApiOptions
 {
     std::string studyFolder = "";
@@ -86,9 +82,8 @@ void ValidateOptions(const ApiOptions& options)
           "Study Folder is empty, please enter valid study path checkout --help");
     }
 }
-void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly, const ApiOptions& options, const WeeklyProblemId& id){
-      if (options.writeMps)
-    {
+void writeWeekMPS(const WeeklyDataFromAntares& weekly, const std::filesystem::path& outputPath, const WeeklyProblemId& id){
+    
         std::string mps;
         weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
         logs.info()<<"Printing problem: "<<problemName(id)<<'\n';
@@ -98,8 +93,8 @@ void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAnta
         logs.info() <<'\n'<< mps ;
         logs.info() << "******************************** END MPS ********************************"
                   ;
-        if(!options.outputFolder.empty()){
-            std::filesystem::path outputPath = options.outputFolder;
+        if(!outputPath.empty()){
+            
             static std::once_flag once;
            std::call_once(once,  [&outputPath]
             {
@@ -114,8 +109,13 @@ void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAnta
             ofs << mps;
             ofs.close();
         }
-    }
+    
 
+}
+
+
+void printWeekLPData(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly){
+  
     print_side_by_side(constant.VariablesCount,
                        constant.VariablesMeaning,
                        weekly.Xmin,
@@ -150,8 +150,9 @@ void printProblems(const ApiOptions& options)
         for(int week = firstWeek; week < lastWeek; ++week){
             logs.info() << " week: "<< week <<'\n';
             const WeeklyProblemId id = {year, week};
-            auto weekly = getter.getWeeklyData(id);
-            printWeek(constant, weekly, options, id);
+            auto weekly = getter.getWeeklyData(id, true);
+            printWeekLPData(constant, weekly);
+            writeWeekMPS(weekly, options.outputFolder, id);
         }
     
     }

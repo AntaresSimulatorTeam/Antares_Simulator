@@ -25,6 +25,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
 #include <fmt/format.h>
 
 #include "ortools/linear_solver/linear_solver.h"
@@ -101,7 +102,7 @@ struct WeeklyDataFromAntares
     std::vector<double> RHS; // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
     std::string name;
-    operations_research::MPSolver* solver_;
+    std::unique_ptr<operations_research::MPSolver> solver_;
 
     auto operator<=>(const WeeklyDataFromAntares& other) const = default;
 };

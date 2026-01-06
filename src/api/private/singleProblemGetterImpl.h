@@ -27,7 +27,7 @@ public:
     explicit SingleProblemGetter(const std::filesystem::path& studyPath);
     explicit SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study);
     ConstantDataFromAntares getConstantData();
-    WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
+    WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id, bool withSolver);
     std::vector<WeeklyProblemId> getProblemIds() const;
 
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);
@@ -38,6 +38,7 @@ private:
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
+    operations_research::MPSolver* getSolver();
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;
     std::unique_ptr<Antares::Data::Study> study_;

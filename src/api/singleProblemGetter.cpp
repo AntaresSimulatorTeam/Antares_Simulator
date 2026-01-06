@@ -39,9 +39,9 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     return impl_->getConstantData();
 }
 
-WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
+WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, bool withSolver)
 {
-    return impl_->getWeeklyData(id);
+    return impl_->getWeeklyData(id, withSolver);
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const

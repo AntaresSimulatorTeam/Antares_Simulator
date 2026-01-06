@@ -40,6 +40,7 @@
 
 #include "fmt/format.h"
 using namespace Optimisation::LinearProblemApi;
+using namespace operations_research;
 
 namespace
 {
@@ -193,7 +194,7 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
 }
 
-WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
+WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, bool withSolver)
 {
     auto [year, week] = id;
     // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
@@ -267,9 +268,19 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                                     optimizationNumber);
 
     OPT_InitialiserLesCoutsLineaire(&pb_, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+   
 
+    auto ret = translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
+    if(withSolver)
     {
-        const auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
+       ret.solver_.reset(getSolver());
+    }
+    return ret;
+}
+
+MPSolver* SingleProblemGetter::getSolver()
+{
+const auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
 
         const int opt = optimizationNumber - 1;
         assert(opt >= 0 && opt < 2);
@@ -293,16 +304,13 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                                                 modelerDataSeries,
                                                                 modelerScenarioGroupRepository);
 
-        auto* solver = fillAndGetMpSolver(ortoolsProblem,
+        return fillAndGetMpSolver(ortoolsProblem,
                                           fillCtx,
                                           &pb_,
                                           optimEntityContainer,
                                           true); // TODO
 
-        ProblemeAResoudre->ProblemesSpx[numeroDeLIntervalle].reset(solver);
-    }
-
-    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
+        
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
