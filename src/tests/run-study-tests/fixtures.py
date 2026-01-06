@@ -1,6 +1,7 @@
 import pytest
 
 from actions_on_study.study_run import *
+from actions_on_study.api_run import *
 from actions_on_study.results_remover import *
 from check_on_results.check_general import check_list
 
@@ -42,6 +43,10 @@ def resultsRemover(study_path):
 @pytest.fixture
 def simulation(study_path, antares_simu_path, solver_name, named_mps_problems, parallel):
     return study_run(study_path, antares_simu_path, solver_name, named_mps_problems, parallel)
+
+@pytest.fixture
+def api(study_path, api_exe_path, write_mps, output_dir="20210110-0900eco"):
+    return api_run(study_path, api_exe_path, write_mps, output_dir)
 
 @pytest.fixture(autouse=True)
 def check_runner(simulation, resultsRemover):
