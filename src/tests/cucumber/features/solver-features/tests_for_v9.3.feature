@@ -21,6 +21,7 @@ Feature: tests for v9.3
   @fast @short
   Scenario: near price cap
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-v930/tests-near-price-cap"
+    And the linear solver is sirius
     When I run antares simulator
     Then the simulation takes less than 2 seconds
     And the simulation succeeds
