@@ -24,14 +24,16 @@ std::string to_string_any(const T& value)
 template<typename... Vecs>
 void print_side_by_side(size_t n, const Vecs&... vecs)
 {
+    std::ostringstream oss;
     for (size_t i = 0; i < n; ++i)
     {
         size_t col = 0;
-        ((logs.info() << (i < vecs.size() ? to_string_any(vecs[i]) : "")
+        ((oss << (i < vecs.size() ? to_string_any(vecs[i]) : "")
                     << (++col < sizeof...(vecs) ? "\t" : "")),
          ...);
-        logs.info() << '\n';
+        oss << '\n';
     }
+    logs.info()<<"\n"<<oss.str();
 }
 
 unsigned int toInt(const char* in)
@@ -93,7 +95,7 @@ void printWeek(const ConstantDataFromAntares& constant, const WeeklyDataFromAnta
 
         logs.info() << "******************************** BEGIN MPS ********************************"
                   ;
-        logs.info() << mps ;
+        logs.info() <<'\n'<< mps ;
         logs.info() << "******************************** END MPS ********************************"
                   ;
         if(!options.outputFolder.empty()){
