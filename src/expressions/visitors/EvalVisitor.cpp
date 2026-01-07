@@ -234,17 +234,16 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
     return EvaluationResult{constraintValues};
 }
 
+auto PowerOp = [](const auto& a, const auto& b) { return std::pow(a, b); };
+auto FloorOp = [](double d) { return std::floor(d); };
+
 EvaluationResult EvalVisitor::visitPow(const Nodes::FunctionNode* node)
 {
     const auto numbers = node->getOperands();
     auto base = dispatch(numbers.at(0));
     auto exponent = dispatch(numbers.at(1));
-    return base.evaluateBinaryOperation(exponent,
-                                        [](const auto& a, const auto& b)
-                                        { return std::pow(a, b); });
+    return base.evaluateBinaryOperation(exponent, PowerOp);
 }
-
-auto FloorOp = [](double d) { return std::floor(d); };
 
 EvaluationResult EvalVisitor::visitFloor(const Nodes::FunctionNode* node)
 {
