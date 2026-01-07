@@ -21,6 +21,8 @@
 
 #include <ExprVisitor.h>
 
+#include <boost/algorithm/string.hpp>
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/TimeSumNode.h"
@@ -186,10 +188,8 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
     {
         if (param.id == identifier)
         {
-            return static_cast<Node*>(
-              registry_.create<ParameterNode>(param.id,
-                                              variability(param.time_dependent,
-                                                          param.scenario_dependent)));
+            auto v = variability(param.time_dependent, param.scenario_dependent);
+            return static_cast<Node*>(registry_.create<ParameterNode>(param.id, v));
         }
     }
 
@@ -199,11 +199,8 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         const auto& var = variables[index];
         if (var.id == identifier)
         {
-            return static_cast<Node*>(
-              registry_.create<VariableNode>(var.id,
-                                             index,
-                                             variability(var.time_dependent,
-                                                         var.scenario_dependent)));
+            auto v = variability(var.time_dependent, var.scenario_dependent);
+            return static_cast<Node*>(registry_.create<VariableNode>(var.id, index, v));
         }
     }
     throw NoParameterOrVariableWithThisName(identifier);
@@ -434,32 +431,31 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
 {
-    const auto variables_ids = context->expr();
-    if (variables_ids.size() != 1) // -> > 1
+    std::vector<std::string> argIds;
+    std::ranges::transform(context->expr(),
+                           std::back_inserter(argIds),
+                           [](auto* expr) { return expr->getText(); });
+
+    if (argIds.size() != 1)
     {
-        std::string params(variables_ids.at(0)->getText());
-        for (unsigned param = 1; param < variables_ids.size(); param++)
-        {
-            params += ", " + variables_ids.at(param)->getText();
-        }
         throw std::invalid_argument("reduced_cost operator expects exactly one variable id got: "
-                                    + params);
+                                    + boost::algorithm::join(argIds, ", "));
     }
 
-    const std::string variable_id = variables_ids.at(0)->getText();
+    const std::string var_id = argIds[0];
 
     unsigned index = 0;
     for (const auto& var: model_.variables)
     {
-        if (var.id == variable_id)
+        if (var.id == var_id)
         {
-            auto* varNode = registry_.create<VariableNode>(variable_id, index);
+            auto* varNode = registry_.create<VariableNode>(var_id, index);
             return static_cast<Node*>(
               registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode));
         }
         ++index;
     }
-    throw ReducedCostNoVariableWithThisName(model_.id, variable_id);
+    throw ReducedCostNoVariableWithThisName(model_.id, var_id);
 }
 
 std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
