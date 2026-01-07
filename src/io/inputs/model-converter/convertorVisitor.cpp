@@ -382,12 +382,17 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
     return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
-auto exprToString = [](auto* expr) { return expr->getText(); };
+std::vector<std::string> ExpressionsToIds(const std::vector<ExprParser::ExprContext*>& expressions)
+{
+    std::vector<std::string> ids;
+    auto expressionToId = [](auto* expression) { return expression->getText(); };
+    std::ranges::transform(expressions, std::back_inserter(ids), expressionToId);
+    return ids;
+}
 
 std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
 {
-    std::vector<std::string> argIds;
-    std::ranges::transform(context->expr(), std::back_inserter(argIds), exprToString);
+    std::vector<std::string> argIds = ExpressionsToIds(context->expr());
 
     if (argIds.size() != 1)
     {
@@ -429,8 +434,7 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
 {
-    std::vector<std::string> argIds;
-    std::ranges::transform(context->expr(), std::back_inserter(argIds), exprToString);
+    std::vector<std::string> argIds = ExpressionsToIds(context->expr());
 
     if (argIds.size() != 1)
     {
