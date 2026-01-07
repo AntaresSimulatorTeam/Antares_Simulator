@@ -253,8 +253,6 @@ std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
     for (const auto& [left_end, right_begin, baseTime, index, base]: mem)
     {
         std::string& s = names[index];
-        std::cout << "*************** week " << week
-                  << ", m.baseTime + week * 168 = " << baseTime + week * base << "\n";
         s = s.substr(0, left_end) + std::to_string(baseTime + week * base) + s.substr(right_begin);
     }
     return names;
@@ -342,13 +340,11 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
 
         if (week == 0 && year != 0)
         {
-            std::cout << "before offset year:" << year << ", week:" << week << std::endl;
             ProblemeAResoudre->NomDesVariables = variablesName_;
             ProblemeAResoudre->NomDesContraintes = constraintsName_;
         }
         if (week != 0)
         {
-            std::cout << "before offset year:" << year << ", week:" << week << std::endl;
             ProblemeAResoudre->NomDesVariables = applyTimeOffset(variablesName_,
                                                                  variablesMemo_,
                                                                  week);
