@@ -191,14 +191,18 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrix linearProblemMatrix(&pb_, builder);
     linearProblemMatrix.Run();
-    variablesMemo_= buildMemo(builder_data->NomDesVariables);
-    constraintsMemo_= buildMemo(builder_data->NomDesContraintes);
-    variablesName_ = builder_data->NomDesVariables;
-    constraintsName_ = builder_data->NomDesContraintes;
-    return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
+    auto* PbAResoudre =pb_.ProblemeAResoudre.get();
+    variablesMemo_= buildMemo(PbAResoudre->NomDesVariables);
+    constraintsMemo_= buildMemo(PbAResoudre->NomDesContraintes);
+    variablesName_ = PbAResoudre->NomDesVariables;
+    constraintsName_ = PbAResoudre->NomDesContraintes;
+    return translator_.commonProblemData(PbAResoudre);
 }
- constexpr const char* tag = "::hour<";
-    constexpr std::size_t tagLen = 7;
+struct Tag{
+    std::string_view name;
+    unsigned base;
+};
+constexpr std::array<Tag, 3> tags = {{{"::hour<", 168}, {"::day<", 7}, {"::week<", 1}}};
 std::vector<NameMemo> SingleProblemGetter::buildMemo(
   const std::vector<std::string>& names
   ) const
@@ -209,7 +213,8 @@ std::vector<NameMemo> SingleProblemGetter::buildMemo(
      for (std::size_t i = 0; i < names.size(); ++i)
         {
             const std::string& s = names[i];
-
+for(const auto& [tag, base]: tags ){
+    auto tagLen = tag.size();
             std::size_t tagPos = s.find(tag);
             if (tagPos == std::string::npos)
                 {continue;}
@@ -223,9 +228,9 @@ std::vector<NameMemo> SingleProblemGetter::buildMemo(
             m.index = i;
             m.left_end = numStart;
             m.right_begin = end;
-            m.baseHour = std::stoi(s.substr(numStart, end - numStart));
-
-            mem.push_back(m);
+            m.baseTime = std::stoi(s.substr(numStart, end - numStart));
+            m.base = base;
+            mem.push_back(m);}
         }
 
     return mem;
@@ -235,14 +240,14 @@ std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
                unsigned week)
 {
     auto names = in;
-    for (const auto& m : mem)
+    for (const auto& [left_end, right_begin, baseTime, index, base] : mem)
     {
-        std::string& s = names[m.index];
-
+        std::string& s = names[index];
+        std::cout<<"*************** week "<<week << ", m.baseTime + week * 168 = "<<baseTime + week * base<<"\n";
         s =
-            s.substr(0, m.left_end) +
-            std::to_string(m.baseHour + week * 168) +
-            s.substr(m.right_begin);
+            s.substr(0, left_end) +
+            std::to_string(baseTime + week * base) +
+            s.substr(right_begin);
     }
     return names;
 }
@@ -325,8 +330,15 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
     auto ret = translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
     if(withSolver)
     {
+        auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
+
+        if(week == 0 && year !=0){
+            std::cout<<"before offset year:"<<year<<", week:"<<week<<std::endl;
+            ProblemeAResoudre->NomDesVariables = variablesName_;
+            ProblemeAResoudre->NomDesContraintes = constraintsName_;
+        }
         if(week !=0){
-            auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
+            std::cout<<"before offset year:"<<year<<", week:"<<week<<std::endl;
             ProblemeAResoudre->NomDesVariables = applyTimeOffset(variablesName_, variablesMemo_, week);
             ProblemeAResoudre->NomDesContraintes = applyTimeOffset(constraintsName_, constraintsMemo_, week);
             

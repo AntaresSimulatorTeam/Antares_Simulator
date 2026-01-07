@@ -24,8 +24,9 @@ struct NameMemo
 {
     std::size_t left_end;    // index where the number starts
     std::size_t right_begin; // index of '>' (first char of right part)
-    int baseHour;
+    int baseTime;
     std::size_t index;       // index in names vector
+    unsigned base; // 168 -> hour, 7 -> day, 1 -> week
 };
 
 class SingleProblemGetter final

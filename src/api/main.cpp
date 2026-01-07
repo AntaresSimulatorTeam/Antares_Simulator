@@ -146,12 +146,12 @@ void printProblems(const ApiOptions& options)
     logs.info() << " Displaying problems for weeks [" << firstWeek << "," << lastWeek-1 << "]" <<'\n';
     
      for(int year = firstYear; year < lastYear; ++year){
-    
+            logs.info() << " year: "<< year <<'\n';
         for(int week = firstWeek; week < lastWeek; ++week){
             logs.info() << " week: "<< week <<'\n';
             const WeeklyProblemId id = {year, week};
             auto weekly = getter.getWeeklyData(id, true);
-            printWeekLPData(constant, weekly);
+            //printWeekLPData(constant, weekly);
             writeWeekMPS(weekly, options.outputFolder, id);
         }
     
