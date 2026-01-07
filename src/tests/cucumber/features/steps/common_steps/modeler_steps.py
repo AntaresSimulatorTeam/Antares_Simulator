@@ -167,7 +167,7 @@ def check_master_variables(context):
 
 @then(u'the subproblem contains the following variables')
 def check_subproblem_variables(context):
-    assert (context.moh.problems != None and context.moh.problems.subproblem != None)
+    assert (context.moh.problems != None and context.moh.problems.subproblem != None), f"Is None"
     model = context.moh.problems.subproblem
     check_variables(context, context.moh.problems.subproblem)
 
