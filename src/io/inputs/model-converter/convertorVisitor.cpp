@@ -382,22 +382,20 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
     return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
+auto exprToString = [](auto* expr) { return expr->getText(); };
+
 std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
 {
-    const auto constraints_ids = context->expr();
+    std::vector<std::string> argIds;
+    std::ranges::transform(context->expr(), std::back_inserter(argIds), exprToString);
 
-    if (constraints_ids.size() != 1) // -> > 1
+    if (argIds.size() != 1)
     {
-        std::string params = constraints_ids.at(0)->getText();
-        for (unsigned param = 1; param < constraints_ids.size(); param++)
-        {
-            params += ", " + constraints_ids.at(param)->getText();
-        }
         throw std::invalid_argument("dual operator expects exactly one constraint id got: "
-                                    + params);
+                                    + boost::algorithm::join(argIds, ", "));
     }
 
-    const std::string constraint_id = constraints_ids.at(0)->getText();
+    const std::string constraint_id = argIds[0];
 
     unsigned index = 0;
     const auto search_constraint = [&](const auto& constraints) -> Node*
@@ -432,9 +430,7 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
 {
     std::vector<std::string> argIds;
-    std::ranges::transform(context->expr(),
-                           std::back_inserter(argIds),
-                           [](auto* expr) { return expr->getText(); });
+    std::ranges::transform(context->expr(), std::back_inserter(argIds), exprToString);
 
     if (argIds.size() != 1)
     {
