@@ -53,6 +53,8 @@ public:
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
     int nbYears() const;
     int nbWeeks() const;
+    std::set<int> playedYears() const;
+
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;
 };

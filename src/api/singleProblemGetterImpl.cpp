@@ -127,7 +127,7 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
 
 void SingleProblemGetter::initializeRandomNumbers()
 {
-    nbYears_ = 0;
+    int nbYears = 0;
     nbWeeks_ = study_->parameters.simulationDays.numberOfWeeks();
     std::map<unsigned int, bool> isYearPerformed; // TODO check year number
     for (uint year = 0; year < study_->parameters.nbYears; ++year)
@@ -135,11 +135,12 @@ void SingleProblemGetter::initializeRandomNumbers()
         isYearPerformed[year] = study_->parameters.yearsFilter[year];
         if (study_->parameters.yearsFilter[year])
         {
-            ++nbYears_;
+            ++nbYears;
+            playedYears_.insert(year);
         }
     }
 
-    randomForParallelYears_.emplace(nbYears_, study_->parameters.power.fluctuations);
+    randomForParallelYears_.emplace(nbYears, study_->parameters.power.fluctuations);
     randomForParallelYears_->allocate(*study_);
 
     MersenneTwister randomHydroGenerator;
@@ -191,38 +192,44 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrix linearProblemMatrix(&pb_, builder);
     linearProblemMatrix.Run();
-    auto* PbAResoudre =pb_.ProblemeAResoudre.get();
-    variablesMemo_= buildMemo(PbAResoudre->NomDesVariables);
-    constraintsMemo_= buildMemo(PbAResoudre->NomDesContraintes);
+    auto* PbAResoudre = pb_.ProblemeAResoudre.get();
+    variablesMemo_ = buildMemo(PbAResoudre->NomDesVariables);
+    constraintsMemo_ = buildMemo(PbAResoudre->NomDesContraintes);
     variablesName_ = PbAResoudre->NomDesVariables;
     constraintsName_ = PbAResoudre->NomDesContraintes;
     return translator_.commonProblemData(PbAResoudre);
 }
-struct Tag{
+
+struct Tag
+{
     std::string_view name;
     unsigned base;
 };
-constexpr std::array<Tag, 3> tags = {{{"::hour<", 168}, {"::day<", 7}, {"::week<", 1}}};
-std::vector<NameMemo> SingleProblemGetter::buildMemo(
-  const std::vector<std::string>& names
-  ) const
-{
 
+constexpr std::array<Tag, 3> tags = {{{"::hour<", 168}, {"::day<", 7}, {"::week<", 1}}};
+
+std::vector<NameMemo> SingleProblemGetter::buildMemo(const std::vector<std::string>& names) const
+{
     std::vector<NameMemo> mem;
     // Build memo once
-     for (std::size_t i = 0; i < names.size(); ++i)
+    for (std::size_t i = 0; i < names.size(); ++i)
+    {
+        const std::string& s = names[i];
+        for (const auto& [tag, base]: tags)
         {
-            const std::string& s = names[i];
-for(const auto& [tag, base]: tags ){
-    auto tagLen = tag.size();
+            auto tagLen = tag.size();
             std::size_t tagPos = s.find(tag);
             if (tagPos == std::string::npos)
-                {continue;}
+            {
+                continue;
+            }
 
             std::size_t numStart = tagPos + tagLen;
             std::size_t end = s.find('>', numStart);
             if (end == std::string::npos)
-                {continue;}
+            {
+                continue;
+            }
 
             NameMemo m;
             m.index = i;
@@ -230,27 +237,28 @@ for(const auto& [tag, base]: tags ){
             m.right_begin = end;
             m.baseTime = std::stoi(s.substr(numStart, end - numStart));
             m.base = base;
-            mem.push_back(m);}
+            mem.push_back(m);
         }
+    }
 
     return mem;
 }
+
 std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
-               const std::vector<NameMemo>& mem,
-               unsigned week)
+                                         const std::vector<NameMemo>& mem,
+                                         unsigned week)
 {
     auto names = in;
-    for (const auto& [left_end, right_begin, baseTime, index, base] : mem)
+    for (const auto& [left_end, right_begin, baseTime, index, base]: mem)
     {
         std::string& s = names[index];
-        std::cout<<"*************** week "<<week << ", m.baseTime + week * 168 = "<<baseTime + week * base<<"\n";
-        s =
-            s.substr(0, left_end) +
-            std::to_string(baseTime + week * base) +
-            s.substr(right_begin);
+        std::cout << "*************** week " << week
+                  << ", m.baseTime + week * 168 = " << baseTime + week * base << "\n";
+        s = s.substr(0, left_end) + std::to_string(baseTime + week * base) + s.substr(right_begin);
     }
     return names;
 }
+
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, bool withSolver)
 {
     auto [year, week] = id;
@@ -325,62 +333,59 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
                                                     optimizationNumber);
 
     OPT_InitialiserLesCoutsLineaire(&pb_, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
-   
 
     auto ret = translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
-    if(withSolver)
+    if (withSolver)
     {
         auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
 
-        if(week == 0 && year !=0){
-            std::cout<<"before offset year:"<<year<<", week:"<<week<<std::endl;
+        if (week == 0 && year != 0)
+        {
+            std::cout << "before offset year:" << year << ", week:" << week << std::endl;
             ProblemeAResoudre->NomDesVariables = variablesName_;
             ProblemeAResoudre->NomDesContraintes = constraintsName_;
         }
-        if(week !=0){
-            std::cout<<"before offset year:"<<year<<", week:"<<week<<std::endl;
-            ProblemeAResoudre->NomDesVariables = applyTimeOffset(variablesName_, variablesMemo_, week);
-            ProblemeAResoudre->NomDesContraintes = applyTimeOffset(constraintsName_, constraintsMemo_, week);
-            
+        if (week != 0)
+        {
+            std::cout << "before offset year:" << year << ", week:" << week << std::endl;
+            ProblemeAResoudre->NomDesVariables = applyTimeOffset(variablesName_,
+                                                                 variablesMemo_,
+                                                                 week);
+            ProblemeAResoudre->NomDesContraintes = applyTimeOffset(constraintsName_,
+                                                                   constraintsMemo_,
+                                                                   week);
         }
-       ret.solver_.reset(getSolver());
+        ret.solver_.reset(getSolver());
     }
     return ret;
 }
 
 MPSolver* SingleProblemGetter::getSolver()
 {
-const auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
+    const auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
 
-        const int opt = optimizationNumber - 1;
-        assert(opt >= 0 && opt < 2);
-        // OptimizationStatistics& optimizationStatistics = pb_.optimizationStatistics[opt];
-        // TIME_MEASURE timeMeasure;
-        SingleOptimOptions options;
-        Antares::Optimization::LegacyOrtoolsLinearProblem ortoolsProblem(
-          pb_.ProblemeAResoudre->isMIP(),
-          options.solverName);
-        Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
-                                                                               numeroDeLIntervalle);
-        const auto& modelerData = pb_.modelerData;
-        bool hasModelerData = modelerData != nullptr;
-        const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
-                                                                     : nullptr;
-        const Optimisation::ScenarioGroupRepository*
-          modelerScenarioGroupRepository = hasModelerData ? &modelerData->scenarioGroupRepository
-                                                          : nullptr;
+    const int opt = optimizationNumber - 1;
+    assert(opt >= 0 && opt < 2);
+    // OptimizationStatistics& optimizationStatistics = pb_.optimizationStatistics[opt];
+    // TIME_MEASURE timeMeasure;
+    SingleOptimOptions options;
+    Antares::Optimization::LegacyOrtoolsLinearProblem ortoolsProblem(pb_.ProblemeAResoudre->isMIP(),
+                                                                     options.solverName);
+    Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
+                                                                           numeroDeLIntervalle);
+    const auto& modelerData = pb_.modelerData;
+    bool hasModelerData = modelerData != nullptr;
+    const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
+                                                                 : nullptr;
+    const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
+      = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
-        Optimisation::OptimEntityContainer optimEntityContainer(ortoolsProblem,
-                                                                modelerDataSeries,
-                                                                modelerScenarioGroupRepository);
+    Optimisation::OptimEntityContainer optimEntityContainer(ortoolsProblem,
+                                                            modelerDataSeries,
+                                                            modelerScenarioGroupRepository);
 
-        return fillAndGetMpSolver(ortoolsProblem,
-                                          fillCtx,
-                                          &pb_,
-                                          optimEntityContainer,
-                                          true); // TODO
-
-        
+    return fillAndGetMpSolver(ortoolsProblem, fillCtx, &pb_, optimEntityContainer,
+                              true); // TODO
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -482,10 +487,18 @@ YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
     return {hydroLevels, ventilationResults};
 }
 
- int SingleProblemGetter::nbYears() const{
-return nbYears_;
+int SingleProblemGetter::nbYears() const
+{
+    return playedYears_.size();
 }
- int SingleProblemGetter::nbWeeks() const{
+
+std::set<int> SingleProblemGetter::playedYears() const
+{
+    return playedYears_;
+}
+
+int SingleProblemGetter::nbWeeks() const
+{
     return nbWeeks_;
 }
 } // namespace Antares::Solver::Implementation

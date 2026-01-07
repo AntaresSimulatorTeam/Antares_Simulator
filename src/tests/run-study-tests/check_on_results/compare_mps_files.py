@@ -9,12 +9,11 @@ from check_on_results.mps_utils import *
 
 @printNameDecorator
 class compare_mps_files(check_interface):
-    def __init__(self, study_path, shallow_comparison = False):
+    def __init__(self, study_path):
         super().__init__(study_path)
         self.study_path = study_path
         self.ref_folder = None
         self.dated_output_folder = None
-        self.shallow_comparison = shallow_comparison
 
     def find_folders_to_compare(self):
         # Retrieve the full path of 'reference' folder

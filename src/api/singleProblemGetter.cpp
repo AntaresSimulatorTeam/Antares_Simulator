@@ -59,11 +59,19 @@ void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path
     impl_->writeStudyDescriptionFiles(outputDir);
 }
 
-int SingleProblemGetter::nbYears() const{
-return impl_->nbYears();
+int SingleProblemGetter::nbYears() const
+{
+    return impl_->nbYears();
 }
-int SingleProblemGetter::nbWeeks() const{
+
+int SingleProblemGetter::nbWeeks() const
+{
     return impl_->nbWeeks();
+}
+
+std::set<int> SingleProblemGetter::playedYears() const
+{
+    return impl_->playedYears();
 }
 
 } // namespace Antares::Solver

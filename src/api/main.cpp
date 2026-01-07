@@ -1,10 +1,11 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <mutex>
+
 #include "yuni/core/getopt/parser.h"
+
 #include <antares/logs/logs.h>
 #include "antares/api/singleProblemGetter.h"
-
 
 using namespace Antares::Solver;
 constexpr int kMaxDisplay = 10'000;
@@ -29,11 +30,11 @@ void print_side_by_side(size_t n, const Vecs&... vecs)
     {
         size_t col = 0;
         ((oss << (i < vecs.size() ? to_string_any(vecs[i]) : "")
-                    << (++col < sizeof...(vecs) ? "\t" : "")),
+              << (++col < sizeof...(vecs) ? "\t" : "")),
          ...);
         oss << '\n';
     }
-    logs.info()<<"\n"<<oss.str();
+    logs.info() << "\n" << oss.str();
 }
 
 struct ApiOptions
@@ -50,17 +51,17 @@ Yuni::GetOpt::Parser Parser(ApiOptions& options)
 {
     Yuni::GetOpt::Parser parser;
     parser.addFlag(options.studyFolder, 'i', "input", "Study folder");
-    logs.info()<<" study folder: " << options.studyFolder ;
+    logs.info() << " study folder: " << options.studyFolder;
     parser.add(options.outputFolder, 'o', "output", "Output folder");
     parser.add(options.year, 'y', "year", "year");
     parser.add(options.week, 'w', "week", "week");
     parser.addFlag(options.writeMps, 's', "write-mps");
-    
+
     parser.remainingArguments(options.studyFolder);
     return parser;
 }
 
-bool ParseOptions(ApiOptions& options, int argc,  const char* argv[])
+bool ParseOptions(ApiOptions& options, int argc, const char* argv[])
 {
     auto parser = Parser(options);
     switch (parser.operator()(argc, argv))
@@ -82,40 +83,40 @@ void ValidateOptions(const ApiOptions& options)
           "Study Folder is empty, please enter valid study path checkout --help");
     }
 }
-void writeWeekMPS(const WeeklyDataFromAntares& weekly, const std::filesystem::path& outputPath, const WeeklyProblemId& id){
-    
-        std::string mps;
-        weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
-        logs.info()<<"Printing problem: "<<problemName(id)<<'\n';
 
-        logs.info() << "******************************** BEGIN MPS ********************************"
-                  ;
-        logs.info() <<'\n'<< mps ;
-        logs.info() << "******************************** END MPS ********************************"
-                  ;
-        if(!outputPath.empty()){
-            
-            static std::once_flag once;
-           std::call_once(once,  [&outputPath]
-            {
-                if(std::filesystem::exists(outputPath)){
-                    std::filesystem::remove_all(outputPath);
-                }
-                std::filesystem::create_directories(outputPath);
-            });
+void writeWeekMPS(const WeeklyDataFromAntares& weekly,
+                  const std::filesystem::path& outputPath,
+                  const WeeklyProblemId& id)
+{
+    std::string mps;
+    weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
+    logs.info() << "Printing problem: " << problemName(id) << '\n';
 
-            std::filesystem::path mpsFile = outputPath / (problemName(id)+".mps");
-            std::ofstream ofs(mpsFile);
-            ofs << mps;
-            ofs.close();
-        }
-    
+    logs.info() << "******************************** BEGIN MPS ********************************";
+    logs.info() << '\n' << mps;
+    logs.info() << "******************************** END MPS ********************************";
+    if (!outputPath.empty())
+    {
+        static std::once_flag once;
+        std::call_once(once,
+                       [&outputPath]
+                       {
+                           if (std::filesystem::exists(outputPath))
+                           {
+                               std::filesystem::remove_all(outputPath);
+                           }
+                           std::filesystem::create_directories(outputPath);
+                       });
 
+        std::filesystem::path mpsFile = outputPath / (problemName(id) + ".mps");
+        std::ofstream ofs(mpsFile);
+        ofs << mps;
+        ofs.close();
+    }
 }
 
-
-void printWeekLPData(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly){
-  
+void printWeekLPData(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly)
+{
     print_side_by_side(constant.VariablesCount,
                        constant.VariablesMeaning,
                        weekly.Xmin,
@@ -127,39 +128,39 @@ void printWeekLPData(const ConstantDataFromAntares& constant, const WeeklyDataFr
                        weekly.RHS);
 }
 
-
 void printProblems(const ApiOptions& options)
 {
-
     Antares::Solver::SingleProblemGetter getter(options.studyFolder);
     auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
     auto nbWeeks = getter.nbWeeks();
-    logs.info() << " * Number of years: " << nbYears ;
-    logs.info() << " * Number of weeks per year: " << nbWeeks ;
-    int firstYear = options.year== -1 ? 0 : options.year;
-    int lastYear = options.year == -1 ? nbYears : options.year + 1;
-     logs.info() << "Displaying problems for years [" << firstYear << "," << lastYear-1 << "]" <<'\n';
-     
-    int firstWeek = options.week== -1 ? 1 : options.week;
-    int lastWeek = options.week == -1 ? nbWeeks +1 : options.week + 1;
-    logs.info() << " Displaying problems for weeks [" << firstWeek << "," << lastWeek-1 << "]" <<'\n';
-    
-     for(int year = firstYear; year < lastYear; ++year){
-            logs.info() << " year: "<< year <<'\n';
-        for(int week = firstWeek; week < lastWeek; ++week){
-            logs.info() << " week: "<< week <<'\n';
+    logs.info() << " * Number of years: " << nbYears;
+    logs.info() << " * Number of weeks per year: " << nbWeeks;
+
+    // logs.info() << "Displaying problems for years [" << firstYear << "," << lastYear-1 << "]"
+    // <<'\n';
+
+    int firstWeek = options.week == -1 ? 1 : options.week;
+    int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
+    logs.info() << " Displaying problems for weeks [" << firstWeek << "," << lastWeek - 1 << "]"
+                << '\n';
+
+    for (int year: getter.playedYears())
+    {
+        logs.info() << " year: " << year << '\n';
+        for (int week = firstWeek; week < lastWeek; ++week)
+        {
+            logs.info() << " week: " << week << '\n';
             const WeeklyProblemId id = {year, week};
             auto weekly = getter.getWeeklyData(id, true);
-            //printWeekLPData(constant, weekly);
+            // printWeekLPData(constant, weekly);
             writeWeekMPS(weekly, options.outputFolder, id);
         }
-    
     }
 }
 
 int main(int argc, const char** argv)
-{ 
+{
     ApiOptions options;
     try
     {
@@ -172,7 +173,7 @@ int main(int argc, const char** argv)
     catch (const std::exception& e)
     {
         logs.error() << "Error parsing options: " << e.what() << '\n'
-                    << "Use --help to display usage." ;
+                     << "Use --help to display usage.";
         return 1;
     }
 
