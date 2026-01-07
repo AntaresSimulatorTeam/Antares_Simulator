@@ -93,7 +93,7 @@ SimulationResults APIInternal::execute(
     }
 
     SimulationObserver simulationObserver;
-    durationCollector(totalSimulationKey) << [&]
+    durationCollector("simulation") << [&]
     {
         optimizationInfo = simulationRun(*study_,
                                          settings,

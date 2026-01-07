@@ -444,7 +444,7 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    pDurationCollector(totalSimulationKey) << [&]
+    pDurationCollector("simulation") << [&]
     {
         pOptimizationInfo = simulationRun(*pStudy,
                                           pSettings,
@@ -543,7 +543,7 @@ void writeSimulationInfos(const Data::Study& study,
                           const Benchmarking::OptimizationInfo& optimizationInfo,
                           IResultWriter* resultWriter)
 {
-    logTotalTime("Total simulation time", durationCollector.getTime(totalSimulationKey));
+    logTotalTime("Total simulation time", durationCollector.getTime("simulation"));
     Benchmarking::StudyInfoCollector study_info_collector(study);
     Benchmarking::SimulationInfoCollector simulation_info_collector(optimizationInfo);
 
