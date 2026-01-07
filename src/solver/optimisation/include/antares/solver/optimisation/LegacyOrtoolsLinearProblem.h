@@ -36,7 +36,7 @@ public:
         // nothing else to do
     }
 
-    MPSolver* getMpSolver()
+    operations_research::MPSolver* getMpSolver()
     {
         return MpSolver();
     }

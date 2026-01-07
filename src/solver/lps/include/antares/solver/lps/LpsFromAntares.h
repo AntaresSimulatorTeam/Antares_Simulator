@@ -25,6 +25,10 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
+#include <fmt/format.h>
+
+#include "ortools/linear_solver/linear_solver.h"
 
 namespace Antares::Solver
 {
@@ -98,6 +102,7 @@ struct WeeklyDataFromAntares
     std::vector<double> RHS; // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
     std::string name;
+    std::unique_ptr<operations_research::MPSolver> solver_;
 
     auto operator<=>(const WeeklyDataFromAntares& other) const = default;
 };
@@ -139,4 +144,8 @@ public:
     WeeklyDataByYearWeek weeklyProblems;
 };
 
+inline std::string problemName(const WeeklyProblemId& id)
+{
+    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
+}
 } // namespace Antares::Solver

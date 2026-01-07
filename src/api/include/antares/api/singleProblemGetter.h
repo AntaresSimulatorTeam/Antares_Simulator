@@ -34,6 +34,7 @@ class SingleProblemGetter;
 
 namespace Antares::Solver
 {
+
 class SingleProblemGetter final
 {
 public:
@@ -45,11 +46,14 @@ public:
     ConstantDataFromAntares getConstantData();
     // NOTE week indices start at 1
     // year indices start at 0
-    WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
+    WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id, bool withSolver);
 
     // TODO[FOM] This should not be necessary
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
+    int nbYears() const;
+    int nbWeeks() const;
+    std::set<int> playedYears() const;
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;

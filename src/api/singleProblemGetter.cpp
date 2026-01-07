@@ -39,9 +39,9 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     return impl_->getConstantData();
 }
 
-WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
+WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, bool withSolver)
 {
-    return impl_->getWeeklyData(id);
+    return impl_->getWeeklyData(id, withSolver);
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
@@ -57,6 +57,21 @@ void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& output
 void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path& outputDir)
 {
     impl_->writeStudyDescriptionFiles(outputDir);
+}
+
+int SingleProblemGetter::nbYears() const
+{
+    return impl_->nbYears();
+}
+
+int SingleProblemGetter::nbWeeks() const
+{
+    return impl_->nbWeeks();
+}
+
+std::set<int> SingleProblemGetter::playedYears() const
+{
+    return impl_->playedYears();
 }
 
 } // namespace Antares::Solver
