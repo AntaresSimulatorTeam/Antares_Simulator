@@ -1,4 +1,4 @@
 behave
 pyyaml
 pandas
-pulp
+pulp==3.3.0
