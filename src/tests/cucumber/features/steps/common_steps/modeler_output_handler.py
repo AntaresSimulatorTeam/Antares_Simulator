@@ -10,7 +10,7 @@ def read_if_exists(path, readfunc):
     if (os.path.exists(path)):
         return readfunc(path)
     else:
-        return None
+        return 1
 
 
 class invest_problems:
@@ -35,9 +35,11 @@ class modeler_output_handler:
             master = None
 
         # SUBPROBLEM
-        print("AAAA")
-        subproblem = read_if_exists(os.path.join(output_location, "1-.mps"), mpu.load_problem)
-        print("BBBB")
+        try:
+            subproblem = read_if_exists(os.path.join(output_location, "1-1.mps"), mpu.load_problem)
+        except:
+            subproblem = 2
+        print("subproblem: ", subproblem)
 
         structure = read_if_exists(os.path.join(output_location, "structure.txt"), lambda x: open(x, 'r').readlines())
         return invest_problems(master, subproblem, structure)
