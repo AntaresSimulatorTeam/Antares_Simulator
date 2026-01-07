@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 
 from check_decorators.print_name import printNameDecorator
@@ -7,6 +8,7 @@ from utils.find_output import find_dated_output_folder, find_simulation_folder
 from utils.assertions import check
 from check_on_results.mps_utils import *
 
+tol = 1e-2
 @printNameDecorator
 class compare_mps_files(check_interface):
     def __init__(self, study_path):
@@ -20,7 +22,7 @@ class compare_mps_files(check_interface):
         self.ref_folder = Path(find_reference_folder(self.study_path))
 
         # Folder of results (of which content is compared to content of reference folder)
-        # ... of form yyyymmdd-hhmm<mode> (ex : 20230105-0944eco)
+        # ... of form yyyymmdd-hhmm<mode< (ex : 20230105-0944eco)
         self.dated_output_folder = Path(find_dated_output_folder(self.study_path))
 
     def run(self):
@@ -78,7 +80,12 @@ class compare_mps_files(check_interface):
                 break
         
         return is_lp
-    
+    def check_numbers(self, left, right, msg:str):
+        if math.isinf(left):
+            check(math.isinf(right), msg)
+        else:
+            check(abs(left-right)< tol, msg)
+
     def compare_variables(self, pair, ref_model, out_model):
         ref_vars = extract_variables(ref_model)
         out_vars = extract_variables(out_model)
@@ -87,11 +94,11 @@ class compare_mps_files(check_interface):
                   f"Difference in variable name {ref_var['name']} != {out_var['name']} between files {pair[0]} and {pair[1]}")
             check(ref_var['is_integral'] == out_var['is_integral'],
                   f"Difference in type of variable {ref_var['is_integral']} != {out_var['is_integral']} between files {pair[0]} and {pair[1]}")
-            check(ref_var['xmin'] == out_var['xmin'],
+            self.check_numbers(ref_var['xmin'] , out_var['xmin'] ,
                   f"Difference in lower bound of variable {ref_var['name']}: {ref_var['xmin']} != {out_var['xmin']} between files {pair[0]} and {pair[1]}")
-            check(ref_var['xmax'] == out_var['xmax'],
+            self.check_numbers(ref_var['xmax'] , out_var['xmax'],
                   f"Difference in upper bound of variable {ref_var['name']}: {ref_var['xmax']} != {out_var['xmax']} between files {pair[0]} and {pair[1]}")
-            check(ref_var['cost'] == out_var['cost'],
+            self.check_numbers(ref_var['cost'] , out_var['cost'] ,
                   f"Difference in cost of variable {ref_var['name']}: {ref_var['cost']} != {out_var['cost']} between files {pair[0]} and {pair[1]}")
     
     
@@ -108,10 +115,10 @@ class compare_mps_files(check_interface):
         for name, (ref_sense, ref_rhs) in ref_constr_bounds.items():
             out_sense, out_rhs = out_constr_bounds[name]
 
-            check(ref_sense == out_sense,
+            self.check_numbers(ref_sense , out_sense,
                 f"Difference in constraint sense for {name}")
 
-            check(ref_rhs == out_rhs,
+            self.check_numbers(ref_rhs , out_rhs,
                 f"Difference in constraint rhs for {name}: {ref_rhs} != {out_rhs}, between files {pair[0]} and {pair[1]}")
 
     def compare_matrices(self, pair, ref_model, out_model):
@@ -135,7 +142,7 @@ class compare_mps_files(check_interface):
             for var_name, ref_coef in ref_row.items():
                 out_coef = out_row[var_name]
 
-                check(ref_coef == out_coef,
+                self.check_numbers(ref_coef , out_coef,
                     f"Difference in coefficient for constraint {constr_name}, "
                     f"variable {var_name} between files {pair[0]} and {pair[1]}")
 

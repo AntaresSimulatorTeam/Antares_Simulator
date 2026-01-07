@@ -101,10 +101,10 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
         std::call_once(once,
                        [&outputPath]
                        {
-                           if (std::filesystem::exists(outputPath))
+                          /* if (std::filesystem::exists(outputPath))
                            {
                                std::filesystem::remove_all(outputPath);
-                           }
+                           }*/
                            std::filesystem::create_directories(outputPath);
                        });
 
