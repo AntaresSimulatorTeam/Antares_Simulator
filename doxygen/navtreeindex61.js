@@ -1,9 +1,5 @@
 var NAVTREEINDEX61 =
 {
-"structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#aec1821663b21fe8b5edc6566d35da8bc":[8,0,109,26],
-"structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#af1a9dcbef77ce0172c20c69ec5fbf483":[8,0,109,29],
-"structExchangeBalanceData.html":[8,0,111],
-"structExchangeBalanceData.html#a3bc338b62ee56111070bd05c61ef238e":[8,0,111,4],
 "structExchangeBalanceData.html#a4e800d2cd3e7df7cc668c75b5bb49e91":[8,0,111,0],
 "structExchangeBalanceData.html#a6bc832bd4d81134b91af70c1743707ac":[8,0,111,1],
 "structExchangeBalanceData.html#aa8822b961c1aaeb619ffbf7e4a671fe4":[8,0,111,3],
@@ -249,5 +245,9 @@ var NAVTREEINDEX61 =
 "structPROBLEME__HEBDO.html#a2511c6b361c50c136e13bb8add900de1":[8,0,244,17],
 "structPROBLEME__HEBDO.html#a25babc595702fb143f3e07cba4679e72":[8,0,244,33],
 "structPROBLEME__HEBDO.html#a25efe694aabb780fda4e774728e30942":[8,0,244,59],
-"structPROBLEME__HEBDO.html#a2dd2355be40fb10c71f9763f1358042c":[8,0,244,48]
+"structPROBLEME__HEBDO.html#a2dd2355be40fb10c71f9763f1358042c":[8,0,244,48],
+"structPROBLEME__HEBDO.html#a2e21f6da689147d1d358cc3ab0fd57ec":[8,0,244,50],
+"structPROBLEME__HEBDO.html#a306f72fcdad8e6f1fd081e36006b1d29":[8,0,244,45],
+"structPROBLEME__HEBDO.html#a3ced5b477b233ac4aa8114a606a5c485":[8,0,244,15],
+"structPROBLEME__HEBDO.html#a4582a58e2e7ca2763e20453cb784fd13":[8,0,244,72]
 };

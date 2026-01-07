@@ -156,8 +156,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", null ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -1171,7 +1171,6 @@ var hierarchy =
     [ "Antares::Component::Datagrid::Renderer::LogEntry", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html", null ],
     [ "Antares::Component::Datagrid::Renderer::LogEntryContainer", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntryContainer.html", null ],
     [ "Antares::Window::StudyLogs::LogFilenameInfo", "classAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo.html", null ],
-    [ "Antares::Statistics::LogsDumper", "classAntares_1_1Statistics_1_1LogsDumper.html", null ],
     [ "Antares::Solver::Variable::Economy::LOLD_Base_Traits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html", [
       [ "Antares::Solver::Variable::Economy::LOLDTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLDTraits.html", null ],
       [ "Antares::Solver::Variable::Economy::LOLD_CSRTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__CSRTraits.html", null ]
@@ -1994,7 +1993,6 @@ var hierarchy =
     [ "Antares::Optimization::UnfeasiblePbAnalyzer", "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html", null ],
     [ "Antares::Window::Inspector::Unique", "structAntares_1_1Window_1_1Inspector_1_1Unique.html", null ],
     [ "Antares::ModelerStudy::SystemModel::UniqueIDChecker", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1UniqueIDChecker.html", null ],
-    [ "Antares::Statistics::Updater", "classAntares_1_1Statistics_1_1Updater.html", null ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", null ],
     [ "Antares::Data::ShortTermStorage::ValidateResult", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult.html", null ],
     [ "Antares::Toolbox::Filter::Operator::Parameter::Value", "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html", null ],

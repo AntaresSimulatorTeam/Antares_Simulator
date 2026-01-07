@@ -1,11 +1,5 @@
 var NAVTREEINDEX52 =
 {
-"loopFlow_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1,7],
-"main_2main_8h_source.html":[9,0,0,12,2,0,0,6],
-"main_8h_source.html":[9,0,0,12,2,0,3],
-"main_8hxx_source.html":[9,0,0,12,2,0,0,7],
-"mainpanel_8h_source.html":[9,0,0,12,2,1,1,7],
-"makeGroupsOfHoursFromString_8h.html#a7b2bda6a6499c17a8307745c24191347":[7,0,0,6,4,15],
 "makeGroupsOfHoursFromString_8h_source.html":[9,0,0,4,0,25,0,0,0,5,4,3],
 "manager_8h.html#a5bf36989b506d2daa9038df9082d3c52":[7,0,0,16,14],
 "manager_8h_source.html":[9,0,0,12,2,1,1,3,7],
@@ -249,5 +243,11 @@ var NAVTREEINDEX52 =
 "overallCostCsr_8h_source.html":[9,0,0,8,12,0,0,0,0,2,32],
 "overflow_8h_source.html":[9,0,0,8,12,0,0,0,0,2,33],
 "pages.html":[],
-"panel_8hxx_source.html":[9,0,0,12,2,2,9,0,2]
+"panel_8hxx_source.html":[9,0,0,12,2,2,9,0,2],
+"parameters_8cpp.html#a019dbf7a48f8ff187d74bcb8f4b2223d":[7,0,0,6,199],
+"parameters_8cpp.html#a022cd9dee8ab56db36a70aef2316a336":[7,0,0,6,141],
+"parameters_8h.html#a170bb2cd2325414ba5fdf9f42db381e8":[7,0,0,6,200],
+"parameters_8h.html#a3d8b1113c5241311d33ee5054c08c17f":[7,0,0,6,136],
+"parameters_8h.html#a566fde971ca2fe65af38bc296508833d":[7,0,0,6,168],
+"parameters_8h.html#adff229c76accf7f81a67165a1b7ac6a3":[7,0,0,6,190]
 };

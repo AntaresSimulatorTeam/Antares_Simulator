@@ -1019,10 +1019,6 @@ var annotated_dup =
         [ "AreaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever" ],
         [ "IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker" ]
       ] ],
-      [ "Statistics", null, [
-        [ "Updater", "classAntares_1_1Statistics_1_1Updater.html", "classAntares_1_1Statistics_1_1Updater" ],
-        [ "LogsDumper", "classAntares_1_1Statistics_1_1LogsDumper.html", "classAntares_1_1Statistics_1_1LogsDumper" ]
-      ] ],
       [ "Toolbox", null, [
         [ "Components", null, [
           [ "WizardHeader", "classAntares_1_1Toolbox_1_1Components_1_1WizardHeader.html", "classAntares_1_1Toolbox_1_1Components_1_1WizardHeader" ]
@@ -1525,8 +1521,8 @@ var annotated_dup =
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", "classColumnBasedStorage" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
+    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],

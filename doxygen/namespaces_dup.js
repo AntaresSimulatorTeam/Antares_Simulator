@@ -1565,6 +1565,7 @@ var namespaces_dup =
           [ "AvgExchangeResults", "common-eco-adq_8h.html#aeee36dc5935ddf77aa0506bd8bf2fce8", null ],
           [ "AvgExchangeVCardBalance", "common-eco-adq_8h.html#a03f83cef439caae74b1af3abbf37b064", null ],
           [ "ListStorageForRemix", "storage-for-remix-interface_8h.html#ada39ded35ada218f53885a46c2263cf1", null ],
+          [ "addTimeMeasure", "solver__utils_8h.html#af2a01e66ccaa61af5d7372e6ccd3a91f", null ],
           [ "BuildThermalPartOfWeeklyProblem", "common-eco-adq_8cpp.html#a7bec232f61630e4911ba948d7d2079dd", null ],
           [ "checkInput", "shave-peaks-by-remix-storage-gen_8h.html#a586c540400f03bb38022fe5f5f450164", null ],
           [ "collectRemixDebugInfo", "shave-peaks-by-remix-storage-gen_8h.html#a0e9b015ccae89026b94fe37772f84d44", null ],
@@ -2011,9 +2012,7 @@ var namespaces_dup =
         [ "writeSimulationInfos", "solver_2application_2application_8cpp.html#aade9a4b2cc9a0f036736774ce9354be4", null ]
       ] ],
       [ "Statistics", null, [
-        [ "Updater", "classAntares_1_1Statistics_1_1Updater.html", "classAntares_1_1Statistics_1_1Updater" ],
-        [ "LogsDumper", "classAntares_1_1Statistics_1_1LogsDumper.html", "classAntares_1_1Statistics_1_1LogsDumper" ],
-        [ "DumpToLogs", "io_2include_2antares_2io_2statistics_8h.html#a57f95d8e6be9af958d9a590010e113fa", null ],
+        [ "DumpToLogs", "statistics_8cpp.html#a57f95d8e6be9af958d9a590010e113fa", null ],
         [ "HasReadFromDisk", "io_2include_2antares_2io_2statistics_8h.html#a55ed7d42e2216a241734a022adc0b565", null ],
         [ "HasReadFromNetwork", "io_2include_2antares_2io_2statistics_8h.html#a690048fc7a4018cf11510d4f03de54cd", null ],
         [ "HasWrittenToDisk", "io_2include_2antares_2io_2statistics_8h.html#a7e7dec6fa31c593425a6bb9013219933", null ],

@@ -1,9 +1,5 @@
 var NAVTREEINDEX57 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHurdleCosts.html":[8,0,0,19,5,4,55],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHurdleCosts.html#a198af5444e8a321ab5b6f3513c368b89":[8,0,0,19,5,4,55,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHurdleCosts.html#a7eee0e9d693cae9f060b467404eadf3b":[8,0,0,19,5,4,55,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHurdleCosts.html#aef1f6428c772a5fd4c6657cb740190d8":[8,0,0,19,5,4,55,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html":[8,0,0,19,5,4,37],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a2044367b36b3ee7485417d00b54c6180":[8,0,0,19,5,4,37,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a57c164aca14f4f4a2438a64de272da59":[8,0,0,19,5,4,37,1],
@@ -249,5 +245,9 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base.html#aeb45a4b37ef6bf3464e3c4c51163cd26":[8,0,0,19,5,4,35,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[8,0,0,19,5,4,132,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html":[8,0,0,19,5,4,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[8,0,0,19,5,4,3]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[8,0,0,19,5,4,3],
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[8,0,0,19,5,43],
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91":[8,0,0,19,5,43,0],
+"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[8,0,0,19,5,47,0],
+"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[8,0,0,19,5,12,0]
 };
