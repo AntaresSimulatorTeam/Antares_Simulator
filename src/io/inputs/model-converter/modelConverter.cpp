@@ -78,13 +78,21 @@ static void CommonPreSolve(ForbiddenNodes& f)
 {
     // constraint, objective and variable bounds should not contain dual or reduced_cost
     f.addGlobalForbidden<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max and min
+
+    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max(...)
     f.addForbiddenFor<FunctionNodeType::max, VariableNode>();
-    f.addForbiddenFor<FunctionNodeType::min, VariableNode>();
     f.addForbiddenFor<FunctionNodeType::max, PortFieldNode>();
-    f.addForbiddenFor<FunctionNodeType::min, PortFieldNode>();
     f.addForbiddenFor<FunctionNodeType::max, PortFieldSumNode>();
+
+    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in min(...)
+    f.addForbiddenFor<FunctionNodeType::min, VariableNode>();
+    f.addForbiddenFor<FunctionNodeType::min, PortFieldNode>();
     f.addForbiddenFor<FunctionNodeType::min, PortFieldSumNode>();
+
+    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in floor(node)
+    f.addForbiddenFor<FunctionNodeType::floor, VariableNode>();
+    f.addForbiddenFor<FunctionNodeType::floor, PortFieldNode>();
+    f.addForbiddenFor<FunctionNodeType::floor, PortFieldSumNode>();
 }
 
 static ForbiddenNodes ForbiddenInConstraint()

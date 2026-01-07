@@ -49,40 +49,10 @@ std::type_index forbiddenNodeKey()
     return std::type_index(typeid(Tag));
 }
 
-inline std::type_index forbiddenNodeKey(const Expressions::Nodes::FunctionNodeType& funcType)
-{
-    switch (funcType)
-    {
-        using NT = Expressions::Nodes::FunctionNodeType;
-    case NT::max:
-        return forbiddenNodeKey<NT::max>();
-    case NT::min:
-        return forbiddenNodeKey<NT::min>();
-    case NT::pow:
-        return forbiddenNodeKey<NT::pow>();
-    case NT::dual:
-        return forbiddenNodeKey<NT::dual>();
-    case NT::reduced_cost:
-        return forbiddenNodeKey<NT::reduced_cost>();
-    default:
-        throw std::runtime_error("ForbiddenNodeKey is not implemented");
-    }
-}
-
-inline std::type_index forbiddenNodeKey(const Expressions::Nodes::Node& node)
-{
-    if (auto* funcNode = dynamic_cast<const Expressions::Nodes::FunctionNode*>(&node))
-    {
-        return forbiddenNodeKey(funcNode->type());
-    }
-    return {typeid(node)};
-}
-
 class ForbiddenNodes
 {
 public:
     // ------------------------- GLOBAL -------------------------
-
     template<typename... NodeType>
     void addGlobalForbidden()
     {
@@ -130,7 +100,6 @@ public:
     }
 
     // ---------------------- RUNTIME CHECK ----------------------
-
     template<Expressions::Nodes::FunctionNodeType Child>
     [[nodiscard]] bool isForbiddenFor(const std::type_index& parentKey) const
     {
