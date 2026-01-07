@@ -25,7 +25,7 @@
 namespace Antares::Expressions::Visitors
 {
 
-std::string trimAndFormat(const std::string& in);
+std::string trimAndFormat(std::string s);
 
 /**
  * @brief Represents a visitor for printing nodes in a syntax tree as strings.

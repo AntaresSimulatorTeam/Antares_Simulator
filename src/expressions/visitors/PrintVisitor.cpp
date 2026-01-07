@@ -97,18 +97,15 @@ std::string PrintVisitor::visit(const Nodes::PortFieldSumNode* node)
     return node->getPortName() + "." + node->getFieldName();
 }
 
-std::string trimAndFormat(const std::string& in)
+std::string trimAndFormat(std::string s)
 {
-    auto s = in;
-    // Trim left (remove leading whitespace)
-    auto it = std::ranges::find_if_not(s, [](unsigned char ch) { return std::isspace(ch); });
-    s.erase(s.begin(), it);
+    boost::trim_left(s);
 
-    // Ensure it starts with '+' or '-'
-    if (!s.empty() && (s.front() != '-' && s.front() != '+'))
+    if (!s.empty() && !s.starts_with('-') && !s.starts_with('+'))
     {
-        s.insert(s.begin(), '+');
+        s = "+" + s;
     }
+
     return s;
 }
 
