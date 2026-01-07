@@ -8,6 +8,7 @@ import os
 
 def read_if_exists(path, readfunc):
     if (os.path.exists(path)):
+        print(path)
         return readfunc(path)
     else:
         return None
@@ -31,7 +32,8 @@ class modeler_output_handler:
         # MASTER
         try:
             master = read_if_exists(os.path.join(output_location, "master.mps"), mpu.load_problem)
-        except:
+        except Exception as e:
+            print(f"Exception reading master: {e}")
             master = None
 
         # SUBPROBLEM
