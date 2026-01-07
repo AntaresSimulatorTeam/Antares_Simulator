@@ -20,13 +20,14 @@ struct YearlyData
 };
 
 using AllData = std::map<unsigned int /* year */, YearlyData>;
+
 struct NameMemo
 {
     std::size_t left_end;    // index where the number starts
     std::size_t right_begin; // index of '>' (first char of right part)
     int baseTime;
-    std::size_t index;       // index in names vector
-    unsigned base; // 168 -> hour, 7 -> day, 1 -> week
+    std::size_t index; // index in names vector
+    unsigned base;     // 168 -> hour, 7 -> day, 1 -> week
 };
 
 class SingleProblemGetter final
@@ -40,17 +41,16 @@ public:
 
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
-     int nbYears() const;
-     int nbWeeks() const;
-     std::set<int> playedYears() const;
+    int nbYears() const;
+    int nbWeeks() const;
+    std::set<int> playedYears() const;
+
 private:
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
     operations_research::MPSolver* getSolver();
-    std::vector<NameMemo> buildMemo(
-  const std::vector<std::string>& names
-  ) const;
+    std::vector<NameMemo> buildMemo(const std::vector<std::string>& names) const;
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;
     std::unique_ptr<Antares::Data::Study> study_;
@@ -62,12 +62,9 @@ private:
     std::set<int> playedYears_;
     int nbWeeks_;
 
-
-    
     std::vector<std::string> variablesName_;
     std::vector<std::string> constraintsName_;
     std::vector<NameMemo> variablesMemo_;
     std::vector<NameMemo> constraintsMemo_;
-    
 };
 } // namespace Antares::Solver::Implementation

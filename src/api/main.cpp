@@ -80,7 +80,7 @@ void ValidateOptions(const ApiOptions& options)
     if (options.studyFolder.empty())
     {
         throw std::invalid_argument(
-          "Study Folder is empty, please enter valid study path checkout --help");
+          "Study Folder is not provided, please enter valid study path, checkout --help");
     }
 }
 
@@ -98,15 +98,7 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
     if (!outputPath.empty())
     {
         static std::once_flag once;
-        std::call_once(once,
-                       [&outputPath]
-                       {
-                          /* if (std::filesystem::exists(outputPath))
-                           {
-                               std::filesystem::remove_all(outputPath);
-                           }*/
-                           std::filesystem::create_directories(outputPath);
-                       });
+        std::call_once(once, [&outputPath] { std::filesystem::create_directories(outputPath); });
 
         std::filesystem::path mpsFile = outputPath / (problemName(id) + ".mps");
         std::ofstream ofs(mpsFile);
@@ -137,13 +129,8 @@ void printProblems(const ApiOptions& options)
     logs.info() << " * Number of years: " << nbYears;
     logs.info() << " * Number of weeks per year: " << nbWeeks;
 
-    // logs.info() << "Displaying problems for years [" << firstYear << "," << lastYear-1 << "]"
-    // <<'\n';
-
     int firstWeek = options.week == -1 ? 1 : options.week;
     int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
-    logs.info() << " Displaying problems for weeks [" << firstWeek << "," << lastWeek - 1 << "]"
-                << '\n';
 
     for (int year: getter.playedYears())
     {

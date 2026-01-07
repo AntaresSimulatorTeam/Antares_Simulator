@@ -22,11 +22,11 @@
 
 #pragma once
 #include <array>
+#include <fmt/format.h>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-#include <fmt/format.h>
 
 #include "ortools/linear_solver/linear_solver.h"
 
