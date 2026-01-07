@@ -244,18 +244,12 @@ EvaluationResult EvalVisitor::visitPow(const Nodes::FunctionNode* node)
                                         { return std::pow(a, b); });
 }
 
-struct Floor
-{
-    double operator()(double d) const
-    {
-        return std::floor(d);
-    }
-};
+auto FloorOp = [](double d) { return std::floor(d); };
 
 EvaluationResult EvalVisitor::visitFloor(const Nodes::FunctionNode* node)
 {
     auto* floor_arg = node->getOperands()[0];
-    return dispatch(floor_arg).evaluateUnaryOperation(Floor());
+    return dispatch(floor_arg).evaluateUnaryOperation(FloorOp);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
@@ -268,12 +262,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
         return visitDual(node);
     case Nodes::FunctionNodeType::max:
         return applyOperation(visitChildrenNodes(node),
-                              [](const auto& elements)
-                              { return *std::max_element(elements.begin(), elements.end()); });
+                              [](const auto& v) { return *std::ranges::max_element(v); });
     case Nodes::FunctionNodeType::min:
         return applyOperation(visitChildrenNodes(node),
-                              [](const auto& elements)
-                              { return *std::min_element(elements.begin(), elements.end()); });
+                              [](const auto& v) { return *std::ranges::min_element(v); });
     case Nodes::FunctionNodeType::pow:
         return visitPow(node);
     case Nodes::FunctionNodeType::floor:
