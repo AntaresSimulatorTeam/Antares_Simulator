@@ -37,9 +37,9 @@ class compare_mps_files(check_interface):
         for pair in list_of_pairs:
             ref_mps = pair[0]
             out_mps = pair[1]
-            if self.shallow_comparison:
-                self.compare_files(pair, ref_mps, out_mps)
-            else:
+
+            if not self.compare_files(pair, ref_mps, out_mps):
+                print(f"Difference between files {pair[0]} and {pair[1]}")
                 self.compare_models(pair, str(ref_mps), str(out_mps))
 
     def compare_models(self, pair, ref_mps, out_mps):
@@ -157,7 +157,7 @@ class compare_mps_files(check_interface):
     def compare_files(self, pair, ref_mps, out_mps):
         ref_content = open(ref_mps).read()
         output_content = open(out_mps).read()
-        check(ref_content == output_content, f"Difference between files {pair[0]} and {pair[1]}")
+        return ref_content == output_content
 
 
     def name(self):
