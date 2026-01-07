@@ -9,6 +9,7 @@ import os
 def read_if_exists(path, readfunc):
     if (os.path.exists(path)):
         print(path)
+        print(open(path, 'r').read())
         return readfunc(path)
     else:
         return None
