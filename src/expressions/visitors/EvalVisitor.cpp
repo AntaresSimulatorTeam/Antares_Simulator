@@ -205,7 +205,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
     return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
-EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
+EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
@@ -234,7 +234,7 @@ EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
     return EvaluationResult{constraintValues};
 }
 
-EvaluationResult EvalVisitor::handlePow(const Nodes::FunctionNode* node)
+EvaluationResult EvalVisitor::visitPow(const Nodes::FunctionNode* node)
 {
     const auto numbers = node->getOperands();
     auto base = dispatch(numbers.at(0));
@@ -252,7 +252,7 @@ struct Floor
     }
 };
 
-EvaluationResult EvalVisitor::evaluateFloorNode(const Nodes::FunctionNode* node)
+EvaluationResult EvalVisitor::visitFloor(const Nodes::FunctionNode* node)
 {
     auto* floor_arg = node->getOperands()[0];
     return dispatch(floor_arg).evaluateUnaryOperation(Floor());
@@ -263,9 +263,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
     switch (node->type())
     {
     case Nodes::FunctionNodeType::reduced_cost:
-        return handleReducedCost(node);
+        return visitReducedCost(node);
     case Nodes::FunctionNodeType::dual:
-        return handleDual(node);
+        return visitDual(node);
     case Nodes::FunctionNodeType::max:
         return applyOperation(visitChildrenNodes(node),
                               [](const auto& elements)
@@ -275,15 +275,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
                               [](const auto& elements)
                               { return *std::min_element(elements.begin(), elements.end()); });
     case Nodes::FunctionNodeType::pow:
-        return handlePow(node);
+        return visitPow(node);
     case Nodes::FunctionNodeType::floor:
-        return evaluateFloorNode(node);
+        return visitFloor(node);
     default:
         return EvaluationResult(0);
     }
 }
 
-EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
+EvaluationResult EvalVisitor::visitReducedCost(const Nodes::FunctionNode* node)
 {
     const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
 

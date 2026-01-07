@@ -356,9 +356,9 @@ private:
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult visit(const Nodes::FunctionNode* node) override;
 
-    EvaluationResult handleReducedCost(const Nodes::FunctionNode* node);
-    EvaluationResult handleDual(const Nodes::FunctionNode* node);
-    EvaluationResult handlePow(const Nodes::FunctionNode* node);
-    EvaluationResult evaluateFloorNode(const Nodes::FunctionNode* node);
+    EvaluationResult visitReducedCost(const Nodes::FunctionNode* node);
+    EvaluationResult visitDual(const Nodes::FunctionNode* node);
+    EvaluationResult visitPow(const Nodes::FunctionNode* node);
+    EvaluationResult visitFloor(const Nodes::FunctionNode* node);
 };
 } // namespace Antares::Expressions::Visitors
