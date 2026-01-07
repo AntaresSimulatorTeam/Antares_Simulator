@@ -48,10 +48,16 @@ def simulation(study_path, antares_simu_path, solver_name, named_mps_problems, p
 def api(study_path, api_exe_path, write_mps, output_dir="20210110-0900eco"):
     return api_run(study_path, api_exe_path, write_mps, output_dir)
 
+@pytest.fixture
+def is_api(api_exe_path):
+    return  api_exe_path != ""
+
 @pytest.fixture(autouse=True)
-def check_runner(simulation, resultsRemover):
+def check_runner(request, is_api, resultsRemover):
     # Actions done before the current test
-    my_check_handler = check_handler(simulation, resultsRemover)
+    mode = request.getfixturevalue('api') if is_api else request.getfixturevalue('simulation')
+    
+    my_check_handler = check_handler(mode, resultsRemover)
 
     # A check handler is supplied to the current test now
     yield my_check_handler

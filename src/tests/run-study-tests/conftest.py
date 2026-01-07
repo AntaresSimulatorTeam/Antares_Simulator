@@ -6,7 +6,7 @@ def pytest_addoption(parser):
     parser.addoption("--named-mps-problems", action="store_true", default=False)
     parser.addoption("--force-parallel", action="store_true", default=False)
     parser.addoption("--ts-generator", action="store_true", default=False)
-    parser.addoption("--api-exe-path", action="store")
+    parser.addoption("--api-exe-path", action="store", default="")
     parser.addoption("--write-mps", action="store_true", default=False)
     parser.addoption("--output-dir", action="store", default="20210110-0900eco")
 

@@ -191,9 +191,61 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrix linearProblemMatrix(&pb_, builder);
     linearProblemMatrix.Run();
+    variablesMemo_= buildMemo(builder_data->NomDesVariables);
+    constraintsMemo_= buildMemo(builder_data->NomDesContraintes);
+    variablesName_ = builder_data->NomDesVariables;
+    constraintsName_ = builder_data->NomDesContraintes;
     return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
 }
+ constexpr const char* tag = "::hour<";
+    constexpr std::size_t tagLen = 7;
+std::vector<NameMemo> SingleProblemGetter::buildMemo(
+  const std::vector<std::string>& names
+  ) const
+{
 
+    std::vector<NameMemo> mem;
+    // Build memo once
+     for (std::size_t i = 0; i < names.size(); ++i)
+        {
+            const std::string& s = names[i];
+
+            std::size_t tagPos = s.find(tag);
+            if (tagPos == std::string::npos)
+                {continue;}
+
+            std::size_t numStart = tagPos + tagLen;
+            std::size_t end = s.find('>', numStart);
+            if (end == std::string::npos)
+                {continue;}
+
+            NameMemo m;
+            m.index = i;
+            m.left_end = numStart;
+            m.right_begin = end;
+            m.baseHour = std::stoi(s.substr(numStart, end - numStart));
+
+            mem.push_back(m);
+        }
+
+    return mem;
+}
+std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
+               const std::vector<NameMemo>& mem,
+               unsigned week)
+{
+    auto names = in;
+    for (const auto& m : mem)
+    {
+        std::string& s = names[m.index];
+
+        s =
+            s.substr(0, m.left_end) +
+            std::to_string(m.baseHour + week * 168) +
+            s.substr(m.right_begin);
+    }
+    return names;
+}
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, bool withSolver)
 {
     auto [year, week] = id;
@@ -273,6 +325,12 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
     auto ret = translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
     if(withSolver)
     {
+        if(week !=0){
+            auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
+            ProblemeAResoudre->NomDesVariables = applyTimeOffset(variablesName_, variablesMemo_, week);
+            ProblemeAResoudre->NomDesContraintes = applyTimeOffset(constraintsName_, constraintsMemo_, week);
+            
+        }
        ret.solver_.reset(getSolver());
     }
     return ret;
