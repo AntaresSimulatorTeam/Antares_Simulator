@@ -134,8 +134,8 @@ void NodeChecker::visitChildren(const std::string& parentName,
     {
         checkConsistencyWithParents<Parent>(parentName);
     }
-    parentsStack_.emplace_back(parentName, typeid(Parent));
 
+    parentsStack_.emplace_back(parentName, typeIndexOf<Parent>());
     for (const auto* child: children)
     {
         dispatch(child);
@@ -152,10 +152,8 @@ void NodeChecker::visitChildren(const std::string& parentName,
     {
         checkConsistencyWithParents<func>(parentName);
     }
-    parentsStack_.emplace_back(
-      parentName,
-      typeid(std::integral_constant<Expressions::Nodes::FunctionNodeType, func>));
 
+    parentsStack_.emplace_back(parentName, typeIndexOf<func>());
     for (const auto* child: children)
     {
         dispatch(child);
