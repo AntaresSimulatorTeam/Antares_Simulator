@@ -57,7 +57,7 @@ public:
 
 private:
     // Member functions
-    template<Expressions::Nodes::FunctionNodeType func>
+    template<Expressions::Nodes::FunctionNodeType>
     void checkConsistencyWithParents(const std::string& childName) const;
 
     template<class Node>
@@ -68,7 +68,7 @@ private:
                        const std::vector<Expressions::Nodes::Node*>& children,
                        bool validateConsistencyWithParents);
 
-    template<Expressions::Nodes::FunctionNodeType func>
+    template<Expressions::Nodes::FunctionNodeType>
     void visitChildren(const std::string& parentName,
                        const std::vector<Expressions::Nodes::Node*>& children);
 
@@ -107,17 +107,17 @@ void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
     }
 }
 
-template<Expressions::Nodes::FunctionNodeType func>
+template<Expressions::Nodes::FunctionNodeType functionNodeType>
 void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
 {
-    if (forbiddenNodes_.isGloballyForbidden<func>())
+    if (forbiddenNodes_.isGloballyForbidden<functionNodeType>())
     {
         throw ForbiddenNodeFound(expression_, nodeName);
     }
 
     for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbiddenNodes_.isForbiddenFor<func>(parentTypeIndex))
+        if (forbiddenNodes_.isForbiddenFor<functionNodeType>(parentTypeIndex))
         {
             throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
         }
@@ -142,13 +142,13 @@ void NodeChecker::visitChildren(const std::string& nodeName,
     parentsStack_.pop_back();
 }
 
-template<Expressions::Nodes::FunctionNodeType func>
+template<Expressions::Nodes::FunctionNodeType functionNodeType>
 void NodeChecker::visitChildren(const std::string& nodeName,
                                 const std::vector<Expressions::Nodes::Node*>& children)
 {
-    checkConsistencyWithParents<func>(nodeName);
+    checkConsistencyWithParents<functionNodeType>(nodeName);
 
-    parentsStack_.emplace_back(nodeName, typeIndexOf<func>());
+    parentsStack_.emplace_back(nodeName, typeIndexOf<functionNodeType>());
     for (const auto* child: children)
     {
         dispatch(child);
