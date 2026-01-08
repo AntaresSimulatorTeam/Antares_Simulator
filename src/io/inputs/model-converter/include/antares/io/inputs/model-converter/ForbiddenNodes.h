@@ -54,13 +54,13 @@ class ForbiddenNodes
 public:
     // ------------------------- GLOBAL -------------------------
     template<typename... NodeType>
-    void addGlobalForbidden()
+    void forbidGlobally()
     {
         (global_.insert(typeIndexOf<NodeType>()), ...);
     }
 
     template<Expressions::Nodes::FunctionNodeType... NodeType>
-    void addGlobalForbidden()
+    void forbidGlobally()
     {
         (global_.insert(typeIndexOf<NodeType>()), ...);
     }

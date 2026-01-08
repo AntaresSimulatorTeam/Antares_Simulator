@@ -80,7 +80,7 @@ PortInDefinition::PortInDefinition(const std::string& portId, const std::string&
 static void CommonPreSolve(ForbiddenNodes& f)
 {
     // constraint, objective and variable bounds should not contain dual or reduced_cost
-    f.addGlobalForbidden<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
+    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
 
     // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max(...)
     f.addForbiddenFor<FunctionNodeType::max, VariableNode>();
@@ -105,7 +105,7 @@ static ForbiddenNodes ForbiddenInConstraint()
         // Initialization code executed ONCE
         ForbiddenNodes f;
         CommonPreSolve(f);
-        f.addGlobalForbidden<PortFieldSumNode>();
+        f.forbidGlobally<PortFieldSumNode>();
         return f;
     }();
     return forbidden;
@@ -130,7 +130,7 @@ static ForbiddenNodes PreSolveNonConstraint()
         // Initialization code executed ONCE
         ForbiddenNodes f;
         CommonPreSolve(f);
-        f.addGlobalForbidden<ComparisonNode,
+        f.forbidGlobally<ComparisonNode,
                              EqualNode,
                              LessThanOrEqualNode,
                              GreaterThanOrEqualNode,
@@ -146,7 +146,7 @@ static ForbiddenNodes ForbiddenInExtraOutput()
     {
         // Initialization code executed ONCE
         ForbiddenNodes f;
-        // TODO check        //   f.addGlobalForbidden<PortFieldSumNode>();
+        // TODO check        //   f.forbidGlobally<PortFieldSumNode>();
         return f;
     }();
     return forbidden;
