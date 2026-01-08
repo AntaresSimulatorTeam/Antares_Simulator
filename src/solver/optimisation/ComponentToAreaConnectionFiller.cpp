@@ -117,18 +117,6 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     }
 }
 
-// TODO remove and use proper scenario
-class DefaultScenario final: public IScenario
-{
-public:
-    using IScenario::IScenario;
-
-    [[nodiscard]] TimeSeriesNumber getData(Year) const override
-    {
-        return 1; // Default rank for empty groupId
-    }
-};
-
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   ILinearProblem& pb,
   const FillContext& ctx,
