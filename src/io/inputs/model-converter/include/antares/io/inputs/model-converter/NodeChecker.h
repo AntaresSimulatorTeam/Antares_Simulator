@@ -113,7 +113,7 @@ public:
 template<typename Child>
 void NodeChecker::checkConsistencyWithParents(const std::string& childName) const
 {
-    if (forbid_.isForbidden<Child>())
+    if (forbid_.isGloballyForbidden<Child>())
     {
         throw BadContextComposition(
           {.expression = expression_, .childName = childName, .parentName = std::nullopt});
@@ -131,7 +131,7 @@ void NodeChecker::checkConsistencyWithParents(const std::string& childName) cons
 template<Expressions::Nodes::FunctionNodeType func>
 void NodeChecker::checkConsistencyWithParents(const std::string& childName) const
 {
-    if (forbid_.isForbidden<func>())
+    if (forbid_.isGloballyForbidden<func>())
     {
         throw BadContextComposition(
           {.expression = expression_, .childName = childName, .parentName = std::nullopt});

@@ -256,21 +256,19 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
 {
     std::vector<Variable> variables;
     variables.reserve(model.variables.size());
-    const auto& whatIsForbiddenInVariableBound = PreSolveNonConstraint();
+    const auto& forbiddenNodesInVarBounds = PreSolveNonConstraint();
 
     for (const auto& variable: model.variables)
     {
         Expression lb(variable.lower_bound, convertExpressionToNode(variable.lower_bound, model));
         if (lb.RootNode())
         {
-            NodeChecker(whatIsForbiddenInVariableBound, variable.lower_bound)
-              .dispatch(lb.RootNode());
+            NodeChecker(forbiddenNodesInVarBounds, variable.lower_bound).dispatch(lb.RootNode());
         }
         Expression ub(variable.upper_bound, convertExpressionToNode(variable.upper_bound, model));
         if (ub.RootNode())
         {
-            NodeChecker(whatIsForbiddenInVariableBound, variable.upper_bound)
-              .dispatch(ub.RootNode());
+            NodeChecker(forbiddenNodesInVarBounds, variable.upper_bound).dispatch(ub.RootNode());
         }
         variables.emplace_back(variable.id,
                                std::move(lb),

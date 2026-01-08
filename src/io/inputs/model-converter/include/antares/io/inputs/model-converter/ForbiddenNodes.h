@@ -33,17 +33,17 @@ namespace Antares::IO::Inputs::ModelConverter
 {
 
 template<typename NodeType>
-std::type_index forbiddenNodeKey()
+std::type_index typeIndexOf()
 {
     static_assert(!std::is_same_v<NodeType, Expressions::Nodes::FunctionNode>,
                   "Use Expressions::Nodes::FunctionNodeType enum values or "
-                  "forbiddenNodeKey(Expressions::Nodes::FunctionNodeType) "
+                  "typeIndexOf(Expressions::Nodes::FunctionNodeType) "
                   "instead of FunctionNode for forbidden rules.");
     return std::type_index(typeid(NodeType));
 }
 
 template<Expressions::Nodes::FunctionNodeType T>
-std::type_index forbiddenNodeKey()
+std::type_index typeIndexOf()
 {
     using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType, T>;
     return std::type_index(typeid(Tag));
@@ -56,13 +56,13 @@ public:
     template<typename... NodeType>
     void addGlobalForbidden()
     {
-        (global_.insert(forbiddenNodeKey<NodeType>()), ...);
+        (global_.insert(typeIndexOf<NodeType>()), ...);
     }
 
     template<Expressions::Nodes::FunctionNodeType... NodeType>
     void addGlobalForbidden()
     {
-        (global_.insert(forbiddenNodeKey<NodeType>()), ...);
+        (global_.insert(typeIndexOf<NodeType>()), ...);
     }
 
     // ---------------------- PARENT -> CHILD --------------------
@@ -70,60 +70,59 @@ public:
     requires(!std::is_same_v<Child, Expressions::Nodes::FunctionNodeType>)
     void addForbiddenFor()
     {
-        rules_[forbiddenNodeKey<Parent>()].insert(forbiddenNodeKey<Child>());
+        rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
     template<Expressions::Nodes::FunctionNodeType Parent,
              Expressions::Nodes::FunctionNodeType Child>
     void addForbiddenFor()
     {
-        rules_[forbiddenNodeKey<Parent>()].insert(forbiddenNodeKey<Child>());
+        rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
     template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
     void addForbiddenFor()
     {
-        rules_[forbiddenNodeKey<Parent>()].insert(forbiddenNodeKey<Child>());
+        rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
     // ---------------------- COMPILE-TIME CHECK ----------------------
     template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
     [[nodiscard]] bool isForbiddenFor() const
     {
-        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
+        return check(typeIndexOf<Parent>(), typeIndexOf<Child>());
     }
 
     template<typename Parent, typename Child>
     [[nodiscard]] bool isForbiddenFor() const
     {
-        return check(forbiddenNodeKey<Parent>(), forbiddenNodeKey<Child>());
+        return check(typeIndexOf<Parent>(), typeIndexOf<Child>());
     }
 
     // ---------------------- RUNTIME CHECK ----------------------
     template<Expressions::Nodes::FunctionNodeType Child>
     [[nodiscard]] bool isForbiddenFor(const std::type_index& parentKey) const
     {
-        return check(parentKey, forbiddenNodeKey<Child>());
+        return check(parentKey, typeIndexOf<Child>());
     }
 
     template<typename Child>
     [[nodiscard]] bool isForbiddenFor(const std::type_index& parentKey) const
     {
-        return check(parentKey, forbiddenNodeKey<Child>());
+        return check(parentKey, typeIndexOf<Child>());
     }
 
     // ---------------------- GLOBALLY FORBIDDEN ----------------------
-
     template<typename NodeType>
-    [[nodiscard]] bool isForbidden() const
+    [[nodiscard]] bool isGloballyForbidden() const
     {
-        return global_.contains(forbiddenNodeKey<NodeType>());
+        return global_.contains(typeIndexOf<NodeType>());
     }
 
     template<Expressions::Nodes::FunctionNodeType NodeType>
-    [[nodiscard]] bool isForbidden() const
+    [[nodiscard]] bool isGloballyForbidden() const
     {
-        return global_.contains(forbiddenNodeKey<NodeType>());
+        return global_.contains(typeIndexOf<NodeType>());
     }
 
 private:
