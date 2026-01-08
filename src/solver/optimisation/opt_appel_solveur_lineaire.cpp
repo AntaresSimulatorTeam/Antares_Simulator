@@ -75,18 +75,20 @@ static void logProblemSize(const MPSolver* mpSolver)
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Modeler::Data* modelerData,
-  OptimEntityContainer& optimEntityContainer)
+  OptimEntityContainer& optimEntityContainer,
+  Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS,
+  BendersDecomposition* benders_decomposition = nullptr)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
     for (const auto& component: components)
     {
-        fillersCollection.push_back(
+        fillersCollection.emplace_back(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
-                                            Modeler::Config::Location::SUBPROBLEMS,
-                                            nullptr));
+                                            location,
+                                            benders_decomposition));
     }
 }
 
@@ -117,11 +119,14 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 }
 
 // Returns a non-owning pointer
-MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
-                             FillContext& fillCtx,
-                             const PROBLEME_HEBDO* problemeHebdo,
-                             OptimEntityContainer& optimEntityContainer,
-                             bool namedProblems)
+MPSolver* fillAndGetMpSolver(
+  LegacyOrtoolsLinearProblem& ortoolsProblem,
+  FillContext& fillCtx,
+  const PROBLEME_HEBDO* problemeHebdo,
+  OptimEntityContainer& optimEntityContainer,
+  bool namedProblems,
+  Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS,
+  BendersDecomposition* benders_decomposition = nullptr)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
@@ -130,11 +135,15 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, optimEntityContainer);
+        fillModelerComponents(fillersCollection,
+                              problemeHebdo->modelerData,
+                              optimEntityContainer,
+                              location,
+                              benders_decomposition);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
+        fillersCollection.emplace_back(std::make_unique<ComponentToAreaConnectionFiller>(
           problemeHebdo,
           optimEntityContainer,
           *problemeHebdo->modelerData->dataSeries,
@@ -171,8 +180,11 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
 
-    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
+    BendersDecomposition bendersDecomposition;
+    LegacyOrtoolsLinearProblem master_problem(problemeHebdo->ProblemeAResoudre->isMIP(),
                                               options.solverName);
+    bendersDecomposition.setCurrentProblemId("master");
+
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
@@ -183,15 +195,17 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                            ->scenarioGroupRepository
                                                                       : nullptr;
 
-    OptimEntityContainer optimEntityContainer(ortoolsProblem,
+    OptimEntityContainer optimEntityContainer(master_problem,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    auto* solver = fillAndGetMpSolver(ortoolsProblem,
+    auto* solver = fillAndGetMpSolver(master_problem,
                                       fillCtx,
                                       problemeHebdo,
                                       optimEntityContainer,
-                                      problemeHebdo->NamedProblems);
+                                      problemeHebdo->NamedProblems,
+                                      Modeler::Config::Location::MASTER,
+                                      &bendersDecomposition);
 
     ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
 
@@ -206,6 +220,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
+    // TODO 1 seul fois
+    mps_writer->runIfNeeded(writer, "master.mps");
 
     Utils::TimeMeasurement measure;
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
@@ -246,7 +262,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
         FillSimulationTable(*simulationTable,
-                            ortoolsProblem,
+                            master_problem,
                             ::getObjectiveValue(solver),
                             *modelerData,
                             optimEntityContainer,

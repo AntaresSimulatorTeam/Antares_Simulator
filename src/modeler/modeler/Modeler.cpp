@@ -51,12 +51,11 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
 class SystemLinearProblemBuilder final
 {
 public:
-    explicit SystemLinearProblemBuilder(
-      const ModelerStudy::SystemModel::System* system,
-      ILinearProblem& pb,
-      const LinearProblemApi::ILinearProblemData& dataSeries,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-      BendersDecomposition* bendersDecomposition):
+    explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system,
+                                        ILinearProblem& pb,
+                                        const ILinearProblemData& dataSeries,
+                                        const ScenarioGroupRepository& scenarioGroupRepository,
+                                        BendersDecomposition* bendersDecomposition):
         system_(system),
         scenarioGroupRepository_(scenarioGroupRepository),
         optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository),
@@ -74,11 +73,11 @@ public:
 
         for (const auto& component: components)
         {
-            auto cf = std::make_unique<Optimisation::ComponentFiller>(component,
-                                                                      optimEntityContainer_,
-                                                                      scenarioGroupRepository_,
-                                                                      location,
-                                                                      bendersDecomposition_);
+            auto cf = std::make_unique<ComponentFiller>(component,
+                                                        optimEntityContainer_,
+                                                        scenarioGroupRepository_,
+                                                        location,
+                                                        bendersDecomposition_);
             fillers.push_back(std::move(cf));
         }
 
@@ -86,21 +85,21 @@ public:
         linear_problem_builder.build(timeScenarioCtx);
     }
 
-    [[nodiscard]] const Optimisation::OptimEntityContainer& getOptimEntityContainer() const
+    [[nodiscard]] const OptimEntityContainer& getOptimEntityContainer() const
     {
         return optimEntityContainer_;
     }
 
 private:
     const ModelerStudy::SystemModel::System* system_;
-    const Optimisation::ScenarioGroupRepository& scenarioGroupRepository_;
-    Optimisation::OptimEntityContainer optimEntityContainer_;
+    const ScenarioGroupRepository& scenarioGroupRepository_;
+    OptimEntityContainer optimEntityContainer_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
 void Modeler::run() const
 {
-    Antares::Solver::ModelerParameters parameters;
+    ModelerParameters parameters;
     Antares::Modeler::Data data;
 
     try

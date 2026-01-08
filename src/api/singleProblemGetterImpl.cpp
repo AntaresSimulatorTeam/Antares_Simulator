@@ -167,6 +167,14 @@ void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path
     OPT_ExportStructures(&pb_, *writer);
 }
 
+void SingleProblemGetter::writeInvestmentFiles(const std::filesystem::path& outputDir)
+{
+    auto writer = resultWriterFactory(Antares::Data::ResultFormat::legacyFilesDirectories,
+                                      outputDir,
+                                      nullptr, // not needed
+                                      gDurationCollector);
+}
+
 void fillLinksProperties(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)
 {
     const auto& studyruntime = study.runtime;
