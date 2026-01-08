@@ -25,6 +25,24 @@ using namespace Antares::Expressions::Nodes;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
+
+std::string ErrorMessage(const std::string expr, const std::string child, const std::string parent)
+{
+    if (!parent.empty())
+    {
+        std::string format_str = "'{}' is not allowed to contain '{}' in this context '{}'";
+        return fmt::format(fmt::runtime(format_str), parent, child, expr);
+    }
+    return fmt::format("'{}' is not allowed in this context '{}'", child, expr);
+}
+
+ForbiddenNodeFound::ForbiddenNodeFound(const std::string expr,
+                                       const std::string child,
+                                       const std::string parent):
+    invalid_argument(ErrorMessage(expr, child, parent))
+{
+}
+
 NodeChecker::NodeChecker(const ForbiddenNodes& forbiddenNodes, const std::string& expression):
     forbiddenNodes_(forbiddenNodes),
     expression_(expression)

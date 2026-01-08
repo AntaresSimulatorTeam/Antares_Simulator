@@ -86,22 +86,9 @@ private:
 class ForbiddenNodeFound final: public std::invalid_argument
 {
 public:
-    static std::string ErrorMessage(const std::string expr,
-                             const std::string child,
-                             const std::string parent)
-    {
-        if (!parent.empty())
-        {
-            std::string format_str = "'{}' is not allowed to contain '{}' in this context '{}'";
-            return fmt::format(fmt::runtime(format_str), parent, child, expr);
-        }
-        return fmt::format("'{}' is not allowed in this context '{}'", child, expr);
-    }
-
-    explicit ForbiddenNodeFound(std::string expr, std::string child, std::string parent = ""):
-        invalid_argument(ErrorMessage(expr, child, parent))
-    {
-    }
+    explicit ForbiddenNodeFound(const std::string expr,
+                                const std::string child,
+                                const std::string parent = "");
 };
 
 template<typename Child>
