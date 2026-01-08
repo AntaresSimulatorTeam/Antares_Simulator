@@ -70,8 +70,7 @@ private:
 
     template<Expressions::Nodes::FunctionNodeType func>
     void visitChildren(const std::string& parentName,
-                       const std::vector<Expressions::Nodes::Node*>& children,
-                       bool validateConsistencyWithParents);
+                       const std::vector<Expressions::Nodes::Node*>& children);
 
     template<class NodeType>
     void visitComparisonNode(const std::string& op,
@@ -145,13 +144,9 @@ void NodeChecker::visitChildren(const std::string& parentName,
 
 template<Expressions::Nodes::FunctionNodeType func>
 void NodeChecker::visitChildren(const std::string& parentName,
-                                const std::vector<Expressions::Nodes::Node*>& children,
-                                bool validateConsistencyWithParents)
+                                const std::vector<Expressions::Nodes::Node*>& children)
 {
-    if (validateConsistencyWithParents)
-    {
-        checkConsistencyWithParents<func>(parentName);
-    }
+    checkConsistencyWithParents<func>(parentName);
 
     parentsStack_.emplace_back(parentName, typeIndexOf<func>());
     for (const auto* child: children)

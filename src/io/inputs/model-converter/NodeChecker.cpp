@@ -142,33 +142,26 @@ void NodeChecker::visit(const AllTimeSumNode* allTimeSumNode)
 
 void NodeChecker::visit(const FunctionNode* functionNode)
 {
-    switch (functionNode->type())
+    const std::string type_str = functionNode->typeToString();
+    const auto operands = functionNode->getOperands();
+    const FunctionNodeType type = functionNode->type();
+
+    switch (type)
     {
     case FunctionNodeType::reduced_cost:
-        visitChildren<FunctionNodeType::reduced_cost>(functionNode->typeToString(),
-                                                      functionNode->getOperands(),
-                                                      true);
+        visitChildren<FunctionNodeType::reduced_cost>(type_str, operands);
         break;
     case FunctionNodeType::dual:
-        visitChildren<FunctionNodeType::dual>(functionNode->typeToString(),
-                                              functionNode->getOperands(),
-                                              true);
+        visitChildren<FunctionNodeType::dual>(type_str, operands);
         break;
-
     case FunctionNodeType::min:
-        visitChildren<FunctionNodeType::min>(functionNode->typeToString(),
-                                             functionNode->getOperands(),
-                                             true);
+        visitChildren<FunctionNodeType::min>(type_str, operands);
         break;
     case FunctionNodeType::max:
-        visitChildren<FunctionNodeType::max>(functionNode->typeToString(),
-                                             functionNode->getOperands(),
-                                             true);
+        visitChildren<FunctionNodeType::max>(type_str, operands);
         break;
     case FunctionNodeType::pow:
-        visitChildren<FunctionNodeType::pow>(functionNode->typeToString(),
-                                             functionNode->getOperands(),
-                                             true);
+        visitChildren<FunctionNodeType::pow>(type_str, operands);
         break;
     default:
         break;
