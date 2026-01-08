@@ -60,11 +60,11 @@ private:
     template<Expressions::Nodes::FunctionNodeType func>
     void checkConsistencyWithParents(const std::string& childName) const;
 
-    template<class Child>
+    template<class Node>
     void checkConsistencyWithParents(const std::string& childName) const;
 
-    template<class Parent>
-    void visitChildren(const std::string& parentName,
+    template<class Node>
+    void visitChildren(const std::string& nodeName,
                        const std::vector<Expressions::Nodes::Node*>& children,
                        bool validateConsistencyWithParents);
 
@@ -72,7 +72,7 @@ private:
     void visitChildren(const std::string& parentName,
                        const std::vector<Expressions::Nodes::Node*>& children);
 
-    template<class NodeType>
+    template<class Node>
     void visitComparisonNode(const std::string& op,
                              const std::vector<Expressions::Nodes::Node*>& children);
 
@@ -86,55 +86,55 @@ class ForbiddenNodeFound final: public std::invalid_argument
 {
 public:
     explicit ForbiddenNodeFound(const std::string expr,
-                                const std::string child,
+                                const std::string node,
                                 const std::string parent = "");
 };
 
-template<typename Child>
-void NodeChecker::checkConsistencyWithParents(const std::string& childName) const
+template<typename Node>
+void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
 {
-    if (forbiddenNodes_.isGloballyForbidden<Child>())
+    if (forbiddenNodes_.isGloballyForbidden<Node>())
     {
-        throw ForbiddenNodeFound(expression_, childName);
+        throw ForbiddenNodeFound(expression_, nodeName);
     }
 
-    for (const auto& [parentName, typeIndex]: std::ranges::reverse_view(parentsStack_))
+    for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbiddenNodes_.isForbiddenFor<Child>(typeIndex))
+        if (forbiddenNodes_.isForbiddenFor<Node>(parentTypeIndex))
         {
-            throw ForbiddenNodeFound(expression_, childName, parentName);
+            throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
         }
     }
 }
 
 template<Expressions::Nodes::FunctionNodeType func>
-void NodeChecker::checkConsistencyWithParents(const std::string& childName) const
+void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
 {
     if (forbiddenNodes_.isGloballyForbidden<func>())
     {
-        throw ForbiddenNodeFound(expression_, childName);
+        throw ForbiddenNodeFound(expression_, nodeName);
     }
 
-    for (const auto& [parentName, typeIndex]: std::ranges::reverse_view(parentsStack_))
+    for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbiddenNodes_.isForbiddenFor<func>(typeIndex))
+        if (forbiddenNodes_.isForbiddenFor<func>(parentTypeIndex))
         {
-            throw ForbiddenNodeFound(expression_, childName, parentName);
+            throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
         }
     }
 }
 
-template<typename Parent>
-void NodeChecker::visitChildren(const std::string& parentName,
+template<typename Node>
+void NodeChecker::visitChildren(const std::string& nodeName,
                                 const std::vector<Expressions::Nodes::Node*>& children,
                                 bool validateConsistencyWithParents)
 {
     if (validateConsistencyWithParents)
     {
-        checkConsistencyWithParents<Parent>(parentName);
+        checkConsistencyWithParents<Node>(nodeName);
     }
 
-    parentsStack_.emplace_back(parentName, typeIndexOf<Parent>());
+    parentsStack_.emplace_back(nodeName, typeIndexOf<Node>());
     for (const auto* child: children)
     {
         dispatch(child);
@@ -143,12 +143,12 @@ void NodeChecker::visitChildren(const std::string& parentName,
 }
 
 template<Expressions::Nodes::FunctionNodeType func>
-void NodeChecker::visitChildren(const std::string& parentName,
+void NodeChecker::visitChildren(const std::string& nodeName,
                                 const std::vector<Expressions::Nodes::Node*>& children)
 {
-    checkConsistencyWithParents<func>(parentName);
+    checkConsistencyWithParents<func>(nodeName);
 
-    parentsStack_.emplace_back(parentName, typeIndexOf<func>());
+    parentsStack_.emplace_back(nodeName, typeIndexOf<func>());
     for (const auto* child: children)
     {
         dispatch(child);
@@ -156,11 +156,11 @@ void NodeChecker::visitChildren(const std::string& parentName,
     parentsStack_.pop_back();
 }
 
-template<typename NodeType>
+template<typename Node>
 void NodeChecker::visitComparisonNode(const std::string& sign,
                                       const std::vector<Expressions::Nodes::Node*>& children)
 {
-    visitChildren<NodeType>("expression with " + sign, children, true);
+    visitChildren<Node>("expression with " + sign, children, true);
 }
 
 } // namespace Antares::IO::Inputs::ModelConverter

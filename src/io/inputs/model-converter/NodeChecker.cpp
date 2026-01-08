@@ -26,20 +26,20 @@ using namespace Antares::Expressions::Nodes;
 namespace Antares::IO::Inputs::ModelConverter
 {
 
-std::string ErrorMessage(const std::string expr, const std::string child, const std::string parent)
+std::string ErrorMessage(const std::string expr, const std::string node, const std::string parent)
 {
     if (!parent.empty())
     {
         std::string format_str = "'{}' is not allowed to contain '{}' in this context '{}'";
-        return fmt::format(fmt::runtime(format_str), parent, child, expr);
+        return fmt::format(fmt::runtime(format_str), parent, node, expr);
     }
-    return fmt::format("'{}' is not allowed in this context '{}'", child, expr);
+    return fmt::format("'{}' is not allowed in this context '{}'", node, expr);
 }
 
 ForbiddenNodeFound::ForbiddenNodeFound(const std::string expr,
-                                       const std::string child,
+                                       const std::string node,
                                        const std::string parent):
-    invalid_argument(ErrorMessage(expr, child, parent))
+    invalid_argument(ErrorMessage(expr, node, parent))
 {
 }
 
@@ -143,7 +143,7 @@ void NodeChecker::visit(const AllTimeSumNode* allTimeSumNode)
 void NodeChecker::visit(const FunctionNode* functionNode)
 {
     const std::string type_str = functionNode->typeToString();
-    const auto operands = functionNode->getOperands();
+    const auto& operands = functionNode->getOperands();
     const FunctionNodeType type = functionNode->type();
 
     switch (type)
@@ -162,6 +162,9 @@ void NodeChecker::visit(const FunctionNode* functionNode)
         break;
     case FunctionNodeType::pow:
         visitChildren<FunctionNodeType::pow>(type_str, operands);
+        break;
+    case FunctionNodeType::floor:
+        visitChildren<FunctionNodeType::floor>(type_str, operands);
         break;
     default:
         break;

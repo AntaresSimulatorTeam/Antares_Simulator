@@ -634,7 +634,6 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
 
     auto node = convertExpressionToNode(expression, model);
 
-    // Forbid <= Globally
     forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
 
     std::string err_msg = "'expression with >=' is not allowed in this context '" + expression

@@ -86,30 +86,17 @@ public:
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
-    // ---------------------- COMPILE-TIME CHECK ----------------------
-    template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
-    [[nodiscard]] bool isForbiddenFor() const
-    {
-        return check(typeIndexOf<Parent>(), typeIndexOf<Child>());
-    }
-
-    template<typename Parent, typename Child>
-    [[nodiscard]] bool isForbiddenFor() const
-    {
-        return check(typeIndexOf<Parent>(), typeIndexOf<Child>());
-    }
-
     // ---------------------- RUNTIME CHECK ----------------------
-    template<Expressions::Nodes::FunctionNodeType Child>
+    template<Expressions::Nodes::FunctionNodeType func>
     [[nodiscard]] bool isForbiddenFor(const std::type_index& parentTypeId) const
     {
-        return check(parentTypeId, typeIndexOf<Child>());
+        return isForbidden(parentTypeId, typeIndexOf<func>());
     }
 
-    template<typename Child>
+    template<typename Node>
     [[nodiscard]] bool isForbiddenFor(const std::type_index& parentTypeId) const
     {
-        return check(parentTypeId, typeIndexOf<Child>());
+        return isForbidden(parentTypeId, typeIndexOf<Node>());
     }
 
     // ---------------------- GLOBALLY FORBIDDEN ----------------------
@@ -128,26 +115,18 @@ public:
 private:
     std::set<std::type_index> global_;
 
-    // Parent --> set of children 
+    // Parent --> set of children
     std::map<std::type_index, std::set<std::type_index>> rules_;
 
-    [[nodiscard]] bool check(const std::type_index& parentTypeId,
-                             const std::type_index& childTypeId) const
+    [[nodiscard]] bool isForbidden(const std::type_index& parentTypeId,
+                                   const std::type_index& nodeTypeId) const
     {
-        // global forbidden child ?
-        if (global_.contains(childTypeId))
-        {
-            return true;
-        }
+        bool isGloballyForbidden = global_.contains(nodeTypeId);
 
-        // parent-specific forbidden child ?
         const auto& it = rules_.find(parentTypeId);
-        if (it == rules_.end())
-        {
-            return false;
-        }
+        bool isForbiddenByParent = (it != rules_.end()) && it->second.contains(nodeTypeId);
 
-        return it->second.contains(childTypeId);
+        return isGloballyForbidden || isForbiddenByParent;
     }
 };
 
