@@ -86,17 +86,17 @@ public:
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
-    // ---------------------- RUNTIME CHECK ----------------------
+    // ---------------------- FORBIDDEN BY PARENT ----------------------
     template<Expressions::Nodes::FunctionNodeType functionNodeType>
     [[nodiscard]] bool isForbiddenByParent(const std::type_index& parentTypeId) const
     {
-        return isForbidden(parentTypeId, typeIndexOf<functionNodeType>());
+        return isForbiddenByParent(parentTypeId, typeIndexOf<functionNodeType>());
     }
 
     template<typename Node>
     [[nodiscard]] bool isForbiddenByParent(const std::type_index& parentTypeId) const
     {
-        return isForbidden(parentTypeId, typeIndexOf<Node>());
+        return isForbiddenByParent(parentTypeId, typeIndexOf<Node>());
     }
 
     // ---------------------- GLOBALLY FORBIDDEN ----------------------
@@ -118,15 +118,11 @@ private:
     // Parent --> set of children
     std::map<std::type_index, std::set<std::type_index>> rules_;
 
-    [[nodiscard]] bool isForbidden(const std::type_index& parentTypeId,
-                                   const std::type_index& nodeTypeId) const
+    [[nodiscard]] bool isForbiddenByParent(const std::type_index& parentTypeId,
+                                           const std::type_index& nodeTypeId) const
     {
-        bool isGloballyForbidden = global_.contains(nodeTypeId);
-
         const auto& it = rules_.find(parentTypeId);
-        bool isForbiddenByParent = (it != rules_.end()) && it->second.contains(nodeTypeId);
-
-        return isGloballyForbidden || isForbiddenByParent;
+        return (it != rules_.end()) && it->second.contains(nodeTypeId);
     }
 };
 
