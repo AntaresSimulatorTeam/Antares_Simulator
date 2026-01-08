@@ -27,6 +27,7 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/job/queue/service.h>
 
+#include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
 #include <antares/solver/modeler/data.h>
@@ -143,7 +144,9 @@ public:
     ** \param path The path where data are located
     ** \return True if succeeded, false otherwise
     */
-    bool loadFromFolder(const std::string& path, const StudyLoadOptions& options);
+    bool loadFromFolder(const std::string& path,
+                        const StudyLoadOptions& options,
+                        Benchmarking::DurationCollector& durationCollector);
 
     /*!
     ** \brief Clear all ressources held by the study
@@ -626,7 +629,9 @@ protected:
     //! \name Loading
     //@{
     //! Load a study from a folder
-    bool internalLoadFromFolder(const std::filesystem::path& path, const StudyLoadOptions& options);
+    bool internalLoadFromFolder(const std::filesystem::path& path,
+                                const StudyLoadOptions& options,
+                                Benchmarking::DurationCollector& durationCollector);
     //! Load the study header
     bool internalLoadHeader(const std::filesystem::path& folder);
     //! Load all correlation matrices

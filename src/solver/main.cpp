@@ -33,7 +33,7 @@ namespace
 {
 
 const char* const MPL_ANNOUNCEMENT
-  = "Copyright 2007-2023 RTE  - Authors: The Antares_Simulator Team \n"
+  = "Copyright 2007-2025 RTE  - Authors: The Antares_Simulator Team \n"
     "\n"
     "Antares_Simulator is free software : you can redistribute it and / or modify\n"
     "it under the terms of the Mozilla Public Licence 2.0 as published by\n"
@@ -106,26 +106,32 @@ int main(int argc, const char** argv)
 {
     try
     {
-        logs.info(ANTARES_LOGO);
-        logs.info(MPL_ANNOUNCEMENT);
-        // Name of the running application for the logger
-        logs.applicationName("solver");
-
-        if (not memory.initializeTemporaryFolder())
-        {
-            throw FatalError("Could not initialize temporary folder");
-        }
-
-        // locale
-        InitializeDefaultLocale();
-
-        // Getting real UTF8 arguments
-        IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
-        std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
         Antares::Solver::Application application;
-        application.prepare(argc, argv);
-        application.execute();
-        application.writeExectutionInfo();
+        auto& durationCollector = application.getDurationCollector();
+
+        durationCollector("full_exec") << [&application, &argc, &argv]
+        {
+            logs.info(ANTARES_LOGO);
+            logs.info(MPL_ANNOUNCEMENT);
+            // Name of the running application for the logger
+            logs.applicationName("solver");
+
+            if (not memory.initializeTemporaryFolder())
+            {
+                throw FatalError("Could not initialize temporary folder");
+            }
+
+            // locale
+            InitializeDefaultLocale();
+
+            // Getting real UTF8 arguments
+            IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+            std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
+            application.prepare(argc, argv);
+            application.execute();
+        };
+
+        application.writeExecutionInfo();
 
         return EXIT_SUCCESS;
     }
