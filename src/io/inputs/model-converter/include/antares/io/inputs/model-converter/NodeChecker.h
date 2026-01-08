@@ -56,26 +56,29 @@ public:
     void visit(const Expressions::Nodes::FunctionNode*) override;
 
 private:
+    // Member functions
     template<Expressions::Nodes::FunctionNodeType func>
     void checkConsistencyWithParents(const std::string& childName) const;
+
     template<class Child>
     void checkConsistencyWithParents(const std::string& childName) const;
 
     template<class Parent>
-    void checkChildren(const std::string& parentName,
+    void visitChildren(const std::string& parentName,
                        const std::vector<Expressions::Nodes::Node*>& children,
                        bool validateConsistencyWithParents);
+
     template<Expressions::Nodes::FunctionNodeType func>
-    void checkChildren(const std::string& parentName,
+    void visitChildren(const std::string& parentName,
                        const std::vector<Expressions::Nodes::Node*>& children,
                        bool validateConsistencyWithParents);
+
     template<class NodeType>
-    void handleComparisonNode(const std::string& op,
-                              const std::vector<Expressions::Nodes::Node*>& children);
+    void visitComparisonNode(const std::string& op,
+                             const std::vector<Expressions::Nodes::Node*>& children);
 
-    //--
-
-    const ForbiddenNodes& forbid_;
+    // Data members
+    const ForbiddenNodes& forbiddenNodes_;
     std::vector<std::pair<std::string, std::type_index>> parentsStack_;
     const std::string& expression_;
 };
@@ -113,14 +116,14 @@ public:
 template<typename Child>
 void NodeChecker::checkConsistencyWithParents(const std::string& childName) const
 {
-    if (forbid_.isGloballyForbidden<Child>())
+    if (forbiddenNodes_.isGloballyForbidden<Child>())
     {
         throw BadContextComposition(
           {.expression = expression_, .childName = childName, .parentName = std::nullopt});
     }
     for (const auto& [parentName, typeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbid_.isForbiddenFor<Child>(typeIndex))
+        if (forbiddenNodes_.isForbiddenFor<Child>(typeIndex))
         {
             throw BadContextComposition(
               {.expression = expression_, .childName = childName, .parentName = parentName});
@@ -131,14 +134,14 @@ void NodeChecker::checkConsistencyWithParents(const std::string& childName) cons
 template<Expressions::Nodes::FunctionNodeType func>
 void NodeChecker::checkConsistencyWithParents(const std::string& childName) const
 {
-    if (forbid_.isGloballyForbidden<func>())
+    if (forbiddenNodes_.isGloballyForbidden<func>())
     {
         throw BadContextComposition(
           {.expression = expression_, .childName = childName, .parentName = std::nullopt});
     }
     for (const auto& [parentName, typeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbid_.isForbiddenFor<func>(typeIndex))
+        if (forbiddenNodes_.isForbiddenFor<func>(typeIndex))
         {
             throw BadContextComposition(
               {.expression = expression_, .childName = childName, .parentName = parentName});
@@ -147,7 +150,7 @@ void NodeChecker::checkConsistencyWithParents(const std::string& childName) cons
 }
 
 template<typename Parent>
-void NodeChecker::checkChildren(const std::string& parentName,
+void NodeChecker::visitChildren(const std::string& parentName,
                                 const std::vector<Expressions::Nodes::Node*>& children,
                                 bool validateConsistencyWithParents)
 {
@@ -165,7 +168,7 @@ void NodeChecker::checkChildren(const std::string& parentName,
 }
 
 template<Expressions::Nodes::FunctionNodeType func>
-void NodeChecker::checkChildren(const std::string& parentName,
+void NodeChecker::visitChildren(const std::string& parentName,
                                 const std::vector<Expressions::Nodes::Node*>& children,
                                 bool validateConsistencyWithParents)
 {
@@ -185,10 +188,10 @@ void NodeChecker::checkChildren(const std::string& parentName,
 }
 
 template<typename NodeType>
-void NodeChecker::handleComparisonNode(const std::string& op,
-                                       const std::vector<Expressions::Nodes::Node*>& children)
+void NodeChecker::visitComparisonNode(const std::string& sign,
+                                      const std::vector<Expressions::Nodes::Node*>& children)
 {
-    checkChildren<NodeType>("expression with " + op, children, true);
+    visitChildren<NodeType>("expression with " + sign, children, true);
 }
 
 } // namespace Antares::IO::Inputs::ModelConverter

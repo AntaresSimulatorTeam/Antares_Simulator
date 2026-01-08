@@ -21,10 +21,10 @@
 
 #pragma once
 
+#include <map>
+#include <set>
 #include <stdexcept>
 #include <typeindex>
-#include <unordered_map>
-#include <unordered_set>
 
 #include "antares/expressions/nodes/FunctionNode.h"
 #include "antares/expressions/nodes/Node.h"
@@ -101,15 +101,15 @@ public:
 
     // ---------------------- RUNTIME CHECK ----------------------
     template<Expressions::Nodes::FunctionNodeType Child>
-    [[nodiscard]] bool isForbiddenFor(const std::type_index& parentKey) const
+    [[nodiscard]] bool isForbiddenFor(const std::type_index& parentTypeId) const
     {
-        return check(parentKey, typeIndexOf<Child>());
+        return check(parentTypeId, typeIndexOf<Child>());
     }
 
     template<typename Child>
-    [[nodiscard]] bool isForbiddenFor(const std::type_index& parentKey) const
+    [[nodiscard]] bool isForbiddenFor(const std::type_index& parentTypeId) const
     {
-        return check(parentKey, typeIndexOf<Child>());
+        return check(parentTypeId, typeIndexOf<Child>());
     }
 
     // ---------------------- GLOBALLY FORBIDDEN ----------------------
@@ -126,28 +126,28 @@ public:
     }
 
 private:
-    std::unordered_set<std::type_index> global_;
-    std::unordered_map<std::type_index /* parent */,
-                       std::unordered_set<std::type_index> /* children */>
-      rules_;
+    std::set<std::type_index> global_;
 
-    [[nodiscard]] bool check(const std::type_index& parentKey,
-                             const std::type_index& childKey) const
+    // Parent --> set of children 
+    std::map<std::type_index, std::set<std::type_index>> rules_;
+
+    [[nodiscard]] bool check(const std::type_index& parentTypeId,
+                             const std::type_index& childTypeId) const
     {
-        // global forbidden child?
-        if (global_.contains(childKey))
+        // global forbidden child ?
+        if (global_.contains(childTypeId))
         {
             return true;
         }
 
-        // parent-specific forbidden child?
-        const auto& it = rules_.find(parentKey);
+        // parent-specific forbidden child ?
+        const auto& it = rules_.find(parentTypeId);
         if (it == rules_.end())
         {
             return false;
         }
 
-        return it->second.contains(childKey);
+        return it->second.contains(childTypeId);
     }
 };
 
