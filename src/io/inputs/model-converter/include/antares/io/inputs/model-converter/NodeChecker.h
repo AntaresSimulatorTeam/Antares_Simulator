@@ -83,32 +83,23 @@ private:
     const std::string& expression_;
 };
 
-struct ErrorInfo
-{
-    std::string expression;
-    std::string childName;
-    std::optional<std::string> parentName;
-};
-
 class ForbiddenNodeFound final: public std::invalid_argument
 {
 public:
-    std::string ErrorMessage(const ErrorInfo& errorInfo)
+    static std::string ErrorMessage(const std::string expr,
+                             const std::string child,
+                             const std::string parent)
     {
-        if (errorInfo.parentName.has_value())
+        if (!parent.empty())
         {
-            return fmt::format("'{}' is not allowed to contain '{}' in this context '{}'",
-                               errorInfo.parentName.value(),
-                               errorInfo.childName,
-                               errorInfo.expression);
+            std::string format_str = "'{}' is not allowed to contain '{}' in this context '{}'";
+            return fmt::format(fmt::runtime(format_str), parent, child, expr);
         }
-        return fmt::format("'{}' is not allowed in this context '{}'",
-                           errorInfo.childName,
-                           errorInfo.expression);
+        return fmt::format("'{}' is not allowed in this context '{}'", child, expr);
     }
 
-    explicit ForbiddenNodeFound(const ErrorInfo& errorInfo):
-        invalid_argument(ErrorMessage(errorInfo))
+    explicit ForbiddenNodeFound(std::string expr, std::string child, std::string parent = ""):
+        invalid_argument(ErrorMessage(expr, child, parent))
     {
     }
 };
@@ -118,14 +109,14 @@ void NodeChecker::checkConsistencyWithParents(const std::string& childName) cons
 {
     if (forbiddenNodes_.isGloballyForbidden<Child>())
     {
-        throw ForbiddenNodeFound({.expression = expression_, .childName = childName});
+        throw ForbiddenNodeFound(expression_, childName);
     }
 
     for (const auto& [parentName, typeIndex]: std::ranges::reverse_view(parentsStack_))
     {
         if (forbiddenNodes_.isForbiddenFor<Child>(typeIndex))
         {
-            throw ForbiddenNodeFound({expression_, childName, parentName});
+            throw ForbiddenNodeFound(expression_, childName, parentName);
         }
     }
 }
@@ -135,14 +126,14 @@ void NodeChecker::checkConsistencyWithParents(const std::string& childName) cons
 {
     if (forbiddenNodes_.isGloballyForbidden<func>())
     {
-        throw ForbiddenNodeFound({.expression = expression_, .childName = childName});
+        throw ForbiddenNodeFound(expression_, childName);
     }
 
     for (const auto& [parentName, typeIndex]: std::ranges::reverse_view(parentsStack_))
     {
         if (forbiddenNodes_.isForbiddenFor<func>(typeIndex))
         {
-            throw ForbiddenNodeFound({expression_, childName, parentName});
+            throw ForbiddenNodeFound(expression_, childName, parentName);
         }
     }
 }
