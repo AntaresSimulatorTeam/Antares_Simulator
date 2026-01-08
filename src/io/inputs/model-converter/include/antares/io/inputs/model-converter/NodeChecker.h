@@ -88,7 +88,7 @@ public:
 template<typename Node>
 void NodeChecker::checkIsForbidden(const std::string& nodeName) const
 {
-    if (forbiddenNodes_.isGloballyForbidden<Node>())
+    if (forbiddenNodes_.isGloballyForbidden(typeIndexOf<Node>()))
     {
         throw ForbiddenNodeFound(expression_, nodeName);
     }
@@ -105,7 +105,7 @@ void NodeChecker::checkIsForbidden(const std::string& nodeName) const
 template<Expressions::Nodes::FunctionNodeType functionNodeType>
 void NodeChecker::checkIsForbidden(const std::string& nodeName) const
 {
-    if (forbiddenNodes_.isGloballyForbidden<functionNodeType>())
+    if (forbiddenNodes_.isGloballyForbidden(typeIndexOf<functionNodeType>()))
     {
         throw ForbiddenNodeFound(expression_, nodeName);
     }

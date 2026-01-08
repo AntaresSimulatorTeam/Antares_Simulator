@@ -100,16 +100,10 @@ public:
     }
 
     // ---------------------- GLOBALLY FORBIDDEN ----------------------
-    template<typename NodeType>
-    [[nodiscard]] bool isGloballyForbidden() const
+    
+    [[nodiscard]] bool isGloballyForbidden(const std::type_index& typeId) const
     {
-        return global_.contains(typeIndexOf<NodeType>());
-    }
-
-    template<Expressions::Nodes::FunctionNodeType NodeType>
-    [[nodiscard]] bool isGloballyForbidden() const
-    {
-        return global_.contains(typeIndexOf<NodeType>());
+        return global_.contains(typeId);
     }
 
 private:
