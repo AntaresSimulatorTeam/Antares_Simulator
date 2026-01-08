@@ -86,22 +86,14 @@ public:
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
-    // ---------------------- FORBIDDEN BY PARENT ----------------------
-    template<Expressions::Nodes::FunctionNodeType functionNodeType>
-    [[nodiscard]] bool isForbiddenByParent(const std::type_index& parentTypeId) const
+    bool isForbiddenByParent(const std::type_index& parentTypeId,
+                             const std::type_index& nodeTypeId) const
     {
-        return isForbiddenByParent(parentTypeId, typeIndexOf<functionNodeType>());
+        const auto& it = rules_.find(parentTypeId);
+        return (it != rules_.end()) && it->second.contains(nodeTypeId);
     }
 
-    template<typename Node>
-    [[nodiscard]] bool isForbiddenByParent(const std::type_index& parentTypeId) const
-    {
-        return isForbiddenByParent(parentTypeId, typeIndexOf<Node>());
-    }
-
-    // ---------------------- GLOBALLY FORBIDDEN ----------------------
-    
-    [[nodiscard]] bool isGloballyForbidden(const std::type_index& typeId) const
+    bool isGloballyForbidden(const std::type_index& typeId) const
     {
         return global_.contains(typeId);
     }
@@ -109,13 +101,6 @@ public:
 private:
     std::set<std::type_index> global_;
     std::map<std::type_index, std::set<std::type_index>> rules_; // Parent --> set of children
-
-    bool isForbiddenByParent(const std::type_index& parentTypeId,
-                             const std::type_index& nodeTypeId) const
-    {
-        const auto& it = rules_.find(parentTypeId);
-        return (it != rules_.end()) && it->second.contains(nodeTypeId);
-    }
 };
 
 } // namespace Antares::IO::Inputs::ModelConverter

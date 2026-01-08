@@ -88,14 +88,16 @@ public:
 template<typename Node>
 void NodeChecker::checkIsForbidden(const std::string& nodeName) const
 {
-    if (forbiddenNodes_.isGloballyForbidden(typeIndexOf<Node>()))
+    std::type_index typeId = typeIndexOf<Node>();
+
+    if (forbiddenNodes_.isGloballyForbidden(typeId))
     {
         throw ForbiddenNodeFound(expression_, nodeName);
     }
 
     for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbiddenNodes_.isForbiddenByParent<Node>(parentTypeIndex))
+        if (forbiddenNodes_.isForbiddenByParent(parentTypeIndex, typeId))
         {
             throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
         }
@@ -105,14 +107,16 @@ void NodeChecker::checkIsForbidden(const std::string& nodeName) const
 template<Expressions::Nodes::FunctionNodeType functionNodeType>
 void NodeChecker::checkIsForbidden(const std::string& nodeName) const
 {
-    if (forbiddenNodes_.isGloballyForbidden(typeIndexOf<functionNodeType>()))
+    std::type_index typeId = typeIndexOf<functionNodeType>();
+    
+    if (forbiddenNodes_.isGloballyForbidden(typeId))
     {
         throw ForbiddenNodeFound(expression_, nodeName);
     }
 
     for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbiddenNodes_.isForbiddenByParent<functionNodeType>(parentTypeIndex))
+        if (forbiddenNodes_.isForbiddenByParent(parentTypeIndex, typeId))
         {
             throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
         }
