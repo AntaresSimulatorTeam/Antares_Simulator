@@ -190,4 +190,21 @@ void NodeChecker::visit(const FunctionNode* functionNode)
         break;
     }
 }
+
+void NodeChecker::checkIsForbidden(std::type_index& typeId, const std::string& nodeName) const
+{
+    if (forbiddenNodes_.isGloballyForbidden(typeId))
+    {
+        throw ForbiddenNodeFound(expression_, nodeName);
+    }
+
+    for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
+    {
+        if (forbiddenNodes_.isForbiddenByParent(parentTypeIndex, typeId))
+        {
+            throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
+        }
+    }
+}
+
 } // namespace Antares::IO::Inputs::ModelConverter
