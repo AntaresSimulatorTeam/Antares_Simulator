@@ -77,21 +77,21 @@ void NodeChecker::visit(const DivisionNode* divisionNode)
 void NodeChecker::visit(const EqualNode* equalNode)
 {
     std::string nodeName = "expression with =";
-    checkConsistencyWithParents<EqualNode>(nodeName);
+    checkIsForbidden<EqualNode>(nodeName);
     visitChildren<EqualNode>(nodeName, equalNode->getOperands());
 }
 
 void NodeChecker::visit(const LessThanOrEqualNode* lessThanOrEqualNode)
 {
     std::string nodeName = "expression with <=";
-    checkConsistencyWithParents<LessThanOrEqualNode>(nodeName);
+    checkIsForbidden<LessThanOrEqualNode>(nodeName);
     visitChildren<LessThanOrEqualNode>(nodeName, lessThanOrEqualNode->getOperands());
 }
 
 void NodeChecker::visit(const GreaterThanOrEqualNode* greaterThanOrEqualNode)
 {
     std::string nodeName = "expression with >=";
-    checkConsistencyWithParents<GreaterThanOrEqualNode>(nodeName);
+    checkIsForbidden<GreaterThanOrEqualNode>(nodeName);
     visitChildren<GreaterThanOrEqualNode>(nodeName, greaterThanOrEqualNode->getOperands());
 }
 
@@ -107,7 +107,7 @@ void NodeChecker::visit(const LiteralNode*)
 
 void NodeChecker::visit(const VariableNode* variableNode)
 {
-    checkConsistencyWithParents<VariableNode>("variable(" + variableNode->value() + ")");
+    checkIsForbidden<VariableNode>("variable(" + variableNode->value() + ")");
 }
 
 void NodeChecker::visit(const ParameterNode*)
@@ -117,40 +117,40 @@ void NodeChecker::visit(const ParameterNode*)
 
 void NodeChecker::visit(const PortFieldNode* portFieldNode)
 {
-    checkConsistencyWithParents<PortFieldNode>("port field (" + portFieldNode->getPortName() + "."
-                                               + portFieldNode->getFieldName() + ")");
+    checkIsForbidden<PortFieldNode>("port field (" + portFieldNode->getPortName() + "."
+                                    + portFieldNode->getFieldName() + ")");
 }
 
 void NodeChecker::visit(const PortFieldSumNode*)
 {
-    checkConsistencyWithParents<PortFieldSumNode>("sum_connections");
+    checkIsForbidden<PortFieldSumNode>("sum_connections");
 }
 
 void NodeChecker::visit(const TimeShiftNode* timeShiftNode)
 {
     std::string nodeName = "timeShift";
-    checkConsistencyWithParents<TimeShiftNode>(nodeName);
+    checkIsForbidden<TimeShiftNode>(nodeName);
     visitChildren<TimeShiftNode>(nodeName, timeShiftNode->getOperands());
 }
 
 void NodeChecker::visit(const TimeIndexNode* timeIndexNode)
 {
     std::string nodeName = "timeIndex";
-    checkConsistencyWithParents<TimeIndexNode>(nodeName);
+    checkIsForbidden<TimeIndexNode>(nodeName);
     visitChildren<TimeIndexNode>(nodeName, timeIndexNode->getOperands());
 }
 
 void NodeChecker::visit(const TimeSumNode* timeSumNode)
 {
     std::string nodeName = "sum";
-    checkConsistencyWithParents<TimeIndexNode>(nodeName);
+    checkIsForbidden<TimeIndexNode>(nodeName);
     visitChildren<TimeSumNode>(nodeName, timeSumNode->getOperands());
 }
 
 void NodeChecker::visit(const AllTimeSumNode* allTimeSumNode)
 {
     std::string nodeName = "sum";
-    checkConsistencyWithParents<AllTimeSumNode>(nodeName);
+    checkIsForbidden<AllTimeSumNode>(nodeName);
     visitChildren<AllTimeSumNode>(nodeName, allTimeSumNode->getOperands());
 }
 
@@ -163,21 +163,27 @@ void NodeChecker::visit(const FunctionNode* functionNode)
     switch (type)
     {
     case FunctionNodeType::reduced_cost:
+        checkIsForbidden<FunctionNodeType::reduced_cost>(type_str);
         visitChildren<FunctionNodeType::reduced_cost>(type_str, operands);
         break;
     case FunctionNodeType::dual:
+        checkIsForbidden<FunctionNodeType::dual>(type_str);
         visitChildren<FunctionNodeType::dual>(type_str, operands);
         break;
     case FunctionNodeType::min:
+        checkIsForbidden<FunctionNodeType::min>(type_str);
         visitChildren<FunctionNodeType::min>(type_str, operands);
         break;
     case FunctionNodeType::max:
+        checkIsForbidden<FunctionNodeType::max>(type_str);
         visitChildren<FunctionNodeType::max>(type_str, operands);
         break;
     case FunctionNodeType::pow:
+        checkIsForbidden<FunctionNodeType::pow>(type_str);
         visitChildren<FunctionNodeType::pow>(type_str, operands);
         break;
     case FunctionNodeType::floor:
+        checkIsForbidden<FunctionNodeType::floor>(type_str);
         visitChildren<FunctionNodeType::floor>(type_str, operands);
         break;
     default:

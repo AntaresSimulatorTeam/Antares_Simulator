@@ -58,10 +58,10 @@ public:
 private:
     // Member functions
     template<Expressions::Nodes::FunctionNodeType>
-    void checkConsistencyWithParents(const std::string& childName) const;
+    void checkIsForbidden(const std::string& childName) const;
 
     template<class Node>
-    void checkConsistencyWithParents(const std::string& childName) const;
+    void checkIsForbidden(const std::string& childName) const;
 
     template<class Node>
     void visitChildren(const std::string& nodeName,
@@ -86,7 +86,7 @@ public:
 };
 
 template<typename Node>
-void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
+void NodeChecker::checkIsForbidden(const std::string& nodeName) const
 {
     if (forbiddenNodes_.isGloballyForbidden<Node>())
     {
@@ -103,7 +103,7 @@ void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
 }
 
 template<Expressions::Nodes::FunctionNodeType functionNodeType>
-void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
+void NodeChecker::checkIsForbidden(const std::string& nodeName) const
 {
     if (forbiddenNodes_.isGloballyForbidden<functionNodeType>())
     {
@@ -135,8 +135,6 @@ template<Expressions::Nodes::FunctionNodeType functionNodeType>
 void NodeChecker::visitChildren(const std::string& nodeName,
                                 const std::vector<Expressions::Nodes::Node*>& children)
 {
-    checkConsistencyWithParents<functionNodeType>(nodeName);
-
     parentsStack_.emplace_back(nodeName, typeIndexOf<functionNodeType>());
     for (const auto* child: children)
     {
