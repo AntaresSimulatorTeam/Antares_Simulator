@@ -83,32 +83,32 @@ private:
     const std::string& expression_;
 };
 
-struct BadExpression
+struct ErrorInfo
 {
     std::string expression;
     std::string childName;
     std::optional<std::string> parentName;
 };
 
-class BadContextComposition final: public std::invalid_argument
+class ForbiddenNodeFound final: public std::invalid_argument
 {
 public:
-    static std::string BuildMessage(const BadExpression& context)
+    std::string ErrorMessage(const ErrorInfo& errorInfo)
     {
-        if (context.parentName.has_value())
+        if (errorInfo.parentName.has_value())
         {
             return fmt::format("'{}' is not allowed to contain '{}' in this context '{}'",
-                               context.parentName.value(),
-                               context.childName,
-                               context.expression);
+                               errorInfo.parentName.value(),
+                               errorInfo.childName,
+                               errorInfo.expression);
         }
         return fmt::format("'{}' is not allowed in this context '{}'",
-                           context.childName,
-                           context.expression);
+                           errorInfo.childName,
+                           errorInfo.expression);
     }
 
-    explicit BadContextComposition(const BadExpression& context):
-        invalid_argument(BuildMessage(context))
+    explicit ForbiddenNodeFound(const ErrorInfo& errorInfo):
+        invalid_argument(ErrorMessage(errorInfo))
     {
     }
 };
@@ -118,15 +118,14 @@ void NodeChecker::checkConsistencyWithParents(const std::string& childName) cons
 {
     if (forbiddenNodes_.isGloballyForbidden<Child>())
     {
-        throw BadContextComposition(
-          {.expression = expression_, .childName = childName, .parentName = std::nullopt});
+        throw ForbiddenNodeFound({.expression = expression_, .childName = childName});
     }
+
     for (const auto& [parentName, typeIndex]: std::ranges::reverse_view(parentsStack_))
     {
         if (forbiddenNodes_.isForbiddenFor<Child>(typeIndex))
         {
-            throw BadContextComposition(
-              {.expression = expression_, .childName = childName, .parentName = parentName});
+            throw ForbiddenNodeFound({expression_, childName, parentName});
         }
     }
 }
@@ -136,15 +135,14 @@ void NodeChecker::checkConsistencyWithParents(const std::string& childName) cons
 {
     if (forbiddenNodes_.isGloballyForbidden<func>())
     {
-        throw BadContextComposition(
-          {.expression = expression_, .childName = childName, .parentName = std::nullopt});
+        throw ForbiddenNodeFound({.expression = expression_, .childName = childName});
     }
+
     for (const auto& [parentName, typeIndex]: std::ranges::reverse_view(parentsStack_))
     {
         if (forbiddenNodes_.isForbiddenFor<func>(typeIndex))
         {
-            throw BadContextComposition(
-              {.expression = expression_, .childName = childName, .parentName = parentName});
+            throw ForbiddenNodeFound({expression_, childName, parentName});
         }
     }
 }
