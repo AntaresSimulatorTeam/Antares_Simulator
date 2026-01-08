@@ -592,7 +592,7 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
     auto err_msg = "'min' is not allowed to contain 'variable(varB)' in this context '" + expression
                    + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
@@ -608,7 +608,7 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
     std::string err_msg = "'max' is not allowed to contain 'variable(varB)' in this context '"
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
@@ -624,7 +624,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
     std::string err_msg = "'expression with <=' is not allowed in this context '" + expression
                           + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
@@ -640,7 +640,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
     std::string err_msg = "'expression with >=' is not allowed in this context '" + expression
                           + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
@@ -655,7 +655,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
 
     std::string err_msg = "'expression with =' is not allowed in this context '" + expression + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
