@@ -56,37 +56,43 @@ std::string NodeChecker::name() const
 
 void NodeChecker::visit(const SumNode* sumNode)
 {
-    visitChildren<SumNode>("sum", sumNode->getOperands(), false);
+    visitChildren<SumNode>("sum", sumNode->getOperands());
 }
 
 void NodeChecker::visit(const SubtractionNode* subtractionNode)
 {
-    visitChildren<SubtractionNode>("subtraction", subtractionNode->getOperands(), false);
+    visitChildren<SubtractionNode>("subtraction", subtractionNode->getOperands());
 }
 
 void NodeChecker::visit(const MultiplicationNode* multiplicationNode)
 {
-    visitChildren<MultiplicationNode>("multiplication", multiplicationNode->getOperands(), false);
+    visitChildren<MultiplicationNode>("multiplication", multiplicationNode->getOperands());
 }
 
 void NodeChecker::visit(const DivisionNode* divisionNode)
 {
-    visitChildren<DivisionNode>("division", divisionNode->getOperands(), false);
+    visitChildren<DivisionNode>("division", divisionNode->getOperands());
 }
 
 void NodeChecker::visit(const EqualNode* equalNode)
 {
-    visitComparisonNode<EqualNode>("=", equalNode->getOperands());
+    std::string nodeName = "expression with =";
+    checkConsistencyWithParents<EqualNode>(nodeName);
+    visitChildren<EqualNode>(nodeName, equalNode->getOperands());
 }
 
 void NodeChecker::visit(const LessThanOrEqualNode* lessThanOrEqualNode)
 {
-    visitComparisonNode<LessThanOrEqualNode>("<=", lessThanOrEqualNode->getOperands());
+    std::string nodeName = "expression with <=";
+    checkConsistencyWithParents<LessThanOrEqualNode>(nodeName);
+    visitChildren<LessThanOrEqualNode>(nodeName, lessThanOrEqualNode->getOperands());
 }
 
 void NodeChecker::visit(const GreaterThanOrEqualNode* greaterThanOrEqualNode)
 {
-    visitComparisonNode<GreaterThanOrEqualNode>(">=", greaterThanOrEqualNode->getOperands());
+    std::string nodeName = "expression with >=";
+    checkConsistencyWithParents<GreaterThanOrEqualNode>(nodeName);
+    visitChildren<GreaterThanOrEqualNode>(nodeName, greaterThanOrEqualNode->getOperands());
 }
 
 void NodeChecker::visit(const NegationNode* negationNode)
@@ -122,22 +128,30 @@ void NodeChecker::visit(const PortFieldSumNode*)
 
 void NodeChecker::visit(const TimeShiftNode* timeShiftNode)
 {
-    visitChildren<TimeShiftNode>("timeShift", timeShiftNode->getOperands(), true);
+    std::string nodeName = "timeShift";
+    checkConsistencyWithParents<TimeShiftNode>(nodeName);
+    visitChildren<TimeShiftNode>(nodeName, timeShiftNode->getOperands());
 }
 
 void NodeChecker::visit(const TimeIndexNode* timeIndexNode)
 {
-    visitChildren<TimeIndexNode>("timeIndex", timeIndexNode->getOperands(), true);
+    std::string nodeName = "timeIndex";
+    checkConsistencyWithParents<TimeIndexNode>(nodeName);
+    visitChildren<TimeIndexNode>(nodeName, timeIndexNode->getOperands());
 }
 
 void NodeChecker::visit(const TimeSumNode* timeSumNode)
 {
-    visitChildren<TimeSumNode>("sum", timeSumNode->getOperands(), true);
+    std::string nodeName = "sum";
+    checkConsistencyWithParents<TimeIndexNode>(nodeName);
+    visitChildren<TimeSumNode>(nodeName, timeSumNode->getOperands());
 }
 
 void NodeChecker::visit(const AllTimeSumNode* allTimeSumNode)
 {
-    visitChildren<AllTimeSumNode>("sum", allTimeSumNode->getOperands(), true);
+    std::string nodeName = "sum";
+    checkConsistencyWithParents<AllTimeSumNode>(nodeName);
+    visitChildren<AllTimeSumNode>(nodeName, allTimeSumNode->getOperands());
 }
 
 void NodeChecker::visit(const FunctionNode* functionNode)

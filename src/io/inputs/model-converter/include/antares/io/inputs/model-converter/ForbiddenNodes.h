@@ -114,12 +114,10 @@ public:
 
 private:
     std::set<std::type_index> global_;
+    std::map<std::type_index, std::set<std::type_index>> rules_; // Parent --> set of children
 
-    // Parent --> set of children
-    std::map<std::type_index, std::set<std::type_index>> rules_;
-
-    [[nodiscard]] bool isForbiddenByParent(const std::type_index& parentTypeId,
-                                           const std::type_index& nodeTypeId) const
+    bool isForbiddenByParent(const std::type_index& parentTypeId,
+                             const std::type_index& nodeTypeId) const
     {
         const auto& it = rules_.find(parentTypeId);
         return (it != rules_.end()) && it->second.contains(nodeTypeId);

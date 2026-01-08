@@ -65,16 +65,11 @@ private:
 
     template<class Node>
     void visitChildren(const std::string& nodeName,
-                       const std::vector<Expressions::Nodes::Node*>& children,
-                       bool validateConsistencyWithParents);
+                       const std::vector<Expressions::Nodes::Node*>& children);
 
     template<Expressions::Nodes::FunctionNodeType>
     void visitChildren(const std::string& parentName,
                        const std::vector<Expressions::Nodes::Node*>& children);
-
-    template<class Node>
-    void visitComparisonNode(const std::string& op,
-                             const std::vector<Expressions::Nodes::Node*>& children);
 
     // Data members
     const ForbiddenNodes& forbiddenNodes_;
@@ -126,14 +121,8 @@ void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
 
 template<typename Node>
 void NodeChecker::visitChildren(const std::string& nodeName,
-                                const std::vector<Expressions::Nodes::Node*>& children,
-                                bool validateConsistencyWithParents)
+                                const std::vector<Expressions::Nodes::Node*>& children)
 {
-    if (validateConsistencyWithParents)
-    {
-        checkConsistencyWithParents<Node>(nodeName);
-    }
-
     parentsStack_.emplace_back(nodeName, typeIndexOf<Node>());
     for (const auto* child: children)
     {
@@ -154,13 +143,6 @@ void NodeChecker::visitChildren(const std::string& nodeName,
         dispatch(child);
     }
     parentsStack_.pop_back();
-}
-
-template<typename Node>
-void NodeChecker::visitComparisonNode(const std::string& sign,
-                                      const std::vector<Expressions::Nodes::Node*>& children)
-{
-    visitChildren<Node>("expression with " + sign, children, true);
 }
 
 } // namespace Antares::IO::Inputs::ModelConverter

@@ -618,7 +618,6 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
 
     auto node = convertExpressionToNode(expression, model);
 
-    // Forbid <= Globally
     forbiddenNodes.forbidGlobally<Nodes::LessThanOrEqualNode>();
 
     std::string err_msg = "'expression with <=' is not allowed in this context '" + expression
@@ -649,7 +648,6 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
 
     auto node = convertExpressionToNode(expression, model);
 
-    // Forbid <= Globally
     forbiddenNodes.forbidGlobally<Nodes::EqualNode>();
 
     std::string err_msg = "'expression with =' is not allowed in this context '" + expression + "'";
