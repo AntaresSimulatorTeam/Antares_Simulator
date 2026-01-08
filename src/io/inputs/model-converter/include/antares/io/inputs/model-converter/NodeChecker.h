@@ -100,7 +100,7 @@ void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
 
     for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbiddenNodes_.isForbiddenFor<Node>(parentTypeIndex))
+        if (forbiddenNodes_.isForbiddenByParent<Node>(parentTypeIndex))
         {
             throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
         }
@@ -117,7 +117,7 @@ void NodeChecker::checkConsistencyWithParents(const std::string& nodeName) const
 
     for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
-        if (forbiddenNodes_.isForbiddenFor<functionNodeType>(parentTypeIndex))
+        if (forbiddenNodes_.isForbiddenByParent<functionNodeType>(parentTypeIndex))
         {
             throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
         }

@@ -88,13 +88,13 @@ public:
 
     // ---------------------- RUNTIME CHECK ----------------------
     template<Expressions::Nodes::FunctionNodeType functionNodeType>
-    [[nodiscard]] bool isForbiddenFor(const std::type_index& parentTypeId) const
+    [[nodiscard]] bool isForbiddenByParent(const std::type_index& parentTypeId) const
     {
         return isForbidden(parentTypeId, typeIndexOf<functionNodeType>());
     }
 
     template<typename Node>
-    [[nodiscard]] bool isForbiddenFor(const std::type_index& parentTypeId) const
+    [[nodiscard]] bool isForbiddenByParent(const std::type_index& parentTypeId) const
     {
         return isForbidden(parentTypeId, typeIndexOf<Node>());
     }
