@@ -587,7 +587,7 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
     auto node = convertExpressionToNode(expression, model);
 
     // Forbid variable in min
-    forbiddenNodes.addForbiddenFor<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
+    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
 
     auto err_msg = "'min' is not allowed to contain 'variable(varB)' in this context '" + expression
                    + "'";
@@ -603,7 +603,7 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
     auto node = convertExpressionToNode(expression, model);
 
     // Forbid variable in max
-    forbiddenNodes.addForbiddenFor<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
+    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
 
     std::string err_msg = "'max' is not allowed to contain 'variable(varB)' in this context '"
                           + expression + "'";

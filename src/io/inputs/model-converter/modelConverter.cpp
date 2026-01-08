@@ -83,19 +83,19 @@ static void CommonPreSolve(ForbiddenNodes& f)
     f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
 
     // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max(...)
-    f.addForbiddenFor<FunctionNodeType::max, VariableNode>();
-    f.addForbiddenFor<FunctionNodeType::max, PortFieldNode>();
-    f.addForbiddenFor<FunctionNodeType::max, PortFieldSumNode>();
+    f.parentForbidsChild<FunctionNodeType::max, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::max, PortFieldNode>();
+    f.parentForbidsChild<FunctionNodeType::max, PortFieldSumNode>();
 
     // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in min(...)
-    f.addForbiddenFor<FunctionNodeType::min, VariableNode>();
-    f.addForbiddenFor<FunctionNodeType::min, PortFieldNode>();
-    f.addForbiddenFor<FunctionNodeType::min, PortFieldSumNode>();
+    f.parentForbidsChild<FunctionNodeType::min, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::min, PortFieldNode>();
+    f.parentForbidsChild<FunctionNodeType::min, PortFieldSumNode>();
 
     // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in floor(node)
-    f.addForbiddenFor<FunctionNodeType::floor, VariableNode>();
-    f.addForbiddenFor<FunctionNodeType::floor, PortFieldNode>();
-    f.addForbiddenFor<FunctionNodeType::floor, PortFieldSumNode>();
+    f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::floor, PortFieldNode>();
+    f.parentForbidsChild<FunctionNodeType::floor, PortFieldSumNode>();
 }
 
 static ForbiddenNodes ForbiddenInConstraint()
@@ -131,10 +131,10 @@ static ForbiddenNodes PreSolveNonConstraint()
         ForbiddenNodes f;
         CommonPreSolve(f);
         f.forbidGlobally<ComparisonNode,
-                             EqualNode,
-                             LessThanOrEqualNode,
-                             GreaterThanOrEqualNode,
-                             PortFieldSumNode>();
+                         EqualNode,
+                         LessThanOrEqualNode,
+                         GreaterThanOrEqualNode,
+                         PortFieldSumNode>();
         return f;
     }();
     return forbidden;

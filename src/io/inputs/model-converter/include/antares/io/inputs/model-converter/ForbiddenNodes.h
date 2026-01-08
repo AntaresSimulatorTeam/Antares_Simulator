@@ -68,20 +68,20 @@ public:
     // ---------------------- PARENT -> CHILD --------------------
     template<Expressions::Nodes::FunctionNodeType Parent, typename Child>
     requires(!std::is_same_v<Child, Expressions::Nodes::FunctionNodeType>)
-    void addForbiddenFor()
+    void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
     template<Expressions::Nodes::FunctionNodeType Parent,
              Expressions::Nodes::FunctionNodeType Child>
-    void addForbiddenFor()
+    void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
     template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
-    void addForbiddenFor()
+    void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
