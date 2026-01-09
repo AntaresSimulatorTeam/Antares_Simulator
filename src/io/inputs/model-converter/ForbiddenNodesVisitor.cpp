@@ -78,21 +78,21 @@ void ForbiddenNodesVisitor::visit(const DivisionNode* divisionNode)
 void ForbiddenNodesVisitor::visit(const EqualNode* equalNode)
 {
     std::type_index nodeTypeId = typeIndexOf<EqualNode>();
-    checkIsForbidden(nodeTypeId, equalNode);
+    checkIsForbidden(equalNode, nodeTypeId);
     visitChildren(equalNode, nodeTypeId);
 }
 
 void ForbiddenNodesVisitor::visit(const LessThanOrEqualNode* lessThanOrEqualNode)
 {
     std::type_index nodeTypeId = typeIndexOf<LessThanOrEqualNode>();
-    checkIsForbidden(nodeTypeId, lessThanOrEqualNode);
+    checkIsForbidden(lessThanOrEqualNode, nodeTypeId);
     visitChildren(lessThanOrEqualNode, nodeTypeId);
 }
 
 void ForbiddenNodesVisitor::visit(const GreaterThanOrEqualNode* greaterThanOrEqualNode)
 {
     std::type_index nodeTypeId = typeIndexOf<GreaterThanOrEqualNode>();
-    checkIsForbidden(nodeTypeId, greaterThanOrEqualNode);
+    checkIsForbidden(greaterThanOrEqualNode, nodeTypeId);
     visitChildren(greaterThanOrEqualNode, nodeTypeId);
 }
 
@@ -108,7 +108,7 @@ void ForbiddenNodesVisitor::visit(const LiteralNode*)
 
 void ForbiddenNodesVisitor::visit(const VariableNode* variableNode)
 {
-    checkIsForbidden(typeIndexOf<VariableNode>(), variableNode);
+    checkIsForbidden(variableNode, typeIndexOf<VariableNode>());
 }
 
 void ForbiddenNodesVisitor::visit(const ParameterNode*)
@@ -118,39 +118,39 @@ void ForbiddenNodesVisitor::visit(const ParameterNode*)
 
 void ForbiddenNodesVisitor::visit(const PortFieldNode* portFieldNode)
 {
-    checkIsForbidden(typeIndexOf<PortFieldNode>(), portFieldNode);
+    checkIsForbidden(portFieldNode, typeIndexOf<PortFieldNode>());
 }
 
 void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
 {
-    checkIsForbidden(typeIndexOf<PortFieldSumNode>(), portFieldSumNode);
+    checkIsForbidden(portFieldSumNode, typeIndexOf<PortFieldSumNode>());
 }
 
 void ForbiddenNodesVisitor::visit(const TimeShiftNode* timeShiftNode)
 {
     std::type_index nodeTypeId = typeIndexOf<TimeShiftNode>();
-    checkIsForbidden(nodeTypeId, timeShiftNode);
+    checkIsForbidden(timeShiftNode, nodeTypeId);
     visitChildren(timeShiftNode, nodeTypeId);
 }
 
 void ForbiddenNodesVisitor::visit(const TimeIndexNode* timeIndexNode)
 {
     std::type_index nodeTypeId = typeIndexOf<TimeIndexNode>();
-    checkIsForbidden(nodeTypeId, timeIndexNode);
+    checkIsForbidden(timeIndexNode, nodeTypeId);
     visitChildren(timeIndexNode, nodeTypeId);
 }
 
 void ForbiddenNodesVisitor::visit(const TimeSumNode* timeSumNode)
 {
     std::type_index nodeTypeId = typeIndexOf<TimeSumNode>();
-    checkIsForbidden(nodeTypeId, timeSumNode);
+    checkIsForbidden(timeSumNode, nodeTypeId);
     visitChildren(timeSumNode, nodeTypeId);
 }
 
 void ForbiddenNodesVisitor::visit(const AllTimeSumNode* allTimeSumNode)
 {
     std::type_index nodeTypeId = typeIndexOf<AllTimeSumNode>();
-    checkIsForbidden(nodeTypeId, allTimeSumNode);
+    checkIsForbidden(allTimeSumNode, nodeTypeId);
     visitChildren(allTimeSumNode, nodeTypeId);
 }
 
@@ -182,12 +182,12 @@ void ForbiddenNodesVisitor::visit(const FunctionNode* functionNode)
         break;
     }
 
-    checkIsForbidden(nodeTypeId, functionNode);
+    checkIsForbidden(functionNode, nodeTypeId);
     visitChildren(functionNode, nodeTypeId);
 }
 
-void ForbiddenNodesVisitor::checkIsForbidden(const std::type_index& nodeTypeId,
-                                             const Node* node) const
+void ForbiddenNodesVisitor::checkIsForbidden(const Node* node,
+                                             const std::type_index& nodeTypeId) const
 {
     checkIGloballyForbidden(nodeTypeId, node);
     checkIsForbiddenByParent(nodeTypeId, node);
