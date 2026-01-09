@@ -69,7 +69,7 @@ private:
     void checkIsForbidden(const std::type_index& nodeTypeId, const std::string& nodeName) const;
 
     void visitChildren(const std::string& nodeName,
-                       const std::vector<Expressions::Nodes::Node*>& children,
+                       const Expressions::Nodes::ParentNode* node,
                        const std::type_index& nodeTypeId);
 
     // Data members
