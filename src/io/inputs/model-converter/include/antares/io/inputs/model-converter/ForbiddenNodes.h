@@ -32,21 +32,20 @@
 namespace Antares::IO::Inputs::ModelConverter
 {
 
+using namespace Antares::Expressions;
+
 template<typename NodeType>
+requires(!std::is_same_v<NodeType, Nodes::FunctionNodeType>)
 std::type_index typeIndexOf()
 {
-    static_assert(!std::is_same_v<NodeType, Expressions::Nodes::FunctionNode>,
-                  "Use Expressions::Nodes::FunctionNodeType enum values or "
-                  "typeIndexOf(Expressions::Nodes::FunctionNodeType) "
-                  "instead of FunctionNode for forbidden rules.");
     return std::type_index(typeid(NodeType));
 }
 
-template<Expressions::Nodes::FunctionNodeType T>
+template<Nodes::FunctionNodeType item>
 std::type_index typeIndexOf()
 {
-    using Tag = std::integral_constant<Expressions::Nodes::FunctionNodeType, T>;
-    return std::type_index(typeid(Tag));
+    using enum_item_as_type = std::integral_constant<Nodes::FunctionNodeType, item>;
+    return std::type_index(typeid(enum_item_as_type));
 }
 
 class ForbiddenNodes
@@ -59,28 +58,28 @@ public:
         (global_.insert(typeIndexOf<NodeType>()), ...);
     }
 
-    template<Expressions::Nodes::FunctionNodeType... NodeType>
+    template<Nodes::FunctionNodeType... NodeType>
     void forbidGlobally()
     {
         (global_.insert(typeIndexOf<NodeType>()), ...);
     }
 
     // ---------------------- PARENT -> CHILD --------------------
-    template<Expressions::Nodes::FunctionNodeType Parent, typename Child>
-    requires(!std::is_same_v<Child, Expressions::Nodes::FunctionNodeType>)
+    template<Nodes::FunctionNodeType Parent, typename Child>
+    requires(!std::is_same_v<Child, Nodes::FunctionNodeType>)
     void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
-    template<Expressions::Nodes::FunctionNodeType Parent,
-             Expressions::Nodes::FunctionNodeType Child>
+    template<Nodes::FunctionNodeType Parent,
+             Nodes::FunctionNodeType Child>
     void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
-    template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
+    template<typename Parent, Nodes::FunctionNodeType Child>
     void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
@@ -99,6 +98,7 @@ public:
     }
 
 private:
+    // gp : we originally used unordered set and map, do we restore these types ?
     std::set<std::type_index> global_;
     std::map<std::type_index, std::set<std::type_index>> rules_; // Parent --> set of children
 };
