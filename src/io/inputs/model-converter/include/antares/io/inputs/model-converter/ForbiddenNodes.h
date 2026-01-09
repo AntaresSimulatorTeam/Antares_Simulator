@@ -83,17 +83,9 @@ public:
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
+    bool isGloballyForbidden(const std::type_index& typeId) const;
     bool isForbiddenByParent(const std::type_index& parentTypeId,
-                             const std::type_index& nodeTypeId) const
-    {
-        const auto& it = rules_.find(parentTypeId);
-        return (it != rules_.end()) && it->second.contains(nodeTypeId);
-    }
-
-    bool isGloballyForbidden(const std::type_index& typeId) const
-    {
-        return global_.contains(typeId);
-    }
+                             const std::type_index& nodeTypeId) const;
 
 private:
     // gp : we originally used unordered set and map, do we restore these types ?

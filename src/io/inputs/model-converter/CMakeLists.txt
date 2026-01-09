@@ -4,6 +4,7 @@ set(SOURCES
         modelConverter.cpp
         convertorVisitor.cpp
         NodeChecker.cpp
+        ForbiddenNodes.cpp
         include/antares/io/inputs/model-converter/modelConverter.h
         include/antares/io/inputs/model-converter/convertorVisitor.h
         include/antares/io/inputs/model-converter/ForbiddenNodes.h
