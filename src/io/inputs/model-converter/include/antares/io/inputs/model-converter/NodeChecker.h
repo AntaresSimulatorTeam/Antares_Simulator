@@ -57,13 +57,7 @@ public:
 
 private:
     // Member functions
-    template<Expressions::Nodes::FunctionNodeType>
-    void checkIsForbidden(const std::string& childName) const;
-
-    template<class Node>
-    void checkIsForbidden(const std::string& childName) const;
-
-    void checkIsForbidden(std::type_index& typeId, const std::string& nodeName) const;
+    void checkIsForbidden(const std::type_index& typeId, const std::string& nodeName) const;
 
     template<class Node>
     void visitChildren(const std::string& nodeName,
@@ -86,20 +80,6 @@ public:
                                 const std::string node,
                                 const std::string parent = "");
 };
-
-template<typename Node>
-void NodeChecker::checkIsForbidden(const std::string& nodeName) const
-{
-    std::type_index typeId = typeIndexOf<Node>();
-    checkIsForbidden(typeId, nodeName);
-}
-
-template<Expressions::Nodes::FunctionNodeType functionNodeType>
-void NodeChecker::checkIsForbidden(const std::string& nodeName) const
-{
-    std::type_index typeId = typeIndexOf<functionNodeType>();
-    checkIsForbidden(typeId, nodeName);
-}
 
 template<typename Node>
 void NodeChecker::visitChildren(const std::string& nodeName,
