@@ -589,8 +589,8 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
     // Forbid variable in min
     forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
 
-    auto err_msg = "'min' is not allowed to contain 'variable(varB)' in this context '" + expression
-                   + "'";
+    auto err_msg = "'FunctionNode::min' is not allowed to contain 'VariableNode' in expression '"
+                   + expression + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbiddenNodes, expression).dispatch(node.node),
                           ForbiddenNodeFound,
                           checkMessage(err_msg));
@@ -605,8 +605,8 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
     // Forbid variable in max
     forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
 
-    std::string err_msg = "'max' is not allowed to contain 'variable(varB)' in this context '"
-                          + expression + "'";
+    std::string err_msg = "'FunctionNode::max' is not allowed to contain 'VariableNode' in "
+                          "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbiddenNodes, expression).dispatch(node.node),
                           ForbiddenNodeFound,
                           checkMessage(err_msg));
@@ -620,8 +620,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
 
     forbiddenNodes.forbidGlobally<Nodes::LessThanOrEqualNode>();
 
-    std::string err_msg = "'expression with <=' is not allowed in this context '" + expression
-                          + "'";
+    std::string err_msg = "'LessThanOrEqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbiddenNodes, expression).dispatch(node.node),
                           ForbiddenNodeFound,
                           checkMessage(err_msg));
@@ -635,7 +634,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
 
     forbiddenNodes.forbidGlobally<Nodes::GreaterThanOrEqualNode>();
 
-    std::string err_msg = "'expression with >=' is not allowed in this context '" + expression
+    std::string err_msg = "'GreaterThanOrEqualNode' is not allowed in expression '" + expression
                           + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbiddenNodes, expression).dispatch(node.node),
                           ForbiddenNodeFound,
@@ -650,7 +649,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
 
     forbiddenNodes.forbidGlobally<Nodes::EqualNode>();
 
-    std::string err_msg = "'expression with =' is not allowed in this context '" + expression + "'";
+    std::string err_msg = "'EqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(NodeChecker(forbiddenNodes, expression).dispatch(node.node),
                           ForbiddenNodeFound,
                           checkMessage(err_msg));

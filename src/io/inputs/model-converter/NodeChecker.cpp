@@ -30,10 +30,10 @@ std::string ErrorMessage(const std::string expr, const std::string node, const s
 {
     if (!parent.empty())
     {
-        std::string format_str = "'{}' is not allowed to contain '{}' in this context '{}'";
+        std::string format_str = "'{}' is not allowed to contain '{}' in expression '{}'";
         return fmt::format(fmt::runtime(format_str), parent, node, expr);
     }
-    return fmt::format("'{}' is not allowed in this context '{}'", node, expr);
+    return fmt::format("'{}' is not allowed in expression '{}'", node, expr);
 }
 
 ForbiddenNodeFound::ForbiddenNodeFound(const std::string expr,
@@ -56,46 +56,43 @@ std::string NodeChecker::name() const
 
 void NodeChecker::visit(const SumNode* sumNode)
 {
-    visitChildren("sum", sumNode, typeIndexOf<SumNode>());
+    visitChildren(sumNode, typeIndexOf<SumNode>());
 }
 
 void NodeChecker::visit(const SubtractionNode* subtractionNode)
 {
-    visitChildren("subtraction", subtractionNode, typeIndexOf<SubtractionNode>());
+    visitChildren(subtractionNode, typeIndexOf<SubtractionNode>());
 }
 
 void NodeChecker::visit(const MultiplicationNode* multiplicationNode)
 {
-    visitChildren("multiplication", multiplicationNode, typeIndexOf<MultiplicationNode>());
+    visitChildren(multiplicationNode, typeIndexOf<MultiplicationNode>());
 }
 
 void NodeChecker::visit(const DivisionNode* divisionNode)
 {
-    visitChildren("division", divisionNode, typeIndexOf<DivisionNode>());
+    visitChildren(divisionNode, typeIndexOf<DivisionNode>());
 }
 
 void NodeChecker::visit(const EqualNode* equalNode)
 {
-    std::string nodeName = "expression with =";
     std::type_index nodeTypeId = typeIndexOf<EqualNode>();
-    checkIsForbidden(nodeTypeId, nodeName);
-    visitChildren(nodeName, equalNode, nodeTypeId);
+    checkIsForbidden(nodeTypeId, equalNode);
+    visitChildren(equalNode, nodeTypeId);
 }
 
 void NodeChecker::visit(const LessThanOrEqualNode* lessThanOrEqualNode)
 {
-    std::string nodeName = "expression with <=";
     std::type_index nodeTypeId = typeIndexOf<LessThanOrEqualNode>();
-    checkIsForbidden(nodeTypeId, nodeName);
-    visitChildren(nodeName, lessThanOrEqualNode, nodeTypeId);
+    checkIsForbidden(nodeTypeId, lessThanOrEqualNode);
+    visitChildren(lessThanOrEqualNode, nodeTypeId);
 }
 
 void NodeChecker::visit(const GreaterThanOrEqualNode* greaterThanOrEqualNode)
 {
-    std::string nodeName = "expression with >=";
     std::type_index nodeTypeId = typeIndexOf<GreaterThanOrEqualNode>();
-    checkIsForbidden(nodeTypeId, nodeName);
-    visitChildren(nodeName, greaterThanOrEqualNode, nodeTypeId);
+    checkIsForbidden(nodeTypeId, greaterThanOrEqualNode);
+    visitChildren(greaterThanOrEqualNode, nodeTypeId);
 }
 
 void NodeChecker::visit(const NegationNode* negationNode)
@@ -110,8 +107,7 @@ void NodeChecker::visit(const LiteralNode*)
 
 void NodeChecker::visit(const VariableNode* variableNode)
 {
-    std::string nodeName = "variable(" + variableNode->value() + ")";
-    checkIsForbidden(typeIndexOf<VariableNode>(), nodeName);
+    checkIsForbidden(typeIndexOf<VariableNode>(), variableNode);
 }
 
 void NodeChecker::visit(const ParameterNode*)
@@ -121,46 +117,40 @@ void NodeChecker::visit(const ParameterNode*)
 
 void NodeChecker::visit(const PortFieldNode* portFieldNode)
 {
-    std::string nodeName = "port field (" + portFieldNode->getPortName() + "."
-                           + portFieldNode->getFieldName() + ")";
-    checkIsForbidden(typeIndexOf<PortFieldNode>(), nodeName);
+    checkIsForbidden(typeIndexOf<PortFieldNode>(), portFieldNode);
 }
 
-void NodeChecker::visit(const PortFieldSumNode*)
+void NodeChecker::visit(const PortFieldSumNode* portFieldSumNode)
 {
-    checkIsForbidden(typeIndexOf<PortFieldSumNode>(), "sum_connections");
+    checkIsForbidden(typeIndexOf<PortFieldSumNode>(), portFieldSumNode);
 }
 
 void NodeChecker::visit(const TimeShiftNode* timeShiftNode)
 {
-    std::string nodeName = "timeShift";
     std::type_index nodeTypeId = typeIndexOf<TimeShiftNode>();
-    checkIsForbidden(nodeTypeId, nodeName);
-    visitChildren(nodeName, timeShiftNode, nodeTypeId);
+    checkIsForbidden(nodeTypeId, timeShiftNode);
+    visitChildren(timeShiftNode, nodeTypeId);
 }
 
 void NodeChecker::visit(const TimeIndexNode* timeIndexNode)
 {
-    std::string nodeName = "timeIndex";
     std::type_index nodeTypeId = typeIndexOf<TimeIndexNode>();
-    checkIsForbidden(nodeTypeId, nodeName);
-    visitChildren(nodeName, timeIndexNode, nodeTypeId);
+    checkIsForbidden(nodeTypeId, timeIndexNode);
+    visitChildren(timeIndexNode, nodeTypeId);
 }
 
 void NodeChecker::visit(const TimeSumNode* timeSumNode)
 {
-    std::string nodeName = "sum";
     std::type_index nodeTypeId = typeIndexOf<TimeSumNode>();
-    checkIsForbidden(nodeTypeId, nodeName);
-    visitChildren(nodeName, timeSumNode, nodeTypeId);
+    checkIsForbidden(nodeTypeId, timeSumNode);
+    visitChildren(timeSumNode, nodeTypeId);
 }
 
 void NodeChecker::visit(const AllTimeSumNode* allTimeSumNode)
 {
-    std::string nodeName = "sum";
     std::type_index nodeTypeId = typeIndexOf<AllTimeSumNode>();
-    checkIsForbidden(nodeTypeId, nodeName);
-    visitChildren(nodeName, allTimeSumNode, nodeTypeId);
+    checkIsForbidden(nodeTypeId, allTimeSumNode);
+    visitChildren(allTimeSumNode, nodeTypeId);
 }
 
 void NodeChecker::visit(const FunctionNode* functionNode)
@@ -191,37 +181,33 @@ void NodeChecker::visit(const FunctionNode* functionNode)
         break;
     }
 
-    const std::string nodeName = functionNode->typeToString();
-
-    checkIsForbidden(nodeTypeId, nodeName);
-    visitChildren(nodeName, functionNode, nodeTypeId);
+    checkIsForbidden(nodeTypeId, functionNode);
+    visitChildren(functionNode, nodeTypeId);
 }
 
-void NodeChecker::checkIsForbidden(const std::type_index& nodeTypeId,
-                                   const std::string& nodeName) const
+void NodeChecker::checkIsForbidden(const std::type_index& nodeTypeId, const Node* node) const
 {
     if (forbiddenNodes_.isGloballyForbidden(nodeTypeId))
     {
-        throw ForbiddenNodeFound(expression_, nodeName);
+        throw ForbiddenNodeFound(expression_, node->name());
     }
 
     for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
         if (forbiddenNodes_.isForbiddenByParent(parentTypeIndex, nodeTypeId))
         {
-            throw ForbiddenNodeFound(expression_, nodeName, parentNodeName);
+            throw ForbiddenNodeFound(expression_, node->name(), parentNodeName);
         }
     }
 }
 
-void NodeChecker::visitChildren(const std::string& nodeName,
-                                const Expressions::Nodes::ParentNode* node,
+void NodeChecker::visitChildren(const Expressions::Nodes::ParentNode* node,
                                 const std::type_index& nodeTypeId)
 {
-    parentsStack_.emplace_back(nodeName, nodeTypeId);
-    for (const auto* child: node->getOperands())
+    parentsStack_.emplace_back(node->name(), nodeTypeId);
+    for (const auto* childNode: node->getOperands())
     {
-        dispatch(child);
+        dispatch(childNode);
     }
     parentsStack_.pop_back();
 }

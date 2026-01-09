@@ -66,10 +66,10 @@ public:
 
 private:
     // Member functions
-    void checkIsForbidden(const std::type_index& nodeTypeId, const std::string& nodeName) const;
+    void checkIsForbidden(const std::type_index& nodeTypeId,
+                          const Expressions::Nodes::Node* node) const;
 
-    void visitChildren(const std::string& nodeName,
-                       const Expressions::Nodes::ParentNode* node,
+    void visitChildren(const Expressions::Nodes::ParentNode* node,
                        const std::type_index& nodeTypeId);
 
     // Data members
