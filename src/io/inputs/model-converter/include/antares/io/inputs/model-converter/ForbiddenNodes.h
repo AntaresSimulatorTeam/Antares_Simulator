@@ -33,7 +33,6 @@ namespace Antares::IO::Inputs::ModelConverter
 {
 
 template<typename NodeType>
-requires(!std::is_same_v<NodeType, Expressions::Nodes::FunctionNodeType>)
 std::type_index typeIndexOf()
 {
     return std::type_index(typeid(NodeType));
