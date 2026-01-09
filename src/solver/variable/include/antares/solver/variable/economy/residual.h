@@ -18,8 +18,8 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#ifndef __SOLVER_VARIABLE_ECONOMY_Inflows_H__
-#define __SOLVER_VARIABLE_ECONOMY_Inflows_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_Residual_H__
+#define __SOLVER_VARIABLE_ECONOMY_Residual_H__
 
 #include "antares/solver/variable/variable.h"
 
@@ -262,4 +262,4 @@ private:
 
 } // namespace Antares::Solver::Variable::Economy
 
-#endif // __SOLVER_VARIABLE_ECONOMY_Inflows_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_Residual_H__

@@ -75,6 +75,7 @@
 #include "pumping.h"
 #include "renewableGeneration.h"
 #include "reservoirlevel.h"
+#include "residual.h"
 #include "spilledEnergy.h"
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergy.h"
@@ -138,6 +139,7 @@ using VariablesPerArea = Common::ComposeAll<OverallCost,
                                             NbOfDispatchedUnits,
                                             NbOfDispatchedUnitsByPlant,
                                             ProfitByPlant,
+                                            Residual,
                                             Links>::type;
 
 /*!\n** \brief All variables for a single set of areas (economy)
@@ -173,6 +175,7 @@ using VariablesPerSetOfAreas = Common::SpatialAggregateAll<OverallCost,
                                                            DtgMarginCsr,
                                                            Marge,
                                                            NonProportionalCost,
+                                                           Residual,
                                                            NbOfDispatchedUnits>::type;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
