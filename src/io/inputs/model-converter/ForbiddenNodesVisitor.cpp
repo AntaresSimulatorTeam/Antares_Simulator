@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "include/antares/io/inputs/model-converter/NodeChecker.h"
+#include "include/antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 using namespace Antares::Expressions::Nodes;
@@ -43,117 +43,118 @@ ForbiddenNodeFound::ForbiddenNodeFound(const std::string expr,
 {
 }
 
-NodeChecker::NodeChecker(const ForbiddenNodes& forbiddenNodes, const std::string& expression):
+ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbiddenNodes,
+                                             const std::string& expression):
     forbiddenNodes_(forbiddenNodes),
     expression_(expression)
 {
 }
 
-std::string NodeChecker::name() const
+std::string ForbiddenNodesVisitor::name() const
 {
-    return "NodeChecker";
+    return "ForbiddenNodesVisitor";
 }
 
-void NodeChecker::visit(const SumNode* sumNode)
+void ForbiddenNodesVisitor::visit(const SumNode* sumNode)
 {
     visitChildren(sumNode, typeIndexOf<SumNode>());
 }
 
-void NodeChecker::visit(const SubtractionNode* subtractionNode)
+void ForbiddenNodesVisitor::visit(const SubtractionNode* subtractionNode)
 {
     visitChildren(subtractionNode, typeIndexOf<SubtractionNode>());
 }
 
-void NodeChecker::visit(const MultiplicationNode* multiplicationNode)
+void ForbiddenNodesVisitor::visit(const MultiplicationNode* multiplicationNode)
 {
     visitChildren(multiplicationNode, typeIndexOf<MultiplicationNode>());
 }
 
-void NodeChecker::visit(const DivisionNode* divisionNode)
+void ForbiddenNodesVisitor::visit(const DivisionNode* divisionNode)
 {
     visitChildren(divisionNode, typeIndexOf<DivisionNode>());
 }
 
-void NodeChecker::visit(const EqualNode* equalNode)
+void ForbiddenNodesVisitor::visit(const EqualNode* equalNode)
 {
     std::type_index nodeTypeId = typeIndexOf<EqualNode>();
     checkIsForbidden(nodeTypeId, equalNode);
     visitChildren(equalNode, nodeTypeId);
 }
 
-void NodeChecker::visit(const LessThanOrEqualNode* lessThanOrEqualNode)
+void ForbiddenNodesVisitor::visit(const LessThanOrEqualNode* lessThanOrEqualNode)
 {
     std::type_index nodeTypeId = typeIndexOf<LessThanOrEqualNode>();
     checkIsForbidden(nodeTypeId, lessThanOrEqualNode);
     visitChildren(lessThanOrEqualNode, nodeTypeId);
 }
 
-void NodeChecker::visit(const GreaterThanOrEqualNode* greaterThanOrEqualNode)
+void ForbiddenNodesVisitor::visit(const GreaterThanOrEqualNode* greaterThanOrEqualNode)
 {
     std::type_index nodeTypeId = typeIndexOf<GreaterThanOrEqualNode>();
     checkIsForbidden(nodeTypeId, greaterThanOrEqualNode);
     visitChildren(greaterThanOrEqualNode, nodeTypeId);
 }
 
-void NodeChecker::visit(const NegationNode* negationNode)
+void ForbiddenNodesVisitor::visit(const NegationNode* negationNode)
 {
     dispatch(negationNode->child());
 }
 
-void NodeChecker::visit(const LiteralNode*)
+void ForbiddenNodesVisitor::visit(const LiteralNode*)
 {
     // keep empty
 }
 
-void NodeChecker::visit(const VariableNode* variableNode)
+void ForbiddenNodesVisitor::visit(const VariableNode* variableNode)
 {
     checkIsForbidden(typeIndexOf<VariableNode>(), variableNode);
 }
 
-void NodeChecker::visit(const ParameterNode*)
+void ForbiddenNodesVisitor::visit(const ParameterNode*)
 {
     // keep empty
 }
 
-void NodeChecker::visit(const PortFieldNode* portFieldNode)
+void ForbiddenNodesVisitor::visit(const PortFieldNode* portFieldNode)
 {
     checkIsForbidden(typeIndexOf<PortFieldNode>(), portFieldNode);
 }
 
-void NodeChecker::visit(const PortFieldSumNode* portFieldSumNode)
+void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
 {
     checkIsForbidden(typeIndexOf<PortFieldSumNode>(), portFieldSumNode);
 }
 
-void NodeChecker::visit(const TimeShiftNode* timeShiftNode)
+void ForbiddenNodesVisitor::visit(const TimeShiftNode* timeShiftNode)
 {
     std::type_index nodeTypeId = typeIndexOf<TimeShiftNode>();
     checkIsForbidden(nodeTypeId, timeShiftNode);
     visitChildren(timeShiftNode, nodeTypeId);
 }
 
-void NodeChecker::visit(const TimeIndexNode* timeIndexNode)
+void ForbiddenNodesVisitor::visit(const TimeIndexNode* timeIndexNode)
 {
     std::type_index nodeTypeId = typeIndexOf<TimeIndexNode>();
     checkIsForbidden(nodeTypeId, timeIndexNode);
     visitChildren(timeIndexNode, nodeTypeId);
 }
 
-void NodeChecker::visit(const TimeSumNode* timeSumNode)
+void ForbiddenNodesVisitor::visit(const TimeSumNode* timeSumNode)
 {
     std::type_index nodeTypeId = typeIndexOf<TimeSumNode>();
     checkIsForbidden(nodeTypeId, timeSumNode);
     visitChildren(timeSumNode, nodeTypeId);
 }
 
-void NodeChecker::visit(const AllTimeSumNode* allTimeSumNode)
+void ForbiddenNodesVisitor::visit(const AllTimeSumNode* allTimeSumNode)
 {
     std::type_index nodeTypeId = typeIndexOf<AllTimeSumNode>();
     checkIsForbidden(nodeTypeId, allTimeSumNode);
     visitChildren(allTimeSumNode, nodeTypeId);
 }
 
-void NodeChecker::visit(const FunctionNode* functionNode)
+void ForbiddenNodesVisitor::visit(const FunctionNode* functionNode)
 {
     std::type_index nodeTypeId(typeid(int)); // Must be default constructed here
 
@@ -185,14 +186,15 @@ void NodeChecker::visit(const FunctionNode* functionNode)
     visitChildren(functionNode, nodeTypeId);
 }
 
-void NodeChecker::checkIsForbidden(const std::type_index& nodeTypeId, const Node* node) const
+void ForbiddenNodesVisitor::checkIsForbidden(const std::type_index& nodeTypeId,
+                                             const Node* node) const
 {
     checkIGloballyForbidden(nodeTypeId, node);
     checkIsForbiddenByParent(nodeTypeId, node);
 }
 
-void NodeChecker::checkIGloballyForbidden(const std::type_index& nodeTypeId,
-                                          const Antares::Expressions::Nodes::Node* node) const
+void ForbiddenNodesVisitor::checkIGloballyForbidden(const std::type_index& nodeTypeId,
+                                                    const Node* node) const
 {
     if (forbiddenNodes_.isGloballyForbidden(nodeTypeId))
     {
@@ -200,8 +202,8 @@ void NodeChecker::checkIGloballyForbidden(const std::type_index& nodeTypeId,
     }
 }
 
-void NodeChecker::checkIsForbiddenByParent(const std::type_index& nodeTypeId,
-                                           const Antares::Expressions::Nodes::Node* node) const
+void ForbiddenNodesVisitor::checkIsForbiddenByParent(const std::type_index& nodeTypeId,
+                                                     const Node* node) const
 {
     for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
@@ -212,8 +214,8 @@ void NodeChecker::checkIsForbiddenByParent(const std::type_index& nodeTypeId,
     }
 }
 
-void NodeChecker::visitChildren(const Expressions::Nodes::ParentNode* node,
-                                const std::type_index& nodeTypeId)
+void ForbiddenNodesVisitor::visitChildren(const Expressions::Nodes::ParentNode* node,
+                                          const std::type_index& nodeTypeId)
 {
     parentsStack_.emplace_back(node->name(), nodeTypeId);
     for (const auto* childNode: node->getOperands())

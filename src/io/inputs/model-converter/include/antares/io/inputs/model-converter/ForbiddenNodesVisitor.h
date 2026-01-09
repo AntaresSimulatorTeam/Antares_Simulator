@@ -39,10 +39,10 @@ public:
                                 const std::string parent = "");
 };
 
-class NodeChecker final: public Expressions::Visitors::NodeVisitor<void>
+class ForbiddenNodesVisitor final: public Expressions::Visitors::NodeVisitor<void>
 {
 public:
-    explicit NodeChecker(const ForbiddenNodes& forbid, const std::string& expression);
+    explicit ForbiddenNodesVisitor(const ForbiddenNodes& forbid, const std::string& expression);
     [[nodiscard]] std::string name() const override;
 
     void visit(const Expressions::Nodes::SumNode*) override;

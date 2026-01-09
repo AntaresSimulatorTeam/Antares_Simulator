@@ -24,7 +24,7 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/expressions/expression.h"
-#include "antares/io/inputs/model-converter/NodeChecker.h"
+#include "antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -263,12 +263,14 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
         Expression lb(variable.lower_bound, convertExpressionToNode(variable.lower_bound, model));
         if (lb.RootNode())
         {
-            NodeChecker(forbiddenNodesInVarBounds, variable.lower_bound).dispatch(lb.RootNode());
+            ForbiddenNodesVisitor(forbiddenNodesInVarBounds, variable.lower_bound)
+              .dispatch(lb.RootNode());
         }
         Expression ub(variable.upper_bound, convertExpressionToNode(variable.upper_bound, model));
         if (ub.RootNode())
         {
-            NodeChecker(forbiddenNodesInVarBounds, variable.upper_bound).dispatch(ub.RootNode());
+            ForbiddenNodesVisitor(forbiddenNodesInVarBounds, variable.upper_bound)
+              .dispatch(ub.RootNode());
         }
         variables.emplace_back(variable.id,
                                std::move(lb),
@@ -351,7 +353,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
             throw PortInDefinition(pfdefinition.port,
                                    dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
-        NodeChecker(PreSolveNonConstraint(), pfdefinition.definition).dispatch(nodeRegistry.node);
+        ForbiddenNodesVisitor(PreSolveNonConstraint(), pfdefinition.definition)
+          .dispatch(nodeRegistry.node);
         portFieldDefinitions.emplace_back(*itPort,
                                           *itField,
                                           Expression(pfdefinition.definition,
@@ -366,7 +369,7 @@ static void addSingleConstraint(std::vector<Constraint>& constraints,
                                 const ForbiddenNodes& forbiddenNodes)
 {
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
-    NodeChecker(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
+    ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     constraints.emplace_back(constraint.id,
                              Expression{constraint.expression, std::move(nodeRegistry)},
                              convertLocation(constraint.location));
@@ -409,7 +412,8 @@ std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
     for (const auto& extraOutput: model.extra_outputs)
     {
         auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
-        NodeChecker(ForbiddenInExtraOutput(), extraOutput.expression).dispatch(nodeRegistry.node);
+        ForbiddenNodesVisitor(ForbiddenInExtraOutput(), extraOutput.expression)
+          .dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
                                   Expression{extraOutput.expression, std::move(nodeRegistry)});
     }
@@ -429,7 +433,8 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model)
     for (const auto& objective: model.objectives)
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression, model);
-        NodeChecker(PreSolveNonConstraint(), objective.expression).dispatch(nodeRegistry.node);
+        ForbiddenNodesVisitor(PreSolveNonConstraint(), objective.expression)
+          .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
                                 Expression{objective.expression, std::move(nodeRegistry)},
                                 convertLocation(objective.location));
