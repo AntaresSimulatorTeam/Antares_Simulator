@@ -32,19 +32,17 @@
 namespace Antares::IO::Inputs::ModelConverter
 {
 
-using namespace Antares::Expressions;
-
 template<typename NodeType>
-requires(!std::is_same_v<NodeType, Nodes::FunctionNodeType>)
+requires(!std::is_same_v<NodeType, Expressions::Nodes::FunctionNodeType>)
 std::type_index typeIndexOf()
 {
     return std::type_index(typeid(NodeType));
 }
 
-template<Nodes::FunctionNodeType item>
+template<Expressions::Nodes::FunctionNodeType item>
 std::type_index typeIndexOf()
 {
-    using enum_item_as_type = std::integral_constant<Nodes::FunctionNodeType, item>;
+    using enum_item_as_type = std::integral_constant<Expressions::Nodes::FunctionNodeType, item>;
     return std::type_index(typeid(enum_item_as_type));
 }
 
@@ -58,28 +56,28 @@ public:
         (global_.insert(typeIndexOf<NodeType>()), ...);
     }
 
-    template<Nodes::FunctionNodeType... NodeType>
+    template<Expressions::Nodes::FunctionNodeType... NodeType>
     void forbidGlobally()
     {
         (global_.insert(typeIndexOf<NodeType>()), ...);
     }
 
     // ---------------------- PARENT -> CHILD --------------------
-    template<Nodes::FunctionNodeType Parent, typename Child>
-    requires(!std::is_same_v<Child, Nodes::FunctionNodeType>)
+    template<Expressions::Nodes::FunctionNodeType Parent, typename Child>
+    requires(!std::is_same_v<Child, Expressions::Nodes::FunctionNodeType>)
     void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
-    template<Nodes::FunctionNodeType Parent,
-             Nodes::FunctionNodeType Child>
+    template<Expressions::Nodes::FunctionNodeType Parent,
+             Expressions::Nodes::FunctionNodeType Child>
     void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
-    template<typename Parent, Nodes::FunctionNodeType Child>
+    template<typename Parent, Expressions::Nodes::FunctionNodeType Child>
     void parentForbidsChild()
     {
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());

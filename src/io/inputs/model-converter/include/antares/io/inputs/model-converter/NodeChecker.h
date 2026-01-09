@@ -57,7 +57,7 @@ public:
 
 private:
     // Member functions
-    void checkIsForbidden(const std::type_index& typeId, const std::string& nodeName) const;
+    void checkIsForbidden(const std::type_index& nodeTypeId, const std::string& nodeName) const;
 
     template<class Node>
     void visitChildren(const std::string& nodeName,
