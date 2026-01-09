@@ -155,7 +155,7 @@ void NodeChecker::visit(const AllTimeSumNode* allTimeSumNode)
 
 void NodeChecker::visit(const FunctionNode* functionNode)
 {
-    std::type_index nodeTypeId(typeid(int) /* has to be default constructed here */);
+    std::type_index nodeTypeId(typeid(int)); // Must be default constructed here
 
     switch (functionNode->type())
     {
