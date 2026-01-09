@@ -187,11 +187,22 @@ void NodeChecker::visit(const FunctionNode* functionNode)
 
 void NodeChecker::checkIsForbidden(const std::type_index& nodeTypeId, const Node* node) const
 {
+    checkIGloballyForbidden(nodeTypeId, node);
+    checkIsForbiddenByParent(nodeTypeId, node);
+}
+
+void NodeChecker::checkIGloballyForbidden(const std::type_index& nodeTypeId,
+                                          const Antares::Expressions::Nodes::Node* node) const
+{
     if (forbiddenNodes_.isGloballyForbidden(nodeTypeId))
     {
         throw ForbiddenNodeFound(expression_, node->name());
     }
+}
 
+void NodeChecker::checkIsForbiddenByParent(const std::type_index& nodeTypeId,
+                                           const Antares::Expressions::Nodes::Node* node) const
+{
     for (const auto& [parentNodeName, parentTypeIndex]: std::ranges::reverse_view(parentsStack_))
     {
         if (forbiddenNodes_.isForbiddenByParent(parentTypeIndex, nodeTypeId))

@@ -69,6 +69,12 @@ private:
     void checkIsForbidden(const std::type_index& nodeTypeId,
                           const Expressions::Nodes::Node* node) const;
 
+    void checkIGloballyForbidden(const std::type_index& nodeTypeId,
+                                 const Antares::Expressions::Nodes::Node* node) const;
+
+    void checkIsForbiddenByParent(const std::type_index& nodeTypeId,
+                                  const Antares::Expressions::Nodes::Node* node) const;
+
     void visitChildren(const Expressions::Nodes::ParentNode* node,
                        const std::type_index& nodeTypeId);
 
