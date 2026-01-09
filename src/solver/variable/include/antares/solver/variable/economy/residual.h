@@ -219,8 +219,8 @@ public:
     {
         // Retrieving the Residual
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          = state.problemeHebdo->ConsommationsAbattues[state.hourInTheWeek].ConsommationAbattueDuPays[pArea->index];
-
+          = state.problemeHebdo->ConsommationsAbattues[state.hourInTheWeek]
+              .ConsommationAbattueDuPays[pArea->index];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
