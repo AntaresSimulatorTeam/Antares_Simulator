@@ -30,6 +30,15 @@
 
 namespace Antares::IO::Inputs::ModelConverter
 {
+
+class ForbiddenNodeFound final: public std::invalid_argument
+{
+public:
+    explicit ForbiddenNodeFound(const std::string expr,
+                                const std::string node,
+                                const std::string parent = "");
+};
+
 class NodeChecker final: public Expressions::Visitors::NodeVisitor<void>
 {
 public:
@@ -59,50 +68,14 @@ private:
     // Member functions
     void checkIsForbidden(const std::type_index& nodeTypeId, const std::string& nodeName) const;
 
-    template<class Node>
     void visitChildren(const std::string& nodeName,
-                       const std::vector<Expressions::Nodes::Node*>& children);
-
-    template<Expressions::Nodes::FunctionNodeType>
-    void visitChildren(const std::string& parentName,
-                       const std::vector<Expressions::Nodes::Node*>& children);
+                       const std::vector<Expressions::Nodes::Node*>& children,
+                       const std::type_index& nodeTypeId);
 
     // Data members
     const ForbiddenNodes& forbiddenNodes_;
     std::vector<std::pair<std::string, std::type_index>> parentsStack_;
     const std::string& expression_;
 };
-
-class ForbiddenNodeFound final: public std::invalid_argument
-{
-public:
-    explicit ForbiddenNodeFound(const std::string expr,
-                                const std::string node,
-                                const std::string parent = "");
-};
-
-template<typename Node>
-void NodeChecker::visitChildren(const std::string& nodeName,
-                                const std::vector<Expressions::Nodes::Node*>& children)
-{
-    parentsStack_.emplace_back(nodeName, typeIndexOf<Node>());
-    for (const auto* child: children)
-    {
-        dispatch(child);
-    }
-    parentsStack_.pop_back();
-}
-
-template<Expressions::Nodes::FunctionNodeType functionNodeType>
-void NodeChecker::visitChildren(const std::string& nodeName,
-                                const std::vector<Expressions::Nodes::Node*>& children)
-{
-    parentsStack_.emplace_back(nodeName, typeIndexOf<functionNodeType>());
-    for (const auto* child: children)
-    {
-        dispatch(child);
-    }
-    parentsStack_.pop_back();
-}
 
 } // namespace Antares::IO::Inputs::ModelConverter
