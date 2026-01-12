@@ -109,7 +109,7 @@ protected:
                                                                                  avgdata.monthly);
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
+                InternalExportValues<1, VCardT, Category::annual>(report, {avgdata.year});
                 break;
             }
         }
@@ -143,7 +143,7 @@ protected:
             report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
               VCardT::decimal>::Value();
             // Value
-            report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.year[0];
+            report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.year;
             // Non applicability
             report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
               = *report.isCurrentVarNA;

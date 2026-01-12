@@ -47,7 +47,7 @@ public:
     void merge(unsigned int year, const IntermediateValues& rhs);
 
 public:
-    std::vector<HighPrecision> year{1};
+    HighPrecision year;
     std::vector<HighPrecision> monthly{MONTHS_PER_YEAR};
     std::vector<HighPrecision> weekly{WEEKS_PER_YEAR};
     std::vector<HighPrecision> daily{DAYS_PER_YEAR};

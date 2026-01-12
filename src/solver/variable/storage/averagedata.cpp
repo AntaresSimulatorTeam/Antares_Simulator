@@ -30,7 +30,7 @@ AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {
-    year.assign(1, 0.);
+    year = 0.;
     monthly.assign(MONTHS_PER_YEAR, 0.);
     weekly.assign(WEEKS_PER_YEAR, 0.);
     daily.assign(DAYS_PER_YEAR, 0.);
@@ -71,7 +71,7 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
         monthly[i] += rhs.month[i] * ratio;
     }
     // Average value throughout all years
-    year[0] += rhs.year * ratio;
+    year += rhs.year * ratio;
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
