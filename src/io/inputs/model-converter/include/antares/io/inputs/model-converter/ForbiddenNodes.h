@@ -48,7 +48,7 @@ std::type_index typeIndexOf()
 class ForbiddenNodes
 {
 public:
-    // ------------------------- GLOBAL -------------------------
+    // ------ GLOBALLY FORBIDDEN -------
     template<typename... NodeType>
     void forbidGlobally()
     {
@@ -61,7 +61,7 @@ public:
         (global_.insert(typeIndexOf<NodeType>()), ...);
     }
 
-    // ---------------------- PARENT -> CHILD --------------------
+    // ------ A PARENT FORBIDS A CHILD ------
     template<Expressions::Nodes::FunctionNodeType Parent, typename Child>
     requires(!std::is_same_v<Child, Expressions::Nodes::FunctionNodeType>)
     void parentForbidsChild()
