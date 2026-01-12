@@ -172,6 +172,7 @@ public:
                                              failedWeekList,
                                              hydroManagement.ventilationResults(),
                                              optWriter,
+                                             pDurationCollector,
                                              scratchmap);
         if (!study.parameters.noOutput)
         {
@@ -213,16 +214,22 @@ public:
         // Computing the summary : adding the contribution of MC years
         // previously computed in parallel
         aggregationMutex.lock();
+
         yearsFailed[y] = yearFailed;
 
-        simulation_->variables.computeSummary(y, numSpace);
+        pDurationCollector("synthesis_compute") << [this, &numSpace, &state]
+        {
+            simulation_->variables.computeSummary(y, numSpace);
 
-        // Computing summary of spatial aggregations
-        simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables, y, numSpace);
+            // Computing summary of spatial aggregations
+            simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables,
+                                                                   y,
+                                                                   numSpace);
 
-        // Computes statistics on annual (system and solution) costs, to be printed in output
-        // into separate files
-        simulation_->computeAnnualCostsStatistics(state);
+            // Computes statistics on annual (system and solution) costs, to be printed in output
+            // into separate files
+            simulation_->computeAnnualCostsStatistics(state);
+        };
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
         numspaceManager.freeNumSpace(numSpace);

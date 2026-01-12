@@ -24,6 +24,7 @@
 #include <SimulationObserver.h>
 
 #include <antares/writer/writer_factory.h>
+#include "antares/application/application.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/exception/LoadingError.hpp"
 #include "antares/infoCollection/StudyInfoCollector.h"
@@ -32,6 +33,7 @@
 
 namespace Antares::API
 {
+
 SimulationResults APIInternal::run(
   const IStudyLoader& study_loader,
   const std::filesystem::path& output,
@@ -91,15 +93,19 @@ SimulationResults APIInternal::execute(
     }
 
     SimulationObserver simulationObserver;
-    optimizationInfo = simulationRun(*study_,
-                                     settings,
-                                     durationCollector,
-                                     *resultWriter,
-                                     simulationObserver);
+    durationCollector("simulation") << [&]
+    {
+        optimizationInfo = simulationRun(*study_,
+                                         settings,
+                                         durationCollector,
+                                         *resultWriter,
+                                         simulationObserver);
+    };
 
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
 
+    Solver::writeSimulationInfos(*study_, durationCollector, optimizationInfo, resultWriter.get());
     return {.antares_problems = simulationObserver.acquireLps(), .error{}};
 }
 } // namespace Antares::API

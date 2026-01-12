@@ -57,5 +57,9 @@ public:
 
     /// Number cumulative - constraint
     std::size_t cumulativeConstraintCount() const;
+
+private:
+    bool loadAdditionalConstraintsFromIni(const std::filesystem::path& filePath);
+    bool loadAdditionalConstraintsRHS(const std::filesystem::path& filePath);
 };
 } // namespace Antares::Data::ShortTermStorage
