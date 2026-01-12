@@ -218,10 +218,6 @@ const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::Hyd
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
                                     const std::string& text)
 {
-    if (text.empty())
-    {
-        return false;
-    }
     if (text == "daily")
     {
         mode = Parameters::Compatibility::HydroPmax::Daily;
@@ -252,10 +248,6 @@ const char* CompatibilityHydroRuleCurvesToCString(
 bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCurves& mode,
                                           const std::string& text)
 {
-    if (text.empty())
-    {
-        return false;
-    }
     if (text == "single")
     {
         mode = Parameters::Compatibility::HydroRuleCurves::Single;
