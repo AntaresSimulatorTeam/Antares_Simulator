@@ -918,10 +918,8 @@ var annotated_dup =
             [ "STstorageWithdrawalByCluster", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster" ],
             [ "VCardThermalAirPollutantEmissions", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions" ],
             [ "ThermalAirPollutantEmissions", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions" ],
-            [ "VCardUnsupliedEnergy", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy" ],
-            [ "UnsupliedEnergy", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy" ],
-            [ "VCardUnsupliedEnergyCSR", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR" ],
-            [ "UnsupliedEnergyCSR", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR" ],
+            [ "UnsuppliedEnergyTrait", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyTrait.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyTrait" ],
+            [ "UnsuppliedEnergyCSRTrait", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyCSRTrait.html", null ],
             [ "VCardWaterValue", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue" ],
             [ "WaterValue", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue" ]
           ] ],
