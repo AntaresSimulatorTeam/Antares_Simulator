@@ -18,12 +18,14 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#include "antares/solver/variable/categories.h"
 #define BOOST_TEST_MODULE "test time series"
 
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/logs/logs.h"
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/writer/in_memory_writer.h"
 
@@ -50,7 +52,20 @@ BOOST_FIXTURE_TEST_CASE(no_variable_constructor_does_not_throw, StudyFixture)
     Antares::Solver::InMemoryWriter writer(durationCollector);
     // At least one area was required to trigger a std::bad_alloc throw
     Antares::Data::addAreaToListOfAreas(study->areas, "dummyArea");
-    BOOST_CHECK_NO_THROW(SurveyResults survey(*study, 1, "out", writer););
+    SurveyResults survey(*study, 1, "out", writer);
+
+    survey.data.columnIndex = 1;
+    survey.captions[0][0] = "hello";
+    survey.captions[1][0] = "unit";
+    survey.captions[2][0] = "N/A";
+    survey.saveToFile(Category::DataLevel::setOfAreas,
+                      Category::FileLevel::va,
+                      Category::Precision::hourly);
+    for (auto [k, v]: writer.getMap())
+    {
+        logs.info() << "#" << k;
+        logs.info() << v;
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
