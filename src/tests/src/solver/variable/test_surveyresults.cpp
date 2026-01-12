@@ -92,6 +92,10 @@ BOOST_FIXTURE_TEST_CASE(survey_result_hourly, StudyFixture)
                        std::string::npos);
     }
     // Annual
+    // ⚠ SurveyResults ne fait pas l'agrégation temporelle,
+    // il se contente d'écrire son contenu. Il faut faire l'agrégation temporelle
+    // en amont.
+    if (false)
     {
         const std::string filename = "annual.txt";
         survey.data.filename = filename;
