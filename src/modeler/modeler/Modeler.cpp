@@ -105,33 +105,36 @@ private:
     BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
-bool isEmpty(const Antares::Solver::ModelerData& data, Config::Location location)
+struct LocationAnalysis
 {
-    return !std::ranges::any_of(
-      data.system->Components(),
-      [&location](const auto& component)
-      {
-          return std::ranges::any_of(
-            component.getModel()->Variables(),
-            [&location](const auto& variable)
-            { return AreLocationsCompatibleForFillers(location, variable.location()); });
-      });
-}
+    bool hasCompatibleVariable = false;
+    bool isMip = false;
+};
 
-bool isProblemLocationMip(const ModelerData& data, Config::Location location)
+LocationAnalysis analyzeLocation(const ModelerData& data, const Config::Location& location)
 {
-    return std::ranges::any_of(
-      data.system->Components(),
-      [&location](const auto& component)
-      {
-          return std::ranges::any_of(
-            component.getModel()->Variables(),
-            [&location](const auto& variable)
+    LocationAnalysis result;
+
+    for (const auto& component: data.system->Components())
+    {
+        for (const auto& variable: component.getModel()->Variables())
+        {
+            if (!AreLocationsCompatibleForFillers(location, variable.location()))
             {
-                return AreLocationsCompatibleForFillers(location, variable.location())
-                       && variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT;
-            });
-      });
+                continue;
+            }
+
+            result.hasCompatibleVariable = true;
+
+            if (variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT)
+            {
+                result.isMip = true;
+                return result;
+            }
+        }
+    }
+
+    return result;
 }
 
 struct ProblemEntity
@@ -147,11 +150,11 @@ ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
                            const FillContext& timeScenarioCtx,
                            const std::string& solver)
 {
-    if (isEmpty(data, location))
+    auto [hasCompatibleVariable, isMip] = analyzeLocation(data, location);
+    if (!hasCompatibleVariable)
     {
         return {nullptr, nullptr};
     }
-    bool isMip = isProblemLocationMip(data, location);
     auto problem = std::make_unique<OrtoolsLinearProblem>(isMip, solver);
     auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
       *problem,
