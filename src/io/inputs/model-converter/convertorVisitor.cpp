@@ -295,7 +295,7 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-static bool isThePortIsRegistered(const std::string& portId,
+static bool isPortRegistered(const std::string& portId,
                                   const std::vector<YmlModel::Port>& ports)
 {
     for (const auto& [id, _]: ports)
@@ -313,7 +313,7 @@ PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContex
     const auto [portId, portField] = std::any_cast<std::pair<std::string, std::string>>(
       context->accept(this));
 
-    if (isThePortIsRegistered(portId, model_.ports))
+    if (isPortRegistered(portId, model_.ports))
     {
         return registry_.create<PortFieldNode>(portId, portField);
     }
