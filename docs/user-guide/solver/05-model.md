@@ -404,7 +404,7 @@ $$
 $$
 
 $$
-(14)(c) \forall n \in N, \forall \lambda \in \Lambda\_n, q=1,Q, \mathfrak{R}\_{\lambda_q} \leq S_{\lambda} \frac{1}{Q}
+(14)(c) \forall n \in N, \forall \lambda \in \Lambda\_n, q=1,Q, \mathfrak{R}\_{\lambda_q} \leq \frac{S_{\lambda}}{Q}
 $$
 
 Reservoir level is bounded by admissible lower and upper bounds (rule curves)
