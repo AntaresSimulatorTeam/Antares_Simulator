@@ -80,34 +80,34 @@ void checkVariables(const unique_ptr<ILinearProblem>& originalProblem,
         BOOST_CHECK_EQUAL(origVariable->getLb(), fromMps.VarLowerBound(vi));
         BOOST_CHECK_EQUAL(origVariable->getUb(), fromMps.VarUpperBound(vi));
     }
-    }
+}
 
 void checkConstraints(const unique_ptr<ILinearProblem>& originalProblem,
-                          const operations_research::mb::ModelBuilderHelper& fromMps)
+                      const operations_research::mb::ModelBuilderHelper& fromMps)
+{
+    BOOST_CHECK_EQUAL(originalProblem->constraintCount(), fromMps.num_constraints());
+    const auto& origVariables = originalProblem->getVariables();
+    const auto& origConstraints = originalProblem->getConstraints();
+
+    NameManager nameManager;
+    for (int ci = 0; ci < fromMps.num_constraints(); ++ci)
     {
-        BOOST_CHECK_EQUAL(originalProblem->constraintCount(), fromMps.num_constraints());
-        const auto& origVariables = originalProblem->getVariables();
-        const auto& origConstraints = originalProblem->getConstraints();
+        const auto& origConstraint = origConstraints.at(ci);
+        BOOST_CHECK_EQUAL(MakeMpsSafeUniqueName(origConstraint->getName(), nameManager),
+                          fromMps.ConstraintName(ci));
+        BOOST_CHECK_EQUAL(origConstraint->getLb(), fromMps.ConstraintLowerBound(ci));
+        BOOST_CHECK_EQUAL(origConstraint->getUb(), fromMps.ConstraintUpperBound(ci));
 
-        NameManager nameManager;
-        for (int ci = 0; ci < fromMps.num_constraints(); ++ci)
+        const auto fromMpsConstraintCoef = fromMps.ConstraintCoefficients(ci);
+        const auto fromMpsConstraintVarIndices = fromMps.ConstraintVarIndices(ci);
+        BOOST_CHECK_EQUAL(fromMpsConstraintCoef.size(), fromMpsConstraintVarIndices.size());
+        for (int vi = 0; vi < fromMps.num_variables(); ++vi)
         {
-            const auto& origConstraint = origConstraints.at(ci);
-            BOOST_CHECK_EQUAL(MakeMpsSafeUniqueName(origConstraint->getName(), nameManager),
-                              fromMps.ConstraintName(ci));
-            BOOST_CHECK_EQUAL(origConstraint->getLb(), fromMps.ConstraintLowerBound(ci));
-            BOOST_CHECK_EQUAL(origConstraint->getUb(), fromMps.ConstraintUpperBound(ci));
-
-            const auto fromMpsConstraintCoef = fromMps.ConstraintCoefficients(ci);
-            const auto fromMpsConstraintVarIndices = fromMps.ConstraintVarIndices(ci);
-            BOOST_CHECK_EQUAL(fromMpsConstraintCoef.size(), fromMpsConstraintVarIndices.size());
-            for (int vi = 0; vi < fromMps.num_variables(); ++vi)
+            const auto& origVariable = origVariables.at(vi);
+            const auto origVariableCoef = origConstraint->getCoefficient(origVariable.get());
+            if (origVariableCoef == 0) // if the coef in the original constraint is zero then
+                                       // variable index should not be in ConstraintVarIndices
             {
-                const auto& origVariable = origVariables.at(vi);
-                const auto origVariableCoef = origConstraint->getCoefficient(origVariable.get());
-                if (origVariableCoef == 0) // if the coef in the original constraint is zero then
-                                           // variable index should not be in ConstraintVarIndices
-                {
                     const bool found = ranges::find(fromMpsConstraintVarIndices, vi)
                                        != fromMpsConstraintVarIndices.end();
                     BOOST_CHECK_EQUAL(found, false);
@@ -121,7 +121,7 @@ void checkConstraints(const unique_ptr<ILinearProblem>& originalProblem,
         }
     }
 
-    void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
+void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
                         const operations_research::mb::ModelBuilderHelper& fromMps)
     {
         const auto& origVariables = originalProblem->getVariables();
