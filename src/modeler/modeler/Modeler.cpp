@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -22,7 +21,6 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
-#include <chrono>
 #include <fstream>
 
 #include <antares/logs/logs.h>
@@ -40,7 +38,6 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
-using namespace Antares::Solver;
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Solver

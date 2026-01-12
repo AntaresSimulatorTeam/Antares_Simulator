@@ -30,7 +30,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
-#include "antares/modeler-optimisation-container/VariabilityType.h"
+#include <antares/study/system-model/variabilityType.h>
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
 #include "UtilMocks.h"
@@ -109,11 +109,12 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
     model_(
       createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO),
                                  Parameter("five", TimeDependent::NO, ScenarioDependent::NO)})),
-    component_(createComponent(model_,
-                               "component-id",
-                               {{"p", {"p", ParameterType::TIMESERIES, "p"}},
-                                {"five", {"five", ParameterType::CONSTANT, "5"}}},
-                               0)),
+    component_(
+      createComponent(model_,
+                      "component-id",
+                      {{"p", {"p", VariabilityType::VARYING_IN_TIME_ONLY, "p"}},
+                       {"five", {"five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "5"}}},
+                      0)),
     scenarioGroupRepo_(makeScenarioGroupRepo(component_)),
     components_({component_})
 {

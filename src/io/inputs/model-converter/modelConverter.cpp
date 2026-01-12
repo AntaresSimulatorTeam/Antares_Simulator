@@ -195,6 +195,26 @@ std::vector<ModelerStudy::SystemModel::Parameter> convertParameters(
     return parameters;
 }
 
+Modeler::Config::Location convertLocation(const std::string& locationStr)
+{
+    std::string locLower = locationStr;
+    std::ranges::transform(locLower, locLower.begin(), ::tolower);
+    if (locLower == "master")
+    {
+        return Modeler::Config::Location::MASTER;
+    }
+    if (locLower == "master-and-subproblems")
+    {
+        return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+    if (locLower == "subproblems")
+    {
+        return Modeler::Config::Location::SUBPROBLEMS;
+    }
+
+    throw std::runtime_error("Unknown location: " + locationStr);
+}
+
 /**
  * \brief Converts a YmlModel::ValueType to an SystemModel::ValueType.
  *
@@ -252,7 +272,8 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
                                std::move(ub),
                                convertType(variable.variable_type),
                                SM::fromBool<SM::TimeDependent>(variable.time_dependent),
-                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent));
+                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent),
+                               convertLocation(variable.location));
     }
 
     return variables;
@@ -348,7 +369,8 @@ static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constrain
     NodeChecker(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     constraints.emplace_back(constraint.id,
                              ModelerStudy::SystemModel::Expression{constraint.expression,
-                                                                   std::move(nodeRegistry)});
+                                                                   std::move(nodeRegistry)},
+                             convertLocation(constraint.location));
 }
 
 /**
@@ -415,7 +437,8 @@ std::vector<ModelerStudy::SystemModel::Objective> convertObjectives(
         NodeChecker(PreSolveNonConstraint(), objective.expression).dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
                                 ModelerStudy::SystemModel::Expression{objective.expression,
-                                                                      std::move(nodeRegistry)});
+                                                                      std::move(nodeRegistry)},
+                                convertLocation(objective.location));
     }
     return objectives;
 }

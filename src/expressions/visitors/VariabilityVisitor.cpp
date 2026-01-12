@@ -83,12 +83,7 @@ Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::VariableNod
 Optimisation::VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
 {
     const auto systemParameter = context_.getParameter(param->value());
-    if (systemParameter.type == ParameterType::CONSTANT)
-    {
-        return Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
-        // TODO: handle more cases, but ParameterType must be exhaustive first
-    }
-    return param->variability();
+    return systemParameter.type;
 }
 
 Optimisation::VariabilityType VariabilityVisitor::visit(

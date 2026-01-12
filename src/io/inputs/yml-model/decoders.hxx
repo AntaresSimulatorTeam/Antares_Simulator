@@ -108,6 +108,7 @@ struct convert<Antares::IO::Inputs::YmlModel::Variable>
           Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS);
         rhs.time_dependent = node["time-dependent"].as<bool>(true);
         rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
+        rhs.location = node["location"].as<std::string>("subproblems");
         return true;
     }
 };
@@ -155,6 +156,7 @@ struct convert<Antares::IO::Inputs::YmlModel::Constraint>
         }
         rhs.id = node["id"].as<std::string>();
         rhs.expression = node["expression"].as<std::string>();
+        rhs.location = node["location"].as<std::string>("subproblems");
         return true;
     }
 };
@@ -185,6 +187,7 @@ struct convert<Antares::IO::Inputs::YmlModel::Objective>
         }
         rhs.id = node["id"].as<std::string>();
         rhs.expression = node["expression"].as<std::string>();
+        rhs.location = node["location"].as<std::string>("subproblems");
         return true;
     }
 };

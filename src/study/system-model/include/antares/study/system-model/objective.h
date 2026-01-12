@@ -52,11 +52,6 @@ public:
         return expression_;
     }
 
-    void setLocation(Modeler::Config::Location loc)
-    {
-        location_ = loc;
-    }
-
     [[nodiscard]] Modeler::Config::Location location() const
     {
         return location_;

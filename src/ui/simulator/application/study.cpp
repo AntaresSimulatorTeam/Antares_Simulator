@@ -214,7 +214,8 @@ protected:
         // Load all data
         Data::StudyLoadOptions options;
         options.loadOnlyNeeded = false;
-        study->loadFromFolder(sFl, options);
+        Benchmarking::DurationCollector durationCollector;
+        study->loadFromFolder(sFl, options, durationCollector);
 
         // Postflight
         logs.info();

@@ -105,6 +105,14 @@ public:
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
 
+    /**
+     * Return the last solution or solve if no solution exist.
+     * @param verboseSolver
+     * @return The solution
+     */
+    OrtoolsMipSolution* solution(bool verboseSolver);
+    double objectiveValue() const override;
+
     [[nodiscard]] double infinity() const override;
     [[nodiscard]] bool isLP() const override;
 

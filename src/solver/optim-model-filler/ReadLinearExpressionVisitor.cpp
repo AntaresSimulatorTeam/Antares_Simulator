@@ -157,17 +157,15 @@ Optimization::TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
   const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (node->variability() == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        && systemParameter.type != ModelerStudy::SystemModel::ParameterType::CONSTANT)
-    {
-        throw Error::InvalidArgumentError(
-          "Parameter " + node->value()
-          + " is declared constant in time and scenario in library but not in system");
-    }
-
-    if (systemParameter.type == ModelerStudy::SystemModel::ParameterType::CONSTANT)
+    if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         double value = evalContext_.getSystemParameterValueAsDouble(node->value());
+
+        return Optimization::TimeDependentLinearExpression({}, value);
+    }
+    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    {
+        double value = evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0);
         return Optimization::TimeDependentLinearExpression({}, value);
     }
     // only dependent

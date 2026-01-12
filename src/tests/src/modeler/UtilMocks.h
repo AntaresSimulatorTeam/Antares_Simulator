@@ -326,6 +326,11 @@ public:
         return !isMinimization();
     }
 
+    [[nodiscard]] double objectiveValue() const override
+    {
+        return 0.0;
+    }
+
 protected:
     bool isLP_;
     std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable>> variables_;

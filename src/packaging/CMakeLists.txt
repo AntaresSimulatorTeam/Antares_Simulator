@@ -111,6 +111,7 @@ set(TARGET_LIBS #No alias
         scenario-group-parser
         yml-optim-config
         enums
+        modeler-checks
 )
 
 install(TARGETS ${TARGET_LIBS}

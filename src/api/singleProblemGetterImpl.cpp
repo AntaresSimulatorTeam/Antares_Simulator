@@ -25,7 +25,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
@@ -58,7 +57,7 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
 
 std::string problemName(const WeeklyProblemId& id)
 {
-    return fmt::format("problem-{}-{}.txt", id.year, id.week);
+    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
 }
 } // namespace
 
@@ -105,7 +104,6 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
     initializeRandomNumbers();
-    ScenarioBuilderOwner(*study_).callScenarioBuilder();
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
@@ -168,8 +166,24 @@ void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path
     OPT_ExportStructures(&pb_, *writer);
 }
 
+void fillLinksProperties(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)
+{
+    const auto& studyruntime = study.runtime;
+    for (uint k = 0; k < studyruntime.interconnectionsCount(); ++k)
+    {
+        const auto* lnk = studyruntime.areaLink[k];
+        pb.CoutDeTransport[k].IntercoGereeAvecDesCouts = lnk->useHurdlesCost;
+    }
+}
+
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
 {
+    // IntercoGereeAvecDesCouts needs to be initialized
+    // before building variable list and the common matrix
+    fillLinksProperties(pb_, *study_);
+
+    OPT_NumeroDeJourDuPasDeTemps(&pb_);
+
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(&pb_);
 
     auto builder_data = NewGetConstraintBuilderFromProblemHebdo(&pb_);

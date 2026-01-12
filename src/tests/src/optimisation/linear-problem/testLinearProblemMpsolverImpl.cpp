@@ -259,4 +259,48 @@ BOOST_FIXTURE_TEST_CASE(solve_problem_then_add_new_var___new_var_optimal_value_i
     BOOST_CHECK_EQUAL(newVar->solutionValue(), 0);
 }
 
+// New tests for objectiveValue()
+BOOST_FIXTURE_TEST_CASE(objectiveValue_default_is_zero, FixtureEmptyProblem)
+{
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(objectiveValue_with_coeff_but_not_solved_is_zero, FixtureEmptyProblem)
+{
+    auto* var = pb->addNumVariable(0, 10, "var");
+    pb->setObjectiveCoefficient(var, 5);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(objectiveValue_after_solve_matches_solution_objective,
+                        FixtureFeasibleProblem)
+{
+    auto* solution = pb->solve(false);
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 1);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), solution->getObjectiveValue());
+}
+
+BOOST_FIXTURE_TEST_CASE(objectiveOffset_default_and_value_is_zero, FixtureEmptyProblem)
+{
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 0);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(setObjectiveOffset_changes_getter_and_objectiveValue_without_vars,
+                        FixtureEmptyProblem)
+{
+    pb->setObjectiveOffset(2.5);
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 2.5);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), 2.5);
+}
+
+BOOST_FIXTURE_TEST_CASE(setObjectiveOffset_before_solve_affects_solution_objective,
+                        FixtureFeasibleProblem)
+{
+    pb->setObjectiveOffset(2.0);
+    auto* solution = pb->solve(false);
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 3);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), solution->getObjectiveValue());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

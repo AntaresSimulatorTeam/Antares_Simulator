@@ -83,6 +83,7 @@ target_include_directories(expressions
 target_link_libraries(expressions
         PUBLIC
         Boost::headers
+        Antares::antares-study-system-model
         Antares::logs
         fmt::fmt
         #TODO i need LinearProblemData
@@ -91,7 +92,6 @@ target_link_libraries(expressions
         Antares::modeler-optimisation-container
         Antares::optim-model-filler
         PRIVATE
-        Antares::antares-study-system-model
         Antares::exception
 )
 

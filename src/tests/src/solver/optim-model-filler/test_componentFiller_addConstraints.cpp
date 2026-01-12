@@ -23,9 +23,9 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/study/system-model/variabilityType.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/modeler-optimisation-container/VariabilityType.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -153,9 +153,10 @@ BOOST_AUTO_TEST_CASE(ct_with_time_series_variable_bounds)
         false}},
       {{"ct1", ct_node}});
 
-    createComponent("model",
-                    "componentToto",
-                    {build_context_parameter_with("bounds", "bounds", ParameterType::TIMESERIES)});
+    createComponent(
+      "model",
+      "componentToto",
+      {build_context_parameter_with("bounds", "bounds", VariabilityType::VARYING_IN_TIME_ONLY)});
 
     const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 0};
@@ -206,10 +207,11 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
         false}},
       {{"ct1", ct_node}});
 
-    createComponent("model",
-                    "componentToto",
-                    {build_context_parameter_with("bounds", "bounds", ParameterType::TIMESERIES)},
-                    "GROUPENAME");
+    createComponent(
+      "model",
+      "componentToto",
+      {build_context_parameter_with("bounds", "bounds", VariabilityType::VARYING_IN_TIME_ONLY)},
+      "GROUPENAME");
 
     const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 3};

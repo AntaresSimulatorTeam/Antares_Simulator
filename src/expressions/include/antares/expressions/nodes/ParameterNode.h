@@ -3,7 +3,7 @@
 #include <string>
 
 #include <antares/expressions/nodes/Leaf.h>
-#include <antares/modeler-optimisation-container/VariabilityType.h>
+#include <antares/study/system-model/variabilityType.h>
 
 namespace Antares::Expressions::Nodes
 {

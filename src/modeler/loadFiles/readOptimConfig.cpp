@@ -19,11 +19,12 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include "antares/solver/modeler/loadFiles/readOptimConfig.h"
+
 #include <yaml-cpp/yaml.h>
 
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
-#include "antares/io/inputs/yml-optim-config/converter.h"
 #include "antares/io/inputs/yml-optim-config/parser.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 
@@ -62,33 +63,17 @@ static YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
     }
 }
 
-static void updateLibraries(const YmlOptimConfig::OptimConfig& obj,
-                            std::vector<ModelerStudy::SystemModel::Library>& libraries)
-{
-    try
-    {
-        YmlOptimConfig::updateLibrairies(obj, libraries);
-    }
-    catch (const std::runtime_error& e)
-    {
-        logs.error() << "Error while converting optim config yaml: " << e.what();
-        throw ErrorLoadingYaml(e.what());
-    }
-}
-
-void loadOptimConfig(const fs::path& studyPath,
-                     std::vector<ModelerStudy::SystemModel::Library>& libraries)
+YmlOptimConfig::OptimConfig loadOptimConfigFromYaml(const fs::path& studyPath)
 {
     const fs::path configPath = studyPath / "input" / "optim-config.yml";
     if (!std::filesystem::exists(configPath))
     {
         logs.info() << "Optim config file not found at " << configPath;
-        return;
+        return {};
     }
 
     std::string content = readOptimConfigFile(configPath);
-    const auto&& obj = parseOptimConfig(content, configPath);
-    updateLibraries(obj, libraries);
+    return parseOptimConfig(content, configPath);
 }
 
 } // namespace Antares::Solver::LoadFiles

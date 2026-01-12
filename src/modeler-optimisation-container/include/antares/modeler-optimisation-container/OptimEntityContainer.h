@@ -26,10 +26,10 @@
 #include <antares/optimisation/linear-problem-api/mipConstraint.h>
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
 #include <antares/study/system-model/component.h>
+#include <antares/study/system-model/variabilityType.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 
 #include "EvaluationContext.h"
-#include "VariabilityType.h"
 #include "scenarioGroupRepo.h"
 
 namespace Antares::Optimisation

@@ -37,7 +37,7 @@ namespace Test::Modeler
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const ParameterType& type)
+  const VariabilityType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }
@@ -137,6 +137,11 @@ Nodes::Node* LinearProblemBuildingFixture::add(Nodes::Node* node1, Nodes::Node* 
     return nodeRegistry.create<Nodes::SumNode>(node1, node2);
 }
 
+Nodes::Node* LinearProblemBuildingFixture::Sum(Nodes::Node* node)
+{
+    return nodeRegistry.create<Nodes::AllTimeSumNode>(node);
+}
+
 void LinearProblemBuildingFixture::createModel(const std::string& modelId,
                                                const std::vector<std::string>& parameterIds,
                                                const std::vector<VariableData>& variablesData,
@@ -146,7 +151,7 @@ void LinearProblemBuildingFixture::createModel(const std::string& modelId,
     std::vector<Parameter> parameters;
     for (const auto& parameter_id: std::move(parameterIds))
     {
-        parameters.emplace_back(parameter_id, TimeDependent::NO, ScenarioDependent::NO);
+        parameters.emplace_back(parameter_id, TimeDependent::YES, ScenarioDependent::YES);
     }
     createModelWithSystemModelParameter(modelId,
                                         parameters,
@@ -195,6 +200,49 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
         objectives.emplace_back("objective", createExpression(objective, nodeRegistry));
         model_builder.withObjectives(std::move(objectives));
     }
+    auto model = model_builder.build();
+    models[modelId] = std::move(model);
+}
+
+void LinearProblemBuildingFixture::createModelWithMultipleObjectives(
+  const std::string& modelId,
+  std::vector<Parameter> parameters,
+  const std::vector<VariableData>& variablesData,
+  const std::vector<ConstraintData>& constraintsData,
+  std::vector<Nodes::Node*> objectiveNodes)
+{
+    std::vector<Variable> variables;
+    for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
+    {
+        variables.emplace_back(id,
+                               createExpression(lb, nodeRegistry),
+                               createExpression(ub, nodeRegistry),
+                               type,
+                               fromBool<TimeDependent>(timeDependent),
+                               fromBool<ScenarioDependent>(scenarioDependent));
+    }
+    std::vector<Constraint> constraints;
+    for (const auto& [id, expression]: constraintsData)
+    {
+        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+    }
+
+    std::vector<Objective> objectives;
+    int objIndex = 0;
+    for (auto* objectiveNode: objectiveNodes)
+    {
+        objectives.emplace_back("objective_" + std::to_string(objIndex),
+                                createExpression(objectiveNode, nodeRegistry));
+        objIndex++;
+    }
+
+    ModelBuilder model_builder;
+    model_builder.withId(modelId)
+      .withParameters(std::move(parameters))
+      .withVariables(std::move(variables))
+      .withConstraints(std::move(constraints))
+      .withObjectives(std::move(objectives));
+
     auto model = model_builder.build();
     models[modelId] = std::move(model);
 }

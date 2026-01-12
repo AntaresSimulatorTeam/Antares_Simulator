@@ -21,13 +21,26 @@
 
 #pragma once
 
-#include <antares/io/inputs/yml-optim-config/OptimConfig.h>
-#include "antares/study/system-model/library.h"
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/modeler/data.h>
 
-namespace Antares::IO::Inputs::YmlOptimConfig
+namespace Antares::Modeler::Checks
 {
 
-void updateLibrairies(const OptimConfig& ymlOptimConfig,
-                      std::vector<ModelerStudy::SystemModel::Library>& libraries);
+/// Check location validity for all modeler data
+void checkLocations(const Antares::Modeler::Data& data);
 
-} // namespace Antares::IO::Inputs::YmlOptimConfig
+// shouldn't be used outside, here for unit tests
+void checkExpression(const Antares::Expressions::Nodes::Node* expression,
+                     const Antares::Modeler::Config::Location& location,
+                     const Antares::ModelerStudy::SystemModel::Model& model,
+                     const Antares::ModelerStudy::SystemModel::System& system,
+                     const std::string& exprStr,
+                     const std::string& errorMsgForPortFieldSum = "");
+
+class LocationError final: public std::invalid_argument
+{
+    using std::invalid_argument::invalid_argument;
+};
+
+} // namespace Antares::Modeler::Checks

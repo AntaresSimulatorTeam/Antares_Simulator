@@ -92,13 +92,13 @@ public:
 
 private:
     void addStaticConstraint(const LinearConstraint& linear_constraint,
-                             const std::string& constraint_id);
+                             const std::string& constraint_id) const;
 
     void addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
-                                     const LinearProblemApi::FillContext& ctx);
+                                     const LinearProblemApi::FillContext& ctx) const;
 
-    void addStaticObjective(const Optimization::TimeDependentLinearExpression& expression) const;
+    void addStaticObjective(const Optimization::LinearExpression& expression) const;
 
     VariabilityType getVariability(const Nodes::Node* node,
                                    const ModelerStudy::SystemModel::Component& component) const;
@@ -114,7 +114,7 @@ private:
     {
         return std::views::filter(
           [this](const auto& item)
-          { return AreLocationsCompatible(item.location(), targetLocation_); });
+          { return AreLocationsCompatibleForFillers(item.location(), targetLocation_); });
     }
 };
 } // namespace Antares::Optimisation
