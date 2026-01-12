@@ -44,8 +44,7 @@ void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& pat
 
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName):
     mpSolver_(MPSolverFactory(isMip, solverName)),
-    objective_(mpSolver_->MutableObjective()),
-    isLP_(!isMip)
+    objective_(mpSolver_->MutableObjective())
 {
 }
 

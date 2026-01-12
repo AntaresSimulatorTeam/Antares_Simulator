@@ -39,6 +39,7 @@ using namespace Antares;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::Modeler::Config;
 
 namespace Antares::Solver
 {
@@ -66,7 +67,7 @@ public:
 
     ~SystemLinearProblemBuilder() = default;
 
-    void build(const FillContext& timeScenarioCtx, Antares::Modeler::Config::Location location)
+    void build(const FillContext& timeScenarioCtx, Location location)
     {
         std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
         const auto& components = system_->Components();
@@ -98,6 +99,22 @@ private:
     BendersDecomposition* bendersDecomposition_ = nullptr;
 };
 
+bool isMip(const Antares::Modeler::Data& data, Location location)
+{
+    return std::ranges::any_of(
+      data.system->Components(),
+      [&location](const auto& component)
+      {
+          return std::ranges::any_of(
+            component.getModel()->Variables(),
+            [&location](const auto& variable)
+            {
+                return AreLocationsCompatibleForFillers(location, variable.location())
+                       && variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT;
+            });
+      });
+}
+
 void Modeler::run() const
 {
     Antares::Solver::ModelerParameters parameters;
@@ -118,16 +135,6 @@ void Modeler::run() const
 
     logs.info() << "linear problem of System loaded";
     // Problem is MIP if any variable of any component is not continuous
-    bool isMip = std::ranges::any_of(
-      data.system->Components(),
-      [](const auto& component)
-      {
-          return std::ranges::any_of(component.getModel()->Variables(),
-                                     [](const auto& variable) {
-                                         return variable.Type()
-                                                != ModelerStudy::SystemModel::ValueType::FLOAT;
-                                     });
-      });
 
     // Todo: scenario
     FillContext timeScenarioCtx = {
@@ -141,7 +148,7 @@ void Modeler::run() const
     BendersDecomposition bendersDecomposition;
 
     // Master
-    OrtoolsLinearProblem master_problem(isMip, parameters.solver);
+    OrtoolsLinearProblem master_problem(isMip(data, Location::MASTER), parameters.solver);
     SystemLinearProblemBuilder master_builder(data.system.get(),
                                               master_problem,
                                               *data.dataSeries,
@@ -152,7 +159,7 @@ void Modeler::run() const
     master_builder.build(timeScenarioCtx, Antares::Modeler::Config::Location::MASTER);
 
     // Subproblem
-    OrtoolsLinearProblem subproblem(isMip, parameters.solver);
+    OrtoolsLinearProblem subproblem(isMip(data, Location::SUBPROBLEMS), parameters.solver);
 
     // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
     // gp : and build() should return the vector of component fillers
