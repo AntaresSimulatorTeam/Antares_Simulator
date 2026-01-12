@@ -143,7 +143,7 @@ protected:
             report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
               VCardT::decimal>::Value();
             // Value
-            report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.allYears;
+            report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.year[0];
             // Non applicability
             report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
               = *report.isCurrentVarNA;
@@ -214,7 +214,6 @@ private:
         case Category::annual:
         {
             *(report.values[report.data.columnIndex]) = array[0];
-            avgdata.allYears = array[0];
             break;
         }
 

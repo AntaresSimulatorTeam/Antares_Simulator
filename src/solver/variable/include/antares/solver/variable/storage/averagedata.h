@@ -52,7 +52,6 @@ public:
     std::vector<HighPrecision> weekly{WEEKS_PER_YEAR};
     std::vector<HighPrecision> daily{DAYS_PER_YEAR};
     std::vector<HighPrecision> hourly{HOURS_PER_YEAR};
-    mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     std::vector<float> yearsWeight;
     float yearsWeightSum;
 
