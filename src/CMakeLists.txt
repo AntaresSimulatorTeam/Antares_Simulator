@@ -198,7 +198,7 @@ endif ()
 #Boost header libraries
 find_package(Boost REQUIRED)
 
-#find_package(antlr4-runtime REQUIRED)
+find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(fmt REQUIRED)
 
