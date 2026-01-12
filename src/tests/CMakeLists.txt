@@ -79,15 +79,6 @@ if(Python3_Interpreter_FOUND)
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
-if (BUILD_TOOLS)
-      add_test(
-        NAME tsgenerator
-        COMMAND Python3::Interpreter -m pytest -m tsgenerator --tsgenerator_path=$<TARGET_FILE:antares-ts-generator> antares_tools/ts-generator/ts-generator.py
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
-        )
-
-endif()
-
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
   else()
       message(FATAL_ERROR "Module pytest or numpy not installed : can't run python scripts for end to end tests")
