@@ -238,7 +238,7 @@ BOOST_FIXTURE_TEST_CASE(clone_floor_operator_node, Registry<Node>)
 
     const auto& operands = cloned_floor_node->getOperands();
     BOOST_CHECK_EQUAL(operands.size(), 1);
-    const auto cloned_param = dynamic_cast<ParameterNode*>(operands.at(0));
+    const auto cloned_param = dynamic_cast<ParameterNode*>(operands[0]);
     BOOST_REQUIRE(cloned_param);
     BOOST_CHECK(cloned_param->value() == "p");
 }

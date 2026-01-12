@@ -282,4 +282,34 @@ BOOST_FIXTURE_TEST_CASE(compare_max, ComparisonFixture)
     BOOST_CHECK(!compareVisitor.dispatch(max1, max2));
 }
 
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_itself, ComparisonFixture)
+{
+    Node* floorNode = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                     registry_.create<ParameterNode>("p"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(floorNode, floorNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_its_clone, ComparisonFixture)
+{
+    Node* floorNode = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                     registry_.create<ParameterNode>("p"));
+    const auto clonedFloorNode = CloneVisitor(registry_).dispatch(floorNode);
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(floorNode, clonedFloorNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_a_different_floor_node, ComparisonFixture)
+{
+    Node* floorNode1 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p1"));
+    Node* floorNode2 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p2"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(!compareVisitor.dispatch(floorNode1, floorNode2));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
