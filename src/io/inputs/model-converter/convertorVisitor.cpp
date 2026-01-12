@@ -295,8 +295,7 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-static bool isPortRegistered(const std::string& portId,
-                                  const std::vector<YmlModel::Port>& ports)
+static bool isPortRegistered(const std::string& portId, const std::vector<YmlModel::Port>& ports)
 {
     for (const auto& [id, _]: ports)
     {
