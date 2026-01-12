@@ -63,10 +63,9 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
     {
-        auto cf = std::make_unique<ComponentFiller>(
-          component,
-          *optimEntityContainer,
-          scenarioGroupRepo,
+        auto cf = std::make_unique<ComponentFiller>(component,
+                                                    *optimEntityContainer,
+                                                    scenarioGroupRepo,
                                                     Config::Location::SUBPROBLEMS);
         fillers.push_back(std::move(cf));
     }

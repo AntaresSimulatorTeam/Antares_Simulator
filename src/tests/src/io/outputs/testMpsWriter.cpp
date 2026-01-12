@@ -116,100 +116,99 @@ void checkConstraints(const unique_ptr<ILinearProblem>& originalProblem,
 }
 
 void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
-                        const operations_research::mb::ModelBuilderHelper& fromMps)
+                    const operations_research::mb::ModelBuilderHelper& fromMps)
+{
+    const auto& origVariables = originalProblem->getVariables();
+    BOOST_CHECK_EQUAL(originalProblem->getObjectiveOffset(), fromMps.ObjectiveOffset());
+    for (int vi = 0; vi < fromMps.num_variables(); ++vi)
     {
-        const auto& origVariables = originalProblem->getVariables();
-        BOOST_CHECK_EQUAL(originalProblem->getObjectiveOffset(), fromMps.ObjectiveOffset());
-        for (int vi = 0; vi < fromMps.num_variables(); ++vi)
-        {
-            const auto& origVariable = origVariables.at(vi);
+        const auto& origVariable = origVariables.at(vi);
 
-            BOOST_CHECK_EQUAL(originalProblem->getObjectiveCoefficient(origVariable.get()),
-                              fromMps.VarObjectiveCoefficient(vi));
-        }
+        BOOST_CHECK_EQUAL(originalProblem->getObjectiveCoefficient(origVariable.get()),
+                          fromMps.VarObjectiveCoefficient(vi));
+    }
+}
+
+void checkProblem(const std::unique_ptr<ILinearProblem>& originalProblem, const fs::path& mpsPath)
+{
+    operations_research::mb::ModelBuilderHelper fromMps;
+    fromMps.ImportFromMpsFile(mpsPath.string());
+    checkProblemType(originalProblem, fromMps);
+    checkVariables(originalProblem, fromMps);
+    checkConstraints(originalProblem, fromMps);
+    checkObjective(originalProblem, fromMps);
+}
+
+void checkMPS(const fs::path& studyPath, Modeler& modeler)
+{
+    modeler.run();
+    if (const auto& masterProblem = modeler.masterProblem(); !isProblemEmpty(masterProblem))
+    {
+        checkProblem(masterProblem, studyPath / "output" / "master.mps");
+    }
+    checkProblem(modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
+}
+
+struct MpsWriterTestFixture
+{
+    LoadFiles::FileLoader loader;
+    FileWriter writer;
+
+    explicit MpsWriterTestFixture(const fs::path& studyPath):
+        loader(studyPath),
+        writer(studyPath)
+    {
     }
 
-    void checkProblem(const std::unique_ptr<ILinearProblem>& originalProblem,
-                      const fs::path& mpsPath)
+    Modeler build()
     {
-        operations_research::mb::ModelBuilderHelper fromMps;
-        fromMps.ImportFromMpsFile(mpsPath.string());
-        checkProblemType(originalProblem, fromMps);
-        checkVariables(originalProblem, fromMps);
-        checkConstraints(originalProblem, fromMps);
-        checkObjective(originalProblem, fromMps);
+        return {loader, writer};
     }
+};
 
-    void checkMPS(const fs::path& studyPath, Modeler& modeler)
+void processStudy(const filesystem::path& entry)
+{
+    MpsWriterTestFixture fixture(entry);
+    auto modeler = fixture.build();
+    checkMPS(entry, modeler);
+}
+
+void checkEpic2Studies()
+{
+    for (const auto& subEntry: fs::directory_iterator(resources / "epic2" / "us2.5"))
     {
-        modeler.run();
-        if (const auto& masterProblem = modeler.masterProblem(); !isProblemEmpty(masterProblem))
+        if (!subEntry.is_directory())
         {
-            checkProblem(masterProblem, studyPath / "output" / "master.mps");
+            continue;
         }
-        checkProblem(modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
+        const auto& path = subEntry.path();
+        if (!ignoreList.contains(path.filename().string()))
+        {
+            processStudy(path);
+        }
     }
+}
 
-    struct MpsWriterTestFixture
+BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
+{
+    for (const auto& entry:
+         fs::directory_iterator(resources, fs::directory_options::skip_permission_denied))
     {
-        LoadFiles::FileLoader loader;
-        FileWriter writer;
-
-        explicit MpsWriterTestFixture(const fs::path& studyPath):
-            loader(studyPath),
-            writer(studyPath)
+        if (!entry.is_directory())
         {
+            continue;
         }
-
-        Modeler build()
+        const auto& path = entry.path();
+        if (!ignoreList.contains(path.filename().string()))
         {
-            return {loader, writer};
-        }
-    };
-
-    void processStudy(const filesystem::path& entry)
-    {
-        MpsWriterTestFixture fixture(entry);
-        auto modeler = fixture.build();
-        checkMPS(entry, modeler);
-    }
-
-    void checkEpic2Studies()
-    {
-        for (const auto& subEntry: fs::directory_iterator(resources / "epic2" / "us2.5"))
-        {
-            if (!subEntry.is_directory())
+            if (path.filename().string() == "epic2")
             {
+                checkEpic2Studies();
                 continue;
             }
-            const auto& path = subEntry.path();
-            if (!ignoreList.contains(path.filename().string()))
-            {
-                processStudy(path);
-            }
+            processStudy(path);
         }
     }
+}
 
-    BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
-    {
-        for (const auto& entry:
-             fs::directory_iterator(resources, fs::directory_options::skip_permission_denied))
-        {
-            if (!entry.is_directory())
-            {
-                continue;
-            }
-            const auto& path = entry.path();
-            if (!ignoreList.contains(path.filename().string()))
-            {
-                if (path.filename().string() == "epic2")
-                {
-                    checkEpic2Studies();
-                    continue;
-                }
-                processStudy(path);
-            }
-        }
-    }
-
-    BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END()

@@ -70,4 +70,4 @@ std::vector<std::string> MPSWriter::extractNames(const std::vector<std::unique_p
     return names;
 }
 
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs

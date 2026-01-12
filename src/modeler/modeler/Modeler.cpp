@@ -114,7 +114,7 @@ bool isEmpty(const Antares::Solver::ModelerData& data, Config::Location location
           return std::ranges::any_of(
             component.getModel()->Variables(),
             [&location](const auto& variable)
-            { return !AreLocationsCompatibleForFillers(location, variable.location()); });
+            { return AreLocationsCompatibleForFillers(location, variable.location()); });
       });
 }
 
@@ -231,11 +231,17 @@ void Modeler::run()
 
         // 1-1.mps
         // Write(*(static_cast<OrtoolsLinearProblem*>(subproblem_1_1.get())), output / "1-1.mps");
-        IO::Outputs::MPSWriter(*subproblem_1_1, output / "1-1.mps", "1-1").write();
+        if (subproblem_1_1)
+        {
+            IO::Outputs::MPSWriter(*subproblem_1_1, output / "1-1.mps", "1-1").write();
+        }
         // master.mps
         // Write(*(static_cast<OrtoolsLinearProblem*>(masterProblem_.get())), output /
         // "master.mps");
-        IO::Outputs::MPSWriter(*masterProblem_, output / "master.mps", "master").write();
+        if (masterProblem_)
+        {
+            IO::Outputs::MPSWriter(*masterProblem_, output / "master.mps", "master").write();
+        }
         // structure.txt
         BendersDecompositionWriter writer(bendersDecomposition);
         std::ofstream of(output / "structure.txt");

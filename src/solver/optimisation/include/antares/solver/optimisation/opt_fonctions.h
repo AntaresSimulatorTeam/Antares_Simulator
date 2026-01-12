@@ -35,6 +35,7 @@
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
+
 namespace Antares::IO::Outputs
 {
 class ISimulationTable;

@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
+
 namespace Antares::IO::Outputs
 {
 class IColumn
@@ -135,4 +136,4 @@ using IntegralColumn = TypedColumn<T>;
 using DoubleColumn = TypedColumn<double>;
 template<typename T>
 using OptionalColumn = TypedColumn<std::optional<T>>;
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs

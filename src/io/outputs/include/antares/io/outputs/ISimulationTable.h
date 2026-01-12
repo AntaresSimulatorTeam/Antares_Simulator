@@ -21,6 +21,7 @@
 #pragma once
 
 #include "SimulationTableEntry.h"
+
 namespace Antares::IO::Outputs
 {
 class ISimulationTable
@@ -37,4 +38,4 @@ public:
     /// Write the table to the given file path, using the concrete export format
     virtual void write() = 0;
 };
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs

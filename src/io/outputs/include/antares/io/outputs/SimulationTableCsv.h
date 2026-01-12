@@ -44,4 +44,4 @@ private:
     std::ostringstream buffer_;
     ColumnBasedStorage storage_;
 };
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs

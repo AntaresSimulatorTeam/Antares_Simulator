@@ -26,6 +26,7 @@
 #include "antares/io/outputs/ExportableName.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
+
 namespace Antares::IO::Outputs
 {
 char ConstraintSense(const double& lb, const double& ub, const double& infinity)
@@ -264,4 +265,4 @@ void MPSWriter::write()
 
     writeEnd();
 }
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs

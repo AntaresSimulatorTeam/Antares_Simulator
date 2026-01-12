@@ -37,4 +37,4 @@ public:
 private:
     std::ofstream file_;
 };
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs
