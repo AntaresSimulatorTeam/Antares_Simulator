@@ -19,6 +19,7 @@
 
 #pragma once
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/modeler/parameters/modelerParameters.h"
 
 #include "ModelerData.h"

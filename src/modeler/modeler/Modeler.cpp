@@ -67,11 +67,12 @@ public:
       ILinearProblem& pb,
       const LinearProblemApi::ILinearProblemData& dataSeries,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-      BendersDecomposition* bendersDecomposition):
+      BendersDecomposition* bendersDecomposition,
+      OptimEntityContainer& optimEntityContainer):
         system_(system),
         scenarioGroupRepository_(scenarioGroupRepository),
-        optimEntityContainer_(pb, &dataSeries, &scenarioGroupRepository),
-        bendersDecomposition_(bendersDecomposition)
+        bendersDecomposition_(bendersDecomposition),
+        optimEntityContainer_(optimEntityContainer)
     {
     }
 
@@ -97,17 +98,76 @@ public:
         linear_problem_builder.build(timeScenarioCtx);
     }
 
-    [[nodiscard]] const OptimEntityContainer& getOptimEntityContainer() const
-    {
-        return optimEntityContainer_;
-    }
-
 private:
     const ModelerStudy::SystemModel::System* system_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
-    OptimEntityContainer optimEntityContainer_;
+    OptimEntityContainer& optimEntityContainer_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
 };
+
+bool isEmpty(const Antares::Solver::ModelerData& data, Config::Location location)
+{
+    return !std::ranges::any_of(
+      data.system->Components(),
+      [&location](const auto& component)
+      {
+          return std::ranges::any_of(
+            component.getModel()->Variables(),
+            [&location](const auto& variable)
+            { return !AreLocationsCompatibleForFillers(location, variable.location()); });
+      });
+}
+
+bool isProblemLocationMip(const ModelerData& data, Config::Location location)
+{
+    return std::ranges::any_of(
+      data.system->Components(),
+      [&location](const auto& component)
+      {
+          return std::ranges::any_of(
+            component.getModel()->Variables(),
+            [&location](const auto& variable)
+            {
+                return AreLocationsCompatibleForFillers(location, variable.location())
+                       && variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT;
+            });
+      });
+}
+
+struct ProblemEntity
+{
+    std::unique_ptr<ILinearProblem> problem;
+    std::unique_ptr<OptimEntityContainer> optimEntityContainer;
+};
+
+ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
+                           const Config::Location& location,
+                           const std::string& problemId,
+                           BendersDecomposition* bendersDecomposition,
+                           const FillContext& timeScenarioCtx,
+                           const std::string& solver)
+{
+    if (isEmpty(data, location))
+    {
+        return {nullptr, nullptr};
+    }
+    bool isMip = isProblemLocationMip(data, location);
+    auto problem = std::make_unique<OrtoolsLinearProblem>(isMip, solver);
+    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
+      *problem,
+      data.dataSeries.get(),
+      &data.scenarioGroupRepository);
+    SystemLinearProblemBuilder builder(data.system.get(),
+                                       *problem,
+                                       *data.dataSeries,
+                                       data.scenarioGroupRepository,
+                                       bendersDecomposition,
+                                       *optimEntityContainer);
+
+    bendersDecomposition->setCurrentProblemId(problemId);
+    builder.build(timeScenarioCtx, location);
+    return {std::move(problem), (std::move(optimEntityContainer))};
+}
 
 void Modeler::run()
 {
@@ -115,17 +175,6 @@ void Modeler::run()
 
     logs.info() << "linear problem of System loaded";
     // Problem is MIP if any variable of any component is not continuous
-    bool isMip = std::ranges::any_of(
-      data_.system->Components(),
-      [](const auto& component)
-      {
-          return std::ranges::any_of(component.getModel()->Variables(),
-                                     [](const auto& variable)
-                                     {
-                                         return variable.Type()
-                                                != ModelerStudy::SystemModel::ValueType::FLOAT;
-                                     });
-      });
 
     // Todo: scenario
     FillContext timeScenarioCtx = {
@@ -139,31 +188,27 @@ void Modeler::run()
     BendersDecomposition bendersDecomposition;
 
     // Master
-    masterProblem_ = std::make_unique<OrtoolsLinearProblem>(isMip, parameters_.solver);
-    SystemLinearProblemBuilder masterBuilder(data_.system.get(),
-                                             *masterProblem_,
-                                             *data_.dataSeries,
-                                             data_.scenarioGroupRepository,
-                                             &bendersDecomposition);
 
-    bendersDecomposition.setCurrentProblemId("master");
-    masterBuilder.build(timeScenarioCtx, Config::Location::MASTER);
-
+    auto masterEntities = buildProblem(data_,
+                                       Config::Location::MASTER,
+                                       "master",
+                                       &bendersDecomposition,
+                                       timeScenarioCtx,
+                                       parameters_.solver);
+    masterProblem_ = std::move(masterEntities.problem);
     // Subproblem
-    subproblems_.emplace_back(std::make_unique<OrtoolsLinearProblem>(isMip, parameters_.solver));
+    auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
+                                                                     Config::Location::SUBPROBLEMS,
+                                                                     "1-1",
+                                                                     &bendersDecomposition,
+                                                                     timeScenarioCtx,
+                                                                     parameters_.solver);
+    subproblems_.emplace_back(std::move(subproblem));
 
     auto& subproblem_1_1 = subproblems_[0];
     // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
     // gp : and build() should return the vector of component fillers
     // Subproblem
-    SystemLinearProblemBuilder subproblemBuilder(data_.system.get(),
-                                                 *subproblem_1_1,
-                                                 *data_.dataSeries,
-                                                 data_.scenarioGroupRepository,
-                                                 &bendersDecomposition);
-
-    bendersDecomposition.setCurrentProblemId("1-1");
-    subproblemBuilder.build(timeScenarioCtx, Config::Location::SUBPROBLEMS);
 
     logs.info() << "Linear problem provided";
 
@@ -213,7 +258,7 @@ void Modeler::run()
             writer_.writeSimulationTable(*subproblem_1_1,
                                          *solution,
                                          data_,
-                                         subproblemBuilder.getOptimEntityContainer(),
+                                         *subproblemOptimEntityContainer,
                                          timeScenarioCtx);
         }
     }
