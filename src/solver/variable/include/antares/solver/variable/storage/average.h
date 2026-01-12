@@ -213,13 +213,8 @@ private:
         }
         case Category::annual:
         {
-            double& target = *(report.values[report.data.columnIndex]);
-            target = 0;
-            for (uint i = 0; i != avgdata.nbYearsCapacity; ++i)
-            {
-                target += array[i];
-            }
-            avgdata.allYears = target;
+            *(report.values[report.data.columnIndex]) = array[0];
+            avgdata.allYears = array[0];
             break;
         }
 
