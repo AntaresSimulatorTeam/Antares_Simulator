@@ -57,7 +57,10 @@ public:
     ** \param o The output folder
     ** \param year The current year, if any
     */
-    SurveyResults(const Data::Study& s, const Yuni::String& o, IResultWriter& writer);
+    SurveyResults(const Data::Study& s,
+                  uint maxVariables,
+                  const Yuni::String& o,
+                  IResultWriter& writer);
     /*!
     ** \brief Destructor
     */

@@ -43,12 +43,6 @@ public:
         categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
-    struct Data
-    {
-        double value;
-        uint32_t indice;
-    };
-
     //! Name of the filter
     static const char* Name()
     {

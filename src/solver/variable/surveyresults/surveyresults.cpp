@@ -505,16 +505,20 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-SurveyResults::SurveyResults(const Data::Study& s, const Yuni::String& o, IResultWriter& writer):
+SurveyResults::SurveyResults(const Data::Study& s,
+                             uint maxVariables,
+                             const Yuni::String& o,
+                             IResultWriter& writer):
     data(s, o),
+    maxVariables(maxVariables),
     yearByYearResults(false),
     isCurrentVarNA(nullptr),
     isPrinted(nullptr),
     pResultWriter(writer)
+
 {
     variableCaption.reserve(10);
 
-    maxVariables = s.parameters.variablesPrintInfo.getTotalMaxColumnsCount();
     logs.debug() << "  (for " << maxVariables << " columns)";
 
     data.initialize(maxVariables);
