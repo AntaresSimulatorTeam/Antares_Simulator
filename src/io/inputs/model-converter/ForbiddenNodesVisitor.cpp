@@ -154,34 +154,30 @@ void ForbiddenNodesVisitor::visit(const AllTimeSumNode* allTimeSumNode)
     visitChildren(allTimeSumNode, nodeTypeId);
 }
 
-void ForbiddenNodesVisitor::visit(const FunctionNode* functionNode)
+std::type_index getTypeIndex(const FunctionNode* functionNode)
 {
-    std::type_index nodeTypeId(typeid(int)); // Must be default constructed here
-
     switch (functionNode->type())
     {
     case FunctionNodeType::reduced_cost:
-        nodeTypeId = typeIndexOf<FunctionNodeType::reduced_cost>();
-        break;
+        return typeIndexOf<FunctionNodeType::reduced_cost>();
     case FunctionNodeType::dual:
-        nodeTypeId = typeIndexOf<FunctionNodeType::dual>();
-        break;
+        return typeIndexOf<FunctionNodeType::dual>();
     case FunctionNodeType::min:
-        nodeTypeId = typeIndexOf<FunctionNodeType::min>();
-        break;
+        return typeIndexOf<FunctionNodeType::min>();
     case FunctionNodeType::max:
-        nodeTypeId = typeIndexOf<FunctionNodeType::max>();
-        break;
+        return typeIndexOf<FunctionNodeType::max>();
     case FunctionNodeType::pow:
-        nodeTypeId = typeIndexOf<FunctionNodeType::pow>();
-        break;
+        return typeIndexOf<FunctionNodeType::pow>();
     case FunctionNodeType::floor:
-        nodeTypeId = typeIndexOf<FunctionNodeType::floor>();
-        break;
+        return typeIndexOf<FunctionNodeType::floor>();
     default:
-        break;
+        return typeid(int); // Supposed to be dead code (never reached)
     }
+}
 
+void ForbiddenNodesVisitor::visit(const FunctionNode* functionNode)
+{
+    std::type_index nodeTypeId(getTypeIndex(functionNode));
     checkIsForbidden(functionNode, nodeTypeId);
     visitChildren(functionNode, nodeTypeId);
 }
