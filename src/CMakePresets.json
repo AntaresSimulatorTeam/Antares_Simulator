@@ -8,6 +8,10 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x64-linux-release"
+      },
+      "environment": {
+        "VCPKG_ROOT": "../vcpkg",
+        "VCPKG_BINARY_SOURCES": "clear;default"
       }
     }
   ]
