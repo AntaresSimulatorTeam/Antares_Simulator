@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_CATEGORIES_H__
 #define __SOLVER_VARIABLE_CATEGORIES_H__
 
+#include <cstdint>
+
 #include <antares/antares/constants.h>
 
 namespace Antares::Solver::Variable::Category
@@ -140,7 +142,7 @@ enum SpatialAggregatePostProcessing
 /*!
 ** \brief Hard limit for the decimal precision according a given File precision level
 */
-static inline uint MaxDecimalPrecision(uint fileLevel)
+static inline unsigned int MaxDecimalPrecision(unsigned int fileLevel)
 {
     return (fileLevel != FileLevel::id) ? 2u : 0u;
 }
@@ -173,7 +175,7 @@ inline void DataLevelToStream(StreamT& out, int dataLevel)
         out += "set of areas";
         break;
     default:
-        out += NULL;
+        out += nullptr;
     };
 }
 
@@ -202,7 +204,7 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
         out += "sts";
         break;
     default:
-        out += NULL;
+        out += nullptr;
     }
 }
 
@@ -231,7 +233,7 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
         out += "details-STstorage";
         break;
     default:
-        out += NULL;
+        out += nullptr;
     }
 }
 
@@ -256,7 +258,7 @@ inline void PrecisionLevelToStream(StreamT& out, int precisionLevel)
         out += "annual";
         break;
     default:
-        out += NULL;
+        out += nullptr;
     }
 }
 
