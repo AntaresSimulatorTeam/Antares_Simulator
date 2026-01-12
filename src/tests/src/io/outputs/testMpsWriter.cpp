@@ -45,82 +45,45 @@ const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "
 const std::set<std::string> ignoreList{"1_3", "1_5"};
 BOOST_AUTO_TEST_SUITE(ValidateMps)
 
-struct MpsWriterTestFixture
+bool isProblemEmpty(const std::unique_ptr<ILinearProblem>& problem)
 {
-    LoadFiles::FileLoader loader;
-    FileWriter writer;
+    return problem->variableCount() == 0;
+}
 
-    explicit MpsWriterTestFixture(const fs::path& studyPath):
-        loader(studyPath),
-        writer(studyPath)
+void checkProblemType(const unique_ptr<ILinearProblem>& originalProblem,
+                      const operations_research::mb::ModelBuilderHelper& fromMps)
+{
+    bool isLp = true;
+    for (int vi = 0; vi < fromMps.num_variables(); ++vi)
     {
-    }
-
-    Modeler build()
-    {
-        return {loader, writer};
-    }
-
-    static void checkMPS(const fs::path& studyPath, Modeler& modeler)
-    {
-        modeler.run();
-        if (const auto& masterProblem = modeler.masterProblem(); !isProblemEmpty(masterProblem))
+        if (fromMps.VarIsIntegral(vi))
         {
-            checkProblem(masterProblem, studyPath / "output" / "master.mps");
-        }
-        checkProblem(modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
-    }
-
-    static bool isProblemEmpty(const std::unique_ptr<ILinearProblem>& problem)
-    {
-        return problem->variableCount() == 0;
-    }
-
-    static void checkProblem(const std::unique_ptr<ILinearProblem>& originalProblem,
-                             const fs::path& mpsPath)
-    {
-        operations_research::mb::ModelBuilderHelper fromMps;
-        fromMps.ImportFromMpsFile(mpsPath.string());
-        checkProblemType(originalProblem, fromMps);
-        checkVariables(originalProblem, fromMps);
-        checkConstraints(originalProblem, fromMps);
-        checkObjective(originalProblem, fromMps);
-    }
-
-    static void checkProblemType(const unique_ptr<ILinearProblem>& originalProblem,
-                                 const operations_research::mb::ModelBuilderHelper& fromMps)
-    {
-        bool isLp = true;
-        for (int vi = 0; vi < fromMps.num_variables(); ++vi)
-        {
-            if (fromMps.VarIsIntegral(vi))
-            {
-                isLp = false;
-                break;
-            }
-        }
-        BOOST_CHECK_EQUAL(isLp, originalProblem->isLP());
-    }
-
-    static void checkVariables(const unique_ptr<ILinearProblem>& originalProblem,
-                               const operations_research::mb::ModelBuilderHelper& fromMps)
-    {
-        BOOST_CHECK_EQUAL(originalProblem->variableCount(), fromMps.num_variables());
-        const auto& origVariables = originalProblem->getVariables();
-        NameManager nameManager;
-        for (int vi = 0; vi < fromMps.num_variables(); ++vi)
-        {
-            const auto& origVariable = origVariables.at(vi);
-            BOOST_CHECK_EQUAL(MakeMpsSafeUniqueName(origVariable->getName(), nameManager),
-                              fromMps.VarName(vi));
-            BOOST_CHECK_EQUAL(origVariable->isInteger(), fromMps.VarIsIntegral(vi));
-            BOOST_CHECK_EQUAL(origVariable->getLb(), fromMps.VarLowerBound(vi));
-            BOOST_CHECK_EQUAL(origVariable->getUb(), fromMps.VarUpperBound(vi));
+            isLp = false;
+            break;
         }
     }
+    BOOST_CHECK_EQUAL(isLp, originalProblem->isLP());
+}
 
-    static void checkConstraints(const unique_ptr<ILinearProblem>& originalProblem,
-                                 const operations_research::mb::ModelBuilderHelper& fromMps)
+void checkVariables(const unique_ptr<ILinearProblem>& originalProblem,
+                    const operations_research::mb::ModelBuilderHelper& fromMps)
+{
+    BOOST_CHECK_EQUAL(originalProblem->variableCount(), fromMps.num_variables());
+    const auto& origVariables = originalProblem->getVariables();
+    NameManager nameManager;
+    for (int vi = 0; vi < fromMps.num_variables(); ++vi)
+    {
+        const auto& origVariable = origVariables.at(vi);
+        BOOST_CHECK_EQUAL(MakeMpsSafeUniqueName(origVariable->getName(), nameManager),
+                          fromMps.VarName(vi));
+        BOOST_CHECK_EQUAL(origVariable->isInteger(), fromMps.VarIsIntegral(vi));
+        BOOST_CHECK_EQUAL(origVariable->getLb(), fromMps.VarLowerBound(vi));
+        BOOST_CHECK_EQUAL(origVariable->getUb(), fromMps.VarUpperBound(vi));
+    }
+    }
+
+void checkConstraints(const unique_ptr<ILinearProblem>& originalProblem,
+                          const operations_research::mb::ModelBuilderHelper& fromMps)
     {
         BOOST_CHECK_EQUAL(originalProblem->constraintCount(), fromMps.num_constraints());
         const auto& origVariables = originalProblem->getVariables();
@@ -158,8 +121,8 @@ struct MpsWriterTestFixture
         }
     }
 
-    static void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
-                               const operations_research::mb::ModelBuilderHelper& fromMps)
+    void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
+                        const operations_research::mb::ModelBuilderHelper& fromMps)
     {
         const auto& origVariables = originalProblem->getVariables();
         BOOST_CHECK_EQUAL(originalProblem->getObjectiveOffset(), fromMps.ObjectiveOffset());
@@ -171,47 +134,88 @@ struct MpsWriterTestFixture
                               fromMps.VarObjectiveCoefficient(vi));
         }
     }
-};
 
-static void checkEpic2Studies()
-{
-    for (const auto& subEntry: fs::directory_iterator(resources / "epic_2" / "us2.5"))
+    void checkProblem(const std::unique_ptr<ILinearProblem>& originalProblem,
+                      const fs::path& mpsPath)
     {
-        if (!subEntry.is_directory())
-        {
-            continue;
-        }
-        if (!ignoreList.contains(subEntry.path().stem().string()))
-        {
-            {
-                MpsWriterTestFixture fixture(subEntry.path());
-                auto modeler = fixture.build();
-                MpsWriterTestFixture::checkMPS(subEntry.path(), modeler);
-            }
-        }
+        operations_research::mb::ModelBuilderHelper fromMps;
+        fromMps.ImportFromMpsFile(mpsPath.string());
+        checkProblemType(originalProblem, fromMps);
+        checkVariables(originalProblem, fromMps);
+        checkConstraints(originalProblem, fromMps);
+        checkObjective(originalProblem, fromMps);
     }
-}
 
-BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
-{
-    for (const auto& entry: fs::directory_iterator(resources))
+    void checkMPS(const fs::path& studyPath, Modeler& modeler)
     {
-        if (!entry.is_directory())
+        modeler.run();
+        if (const auto& masterProblem = modeler.masterProblem(); !isProblemEmpty(masterProblem))
         {
-            continue;
+            checkProblem(masterProblem, studyPath / "output" / "master.mps");
         }
-        if (!ignoreList.contains(entry.path().stem().string()))
+        checkProblem(modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
+    }
+
+    struct MpsWriterTestFixture
+    {
+        LoadFiles::FileLoader loader;
+        FileWriter writer;
+
+        explicit MpsWriterTestFixture(const fs::path& studyPath):
+            loader(studyPath),
+            writer(studyPath)
         {
-            if (const auto& path = entry.path(); path.stem() == "epic_2")
+        }
+
+        Modeler build()
+        {
+            return {loader, writer};
+        }
+    };
+
+    void processStudy(const filesystem::path& entry)
+    {
+        MpsWriterTestFixture fixture(entry);
+        auto modeler = fixture.build();
+        checkMPS(entry, modeler);
+    }
+
+    void checkEpic2Studies()
+    {
+        for (const auto& subEntry: fs::directory_iterator(resources / "epic_2" / "us2.5"))
+        {
+            if (!subEntry.is_directory())
             {
-                checkEpic2Studies();
                 continue;
             }
-            MpsWriterTestFixture fixture(entry.path());
-            auto modeler = fixture.build();
-            MpsWriterTestFixture::checkMPS(entry.path(), modeler);
+            const auto& path = subEntry.path();
+            if (!ignoreList.contains(path.filename().string()))
+            {
+                processStudy(path);
+            }
         }
     }
-}
 
-BOOST_AUTO_TEST_SUITE_END()
+    BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
+    {
+        for (const auto& entry:
+             fs::directory_iterator(resources, fs::directory_options::skip_permission_denied))
+        {
+            if (!entry.is_directory())
+            {
+                continue;
+            }
+            const auto& path = entry.path();
+            if (!ignoreList.contains(path.filename().string()))
+            {
+                if (path.filename().string() == "epic_2")
+                {
+                    checkEpic2Studies();
+                    continue;
+                }
+                processStudy(path);
+            }
+        }
+    }
+
+    BOOST_AUTO_TEST_SUITE_END()
