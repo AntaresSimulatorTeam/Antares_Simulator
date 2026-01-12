@@ -8,7 +8,7 @@ from utils.find_output import find_dated_output_folder, find_simulation_folder
 from utils.assertions import check
 from check_on_results.mps_utils import *
 
-tol = 1e-2
+tol = 1e-12
 @printNameDecorator
 class compare_mps_files(check_interface):
     def __init__(self, study_path):
