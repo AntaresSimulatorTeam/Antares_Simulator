@@ -176,7 +176,7 @@ void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
 
     void checkEpic2Studies()
     {
-        for (const auto& subEntry: fs::directory_iterator(resources / "epic_2" / "us2.5"))
+        for (const auto& subEntry: fs::directory_iterator(resources / "epic2" / "us2.5"))
         {
             if (!subEntry.is_directory())
             {
