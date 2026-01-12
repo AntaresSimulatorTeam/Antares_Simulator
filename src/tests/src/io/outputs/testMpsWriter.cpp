@@ -53,16 +53,10 @@ bool isProblemEmpty(const std::unique_ptr<ILinearProblem>& problem)
 void checkProblemType(const unique_ptr<ILinearProblem>& originalProblem,
                       const operations_research::mb::ModelBuilderHelper& fromMps)
 {
-    bool isLp = true;
-    for (int vi = 0; vi < fromMps.num_variables(); ++vi)
-    {
-        if (fromMps.VarIsIntegral(vi))
-        {
-            isLp = false;
-            break;
-        }
-    }
-    BOOST_CHECK_EQUAL(isLp, originalProblem->isLP());
+    const bool isMip = std::ranges::any_of(std::views::iota(0, fromMps.num_variables()),
+                                           [&fromMps](const int vi)
+                                           { return fromMps.VarIsIntegral(vi); });
+    BOOST_CHECK_EQUAL(isMip, !originalProblem->isLP());
 }
 
 void checkVariables(const unique_ptr<ILinearProblem>& originalProblem,
@@ -108,18 +102,18 @@ void checkConstraints(const unique_ptr<ILinearProblem>& originalProblem,
             if (origVariableCoef == 0) // if the coef in the original constraint is zero then
                                        // variable index should not be in ConstraintVarIndices
             {
-                    const bool found = ranges::find(fromMpsConstraintVarIndices, vi)
-                                       != fromMpsConstraintVarIndices.end();
-                    BOOST_CHECK_EQUAL(found, false);
-                    continue;
-                }
-                auto it = std::ranges::find(fromMpsConstraintVarIndices, vi);
-                BOOST_CHECK_EQUAL(it == fromMpsConstraintVarIndices.end(), false);
-                const auto position = std::distance(fromMpsConstraintVarIndices.begin(), it);
-                BOOST_CHECK_EQUAL(origVariableCoef, fromMpsConstraintCoef.at(position));
+                const bool found = ranges::find(fromMpsConstraintVarIndices, vi)
+                                   != fromMpsConstraintVarIndices.end();
+                BOOST_CHECK_EQUAL(found, false);
+                continue;
             }
+            auto it = std::ranges::find(fromMpsConstraintVarIndices, vi);
+            BOOST_CHECK_EQUAL(it == fromMpsConstraintVarIndices.end(), false);
+            const auto position = std::distance(fromMpsConstraintVarIndices.begin(), it);
+            BOOST_CHECK_EQUAL(origVariableCoef, fromMpsConstraintCoef.at(position));
         }
     }
+}
 
 void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
                         const operations_research::mb::ModelBuilderHelper& fromMps)
@@ -208,7 +202,7 @@ void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
             const auto& path = entry.path();
             if (!ignoreList.contains(path.filename().string()))
             {
-                if (path.filename().string() == "epic_2")
+                if (path.filename().string() == "epic2")
                 {
                     checkEpic2Studies();
                     continue;
