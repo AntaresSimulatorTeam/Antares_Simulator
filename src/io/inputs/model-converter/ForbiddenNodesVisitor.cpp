@@ -154,7 +154,7 @@ void ForbiddenNodesVisitor::visit(const AllTimeSumNode* allTimeSumNode)
     visitChildren(allTimeSumNode, nodeTypeId);
 }
 
-std::type_index getTypeIndex(const FunctionNode* functionNode)
+std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
 {
     switch (functionNode->type())
     {
@@ -177,7 +177,7 @@ std::type_index getTypeIndex(const FunctionNode* functionNode)
 
 void ForbiddenNodesVisitor::visit(const FunctionNode* functionNode)
 {
-    std::type_index nodeTypeId(getTypeIndex(functionNode));
+    std::type_index nodeTypeId(functionNodeTypeIndex(functionNode));
     checkIsForbidden(functionNode, nodeTypeId);
     visitChildren(functionNode, nodeTypeId);
 }
