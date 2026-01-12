@@ -18,6 +18,9 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#include <iterator>
+
+#include "antares/antares/constants.h"
 #include "antares/solver/variable/categories.h"
 #define BOOST_TEST_MODULE "test time series"
 
@@ -46,25 +49,61 @@ struct StudyFixture
 
 BOOST_AUTO_TEST_SUITE(surveyresults)
 
-BOOST_FIXTURE_TEST_CASE(no_variable_constructor_does_not_throw, StudyFixture)
+BOOST_FIXTURE_TEST_CASE(survey_result_hourly, StudyFixture)
 {
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    // At least one area was required to trigger a std::bad_alloc throw
-    Antares::Data::addAreaToListOfAreas(study->areas, "dummyArea");
-    SurveyResults survey(*study, 1, "out", writer);
 
-    survey.data.columnIndex = 1;
-    survey.captions[0][0] = "hello";
-    survey.captions[1][0] = "unit";
-    survey.captions[2][0] = "N/A";
-    survey.saveToFile(Category::DataLevel::setOfAreas,
-                      Category::FileLevel::va,
-                      Category::Precision::hourly);
-    for (auto [k, v]: writer.getMap())
+    unsigned int nbVariables = 2;
+    SurveyResults survey(*study, nbVariables, "out", writer);
+
+    // Loop
+    survey.data.columnIndex = nbVariables;
     {
-        logs.info() << "#" << k;
-        logs.info() << v;
+        survey.captions[0][0] = "hello";
+        survey.captions[1][0] = "unit";
+        survey.captions[2][0] = "N/A";
+    }
+    {
+        survey.captions[0][1] = "world";
+        survey.captions[1][1] = "unit2";
+        survey.captions[2][1] = "N/A";
+    }
+    for (unsigned int h = 0; h < HOURS_PER_YEAR; ++h)
+    {
+        survey.values[0][h] = h + 1;
+        survey.values[1][h] = h * h + 3;
+    }
+    // Hourly
+    {
+        const std::string filename = "hourly.txt";
+        survey.data.filename = filename;
+        survey.saveToFile(Category::DataLevel::setOfAreas,
+                          Category::FileLevel::va,
+                          Category::Precision::hourly);
+
+        BOOST_REQUIRE(writer.getMap().contains(filename));
+        const auto& content = writer.getMap().at(filename);
+        // Header
+        BOOST_CHECK_NE(content.find("system	hourly				hello	world\n"),
+                       std::string::npos);
+        // Some values
+        BOOST_CHECK_NE(content.find("	9	01	JAN	08:00	9	67\n"),
+                       std::string::npos);
+    }
+    // Annual
+    {
+        const std::string filename = "annual.txt";
+        survey.data.filename = filename;
+        survey.saveToFile(Category::DataLevel::setOfAreas,
+                          Category::FileLevel::va,
+                          Category::Precision::annual);
+        BOOST_REQUIRE(writer.getMap().contains(filename));
+        const auto& content = writer.getMap().at(filename);
+        // Some values
+        logs.warning() << content;
+        BOOST_CHECK_NE(content.find("	9	01	JAN	08:00	9	67\n"),
+                       std::string::npos);
     }
 }
 
