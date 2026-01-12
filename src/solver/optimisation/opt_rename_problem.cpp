@@ -426,10 +426,11 @@ void ConstraintNamer::ShortTermStorageCumulation(const std::string& constraint_t
                                                  const std::string& short_term_name,
                                                  const std::string& constraint_name)
 {
-    targetUpdater_.UpdateTargetAtIndex(
-      BuildName(constraint_type,
-                LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<"
-                  + short_term_name + ">",
-                ShortTermStorageCumulationIdentifier(constraint_name)),
-      constraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName(constraint_type,
+                                                 LocationIdentifier(area_, AREA) + SEPARATOR
+                                                   + "ShortTermStorage" + "<" + short_term_name
+                                                   + ">" + SEPARATOR + "Constraint" + "<"
+                                                   + constraint_name + ">",
+                                                 TimeIdentifier(timeStep_, WEEK)),
+                                       constraint);
 }

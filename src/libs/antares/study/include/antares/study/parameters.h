@@ -451,6 +451,9 @@ public:
     /// Used to create debug informations for both hydro and short term storages
     bool remixStorageDebug = false;
 
+    /// Used to create debug informations for variables modified by adequacy patch
+    bool adqPatchDebug = false;
+
     //! \name Seeds
     //@{
     //! Seeds

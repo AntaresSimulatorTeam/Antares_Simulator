@@ -28,19 +28,14 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include <yuni/io/file.h>
-
 #include "antares/antares/constants.h"
 #include "antares/study/parts/short-term-storage/additionalConstraints.h"
 #include "antares/study/parts/short-term-storage/container.h"
 
-using namespace std;
 using namespace Antares::Data;
+using namespace Antares::Data::ShortTermStorage;
 
 namespace fs = std::filesystem;
-
-namespace
-{
 
 struct PenaltyCostOnVariation
 {
@@ -48,12 +43,7 @@ struct PenaltyCostOnVariation
     bool withdrawal = false;
 };
 
-fs::path getFolder()
-{
-    return fs::temp_directory_path();
-}
-
-void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned int size)
+void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned size)
 {
     series.maxInjectionModulation.resize(size, value);
     series.maxWithdrawalModulation.resize(size, value);
@@ -70,11 +60,11 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
     series.costVariationWithdrawal.resize(size, value);
 }
 
-void createIndividualFileSeries(const fs::path& path, double value, unsigned int size)
+void createIndividualFileSeries(const fs::path& path, double value, unsigned size)
 {
     std::ofstream outfile(path);
 
-    for (unsigned int i = 0; i < size; i++)
+    for (unsigned i = 0; i < size; i++)
     {
         outfile << value << std::endl;
     }
@@ -82,12 +72,12 @@ void createIndividualFileSeries(const fs::path& path, double value, unsigned int
     outfile.close();
 }
 
-void createIndividualFileSeries(const fs::path& path, unsigned int size)
+void createIndividualFileSeries(const fs::path& path, unsigned size)
 {
     std::ofstream outfile;
     outfile.open(path, std::ofstream::out | std::ofstream::trunc);
 
-    for (unsigned int i = 0; i < size; i++)
+    for (unsigned i = 0; i < size; i++)
     {
         double value = i * 0.0001;
         outfile << value << std::endl;
@@ -96,154 +86,126 @@ void createIndividualFileSeries(const fs::path& path, unsigned int size)
     outfile.close();
 }
 
-void createFileSeries(double value, unsigned int size)
-{
-    fs::path folder = getFolder();
-
-    createIndividualFileSeries(folder / "PMAX-injection.txt", value, size);
-    createIndividualFileSeries(folder / "PMAX-withdrawal.txt", value, size);
-    createIndividualFileSeries(folder / "inflows.txt", value, size);
-    createIndividualFileSeries(folder / "lower-rule-curve.txt", value, size);
-    createIndividualFileSeries(folder / "upper-rule-curve.txt", value, size);
-
-    createIndividualFileSeries(folder / "cost-injection.txt", value, size);
-    createIndividualFileSeries(folder / "cost-withdrawal.txt", value, size);
-    createIndividualFileSeries(folder / "cost-level.txt", value, size);
-    createIndividualFileSeries(folder / "cost-variation-injection.txt", value, size);
-    createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", value, size);
-}
-
-void createFileSeries(unsigned int size)
-{
-    fs::path folder = getFolder();
-
-    createIndividualFileSeries(folder / "PMAX-injection.txt", size);
-    createIndividualFileSeries(folder / "PMAX-withdrawal.txt", size);
-    createIndividualFileSeries(folder / "inflows.txt", size);
-    createIndividualFileSeries(folder / "lower-rule-curve.txt", size);
-    createIndividualFileSeries(folder / "upper-rule-curve.txt", size);
-
-    createIndividualFileSeries(folder / "cost-injection.txt", size);
-    createIndividualFileSeries(folder / "cost-withdrawal.txt", size);
-    createIndividualFileSeries(folder / "cost-level.txt", size);
-
-    createIndividualFileSeries(folder / "cost-variation-injection.txt", size);
-    createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", size);
-}
-
-void createIniFile(bool enabled)
-{
-    fs::path folder = getFolder();
-
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
-    outfile << "[area]" << std::endl;
-    outfile << "name = area" << std::endl;
-    outfile << "group = PSP_open" << std::endl;
-    outfile << "injectionnominalcapacity = 870.000000" << std::endl;
-    outfile << "withdrawalnominalcapacity = 900.000000" << std::endl;
-    outfile << "reservoircapacity = 31200.000000" << std::endl;
-    outfile << "efficiency = 0.75" << std::endl;
-    outfile << "efficiencywithdrawal = 0.9" << std::endl;
-    outfile << "initiallevel = 0.50000" << std::endl;
-    outfile << "enabled = " << (enabled ? "true" : "false") << std::endl;
-    outfile.close();
-}
-
-void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
-{
-    fs::path folder = getFolder();
-
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
-    outfile << "[area]" << std::endl;
-    outfile << "name = area" << std::endl;
-    outfile << "group = PSP_open" << std::endl;
-    outfile << "penalize-variation-injection = " << std::boolalpha
-            << penaltyCostOnVariation.injection << std::endl;
-    outfile << "penalize-variation-withdrawal = " << std::boolalpha
-            << penaltyCostOnVariation.withdrawal << std::endl;
-    outfile.close();
-}
-
-void createIniFileWrongValue()
-{
-    fs::path folder = getFolder();
-
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
-    outfile << "[area]" << std::endl;
-    outfile << "name = area" << std::endl;
-    outfile << "group = abcde" << std::endl;
-    outfile << "injectionnominalcapacity = -870.000000" << std::endl;
-    outfile << "withdrawalnominalcapacity = -900.000000" << std::endl;
-    outfile << "reservoircapacity = -31200.000000" << std::endl;
-    outfile << "efficiency = 4" << std::endl;
-    outfile << "efficiencywithdrawal = -2" << std::endl;
-    outfile << "initiallevel = -0.50000" << std::endl;
-
-    outfile.close();
-}
-
-void createEmptyIniFile()
-{
-    fs::path folder = getFolder();
-
-    std::ofstream outfile;
-    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
-
-    outfile.close();
-}
-
-void removeIniFile()
-{
-    fs::remove(getFolder() / "list.ini");
-}
-} // namespace
-
 // =================
 // The fixture
 // =================
-struct Fixture
+struct WorkDirCreationFixture
 {
-    Fixture(const Fixture& f) = delete;
-    Fixture(const Fixture&& f) = delete;
-    Fixture& operator=(const Fixture& f) = delete;
-    Fixture& operator=(const Fixture&& f) = delete;
+    WorkDirCreationFixture()
+    {
+        work_dir = fs::temp_directory_path() / "testWorkDir";
+        fs::create_directories(work_dir);
+    }
+
+    ~WorkDirCreationFixture()
+    {
+        fs::remove_all(work_dir);
+    }
+
+    fs::path work_dir;
+};
+
+struct Fixture: public WorkDirCreationFixture
+{
     Fixture() = default;
+    void createFileSeries(double value, unsigned size);
+    void createFileSeries(unsigned size);
+    void createIniFileWrongValue();
+    void createIniFile(bool enabled);
+    void createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation);
+    void createEmptyIniFile();
 
-    ~Fixture()
-    {
-        fs::remove(folder / "PMAX-injection.txt");
-        fs::remove(folder / "PMAX-withdrawal.txt");
-        fs::remove(folder / "inflows.txt");
-        fs::remove(folder / "lower-rule-curve.txt");
-        fs::remove(folder / "upper-rule-curve.txt");
-
-        fs::remove(folder / "cost-injection.txt");
-        fs::remove(folder / "cost-withdrawal.txt");
-        fs::remove(folder / "cost-level.txt");
-
-        fs::remove(folder / "cost-variation-injection.txt");
-        fs::remove(folder / "cost-variation-withdrawal.txt");
-    }
-
-    bool loadFromFolder(StudyVersion version)
-    {
-        return series.loadFromFolder(folder, version);
-    }
-
-    fs::path folder = getFolder();
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
     ShortTermStorage::STStorageInput container;
 
     PenaltyCostOnVariation penaltyCostOnVariation;
+
+private:
+    std::ofstream iniFile_;
 };
+
+void Fixture::createFileSeries(double value, unsigned size)
+{
+    createIndividualFileSeries(work_dir / "PMAX-injection.txt", value, size);
+    createIndividualFileSeries(work_dir / "PMAX-withdrawal.txt", value, size);
+    createIndividualFileSeries(work_dir / "inflows.txt", value, size);
+    createIndividualFileSeries(work_dir / "lower-rule-curve.txt", value, size);
+    createIndividualFileSeries(work_dir / "upper-rule-curve.txt", value, size);
+
+    createIndividualFileSeries(work_dir / "cost-injection.txt", value, size);
+    createIndividualFileSeries(work_dir / "cost-withdrawal.txt", value, size);
+    createIndividualFileSeries(work_dir / "cost-level.txt", value, size);
+    createIndividualFileSeries(work_dir / "cost-variation-injection.txt", value, size);
+    createIndividualFileSeries(work_dir / "cost-variation-withdrawal.txt", value, size);
+}
+
+void Fixture::createFileSeries(unsigned size)
+{
+    createIndividualFileSeries(work_dir / "PMAX-injection.txt", size);
+    createIndividualFileSeries(work_dir / "PMAX-withdrawal.txt", size);
+    createIndividualFileSeries(work_dir / "inflows.txt", size);
+    createIndividualFileSeries(work_dir / "lower-rule-curve.txt", size);
+    createIndividualFileSeries(work_dir / "upper-rule-curve.txt", size);
+
+    createIndividualFileSeries(work_dir / "cost-injection.txt", size);
+    createIndividualFileSeries(work_dir / "cost-withdrawal.txt", size);
+    createIndividualFileSeries(work_dir / "cost-level.txt", size);
+
+    createIndividualFileSeries(work_dir / "cost-variation-injection.txt", size);
+    createIndividualFileSeries(work_dir / "cost-variation-withdrawal.txt", size);
+}
+
+void Fixture::createIniFile(bool enabled)
+{
+    iniFile_.open(work_dir / "list.ini", std::ofstream::out | std::ofstream::trunc);
+    iniFile_ << "[area]" << std::endl;
+    iniFile_ << "name = area" << std::endl;
+    iniFile_ << "group = PSP_open" << std::endl;
+    iniFile_ << "injectionnominalcapacity = 870.000000" << std::endl;
+    iniFile_ << "withdrawalnominalcapacity = 900.000000" << std::endl;
+    iniFile_ << "reservoircapacity = 31200.000000" << std::endl;
+    iniFile_ << "efficiency = 0.75" << std::endl;
+    iniFile_ << "efficiencywithdrawal = 0.9" << std::endl;
+    iniFile_ << "initiallevel = 0.50000" << std::endl;
+    iniFile_ << "enabled = " << (enabled ? "true" : "false") << std::endl;
+    iniFile_.close();
+}
+
+void Fixture::createIniFile(const PenaltyCostOnVariation& penaltyCostOnVariation)
+{
+    iniFile_.open(work_dir / "list.ini", std::ofstream::out | std::ofstream::trunc);
+    iniFile_ << "[area]" << std::endl;
+    iniFile_ << "name = area" << std::endl;
+    iniFile_ << "group = PSP_open" << std::endl;
+    iniFile_ << "penalize-variation-injection = " << std::boolalpha
+             << penaltyCostOnVariation.injection << std::endl;
+    iniFile_ << "penalize-variation-withdrawal = " << std::boolalpha
+             << penaltyCostOnVariation.withdrawal << std::endl;
+    iniFile_.close();
+}
+
+void Fixture::createEmptyIniFile()
+{
+    iniFile_.open(work_dir / "list.ini", std::ofstream::out | std::ofstream::trunc);
+    iniFile_.close();
+}
+
+void Fixture::createIniFileWrongValue()
+{
+    iniFile_.open(work_dir / "list.ini", std::ofstream::out | std::ofstream::trunc);
+    iniFile_ << "[area]" << std::endl;
+    iniFile_ << "name = area" << std::endl;
+    iniFile_ << "group = abcde" << std::endl;
+    iniFile_ << "injectionnominalcapacity = -870.000000" << std::endl;
+    iniFile_ << "withdrawalnominalcapacity = -900.000000" << std::endl;
+    iniFile_ << "reservoircapacity = -31200.000000" << std::endl;
+    iniFile_ << "efficiency = 4" << std::endl;
+    iniFile_ << "efficiencywithdrawal = -2" << std::endl;
+    iniFile_ << "initiallevel = -0.50000" << std::endl;
+    iniFile_.close();
+}
 
 // ==================
 // Tests section
@@ -267,7 +229,7 @@ void checkSizeFirst(const TimeSeries& series, double value)
 BOOST_FIXTURE_TEST_CASE(check_empty, Fixture)
 {
     createFileSeries(0); // Empty files
-    loadFromFolder(StudyVersion(9, 2));
+    series.loadFromFolder(work_dir, StudyVersion(9, 2));
     series.fillDefaultSeriesIfEmpty();
 
     // version<9.2
@@ -290,29 +252,32 @@ BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
     resizeFillVectors(series, 0.0, 12);
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 
-    resizeFillVectors(series, 0.0, 8760);
+    resizeFillVectors(series, 0.0, HOURS_PER_YEAR);
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 {
-    createFileSeries(1.0, 8760);
+    createFileSeries(1.0, HOURS_PER_YEAR);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
-    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1 && series.maxInjectionModulation[8759] == 1
-                && series.upperRuleCurve[1343] == 1 && series.costVariationInjection[0] == 1
-                && series.costVariationWithdrawal[0] == 1);
+    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1);
+    BOOST_CHECK(series.maxInjectionModulation[8759] == 1);
+    BOOST_CHECK(series.upperRuleCurve[1343] == 1);
+    BOOST_CHECK(series.costVariationInjection[0] == 1);
+    BOOST_CHECK(series.costVariationWithdrawal[0] == 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
 {
-    createFileSeries(1.0, 8760);
+    createFileSeries(1.0, HOURS_PER_YEAR);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
-    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1 && series.maxInjectionModulation[8759] == 1
-                && series.upperRuleCurve[1343]);
+    BOOST_CHECK(series.inflows.getCoefficient(0, 0) == 1);
+    BOOST_CHECK(series.maxInjectionModulation[8759] == 1);
+    BOOST_CHECK(series.upperRuleCurve[1343]);
 
     // New elements should NOT be loaded if the study version is < 9.2
     BOOST_CHECK(series.costVariationInjection.empty());
@@ -321,25 +286,25 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_880, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values_880, Fixture)
 {
-    createFileSeries(8760);
+    createFileSeries(HOURS_PER_YEAR);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values, Fixture)
 {
-    createFileSeries(8760);
+    createFileSeries(HOURS_PER_YEAR);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_negative_value, Fixture)
 {
-    createFileSeries(-247.0, 8760);
+    createFileSeries(-247.0, HOURS_PER_YEAR);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
@@ -347,7 +312,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big, Fixture)
 {
     createFileSeries(1.0, 9000);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
@@ -355,7 +320,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big_880, Fixture)
 {
     createFileSeries(1.0, 9000);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion(8, 8)));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion(8, 8)));
     BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
 }
 
@@ -363,13 +328,13 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_small, Fixture)
 {
     createFileSeries(1.0, 100);
 
-    BOOST_CHECK(!loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(!series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_empty, Fixture)
 {
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(!series.validate("", StudyVersion::latest()));
 }
 
@@ -381,28 +346,28 @@ BOOST_FIXTURE_TEST_CASE(check_series_vector_fill, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(check_cluster_series_vector_fill, Fixture)
 {
-    BOOST_CHECK(cluster.loadSeries(folder, StudyVersion::latest()));
+    BOOST_CHECK(cluster.loadSeries(work_dir, StudyVersion::latest()));
     BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
 {
-    createFileSeries(0.5, 8760);
+    createFileSeries(0.5, HOURS_PER_YEAR);
 
-    BOOST_CHECK(cluster.loadSeries(folder, StudyVersion::latest()));
+    BOOST_CHECK(cluster.loadSeries(work_dir, StudyVersion::latest()));
     BOOST_CHECK(cluster.series->validate("", StudyVersion::latest()));
-    BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
-                && cluster.series->inflows.getCoefficient(0, 2756) == 0.5
-                && cluster.series->lowerRuleCurve[6392] == 0.5
-                && cluster.series->costVariationInjection[15] == 0.5
-                && cluster.series->costVariationWithdrawal[756] == 0.5);
+    BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5);
+    BOOST_CHECK(cluster.series->inflows.getCoefficient(0, 2756) == 0.5);
+    BOOST_CHECK(cluster.series->lowerRuleCurve[6392] == 0.5);
+    BOOST_CHECK(cluster.series->costVariationInjection[15] == 0.5);
+    BOOST_CHECK(cluster.series->costVariationWithdrawal[756] == 0.5);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
 {
     createIniFile(true);
 
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 
     auto& properties = container.storagesByIndex[0].properties;
 
@@ -411,8 +376,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
     BOOST_CHECK(properties.validate());
     BOOST_CHECK(!properties.penalizeVariationInjection);
     BOOST_CHECK(!properties.penalizeVariationWithdrawal);
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variation_injection,
@@ -421,13 +384,11 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variat
     penaltyCostOnVariation = {.injection = true, .withdrawal = false};
     createIniFile(penaltyCostOnVariation);
 
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 
     auto& properties = container.storagesByIndex[0].properties;
 
     BOOST_CHECK(properties.penalizeVariationInjection);
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variation_withdrawal,
@@ -436,13 +397,11 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variat
     penaltyCostOnVariation = {.injection = false, .withdrawal = true};
     createIniFile(penaltyCostOnVariation);
 
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 
     auto& properties = container.storagesByIndex[0].properties;
 
     BOOST_CHECK(properties.penalizeVariationWithdrawal);
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -452,48 +411,40 @@ BOOST_FIXTURE_TEST_CASE(
     penaltyCostOnVariation = {.injection = true, .withdrawal = true};
     createIniFile(penaltyCostOnVariation);
 
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 
     auto& properties = container.storagesByIndex[0].properties;
 
     BOOST_CHECK(properties.penalizeVariationInjection);
     BOOST_CHECK(properties.penalizeVariationWithdrawal);
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_disabled_load, Fixture)
 {
     createIniFile(false);
 
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 
     auto& properties = container.storagesByIndex[0].properties;
 
     BOOST_CHECK(!properties.enabled);
     BOOST_CHECK_EQUAL(container.count(), 0);
     BOOST_CHECK(properties.validate());
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_wrong_value, Fixture)
 {
     createIniFileWrongValue();
 
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
     BOOST_CHECK(!container.storagesByIndex[0].properties.validate());
-
-    removeIniFile();
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
 {
     createEmptyIniFile();
 
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
-
-    removeIniFile();
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 }
 
 #ifdef BUILD_UI
@@ -501,37 +452,36 @@ BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
 {
     createIniFile(true);
 
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 
-    removeIniFile();
+    fs::remove(work_dir / "list.ini");
 
-    BOOST_CHECK(container.saveToFolder(folder.string()));
-
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
-
-    removeIniFile();
+    BOOST_CHECK(container.saveToFolder(work_dir.string()));
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
 {
-    resizeFillVectors(series, 0.123456789, 8760);
+    resizeFillVectors(series, 0.123456789, HOURS_PER_YEAR);
 
-    BOOST_CHECK(series.saveToFolder(folder.string()));
+    BOOST_CHECK(series.saveToFolder(work_dir.string()));
     resizeFillVectors(series, 0, 0);
 
-    BOOST_CHECK(loadFromFolder(StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
     BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 #endif
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(AdditionalConstraintsTests)
+// Test data for parameterization
+namespace bdata = boost::unit_test::data;
+
+BOOST_AUTO_TEST_SUITE(ValidatingAdditionalConstraints)
 
 BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 {
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "name", "", "injection", "less", true, {});
+    AdditionalConstraints constraints("name", "name", "", "injection", "less", true, {});
 
     auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
@@ -540,8 +490,7 @@ BOOST_AUTO_TEST_CASE(Validate_ClusterIdEmpty)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidVariable)
 {
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "name", "ClusterA", "invalid", "less", true, {});
+    AdditionalConstraints constraints("name", "name", "ClusterA", "invalid", "less", true, {});
     auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
     BOOST_CHECK_EQUAL(error_msg,
@@ -550,8 +499,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidVariable)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidOperatorType)
 {
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "name", "ClusterA", "injection", "invalid", true, {});
+    AdditionalConstraints constraints("name", "name", "ClusterA", "injection", "invalid", true, {});
 
     auto [ok, error_msg] = validate(constraints);
     BOOST_CHECK_EQUAL(ok, false);
@@ -560,11 +508,11 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidOperatorType)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
 {
-    ShortTermStorage::SingleAdditionalConstraint constraint;
+    SingleAdditionalConstraint constraint;
     // Case : Empty hours
     constraint.hours = {}; // Invalid: empty
 
-    ShortTermStorage::AdditionalConstraints
+    AdditionalConstraints
       constraints("name", "name", "ClusterA", "injection", "less", true, {constraint});
 
     auto [ok, error_msg] = validate(constraints);
@@ -574,11 +522,10 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Empty)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
 {
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "name", "ClusterA", "injection", "less", true, {});
+    AdditionalConstraints constraints("name", "name", "ClusterA", "injection", "less", true, {});
 
     // Case: Out of range
-    ShortTermStorage::SingleAdditionalConstraint constraint;
+    SingleAdditionalConstraint constraint;
     constraint.hours = {120, 169}; // Invalid: out of range
     constraints.constraints.push_back(constraint);
 
@@ -589,11 +536,10 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Out_of_range)
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
 {
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "name", "ClusterA", "injection", "less", true, {});
+    AdditionalConstraints constraints("name", "name", "ClusterA", "injection", "less", true, {});
 
     // Case : Below minimum
-    ShortTermStorage::SingleAdditionalConstraint constraint;
+    SingleAdditionalConstraint constraint;
     constraint.hours = {0, 1}; // Invalid: below minimum
     constraints.constraints.push_back(constraint);
 
@@ -604,13 +550,12 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidHours_Below_minimum)
 
 BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
 {
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "name", "ClusterA", "injection", "less", true, {});
+    AdditionalConstraints constraints("name", "name", "ClusterA", "injection", "less", true, {});
 
-    ShortTermStorage::SingleAdditionalConstraint constraint1;
+    SingleAdditionalConstraint constraint1;
     constraint1.hours = {1, 2, 3}; // Valid hours
 
-    ShortTermStorage::SingleAdditionalConstraint constraint2;
+    SingleAdditionalConstraint constraint2;
     constraint2.hours = {100, 150, 168}; // Valid hours
 
     constraints.constraints = {constraint1, constraint2};
@@ -620,282 +565,18 @@ BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
     BOOST_CHECK(error_msg.empty());
 }
 
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
-
-    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=[1,2,3]\n";
-    iniFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-
-    BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0]->name,
-                      "constraint1");
-
-    std::filesystem::remove_all(testPath);
-}
-
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directories(testPath / "ClusterA");
-
-    std::ofstream iniFile(testPath / "ClusterA" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=[0,1]\n"; // Invalid hours
-    iniFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "ClusterA";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(result, false);
-
-    std::filesystem::remove_all(testPath);
-}
-
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
-{
-    ShortTermStorage::STStorageInput storageInput;
-    bool result = storageInput.loadAdditionalConstraints("nonexistent_path");
-    BOOST_CHECK_EQUAL(result, true);
-}
-
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
-
-    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=invalid\n"; // Invalid variable
-    iniFile << "operator=less\n";
-    iniFile << "hours=[1,2,3]\n";
-    iniFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(result, false);
-
-    std::filesystem::remove_all(testPath);
-}
-
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
-
-    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=[1,2,3]\n";
-    iniFile.close();
-
-    std::ofstream rhsFile(testPath / "cluster1" / "rhs_constraint1.txt");
-    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
-    {
-        rhsFile << i * 1.0 << "\n";
-    }
-    rhsFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-
-    BOOST_CHECK_EQUAL(result, true);
-    const auto& constraint1Rhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
-    BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
-    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
-
-    std::filesystem::remove_all(testPath);
-}
-
-BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
-
-    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
-    iniFile << R"([constraint1]
-                  variable=injection
-                  operator=less
-                  hours=[1,2,3]
-                  [constraint2]
-                  variable=withdrawal
-                  operator=greater
-                  hours=[5,33])";
-    iniFile.close();
-
-    std::ofstream rhsFile(testPath / "cluster1" / "rhs_constraint1.txt");
-    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
-    {
-        rhsFile << i * 1.0 << "\n";
-    }
-    rhsFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-
-    BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 2);
-
-    //------- constraint1 ----------
-    const auto& constraint1 = *storageInput.storagesByIndex[0].additionalConstraints[0];
-    BOOST_CHECK_EQUAL(constraint1.name, "constraint1");
-    BOOST_CHECK_EQUAL(constraint1.operatorType, "less");
-    BOOST_CHECK_EQUAL(constraint1.variable, "injection");
-    BOOST_CHECK_EQUAL(constraint1.cluster_id, cluster.id);
-
-    const auto& constraint1Rhs = constraint1.rhs();
-    BOOST_CHECK_EQUAL(constraint1Rhs.timeSeries.height, HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, 0), 0.0);
-    BOOST_CHECK_EQUAL(constraint1Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
-
-    //------- constraint2 ----------
-
-    const auto& constraint2 = *storageInput.storagesByIndex[0].additionalConstraints[1];
-    BOOST_CHECK_EQUAL(constraint2.name, "constraint2");
-    BOOST_CHECK_EQUAL(constraint2.operatorType, "greater");
-    BOOST_CHECK_EQUAL(constraint2.variable, "withdrawal");
-    BOOST_CHECK_EQUAL(constraint2.cluster_id, cluster.id);
-
-    const auto& constraint2Rhs = constraint2.rhs();
-    BOOST_CHECK_EQUAL(constraint2Rhs.timeSeries.height, HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, 0), 0.0);
-    BOOST_CHECK_EQUAL(constraint2Rhs.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
-
-    std::filesystem::remove_all(testPath);
-}
-
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
-
-    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=[1,2,3]\n";
-    iniFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-
-    BOOST_CHECK_EQUAL(result, true);
-    const auto& constraintRhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
-    BOOST_CHECK_EQUAL(constraintRhs.timeSeries.height, HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
-
-    std::filesystem::remove_all(testPath);
-}
-
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
-
-    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=[1,2,3]\n";
-    iniFile.close();
-
-    std::ofstream rhsFile(testPath / "cluster1" / "rhs_constraint1.txt");
-    rhsFile << "1.0\n2.0\ninvalid\n4.0\n"; // Malformed line
-    rhsFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(result, false);
-    std::filesystem::remove_all(testPath);
-}
-
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directories(testPath / "cluster1");
-
-    std::ofstream iniFile(testPath / "cluster1" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=[1,2,3]\n";
-    iniFile.close();
-
-    std::ofstream rhsFile(testPath / "cluster1" / "rhs_constraint1.txt");
-    for (int i = 0; i < 10; ++i)
-    {
-        rhsFile << i * 1.0 << "\n";
-    }
-    rhsFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(result, false);
-
-    std::filesystem::remove_all(testPath);
-}
-
-// Test data for parameterization
-namespace bdata = boost::unit_test::data;
-
 BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
                      bdata::make({"injection", "withdrawal", "netting"})
                        ^ bdata::make({"less", "equal", "greater"}),
                      variable,
                      op)
 {
-    ShortTermStorage::AdditionalConstraints
-      constraints("name", "name", "clusterA", variable, op, true, {});
+    AdditionalConstraints constraints("name", "name", "clusterA", variable, op, true, {});
 
     // Create constraints with valid hours
-    constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{1, 2, 3}});
-    constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{50, 100, 150}});
-    constraints.constraints.push_back(
-      ShortTermStorage::SingleAdditionalConstraint{{120, 121, 122}});
+    constraints.constraints.push_back(SingleAdditionalConstraint{{1, 2, 3}});
+    constraints.constraints.push_back(SingleAdditionalConstraint{{50, 100, 150}});
+    constraints.constraints.push_back(SingleAdditionalConstraint{{120, 121, 122}});
 
     // Validate the constraints
     auto [ok, error_msg] = validate(constraints);
@@ -903,97 +584,283 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
     BOOST_CHECK(error_msg.empty());
 }
 
-BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
-                     bdata::make({"injection", "withdrawal", "netting"})
-                       * bdata::make({"less", "equal", "greater"}),
-                     variable,
-                     op)
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(LoadingAdditionalConstraints)
+
+struct IniConstraint
 {
-    // Define the path for the test data
-    std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "clustera");
+    std::string name;
+    std::string variable;
+    std::string op;
+    std::string hours;
+    std::string enabled = "true";
+};
 
-    // Write the `.ini` file for this test case
-    std::ofstream iniFile(testPath / "clustera" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=" << variable << "\n";
-    iniFile << "operator=" << op << "\n";
-    iniFile << "enabled=true\n";
-    iniFile << "hours=[1,2,3]\n";
-    iniFile.close();
-
-    // Write the `rhs_constraint1.txt` file
-    std::ofstream rhsFile(testPath / "clustera" / "rhs_constraint1.txt");
-    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
+void makeAdditConstrIniFile(fs::path& dir, const std::vector<IniConstraint>& ini_constraints)
+{
+    std::ofstream iniFile(dir / "additional-constraints.ini");
+    for (const auto& c: ini_constraints)
     {
-        rhsFile << i * 1.0 << "\n";
+        iniFile << "[" + c.name + "]\n";
+        iniFile << "variable=" + c.variable + "\n";
+        iniFile << "operator=" + c.op + "\n";
+        iniFile << "hours=" + c.hours + "\n";
+        iniFile << "enabled=" + c.enabled + "\n";
     }
-    rhsFile.close();
-
-    // Setup storage input and cluster
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "clustera";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    // Load constraints from the `.ini` file
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 1);
-
-    // Assertions
-    BOOST_CHECK_EQUAL(result, true);
-    // Validate loaded constraints
-    auto& built_cluster = storageInput.storagesByIndex[0];
-    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 1);
-
-    const auto& loadedConstraint = *built_cluster.additionalConstraints[0];
-
-    // Check variable, operator type, and rhs values
-    BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
-    BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
-    const auto& rhs = loadedConstraint.rhs();
-    BOOST_REQUIRE_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
-
-    unsigned int i = 0;
-    do
-    {
-        BOOST_CHECK_CLOSE(rhs.getCoefficient(0, i), i * 1.0, 0.001);
-        // Check rhs values within a tolerance
-
-        i += HOURS_PER_YEAR / 5;
-    } while (i < HOURS_PER_YEAR);
+    iniFile.close();
 }
 
-BOOST_AUTO_TEST_CASE(Load_disabled)
+void makeRHSforConstraint(fs::path& dir, unsigned nb_lines, const std::string& constraint_name)
 {
-    // Define the path for the test data
-    std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
-    std::filesystem::create_directories(testPath / "clustera");
+    std::string filename = "rhs_" + constraint_name + ".txt";
+    std::ofstream rhsFile(dir / filename);
 
-    // Write the `.ini` file for this test case
-    std::ofstream iniFile(testPath / "clustera" / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "enabled=false\n";
-    iniFile << "hours=[1,2,3]\n";
+    for (unsigned i = 0; i < nb_lines; ++i)
+    {
+        rhsFile << i << "\n";
+    }
+    rhsFile.close();
+}
+
+// =========================================
+// Fixture : AdditConstrFixture
+// =========================================
+
+template<unsigned nb_sts>
+struct AdditConstrFixture: public WorkDirCreationFixture
+{
+    AdditConstrFixture();
+
+    STStorageInput storageInput;
+    std::vector<fs::path> pathsToSTS;
+    std::vector<std::string> sts_names;
+};
+
+template<unsigned nb_sts>
+AdditConstrFixture<nb_sts>::AdditConstrFixture()
+{
+    for (unsigned i = 1; i <= nb_sts; i++)
+    {
+        std::string sts_name = "my-sts-" + std::to_string(i);
+        sts_names.push_back(sts_name);
+
+        fs::path sts_dir = work_dir / sts_name;
+        pathsToSTS.push_back(work_dir / sts_name); // Storing path tp STS data
+
+        fs::create_directories(sts_dir);
+
+        STStorageCluster sts;
+        sts.id = sts_name;
+        storageInput.storagesByIndex.push_back(sts);
+    }
+}
+
+// =========================================
+// Test on loading additional constraints
+// =========================================
+BOOST_FIXTURE_TEST_CASE(constraint_has_a_unknown_key___loading_returns_false, AdditConstrFixture<1>)
+{
+    std::ofstream iniFile(pathsToSTS[0] / "additional-constraints.ini");
+    iniFile << "[some constraint]\n";
+    iniFile << "blabla=some value\n";
     iniFile.close();
 
-    // Setup storage input and cluster
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "clustera";
-    storageInput.storagesByIndex.push_back(cluster);
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
+}
 
-    // Load constraints from the `.ini` file
-    bool result = storageInput.loadAdditionalConstraints(testPath);
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidFile, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0]->name, "my_constr");
+}
+
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidHours, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0],
+                           {{"my_constr", "injection", "less", "[0,1]"}}); // Invalid hours
+
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
+}
+
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
+{
+    STStorageInput storageInput;
+    BOOST_CHECK(storageInput.loadAdditionalConstraints("nonexistent_path"));
+}
+
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_InvalidConstraint, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0],
+                           {{"my_constr", "invalid", "less", "[1,2,3]"}}); // Invalid variable
+
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
+}
+
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "my_constr");
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
+
+    const auto& rhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
+    BOOST_CHECK_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0],
+                           {{"constraint1", "injection", "less", "[1,2,3]"},
+                            {"constraint2", "withdrawal", "greater", "[5,33]"}});
+
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "constraint1");
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 2);
+
+    //------- constraint1 ----------
+    const auto& constraint1 = storageInput.storagesByIndex[0].additionalConstraints[0];
+    BOOST_CHECK_EQUAL(constraint1->name, "constraint1");
+    BOOST_CHECK_EQUAL(constraint1->operatorType, "less");
+    BOOST_CHECK_EQUAL(constraint1->variable, "injection");
+    BOOST_CHECK_EQUAL(constraint1->cluster_id, sts_names[0]);
+
+    const auto& rhs1 = constraint1->rhs();
+    BOOST_CHECK_EQUAL(rhs1.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs1.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(rhs1.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
+
+    //------- constraint2 ----------
+    const auto& constraint2 = storageInput.storagesByIndex[0].additionalConstraints[1];
+    BOOST_CHECK_EQUAL(constraint2->name, "constraint2");
+    BOOST_CHECK_EQUAL(constraint2->operatorType, "greater");
+    BOOST_CHECK_EQUAL(constraint2->variable, "withdrawal");
+    BOOST_CHECK_EQUAL(constraint2->cluster_id, sts_names[0]);
+
+    const auto& rhs2 = constraint2->rhs();
+    BOOST_CHECK_EQUAL(rhs2.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs2.getCoefficient(0, 0), 0.0);
+    BOOST_CHECK_EQUAL(rhs2.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
+
+    const auto& constraintRhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
+    BOOST_CHECK_EQUAL(constraintRhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
+}
+
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
+
+    std::ofstream rhsFile(pathsToSTS[0] / "rhs_my_constr.txt");
+    rhsFile << "1.0\n2.0\ninvalid\n4.0\n"; // Malformed line
+    rhsFile.close();
+
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
+}
+
+BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]"}});
+
+    makeRHSforConstraint(pathsToSTS[0], 10, "my_constr");
+
+    BOOST_CHECK(!storageInput.loadAdditionalConstraints(work_dir));
+}
+
+BOOST_DATA_TEST_CASE_F(AdditConstrFixture<1>,
+                       Validate_AllVariableOperatorCombinationsFromFile,
+                       bdata::make({"injection", "withdrawal", "netting"})
+                         * bdata::make({"less", "equal", "greater"}),
+                       variable,
+                       op)
+{
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", variable, op, "[1,2,3]"}});
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "my_constr");
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 1);
+    BOOST_REQUIRE_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
+
+    const auto loadedConstraint = storageInput.storagesByIndex[0].additionalConstraints[0];
+    BOOST_CHECK_EQUAL(loadedConstraint->variable, variable);
+    BOOST_CHECK_EQUAL(loadedConstraint->operatorType, op);
+
+    const auto& rhs = loadedConstraint->rhs();
+    BOOST_REQUIRE_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
+
+    unsigned i = 0;
+    while (i < HOURS_PER_YEAR)
+    {
+        BOOST_CHECK_CLOSE(rhs.getCoefficient(0, i), i, 0.001 /* tolerance */);
+        i += HOURS_PER_YEAR / 5;
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(Load_disabled, AdditConstrFixture<1>)
+{
+    makeAdditConstrIniFile(pathsToSTS[0], {{"my_constr", "injection", "less", "[1,2,3]", "false"}});
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 0);
+}
 
-    // Assertions
-    BOOST_CHECK_EQUAL(result, true);
-    // Validate loaded constraints
-    auto& built_cluster = storageInput.storagesByIndex[0];
-    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 0);
+BOOST_FIXTURE_TEST_CASE(multiple_sts__one_sts_has_no_additional_constraint__all_constr_fully_loaded,
+                        AdditConstrFixture<2> /* 2 STS are built here */)
+{
+    // Fixture builds 2 short term storage here.
+    // We make 2 constraints for the first one.
+    makeAdditConstrIniFile(pathsToSTS[1],
+                           {{"constr_2a", "injection", "less", "[1]"},
+                            {"constr_2b", "netting", "greater", "[1,3]"}});
+    makeRHSforConstraint(pathsToSTS[1], HOURS_PER_YEAR, "constr_2a");
+    makeRHSforConstraint(pathsToSTS[1], HOURS_PER_YEAR, "constr_2b");
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
+
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 2);
+    BOOST_REQUIRE_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 0);
+    BOOST_REQUIRE_EQUAL(storageInput.storagesByIndex[1].additionalConstraints.size(), 2);
+
+    const auto& constr_2a = storageInput.storagesByIndex[1].additionalConstraints[0];
+    const auto& constr_2b = storageInput.storagesByIndex[1].additionalConstraints[1];
+
+    BOOST_REQUIRE_EQUAL(constr_2a->id, "constr_2a");
+    BOOST_REQUIRE_EQUAL(constr_2b->id, "constr_2b");
+}
+
+BOOST_FIXTURE_TEST_CASE(one_sts_with_many_constraints_one_is_disabled__all_constr_fully_loaded,
+                        AdditConstrFixture<1> /* 1 sts here */)
+{
+    makeAdditConstrIniFile(pathsToSTS[0],
+                           {{"constr_1", "withdrawal", "less", "[1]", "false"}, // Disabled
+                            {"constr_2", "injection", "less", "[1,6]"},
+                            {"constr_3", "netting", "greater", "[1,3]"}});
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "constr_2");
+    makeRHSforConstraint(pathsToSTS[0], HOURS_PER_YEAR, "constr_3");
+
+    BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
+
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 2);
+    BOOST_REQUIRE_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 2);
+
+    const auto& constr_2 = storageInput.storagesByIndex[0].additionalConstraints[0];
+    const auto& constr_3 = storageInput.storagesByIndex[0].additionalConstraints[1];
+
+    BOOST_REQUIRE_EQUAL(constr_2->id, "constr_2");
+    BOOST_REQUIRE_EQUAL(constr_3->id, "constr_3");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

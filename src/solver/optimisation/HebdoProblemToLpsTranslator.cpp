@@ -116,7 +116,10 @@ ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(
     ret.ConstraintsMatrixCoeff.resize(ret.CoeffCount);
     copy(problem->IndicesColonnes, ret.ColumnIndexes);
     ret.ColumnIndexes.resize(ret.CoeffCount);
+
     copy(problem->IndicesDebutDeLigne, ret.Mdeb);
+    resizeIfLargerThan(ret.Mdeb, ret.ConstraintesCount);
+    // Add a final coeff
     ret.Mdeb.push_back(ret.CoeffCount);
     copy(problem->NomDesVariables, ret.VariablesMeaning);
 
