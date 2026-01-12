@@ -92,9 +92,8 @@ BOOST_FIXTURE_TEST_CASE(survey_result_hourly, StudyFixture)
                        std::string::npos);
     }
     // Annual
-    // ⚠ SurveyResults ne fait pas l'agrégation temporelle,
-    // il se contente d'écrire son contenu. Il faut faire l'agrégation temporelle
-    // en amont.
+    // ⚠ SurveyResults does not perform temporal aggregation;
+    // it simply writes its content. Temporal aggregation must be done beforehand.
     if (false)
     {
         const std::string filename = "annual.txt";
@@ -105,7 +104,7 @@ BOOST_FIXTURE_TEST_CASE(survey_result_hourly, StudyFixture)
         BOOST_REQUIRE(writer.getMap().contains(filename));
         const auto& content = writer.getMap().at(filename);
         // Some values
-        logs.warning() << content;
+        // NO AGGREGATION HERE
         BOOST_CHECK_NE(content.find("	9	01	JAN	08:00	9	67\n"),
                        std::string::npos);
     }
