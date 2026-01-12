@@ -37,6 +37,8 @@ public:
     ** \brief Default constructor
     */
     AverageData();
+    AverageData(unsigned size);
+
     //! Destructor
     ~AverageData();
 

@@ -25,7 +25,15 @@
 
 namespace Antares::Solver::Variable::R::AllYears
 {
+
 AverageData::AverageData() = default;
+
+AverageData::AverageData(unsigned size):
+    yearsWeightSum(size)
+{
+    yearsWeight.assign(size, 1.);
+}
+
 AverageData::~AverageData() = default;
 
 void AverageData::reset()
