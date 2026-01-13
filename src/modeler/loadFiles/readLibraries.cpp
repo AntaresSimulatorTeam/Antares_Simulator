@@ -155,7 +155,7 @@ void updateSystemModel(YmlModel::Model& model, const YmlOptimConfig::Model& opti
 void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
                                     const YmlOptimConfig::OptimConfig& ymlOptimConfig)
 {
-    for (const auto& optimConfigModel: ymlOptimConfig)
+    for (const auto& optimConfigModel: ymlOptimConfig.models)
     {
         auto& model = fetchModelInLibrairies(optimConfigModel, ymlLibs);
         updateSystemModel(model, optimConfigModel);

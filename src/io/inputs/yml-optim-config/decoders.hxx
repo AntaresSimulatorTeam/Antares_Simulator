@@ -106,4 +106,61 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
     }
 };
 
+template<>
+struct convert<Antares::IO::Inputs::YmlOptimConfig::ResolutionMode>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::ResolutionMode& rhs)
+    {
+        if (!node.IsScalar())
+        {
+            return false;
+        }
+        const auto modeStr = node.as<std::string>();
+        if (modeStr == "sequential-subproblems")
+        {
+            rhs = Antares::IO::Inputs::YmlOptimConfig::ResolutionMode::SequentialSubproblems;
+        }
+        else if (modeStr == "benders-decomposition")
+        {
+            rhs = Antares::IO::Inputs::YmlOptimConfig::ResolutionMode::BendersDecomposition;
+        }
+        else
+        {
+            return false; // Unknown resolution mode
+        }
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::OptimConfig& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+
+        // Parse resolution-mode (optional, defaults to sequential-subproblems)
+        if (node["resolution-mode"])
+        {
+            rhs.resolution_mode = node["resolution-mode"].as<
+              Antares::IO::Inputs::YmlOptimConfig::ResolutionMode>(
+              Antares::IO::Inputs::YmlOptimConfig::ResolutionMode::SequentialSubproblems);
+        }
+        else
+        {
+            rhs.resolution_mode = Antares::IO::Inputs::YmlOptimConfig::ResolutionMode::SequentialSubproblems;
+        }
+
+        // Parse models list
+        rhs.models = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>(
+          node["models"]);
+
+        return true;
+    }
+};
+
 } // namespace YAML
