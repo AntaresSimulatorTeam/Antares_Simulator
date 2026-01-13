@@ -1,10 +1,5 @@
 var NAVTREEINDEX61 =
 {
-"structFlowDissociationData.html#af714f41bbd503e7ee4400640dc422b87":[8,0,138,0],
-"structHydroMaxPowerStudy.html":[8,0,150],
-"structHydroMaxPowerStudy.html#a069794d67b223c434284fe7d551e96f4":[8,0,150,4],
-"structHydroMaxPowerStudy.html#a6d0f6ea2d8894a9d3833d1e9eabfee48":[8,0,150,1],
-"structHydroMaxPowerStudy.html#ac9c8e3703daf5fae0ff155b7bacbe80c":[8,0,150,0],
 "structHydroMaxPowerStudy.html#ace31ef2f85ffd891974772a296de0d26":[8,0,150,3],
 "structHydroMaxPowerStudy.html#ad9a45dc198211f0f30c1c4eec5d13117":[8,0,150,2],
 "structHydroPowerData.html":[8,0,152],
@@ -41,8 +36,8 @@ var NAVTREEINDEX61 =
 "structInputFixture.html#ae5cc7310bbfbc0b87ee5712bb4e4f62d":[8,0,164,22],
 "structInputFixture.html#ae7e762eeef60cce51097c8ba5cf9f245":[8,0,164,14],
 "structInputFixture.html#aeb3d7f53766e66fa2589dd8cf5a9f611":[8,0,164,3],
-"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,164,1],
 "structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,164,0],
+"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,164,1],
 "structLEVEL__FLEX__DOWN__NODE.html":[8,0,174],
 "structLEVEL__FLEX__DOWN__NODE.html#adb586b5229c47e72dc6503a2b621e37d":[8,0,174,0],
 "structLEVEL__FLEX__UP__NODE.html":[8,0,175],
@@ -249,5 +244,10 @@ var NAVTREEINDEX61 =
 "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#a763bba5d3bac78b496e922908dde3685":[8,0,247,7],
 "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#a92238004f974a167fc940bed74be291b":[8,0,247,1],
 "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#aa3d19ff779e35309e20f8971bc5e3e3c":[8,0,247,8],
-"structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#aa95c93d5f310f2c447256200c9b50f2a":[8,0,247,4]
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#aa95c93d5f310f2c447256200c9b50f2a":[8,0,247,4],
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#ad6efcd798adbc881363ac1a19053c81f":[8,0,247,2],
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#ae962e89a51211c8f611cd8ea35758f49":[8,0,247,9],
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__VARIABLE.html":[8,0,248],
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__VARIABLE.html#a0b70a5461226b37125410328c37962d3":[8,0,248,2],
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__VARIABLE.html#a213bfa51653f93b21bb784cc8c3c4d7d":[8,0,248,7]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX44 =
 {
+"classText.html#a49b83708796fde0b81bace35083b15bb":[8,0,322,2],
 "classText.html#ab3e26143fccc52699bcc5149cae852bc":[8,0,322,3],
 "classText.html#ab5bddc5c2879d2bb97617d736d534115":[8,0,322,1],
 "classText.html#ad34dcdda1068a328635e6dc9fd19c041":[8,0,322,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX44 =
 "classjson__collector_1_1jsonCollector.html#ab5820a7bc2db68884657ee629645243f":[8,0,17,2,1],
 "classjson__collector_1_1jsonCollector.html#ad6d5bc74f34978cb71b55f6d5020518c":[8,0,17,2,4],
 "classjson__collector_1_1jsonCollector.html#aeae63ff5c5b52317158dbbf8f1c00d0b":[8,0,17,2,6],
-"classmodeler__output__handler_1_1invest__problems.html":[8,0,18,0],
-"classmodeler__output__handler_1_1invest__problems.html#a45eb871ed6f59b9d7cb6fb5ecf000b16":[8,0,18,0,1]
+"classmodeler__output__handler_1_1invest__problems.html":[8,0,18,0]
 };

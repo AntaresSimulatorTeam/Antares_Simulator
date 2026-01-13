@@ -1,5 +1,6 @@
 var NAVTREEINDEX42 =
 {
+"classMockLinearProblem.html#aef27f34880e92bc060bdff439eed2943":[8,0,197,3],
 "classMockLinearProblem.html#af78b0d69d93e854f1a5542806176d54a":[8,0,197,24],
 "classMockMipConstraint.html":[8,0,199],
 "classMockMipConstraint.html#a317f64ed33ea33b0ed93593232334b49":[8,0,199,2],
@@ -239,8 +240,8 @@ var NAVTREEINDEX42 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[8,0,252,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[8,0,252,7],
 "classPublicStudy.html":[8,0,254],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,254,0],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,254,1],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,254,0],
 "classQuadraticProblemMatrix.html":[8,0,256],
 "classQuadraticProblemMatrix.html#a125f854b3137ecb3e79b501a8530ced2":[8,0,256,1],
 "classQuadraticProblemMatrix.html#a7722642ba2cc688ff94a834baa6c1ffc":[8,0,256,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX42 =
 "classResultMatrix.html#a0d28646f3d8929398765214d4b27d0f7":[8,0,265,3],
 "classResultMatrix.html#a0ebd6169199f31ef26dcf8b3ac389084":[8,0,265,4],
 "classResultMatrix.html#a1704cdc155238f241dcea82d3475a34d":[8,0,265,0],
-"classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7":[8,0,265,7],
-"classResultMatrix.html#abacc6c808def3c8dea3d2a529477ae36":[8,0,265,5]
+"classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7":[8,0,265,7]
 };

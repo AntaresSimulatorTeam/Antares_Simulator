@@ -1,14 +1,9 @@
 var NAVTREEINDEX58 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a7eced0a5c80c17d3b3fd318d40662509":[8,0,0,19,5,6,0,9,10],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#abd0753b91b382df30b7c6e028d8684a5":[8,0,0,19,5,6,0,9,9],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ada37935b4e18bad9341852d49456baf0":[8,0,0,19,5,6,0,9,5],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae3ac30a527c9f15bc40503e58added6b":[8,0,0,19,5,6,0,9,2],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506":[8,0,0,19,5,6,0,9,1],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#aed37a620f52b81f5ed215d2f4b3bd18a":[8,0,0,19,5,6,0,9,6],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html":[8,0,0,19,5,6,0,9,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html#a09178644b4881df8b3f53976c1d60fb1":[8,0,0,19,5,6,0,9,0,1],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html#ac7c85e13045093f0799154c9238fa8a9":[8,0,0,19,5,6,0,9,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ada37935b4e18bad9341852d49456baf0":[8,0,0,19,5,6,0,9,4],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae3ac30a527c9f15bc40503e58added6b":[8,0,0,19,5,6,0,9,1],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506":[8,0,0,19,5,6,0,9,0],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#aed37a620f52b81f5ed215d2f4b3bd18a":[8,0,0,19,5,6,0,9,5],
 "structAntares_1_1Solver_1_1Variable_1_1SetsOfAreas_1_1Statistics.html":[8,0,0,19,5,40,0],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation.html":[8,0,0,19,5,25],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spati841a76f09dca40f27176e5114824b3ac.html":[8,0,0,19,5,28],
@@ -249,5 +244,10 @@ var NAVTREEINDEX58 =
 "structAntares_1_1Window_1_1Inspector_1_1PStudyMCScenarios.html#a41ae1e49a9763605c247b57025f26267":[8,0,0,24,1,15,0],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyPlaylist.html":[8,0,0,24,1,10],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyPlaylist.html#a6bac110ef6483c110d26b6a9ead3367d":[8,0,0,24,1,10,0],
-"structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html":[8,0,0,24,1,12]
+"structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html":[8,0,0,24,1,12],
+"structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html#a7d4db039e78611084632dda7724081a2":[8,0,0,24,1,12,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyThematicTrimming.html":[8,0,0,24,1,14],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyThematicTrimming.html#a492c2e57b60dbba89fd0edc10e5282fa":[8,0,0,24,1,14,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyYearByYear.html":[8,0,0,24,1,11],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyYearByYear.html#a859f0722f74a83cc876a217bd3665a60":[8,0,0,24,1,11,0]
 };

@@ -1,10 +1,5 @@
 var NAVTREEINDEX60 =
 {
-"structCsvCreationFixture.html#a511c24c7f011d1bec6f8da48aaf77474":[8,0,98,1],
-"structCsvCreationFixture.html#a9a4f917679a071414c3b32074e2f6330":[8,0,98,0],
-"structCsvCreationFixture.html#ac04a4dcb4f50ce11e406ca2b69060b3c":[8,0,98,3],
-"structCsvCreationFixture.html#ade9150efaf9e36b65635c48e71eb38d1":[8,0,98,2],
-"structCumulationConstraint.html":[8,0,99],
 "structCumulationConstraint.html#a13563bb2050269e5ebafc1a8edd2da92":[8,0,99,0],
 "structCumulationConstraint.html#a4d3d494de407e18a424494aa5c647713":[8,0,99,1],
 "structDEMAND__FLEX__DOWN__POOL.html":[8,0,103],
@@ -249,5 +244,10 @@ var NAVTREEINDEX60 =
 "structFlowDissociationData.html":[8,0,138],
 "structFlowDissociationData.html#a526ad2a342723bea892e5a06267220eb":[8,0,138,2],
 "structFlowDissociationData.html#ab0d56cc1466bdb3cdbc5afb05bb28538":[8,0,138,3],
-"structFlowDissociationData.html#adada92faf613622f6e4c4a7b240ff696":[8,0,138,1]
+"structFlowDissociationData.html#adada92faf613622f6e4c4a7b240ff696":[8,0,138,1],
+"structFlowDissociationData.html#af714f41bbd503e7ee4400640dc422b87":[8,0,138,0],
+"structHydroMaxPowerStudy.html":[8,0,150],
+"structHydroMaxPowerStudy.html#a069794d67b223c434284fe7d551e96f4":[8,0,150,4],
+"structHydroMaxPowerStudy.html#a6d0f6ea2d8894a9d3833d1e9eabfee48":[8,0,150,1],
+"structHydroMaxPowerStudy.html#ac9c8e3703daf5fae0ff155b7bacbe80c":[8,0,150,0]
 };

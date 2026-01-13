@@ -1,5 +1,6 @@
 var NAVTREEINDEX41 =
 {
+"classHydro__problem__costs.html#a27ff1277524bb4cc8f1c19da2b75c10a":[8,0,149,6],
 "classHydro__problem__costs.html#a2bdc9b0a457e87c939c8680f067d8395":[8,0,149,2],
 "classHydro__problem__costs.html#a2fe89ed7cfdd97846abad74a6a25a1f7":[8,0,149,5],
 "classHydro__problem__costs.html#a622782915ebb0432fd791d4ac4ab88e0":[8,0,149,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX41 =
 "classMockLinearProblem.html#ae920d2fbdb93c8aef5643c517f17d1c7":[8,0,197,15],
 "classMockLinearProblem.html#aea0b961c1663e57f3f7f83218def9199":[8,0,197,18],
 "classMockLinearProblem.html#aec49ee7440182a775ed6666ec0af4116":[8,0,197,11],
-"classMockLinearProblem.html#aee16a287b2f87dede7894bb57cab544a":[8,0,197,27],
-"classMockLinearProblem.html#aef27f34880e92bc060bdff439eed2943":[8,0,197,3]
+"classMockLinearProblem.html#aee16a287b2f87dede7894bb57cab544a":[8,0,197,27]
 };

@@ -1,9 +1,8 @@
 var structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw =
 [
-    [ "Data", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data" ],
     [ "NextType", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a64a09e4897a39e1a1a14ffb548c91e4b", null ],
-    [ "Raw", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a5044c56add1086ac0ec56685036da3c8", null ],
-    [ "~Raw", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#abe787997962d7a0b07363345ed5d8660", null ],
+    [ "Raw", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#ad362f7b81953c5d9e78f0d50e9bb554b", null ],
+    [ "~Raw", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a1dcc3dd03892d9b43880d262768c81f0", null ],
     [ "buildDigest", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#aafc9053228d2b1005ea7f9b3e7e1b3de", null ],
     [ "buildSurveyReport", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#aa020c9da90127aeaaac1486d67a8e328", null ],
     [ "hourlyValuesForSpatialAggregate", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#acf99733bd2fd9b956be83f72e8ec18cd", null ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX36 =
 {
+"classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#ad47fa2a6f6338b90f090e1b40618edfd":[8,0,0,24,1,73,11],
 "classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#ada50a6f3628931e2073f2570a82fa5f2":[8,0,0,24,1,73,2],
 "classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#ae0f0982740a2d4dcb2775c66a1673d07":[8,0,0,24,1,73,8],
 "classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#aefb5275580ca974acc9cc553ce4c4c44":[8,0,0,24,1,73,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX36 =
 "classAntares_1_1Window_1_1Renewable_1_1Panel.html":[8,0,0,24,4,1],
 "classAntares_1_1Window_1_1Renewable_1_1Panel.html#a159555e21981d3e12f05cc02f418bbd1":[8,0,0,24,4,1,0],
 "classAntares_1_1Window_1_1Renewable_1_1Panel.html#a5ee83bbf64c89f3a1babab258f053732":[8,0,0,24,4,1,4],
-"classAntares_1_1Window_1_1Renewable_1_1Panel.html#a7bb42f64d8b672407f7f6af6f6f39ab4":[8,0,0,24,4,1,3],
-"classAntares_1_1Window_1_1Renewable_1_1Panel.html#aa95a146b8ebc42c829f73431af15ea95":[8,0,0,24,4,1,2]
+"classAntares_1_1Window_1_1Renewable_1_1Panel.html#a7bb42f64d8b672407f7f6af6f6f39ab4":[8,0,0,24,4,1,3]
 };

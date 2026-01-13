@@ -1,5 +1,6 @@
 var NAVTREEINDEX35 =
 {
+"classAntares_1_1UnitTests_1_1CaptureAntaresLogs.html#ac72d695788476dc2788dad35bcc5abc9":[8,0,0,22,3,3],
 "classAntares_1_1UnitTests_1_1fakeLogger.html":[8,0,0,22,2],
 "classAntares_1_1UnitTests_1_1fakeLogger.html#a08bebfb7c22dd9cd90b7f84e3c1cc685":[8,0,0,22,2,1],
 "classAntares_1_1UnitTests_1_1fakeLogger.html#a5036844ef77ce6178ea4abf37d90e4fe":[8,0,0,22,2,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX35 =
 "classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#a6cec03200ad90be12fe0b529830afa68":[8,0,0,24,1,73,4],
 "classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#a6d467f3f617e2bbf2ebf5c9308caa416":[8,0,0,24,1,73,1],
 "classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#a7211d4ba8a240bc9d8286e9c23b858c3":[8,0,0,24,1,73,5],
-"classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#acc2489ae86bc1e6e6c504d5ce7d5134b":[8,0,0,24,1,73,3],
-"classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#ad47fa2a6f6338b90f090e1b40618edfd":[8,0,0,24,1,73,11]
+"classAntares_1_1Window_1_1Inspector_1_1InspectorGrid.html#acc2489ae86bc1e6e6c504d5ce7d5134b":[8,0,0,24,1,73,3]
 };

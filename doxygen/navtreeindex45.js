@@ -1,5 +1,6 @@
 var NAVTREEINDEX45 =
 {
+"classmodeler__output__handler_1_1invest__problems.html#a45eb871ed6f59b9d7cb6fb5ecf000b16":[8,0,18,0,1],
 "classmodeler__output__handler_1_1invest__problems.html#a68827debe331af3af18372c0da7d942f":[8,0,18,0,0],
 "classmodeler__output__handler_1_1invest__problems.html#ac7af30b47415921c1113a7718c8423f6":[8,0,18,0,2],
 "classmodeler__output__handler_1_1invest__problems.html#aefab5a9cba1ab05b0d33be6cfa457f42":[8,0,18,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX45 =
 "concurrency_8h_source.html":[9,0,0,4,0,5,0,0,0,0],
 "config_8h_source.html":[9,0,0,12,2,3],
 "congestionFeeAbs_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1,1],
-"congestionFee_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1,0],
-"congestionProbability_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1,2]
+"congestionFee_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1,0]
 };

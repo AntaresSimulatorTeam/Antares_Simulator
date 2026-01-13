@@ -204,6 +204,9 @@ bool *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memitem:ab7badf12c0f2c8bd9da330b602af896a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab7badf12c0f2c8bd9da330b602af896a">SurveyResults</a> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;s, const Yuni::String &amp;o, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;writer)</td></tr>
 <tr class="memdesc:ab7badf12c0f2c8bd9da330b602af896a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab7badf12c0f2c8bd9da330b602af896a">More...</a><br /></td></tr>
 <tr class="separator:ab7badf12c0f2c8bd9da330b602af896a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd03e312e139d5b01d9988e6f76a46a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#abd03e312e139d5b01d9988e6f76a46a4">SurveyResults</a> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;s, uint <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a472737ca9f923c7ce931d63d8d71acb6">maxVariables</a>, const Yuni::String &amp;o, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;writer)</td></tr>
+<tr class="memdesc:abd03e312e139d5b01d9988e6f76a46a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#abd03e312e139d5b01d9988e6f76a46a4">More...</a><br /></td></tr>
+<tr class="separator:abd03e312e139d5b01d9988e6f76a46a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2b82bea22aadb135da7facc9f484e12"><td class="memItemLeft" align="right" valign="top"><a id="ab2b82bea22aadb135da7facc9f484e12"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab2b82bea22aadb135da7facc9f484e12">~SurveyResults</a> ()</td></tr>
 <tr class="memdesc:ab2b82bea22aadb135da7facc9f484e12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
@@ -230,7 +233,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>exportDigestMatrix</b
 <div class="textblock"><p>Class utility for building CSV results files. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab7badf12c0f2c8bd9da330b602af896a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7badf12c0f2c8bd9da330b602af896a">&#9670;&nbsp;</a></span>SurveyResults()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7badf12c0f2c8bd9da330b602af896a">&#9670;&nbsp;</a></span>SurveyResults() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,6 +269,58 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>exportDigestMatrix</b
   <table class="params">
     <tr><td class="paramname">maxVars</td><td>The maximum total of variables that we may need for writing the report </td></tr>
     <tr><td class="paramname">s</td><td>Reference to the study </td></tr>
+    <tr><td class="paramname">o</td><td>The output folder </td></tr>
+    <tr><td class="paramname">year</td><td>The current year, if any </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abd03e312e139d5b01d9988e6f76a46a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd03e312e139d5b01d9988e6f76a46a4">&#9670;&nbsp;</a></span>SurveyResults() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Antares::Solver::Variable::SurveyResults::SurveyResults </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint&#160;</td>
+          <td class="paramname"><em>maxVariables</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Yuni::String &amp;&#160;</td>
+          <td class="paramname"><em>o</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;&#160;</td>
+          <td class="paramname"><em>writer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Default constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">maxVars</td><td>The maximum total of variables that we may need for writing the report </td></tr>
+    <tr><td class="paramname">s</td><td>Reference to the study </td></tr>
+    <tr><td class="paramname">maxVariables</td><td>References the maximal number of output variables </td></tr>
     <tr><td class="paramname">o</td><td>The output folder </td></tr>
     <tr><td class="paramname">year</td><td>The current year, if any </td></tr>
   </table>

@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['optautoresizeparent_7159',['optAutoResizeParent',['../classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14aa4ffe9568269d50db2cc782652f16c33',1,'Antares::Component::Spotlight']]],
-  ['optbkgwhite_7160',['optBkgWhite',['../classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14a5928769f52dcca8ac53b6709080c5d97',1,'Antares::Component::Spotlight']]],
-  ['optfixedsize_7161',['optFixedSize',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a49efeee2664a8ac46263360755d54140',1,'Antares::Matrix']]],
-  ['optgroups_7162',['optGroups',['../classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14a937f4e3a21d9e4a3437b6c127386c68a',1,'Antares::Component::Spotlight']]],
-  ['optimmediate_7163',['optImmediate',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a0e4056ff6da75ffd399efee823cc8508',1,'Antares::Matrix']]],
-  ['optmarkasmodified_7164',['optMarkAsModified',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aaa387da86458ab0555e8d40f4f42eec2',1,'Antares::Matrix']]],
-  ['optneverfails_7165',['optNeverFails',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a34cdfceff80957c5a70e8c89f022a7b5',1,'Antares::Matrix']]],
-  ['optnone_7166',['optNone',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aeace5101cedad1888fbf3accbe4509ae',1,'Antares::Matrix']]],
-  ['optnosearchinput_7167',['optNoSearchInput',['../classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14af35c061bd96f494227f76d7b1e726238',1,'Antares::Component::Spotlight']]],
-  ['optnowarnifempty_7168',['optNoWarnIfEmpty',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee',1,'Antares::Matrix']]],
-  ['optquiet_7169',['optQuiet',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3',1,'Antares::Matrix']]]
+  ['optautoresizeparent_7161',['optAutoResizeParent',['../classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14aa4ffe9568269d50db2cc782652f16c33',1,'Antares::Component::Spotlight']]],
+  ['optbkgwhite_7162',['optBkgWhite',['../classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14a5928769f52dcca8ac53b6709080c5d97',1,'Antares::Component::Spotlight']]],
+  ['optfixedsize_7163',['optFixedSize',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a49efeee2664a8ac46263360755d54140',1,'Antares::Matrix']]],
+  ['optgroups_7164',['optGroups',['../classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14a937f4e3a21d9e4a3437b6c127386c68a',1,'Antares::Component::Spotlight']]],
+  ['optimmediate_7165',['optImmediate',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a0e4056ff6da75ffd399efee823cc8508',1,'Antares::Matrix']]],
+  ['optmarkasmodified_7166',['optMarkAsModified',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aaa387da86458ab0555e8d40f4f42eec2',1,'Antares::Matrix']]],
+  ['optneverfails_7167',['optNeverFails',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a34cdfceff80957c5a70e8c89f022a7b5',1,'Antares::Matrix']]],
+  ['optnone_7168',['optNone',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aeace5101cedad1888fbf3accbe4509ae',1,'Antares::Matrix']]],
+  ['optnosearchinput_7169',['optNoSearchInput',['../classAntares_1_1Component_1_1Spotlight.html#a6802aa582d503c66dc43c5c8949c7d14af35c061bd96f494227f76d7b1e726238',1,'Antares::Component::Spotlight']]],
+  ['optnowarnifempty_7170',['optNoWarnIfEmpty',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee',1,'Antares::Matrix']]],
+  ['optquiet_7171',['optQuiet',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3',1,'Antares::Matrix']]]
 ];

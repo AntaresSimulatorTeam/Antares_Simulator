@@ -1,6 +1,5 @@
 var structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation =
 [
-    [ "Data", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data" ],
     [ "NextType", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506", null ],
     [ "buildSurveyReport", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae3ac30a527c9f15bc40503e58added6b", null ],
     [ "initializeFromStudy", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a622ac0eef11558ca6d7597d63495651f", null ],
