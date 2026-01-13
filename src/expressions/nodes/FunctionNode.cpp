@@ -39,6 +39,8 @@ std::string FunctionNodeTypeToString(FunctionNodeType type)
         return "pow";
     case FunctionNodeType::floor:
         return "floor";
+    case FunctionNodeType::ceil:
+        return "ceil";
     default:
         return "Unknown function";
     }

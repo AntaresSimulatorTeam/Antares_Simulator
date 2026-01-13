@@ -38,6 +38,7 @@ enum class FunctionNodeType
     min,          ///< Minimum of multiple expressions.
     pow,          ///< Exponentiation: base^exponent.
     floor,        ///< Rounds a number to closest smaller int
+    ceil          ///< Rounds a number to closest greater int
 };
 
 /**
@@ -60,6 +61,7 @@ std::string FunctionNodeTypeToString(FunctionNodeType type);
  * - reduced_cost(var) -> FunctionNode(FunctionNodeType::reduced_cost, VariableNode("var"))
  * - dual(constraint) -> FunctionNode(FunctionNodeType::dual, ParameterNode("constraint"))
  * - floor(p) -> FunctionNode(FunctionNodeType::floor, ParameterNode(param))
+ * - ceil(p) -> FunctionNode(FunctionNodeType::ceil, ParameterNode(param))
  */
 class FunctionNode final: public ParentNode
 {

@@ -188,6 +188,33 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_constant_param,
     BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
 }
 
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(4.5) = 5
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::ceil, create<LiteralNode>(4.5));
+
+    auto linear_expression = visitor().dispatch(floorNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(param(4.5)) = 5
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::ceil,
+                                           create<ParameterNode>("four.five"));
+
+    auto linear_expression = visitor().dispatch(floorNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {

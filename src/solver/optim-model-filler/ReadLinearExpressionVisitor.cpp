@@ -21,6 +21,7 @@
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 
 #include <cmath>
+#include <functional>
 
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
@@ -294,19 +295,36 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visitPower(
     return to_return;
 }
 
+auto checkIsConstant = [](const std::string& op, const auto& expression)
+{
+    if (expression.hasCoefs())
+    {
+        std::string err_msg = op + " operator: its argument is not constant, but has to be.";
+        throw std::invalid_argument(err_msg);
+    }
+};
+
+auto checkExpressionIsConstantForFloor = [](const auto& expr) { checkIsConstant("floor", expr); };
+auto checkExpressionIsConstantForCeil = [](const auto& expr) { checkIsConstant("ceil", expr); };
+
+auto floorExpression = [](auto& expr) { expr.constant(std::floor(expr.constant())); };
+auto ceilExpression = [](auto& expr) { expr.constant(std::ceil(expr.constant())); };
+
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visitFloor(
   const Nodes::FunctionNode* node)
 {
     auto expressions = dispatch(node->getOperands()[0]);
-    for (auto& expression: expressions)
-    {
-        if (expression.hasCoefs())
-        {
-            std::string err_msg = "floor operator: its argument is not constant, but has to be.";
-            throw std::invalid_argument(err_msg);
-        }
-        expression.constant(std::floor(expression.constant()));
-    }
+    std::ranges::for_each(expressions, checkExpressionIsConstantForFloor);
+    std::ranges::for_each(expressions, floorExpression);
+    return expressions;
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visitCeil(
+  const Nodes::FunctionNode* node)
+{
+    auto expressions = dispatch(node->getOperands()[0]);
+    std::ranges::for_each(expressions, checkExpressionIsConstantForCeil);
+    std::ranges::for_each(expressions, ceilExpression);
     return expressions;
 }
 
@@ -329,6 +347,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Fu
         return visitPower(node);
     case Nodes::FunctionNodeType::floor:
         return visitFloor(node);
+    case Nodes::FunctionNodeType::ceil:
+        return visitCeil(node);
     default:
         throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
     }
