@@ -112,7 +112,7 @@ using VariablesPerArea = Common::ComposeAll<Variable::Adequacy::OverallCost,
                                             Variable::Economy::DispatchableGenMargin,
                                             Variable::Economy::Marge,
                                             Variable::Economy::ProfitByPlant,
-                                            Variable::Economy::Residual,
+                                            Variable::Economy::ResidualLoad,
                                             Variable::Adequacy::Links>::type;
 
 /*!

@@ -139,7 +139,7 @@ using VariablesPerArea = Common::ComposeAll<OverallCost,
                                             NbOfDispatchedUnits,
                                             NbOfDispatchedUnitsByPlant,
                                             ProfitByPlant,
-                                            Residual,
+                                            ResidualLoad,
                                             Links>::type;
 
 /*!\n** \brief All variables for a single set of areas (economy)
@@ -175,7 +175,7 @@ using VariablesPerSetOfAreas = Common::SpatialAggregateAll<OverallCost,
                                                            DtgMarginCsr,
                                                            Marge,
                                                            NonProportionalCost,
-                                                           Residual,
+                                                           ResidualLoad,
                                                            NbOfDispatchedUnits>::type;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

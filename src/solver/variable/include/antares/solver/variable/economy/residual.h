@@ -25,12 +25,12 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-struct VCardResidual
+struct VCardResidualLoad
 {
     //! Caption
     static std::string Caption()
     {
-        return "RESIDUAL CONSUMPTION";
+        return "RES LOAD";
     }
 
     //! Unit
@@ -42,7 +42,7 @@ struct VCardResidual
     //! The short description of the variable
     static std::string Description()
     {
-        return "Residual consumption";
+        return "Residual load";
     }
 
     //! The expected results
@@ -54,7 +54,7 @@ struct VCardResidual
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardResidual VCardForSpatialAggregate;
+    typedef VCardResidualLoad VCardForSpatialAggregate;
 
     //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
@@ -87,18 +87,18 @@ struct VCardResidual
 }; // class VCard
 
 /*!
-** \brief Residual
+** \brief ResidualLoad
 */
 template<class NextT = Container::EndOfList>
-class Residual: public Variable::IVariable<Residual<NextT>, NextT, VCardResidual>
+class ResidualLoad: public Variable::IVariable<ResidualLoad<NextT>, NextT, VCardResidualLoad>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardResidual VCardType;
+    typedef VCardResidualLoad VCardType;
     //! Ancestor
-    typedef Variable::IVariable<Residual<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ResidualLoad<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -217,7 +217,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Retrieving the Residual
+        // Retrieving the ResidualLoad
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
           = state.problemeHebdo->ConsommationsAbattues[state.hourInTheWeek]
               .ConsommationAbattueDuPays[pArea->index];
@@ -258,7 +258,7 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class Residual
+}; // class ResidualLoad
 
 } // namespace Antares::Solver::Variable::Economy
 
