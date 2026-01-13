@@ -62,13 +62,10 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
 class SystemLinearProblemBuilder final
 {
 public:
-    explicit SystemLinearProblemBuilder(
-      const ModelerStudy::SystemModel::System* system,
-      ILinearProblem& pb,
-      const LinearProblemApi::ILinearProblemData& dataSeries,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository,
-      BendersDecomposition* bendersDecomposition,
-      OptimEntityContainer& optimEntityContainer):
+    explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system,
+                                        const ScenarioGroupRepository& scenarioGroupRepository,
+                                        BendersDecomposition* bendersDecomposition,
+                                        OptimEntityContainer& optimEntityContainer):
         system_(system),
         scenarioGroupRepository_(scenarioGroupRepository),
         bendersDecomposition_(bendersDecomposition),
@@ -101,8 +98,8 @@ public:
 private:
     const ModelerStudy::SystemModel::System* system_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
-    OptimEntityContainer& optimEntityContainer_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
+    OptimEntityContainer& optimEntityContainer_;
 };
 
 struct LocationAnalysis
@@ -161,8 +158,6 @@ ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
       data.dataSeries.get(),
       &data.scenarioGroupRepository);
     SystemLinearProblemBuilder builder(data.system.get(),
-                                       *problem,
-                                       *data.dataSeries,
                                        data.scenarioGroupRepository,
                                        bendersDecomposition,
                                        *optimEntityContainer);
@@ -233,14 +228,11 @@ void Modeler::run()
         auto output = writer_.outputPath();
 
         // 1-1.mps
-        // Write(*(static_cast<OrtoolsLinearProblem*>(subproblem_1_1.get())), output / "1-1.mps");
         if (subproblem_1_1)
         {
             IO::Outputs::MPSWriter(*subproblem_1_1, output / "1-1.mps", "1-1").write();
         }
         // master.mps
-        // Write(*(static_cast<OrtoolsLinearProblem*>(masterProblem_.get())), output /
-        // "master.mps");
         if (masterProblem_)
         {
             IO::Outputs::MPSWriter(*masterProblem_, output / "master.mps", "master").write();
