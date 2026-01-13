@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2025, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -55,6 +54,19 @@ struct Model
     std::vector<Objective> objectives;
 };
 
-using OptimConfig = std::vector<Model>;
+enum class ResolutionMode
+{
+    SequentialSubproblems, // corresponds to `sequential-subproblems` (default)
+    BendersDecomposition    // corresponds to `benders-decomposition`
+};
+
+struct OptimConfig
+{
+    // Mode de résolution demandé dans le YAML. Valeur par défaut : sequential-subproblems
+    ResolutionMode resolution_mode = ResolutionMode::SequentialSubproblems;
+
+    // Liste des modèles présents dans le fichier optim-config.yaml
+    std::vector<Model> models;
+};
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig
