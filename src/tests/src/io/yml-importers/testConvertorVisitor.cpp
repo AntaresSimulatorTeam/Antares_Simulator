@@ -740,4 +740,75 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
                           checkMessage(err_msg));
 }
 
+BOOST_FIXTURE_TEST_CASE(ceil_operator___nominal_case, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "ceil(pmin)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    // Root node is a 'ceil' node
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::ceil");
+
+    auto CeilNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(CeilNode->typeToString(), "ceil");
+
+    // Child node must be unique, and be the parameter node 'pmin' from the model
+    // ... Child node is unique
+    BOOST_CHECK_EQUAL(CeilNode->getOperands().size(), 1);
+    auto* childNode = CeilNode->getOperands()[0];
+
+    // ... Child node is a parameter node
+    const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
+    BOOST_CHECK(paramNode);
+
+    // ... Child node is 'pmin' from the model
+    BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
+}
+
+BOOST_FIXTURE_TEST_CASE(ceil_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "ceil(2.3)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    // Root node is a 'ceil' node
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::ceil");
+
+    auto CeilNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(CeilNode->typeToString(), "ceil");
+
+    // Child node must be unique, and be the literal node '2.3' from the model
+    // ... Child node is unique
+    BOOST_CHECK_EQUAL(CeilNode->getOperands().size(), 1);
+    auto* childNode = CeilNode->getOperands()[0];
+
+    // ... Child node is a parameter node
+    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
+    BOOST_CHECK(literalNode);
+
+    // ... Child node is 'pmin' from the model
+    BOOST_CHECK_EQUAL(literalNode->value(), 2.3);
+}
+
+BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "ceil()";
+
+    std::string err_msg = "ceil operator expects an argument, got nothing";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "ceil(pmin, 5)";
+
+    std::string err_msg = "ceil() expects 1 argument, but has 2";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

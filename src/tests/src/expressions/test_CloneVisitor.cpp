@@ -243,6 +243,28 @@ BOOST_FIXTURE_TEST_CASE(clone_floor_operator_node, Registry<Node>)
     BOOST_CHECK(cloned_param->value() == "p");
 }
 
+BOOST_FIXTURE_TEST_CASE(clone_ceil_operator_node, Registry<Node>)
+{
+    // Arrange
+    ParameterNode* paramNode = create<ParameterNode>("p");
+    Node* ceil_node = create<FunctionNode>(FunctionNodeType::ceil, paramNode);
+
+    // Act
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(ceil_node);
+
+    // Assert
+    const auto cloned_ceil_node = dynamic_cast<FunctionNode*>(clone);
+    BOOST_REQUIRE(cloned_ceil_node);
+    BOOST_CHECK(cloned_ceil_node->typeToString() == "ceil");
+
+    const auto& operands = cloned_ceil_node->getOperands();
+    BOOST_CHECK_EQUAL(operands.size(), 1);
+    const auto cloned_param = dynamic_cast<ParameterNode*>(operands[0]);
+    BOOST_REQUIRE(cloned_param);
+    BOOST_CHECK(cloned_param->value() == "p");
+}
+
 BOOST_FIXTURE_TEST_CASE(CloneVisitor_name, Registry<Node>)
 {
     CloneVisitor cloneVisitor(*this);
