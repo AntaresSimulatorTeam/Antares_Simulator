@@ -28,12 +28,13 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/io/outputs/MPSWriter.h"
+#include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
+
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
-
 using namespace std;
 using namespace Antares;
 using namespace Antares::Solver;
@@ -209,6 +210,102 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
             processStudy(path);
         }
     }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+// ==================== ExportableName Tests ====================
+BOOST_AUTO_TEST_SUITE(ExportableNameTests)
+
+BOOST_AUTO_TEST_CASE(MakeExportableName_EmptyString)
+{
+    NameManager nameManager;
+    std::string result = MakeMpsSafeUniqueName("", nameManager);
+    BOOST_CHECK(!result.empty());
+    BOOST_CHECK_EQUAL(result.front(), '_');
+}
+
+BOOST_AUTO_TEST_CASE(MakeExportableName_StartsWithForbiddenChar)
+{
+    NameManager nameManager;
+
+    // Test all forbidden first chars
+    std::vector<std::string> forbiddenStarts = {"$test", ".test", "0test", "1test", "9test"};
+    for (const auto& name: forbiddenStarts)
+    {
+        std::string result = MakeMpsSafeUniqueName(name, nameManager);
+        BOOST_CHECK_EQUAL(result.front(), '_');
+    }
+}
+
+BOOST_AUTO_TEST_CASE(MakeExportableName_ContainsForbiddenChars)
+{
+    NameManager nameManager;
+
+    // Test all forbidden chars
+    std::string name = "test +name-with*forbidden/chars<>=:\\";
+    std::string result = MakeMpsSafeUniqueName(name, nameManager);
+
+    // Check that forbidden chars are replaced with underscores
+    BOOST_CHECK(result.find('+') == std::string::npos);
+    BOOST_CHECK(result.find('-') == std::string::npos);
+    BOOST_CHECK(result.find('*') == std::string::npos);
+    BOOST_CHECK(result.find('/') == std::string::npos);
+    BOOST_CHECK(result.find('<') == std::string::npos);
+    BOOST_CHECK(result.find('>') == std::string::npos);
+    BOOST_CHECK(result.find('=') == std::string::npos);
+    BOOST_CHECK(result.find(':') == std::string::npos);
+    BOOST_CHECK(result.find('\\') == std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(MakeExportableName_ValidName)
+{
+    NameManager nameManager;
+    std::string validName = "validName123_ABC";
+    std::string result = MakeMpsSafeUniqueName(validName, nameManager);
+    BOOST_CHECK_EQUAL(result, validName);
+}
+
+BOOST_AUTO_TEST_CASE(NameManager_UniqueNames)
+{
+    NameManager nameManager;
+
+    std::string name1 = nameManager.MakeUniqueName("test");
+    std::string name2 = nameManager.MakeUniqueName("test");
+    std::string name3 = nameManager.MakeUniqueName("test");
+
+    BOOST_CHECK_EQUAL(name1, "test");
+    BOOST_CHECK_NE(name1, name2);
+    BOOST_CHECK_NE(name2, name3);
+    BOOST_CHECK_NE(name1, name3);
+}
+
+BOOST_AUTO_TEST_CASE(NameManager_DifferentNames)
+{
+    NameManager nameManager;
+
+    std::string name1 = nameManager.MakeUniqueName("test1");
+    std::string name2 = nameManager.MakeUniqueName("test2");
+
+    BOOST_CHECK_EQUAL(name1, "test1");
+    BOOST_CHECK_EQUAL(name2, "test2");
+}
+
+BOOST_AUTO_TEST_CASE(NameManager_EmptyName)
+{
+    NameManager nameManager;
+    std::string result = nameManager.MakeUniqueName("");
+    BOOST_CHECK_EQUAL(result, "");
+}
+
+BOOST_AUTO_TEST_CASE(MakeMpsSafeUniqueName_Integration)
+{
+    NameManager nameManager;
+    std::string result1 = MakeMpsSafeUniqueName("$invalid", nameManager);
+    std::string result2 = MakeMpsSafeUniqueName("$invalid", nameManager);
+
+    BOOST_CHECK_EQUAL(result1.front(), '_');
+    BOOST_CHECK_NE(result1, result2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
