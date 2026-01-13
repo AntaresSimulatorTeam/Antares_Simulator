@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_SUITE(ValidateMps)
 
 bool isProblemEmpty(const std::unique_ptr<ILinearProblem>& problem)
 {
-    return problem->variableCount() == 0;
+    return !problem || problem->variableCount() == 0;
 }
 
 void checkProblemType(const unique_ptr<ILinearProblem>& originalProblem,
