@@ -54,16 +54,10 @@ struct Model
     std::vector<Objective> objectives;
 };
 
-enum class ResolutionMode
-{
-    SequentialSubproblems, // corresponds to `sequential-subproblems` (default)
-    BendersDecomposition    // corresponds to `benders-decomposition`
-};
-
 struct OptimConfig
 {
     // Mode de résolution demandé dans le YAML. Valeur par défaut : sequential-subproblems
-    ResolutionMode resolution_mode = ResolutionMode::SequentialSubproblems;
+    std::string resolution_mode = "sequential-subproblems";
 
     // Liste des modèles présents dans le fichier optim-config.yaml
     std::vector<Model> models;

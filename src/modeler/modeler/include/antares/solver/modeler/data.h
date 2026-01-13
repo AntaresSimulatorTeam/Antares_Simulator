@@ -30,8 +30,8 @@ namespace Antares::Modeler
 
 enum class ResolutionMode : unsigned
 {
-    BENDERS_DECOMPOSITION = 0,
-    SEQUENTIAL_SUBPROBLEMS = 1
+    SEQUENTIAL_SUBPROBLEMS,
+    BENDERS_DECOMPOSITION,
 };
 
 struct Data
