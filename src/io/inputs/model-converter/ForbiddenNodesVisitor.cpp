@@ -214,10 +214,7 @@ void ForbiddenNodesVisitor::visitChildren(const Expressions::Nodes::ParentNode* 
                                           const std::type_index& nodeTypeId)
 {
     parentsStack_.emplace_back(node->name(), nodeTypeId);
-    for (const auto* childNode: node->getOperands())
-    {
-        dispatch(childNode);
-    }
+    std::ranges::for_each(node->getOperands(), [this](auto* childNode) { dispatch(childNode); });
     parentsStack_.pop_back();
 }
 
