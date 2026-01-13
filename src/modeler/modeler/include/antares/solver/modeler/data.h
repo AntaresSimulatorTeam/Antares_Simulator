@@ -19,6 +19,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 #include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
@@ -30,9 +31,27 @@ namespace Antares::Modeler
 
 enum class ResolutionMode : unsigned
 {
-    SEQUENTIAL_SUBPROBLEMS,
-    BENDERS_DECOMPOSITION,
+    SEQUENTIAL_SUBPROBLEMS = 0,
+    BENDERS_DECOMPOSITION = 1,
 };
+
+// Operator for printing ResolutionMode in logs and tests
+inline std::ostream& operator<<(std::ostream& os, ResolutionMode mode)
+{
+    switch (mode)
+    {
+    case ResolutionMode::SEQUENTIAL_SUBPROBLEMS:
+        os << "SEQUENTIAL_SUBPROBLEMS";
+        break;
+    case ResolutionMode::BENDERS_DECOMPOSITION:
+        os << "BENDERS_DECOMPOSITION";
+        break;
+    default:
+        os << "UNKNOWN";
+        break;
+    }
+    return os;
+}
 
 struct Data
 {
