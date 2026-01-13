@@ -45,10 +45,13 @@ BOOST_AUTO_TEST_CASE(Merge_WithEmptyIntermediateValues_DoesNotChangeAverages)
 
     avgData.merge(0, intermediate);
 
-    BOOST_TEST(std::ranges::all_of(avgData.hourly, [&](auto val) { return check_close(val, 0.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.hourly, [&](auto val) { return check_close(val, 0.0); }));
     BOOST_TEST(std::ranges::all_of(avgData.daily, [&](auto val) { return check_close(val, 0.0); }));
-    BOOST_TEST(std::ranges::all_of(avgData.weekly, [&](auto val) { return check_close(val, 0.0); }));
-    BOOST_TEST(std::ranges::all_of(avgData.monthly, [&](auto val) { return check_close(val, 0.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.weekly, [&](auto val) { return check_close(val, 0.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.monthly, [&](auto val) { return check_close(val, 0.0); }));
     BOOST_TEST(check_close(avgData.year, 0.0));
 }
 
@@ -68,10 +71,13 @@ BOOST_AUTO_TEST_CASE(Merge_ratioOfOne)
 
     avgData.merge(0, intermediate);
 
-    BOOST_TEST(std::ranges::all_of(avgData.hourly, [&](auto val) { return check_close(val, 2.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.hourly, [&](auto val) { return check_close(val, 2.0); }));
     BOOST_TEST(std::ranges::all_of(avgData.daily, [&](auto val) { return check_close(val, 2.0); }));
-    BOOST_TEST(std::ranges::all_of(avgData.weekly, [&](auto val) { return check_close(val, 2.0); }));
-    BOOST_TEST(std::ranges::all_of(avgData.monthly, [&](auto val) { return check_close(val, 2.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.weekly, [&](auto val) { return check_close(val, 2.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.monthly, [&](auto val) { return check_close(val, 2.0); }));
     BOOST_TEST(check_close(avgData.year, 2.0));
 }
 
@@ -91,10 +97,13 @@ BOOST_AUTO_TEST_CASE(Merge_ratioOfTwo)
 
     avgData.merge(1, intermediate);
 
-    BOOST_TEST(std::ranges::all_of(avgData.hourly, [&](auto val) { return check_close(val, 1.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.hourly, [&](auto val) { return check_close(val, 1.0); }));
     BOOST_TEST(std::ranges::all_of(avgData.daily, [&](auto val) { return check_close(val, 1.0); }));
-    BOOST_TEST(std::ranges::all_of(avgData.weekly, [&](auto val) { return check_close(val, 1.0); }));
-    BOOST_TEST(std::ranges::all_of(avgData.monthly, [&](auto val) { return check_close(val, 1.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.weekly, [&](auto val) { return check_close(val, 1.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.monthly, [&](auto val) { return check_close(val, 1.0); }));
     BOOST_TEST(check_close(avgData.year, 1.0));
 }
 
@@ -130,10 +139,13 @@ BOOST_AUTO_TEST_CASE(Merge_several_Intermediates)
 
     avgData.merge(2, intermediate);
 
-    BOOST_TEST(std::ranges::all_of(avgData.hourly, [&](auto val) { return check_close(val, 3.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.hourly, [&](auto val) { return check_close(val, 3.0); }));
     BOOST_TEST(std::ranges::all_of(avgData.daily, [&](auto val) { return check_close(val, 3.0); }));
-    BOOST_TEST(std::ranges::all_of(avgData.weekly, [&](auto val) { return check_close(val, 3.0); }));
-    BOOST_TEST(std::ranges::all_of(avgData.monthly, [&](auto val) { return check_close(val, 3.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.weekly, [&](auto val) { return check_close(val, 3.0); }));
+    BOOST_TEST(
+      std::ranges::all_of(avgData.monthly, [&](auto val) { return check_close(val, 3.0); }));
     BOOST_TEST(check_close(avgData.year, 3.0));
 }
 
