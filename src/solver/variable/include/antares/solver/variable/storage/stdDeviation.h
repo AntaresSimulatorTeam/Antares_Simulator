@@ -241,7 +241,7 @@ private:
         break;
         case Category::annual:
         {
-            const double d = (double)*array - (double)results.avgdata.year * (double)results.avgdata.year;
+            const double d = *array - (double)results.avgdata.year * (double)results.avgdata.year;
             *target = squareRootChecked(d);
         }
         break;
