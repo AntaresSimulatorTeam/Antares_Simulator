@@ -20,6 +20,7 @@
  */
 
 #include <filesystem>
+#include <fmt/format.h>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/data.h>
@@ -34,11 +35,11 @@ namespace Antares::Solver::LoadFiles
 
 Modeler::Data loadAll(const std::filesystem::path& studyPath)
 {
-    Antares::Utils::TimeMeasurement measure;
+    Utils::TimeMeasurement measure;
     logs.info() << "Loading modeler files...";
     Modeler::Data data;
 
-    data.libraries = loadLibraries(studyPath);
+    std::tie(data.libraries, data.resolutionMode) = loadLibraries(studyPath);
     logs.info() << "Libraries loaded";
 
     data.system = std::make_unique<SystemModel::System>(loadSystem(studyPath, data.libraries));
@@ -50,6 +51,7 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     data.scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
     measure.tick();
     logs.info() << "Scenario groups loaded";
+
     logs.info() << "Modeler loaded in " << measure.toStringInSeconds();
 
     Modeler::Checks::checkLocations(data);
