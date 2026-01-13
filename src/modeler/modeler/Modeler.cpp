@@ -30,7 +30,7 @@
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
-#include "antares/io/outputs/MPSWriter.h"
+#include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
@@ -230,12 +230,14 @@ void Modeler::run()
         // 1-1.mps
         if (subproblem_1_1)
         {
-            IO::Outputs::MPSWriter(*subproblem_1_1, output / "1-1.mps", "1-1").write();
+            auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1").run();
+            Antares::IO::Outputs::MPSFileWriter::write(output / "1-1.mps", mps);
         }
         // master.mps
         if (masterProblem_)
         {
-            IO::Outputs::MPSWriter(*masterProblem_, output / "master.mps", "master").write();
+            auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master").run();
+            Antares::IO::Outputs::MPSFileWriter::write(output / "master.mps", mps);
         }
         // structure.txt
         BendersDecompositionWriter writer(bendersDecomposition);

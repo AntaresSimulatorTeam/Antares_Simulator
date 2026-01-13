@@ -18,7 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/io/outputs/MPSWriter.h"
+#include "antares/io/outputs/MPSGenerator.h"
 
 #include <cmath>
 
@@ -67,11 +67,8 @@ bool IsBoolean(const IMipVariable& variable)
            && std::floor(variable.getUb()) == 1.0;
 }
 
-MPSWriter::MPSWriter(const ILinearProblem& lp,
-                     const std::filesystem::path& path,
-                     const std::string& name):
+MPSGenerator::MPSGenerator(const ILinearProblem& lp, const std::string& name):
     linearProblem_(lp),
-
     name_(name)
 
 {
@@ -79,23 +76,19 @@ MPSWriter::MPSWriter(const ILinearProblem& lp,
     {
         logs.warning() << "Linear problem '" << name << "' contains no variables.";
     }
-    out_.open(path.string());
-    if (!out_.is_open())
-    {
-        throw std::runtime_error("Cannot open MPS file: " + path.string());
-    }
+
     exportableConstraintsNames_ = extractNames(lp.getConstraints());
     exportableVariablesNames_ = extractNames(lp.getVariables());
 }
 
-void MPSWriter::writeHeader()
+void MPSGenerator::writeHeader()
 {
     out_ << "* Antares Simulator " << "\n";
     out_ << "* Number of variables: " << std::to_string(linearProblem_.variableCount()) << "\n";
     out_ << "* Number of constraints: " << std::to_string(linearProblem_.constraintCount()) << "\n";
 }
 
-void MPSWriter::writeRows()
+void MPSGenerator::writeRows()
 {
     /* ========= ROWS ========= */
     out_ << "ROWS\n";
@@ -109,7 +102,7 @@ void MPSWriter::writeRows()
     }
 }
 
-void MPSWriter::writeColumns()
+void MPSGenerator::writeColumns()
 {
     /* ========= COLUMNS ========= */
     out_ << "COLUMNS\n";
@@ -139,7 +132,7 @@ void MPSWriter::writeColumns()
     }
 }
 
-void MPSWriter::writeRhs()
+void MPSGenerator::writeRhs()
 {
     const double INF = linearProblem_.infinity();
     /* ========= RHS ========= */
@@ -160,7 +153,7 @@ void MPSWriter::writeRhs()
     }
 }
 
-void MPSWriter::writeBounds()
+void MPSGenerator::writeBounds()
 {
     const double INF = linearProblem_.infinity();
     /* ========= BOUNDS ========= */
@@ -232,24 +225,35 @@ void MPSWriter::writeBounds()
     }
 }
 
-void MPSWriter::writeName()
+void MPSGenerator::writeName()
 {
     /* ========= NAME ========= */
     out_ << "NAME " << name_ << "\n";
 }
 
-void MPSWriter::writeEnd()
+void MPSGenerator::writeEnd()
 {
     /* ========= END ========= */
     out_ << "ENDATA\n";
 }
 
-void MPSWriter::write()
+void MPSFileWriter::write(const std::filesystem::path& filename, const std::string& content)
 {
+    std::ofstream file(filename);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Failed to open file: " + filename.string());
+    }
+    file << content;
+}
+
+std::string MPSGenerator::run()
+{
+    out_.str("");
     if (linearProblem_.variableCount() == 0)
     {
         logs.warning() << "mps will not be produced for empty linear problem '" << name_ << "'.";
-        return;
+        return "";
     }
     writeHeader();
 
@@ -264,5 +268,6 @@ void MPSWriter::write()
     writeBounds();
 
     writeEnd();
+    return out_.str();
 }
 } // namespace Antares::IO::Outputs
