@@ -66,6 +66,7 @@ public:
     ** \param maxVars The maximum total of variables that we may need for writing
     **   the report
     ** \param s Reference to the study
+    ** \param maxVariables References the maximal number of output variables
     ** \param o The output folder
     ** \param year The current year, if any
     */
