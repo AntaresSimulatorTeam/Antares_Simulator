@@ -53,6 +53,7 @@ private:
     void writeRows();
     void writeColumns();
     void writeRhs();
+    void writeRanges();
     void writeBounds();
     void writeEnd();
 };

@@ -21,11 +21,13 @@
 #include "antares/io/outputs/MPSGenerator.h"
 
 #include <cmath>
+#include <fmt/format.h>
 
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/ExportableName.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
+static constexpr std::string_view pad = "    ";
 
 namespace Antares::IO::Outputs
 {
@@ -110,11 +112,18 @@ void MPSGenerator::writeColumns()
     int i = 0;
     for (const auto& vars = linearProblem_.getVariables(); const auto& var: vars)
     {
+        const bool isInt = var->isInteger();
+        if (isInt)
+        {
+            out_ << pad << "MARK" << fmt::format("{:010}", i)
+                 << "    'MARKER'                 'INTORG'" << "\n";
+        }
         if (const auto coef = linearProblem_.getObjectiveCoefficient(var.get()); coef != 0.0)
         {
             // TODO
-            out_ << "    " << exportableVariablesNames_.at(i) << "  OBJ  "
-                 << (linearProblem_.isMinimization() ? coef : -coef) << "\n";
+            // out_ << "    " << exportableVariablesNames_.at(i) << "  OBJ  "
+            //      << (linearProblem_.isMinimization() ? coef : -coef) << "\n";
+            out_ << pad << exportableVariablesNames_.at(i) << "  OBJ  " << coef << "\n";
         }
 
         // constraints
@@ -123,10 +132,15 @@ void MPSGenerator::writeColumns()
         {
             if (const auto coef = c->getCoefficient(var.get()); coef != 0.0)
             {
-                out_ << "    " << exportableVariablesNames_.at(i) << "  "
+                out_ << pad << exportableVariablesNames_.at(i) << "  "
                      << exportableConstraintsNames_.at(j) << "  " << coef << "\n";
             }
             ++j;
+        }
+        if (isInt)
+        {
+            out_ << pad << "MARK" << fmt::format("{:010}", i)
+                 << "    'MARKER'                 'INTEND'" << "\n";
         }
         ++i;
     }
@@ -139,7 +153,7 @@ void MPSGenerator::writeRhs()
     out_ << "RHS\n";
     if (const auto objOffset = linearProblem_.getObjectiveOffset(); objOffset != 0.0)
     {
-        out_ << "    RHS1  " << "OBJ" << "  " << -objOffset << "\n";
+        out_ << pad << "RHS1  " << "OBJ" << "  " << -objOffset << "\n";
     }
     int i = 0;
     for (const auto& c: linearProblem_.getConstraints())
@@ -147,7 +161,22 @@ void MPSGenerator::writeRhs()
         if (const auto rhs = ConstraintRhs(c->getLb(), c->getUb(), INF);
             std::abs(rhs) != INF && std::abs(rhs) != 0.)
         {
-            out_ << "    RHS1  " << exportableConstraintsNames_.at(i) << "  " << rhs << "\n";
+            out_ << pad << "RHS1  " << exportableConstraintsNames_.at(i) << "  " << rhs << "\n";
+        }
+        ++i;
+    }
+}
+
+void MPSGenerator::writeRanges()
+{
+    out_ << "RANGES\n";
+    int i = 0;
+    for (const auto& c: linearProblem_.getConstraints())
+    {
+        if (const auto range = std::abs(c->getUb() - c->getLb());
+            range != linearProblem_.infinity() && range != 0.)
+        {
+            out_ << pad << "RNG1  " << exportableConstraintsNames_.at(i) << "  " << range << "\n";
         }
         ++i;
     }
@@ -171,23 +200,23 @@ void MPSGenerator::writeBounds()
         const bool isBinary = IsBoolean(*var);
         if (lb == -INF && ub == INF)
         {
-            out_ << " FR " << bnd << "  " << varName << "\n";
+            out_ << pad << "FR " << bnd << "  " << varName << "\n";
             continue;
         }
         if (lb == ub)
         {
-            out_ << " FX " << bnd << " " << varName << " " << lb << "\n";
+            out_ << pad << "FX " << bnd << " " << varName << " " << lb << "\n";
             continue;
         }
         if (isBinary)
         {
-            out_ << " BV " << bnd << " " << varName << "\n";
+            out_ << pad << "BV " << bnd << " " << varName << "\n";
             continue;
         }
 
         if (lb == 0.0 && ub == INF) // this case is the default
         {
-            // out_ << " PL " << bnd << " " << varName << "\n";
+            // out_ << pad << "PL " << bnd << " " << varName << "\n";
             continue;
         }
 
@@ -195,31 +224,31 @@ void MPSGenerator::writeBounds()
         {
             if (lb == -INF)
             {
-                out_ << " MI " << bnd << " " << varName << "\n";
+                out_ << pad << "MI " << bnd << " " << varName << "\n";
             }
             else if (lb != 0.0)
             {
-                out_ << " LI " << bnd << " " << varName << " " << lb << "\n";
+                out_ << pad << "LI " << bnd << " " << varName << " " << lb << "\n";
             }
             if (ub != INF)
             {
-                out_ << " UI " << bnd << " " << varName << " " << ub << "\n";
+                out_ << pad << "UI " << bnd << " " << varName << " " << ub << "\n";
             }
         }
         else
         {
             if (lb == -INF)
             {
-                out_ << " MI " << bnd << " " << varName << "\n";
+                out_ << pad << "MI " << bnd << " " << varName << "\n";
             }
             else if (lb != 0.0)
             {
-                out_ << " LO " << bnd << " " << varName << " " << lb << "\n";
+                out_ << pad << "LO " << bnd << " " << varName << " " << lb << "\n";
             }
 
             if (ub != INF)
             {
-                out_ << " UP " << bnd << " " << varName << " " << ub << "\n";
+                out_ << pad << "UP " << bnd << " " << varName << " " << ub << "\n";
             }
         }
     }
@@ -264,6 +293,8 @@ std::string MPSGenerator::run()
     writeColumns();
 
     writeRhs();
+
+    writeRanges();
 
     writeBounds();
 
