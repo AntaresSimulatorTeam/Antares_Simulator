@@ -22,6 +22,7 @@
 #include <memory>
 #include <string>
 
+#include <antares/benchmarking/DurationCollector.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/study/study.h>
@@ -85,7 +86,8 @@ int main(int argc, const char* argv[])
         // === Data for TS generation ===
         auto study = std::make_shared<Data::Study>(true);
         Data::StudyLoadOptions studyOptions;
-        if (!study->loadFromFolder(settings.studyFolder, studyOptions))
+        Benchmarking::DurationCollector durationCollector;
+        if (!study->loadFromFolder(settings.studyFolder, studyOptions, durationCollector))
         {
             logs.error() << "Invalid study given to the generator";
             return 1;

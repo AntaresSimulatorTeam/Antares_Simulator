@@ -47,6 +47,15 @@ def change_transmission_capacities(context, link, value):
     context.sih.set_value(variable="transmission-capacities", value=value, file_path=file_path)
 
 
+@given('the linear solver is {solver_name}')
+def set_linear_solver(context, solver_name):
+    context.config.userdata["linear-solver"] = solver_name
+
+@given('the quadratic solver is {solver_name}')
+def set_quadratic_solver(context, solver_name):
+    context.config.userdata["quadratic-solver"] = solver_name
+
+
 @when('I run antares simulator')
 def run_antares(context):
     context.named_mps_problems = False

@@ -20,6 +20,7 @@
  */
 #pragma once
 
+#include "economy_base.h"
 #include "lold_base.h"
 
 namespace Antares::Solver::Variable::Economy

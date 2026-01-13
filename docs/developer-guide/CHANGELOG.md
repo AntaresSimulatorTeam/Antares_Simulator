@@ -4,6 +4,22 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 9.3.5
+#### Improvements
+* New option Adequacy patch debug files [ANT-4034] (#3297)
+* Add time infos to API [ANT-4261] (#3315)
+* Add more details for steps durations [ANT-4263] (#3319)
+* APIv2 - Fix initial hydro levels (#3326)
+#### CI
+
+* Bump actions/cache from 4 to 5 (#3293)
+* Bump actions/upload-artifact from 5 to 6 (#3294)
+
+### 9.3.4
+#### Improvements
+* Various fixes for the "single problem API" (#3313, #3311, #3312, #3309)
+* Bump SonarSource/sonarqube-scan-action from 6.0.0 to 7.0.0 (#3295)
+
 ### 9.3.3
 
 #### New features

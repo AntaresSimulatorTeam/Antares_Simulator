@@ -26,6 +26,8 @@
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
 
+#include "include/antares/study/fwd.h"
+
 namespace fs = std::filesystem;
 
 namespace Antares::Data
@@ -49,11 +51,13 @@ bool Study::internalLoadHeader(const fs::path& path)
     return true;
 }
 
-bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
+bool Study::loadFromFolder(const std::string& path,
+                           const StudyLoadOptions& options,
+                           Benchmarking::DurationCollector& durationCollector)
 {
     fs::path normPath = path;
     normPath = normPath.lexically_normal();
-    return internalLoadFromFolder(normPath, options);
+    return internalLoadFromFolder(normPath, options, durationCollector);
 }
 
 bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& options)
@@ -163,11 +167,10 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions& options)
+bool Study::internalLoadFromFolder(const fs::path& path,
+                                   const StudyLoadOptions& options,
+                                   Benchmarking::DurationCollector& durationCollector)
 {
-    // IO statistics
-    Statistics::LogsDumper statisticsDumper;
-
     // Check if the path is correct
     if (!fs::exists(path))
     {
@@ -189,36 +192,41 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
         return false;
     }
 
-    // -------------------------
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
+    bool ret = true;
 
-    // In case parallel mode was not chosen, only 1 core is allowed
-    if (!options.enableParallel && !options.forceParallel)
+    durationCollector("study_loading") << [this, &options, &ret]
     {
-        maxNbYearsInParallel = 1;
-    }
+        // -------------------------
+        // Logical cores
+        // -------------------------
+        // Getting the number of logical cores to use before loading and creating the areas :
+        // Areas need this number to be up-to-date at construction.
+        getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
 
-    // End logical core --------
+        // In case parallel mode was not chosen, only 1 core is allowed
+        if (!options.enableParallel && !options.forceParallel)
+        {
+            maxNbYearsInParallel = 1;
+        }
 
-    // Areas - Raw Data
-    bool ret = areas.loadFromFolder(options);
+        // End logical core --------
 
-    logs.info() << "Loading correlation matrices...";
-    // Correlation matrices
-    ret = internalLoadCorrelationMatrices(options) && ret;
-    // Binding constraints
-    ret = internalLoadBindingConstraints(options) && ret;
-    // Sets of areas & links
-    ret = internalLoadSets() && ret;
+        // Areas - Raw Data
+        ret = areas.loadFromFolder(options) && ret;
 
-    parameterFiller(options);
+        logs.info() << "Loading correlation matrices...";
+        // Correlation matrices
+        ret = internalLoadCorrelationMatrices(options) && ret;
+        // Binding constraints
+        ret = internalLoadBindingConstraints(options) && ret;
+        // Sets of areas & links
+        ret = internalLoadSets() && ret;
+
+        parameterFiller(options);
+    };
 
     // Modeler components for hybrid studies
-    loadModelerComponents();
+    durationCollector("modeler_loading") << [this] { loadModelerComponents(); };
 
     return ret;
 }

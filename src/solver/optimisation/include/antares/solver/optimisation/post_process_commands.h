@@ -127,4 +127,25 @@ private:
     const OptimizationOptions& solverOptions_;
 };
 
+class WriteDebugAdequacyPatch final: public basePostProcessCommand
+{
+public:
+    WriteDebugAdequacyPatch(PROBLEME_HEBDO* problemeHebdo,
+                            AreaList& areas,
+                            unsigned int numSpace,
+                            IResultWriter& writer,
+                            std::string fileLabel);
+
+    void execute(const optRuntimeData& opt_runtime_data) override;
+
+private:
+    void writeAreaData(const optRuntimeData& opt_runtime_data);
+    void writeLinkData(const optRuntimeData& opt_runtime_data);
+
+    const AreaList& areas_;
+    unsigned int numSpace_ = 0;
+    IResultWriter& writer_;
+    const std::string fileLabel_;
+};
+
 } // namespace Antares::Solver::Simulation

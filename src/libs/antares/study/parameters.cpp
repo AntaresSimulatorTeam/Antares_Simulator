@@ -626,6 +626,10 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     {
         return value.to<bool>(d.remixStorageDebug);
     }
+    if (key == "adequacy-patch-debug")
+    {
+        return value.to<bool>(d.adqPatchDebug);
+    }
     return false;
 }
 
@@ -1756,6 +1760,10 @@ void Parameters::saveToINI(IniFile& ini) const
         if (remixStorageDebug)
         {
             section->add("remix-storage-debug", remixStorageDebug);
+        }
+        if (adqPatchDebug)
+        {
+            section->add("adequacy-patch-debug", adqPatchDebug);
         }
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
         ParametersSaveResultFormat(section, resultFormat);

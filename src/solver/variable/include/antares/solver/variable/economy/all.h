@@ -78,7 +78,6 @@
 #include "spilledEnergy.h"
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergy.h"
-#include "unsupliedEnergyCsr.h"
 #include "waterValue.h"
 
 namespace Antares::Solver::Variable::Economy
