@@ -64,10 +64,7 @@ struct StudyFixture
     StudyFixture():
         study(studyHelper(FirstDay, LastDay)),
         writer(durationCollector),
-        survey(*study,
-               study->parameters.variablesPrintInfo.getTotalMaxColumnsCount(),
-               "out",
-               writer)
+        survey(*study, "out", writer)
     {
     }
 

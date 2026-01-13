@@ -505,6 +505,11 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
+SurveyResults::SurveyResults(const Data::Study& s, const Yuni::String& o, IResultWriter& writer):
+    SurveyResults(s, s.parameters.variablesPrintInfo.getTotalMaxColumnsCount(), o, writer)
+{
+}
+
 SurveyResults::SurveyResults(const Data::Study& s,
                              uint maxVariables,
                              const Yuni::String& o,
