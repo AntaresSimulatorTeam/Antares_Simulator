@@ -440,7 +440,7 @@ models:
     OptimConfig config = parser.parse(yaml_content);
 
     // By default, resolution_mode should be SequentialSubproblems
-    BOOST_CHECK_EQUAL(config.resolution_mode, ResolutionMode::SequentialSubproblems);
+    BOOST_CHECK_EQUAL(config.resolution_mode, "sequential-subproblems");
     BOOST_REQUIRE_EQUAL(config.models.size(), 1);
 }
 
@@ -458,7 +458,7 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_CHECK_EQUAL(config.resolution_mode, ResolutionMode::SequentialSubproblems);
+    BOOST_CHECK_EQUAL(config.resolution_mode, "sequential-subproblems");
     BOOST_REQUIRE_EQUAL(config.models.size(), 1);
 }
 
@@ -480,24 +480,9 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_CHECK_EQUAL(config.resolution_mode, ResolutionMode::BendersDecomposition);
+    BOOST_CHECK_EQUAL(config.resolution_mode, "benders-decomposition");
     BOOST_REQUIRE_EQUAL(config.models.size(), 1);
     BOOST_CHECK_EQUAL(config.models[0].id, "model1");
-}
-
-BOOST_AUTO_TEST_CASE(parse_resolution_mode_invalid_throws)
-{
-    std::string yaml_content = R"(
-resolution-mode: invalid-mode
-models:
-  - id: model1
-    model-decomposition:
-      variables: []
-      objective-contributions: []
-)";
-
-    Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

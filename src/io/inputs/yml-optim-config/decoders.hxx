@@ -123,9 +123,8 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
         }
 
         // Parse models list
-        rhs.models = as_fallback_default<
-          std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>(
-          node["models"]);
+        rhs.models = node["models"].as<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
 
         return true;
     }
