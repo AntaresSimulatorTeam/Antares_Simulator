@@ -125,7 +125,7 @@ $(document).ready(function(){initNavTree('classNamer.html',''); initResizable();
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classNamer-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Namer Class Reference</div>  </div>
@@ -144,48 +144,48 @@ Inheritance diagram for Namer:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad2b209d3dfdae47de9cf9d05682ad76c"><td class="memItemLeft" align="right" valign="top"><a id="ad2b209d3dfdae47de9cf9d05682ad76c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Namer</b> (std::vector&lt; std::string &gt; &amp;target)</td></tr>
-<tr class="separator:ad2b209d3dfdae47de9cf9d05682ad76c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34e8833cfe774fa69e3ff3ef59ced4ba"><td class="memItemLeft" align="right" valign="top"><a id="a34e8833cfe774fa69e3ff3ef59ced4ba"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateTimeStep</b> (unsigned int timeStep)</td></tr>
-<tr class="separator:a34e8833cfe774fa69e3ff3ef59ced4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac86fca681803ca8a161de0e5ffe66294"><td class="memItemLeft" align="right" valign="top"><a id="ac86fca681803ca8a161de0e5ffe66294"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Namer</b> (std::vector&lt; std::string &gt; &amp;target_names)</td></tr>
+<tr class="separator:ac86fca681803ca8a161de0e5ffe66294"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88667634a075460e7252464a875152cd"><td class="memItemLeft" align="right" valign="top"><a id="a88667634a075460e7252464a875152cd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateTimeStep</b> (unsigned timeStep)</td></tr>
+<tr class="separator:a88667634a075460e7252464a875152cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c7f634e964ae71444c1e06d1edaff94"><td class="memItemLeft" align="right" valign="top"><a id="a8c7f634e964ae71444c1e06d1edaff94"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateArea</b> (const std::string &amp;area)</td></tr>
 <tr class="separator:a8c7f634e964ae71444c1e06d1edaff94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf94c7c1e0881e4952535ec7e7a43904"><td class="memItemLeft" align="right" valign="top"><a id="aaf94c7c1e0881e4952535ec7e7a43904"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetLinkElementName</b> (unsigned int variable, const std::string &amp;variableType)</td></tr>
-<tr class="separator:aaf94c7c1e0881e4952535ec7e7a43904"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a415fd9a6381f59087e6a8ec1050183b9"><td class="memItemLeft" align="right" valign="top"><a id="a415fd9a6381f59087e6a8ec1050183b9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementNameHour</b> (unsigned int variable, const std::string &amp;variableType)</td></tr>
-<tr class="separator:a415fd9a6381f59087e6a8ec1050183b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab663d76d4612d7d6c6e687f368d96448"><td class="memItemLeft" align="right" valign="top"><a id="ab663d76d4612d7d6c6e687f368d96448"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementNameWeek</b> (unsigned int variable, const std::string &amp;variableType)</td></tr>
-<tr class="separator:ab663d76d4612d7d6c6e687f368d96448"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af16b7005029b7f5d43f4762d04d00666"><td class="memItemLeft" align="right" valign="top"><a id="af16b7005029b7f5d43f4762d04d00666"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementName</b> (unsigned int variable, const std::string &amp;variableType, const std::string &amp;timeStepType)</td></tr>
-<tr class="separator:af16b7005029b7f5d43f4762d04d00666"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c339a59d7db4db283e2c2e1857542b4"><td class="memItemLeft" align="right" valign="top"><a id="a4c339a59d7db4db283e2c2e1857542b4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetThermalClusterElementName</b> (unsigned int variable, const std::string &amp;variableType, const std::string &amp;clusterName)</td></tr>
-<tr class="separator:a4c339a59d7db4db283e2c2e1857542b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dfba44a9dff565fa3b9f9fc15155862"><td class="memItemLeft" align="right" valign="top"><a id="a4dfba44a9dff565fa3b9f9fc15155862"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>updateExtremities</b> (const std::string &amp;origin, const std::string &amp;destination)</td></tr>
+<tr class="separator:a4dfba44a9dff565fa3b9f9fc15155862"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a51a0def7359ed48523b02622d217703f"><td class="memItemLeft" align="right" valign="top"><a id="a51a0def7359ed48523b02622d217703f"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>timeStep_</b> = 0</td></tr>
-<tr class="separator:a51a0def7359ed48523b02622d217703f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ca5a199685af0b97671beb4f2184c63"><td class="memItemLeft" align="right" valign="top"><a id="a1ca5a199685af0b97671beb4f2184c63"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>origin_</b></td></tr>
-<tr class="separator:a1ca5a199685af0b97671beb4f2184c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9c1a680fb9dc253aefad4447d18f47a"><td class="memItemLeft" align="right" valign="top"><a id="ad9c1a680fb9dc253aefad4447d18f47a"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>destination_</b></td></tr>
-<tr class="separator:ad9c1a680fb9dc253aefad4447d18f47a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13decf1b81a0e046dac6df649b58e8d7"><td class="memItemLeft" align="right" valign="top"><a id="a13decf1b81a0e046dac6df649b58e8d7"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>area_</b></td></tr>
-<tr class="separator:a13decf1b81a0e046dac6df649b58e8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae28f3c73d847f63c5a066610d78a5f61"><td class="memItemLeft" align="right" valign="top"><a id="ae28f3c73d847f63c5a066610d78a5f61"></a>
-<a class="el" href="classTargetVectorUpdater.html">TargetVectorUpdater</a>&#160;</td><td class="memItemRight" valign="bottom"><b>targetUpdater_</b></td></tr>
-<tr class="separator:ae28f3c73d847f63c5a066610d78a5f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a7826a47bf0545f72773ec2168636699f"><td class="memItemLeft" align="right" valign="top"><a id="a7826a47bf0545f72773ec2168636699f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetLinkElementName</b> (unsigned varIndex, const std::string &amp;variableType)</td></tr>
+<tr class="separator:a7826a47bf0545f72773ec2168636699f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade767035cb03ed27c830d90b07a3f723"><td class="memItemLeft" align="right" valign="top"><a id="ade767035cb03ed27c830d90b07a3f723"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementNameHour</b> (unsigned varIndex, const std::string &amp;variableType)</td></tr>
+<tr class="separator:ade767035cb03ed27c830d90b07a3f723"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95fd1e61eff567c628f7821e41cb55f2"><td class="memItemLeft" align="right" valign="top"><a id="a95fd1e61eff567c628f7821e41cb55f2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementNameWeek</b> (unsigned varIndex, const std::string &amp;variableType)</td></tr>
+<tr class="separator:a95fd1e61eff567c628f7821e41cb55f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ad7cc40b38cccce1bd9ae7820cf380e"><td class="memItemLeft" align="right" valign="top"><a id="a6ad7cc40b38cccce1bd9ae7820cf380e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementName</b> (unsigned varIndex, const std::string &amp;variableType, const std::string &amp;timeGranularity)</td></tr>
+<tr class="separator:a6ad7cc40b38cccce1bd9ae7820cf380e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adee137066c6b32fa8a59c91ee1dc96f1"><td class="memItemLeft" align="right" valign="top"><a id="adee137066c6b32fa8a59c91ee1dc96f1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetThermalClusterElementName</b> (unsigned varIndex, const std::string &amp;variableType, const std::string &amp;clusterName)</td></tr>
+<tr class="separator:adee137066c6b32fa8a59c91ee1dc96f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1787da47d06a799afc09c1823b6b0d06"><td class="memItemLeft" align="right" valign="top"><a id="a1787da47d06a799afc09c1823b6b0d06"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>TimeIdentifier</b> (const std::string &amp;timeGranularity)</td></tr>
+<tr class="separator:a1787da47d06a799afc09c1823b6b0d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d890af6a29b4c1ccb61d29969061308"><td class="memItemLeft" align="right" valign="top"><a id="a9d890af6a29b4c1ccb61d29969061308"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>linkLocation</b> ()</td></tr>
+<tr class="separator:a9d890af6a29b4c1ccb61d29969061308"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a529faa6e41852c7352156e09d8ec42af"><td class="memItemLeft" align="right" valign="top"><a id="a529faa6e41852c7352156e09d8ec42af"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>areaLocation</b> ()</td></tr>
+<tr class="separator:a529faa6e41852c7352156e09d8ec42af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7abf76b84765b0dda3e43f80f03775b5"><td class="memItemLeft" align="right" valign="top"><a id="a7abf76b84765b0dda3e43f80f03775b5"></a>
+std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>names</b> ()</td></tr>
+<tr class="separator:a7abf76b84765b0dda3e43f80f03775b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/solver/optimisation/include/antares/solver/optimisation/<a class="el" href="opt__rename__problem_8h_source.html">opt_rename_problem.h</a></li>

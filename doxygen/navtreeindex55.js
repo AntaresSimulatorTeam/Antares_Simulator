@@ -1,9 +1,5 @@
 var NAVTREEINDEX55 =
 {
-"structAntares_1_1Date_1_1DayInterval.html#a0dc9599f70b43803e74b1dca42748d03":[8,0,0,6,1,1],
-"structAntares_1_1Date_1_1DayInterval.html#a2d4af235f35e11feb8121cd64c6de06b":[8,0,0,6,1,3],
-"structAntares_1_1Date_1_1DayInterval.html#ab4108dc01e14e419434bf62dfaf98fb4":[8,0,0,6,1,0],
-"structAntares_1_1Date_1_1DayInterval.html#ad6dd27f028962beaa2f8f1ce1065f6bd":[8,0,0,6,1,2],
 "structAntares_1_1Date_1_1HourInterval.html":[8,0,0,6,0],
 "structAntares_1_1Date_1_1HourInterval.html#a53e86b3732adfe8635cab8d74fa5779d":[8,0,0,6,0,2],
 "structAntares_1_1Date_1_1HourInterval.html#a8e699af7f35137c818d5a00934f38a53":[8,0,0,6,0,1],
@@ -249,5 +245,9 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#a93d2c48ed55ac673143b260338120723":[8,0,0,19,3,0,4],
 "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#addaad5577e3a035c13a6b104c40d24b1":[8,0,0,19,3,0,1],
 "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html#ae05de17a4aac5cb0ed952370193b46f0":[8,0,0,19,3,0,3],
-"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html":[8,0,0,19,4,23]
+"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html":[8,0,0,19,4,23],
+"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#a87bd9e31c81509422defef872119c5c4":[8,0,0,19,4,23,1],
+"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#aa9bb5beb9372ffb183b0a79bf9777445":[8,0,0,19,4,23,0],
+"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#abf4816ef175154cf3f955665802daa13":[8,0,0,19,4,23,2],
+"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#afb964f5d0cdc74fc0b4ba44ba939bb4a":[8,0,0,19,4,23,3]
 };

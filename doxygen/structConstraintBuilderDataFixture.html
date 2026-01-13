@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: ConstraintBuilderDataFixture Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('structConstraintBuilderDataFixture.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structConstraintBuilderDataFixture-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">ConstraintBuilderDataFixture Struct Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for ConstraintBuilderDataFixture:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="structConstraintBuilderDataFixture.png" usemap="#ConstraintBuilderDataFixture_map" alt=""/>
+  <map id="ConstraintBuilderDataFixture_map" name="ConstraintBuilderDataFixture_map">
+<area href="structConstraintBuilderFixture.html" alt="ConstraintBuilderFixture" shape="rect" coords="0,56,174,80"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a10e16edae575027694bfde1d9d3768c8"><td class="memItemLeft" align="right" valign="top"><a id="a10e16edae575027694bfde1d9d3768c8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_correspondances_des_variables</b> ()</td></tr>
+<tr class="separator:a10e16edae575027694bfde1d9d3768c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eff147fe3f3e7907ba5c9729be435a2"><td class="memItemLeft" align="right" valign="top"><a id="a7eff147fe3f3e7907ba5c9729be435a2"></a>
+<a class="el" href="classConstraintBuilderData.html">ConstraintBuilderData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>makeConstraintBuilderData</b> ()</td></tr>
+<tr class="separator:a7eff147fe3f3e7907ba5c9729be435a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:aa13eb7e49db9b7f8fa7c2d1c27c578d6"><td class="memItemLeft" align="right" valign="top"><a id="aa13eb7e49db9b7f8fa7c2d1c27c578d6"></a>
+int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>nbTimeStepsOptim</b> = 50</td></tr>
+<tr class="separator:aa13eb7e49db9b7f8fa7c2d1c27c578d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28a06b2cf215c5f930f6f502ec5146dd"><td class="memItemLeft" align="right" valign="top"><a id="a28a06b2cf215c5f930f6f502ec5146dd"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>NombreDePasDeTemps</b> = 168</td></tr>
+<tr class="separator:a28a06b2cf215c5f930f6f502ec5146dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62151ef04fd1ca9cdb4ed04115bcc073"><td class="memItemLeft" align="right" valign="top"><a id="a62151ef04fd1ca9cdb4ed04115bcc073"></a>
+std::vector&lt; const char * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>NomsDesPays</b> = {&quot;CountryA&quot;, &quot;CountryB&quot;, &quot;CountryC&quot;}</td></tr>
+<tr class="separator:a62151ef04fd1ca9cdb4ed04115bcc073"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad905bf1e1aa8f5e3cd5be8b4d50827fb"><td class="memItemLeft" align="right" valign="top"><a id="ad905bf1e1aa8f5e3cd5be8b4d50827fb"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>weekInTheYear</b> = 1</td></tr>
+<tr class="separator:ad905bf1e1aa8f5e3cd5be8b4d50827fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa449ed1f73e826d7a629e8d6e49e7add"><td class="memItemLeft" align="right" valign="top"><a id="aa449ed1f73e826d7a629e8d6e49e7add"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Pi</b> = std::vector(2 * nbTimeStepsOptim, 0.0)</td></tr>
+<tr class="separator:aa449ed1f73e826d7a629e8d6e49e7add"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55a3c115d73f3e13d6c2a5c350bedfe4"><td class="memItemLeft" align="right" valign="top"><a id="a55a3c115d73f3e13d6c2a5c350bedfe4"></a>
+std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Colonne</b> = std::vector(2 * nbTimeStepsOptim, 0)</td></tr>
+<tr class="separator:a55a3c115d73f3e13d6c2a5c350bedfe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ba4f19902fc5c556e75d0a8fa4ac9ae"><td class="memItemLeft" align="right" valign="top"><a id="a8ba4f19902fc5c556e75d0a8fa4ac9ae"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>nombreDeContraintes</b> = 0</td></tr>
+<tr class="separator:a8ba4f19902fc5c556e75d0a8fa4ac9ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6709b978218c7cef17ac306ebb3e2a71"><td class="memItemLeft" align="right" valign="top"><a id="a6709b978218c7cef17ac306ebb3e2a71"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>nombreDeTermesDansLaMatriceDeContrainte</b> = 0</td></tr>
+<tr class="separator:a6709b978218c7cef17ac306ebb3e2a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4123c30b936ca6a0b39956735469781"><td class="memItemLeft" align="right" valign="top"><a id="ad4123c30b936ca6a0b39956735469781"></a>
+std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>IndicesDebutDeLigne</b> = std::vector(4, 0)</td></tr>
+<tr class="separator:ad4123c30b936ca6a0b39956735469781"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2de39cbbe598c9ee3b326625ce10434c"><td class="memItemLeft" align="right" valign="top"><a id="a2de39cbbe598c9ee3b326625ce10434c"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CoefficientsDeLaMatriceDesContraintes</b></td></tr>
+<tr class="separator:a2de39cbbe598c9ee3b326625ce10434c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abacece14106b0c9bb9d5e164ca4fa696"><td class="memItemLeft" align="right" valign="top"><a id="abacece14106b0c9bb9d5e164ca4fa696"></a>
+std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>IndicesColonnes</b></td></tr>
+<tr class="separator:abacece14106b0c9bb9d5e164ca4fa696"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad490d2967803bd63904838279ca2d1b"><td class="memItemLeft" align="right" valign="top"><a id="aad490d2967803bd63904838279ca2d1b"></a>
+std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>NombreDeTermesDesLignes</b> = std::vector&lt;int&gt;(4, 0)</td></tr>
+<tr class="separator:aad490d2967803bd63904838279ca2d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07a540100ac092093a479ed2df0b1249"><td class="memItemLeft" align="right" valign="top"><a id="a07a540100ac092093a479ed2df0b1249"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Sens</b> = std::string(4, '=')</td></tr>
+<tr class="separator:a07a540100ac092093a479ed2df0b1249"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ba36caf0d8d544c817c2defe1660377"><td class="memItemLeft" align="right" valign="top"><a id="a9ba36caf0d8d544c817c2defe1660377"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>IncrementDAllocationMatriceDesContraintes</b> = 10</td></tr>
+<tr class="separator:a9ba36caf0d8d544c817c2defe1660377"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7152c5022c18287a3b4f49a549ad7c53"><td class="memItemLeft" align="right" valign="top"><a id="a7152c5022c18287a3b4f49a549ad7c53"></a>
+std::vector&lt; <a class="el" href="structCORRESPONDANCES__DES__VARIABLES.html">CORRESPONDANCES_DES_VARIABLES</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CorrespondanceVarNativesVarOptim</b></td></tr>
+<tr class="separator:a7152c5022c18287a3b4f49a549ad7c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee122259e2464604dd7e81d5f7948de2"><td class="memItemLeft" align="right" valign="top"><a id="aee122259e2464604dd7e81d5f7948de2"></a>
+std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>NumeroDeVariableStockFinal</b> = std::vector&lt;int&gt;(10, -1)</td></tr>
+<tr class="separator:aee122259e2464604dd7e81d5f7948de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedb421bc25838eaf44dde6a121d6ddb2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>NumeroDeVariableDeTrancheDeStock</b></td></tr>
+<tr class="separator:aedb421bc25838eaf44dde6a121d6ddb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73e73dd062a8c95c27d3daa69dca9774"><td class="memItemLeft" align="right" valign="top"><a id="a73e73dd062a8c95c27d3daa69dca9774"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>NomDesContraintes</b> = std::vector&lt;std::string&gt;(100, &quot;&quot;)</td></tr>
+<tr class="separator:a73e73dd062a8c95c27d3daa69dca9774"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aedb421bc25838eaf44dde6a121d6ddb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedb421bc25838eaf44dde6a121d6ddb2">&#9670;&nbsp;</a></span>NumeroDeVariableDeTrancheDeStock</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::vector&lt;int&gt; &gt; ConstraintBuilderDataFixture::NumeroDeVariableDeTrancheDeStock</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= std::vector&lt;std::vector&lt;int&gt;&gt;(</div>
+<div class="line">      10,</div>
+<div class="line">      std::vector&lt;int&gt;(5, -1))</div>
+</div><!-- fragment -->
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/tests/src/solver/optimisation/constraints/constraints_builder.cpp</li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="structConstraintBuilderDataFixture.html">ConstraintBuilderDataFixture</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
+</body>
+</html>

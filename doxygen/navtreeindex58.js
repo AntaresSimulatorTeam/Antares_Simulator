@@ -1,9 +1,5 @@
 var NAVTREEINDEX58 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a010d69528b95fd6e9d32611d597f605d":[8,0,0,19,5,6,0,9,7],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a020057f73f46233b224a00499c7f32ab":[8,0,0,19,5,6,0,9,8],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a259a2d881d92d9432aa0133343e9a273":[8,0,0,19,5,6,0,9,4],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a622ac0eef11558ca6d7597d63495651f":[8,0,0,19,5,6,0,9,3],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a7eced0a5c80c17d3b3fd318d40662509":[8,0,0,19,5,6,0,9,10],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#abd0753b91b382df30b7c6e028d8684a5":[8,0,0,19,5,6,0,9,9],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ada37935b4e18bad9341852d49456baf0":[8,0,0,19,5,6,0,9,5],
@@ -249,5 +245,9 @@ var NAVTREEINDEX58 =
 "structAntares_1_1Window_1_1Inspector_1_1PStudyHorizon.html#acd9d23e9fa0417ec5e9010feb18deea3":[8,0,0,24,1,19,0],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyLeapYear.html":[8,0,0,24,1,8],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyLeapYear.html#a4326ad666df1e6b8df69e341e323bb11":[8,0,0,24,1,8,0],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyMCScenarios.html":[8,0,0,24,1,15]
+"structAntares_1_1Window_1_1Inspector_1_1PStudyMCScenarios.html":[8,0,0,24,1,15],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyMCScenarios.html#a41ae1e49a9763605c247b57025f26267":[8,0,0,24,1,15,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyPlaylist.html":[8,0,0,24,1,10],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyPlaylist.html#a6bac110ef6483c110d26b6a9ead3367d":[8,0,0,24,1,10,0],
+"structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html":[8,0,0,24,1,12]
 };

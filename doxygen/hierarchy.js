@@ -95,7 +95,6 @@ var hierarchy =
     [ "Antares::Optimization::BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", null ],
     [ "Test::BasisStatus", "classTest_1_1BasisStatus.html", null ],
     [ "Antares::Optimization::BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", null ],
-    [ "BB", "structBB.html", null ],
     [ "unfeasible_problem.behavior_flag", "classunfeasible__problem_1_1behavior__flag.html", null ],
     [ "Antares::Optimisation::BendersDecomposition", "classAntares_1_1Optimisation_1_1BendersDecomposition.html", null ],
     [ "Antares::Optimisation::BendersDecompositionWriter", "classAntares_1_1Optimisation_1_1BendersDecompositionWriter.html", null ],
@@ -194,6 +193,9 @@ var hierarchy =
     [ "TestingSimulationObserver::Constraint", "structTestingSimulationObserver_1_1Constraint.html", null ],
     [ "ConstraintBuilder", "classConstraintBuilder.html", null ],
     [ "ConstraintBuilderData", "classConstraintBuilderData.html", null ],
+    [ "ConstraintBuilderDataFixture", "structConstraintBuilderDataFixture.html", [
+      [ "ConstraintBuilderFixture", "structConstraintBuilderFixture.html", null ]
+    ] ],
     [ "Test::Modeler::ConstraintData", "structTest_1_1Modeler_1_1ConstraintData.html", null ],
     [ "ConstraintFactory", "classConstraintFactory.html", [
       [ "AreaBalance", "classAreaBalance.html", null ],
@@ -1832,6 +1834,9 @@ var hierarchy =
       [ "Fixture::Thermal", "structFixture_1_1Thermal.html", null ]
     ] ],
     [ "STS_holder< nb_hours >", "structSTS__holder.html", null ],
+    [ "STScumulativeConstaintFixture", "structSTScumulativeConstaintFixture.html", [
+      [ "ConstraintBuilderFixture", "structConstraintBuilderFixture.html", null ]
+    ] ],
     [ "Antares::Data::ShortTermStorage::STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", null ],
     [ "Antares::Data::ShortTermStorage::STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", null ],
     [ "study_input_handler.study_input_handler", "classstudy__input__handler_1_1study__input__handler.html", null ],
@@ -1871,7 +1876,6 @@ var hierarchy =
       [ "Antares::Optimisation::EvaluationContext::CouldNotEvaluateConstantParameter< T >", "structAntares_1_1Optimisation_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html", null ]
     ] ],
     [ "IItem::Tag", "classIItem_1_1Tag.html", null ],
-    [ "TargetVectorUpdater", "classTargetVectorUpdater.html", null ],
     [ "Antares::Solver::Progression::Task", "classAntares_1_1Solver_1_1Progression_1_1Task.html", null ],
     [ "TempDirFixture", "structTempDirFixture.html", null ],
     [ "TestContext", "structTestContext.html", null ],

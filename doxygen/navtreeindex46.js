@@ -1,9 +1,5 @@
 var NAVTREEINDEX46 =
 {
-"config_8h_source.html":[9,0,0,12,2,3],
-"congestionFeeAbs_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1,1],
-"congestionFee_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1,0],
-"congestionProbability_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1,2],
 "connection_8hxx_source.html":[9,0,0,12,2,1,1,3,1,2],
 "connectioncreator_8h_source.html":[9,0,0,12,2,1,1,3,2,0],
 "constraint-slack-analysis_8h_source.html":[9,0,0,8,3,0,0,0,0,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX46 =
 "dir_58214dbee968e8ac661492141d050741.html":[9,0,0,8,7],
 "dir_58a1ac5b04a4271df1ed6fcfc2b3b040.html":[9,0,0,3,1,3,0,0,0,0],
 "dir_58c94e147c5f49dd2d97967063c1deba.html":[9,0,0,9,0,0,0,0,0],
-"dir_59ad432b10110dd2fdde74b42d166507.html":[9,0,0,4,0,1,0,0,0]
+"dir_59ad432b10110dd2fdde74b42d166507.html":[9,0,0,4,0,1,0,0,0],
+"dir_59ec79b6e0a705e9404735d4800549b3.html":[9,0,0,5,0,0,0],
+"dir_5a112161cdd368098316fb1abaae287b.html":[9,0,0,3,2,0],
+"dir_5b0eb06888e192fdb5a7e964314dd199.html":[9,0,0,8,1,0],
+"dir_5b6f7ff7553f331bf950054846e3d366.html":[9,0,0,12,2,2,9,0]
 };

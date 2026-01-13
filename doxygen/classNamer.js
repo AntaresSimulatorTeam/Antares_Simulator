@@ -1,16 +1,16 @@
 var classNamer =
 [
-    [ "Namer", "classNamer.html#ad2b209d3dfdae47de9cf9d05682ad76c", null ],
-    [ "SetAreaElementName", "classNamer.html#af16b7005029b7f5d43f4762d04d00666", null ],
-    [ "SetAreaElementNameHour", "classNamer.html#a415fd9a6381f59087e6a8ec1050183b9", null ],
-    [ "SetAreaElementNameWeek", "classNamer.html#ab663d76d4612d7d6c6e687f368d96448", null ],
-    [ "SetLinkElementName", "classNamer.html#aaf94c7c1e0881e4952535ec7e7a43904", null ],
-    [ "SetThermalClusterElementName", "classNamer.html#a4c339a59d7db4db283e2c2e1857542b4", null ],
+    [ "Namer", "classNamer.html#ac86fca681803ca8a161de0e5ffe66294", null ],
+    [ "areaLocation", "classNamer.html#a529faa6e41852c7352156e09d8ec42af", null ],
+    [ "linkLocation", "classNamer.html#a9d890af6a29b4c1ccb61d29969061308", null ],
+    [ "names", "classNamer.html#a7abf76b84765b0dda3e43f80f03775b5", null ],
+    [ "SetAreaElementName", "classNamer.html#a6ad7cc40b38cccce1bd9ae7820cf380e", null ],
+    [ "SetAreaElementNameHour", "classNamer.html#ade767035cb03ed27c830d90b07a3f723", null ],
+    [ "SetAreaElementNameWeek", "classNamer.html#a95fd1e61eff567c628f7821e41cb55f2", null ],
+    [ "SetLinkElementName", "classNamer.html#a7826a47bf0545f72773ec2168636699f", null ],
+    [ "SetThermalClusterElementName", "classNamer.html#adee137066c6b32fa8a59c91ee1dc96f1", null ],
+    [ "TimeIdentifier", "classNamer.html#a1787da47d06a799afc09c1823b6b0d06", null ],
     [ "UpdateArea", "classNamer.html#a8c7f634e964ae71444c1e06d1edaff94", null ],
-    [ "UpdateTimeStep", "classNamer.html#a34e8833cfe774fa69e3ff3ef59ced4ba", null ],
-    [ "area_", "classNamer.html#a13decf1b81a0e046dac6df649b58e8d7", null ],
-    [ "destination_", "classNamer.html#ad9c1a680fb9dc253aefad4447d18f47a", null ],
-    [ "origin_", "classNamer.html#a1ca5a199685af0b97671beb4f2184c63", null ],
-    [ "targetUpdater_", "classNamer.html#ae28f3c73d847f63c5a066610d78a5f61", null ],
-    [ "timeStep_", "classNamer.html#a51a0def7359ed48523b02622d217703f", null ]
+    [ "updateExtremities", "classNamer.html#a4dfba44a9dff565fa3b9f9fc15155862", null ],
+    [ "UpdateTimeStep", "classNamer.html#a88667634a075460e7252464a875152cd", null ]
 ];
