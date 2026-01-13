@@ -64,8 +64,6 @@ private:
     Optimisation::VariabilityType visitPow(const Nodes::FunctionNode* node);
     Optimisation::VariabilityType visitChildrenNodes(const Nodes::ParentNode* node);
 
-    std::vector<const ModelerStudy::SystemModel::Component*> getConnectedComponents();
-
     const Optimisation::OptimEntityContainer& optimEntityContainer_;
     const ModelerStudy::SystemModel::Component& component_;
     const Optimisation::EvaluationContext& context_;
