@@ -50,7 +50,7 @@ BOOST_FIXTURE_TEST_CASE(no_variable_constructor_does_not_throw, StudyFixture)
     Antares::Solver::InMemoryWriter writer(durationCollector);
     // At least one area was required to trigger a std::bad_alloc throw
     Antares::Data::addAreaToListOfAreas(study->areas, "dummyArea");
-    BOOST_CHECK_NO_THROW(SurveyResults survey(*study, 1, "out", writer););
+    BOOST_CHECK_NO_THROW(SurveyResults survey(*study, "out", writer););
 }
 
 BOOST_AUTO_TEST_SUITE_END()
