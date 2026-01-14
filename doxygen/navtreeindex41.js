@@ -1,9 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"classHydroPower.html#a5adbb80ce19ed4eee75f77670bbae7e7":[8,0,151,1],
-"classHydroPower.html#a7536d229dba6901a38d7d0e86ac42a86":[8,0,151,0],
-"classHydroPower.html#ac001ea4d2bd31e114bf555c831565ddd":[8,0,151,2],
-"classHydroPowerGroup.html":[8,0,153],
 "classHydroPowerGroup.html#a83aee8659878014b25a079764befe8fa":[8,0,153,0],
 "classHydroPowerGroup.html#aedd8f967c204c600ed992ac73b69bf13":[8,0,153,1],
 "classHydroPowerSmoothingUsingVariationMaxDown.html":[8,0,154],
@@ -249,5 +245,9 @@ var NAVTREEINDEX41 =
 "classMockLinearProblem.html#a278425f71e237e9bdf318631d60543fc":[8,0,197,20],
 "classMockLinearProblem.html#a2b75d40b09f957cfd6bb2e8f0bfce673":[8,0,197,2],
 "classMockLinearProblem.html#a2e45140ef953efe27613114f58b4b440":[8,0,197,8],
-"classMockLinearProblem.html#a3e35308745b6a6614a817d8a6e320759":[8,0,197,10]
+"classMockLinearProblem.html#a3e35308745b6a6614a817d8a6e320759":[8,0,197,10],
+"classMockLinearProblem.html#a40d0f4749eb153198f335943a469398d":[8,0,197,17],
+"classMockLinearProblem.html#a44a836b1038be3d2234ce9a8983eb74a":[8,0,197,9],
+"classMockLinearProblem.html#a4562e02de024ff6c13df264d363aab9a":[8,0,197,19],
+"classMockLinearProblem.html#a46f3d6cab52e01d560dbbd3cf6b35252":[8,0,197,26]
 };

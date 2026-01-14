@@ -1,9 +1,5 @@
 var NAVTREEINDEX43 =
 {
-"classProgress.html#ab97388e704c814b9454d07be007513dd":[8,0,252,0],
-"classProgress.html#abfa443f16958768636a59a560b625317":[8,0,252,3],
-"classProgress.html#ac4b5ef750872e2013c6925c203a35d4c":[8,0,252,1],
-"classProgress.html#ac4b5ef750872e2013c6925c203a35d4ca12149aab1f8562aabc3dae8b5c4da061":[8,0,252,1,3],
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4ca5bda9af822ef4bca4fa970718dd4e2c3":[8,0,252,1,1],
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4ca7e89615a1194832878ff1bff8ea78f07":[8,0,252,1,2],
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[8,0,252,1,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX43 =
 "classStudyData.html#a8f6d4379748e859804f2ee469a056cf9":[8,0,308,6],
 "classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b":[8,0,308,1],
 "classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08":[8,0,308,7],
-"classStudyData.html#ab8124828569c97b656cb24c380e88321":[8,0,308,2]
+"classStudyData.html#ab8124828569c97b656cb24c380e88321":[8,0,308,2],
+"classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7":[8,0,308,0],
+"classSystemMemoryLogger.html":[8,0,314],
+"classSystemMemoryLogger.html#a24ec5be7f986cc6a881a28e10d7f0bde":[8,0,314,2],
+"classSystemMemoryLogger.html#a4ae808128767843f680c4aa1759aaead":[8,0,314,0]
 };

@@ -1096,9 +1096,7 @@ var annotated_dup =
         ] ],
         [ "StudyParamsForLinkTS", "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html", "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS" ],
         [ "LinkTSgenerationParams", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams" ],
-        [ "AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData" ],
-        [ "LinksTSgenerator", "classAntares_1_1TSGenerator_1_1LinksTSgenerator.html", "classAntares_1_1TSGenerator_1_1LinksTSgenerator" ],
-        [ "Settings", "structAntares_1_1TSGenerator_1_1Settings.html", "structAntares_1_1TSGenerator_1_1Settings" ]
+        [ "AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData" ]
       ] ],
       [ "UnitTests", null, [
         [ "PredicateIdentity", "structAntares_1_1UnitTests_1_1PredicateIdentity.html", "structAntares_1_1UnitTests_1_1PredicateIdentity" ],
@@ -1520,8 +1518,8 @@ var annotated_dup =
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", "classColumnBasedStorage" ],
-    [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
     [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
+    [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],

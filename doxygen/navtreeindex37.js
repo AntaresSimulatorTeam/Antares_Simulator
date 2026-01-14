@@ -1,9 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"classAntares_1_1Window_1_1OutputViewer_1_1Window.html#acaaec801fce09558ef938df9af5c9639":[8,0,0,24,3,6,1],
-"classAntares_1_1Window_1_1PerformerDialog.html":[8,0,0,24,13],
-"classAntares_1_1Window_1_1PerformerDialog.html#a40e6462e22994977dc01fca280fd6999":[8,0,0,24,13,3],
-"classAntares_1_1Window_1_1PerformerDialog.html#a4796034dd9ec75385e9a2771d3f82a86":[8,0,0,24,13,1],
 "classAntares_1_1Window_1_1PerformerDialog.html#a8f8a36650514d1ad39ff5a8734acdc92":[8,0,0,24,13,2],
 "classAntares_1_1Window_1_1PerformerDialog.html#a911d63e70e144bde83c9212e84a92efa":[8,0,0,24,13,6],
 "classAntares_1_1Window_1_1PerformerDialog.html#aa5150432e17a25c7d3e70b925011bf4d":[8,0,0,24,13,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX37 =
 "classColumnBasedStorage.html#a3fb625891445b889b8ed21ea7fda2e10":[8,0,64,3],
 "classColumnBasedStorage.html#a4ff20f2b20f02de770fae2696194d9f8":[8,0,64,0],
 "classColumnBasedStorage.html#a6fd0fa3c9b203439178bed81a0c2ebdb":[8,0,64,8],
-"classColumnBasedStorage.html#a7e580b92998c70053fc14903aea50b8c":[8,0,64,4]
+"classColumnBasedStorage.html#a7e580b92998c70053fc14903aea50b8c":[8,0,64,4],
+"classColumnBasedStorage.html#a8e913068cec1e32c388bc85837d3734d":[8,0,64,7],
+"classColumnBasedStorage.html#a9881fb1dbc6a7e7fae04c9a0a47b4ac8":[8,0,64,6],
+"classColumnBasedStorage.html#a9da389828d80611d51c41a6a88e27f1f":[8,0,64,1],
+"classColumnBasedStorage.html#abb4dab419142a3adb5504c3b11feac42":[8,0,64,5]
 };

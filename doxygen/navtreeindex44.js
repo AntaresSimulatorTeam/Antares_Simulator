@@ -1,9 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7":[8,0,308,0],
-"classSystemMemoryLogger.html":[8,0,314],
-"classSystemMemoryLogger.html#a24ec5be7f986cc6a881a28e10d7f0bde":[8,0,314,2],
-"classSystemMemoryLogger.html#a4ae808128767843f680c4aa1759aaead":[8,0,314,0],
 "classSystemMemoryLogger.html#a5ae8d302631fc7e891607d897b7771a6":[8,0,314,1],
 "classSystemMemoryLogger.html#aafec914140ac3995ca484cbbb4b66090":[8,0,314,3],
 "classTestException.html":[8,0,317],
@@ -249,5 +245,9 @@ var NAVTREEINDEX44 =
 "classjson__collector_1_1checksRetriever.html#a80b45d298e869613c15632dda5d2ba37":[8,0,17,1,4],
 "classjson__collector_1_1checksRetriever.html#a9b0d9af7bd7f2c1455a67efd1cfc6b1f":[8,0,17,1,16],
 "classjson__collector_1_1checksRetriever.html#a9ce507490e00242b8fd385d98eafbaf6":[8,0,17,1,5],
-"classjson__collector_1_1checksRetriever.html#aafd01ee5b7b678d782331ef13e0301b3":[8,0,17,1,11]
+"classjson__collector_1_1checksRetriever.html#aafd01ee5b7b678d782331ef13e0301b3":[8,0,17,1,11],
+"classjson__collector_1_1checksRetriever.html#ac7098b1e9080b1382db2d55eafe4f26f":[8,0,17,1,0],
+"classjson__collector_1_1checksRetriever.html#ad92d34771581a2f55c2360a1a62970be":[8,0,17,1,7],
+"classjson__collector_1_1checksRetriever.html#adbe73d3255b4d7c4c2402741f6a0a145":[8,0,17,1,2],
+"classjson__collector_1_1checksRetriever.html#add36e871a5c68f8a8bfb6a6c369248d1":[8,0,17,1,9]
 };

@@ -1,9 +1,5 @@
 var NAVTREEINDEX45 =
 {
-"classjson__collector_1_1checksRetriever.html#ac7098b1e9080b1382db2d55eafe4f26f":[8,0,17,1,0],
-"classjson__collector_1_1checksRetriever.html#ad92d34771581a2f55c2360a1a62970be":[8,0,17,1,7],
-"classjson__collector_1_1checksRetriever.html#adbe73d3255b4d7c4c2402741f6a0a145":[8,0,17,1,2],
-"classjson__collector_1_1checksRetriever.html#add36e871a5c68f8a8bfb6a6c369248d1":[8,0,17,1,9],
 "classjson__collector_1_1checksRetriever.html#ae95276ecf0fb0224504d6123ad366f34":[8,0,17,1,14],
 "classjson__collector_1_1error.html":[8,0,17,0],
 "classjson__collector_1_1error.html#a134e099fed47e5b7d0e504332d07c2ed":[8,0,17,0,1],
@@ -59,8 +55,8 @@ var NAVTREEINDEX45 =
 "classoutput__compare_1_1output__compare.html#ae625a93da73247a17fbb99cd27ea6694":[8,0,20,0,1],
 "classreferenceIniFile.html":[8,0,259],
 "classreferenceIniFile.html#a2eddf21fbd2a266bccc0a34904e384d1":[8,0,259,5],
-"classreferenceIniFile.html#a4ed163a7f9aae97cf995aaf4ff5da5dd":[8,0,259,2],
 "classreferenceIniFile.html#a4ed163a7f9aae97cf995aaf4ff5da5dd":[8,0,259,0],
+"classreferenceIniFile.html#a4ed163a7f9aae97cf995aaf4ff5da5dd":[8,0,259,2],
 "classreferenceIniFile.html#a75321962859591936a29ac8ccfb7ea9a":[8,0,259,8],
 "classreferenceIniFile.html#ab918a89fc2994f9e449cadc853522f97":[8,0,259,4],
 "classreferenceIniFile.html#ad8f56103cf90e97314837d175fb5cb8d":[8,0,259,9],
@@ -249,5 +245,9 @@ var NAVTREEINDEX45 =
 "common_2dispatcher_2action_8cpp.html#ae6af1d6809243968aa093df7233fd739":[7,0,0,8,0,11],
 "common_2dispatcher_2action_8cpp.html#ae6f7de6db1489b6e6fc6f6a72d07defb":[7,0,0,8,1,0],
 "common_2dispatcher_2action_8h.html#a0664ced7ca1302d3e4dab2d3f606e376":[7,0,0,8,0,6],
-"common_2dispatcher_2action_8h.html#a06aa5e26f400b07007cd9a9dc11e3d47":[7,0,0,8,0,9]
+"common_2dispatcher_2action_8h.html#a06aa5e26f400b07007cd9a9dc11e3d47":[7,0,0,8,0,9],
+"common_2dispatcher_2action_8h.html#a18c63566c2c9b93794a66d64cb0c7d39":[7,0,0,8,0,7],
+"common_2dispatcher_2action_8h_source.html":[9,0,0,12,1,1,0],
+"common_2dispatcher_2action_8hxx_source.html":[9,0,0,12,1,1,1],
+"common_2dispatcher_2settings_8cpp.html#a5e04a23a5791f2280efe1c6f83ec85b0":[7,0,0,8,2,0]
 };

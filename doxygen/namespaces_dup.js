@@ -2112,16 +2112,9 @@ var namespaces_dup =
         [ "StudyParamsForLinkTS", "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html", "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS" ],
         [ "LinkTSgenerationParams", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams" ],
         [ "AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData" ],
-        [ "LinksTSgenerator", "classAntares_1_1TSGenerator_1_1LinksTSgenerator.html", "classAntares_1_1TSGenerator_1_1LinksTSgenerator" ],
-        [ "Settings", "structAntares_1_1TSGenerator_1_1Settings.html", "structAntares_1_1TSGenerator_1_1Settings" ],
         [ "listOfLinks", "generator_8h.html#a27e583f068feff9d9c79beb29bc1f33f", null ],
-        [ "checkOptions", "tsGenerationOptions_8h.html#a62f914414c92946b770434f2962ef5c3", null ],
-        [ "CreateLinkList", "linksTSgenerator_8cpp.html#a4767f627b495c48cc05508639521b487", null ],
-        [ "createTsGeneratorParser", "tsGenerationOptions_8h.html#a33eaf930f40712e6447731f496fb9e54", null ],
         [ "Destroy", "generator_8h.html#acd9b71e1425f457bd8778b23759a0ea4", null ],
         [ "DestroyAll", "generator_8cpp.html#a376d0117e2a60cd9d1db26b398025056", null ],
-        [ "extractTargetAreas", "linksTSgenerator_8cpp.html#a7db3be59663c31ce6edd03fd2488b560", null ],
-        [ "findLinkInList", "linksTSgenerator_8cpp.html#a50fc23a601f5b5958ed3e79914c2063a", null ],
         [ "GenerateHydroTimeSeries", "generator_8hxx.html#a165b57fb5cb5a9468d1a9d965e24fa97", null ],
         [ "GenerateHydroTimeSeries", "solver_2ts-generator_2hydro_8cpp.html#a3f5a55066990f8dd175afb8a7c864625", null ],
         [ "generateLinkTimeSeries", "availability_8cpp.html#aff622e3098b1794af9d0a9980ebabd08", null ],
@@ -2130,20 +2123,7 @@ var namespaces_dup =
         [ "GenerateTimeSeries", "generator_8hxx.html#af9618dd6d3446b4ddc5f0592e5fc476c", null ],
         [ "GenerateTimeSeries< Data::timeSeriesHydro >", "generator_8hxx.html#a66826706bf3300441a828129cb068bca", null ],
         [ "getAllClustersToGen", "availability_8cpp.html#a6931dc8e4802e8792c952569484a6a6a", null ],
-        [ "getMatchingPairInCollection", "linksTSgenerator_8cpp.html#a1bbf299a57d34d8e028508d1d331db1e", null ],
-        [ "linkTSrequired", "tsGenerationOptions_8h.html#afa5f5f1b4c23f40c11bda9c7b7d6d055", null ],
-        [ "makePreproFile", "linksTSgenerator_8cpp.html#aa7bfe6396790095ee16eec44c9dadbdc", null ],
-        [ "pairs_match", "linksTSgenerator_8cpp.html#a9011937df23a0d097af858c4f3bb7800", null ],
-        [ "parseOptions", "tsGenerationOptions_8h.html#ab91f6f2a9e7e4ce5914274125994c8c5", null ],
-        [ "readIniProperties", "linksTSgenerator_8cpp.html#a3c14d4bf50a7caec2c50a8c6f5a1f038", null ],
-        [ "readLinkGeneralProperty", "linksTSgenerator_8cpp.html#a7d7b186321aaf1b31978834a8a272e4e", null ],
-        [ "readLinkIniProperties", "linksTSgenerator_8cpp.html#ac7518c1eb0f990f752d96b7223652a9d", null ],
-        [ "readLinkIniProperty", "linksTSgenerator_8cpp.html#a933c3a8806e745b5061f7055e84d98cd", null ],
-        [ "readLinkPreproTimeSeries", "linksTSgenerator_8cpp.html#a6bad6111c66063916e6b28ad98f6ecb2", null ],
-        [ "readPreproTimeSeries", "linksTSgenerator_8cpp.html#aa20d4d25d0e1883f975ff0abaed9e748", null ],
-        [ "readSourceAreaIniFile", "linksTSgenerator_8cpp.html#a02dd292d6e8135c964df5489ebec4119", null ],
         [ "ResizeGeneratedTimeSeries", "generator_8cpp.html#a4c314807cc36b58c96f1c9a627554f7e", null ],
-        [ "thermalTSrequired", "tsGenerationOptions_8h.html#adfb1c8fb5e738092621c68069f2a26fc", null ],
         [ "writeThermalTimeSeries", "availability_8cpp.html#a70dc7060a974a1670f019295c2dfef56", null ],
         [ "writeTStoDisk", "availability_8cpp.html#a3e63ef1830806b4386115677e0cc8113", null ]
       ] ],
@@ -2677,8 +2657,7 @@ var namespaces_dup =
       [ "parallel", "run-study-tests_2conftest_8py.html#a9740f129861e2a7c9214e69368a0a87f", null ],
       [ "pytest_addoption", "examples_2conftest_8py.html#ab0ebca4c0bae417023a405900453603d", null ],
       [ "solver_name", "run-study-tests_2conftest_8py.html#abb137afc7ad9747df934f556298017a7", null ],
-      [ "solver_path", "examples_2conftest_8py.html#ac8a0b650cf676deaa4e6df67f7222e6d", null ],
-      [ "tsgenerator_path", "run-study-tests_2antares__tools_2ts-generator_2conftest_8py.html#a807fc90332208d532d0caaad96b45df1", null ]
+      [ "solver_path", "examples_2conftest_8py.html#ac8a0b650cf676deaa4e6df67f7222e6d", null ]
     ] ],
     [ "create_checks", null, [
       [ "create_check_hydro_level", "create__checks_8py.html#a16cc70ab9aa97d6e3dba3c4acebf30a5", null ],
@@ -2745,18 +2724,18 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "check_runner", "fixtures_8py.html#a40228dc2652833ab5cc3c0d688ec0613", null ],
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],
@@ -3035,14 +3014,6 @@ var namespaces_dup =
       [ "Win_tolerances", "classtolerances_1_1Win__tolerances.html", "classtolerances_1_1Win__tolerances" ],
       [ "get_tolerances", "tolerances_8py.html#a375c5bbd695b8b6f119b13d68bcb6e9c", null ],
       [ "trim_digit_after_last_dot", "tolerances_8py.html#a4b5ad5876599cd58d5653326906ec4e0", null ]
-    ] ],
-    [ "ts-generator", null, [
-      [ "get_clusters_to_gen", "ts-generator_8py.html#ac1df3a069010a60e7d9bc14c894f00be", null ],
-      [ "get_ts_files", "ts-generator_8py.html#aee5b61e54be7fb968427429a54f72db3", null ],
-      [ "run_and_compare", "ts-generator_8py.html#a8302a43514cad1b12d43cca4d98e1f5e", null ],
-      [ "test_ts_generator", "ts-generator_8py.html#a50f2e510e9d7066b65c4e029fcfdab04", null ],
-      [ "ROOT_FOLDER", "ts-generator_8py.html#a654513e1135ec331b5766f21194ce16e", null ],
-      [ "study_paths", "ts-generator_8py.html#ac2af49cf53e9954df64fe207bf47f4f0", null ]
     ] ],
     [ "unfeasible_problem", null, [
       [ "weeks_in_year", "classunfeasible__problem_1_1weeks__in__year.html", "classunfeasible__problem_1_1weeks__in__year" ],
