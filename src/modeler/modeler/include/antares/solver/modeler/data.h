@@ -18,8 +18,8 @@
 // along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 #pragma once
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>

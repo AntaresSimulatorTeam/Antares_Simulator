@@ -177,9 +177,10 @@ Modeler::ResolutionMode convertResolutionMode(std::string ymlMode)
     {
         return Modeler::ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
     }
-    throw Error::InvalidArgumentError(fmt::format("Invalid resolution mode in optim-config.yaml: {}", ymlMode));
+    throw Error::InvalidArgumentError(
+      fmt::format("Invalid resolution mode in optim-config.yaml: {}", ymlMode));
 }
-}
+} // namespace
 
 std::pair<std::vector<SystemModel::Library>, Modeler::ResolutionMode> loadLibraries(
   const fs::path& studyPath)
@@ -187,6 +188,7 @@ std::pair<std::vector<SystemModel::Library>, Modeler::ResolutionMode> loadLibrar
     auto ymlLibraries = loadLibrariesFromYaml(studyPath);
     const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
     updateLibrariesWithOptimConfig(ymlLibraries, ymlOptimConfig);
-    return {convertIntoSystemLibs(ymlLibraries), convertResolutionMode(ymlOptimConfig.resolution_mode)};
+    return {convertIntoSystemLibs(ymlLibraries),
+            convertResolutionMode(ymlOptimConfig.resolution_mode)};
 }
 } // namespace Antares::Solver::LoadFiles
