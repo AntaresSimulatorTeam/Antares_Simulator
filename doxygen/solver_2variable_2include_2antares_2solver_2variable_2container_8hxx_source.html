@@ -433,41 +433,46 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting the annual results&quot;</span>;</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    }</div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> survey(*pStudy, output, writer);</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <span class="comment">// Year by year ?</span></div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    survey.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad402c65d36e0295eaf960a06ac40d863">yearByYearResults</a> = !global;</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> survey(*pStudy,</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                         pStudy-&gt;<a class="code" href="classAntares_1_1Data_1_1Study.html#a054693459e0a64b430496e04ac49e5dc">parameters</a>.<a class="code" href="classAntares_1_1Data_1_1Parameters.html#a32214934584e8346eb57078edbd579e6">variablesPrintInfo</a>.getTotalMaxColumnsCount(),</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;                         output,</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;                         writer);</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordflow">if</span> (global)</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    {</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        <span class="comment">// alias to the type of the report builder</span></div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        <span class="keyword">using</span> Builder = SurveyReportBuilder&lt;true, ListType&gt;;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        <span class="comment">// Building the survey results for each possible state</span></div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        Builder::Run(*<span class="keyword">this</span>, survey);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        <span class="comment">// Exporting the Grid (information about the study)</span></div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        survey.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab58a9a11e3eaa7913dde703d90b132f0">exportGridInfos</a>();</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="comment">// Year by year ?</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    survey.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad402c65d36e0295eaf960a06ac40d863">yearByYearResults</a> = !global;</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keywordflow">if</span> (global)</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    {</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        <span class="comment">// alias to the type of the report builder</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        <span class="keyword">using</span> Builder = SurveyReportBuilder&lt;true, ListType&gt;;</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        <span class="comment">// Building the survey results for each possible state</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        Builder::Run(*<span class="keyword">this</span>, survey);</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="comment">// Exporting the digest</span></div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <span class="comment">// The digest must be exported after the real report because some values</span></div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <span class="comment">// are computed at this moment.</span></div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        Builder::RunDigest(*<span class="keyword">this</span>, survey, writer);</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    }</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    {</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <span class="comment">// alias to the type of the report builder</span></div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        <span class="keyword">using</span> Builder = SurveyReportBuilder&lt;false, ListType&gt;;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="comment">// Building the survey results for each possible state</span></div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        Builder::Run(*<span class="keyword">this</span>, survey, numSpace);</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    }</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;}</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Container</span></div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_CONTAINER_CONTAINER_H__</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="comment">// Exporting the Grid (information about the study)</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        survey.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab58a9a11e3eaa7913dde703d90b132f0">exportGridInfos</a>();</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160; </div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <span class="comment">// Exporting the digest</span></div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="comment">// The digest must be exported after the real report because some values</span></div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <span class="comment">// are computed at this moment.</span></div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        Builder::RunDigest(*<span class="keyword">this</span>, survey, writer);</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    }</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    {</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <span class="comment">// alias to the type of the report builder</span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        <span class="keyword">using</span> Builder = SurveyReportBuilder&lt;false, ListType&gt;;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <span class="comment">// Building the survey results for each possible state</span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        Builder::Run(*<span class="keyword">this</span>, survey, numSpace);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    }</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;}</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Container</span></div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_CONTAINER_CONTAINER_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:58</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:51</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html_a32214934584e8346eb57078edbd579e6"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html#a32214934584e8346eb57078edbd579e6">Antares::Data::Parameters::variablesPrintInfo</a></div><div class="ttdeci">AllVariablesPrintInfo variablesPrintInfo</div><div class="ttdoc">List of all output variables print info.</div><div class="ttdef"><b>Definition:</b> parameters.h:215</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:58</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html_a054693459e0a64b430496e04ac49e5dc"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html#a054693459e0a64b430496e04ac49e5dc">Antares::Data::Study::parameters</a></div><div class="ttdeci">Parameters parameters</div><div class="ttdoc">Parameters.</div><div class="ttdef"><b>Definition:</b> study.h:507</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ThermalCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalCluster.html">Antares::Data::ThermalCluster</a></div><div class="ttdoc">A single thermal cluster.</div><div class="ttdef"><b>Definition:</b> cluster.h:76</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Container_1_1List_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html">Antares::Solver::Variable::Container::List</a></div><div class="ttdoc">Static list for all output variables.</div><div class="ttdef"><b>Definition:</b> container.h:44</div></div>
