@@ -151,9 +151,6 @@ private:
     Coefficients pValues;
     //! Coefficients for other areas, ordered by the area id
     std::unordered_map<uint, double> pValuesFromAreaID;
-    //! Flag to prevent misuse of the bad container
-    // TODO Find a more reliable way...
-
 }; // class HydroAllocation
 
 } // namespace Antares::Data
