@@ -32,7 +32,6 @@ public:
 
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
-    void writeInvestmentFiles(const std::filesystem::path& outputDir);
 
 private:
     const YearlyData& getYearlyData(unsigned year);
