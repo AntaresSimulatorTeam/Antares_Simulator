@@ -58,6 +58,22 @@ public:
     ** \param year The current year, if any
     */
     SurveyResults(const Data::Study& s, const Yuni::String& o, IResultWriter& writer);
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param maxVars The maximum total of variables that we may need for writing
+    **   the report
+    ** \param s Reference to the study
+    ** \param maxVariables References the maximal number of output variables
+    ** \param o The output folder
+    ** \param year The current year, if any
+    */
+    SurveyResults(const Data::Study& s,
+                  uint maxVariables,
+                  const Yuni::String& o,
+                  IResultWriter& writer);
     /*!
     ** \brief Destructor
     */

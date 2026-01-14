@@ -48,7 +48,22 @@ namespace fs = std::filesystem;
 
 namespace
 {
-const char totalTimeKey[] = "total";
+
+void logTotalTime(const std::string& msg, unsigned duration)
+{
+    std::chrono::milliseconds d(duration);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
+    d -= hours;
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
+    d -= minutes;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
+
+    logs.info().appendFormat("%s: %02luh%02lum%02lus",
+                             msg.c_str(),
+                             hours.count(),
+                             minutes.count(),
+                             seconds.count());
+}
 
 void printSolvers()
 {
@@ -138,14 +153,11 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        pDurationCollector("study_loading") << [this, &study, &options]
+        if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
         {
-            if (study.loadFromFolder(pSettings.studyFolder, options))
-            {
-                logs.info() << "The study is loaded.";
-                logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-            }
-        };
+            logs.info() << "The study is loaded.";
+            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+        }
 
         if (study.areas.empty())
         {
@@ -363,35 +375,40 @@ void Application::prepare(int argc, const char* argv[])
         return;
     }
 
-    printPIDtoDisk(pSettings);
+    pDurationCollector("loading") << [this, &options]
+    {
+        printPIDtoDisk(pSettings);
 
-    checkAndCorrectSettingsAndOptions(pSettings, options);
+        checkAndCorrectSettingsAndOptions(pSettings, options);
 
-    checkStudyFolder(options.studyFolder);
-    pSettings.studyFolder = fixStudyFolder(options.studyFolder);
+        checkStudyFolder(options.studyFolder);
+        pSettings.studyFolder = fixStudyFolder(options.studyFolder);
 
-    auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
-    checkStudyVersion(version, pSettings.studyFolder);
+        auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
+        checkStudyVersion(version, pSettings.studyFolder);
 
-    // Determine the log filename to use for this simulation
-    resetLogFilename();
+        // Determine the log filename to use for this simulation
+        resetLogFilename();
 
-    readStudy_makeChecks_and_printThings(options);
+        readStudy_makeChecks_and_printThings(options);
 
-    // Check solver options
-    const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
-    bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
+        // Check solver options
+        const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
+        bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
 
-    checkSolverOptions(options.solverOptions, milpRequired);
+        checkSolverOptions(options.solverOptions, milpRequired);
 
-    // Set solver options from command line
-    pStudy->parameters.optOptions.initializeWith(options.solverOptions);
+        // Set solver options from command line
+        pStudy->parameters.optOptions.initializeWith(options.solverOptions);
 
-    using namespace Antares::Solver::Optimization;
-    // TODO
-    pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
-                                                     ? ExportBehavior::Once
-                                                     : ExportBehavior::Never;
+        using namespace Antares::Solver::Optimization;
+        // TODO
+        pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
+                                                         ? ExportBehavior::Once
+                                                         : ExportBehavior::Never;
+    };
+
+    logTotalTime("Total loading time", pDurationCollector.getTime("loading"));
 }
 
 void Application::onLogMessage(int level, const std::string& message)
@@ -427,7 +444,7 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    pDurationCollector(totalTimeKey) << [&]
+    pDurationCollector("simulation") << [&]
     {
         pOptimizationInfo = simulationRun(*pStudy,
                                           pSettings,
@@ -490,29 +507,13 @@ void Application::writeComment(Data::Study& study)
     }
 }
 
-static void logTotalTime(unsigned duration)
-{
-    std::chrono::milliseconds d(duration);
-    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
-    d -= hours;
-    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
-    d -= minutes;
-    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
-
-    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus",
-                             hours.count(),
-                             minutes.count(),
-                             seconds.count());
-}
-
-void Application::writeExectutionInfo()
+void Application::writeExecutionInfo()
 {
     if (!pStudy)
     {
         return;
     }
 
-    logTotalTime(pDurationCollector.getTime(totalTimeKey));
     if (pErrorCount == 0 && pWarningCount > 0)
     {
         logs.warning()
@@ -533,6 +534,8 @@ void Application::writeExectutionInfo()
     }
 
     writeSimulationInfos(*pStudy, pDurationCollector, pOptimizationInfo, resultWriter.get());
+
+    logTotalTime("Total execution time", pDurationCollector.getTime("full_exec"));
 }
 
 void writeSimulationInfos(const Data::Study& study,
@@ -540,7 +543,7 @@ void writeSimulationInfos(const Data::Study& study,
                           const Benchmarking::OptimizationInfo& optimizationInfo,
                           IResultWriter* resultWriter)
 {
-    logTotalTime(durationCollector.getTime("total"));
+    logTotalTime("Total simulation time", durationCollector.getTime("simulation"));
     Benchmarking::StudyInfoCollector study_info_collector(study);
     Benchmarking::SimulationInfoCollector simulation_info_collector(optimizationInfo);
 

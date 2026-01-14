@@ -390,6 +390,7 @@ struct TIME_MEASURE
 {
     long solveTime = 0;
     long updateTime = 0;
+    long simulationTableFillTime = 0;
 };
 
 using TIME_MEASURES = std::array<TIME_MEASURE, 2>;

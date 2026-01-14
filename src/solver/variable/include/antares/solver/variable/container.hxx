@@ -304,7 +304,10 @@ void List<NextT>::exportSurveyResults(bool global,
         logs.info() << "Exporting the annual results";
     }
 
-    SurveyResults survey(*pStudy, output, writer);
+    SurveyResults survey(*pStudy,
+                         pStudy->parameters.variablesPrintInfo.getTotalMaxColumnsCount(),
+                         output,
+                         writer);
 
     // Year by year ?
     survey.yearByYearResults = !global;

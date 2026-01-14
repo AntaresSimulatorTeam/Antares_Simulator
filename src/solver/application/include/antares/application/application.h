@@ -33,6 +33,7 @@
 
 namespace Antares::Solver
 {
+
 class Application final: public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
 {
 public:
@@ -71,7 +72,7 @@ public:
     */
     void resetProcessPriority() const;
 
-    void writeExectutionInfo();
+    void writeExecutionInfo();
 
     /**
      * @brief /!\ Acquire the study. Leave Application object in an invalid state.
@@ -80,6 +81,11 @@ public:
     std::unique_ptr<Data::Study> acquireStudy()
     {
         return std::move(pStudy);
+    }
+
+    Benchmarking::DurationCollector& getDurationCollector()
+    {
+        return pDurationCollector;
     }
 
 private:

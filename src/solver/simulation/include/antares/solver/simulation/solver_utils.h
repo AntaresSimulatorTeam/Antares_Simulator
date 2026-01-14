@@ -28,6 +28,8 @@
 #include <antares/study/fwd.h>
 #include <antares/writer/i_writer.h>
 
+#include "sim_structure_probleme_economique.h"
+
 namespace Antares::Solver::Simulation
 {
 struct setOfParallelYears
@@ -102,6 +104,9 @@ private:
     void writeUpdateTimes(IResultWriter& writer) const;
     void writeOptimizationTimeToOutput(IResultWriter& writer) const;
 };
+
+void addTimeMeasure(Benchmarking::DurationCollector&, const TIME_MEASURES&);
+
 } // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_SOLVER_H__

@@ -223,7 +223,7 @@ public:
     {
         if (Traits::checkCondition(state))
         {
-            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = Traits::value();
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = Traits::value(state);
         }
 
         // Next variable
