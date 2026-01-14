@@ -28,20 +28,33 @@
 
 using namespace Antares::Optimisation::LinearProblemApi;
 static constexpr std::string_view pad = "    ";
+static constexpr double EPS = 10e-16;
+
+bool isEqual(const double& a, const double& b, const double& eps = EPS)
+{
+    return std::abs(a - b) < eps;
+}
+
+bool isNotEqual(const double& a, const double& b, const double& eps = EPS)
+{
+    return !isEqual(a, b, eps);
+}
 
 namespace Antares::IO::Outputs
 {
 char ConstraintSense(const double& lb, const double& ub, const double& infinity)
 {
-    if (lb == -infinity && ub == infinity)
+    const bool lbIsMinusInfinity = isEqual(lb, -infinity);
+    const bool ubIsPlusInfinity = isEqual(ub, infinity);
+    if (lbIsMinusInfinity && ubIsPlusInfinity)
     {
         return 'N';
     }
-    else if (lb == ub)
+    else if (isEqual(lb, ub))
     {
         return 'E';
     }
-    else if (lb == -infinity)
+    else if (lbIsMinusInfinity)
     {
         return 'L';
     }
@@ -65,8 +78,9 @@ double ConstraintRhs(const double& lb, const double& ub, const double& infinity)
 
 bool IsBoolean(const IMipVariable& variable)
 {
-    return variable.isInteger() && std::ceil(variable.getLb()) == 0.0
-           && std::floor(variable.getUb()) == 1.0;
+    const bool lbIsZero = isEqual(variable.getLb(), 0.0);
+    const bool ubIsOne = isEqual(variable.getUb(), 1.0);
+    return variable.isInteger() && lbIsZero && ubIsOne;
 }
 
 MPSGenerator::MPSGenerator(const ILinearProblem& lp, const std::string& name):
@@ -118,7 +132,8 @@ void MPSGenerator::writeColumns()
             out_ << pad << "MARK" << fmt::format("{:010}", i)
                  << "    'MARKER'                 'INTORG'" << "\n";
         }
-        if (const auto coef = linearProblem_.getObjectiveCoefficient(var.get()); coef != 0.0)
+        if (const auto coef = linearProblem_.getObjectiveCoefficient(var.get());
+            isNotEqual(coef, 0.0))
         {
             // TODO
             // out_ << "    " << exportableVariablesNames_.at(i) << "  OBJ  "
@@ -130,7 +145,7 @@ void MPSGenerator::writeColumns()
         int j = 0;
         for (const auto& c: linearProblem_.getConstraints())
         {
-            if (const auto coef = c->getCoefficient(var.get()); coef != 0.0)
+            if (const auto coef = c->getCoefficient(var.get()); isNotEqual(coef, 0.0))
             {
                 out_ << pad << exportableVariablesNames_.at(i) << "  "
                      << exportableConstraintsNames_.at(j) << "  " << coef << "\n";
@@ -151,7 +166,7 @@ void MPSGenerator::writeRhs()
     const double INF = linearProblem_.infinity();
     /* ========= RHS ========= */
     out_ << "RHS\n";
-    if (const auto objOffset = linearProblem_.getObjectiveOffset(); objOffset != 0.0)
+    if (const auto objOffset = linearProblem_.getObjectiveOffset(); isNotEqual(objOffset, 0.0))
     {
         out_ << pad << "RHS1  " << "OBJ" << "  " << -objOffset << "\n";
     }
@@ -159,7 +174,7 @@ void MPSGenerator::writeRhs()
     for (const auto& c: linearProblem_.getConstraints())
     {
         if (const auto rhs = ConstraintRhs(c->getLb(), c->getUb(), INF);
-            std::abs(rhs) != INF && std::abs(rhs) != 0.)
+            isNotEqual(std::abs(rhs), INF) && isNotEqual(rhs, 0.))
         {
             out_ << pad << "RHS1  " << exportableConstraintsNames_.at(i) << "  " << rhs << "\n";
         }
@@ -174,7 +189,7 @@ void MPSGenerator::writeRanges()
     for (const auto& c: linearProblem_.getConstraints())
     {
         if (const auto range = std::abs(c->getUb() - c->getLb());
-            range != linearProblem_.infinity() && range != 0.)
+            range != linearProblem_.infinity() && isNotEqual(range, 0.))
         {
             out_ << pad << "RNG1  " << exportableConstraintsNames_.at(i) << "  " << range << "\n";
         }
@@ -198,12 +213,15 @@ void MPSGenerator::writeBounds()
         const double ub = var->getUb();
         const bool isInt = var->isInteger();
         const bool isBinary = IsBoolean(*var);
-        if (lb == -INF && ub == INF)
+        const bool lbIsMinusInfinity = isEqual(lb, -INF);
+        const bool ubIsPlusInfinity = isEqual(ub, INF);
+        const bool lbIsZero = isEqual(lb, 0.0);
+        if (lbIsMinusInfinity && ubIsPlusInfinity)
         {
             out_ << pad << "FR " << bnd << "  " << varName << "\n";
             continue;
         }
-        if (lb == ub)
+        if (isEqual(lb, ub))
         {
             out_ << pad << "FX " << bnd << " " << varName << " " << lb << "\n";
             continue;
@@ -214,7 +232,7 @@ void MPSGenerator::writeBounds()
             continue;
         }
 
-        if (lb == 0.0 && ub == INF) // this case is the default
+        if (lbIsZero && ubIsPlusInfinity) // this case is the default
         {
             // out_ << pad << "PL " << bnd << " " << varName << "\n";
             continue;
@@ -222,31 +240,31 @@ void MPSGenerator::writeBounds()
 
         if (isInt)
         {
-            if (lb == -INF)
+            if (lbIsMinusInfinity)
             {
                 out_ << pad << "MI " << bnd << " " << varName << "\n";
             }
-            else if (lb != 0.0)
+            else if (!lbIsZero)
             {
                 out_ << pad << "LI " << bnd << " " << varName << " " << lb << "\n";
             }
-            if (ub != INF)
+            if (!ubIsPlusInfinity)
             {
                 out_ << pad << "UI " << bnd << " " << varName << " " << ub << "\n";
             }
         }
         else
         {
-            if (lb == -INF)
+            if (lbIsMinusInfinity)
             {
                 out_ << pad << "MI " << bnd << " " << varName << "\n";
             }
-            else if (lb != 0.0)
+            else if (!lbIsZero)
             {
                 out_ << pad << "LO " << bnd << " " << varName << " " << lb << "\n";
             }
 
-            if (ub != INF)
+            if (!ubIsPlusInfinity)
             {
                 out_ << pad << "UP " << bnd << " " << varName << " " << ub << "\n";
             }
