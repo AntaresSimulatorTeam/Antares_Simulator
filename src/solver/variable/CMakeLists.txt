@@ -139,6 +139,9 @@ set(SRC_VARIABLE_ECONOMY
 
         # Binding constraints
         include/antares/solver/variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h
+
+        # Dynamic aggregation
+        dynamic-aggregation/base.cpp
 )
 source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
 
