@@ -45,7 +45,8 @@ void CsrFlowDissociation::add()
                                    .NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
             const auto& destination = builder.data
                                         .NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
-            namer.CsrFlowDissociation(builder.data.nombreDeContraintes, origin, destination);
+            namer.updateExtremities(origin, destination);
+            namer.CsrFlowDissociation(builder.data.nombreDeContraintes);
             builder.equalTo();
             builder.build();
         }

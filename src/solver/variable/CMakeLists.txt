@@ -123,6 +123,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/nearPriceCap.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
+        include/antares/solver/variable/economy/residual.h
         include/antares/solver/variable/economy/unsupliedEnergy.h
 
         # Links
