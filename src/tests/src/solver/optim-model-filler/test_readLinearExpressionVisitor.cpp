@@ -188,6 +188,22 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_constant_param,
     BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
 }
 
+BOOST_FIXTURE_TEST_CASE(read_an_expression_containing_floor_and_var_is_linear,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(4.5)* var = 4 * var (is linear, has a coeff of 4, and no offset)
+    Node* literalNode = create<LiteralNode>(4.5);
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor, literalNode);
+    Node* varNode = create<VariableNode>("my-var", 0);
+    Node* multNode = create<MultiplicationNode>(floorNode, varNode);
+    auto linear_expression = visitor().dispatch(multNode);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK(linear_expression[0].hasCoefs());
+    BOOST_CHECK_EQUAL(linear_expression[0].begin()->second, 4.);
+}
+
 BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_literal,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
