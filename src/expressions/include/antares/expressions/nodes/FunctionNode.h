@@ -42,14 +42,6 @@ enum class FunctionNodeType
 };
 
 /**
- * @brief Convert a FunctionNodeType enum value into its string representation.
- *
- * @param type The function type to convert.
- * @return String representation (e.g. "reduced_cost", "dual", ...).
- */
-std::string FunctionNodeTypeToString(FunctionNodeType type);
-
-/**
  * @brief AST node representing a function expression (max, min, pow, ...).
  *
  * FunctionNode is a ParentNode whose operands represent the arguments of the
@@ -87,11 +79,7 @@ public:
      * @param type Function type.
      * @param operands Vector of Node* operands.
      */
-    explicit FunctionNode(FunctionNodeType type, const std::vector<Node*>& operands):
-        ParentNode(operands),
-        type_(type)
-    {
-    }
+    explicit FunctionNode(FunctionNodeType type, const std::vector<Node*>& operands);
 
     /**
      * @brief Construct a FunctionNode by moving operand vector.
@@ -99,19 +87,12 @@ public:
      * @param type Function type.
      * @param operands Rvalue vector of operands.
      */
-    explicit FunctionNode(FunctionNodeType type, std::vector<Node*>&& operands):
-        ParentNode(std::move(operands)),
-        type_(type)
-    {
-    }
+    explicit FunctionNode(FunctionNodeType type, std::vector<Node*>&& operands);
 
     /**
      * @return The name of this node ("FunctionNode").
      */
-    std::string name() const override
-    {
-        return "FunctionNode::" + FunctionNodeTypeToString(type_);
-    }
+    std::string name() const override;
 
     /**
      * @return Function type associated with this node.
@@ -124,10 +105,7 @@ public:
     /**
      * @return String representation of the function type.
      */
-    std::string typeToString() const
-    {
-        return FunctionNodeTypeToString(type_);
-    }
+    std::string typeToString() const;
 
 private:
     FunctionNodeType type_; ///< Function type applied to operands.

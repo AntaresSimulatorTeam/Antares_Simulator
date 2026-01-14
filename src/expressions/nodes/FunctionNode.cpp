@@ -23,6 +23,13 @@
 
 namespace Antares::Expressions::Nodes
 {
+
+/**
+ * @brief Convert a FunctionNodeType enum value into its string representation.
+ *
+ * @param type The function type to convert.
+ * @return String representation (e.g. "reduced_cost", "dual", ...).
+ */
 std::string FunctionNodeTypeToString(FunctionNodeType type)
 {
     switch (type)
@@ -44,6 +51,28 @@ std::string FunctionNodeTypeToString(FunctionNodeType type)
     default:
         return "Unknown function";
     }
+}
+
+FunctionNode::FunctionNode(FunctionNodeType type, const std::vector<Node*>& operands):
+    ParentNode(operands),
+    type_(type)
+{
+}
+
+FunctionNode::FunctionNode(FunctionNodeType type, std::vector<Node*>&& operands):
+    ParentNode(std::move(operands)),
+    type_(type)
+{
+}
+
+std::string FunctionNode::name() const
+{
+    return "FunctionNode::" + FunctionNodeTypeToString(type_);
+}
+
+std::string FunctionNode::typeToString() const
+{
+    return FunctionNodeTypeToString(type_);
 }
 
 } // namespace Antares::Expressions::Nodes
