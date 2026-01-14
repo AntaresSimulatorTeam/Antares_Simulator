@@ -22,8 +22,8 @@
 #pragma once
 
 #include <antares/study/study.h>
-#include "antares/study/area/area.h"
 #include "antares/solver/variable/storage/averagedata.h"
+#include "antares/study/area/area.h"
 
 namespace Antares::Solver::Variable
 {
@@ -33,9 +33,15 @@ class SetData
 public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
+    // Merge values into results_ using AverageData::merge
+    void mergeValues(const std::string& groupName, const std::vector<double>& values);
+
+private:
     std::vector<R::AllYears::AverageData> results_;
     std::vector<std::string> groupNames_;
     std::map<std::string, unsigned int> groupToNumbers_;
+
+    const std::set<Data::Area*, Data::CompareAreaName>& set_;
 };
 
 class DynamicAggregation

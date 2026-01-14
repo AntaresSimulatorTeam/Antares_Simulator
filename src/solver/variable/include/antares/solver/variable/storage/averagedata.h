@@ -47,6 +47,7 @@ public:
     void reset();
 
     void merge(unsigned int year, const IntermediateValues& rhs);
+    void merge(const IntermediateValues& rhs);
 
 public:
     HighPrecision year;
