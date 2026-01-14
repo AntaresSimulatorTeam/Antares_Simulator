@@ -198,7 +198,7 @@ void MPSGenerator::writeRanges()
     for (const auto& c: linearProblem_.getConstraints())
     {
         if (const auto range = std::abs(c->getUb() - c->getLb());
-            range != linearProblem_.infinity() && isNotEqual(range, 0.))
+            isNotEqual(range, linearProblem_.infinity()) && isNotEqual(range, 0.))
         {
             out_ << pad << "RNG1  " << exportableConstraintsNames_.at(i) << "  " << range << "\n";
         }
