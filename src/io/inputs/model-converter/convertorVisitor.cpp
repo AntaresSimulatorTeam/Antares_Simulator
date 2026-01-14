@@ -482,7 +482,7 @@ std::any ConvertorVisitor::visitMin(ExprParser::ArgListContext* context)
 }
 
 Node* ConvertorVisitor::extractOneArgument(ExprParser::ArgListContext* context,
-                                          const std::string& opName)
+                                           const std::string& opName)
 {
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (size_t size = nodes.size(); size > 1)
