@@ -392,8 +392,7 @@ models:
     createOptimConfigFile(yamlContent);
 
     auto [_, resolutionMode] = loadLibraries(studyFolder);
-    BOOST_CHECK_EQUAL(resolutionMode,
-                      Antares::Modeler::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Modeler::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_resolution_mode_benders_decomposition,
@@ -451,8 +450,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_default_resolution_mode, CreateInputFi
 
     // Act & Assert - default mode should be SEQUENTIAL_SUBPROBLEMS
     auto [libraries, resolutionMode] = loadLibraries(studyFolder);
-    BOOST_CHECK_EQUAL(resolutionMode,
-                      Antares::Modeler::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Modeler::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_multiple_models_and_resolution_mode,
@@ -503,7 +501,7 @@ models:
     BOOST_CHECK(models.find("renewable") != models.end());
 }
 
-//Invalid resolution mode
+// Invalid resolution mode
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_invalid_resolution_mode, CreateInputFileFixture)
 {
     // Arrange part - invalid resolution-mode should cause an error

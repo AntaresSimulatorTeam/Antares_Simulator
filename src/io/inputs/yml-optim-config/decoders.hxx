@@ -123,8 +123,7 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
         }
 
         // Parse models list
-        rhs.models = node["models"].as<
-          std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
+        rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
 
         return true;
     }

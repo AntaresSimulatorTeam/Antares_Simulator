@@ -261,7 +261,8 @@ void Study::loadModelerComponents()
  */
 void Study::checkModelerDataCompatibility() const
 {
-    // Scenario-independent variables are allowed in benders-decomposition mode for investment studies
+    // Scenario-independent variables are allowed in benders-decomposition mode for investment
+    // studies
     if (modelerInput_->resolutionMode == Modeler::ResolutionMode::BENDERS_DECOMPOSITION)
     {
         return;

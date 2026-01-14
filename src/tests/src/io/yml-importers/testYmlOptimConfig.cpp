@@ -107,7 +107,6 @@ models:
     BOOST_CHECK(config.models[1].constraints[0].location == "master");
 }
 
-
 BOOST_AUTO_TEST_CASE(parse_single_model)
 {
     std::string yaml_content = R"(

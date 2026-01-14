@@ -38,8 +38,8 @@ Antares::Modeler::Data loadAll(const std::filesystem::path& studyPath);
 
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
-std::pair<std::vector<ModelerStudy::SystemModel::Library>, Antares::Modeler::ResolutionMode> loadLibraries(
-  const std::filesystem::path& studyPath);
+std::pair<std::vector<ModelerStudy::SystemModel::Library>, Antares::Modeler::ResolutionMode>
+loadLibraries(const std::filesystem::path& studyPath);
 
 ModelerStudy::SystemModel::System loadSystem(
   const std::filesystem::path& studyPath,
