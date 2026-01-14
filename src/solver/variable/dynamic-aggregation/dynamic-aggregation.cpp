@@ -22,8 +22,6 @@
 
 #include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
 
-#include "antares/solver/variable/storage/averagedata.h"
-
 namespace Antares::Solver::Variable
 {
 
@@ -31,7 +29,7 @@ void DynamicAggregation::initializeStorage(const Data::Study& study)
 {
     // for each set do the following
 
-    std::map<std::string, int> nameAndNumberOfOccurrences;
+    std::map<std::string, int> nameAndNumberOfOccurrences; // only used to size results_
     for (auto& area: study.setsOfAreas[0])
     {
         // handle sts later
@@ -42,18 +40,16 @@ void DynamicAggregation::initializeStorage(const Data::Study& study)
         }
     }
 
-    std::vector<std::string> groupNames;
     for (const auto& nameAndNum: nameAndNumberOfOccurrences)
     {
-        groupNames.push_back(nameAndNum.first);
+        groupNames_.push_back(nameAndNum.first);
     }
-    std::map<std::string, unsigned int> groupToNumbers = Utils::giveNumbersToStrings(groupNames);
-    unsigned int nbColumns = groupNames.size();
+    std::map<std::string, unsigned int> groupToNumbers = Utils::giveNumbersToStrings(groupNames_);
+    unsigned int nbColumns = groupNames_.size();
 
-    std::vector<R::AllYears::AverageData> results;
     for (unsigned int i = 0; i < nbColumns; i++)
     {
-        results.push_back(R::AllYears::AverageData(nameAndNumberOfOccurrences[groupNames[i]]));
+        results_.push_back(R::AllYears::AverageData(nameAndNumberOfOccurrences[groupNames_[i]]));
     }
 }
 

@@ -22,6 +22,7 @@
 #pragma once
 
 #include <antares/study/study.h>
+#include "antares/solver/variable/storage/averagedata.h"
 
 namespace Antares::Solver::Variable
 {
@@ -30,6 +31,11 @@ class DynamicAggregation
 {
 public:
     void initializeStorage(const Data::Study& study);
+
+private:
+    std::vector<R::AllYears::AverageData> results_;
+    std::vector<std::string> groupNames_;
+    std::map<std::string, unsigned int> groupToNumbers_;
 };
 
 } // namespace Antares::Solver::Variable
