@@ -155,8 +155,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", null ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -462,6 +462,9 @@ var hierarchy =
       ] ],
       [ "Antares::Solver::Variable::IVariable< ThermalAirPollutantEmissions< Container::EndOfList >, Container::EndOfList, VCardThermalAirPollutantEmissions >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::ThermalAirPollutantEmissions< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< ResidualLoad< Container::EndOfList >, Container::EndOfList, VCardResidualLoad >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::ResidualLoad< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< OverallCostCsr< Container::EndOfList >, Container::EndOfList, VCardOverallCostCsr >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::OverallCostCsr< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr.html", null ]
@@ -1729,6 +1732,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::Pumping< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::RenewableGeneration< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::ReservoirLevel< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::ResidualLoad< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::RowBalance< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::SpilledEnergy< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::STSbyGroup< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html", null ],
@@ -1790,6 +1794,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardPumping >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardRenewableGeneration >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardReservoirLevel >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardResidualLoad >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardRowBalance >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardSpilledEnergy >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardSTSbyGroup >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -2059,6 +2064,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardPumping", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardRenewableGeneration", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardReservoirLevel", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html", null ],
+    [ "Antares::Solver::Variable::Economy::VCardResidualLoad", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardRowBalance", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html", null ],
     [ "Antares::Solver::Variable::Adequacy::VCardSpilledEnergy", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardSpilledEnergy", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSpilledEnergy.html", null ],
