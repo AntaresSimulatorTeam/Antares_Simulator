@@ -8,6 +8,8 @@
 
 #define BOOST_TEST_MODULE test hydro allocation
 
+#include <memory>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/study/parts/hydro/allocation.h>
@@ -17,22 +19,23 @@ using namespace Antares::Data;
 
 struct AllocationFixture
 {
-    Study study{false};
+    std::unique_ptr<Study> study;
     Area* east{nullptr};
     Area* west{nullptr};
 
-    AllocationFixture()
+    AllocationFixture():
+        study(std::make_unique<Study>(false))
     {
         east = new Area("east"); // freed by ~AreaList
         west = new Area("west"); // freed by ~AreaList
-        study.areas.add(east);
-        study.areas.add(west);
-        study.areas.rebuildIndexes();
+        study->areas.add(east);
+        study->areas.add(west);
+        study->areas.rebuildIndexes();
     }
 
     AreaList& areas()
     {
-        return study.areas;
+        return study->areas;
     }
 };
 
