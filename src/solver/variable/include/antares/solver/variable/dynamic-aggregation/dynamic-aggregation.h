@@ -36,7 +36,8 @@ public:
 
     void addResultsToSet(State& state);
 
-private:
+    // Write results to files in a folder named after the set
+    void writeResultsToFolder(const std::string& folderName) const;
     void mergeValues(const std::string& groupName, const double* values);
 
     std::vector<R::AllYears::AverageData> results_;
@@ -52,8 +53,9 @@ public:
     void initializeSetsData(const Data::Study& study);
     void addResultsToSets(State& state);
 
-private:
-    std::vector<SetData> setsData_;
+    // Write results for all sets to folders
+    void writeAllResults(const std::string& baseFolder) const;
+    std::map<std::string, SetData> setsData_;
 };
 
 } // namespace Antares::Solver::Variable

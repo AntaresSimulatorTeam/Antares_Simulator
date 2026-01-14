@@ -36,6 +36,7 @@
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
+#include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
 #include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation
@@ -201,12 +202,17 @@ public:
         // 9 - Write results for the current year
         if (yearByYear)
         {
-            pDurationCollector("yby_export") << [this, &numSpace]
+            pDurationCollector("yby_export") << [this, &numSpace, &state]
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
+
+                Variable::DynamicAggregation dynacmicAgg;
+                dynacmicAgg.initializeSetsData(study);
+                dynacmicAgg.addResultsToSets(state);
+                dynacmicAgg.writeAllResults(study.folderOutput);
             };
         }
 

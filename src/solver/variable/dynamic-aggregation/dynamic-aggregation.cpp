@@ -23,6 +23,10 @@
 
 #include "antares/solver/variable/storage/intermediate.h"
 
+// TODO  remove tests purpose
+#include <filesystem>
+#include <fstream>
+
 namespace Antares::Solver::Variable
 {
 
@@ -50,6 +54,28 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     for (unsigned int i = 0; i < nbColumns; i++)
     {
         results_.push_back(R::AllYears::AverageData(nameAndNumberOfOccurrences[groupNames_[i]]));
+    }
+}
+
+// TODO  remove tests purpose
+void SetData::writeResultsToFolder(const std::string& folderName) const
+{
+    namespace fs = std::filesystem;
+    fs::create_directories(folderName);
+
+    for (size_t i = 0; i < groupNames_.size(); ++i)
+    {
+        const std::string& group = groupNames_[i];
+        std::string filePath = folderName + "/" + group + ".txt";
+        std::ofstream outFile(filePath);
+        if (outFile.is_open())
+        {
+            for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
+            {
+                outFile << results_[i].hourly[h] << std::endl;
+            }
+            outFile.close();
+        }
     }
 }
 
@@ -82,15 +108,28 @@ void DynamicAggregation::initializeSetsData(const Data::Study& study)
 {
     for (const auto& set: study.setsOfAreas)
     {
-        setsData_.emplace_back(*set.second);
+        setsData_.try_emplace(set.first, *set.second);
     }
 }
 
 void DynamicAggregation::addResultsToSets(State& state)
 {
-    for (auto& setData: setsData_)
+    for (auto& [_, setData]: setsData_)
     {
         setData.addResultsToSet(state);
+    }
+}
+
+// TODO  remove tests purpose
+void DynamicAggregation::writeAllResults(const std::string& baseFolder) const
+{
+    namespace fs = std::filesystem;
+    fs::create_directories(baseFolder);
+
+    for (const auto& [setName, setData]: setsData_)
+    {
+        std::string folderPath = baseFolder + "/" + setName;
+        setData.writeResultsToFolder(folderPath);
     }
 }
 

@@ -51,7 +51,6 @@ void AverageData::initializeFromStudy(Data::Study& study)
     yearsWeightSum = study.parameters.getYearsWeightSum();
 }
 
-
 void AverageData::merge(const IntermediateValues& rhs)
 {
     merge(0, rhs);
