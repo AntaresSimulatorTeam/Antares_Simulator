@@ -18,14 +18,15 @@ using namespace Antares::Data;
 struct AllocationFixture
 {
     Study study{false};
-    Area east{"east"};
-    Area west{"west"};
+    Area* east{nullptr};
+    Area* west{nullptr};
 
-    AllocationFixture():
-        list(study)
+    AllocationFixture()
     {
-        study.areas.add(&east);
-        study.areas.add(&west);
+        east = new Area("east"); // freed by ~AreaList
+        west = new Area("west"); // freed by ~AreaList
+        study.areas.add(east);
+        study.areas.add(west);
         study.areas.rebuildIndexes();
     }
 
@@ -33,9 +34,6 @@ struct AllocationFixture
     {
         return study.areas;
     }
-
-private:
-    AreaList list; // not used directly, but needed to ensure constructor coverage
 };
 
 BOOST_AUTO_TEST_SUITE(hydro_allocation)
@@ -45,27 +43,27 @@ BOOST_FIXTURE_TEST_CASE(basic_set_get_remove_rename, AllocationFixture)
     HydroAllocation alloc;
 
     // Initially zero
-    BOOST_CHECK_EQUAL(alloc.fromArea(east), 0.0);
-    BOOST_CHECK_EQUAL(alloc.fromArea(west), 0.0);
+    BOOST_CHECK_EQUAL(alloc.fromArea(*east), 0.0);
+    BOOST_CHECK_EQUAL(alloc.fromArea(*west), 0.0);
 
     // Set values
-    alloc.fromArea(east, 0.3);
-    alloc.fromArea(west, 0.7);
+    alloc.fromArea(*east, 0.3);
+    alloc.fromArea(*west, 0.7);
 
-    BOOST_CHECK_CLOSE(alloc.fromArea(east), 0.3, 1e-12);
-    BOOST_CHECK_CLOSE(alloc.fromArea(west), 0.7, 1e-12);
-    BOOST_CHECK_CLOSE(alloc[east], 0.3, 1e-12);
-    BOOST_CHECK_CLOSE(alloc[west], 0.7, 1e-12);
+    BOOST_CHECK_CLOSE(alloc.fromArea(*east), 0.3, 1e-12);
+    BOOST_CHECK_CLOSE(alloc.fromArea(*west), 0.7, 1e-12);
+    BOOST_CHECK_CLOSE(alloc[*east], 0.3, 1e-12);
+    BOOST_CHECK_CLOSE(alloc[*west], 0.7, 1e-12);
 
     // Remove one value
-    alloc.fromArea(east, 0.0);
-    BOOST_CHECK_EQUAL(alloc.fromArea(east), 0.0);
+    alloc.fromArea(*east, 0.0);
+    BOOST_CHECK_EQUAL(alloc.fromArea(*east), 0.0);
 
     // Rename remaining key
-    AreaName newName = west.id;
+    AreaName newName = west->id;
     newName += "_new";
-    alloc.rename(west.id, newName);
-    BOOST_CHECK_EQUAL(alloc.fromArea(west), 0.0);
+    alloc.rename(west->id, newName);
+    BOOST_CHECK_EQUAL(alloc.fromArea(*west), 0.0);
     BOOST_CHECK_CLOSE(alloc.fromArea(newName), 0.7, 1e-12);
 }
 
@@ -74,8 +72,8 @@ BOOST_FIXTURE_TEST_CASE(prepare_and_eachNonNull, AllocationFixture)
     HydroAllocation alloc;
 
     // Fill values by area name
-    alloc.fromArea(east, 0.4);
-    alloc.fromArea(west, 0.6);
+    alloc.fromArea(*east, 0.4);
+    alloc.fromArea(*west, 0.6);
 
     // Prepare mapping by index
     alloc.prepareForSolver(areas());
@@ -88,35 +86,35 @@ BOOST_FIXTURE_TEST_CASE(prepare_and_eachNonNull, AllocationFixture)
     alloc.eachNonNull([&](uint idx, double v) { byIndex[idx] = v; });
 
     BOOST_REQUIRE_EQUAL(byIndex.size(), 2u);
-    BOOST_CHECK_CLOSE(byIndex[east.index], 0.4, 1e-12);
-    BOOST_CHECK_CLOSE(byIndex[west.index], 0.6, 1e-12);
+    BOOST_CHECK_CLOSE(byIndex[east->index], 0.4, 1e-12);
+    BOOST_CHECK_CLOSE(byIndex[west->index], 0.6, 1e-12);
 }
 
 BOOST_FIXTURE_TEST_CASE(post_prepare_mutation_requires_reprepare, AllocationFixture)
 {
     HydroAllocation alloc;
 
-    alloc.fromArea(east, 0.25);
-    alloc.fromArea(west, 0.75);
+    alloc.fromArea(*east, 0.25);
+    alloc.fromArea(*west, 0.75);
     alloc.prepareForSolver(areas());
 
     // Mutate after prepare
-    alloc.fromArea(east, 0.5);
+    alloc.fromArea(*east, 0.5);
 
     // eachNonNull still reflects the snapshot created at prepare time
     std::map<uint, double> byIndex;
     alloc.eachNonNull([&](uint idx, double v) { byIndex[idx] = v; });
 
-    BOOST_CHECK_CLOSE(byIndex[east.index], 0.25, 1e-12);
-    BOOST_CHECK_CLOSE(byIndex[west.index], 0.75, 1e-12);
+    BOOST_CHECK_CLOSE(byIndex[east->index], 0.25, 1e-12);
+    BOOST_CHECK_CLOSE(byIndex[west->index], 0.75, 1e-12);
 
     // Re-prepare to reflect updated values
     alloc.prepareForSolver(areas());
     byIndex.clear();
     alloc.eachNonNull([&](uint idx, double v) { byIndex[idx] = v; });
 
-    BOOST_CHECK_CLOSE(byIndex[east.index], 0.5, 1e-12);
-    BOOST_CHECK_CLOSE(byIndex[west.index], 0.75, 1e-12);
+    BOOST_CHECK_CLOSE(byIndex[east->index], 0.5, 1e-12);
+    BOOST_CHECK_CLOSE(byIndex[west->index], 0.75, 1e-12);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
