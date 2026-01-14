@@ -22,6 +22,7 @@
 #pragma once
 
 #include <antares/study/study.h>
+#include "antares/solver/variable/state.h"
 #include "antares/solver/variable/storage/averagedata.h"
 #include "antares/study/area/area.h"
 
@@ -33,10 +34,11 @@ class SetData
 public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
-    // Merge values into results_ using AverageData::merge
-    void mergeValues(const std::string& groupName, const std::vector<double>& values);
+    void addResultsToSet(State& state);
 
 private:
+    void mergeValues(const std::string& groupName, const double* values);
+
     std::vector<R::AllYears::AverageData> results_;
     std::vector<std::string> groupNames_;
     std::map<std::string, unsigned int> groupToNumbers_;
@@ -47,8 +49,8 @@ private:
 class DynamicAggregation
 {
 public:
-    // Add methods as needed to manage SetData
     void initializeSetsData(const Data::Study& study);
+    void addResultsToSets(State& state);
 
 private:
     std::vector<SetData> setsData_;

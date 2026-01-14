@@ -53,12 +53,25 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     }
 }
 
-void SetData::mergeValues(const std::string& groupName, const std::vector<double>& values)
+void SetData::addResultsToSet(State& state)
+{
+    for (const auto* area: set_)
+    {
+        for (const auto& cluster: area->thermal.list.each_enabled())
+        {
+            const std::string& groupName = cluster->getGroup();
+
+            mergeValues(groupName, state.thermalClusterProductionForYear);
+        }
+    }
+}
+
+void SetData::mergeValues(const std::string& groupName, const double* values)
 {
     unsigned index = groupToNumbers_[groupName];
 
     IntermediateValues valuesForAllGranularities;
-    std::copy(values.begin(), values.end(), valuesForAllGranularities.hour);
+    memcpy(valuesForAllGranularities.hour, values, HOURS_PER_YEAR * sizeof(double));
 
     valuesForAllGranularities.computeAveragesForCurrentYearFromHourlyResults();
 
@@ -70,6 +83,14 @@ void DynamicAggregation::initializeSetsData(const Data::Study& study)
     for (const auto& set: study.setsOfAreas)
     {
         setsData_.emplace_back(*set.second);
+    }
+}
+
+void DynamicAggregation::addResultsToSets(State& state)
+{
+    for (auto& setData: setsData_)
+    {
+        setData.addResultsToSet(state);
     }
 }
 
