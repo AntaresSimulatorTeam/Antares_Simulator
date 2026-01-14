@@ -166,7 +166,7 @@ BOOST_FIXTURE_TEST_CASE(hourToWeekAggregationWithStatistics, FullYearStudyFixtur
         {
             const double value = isFirstWeek ? 1.0 : 0.0;
             intermediate[hourIndex] = value;
-            expectedWeekSum += (calendar.days[day].week == firstWeekIndex) ? value : 0.0;
+            expectedWeekSum += isFirstWeek ? value : 0.0;
             ++hourIndex;
         }
     }
