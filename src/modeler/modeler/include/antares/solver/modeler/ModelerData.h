@@ -25,7 +25,7 @@
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
-namespace Antares::Modeler
+namespace Antares::Solver
 {
 
 enum class ResolutionMode : unsigned
@@ -34,7 +34,7 @@ enum class ResolutionMode : unsigned
     SEQUENTIAL_SUBPROBLEMS = 1
 };
 
-struct Data
+struct ModelerData
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     std::unique_ptr<ModelerStudy::SystemModel::System> system;
@@ -43,4 +43,4 @@ struct Data
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
 };
 
-} // namespace Antares::Modeler
+} // namespace Antares::Solver

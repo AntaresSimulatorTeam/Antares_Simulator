@@ -41,7 +41,7 @@ public:
              ValueType type,
              TimeDependent timeDependent,
              ScenarioDependent scenarioDependent,
-             Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
+             Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS):
         id_(std::move(id)),
         type_(type),
         lowerBound_(std::move(lower_bound)),
@@ -82,7 +82,7 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
-    [[nodiscard]] Modeler::Config::Location location() const
+    [[nodiscard]] Solver::Config::Location location() const
     {
         return location_;
     }
@@ -94,7 +94,7 @@ private:
     Expression upperBound_;
     TimeDependent timeDependent_ = TimeDependent::YES;
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;
-    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;
+    Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

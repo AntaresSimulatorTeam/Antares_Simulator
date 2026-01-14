@@ -20,7 +20,7 @@
 
 #pragma once
 #include <antares/solver/modeler/parameters/modelerParameters.h>
-#include "antares/solver/modeler/data.h"
+#include "antares/solver/modeler/ModelerData.h"
 
 namespace Antares::Solver
 {
@@ -31,6 +31,6 @@ public:
 
     virtual ModelerParameters loadParameters() = 0;
 
-    virtual Antares::Modeler::Data loadAll() = 0;
+    virtual ModelerData loadAll() = 0;
 };
 } // namespace Antares::Solver

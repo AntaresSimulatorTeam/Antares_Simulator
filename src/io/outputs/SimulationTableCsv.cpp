@@ -22,6 +22,7 @@
 #include "antares/io/outputs/SimulationTableCsv.h"
 
 #include "antares/io/outputs/SimulationTableEntry.h"
+
 namespace Antares::IO::Outputs
 {
 SimulationTableCsv::SimulationTableCsv()
@@ -105,4 +106,4 @@ std::string SimulationTableCsv::buffer() const
 {
     return buffer_.str();
 }
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs

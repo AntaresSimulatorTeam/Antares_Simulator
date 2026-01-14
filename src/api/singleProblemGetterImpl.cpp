@@ -58,7 +58,7 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
 
 std::string problemName(const WeeklyProblemId& id)
 {
-    return fmt::format("problem-{}-{}.txt", id.year, id.week);
+    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
 }
 } // namespace
 
@@ -183,6 +183,8 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     // IntercoGereeAvecDesCouts needs to be initialized
     // before building variable list and the common matrix
     fillLinksProperties(pb_, *study_);
+
+    OPT_NumeroDeJourDuPasDeTemps(&pb_);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(&pb_);
 

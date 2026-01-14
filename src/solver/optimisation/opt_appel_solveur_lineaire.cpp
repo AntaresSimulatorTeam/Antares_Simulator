@@ -75,7 +75,7 @@ static void logProblemSize(const MPSolver* mpSolver)
 
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
-  Modeler::Data* modelerData,
+  Solver::ModelerData* modelerData,
   OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
@@ -86,7 +86,7 @@ static void fillModelerComponents(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
-                                            Modeler::Config::Location::SUBPROBLEMS,
+                                            Solver::Config::Location::SUBPROBLEMS,
                                             nullptr));
     }
 }

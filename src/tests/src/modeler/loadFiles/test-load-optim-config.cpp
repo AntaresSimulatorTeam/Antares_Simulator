@@ -10,7 +10,7 @@
 #include "antares/study/system-model/optimConfig.h"
 
 using namespace Antares::Solver::LoadFiles;
-using namespace Antares::Modeler::Config;
+using namespace Antares::Solver::Config;
 
 struct CreateInputFileFixture
 {

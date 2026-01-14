@@ -37,4 +37,4 @@ struct SimulationTableEntry
     std::optional<double> value;
     std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus> status;
 };
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs

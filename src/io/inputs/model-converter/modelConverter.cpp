@@ -195,21 +195,21 @@ std::vector<ModelerStudy::SystemModel::Parameter> convertParameters(
     return parameters;
 }
 
-Modeler::Config::Location convertLocation(const std::string& locationStr)
+Solver::Config::Location convertLocation(const std::string& locationStr)
 {
     std::string locLower = locationStr;
     std::ranges::transform(locLower, locLower.begin(), ::tolower);
     if (locLower == "master")
     {
-        return Modeler::Config::Location::MASTER;
+        return Solver::Config::Location::MASTER;
     }
     if (locLower == "master-and-subproblems")
     {
-        return Modeler::Config::Location::MASTER_AND_SUBPROBLEMS;
+        return Solver::Config::Location::MASTER_AND_SUBPROBLEMS;
     }
     if (locLower == "subproblems")
     {
-        return Modeler::Config::Location::SUBPROBLEMS;
+        return Solver::Config::Location::SUBPROBLEMS;
     }
 
     throw std::runtime_error("Unknown location: " + locationStr);

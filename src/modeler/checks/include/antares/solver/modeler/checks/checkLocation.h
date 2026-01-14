@@ -22,19 +22,19 @@
 #pragma once
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/modeler/data.h>
+#include <antares/solver/modeler/ModelerData.h>
 
-namespace Antares::Modeler::Checks
+namespace Antares::Solver::Checks
 {
 
 /// Check location validity for all modeler data
-void checkLocations(const Antares::Modeler::Data& data);
+void checkLocations(const ModelerData& data);
 
 // shouldn't be used outside, here for unit tests
-void checkExpression(const Antares::Expressions::Nodes::Node* expression,
-                     const Antares::Modeler::Config::Location& location,
-                     const Antares::ModelerStudy::SystemModel::Model& model,
-                     const Antares::ModelerStudy::SystemModel::System& system,
+void checkExpression(const Expressions::Nodes::Node* expression,
+                     const Config::Location& location,
+                     const ModelerStudy::SystemModel::Model& model,
+                     const ModelerStudy::SystemModel::System& system,
                      const std::string& exprStr,
                      const std::string& errorMsgForPortFieldSum = "");
 
@@ -43,4 +43,4 @@ class LocationError final: public std::invalid_argument
     using std::invalid_argument::invalid_argument;
 };
 
-} // namespace Antares::Modeler::Checks
+} // namespace Antares::Solver::Checks

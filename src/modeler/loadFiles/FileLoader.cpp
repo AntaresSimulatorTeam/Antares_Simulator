@@ -35,7 +35,7 @@ ModelerParameters FileLoader::loadParameters()
     return LoadFiles::loadParameters(studyPath_);
 }
 
-Antares::Modeler::Data FileLoader::loadAll()
+ModelerData FileLoader::loadAll()
 {
     return LoadFiles::loadAll(studyPath_);
 }

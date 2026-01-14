@@ -138,4 +138,4 @@ private:
     std::vector<std::string> columnNames_;
     std::unordered_map<std::string, size_t> name_to_index_;
 };
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs
