@@ -44,7 +44,7 @@ std::string MakeExportableName(const std::string& name)
     }
     if (foundForbiddenChar)
     {
-        logs.info() << "forbidden char(s) found in id '" << name << "', replaced with '_'";
+        logs.debug() << "forbidden char(s) found in id '" << name << "', replaced with '_'";
     }
 
     return exportable;
