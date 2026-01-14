@@ -47,10 +47,10 @@ public:
     const MapType& getMap() const;
 
 private:
+    // prevent concurrent writes
     std::mutex pMapMutex;
-    // minizip-ng requires a void* as a zip handle.
+    // storage
     MapType pEntries;
-    // State, to allow/prevent new jobs being added to the queue
     Benchmarking::DurationCollector& pDurationCollector;
 };
 } // namespace Antares::Solver

@@ -158,7 +158,7 @@ Note: Almost all variables of the system are defined twice (one value per state)
 | Notation                                          | Explanation                                                                                                                                                                        |
 |---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|                
 | $\lambda \in \Lambda_n$                           | reservoirs connected to node $n$                                                                                                                                                   |
-| $\Sigma_\lambda \in \mathbb{R}_+$                 | size of reservoir $\lambda$ : amount of energy that can be stored in $\lambda$                                                                                                     |
+| $S_\lambda \in \mathbb{R}_+$                 | size of reservoir $\lambda$ : amount of energy that can be stored in $\lambda$                                                                                                     |
 | $Q\in \mathbb{N}$                                 | number of discrete levels defined in reservoir                                                                                                                                     |
 | $\overline{W}\_\lambda \in \mathbb{R}_+$          | maximum energy output from $\lambda$ throughout the optimization period                                                                                                            |
 | $\underline{W}\_\lambda \in \mathbb{R}_+$         | minimum energy output from $\lambda$ throughout the optimization period                                                                                                            |
@@ -404,7 +404,7 @@ $$
 $$
 
 $$
-(14)(c) \forall n \in N, \forall \lambda \in \Lambda\_n, q=1,Q, \mathfrak{R}\_{\lambda_q} \leq \sum\_{\lambda} \frac{1}{Q}
+(14)(c) \forall n \in N, \forall \lambda \in \Lambda\_n, q=1,Q, \mathfrak{R}\_{\lambda_q} \leq \frac{S_{\lambda}}{Q}
 $$
 
 Reservoir level is bounded by admissible lower and upper bounds (rule curves)

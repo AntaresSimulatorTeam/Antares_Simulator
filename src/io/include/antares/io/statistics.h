@@ -90,6 +90,7 @@ void HasWrittenToNetwork(uint64_t size);
 */
 void Reset();
 
+#ifdef BUILD_UI
 /*!
 ** \brief Dump the statistic to the logs
 */
@@ -109,18 +110,7 @@ public:
     }
 };
 
-class LogsDumper final
-{
-public:
-    LogsDumper()
-    {
-    }
-
-    ~LogsDumper()
-    {
-        DumpToLogs();
-    }
-};
+#endif // BUILD_UI
 
 } // namespace Antares::Statistics
 

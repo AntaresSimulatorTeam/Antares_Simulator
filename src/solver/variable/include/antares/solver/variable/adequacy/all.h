@@ -57,6 +57,7 @@
 #include "antares/solver/variable/economy/pumping.h"
 #include "antares/solver/variable/economy/renewableGeneration.h"
 #include "antares/solver/variable/economy/reservoirlevel.h"
+#include "antares/solver/variable/economy/residual.h"
 #include "antares/solver/variable/economy/thermalAirPollutantEmissions.h"
 #include "antares/solver/variable/economy/unsupliedEnergy.h"
 #include "antares/solver/variable/economy/waterValue.h"
@@ -111,6 +112,7 @@ using VariablesPerArea = Common::ComposeAll<Variable::Adequacy::OverallCost,
                                             Variable::Economy::DispatchableGenMargin,
                                             Variable::Economy::Marge,
                                             Variable::Economy::ProfitByPlant,
+                                            Variable::Economy::ResidualLoad,
                                             Variable::Adequacy::Links>::type;
 
 /*!

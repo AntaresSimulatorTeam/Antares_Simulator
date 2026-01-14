@@ -165,6 +165,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           IResultWriter& writer,
                                           ISimulationTable* simulationTable)
 {
+    Utils::TimeMeasurement measure;
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     const int opt = optimizationNumber - 1;
@@ -208,7 +209,11 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
-    Utils::TimeMeasurement measure;
+    measure.tick();
+    timeMeasure.updateTime = measure.duration_ms();
+    optimizationStatistics.addSolveTime(timeMeasure.updateTime);
+    measure.reset();
+
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
 
     measure.tick();
@@ -246,6 +251,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
+        measure.reset();
         FillSimulationTable(*simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver),
@@ -255,6 +261,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                             currentBlock,
                             timeConversionMode,
                             true);
+
+        measure.tick();
+        timeMeasure.simulationTableFillTime = measure.duration_ms();
     }
 
     return {.timeMeasure = timeMeasure,
