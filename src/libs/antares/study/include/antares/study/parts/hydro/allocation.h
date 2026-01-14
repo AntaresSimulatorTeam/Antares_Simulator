@@ -153,7 +153,6 @@ private:
     std::unordered_map<uint, double> pValuesFromAreaID;
     //! Flag to prevent misuse of the bad container
     // TODO Find a more reliable way...
-    bool pMustUseValuesFromAreaID;
 
 }; // class HydroAllocation
 

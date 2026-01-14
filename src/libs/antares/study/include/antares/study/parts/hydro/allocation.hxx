@@ -26,7 +26,6 @@ namespace Antares::Data
 template<class CallbackT>
 inline void HydroAllocation::eachNonNull(const CallbackT& callback) const
 {
-    assert(pMustUseValuesFromAreaID);
     auto end = pValuesFromAreaID.end();
     for (auto i = pValuesFromAreaID.begin(); i != end; ++i)
     {

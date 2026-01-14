@@ -42,7 +42,6 @@ static const Area* FindMappedAreaName(const AreaName& id,
 
 HydroAllocation::HydroAllocation()
 {
-    pMustUseValuesFromAreaID = false;
 }
 
 HydroAllocation::~HydroAllocation()
@@ -51,7 +50,6 @@ HydroAllocation::~HydroAllocation()
 
 void HydroAllocation::remove(const AreaName& areaid)
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     if (i != pValues.end())
     {
@@ -61,7 +59,6 @@ void HydroAllocation::remove(const AreaName& areaid)
 
 void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(oldid);
     if (i != pValues.end())
     {
@@ -83,14 +80,12 @@ double HydroAllocation::fromArea(const Area* area) const
 
 double HydroAllocation::operator[](const AreaName& areaid) const
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     return (i != pValues.end()) ? i->second : 0.;
 }
 
 double HydroAllocation::operator[](const Area& area) const
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(area.id);
     return (i != pValues.end()) ? i->second : 0.;
 }
@@ -110,14 +105,12 @@ void HydroAllocation::fromArea(const Area* area, double value)
 
 double HydroAllocation::fromArea(const AreaName& areaid) const
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     return (i != pValues.end()) ? i->second : 0.;
 }
 
 void HydroAllocation::fromArea(const AreaName& areaid, double value)
 {
-    assert(!pMustUseValuesFromAreaID);
     if (Utils::isZero(value))
     {
         auto i = pValues.find(areaid);
@@ -146,14 +139,12 @@ void HydroAllocation::prepareForSolver(const AreaList& list)
     }
 
     pValues.clear();
-    pMustUseValuesFromAreaID = true;
 }
 
 void HydroAllocation::clear()
 {
     pValues.clear();
     pValuesFromAreaID.clear();
-    pMustUseValuesFromAreaID = false;
 }
 
 bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path& filename)
