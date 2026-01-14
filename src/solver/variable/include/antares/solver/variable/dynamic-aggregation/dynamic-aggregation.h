@@ -22,20 +22,30 @@
 #pragma once
 
 #include <antares/study/study.h>
+#include "antares/study/area/area.h"
 #include "antares/solver/variable/storage/averagedata.h"
 
 namespace Antares::Solver::Variable
 {
 
-class DynamicAggregation
+class SetData
 {
 public:
-    void initializeStorage(const Data::Study& study);
+    SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
-private:
     std::vector<R::AllYears::AverageData> results_;
     std::vector<std::string> groupNames_;
     std::map<std::string, unsigned int> groupToNumbers_;
+};
+
+class DynamicAggregation
+{
+public:
+    // Add methods as needed to manage SetData
+    void initializeSetsData(const Data::Study& study);
+
+private:
+    std::vector<SetData> setsData_;
 };
 
 } // namespace Antares::Solver::Variable

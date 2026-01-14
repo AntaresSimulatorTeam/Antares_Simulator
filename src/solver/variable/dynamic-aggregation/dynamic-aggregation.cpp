@@ -19,18 +19,15 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-
 #include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
 
 namespace Antares::Solver::Variable
 {
 
-void DynamicAggregation::initializeStorage(const Data::Study& study)
+SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set)
 {
-    // for each set do the following
-
     std::map<std::string, int> nameAndNumberOfOccurrences; // only used to size results_
-    for (auto& area: study.setsOfAreas[0])
+    for (auto& area: set)
     {
         // handle sts later
         for (const auto& cluster: area->thermal.list.each_enabled())
@@ -44,12 +41,20 @@ void DynamicAggregation::initializeStorage(const Data::Study& study)
     {
         groupNames_.push_back(nameAndNum.first);
     }
-    std::map<std::string, unsigned int> groupToNumbers = Utils::giveNumbersToStrings(groupNames_);
+    groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
     unsigned int nbColumns = groupNames_.size();
 
     for (unsigned int i = 0; i < nbColumns; i++)
     {
         results_.push_back(R::AllYears::AverageData(nameAndNumberOfOccurrences[groupNames_[i]]));
+    }
+}
+
+void DynamicAggregation::initializeSetsData(const Data::Study& study)
+{
+    for (const auto& set: study.setsOfAreas)
+    {
+        setsData_.emplace_back(*set.second);
     }
 }
 
