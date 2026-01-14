@@ -32,6 +32,15 @@ static constexpr double EPS = 10e-16;
 
 bool isEqual(const double& a, const double& b, const double& eps = EPS)
 {
+    if (std::isinf(a) && std::isinf(b))
+    {
+        return (a > 0) == (b > 0); // Both +inf or both -inf
+    }
+
+    if (std::isinf(a) || std::isinf(b))
+    {
+        return false; // One is inf, other isn't
+    }
     return std::abs(a - b) < eps;
 }
 
