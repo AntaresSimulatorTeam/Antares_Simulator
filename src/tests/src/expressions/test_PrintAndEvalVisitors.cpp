@@ -1460,7 +1460,7 @@ BOOST_FIXTURE_TEST_CASE(PrintDualNode, MyDummyFixture)
                                       create<ParameterNode>("constraint"),
                                       create<LiteralNode>(0));
     PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint, 0.000000)");
+    BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint)[0.000000]");
 }
 
 BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)

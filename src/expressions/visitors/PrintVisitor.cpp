@@ -134,8 +134,15 @@ std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)
 std::string PrintVisitor::visit(const Nodes::FunctionNode* node)
 {
     std::string nodeType = node->typeToString();
-    const auto args_as_string = visitChildrenNodes(node);
-    return nodeType + "(" + boost::algorithm::join(args_as_string, ", ") + ")";
+    const std::vector<std::string> args_as_str = visitChildrenNodes(node);
+    if (nodeType == "dual")
+    {
+        return nodeType + "(" + args_as_str[0] + ")[" + args_as_str[1] + "]";
+    }
+    else
+    {
+        return nodeType + "(" + boost::algorithm::join(args_as_str, ", ") + ")";
+    }
 }
 
 std::string PrintVisitor::name() const
