@@ -173,7 +173,9 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
     case FunctionNodeType::ceil:
         return typeIndexOf<FunctionNodeType::ceil>();
     default:
-        return typeid(int); // Supposed to be dead code (never reached)
+        std::string err_msg = "ForbiddenNodesVisitor > ";
+        err_msg += "function '" + functionNode->name() + "' is unknown.";
+        throw std::invalid_argument(err_msg);
     }
 }
 
@@ -187,12 +189,12 @@ void ForbiddenNodesVisitor::visit(const FunctionNode* functionNode)
 void ForbiddenNodesVisitor::checkIsForbidden(const Node* node,
                                              const std::type_index& nodeTypeId) const
 {
-    checkIGloballyForbidden(nodeTypeId, node);
+    checkIsGloballyForbidden(nodeTypeId, node);
     checkIsForbiddenByParent(nodeTypeId, node);
 }
 
-void ForbiddenNodesVisitor::checkIGloballyForbidden(const std::type_index& nodeTypeId,
-                                                    const Node* node) const
+void ForbiddenNodesVisitor::checkIsGloballyForbidden(const std::type_index& nodeTypeId,
+                                                     const Node* node) const
 {
     if (forbiddenNodes_.isGloballyForbidden(nodeTypeId))
     {
