@@ -109,6 +109,8 @@ BOOST_FIXTURE_TEST_CASE(post_prepare_mutation_requires_reprepare, AllocationFixt
     BOOST_CHECK_CLOSE(byIndex[west->index], 0.75, 1e-12);
 
     // Re-prepare to reflect updated values
+    // Note: prepareForSolver rebuilds from pValues; re-add unchanged west value
+    alloc.fromArea(*west, 0.75);
     alloc.prepareForSolver(areas());
     byIndex.clear();
     alloc.eachNonNull([&](uint idx, double v) { byIndex[idx] = v; });
