@@ -32,25 +32,6 @@
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& path)
-{
-    if (problem.isLP())
-    {
-        std::string out;
-        problem.mpSolver_->ExportModelAsMpsFormat(/*fixed_format (ignored) */ false,
-                                                  /* obfuscate */ false,
-                                                  &out);
-        std::ofstream of(path);
-        of << out;
-    }
-    else // for milp, ortools exports integer variables first. thus requiring the use of the
-         // underlying solver method.
-         // /!\ Works only for Xpress
-    {
-        problem.mpSolver_->Write(path.string());
-    }
-}
-
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName):
     mpSolver_(MPSolverFactory(isMip, solverName)),
     objective_(mpSolver_->MutableObjective()),
