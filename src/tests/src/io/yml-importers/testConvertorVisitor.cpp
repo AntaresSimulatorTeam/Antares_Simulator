@@ -35,7 +35,7 @@
 #include <unit_test_utils.h>
 
 #include "antares/io/inputs/model-converter/ForbiddenNodes.h"
-#include "antares/io/inputs/model-converter/NodeChecker.h"
+#include "antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
 // clang-format on
 
 using namespace Antares::Expressions;
@@ -460,7 +460,7 @@ struct SupplyModelForFunctionalOperator
       .objectives = {{"objective-id", ""}},
       .extra_outputs = {}};
 
-    ForbiddenNodes forbidden;
+    ForbiddenNodes forbiddenNodes;
 };
 
 BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
@@ -587,12 +587,12 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
     auto node = convertExpressionToNode(expression, model);
 
     // Forbid variable in min
-    forbidden.addForbiddenFor<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
+    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
 
-    auto err_msg = "'min' is not allowed to contain 'variable(varB)' in this context '" + expression
-                   + "'";
-    BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+    auto err_msg = "'FunctionNode::min' is not allowed to contain 'VariableNode' in expression '"
+                   + expression + "'";
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
@@ -603,12 +603,12 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
     auto node = convertExpressionToNode(expression, model);
 
     // Forbid variable in max
-    forbidden.addForbiddenFor<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
+    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
 
-    std::string err_msg = "'max' is not allowed to contain 'variable(varB)' in this context '"
-                          + expression + "'";
-    BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+    std::string err_msg = "'FunctionNode::max' is not allowed to contain 'VariableNode' in ";
+    err_msg += "expression '" + expression + "'";
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
@@ -618,13 +618,11 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
 
     auto node = convertExpressionToNode(expression, model);
 
-    // Forbid <= Globally
-    forbidden.addGlobalForbidden<Nodes::LessThanOrEqualNode>();
+    forbiddenNodes.forbidGlobally<Nodes::LessThanOrEqualNode>();
 
-    std::string err_msg = "'expression with <=' is not allowed in this context '" + expression
-                          + "'";
-    BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+    std::string err_msg = "'LessThanOrEqualNode' is not allowed in expression '" + expression + "'";
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
@@ -634,13 +632,12 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
 
     auto node = convertExpressionToNode(expression, model);
 
-    // Forbid <= Globally
-    forbidden.addGlobalForbidden<Nodes::GreaterThanOrEqualNode>();
+    forbiddenNodes.forbidGlobally<Nodes::GreaterThanOrEqualNode>();
 
-    std::string err_msg = "'expression with >=' is not allowed in this context '" + expression
+    std::string err_msg = "'GreaterThanOrEqualNode' is not allowed in expression '" + expression
                           + "'";
-    BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
@@ -650,12 +647,11 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
 
     auto node = convertExpressionToNode(expression, model);
 
-    // Forbid <= Globally
-    forbidden.addGlobalForbidden<Nodes::EqualNode>();
+    forbiddenNodes.forbidGlobally<Nodes::EqualNode>();
 
-    std::string err_msg = "'expression with =' is not allowed in this context '" + expression + "'";
-    BOOST_CHECK_EXCEPTION(NodeChecker(forbidden, expression).dispatch(node.node),
-                          BadContextComposition,
+    std::string err_msg = "'EqualNode' is not allowed in expression '" + expression + "'";
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
