@@ -182,14 +182,14 @@ BOOST_FIXTURE_TEST_CASE(intermediate_buildAnnualSurveyReport_to_surveyresults, F
         };
     };
 
-    // First column: daily sum
+    // First column: variable 1
     survey.variableCaption = "variable1";
     survey.variableUnit = "unit1";
     var1.buildAnnualSurveyReport<VCardStub>(survey,
                                             Category::FileLevel::va,
                                             Category::Precision::daily);
 
-    // Second column: annual sum
+    // Second column: variable 2
     survey.variableCaption = "variable2";
     survey.variableUnit = "unit2";
     var2.buildAnnualSurveyReport<VCardStub>(survey,
@@ -199,10 +199,12 @@ BOOST_FIXTURE_TEST_CASE(intermediate_buildAnnualSurveyReport_to_surveyresults, F
     const std::string filename = "daily.txt";
     survey.data.filename = filename;
 
+    // Write report to file
     survey.saveToFile(Category::DataLevel::area,
                       Category::FileLevel::va,
                       Category::Precision::daily);
 
+    // Check the contents of the file
     const auto& map = writer.getMap();
     BOOST_REQUIRE(map.contains(filename));
     const auto& content = map.at(filename);
