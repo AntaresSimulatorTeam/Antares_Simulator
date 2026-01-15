@@ -32,6 +32,7 @@ AverageData::AverageData(unsigned size):
     yearsWeightSum(size)
 {
     yearsWeight.assign(size, 1.);
+    reset();
 }
 
 AverageData::~AverageData() = default;

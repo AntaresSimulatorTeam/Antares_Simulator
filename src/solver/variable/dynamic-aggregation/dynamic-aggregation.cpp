@@ -39,7 +39,7 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
         // handle sts later
         for (const auto& cluster: area->thermal.list.each_enabled())
         {
-            const std::string& groupName = cluster->getGroup();
+            const std::string groupName = cluster->getGroup();
             nameAndNumberOfOccurrences[groupName]++;
         }
     }
@@ -104,6 +104,9 @@ void SetData::mergeValues(const std::string& groupName, const double* values, Da
     valuesForAllGranularities.computeAveragesForCurrentYearFromHourlyResults();
 
     results_[index].merge(valuesForAllGranularities);
+
+    // TODO use another type to avoid memory handling ?
+    Antares::Memory::Release(valuesForAllGranularities.hour);
 }
 
 DynamicAggregation::DynamicAggregation(Data::Study& study):
