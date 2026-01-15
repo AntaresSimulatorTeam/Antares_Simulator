@@ -83,7 +83,7 @@ public:
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository,
                              Modeler::Config::Location targetLocation,
-                             BendersDecomposition* bendersDecomposition = nullptr);
+                             BendersDecomposition* bendersDecomposition);
 
     void addVariables(const LinearProblemApi::FillContext& ctx) override;
 

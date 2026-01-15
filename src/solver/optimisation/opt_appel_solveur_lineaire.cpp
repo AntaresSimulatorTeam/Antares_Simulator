@@ -76,11 +76,11 @@ static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Modeler::Data* modelerData,
   OptimEntityContainer& optimEntityContainer,
-  Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS,
-  BendersDecomposition* benders_decomposition = nullptr)
+  Modeler::Config::Location location,
+  BendersDecomposition* benders_decomposition)
 {
     const auto& components = modelerData->system->Components();
-    optimEntityContainer.addFromSystemComponents(components);
+    optimEntityContainer.addFromSystemComponents(components, location);
     for (const auto& component: components)
     {
         fillersCollection.emplace_back(
@@ -125,8 +125,8 @@ MPSolver* fillAndGetMpSolver(
   const PROBLEME_HEBDO* problemeHebdo,
   OptimEntityContainer& optimEntityContainer,
   bool namedProblems,
-  Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS,
-  BendersDecomposition* benders_decomposition = nullptr)
+  Modeler::Config::Location location,
+  BendersDecomposition* benders_decomposition)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
@@ -368,7 +368,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                                fillCtx,
                                                                problemeHebdo,
                                                                optimEntityContainer,
-                                                               true));
+                                                               true,
+                                                               Modeler::Config::Location::SUBPROBLEMS,
+                                                               nullptr));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
