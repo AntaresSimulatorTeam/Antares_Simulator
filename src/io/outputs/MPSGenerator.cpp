@@ -22,6 +22,7 @@
 
 #include <cmath>
 #include <fmt/format.h>
+#include <fstream>
 
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/ExportableName.h"
