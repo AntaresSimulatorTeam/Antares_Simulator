@@ -208,7 +208,27 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                       Modeler::Config::Location::MASTER,
                                       &bendersDecomposition);
 
-    ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
+    // Do not store master solver in ProblemeAResoudre->ProblemesSpx[NumIntervalle]
+    // (master solver lifecycle is managed locally now)
+    // ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
+
+    // Create sub-problem only for the first optimization (mirrors Modeler.cpp behavior)
+    std::unique_ptr<LegacyOrtoolsLinearProblem> subproblem; // kept alive for function duration
+
+    // Build subproblem and populate its solver (do not solve here)
+    subproblem = std::make_unique<LegacyOrtoolsLinearProblem>(
+      problemeHebdo->ProblemeAResoudre->isMIP(), options.solverName);
+
+    bendersDecomposition.setCurrentProblemId("1-1");
+    (void)fillAndGetMpSolver(*subproblem,
+                             fillCtx,
+                             problemeHebdo,
+                             optimEntityContainer,
+                             problemeHebdo->NamedProblems,
+                             Modeler::Config::Location::SUBPROBLEMS,
+                             &bendersDecomposition);
+
+    logs.info() << "Subproblem 1-1 created for first optimization";
 
     std::call_once(logProblemSizeFlag, logProblemSize, solver);
 
@@ -245,7 +265,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         {
             if (solver)
             {
-                ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset();
+                // Previously we reset the stored solver pointer here. Since we no longer store
+                // the master solver in ProblemeAResoudre, avoid modifying that structure.
+                // Keep local cleanup if needed (nothing to do since solver is non-owned pointer).
             }
 
             logs.info() << " Solver: resolution failed";
