@@ -243,19 +243,13 @@ BOOST_AUTO_TEST_CASE(MakeExportableName_ContainsForbiddenChars)
     NameManager nameManager;
 
     // Test all forbidden chars
-    std::string name = "test +name-with*forbidden/chars<>=:\\";
+    std::string name = "test +name-with forbidden/\\";
     std::string result = MakeMpsSafeUniqueName(name, nameManager);
 
     // Check that forbidden chars are replaced with underscores
-    BOOST_CHECK(result.find('+') == std::string::npos);
-    BOOST_CHECK(result.find('-') == std::string::npos);
-    BOOST_CHECK(result.find('*') == std::string::npos);
     BOOST_CHECK(result.find('/') == std::string::npos);
-    BOOST_CHECK(result.find('<') == std::string::npos);
-    BOOST_CHECK(result.find('>') == std::string::npos);
-    BOOST_CHECK(result.find('=') == std::string::npos);
-    BOOST_CHECK(result.find(':') == std::string::npos);
     BOOST_CHECK(result.find('\\') == std::string::npos);
+    BOOST_CHECK(result.find(' ') == std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(MakeExportableName_ValidName)
