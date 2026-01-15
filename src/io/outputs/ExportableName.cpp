@@ -25,7 +25,7 @@
 namespace Antares::IO::Outputs
 {
 const static std::string_view forbiddenFirstChars = "$.0123456789";
-const static std::string_view forbiddenChars = " +-*/<>=:\\";
+const static std::string_view forbiddenChars = " /\\";
 
 std::string MakeExportableName(const std::string& name)
 {
@@ -42,10 +42,10 @@ std::string MakeExportableName(const std::string& name)
             foundForbiddenChar = true;
         }
     }
-    if (foundForbiddenChar)
-    {
-        logs.debug() << "forbidden char(s) found in id '" << name << "', replaced with '_'";
-    }
+    // if (foundForbiddenChar)
+    // {
+    //     logs.debug() << "forbidden char(s) found in id '" << name << "', replaced with '_'";
+    // }
 
     return exportable;
 }
