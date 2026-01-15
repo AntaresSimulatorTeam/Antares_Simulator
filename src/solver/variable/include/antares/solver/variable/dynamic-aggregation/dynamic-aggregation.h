@@ -34,8 +34,11 @@ class SetData
 public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
-    void addResultsToSet(const State& state, Data::Study& study);
+    void addResultsToSet(State& state, Data::Study& study);
     void mergeValues(const std::string& groupName, const double* values, Data::Study& study);
+    void mergeValues(const std::string& groupName,
+                     std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& thermal,
+                     Data::Study& study);
     void writeResultsToFolder(const std::string& folderName) const;
 
     std::vector<R::AllYears::AverageData> results_;
@@ -51,7 +54,7 @@ public:
     explicit DynamicAggregation(Data::Study& study);
 
     void initializeSetsData();
-    void addResultsToSets(const State& state);
+    void addResultsToSets(State& state);
 
     void writeAllResults(const std::string& baseFolder) const;
 

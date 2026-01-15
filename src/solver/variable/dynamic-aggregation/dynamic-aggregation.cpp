@@ -79,7 +79,7 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
     }
 }
 
-void SetData::addResultsToSet(const State& state, Data::Study& study)
+void SetData::addResultsToSet(State& state, Data::Study& study)
 {
     for (const auto* area: set_)
     {
@@ -87,7 +87,13 @@ void SetData::addResultsToSet(const State& state, Data::Study& study)
         {
             const std::string& groupName = cluster->getGroup();
 
-            mergeValues(groupName, state.thermalClusterProductionForYear, study);
+            double prod[HOURS_PER_YEAR];
+            for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
+            {
+                prod[h] = state.thermal[area->index]
+                            .thermalClustersProductions[cluster->enabledIndex];
+            }
+            mergeValues(groupName, prod, study);
         }
     }
 }
@@ -122,7 +128,7 @@ void DynamicAggregation::initializeSetsData()
     }
 }
 
-void DynamicAggregation::addResultsToSets(const State& state)
+void DynamicAggregation::addResultsToSets(State& state)
 {
     for (auto& [_, setData]: setsData_)
     {
