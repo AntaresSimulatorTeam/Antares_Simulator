@@ -102,8 +102,8 @@ MPSGenerator::MPSGenerator(const ILinearProblem& lp, const std::string& name):
         logs.warning() << "Linear problem '" << name << "' contains no variables.";
     }
 
-    exportableConstraintsNames_ = extractNames(lp.getConstraints());
-    exportableVariablesNames_ = extractNames(lp.getVariables());
+    exportableConstraintsNames_ = ExtractNames(lp.getConstraints());
+    exportableVariablesNames_ = ExtractNames(lp.getVariables());
 }
 
 void MPSGenerator::writeHeader()

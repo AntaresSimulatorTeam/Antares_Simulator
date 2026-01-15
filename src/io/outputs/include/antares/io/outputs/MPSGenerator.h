@@ -22,7 +22,6 @@
 
 #include <algorithm>
 #include <filesystem>
-#include <fstream>
 #include <ranges>
 
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
@@ -34,9 +33,6 @@ namespace Antares::IO::Outputs
 class MPSGenerator
 {
 public:
-    template<class T>
-    std::vector<std::string> extractNames(const std::vector<std::unique_ptr<T>>& elements);
-
     explicit MPSGenerator(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
                           const std::string& name);
     std::string run();
@@ -59,7 +55,7 @@ private:
 };
 
 template<class T>
-std::vector<std::string> MPSGenerator::extractNames(const std::vector<std::unique_ptr<T>>& elements)
+std::vector<std::string> ExtractNames(const std::vector<std::unique_ptr<T>>& elements)
 {
     std::vector<std::string> names(elements.size());
     NameManager nameManager;
