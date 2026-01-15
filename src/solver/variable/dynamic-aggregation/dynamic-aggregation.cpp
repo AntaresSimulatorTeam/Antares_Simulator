@@ -79,7 +79,7 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
     }
 }
 
-void SetData::addResultsToSet(State& state)
+void SetData::addResultsToSet(const State& state, Data::Study& study)
 {
     for (const auto* area: set_)
     {
@@ -87,16 +87,18 @@ void SetData::addResultsToSet(State& state)
         {
             const std::string& groupName = cluster->getGroup();
 
-            mergeValues(groupName, state.thermalClusterProductionForYear);
+            mergeValues(groupName, state.thermalClusterProductionForYear, study);
         }
     }
 }
 
-void SetData::mergeValues(const std::string& groupName, const double* values)
+void SetData::mergeValues(const std::string& groupName, const double* values, Data::Study& study)
 {
     unsigned index = groupToNumbers_[groupName];
 
     IntermediateValues valuesForAllGranularities;
+    valuesForAllGranularities.testOtherName(study);
+
     memcpy(valuesForAllGranularities.hour, values, HOURS_PER_YEAR * sizeof(double));
 
     valuesForAllGranularities.computeAveragesForCurrentYearFromHourlyResults();
@@ -104,19 +106,24 @@ void SetData::mergeValues(const std::string& groupName, const double* values)
     results_[index].merge(valuesForAllGranularities);
 }
 
-void DynamicAggregation::initializeSetsData(const Data::Study& study)
+DynamicAggregation::DynamicAggregation(Data::Study& study):
+    study_(study)
 {
-    for (const auto& set: study.setsOfAreas)
+}
+
+void DynamicAggregation::initializeSetsData()
+{
+    for (const auto& set: study_.setsOfAreas)
     {
         setsData_.try_emplace(set.first, *set.second);
     }
 }
 
-void DynamicAggregation::addResultsToSets(State& state)
+void DynamicAggregation::addResultsToSets(const State& state)
 {
     for (auto& [_, setData]: setsData_)
     {
-        setData.addResultsToSet(state);
+        setData.addResultsToSet(state, study_);
     }
 }
 

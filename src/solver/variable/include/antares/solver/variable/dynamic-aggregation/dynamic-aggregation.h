@@ -34,11 +34,9 @@ class SetData
 public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
-    void addResultsToSet(State& state);
-
-    // Write results to files in a folder named after the set
+    void addResultsToSet(const State& state, Data::Study& study);
+    void mergeValues(const std::string& groupName, const double* values, Data::Study& study);
     void writeResultsToFolder(const std::string& folderName) const;
-    void mergeValues(const std::string& groupName, const double* values);
 
     std::vector<R::AllYears::AverageData> results_;
     std::vector<std::string> groupNames_;
@@ -50,11 +48,15 @@ public:
 class DynamicAggregation
 {
 public:
-    void initializeSetsData(const Data::Study& study);
-    void addResultsToSets(State& state);
+    explicit DynamicAggregation(Data::Study& study);
 
-    // Write results for all sets to folders
+    void initializeSetsData();
+    void addResultsToSets(const State& state);
+
     void writeAllResults(const std::string& baseFolder) const;
+
+private:
+    Data::Study& study_;
     std::map<std::string, SetData> setsData_;
 };
 
