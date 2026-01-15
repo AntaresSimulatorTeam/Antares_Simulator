@@ -121,6 +121,11 @@ public:
         return 1.0;
     }
 
+    [[nodiscard]] std::vector<std::pair<int, double>> getCoefficients() const override
+    {
+        return {};
+    }
+
     // IHasBounds interface
     void setLb(double) override
     {

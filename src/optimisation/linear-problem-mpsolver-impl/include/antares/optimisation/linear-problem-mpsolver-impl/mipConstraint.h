@@ -44,7 +44,7 @@ public:
     [[nodiscard]] double getUb() const override;
 
     [[nodiscard]] double getCoefficient(const LinearProblemApi::IMipVariable* var) const override;
-
+    [[nodiscard]] std::vector<std::pair<int, double>> getCoefficients() const override;
     [[nodiscard]] double dual() const override;
 
     [[nodiscard]] const std::string& getName() const override;

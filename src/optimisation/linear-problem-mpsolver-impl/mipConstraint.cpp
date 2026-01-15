@@ -85,6 +85,19 @@ double OrtoolsMipConstraint::getCoefficient(const LinearProblemApi::IMipVariable
     return mpConstraint_->GetCoefficient(mpvar->getMpVar());
 }
 
+std::vector<std::pair<int, double>> OrtoolsMipConstraint::getCoefficients() const
+{
+    const auto& terms = mpConstraint_->terms();
+    std::vector<std::pair<int, double>> coeffs;
+    coeffs.reserve(terms.size());
+    std::ranges::transform(terms,
+                           std::back_inserter(coeffs),
+                           [](const auto& term)
+                           { return std::make_pair(term.first->index(), term.second); });
+
+    return coeffs;
+}
+
 double OrtoolsMipConstraint::dual() const
 {
     return mpConstraint_->dual_value();

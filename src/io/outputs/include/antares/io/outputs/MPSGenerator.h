@@ -39,7 +39,7 @@ public:
 
 private:
     const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
-    std::ostringstream out_;
+    std::string out_;
     std::string name_;
     std::vector<std::string> exportableConstraintsNames_;
     std::vector<std::string> exportableVariablesNames_;
