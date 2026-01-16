@@ -76,6 +76,14 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
             }
             outFile.close();
         }
+
+        filePath = folderName + "/" + group + "_annual.txt";
+        std::ofstream annualFile(filePath);
+        if (annualFile.is_open())
+        {
+            annualFile << results_[i].year << std::endl;
+            annualFile.close();
+        }
     }
 }
 
@@ -107,7 +115,7 @@ void SetData::mergeValues(const std::string& groupName, const double* values, Da
 
     memcpy(valuesForAllGranularities.hour, values, HOURS_PER_YEAR * sizeof(double));
 
-    valuesForAllGranularities.computeAveragesForCurrentYearFromHourlyResults();
+    valuesForAllGranularities.computeStatisticsForTheCurrentYear();
 
     results_[index].merge(valuesForAllGranularities);
 
