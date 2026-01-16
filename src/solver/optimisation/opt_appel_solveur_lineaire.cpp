@@ -125,7 +125,7 @@ std::shared_ptr<MPSolver> fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortools
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
+      std::make_unique<LegacyFiller>(ortoolsProblem, problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
