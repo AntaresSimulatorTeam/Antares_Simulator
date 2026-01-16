@@ -21,7 +21,6 @@
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 
 #include <cmath>
-#include <functional>
 
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
