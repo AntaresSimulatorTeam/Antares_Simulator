@@ -121,7 +121,8 @@ void MPSGenerator::writeHeader()
 void MPSGenerator::writeRows()
 {
     /* ========= ROWS ========= */
-    out_ += "ROWS\n N  OBJ\n";
+    out_ += "ROWS\n";
+    fmt::format_to(std::back_inserter(out_), "{}N  OBJ\n", pad);
     int i = 0;
     for (const auto& constraints = linearProblem_.getConstraints(); const auto& c: constraints)
     {
@@ -178,11 +179,10 @@ void MPSGenerator::writeColumns()
         }
         auto* varPtr = var.get();
         auto& exportableVariablesName = exportableVariablesNames_[i];
-        if (const auto coef = linearProblem_.getObjectiveCoefficient(varPtr); isNotEqual(coef, 0.0))
+        if (auto coef = linearProblem_.getObjectiveCoefficient(varPtr); isNotEqual(coef, 0.0))
         {
-            // TODO
-            // out_ << "    " << exportableVariablesNames_[i] << "  OBJ  "
-            //      << (linearProblem_.isMinimization() ? coef : -coef) << "\n";
+            // TODO Maximisation problem...
+            // if (linearProblem_.isMaximization())  coef*=-1;
             fmt::format_to(std::back_inserter(out_),
                            "{}{}  OBJ  {}\n",
                            pad,
