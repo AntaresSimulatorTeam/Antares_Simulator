@@ -55,6 +55,13 @@ hide:
 
 ## Misc.
 
+> **Deprecated options**
+> 
+> * `--solver` (alias for `--linear-solver`) is deprecated.
+> * `--solver-parameters` (alias for `--linear-solver-param`) is deprecated.
+> 
+> The short flag `-l` for `--list-solvers` is supported.
+
 | command         | usage                                                            |
 |:----------------|:-----------------------------------------------------------------|
 | --progress      | Display the progress of each task                                |
