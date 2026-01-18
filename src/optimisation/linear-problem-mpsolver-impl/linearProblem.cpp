@@ -213,16 +213,6 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
-MPSolver* OrtoolsLinearProblem::MpSolver() const
-{
-    return mpSolver_.get();
-}
-
-std::shared_ptr<MPSolver> OrtoolsLinearProblem::MpSolverShared() const
-{
-    return mpSolver_;
-}
-
 OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
     if (verboseSolver)

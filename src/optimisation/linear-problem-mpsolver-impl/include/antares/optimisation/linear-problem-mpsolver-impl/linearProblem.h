@@ -121,11 +121,9 @@ public:
     friend void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& path);
 
 protected:
-    [[nodiscard]] operations_research::MPSolver* MpSolver() const;
-    [[nodiscard]] std::shared_ptr<operations_research::MPSolver> MpSolverShared() const;
+    std::shared_ptr<operations_research::MPSolver> mpSolver_;
 
 private:
-    std::shared_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPObjective* objective_{nullptr};
     operations_research::MPSolverParameters params_;
 

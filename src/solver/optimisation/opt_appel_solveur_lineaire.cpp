@@ -153,7 +153,7 @@ std::shared_ptr<MPSolver> fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortools
 
     logs.debug() << "Modeler build took " << measure.toStringInSeconds();
 
-    return ortoolsProblem.getMpSolverShared();
+    return ortoolsProblem.getMpSolver();
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
