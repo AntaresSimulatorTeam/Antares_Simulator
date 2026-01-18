@@ -33,12 +33,11 @@ namespace Antares::Expressions::Visitors
 
 VariabilityType VariabilityVisitor::visitChildrenNodes(const Nodes::ParentNode* node)
 {
-    const auto& operands = node->getOperands();
-    return std::accumulate(std::begin(operands),
-                           std::end(operands),
+    const auto visitedChildren = NodeVisitor<VariabilityType>::visitChildrenNodes(node);
+    return std::accumulate(visitedChildren.begin(),
+                           visitedChildren.end(),
                            VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-                           [this](VariabilityType sum, Nodes::Node* operand)
-                           { return sum | dispatch(operand); });
+                           [](auto a, auto b) { return a | b; });
 }
 
 VariabilityType VariabilityVisitor::visit(const Nodes::SumNode* node)
@@ -182,6 +181,7 @@ VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::max:
     case Nodes::FunctionNodeType::min:
     case Nodes::FunctionNodeType::floor:
+    case Nodes::FunctionNodeType::ceil:
         return visitChildrenNodes(node);
     case Nodes::FunctionNodeType::pow:
         return visitPow(node);

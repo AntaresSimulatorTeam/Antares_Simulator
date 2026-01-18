@@ -37,7 +37,6 @@ public:
      * @param registry The registry used for creating new nodes.
      */
     explicit CloneVisitor(Registry<Nodes::Node>& registry);
-    std::vector<Nodes::Node*> cloneOperands(const Nodes::ParentNode* node);
     std::string name() const override;
 
     Nodes::Node* visit(const Nodes::SumNode* node) override;

@@ -170,8 +170,12 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
         return typeIndexOf<FunctionNodeType::pow>();
     case FunctionNodeType::floor:
         return typeIndexOf<FunctionNodeType::floor>();
+    case FunctionNodeType::ceil:
+        return typeIndexOf<FunctionNodeType::ceil>();
     default:
-        return typeid(int); // Supposed to be dead code (never reached)
+        std::string err_msg = "ForbiddenNodesVisitor > ";
+        err_msg += "function '" + functionNode->name() + "' is unknown.";
+        throw std::invalid_argument(err_msg);
     }
 }
 
@@ -185,12 +189,12 @@ void ForbiddenNodesVisitor::visit(const FunctionNode* functionNode)
 void ForbiddenNodesVisitor::checkIsForbidden(const Node* node,
                                              const std::type_index& nodeTypeId) const
 {
-    checkIGloballyForbidden(nodeTypeId, node);
+    checkIsGloballyForbidden(nodeTypeId, node);
     checkIsForbiddenByParent(nodeTypeId, node);
 }
 
-void ForbiddenNodesVisitor::checkIGloballyForbidden(const std::type_index& nodeTypeId,
-                                                    const Node* node) const
+void ForbiddenNodesVisitor::checkIsGloballyForbidden(const std::type_index& nodeTypeId,
+                                                     const Node* node) const
 {
     if (forbiddenNodes_.isGloballyForbidden(nodeTypeId))
     {
@@ -214,10 +218,7 @@ void ForbiddenNodesVisitor::visitChildren(const Expressions::Nodes::ParentNode* 
                                           const std::type_index& nodeTypeId)
 {
     parentsStack_.emplace_back(node->name(), nodeTypeId);
-    for (const auto* childNode: node->getOperands())
-    {
-        dispatch(childNode);
-    }
+    std::ranges::for_each(node->getOperands(), [this](auto* childNode) { dispatch(childNode); });
     parentsStack_.pop_back();
 }
 

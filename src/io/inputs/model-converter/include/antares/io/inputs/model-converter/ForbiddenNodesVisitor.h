@@ -69,8 +69,8 @@ private:
     void checkIsForbidden(const Expressions::Nodes::Node* node,
                           const std::type_index& nodeTypeId) const;
 
-    void checkIGloballyForbidden(const std::type_index& nodeTypeId,
-                                 const Antares::Expressions::Nodes::Node* node) const;
+    void checkIsGloballyForbidden(const std::type_index& nodeTypeId,
+                                  const Antares::Expressions::Nodes::Node* node) const;
 
     void checkIsForbiddenByParent(const std::type_index& nodeTypeId,
                                   const Antares::Expressions::Nodes::Node* node) const;

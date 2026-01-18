@@ -1460,7 +1460,7 @@ BOOST_FIXTURE_TEST_CASE(PrintDualNode, MyDummyFixture)
                                       create<ParameterNode>("constraint"),
                                       create<LiteralNode>(0));
     PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint, 0.000000)");
+    BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint)[0.000000]");
 }
 
 BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
@@ -1483,6 +1483,20 @@ BOOST_FIXTURE_TEST_CASE(print_floor_applied_to_a_parameter, MyDummyFixture)
     Node* floor_node = create<FunctionNode>(FunctionNodeType::floor, create<ParameterNode>("p"));
     PrintVisitor printVisitor;
     BOOST_CHECK(printVisitor.dispatch(floor_node) == "floor(p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_ceil_applied_to_a_literal, MyDummyFixture)
+{
+    Node* ceil_node = create<FunctionNode>(FunctionNodeType::ceil, create<LiteralNode>(3.7));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(ceil_node) == "ceil(3.700000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_ceil_applied_to_a_parameter, MyDummyFixture)
+{
+    Node* ceil_node = create<FunctionNode>(FunctionNodeType::ceil, create<ParameterNode>("p"));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(ceil_node) == "ceil(p)");
 }
 
 BOOST_AUTO_TEST_CASE(testShiftEmptyVector)

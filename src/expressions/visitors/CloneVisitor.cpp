@@ -28,23 +28,11 @@ CloneVisitor::CloneVisitor(Registry<Nodes::Node>& registry):
 {
 }
 
-std::vector<Nodes::Node*> CloneVisitor::cloneOperands(const Nodes::ParentNode* node)
-{
-    std::vector<Nodes::Node*> clonedOperands(node->size());
-    const auto& operands = node->getOperands();
-    for (int i = 0; i < node->size(); ++i)
-    {
-        auto* operand = operands.at(i);
-        clonedOperands[i] = dispatch(operand);
-    }
-    return clonedOperands;
-}
-
 Nodes::Node* CloneVisitor::visit(const Nodes::SumNode* node)
 {
-    auto clonedOperands = cloneOperands(node);
-    // Give ownership of clonedOperands to the caller
-    return registry_.create<Nodes::SumNode>(std::move(clonedOperands));
+    auto clonedChildren = visitChildrenNodes(node);
+    // Give ownership of cloned children to caller
+    return registry_.create<Nodes::SumNode>(std::move(clonedChildren));
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SubtractionNode* node)
@@ -139,9 +127,9 @@ Nodes::Node* CloneVisitor::visit(const Nodes::AllTimeSumNode* node)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::FunctionNode* node)
 {
-    auto clonedOperands = cloneOperands(node);
-    // Give ownership of clonedOperands to the caller
-    return registry_.create<Nodes::FunctionNode>(node->type(), std::move(clonedOperands));
+    auto clonedChildren = visitChildrenNodes(node);
+    // Give ownership of cloned children to caller
+    return registry_.create<Nodes::FunctionNode>(node->type(), std::move(clonedChildren));
 }
 
 std::string CloneVisitor::name() const

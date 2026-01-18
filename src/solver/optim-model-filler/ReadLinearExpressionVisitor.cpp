@@ -279,37 +279,56 @@ TimeDependentLinearExpression visitDual(const Nodes::FunctionNode*)
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visitPower(
   const Nodes::FunctionNode* node)
 {
-    auto ret(dispatch(node->getOperands().front()));
-    auto exponentExpr = dispatch(node->getOperands().at(1));
+    auto to_return(dispatch(node->getOperands()[0]));
+    auto exponentExpr = dispatch(node->getOperands()[1]);
     if (exponentExpr.size() != 1)
     {
         throw Error::InvalidArgumentError("exponent must be constant");
     }
 
     const auto& exponent = exponentExpr[0];
-    for (auto& s: ret)
+    for (auto& s: to_return)
     {
         s ^= exponent;
     }
-    return ret;
+    return to_return;
 }
+
+auto checkIsConstant = [](const std::string& op, const auto& expression)
+{
+    if (expression.hasCoefs())
+    {
+        std::string err_msg = op + " operator: its argument is not constant, but has to be.";
+        throw std::invalid_argument(err_msg);
+    }
+};
+
+auto checkExpressionIsConstantForFloor = [](const auto& expr) { checkIsConstant("floor", expr); };
+auto checkExpressionIsConstantForCeil = [](const auto& expr) { checkIsConstant("ceil", expr); };
+
+auto floorExpression = [](auto& expr) { expr.constant(std::floor(expr.constant())); };
+auto ceilExpression = [](auto& expr) { expr.constant(std::ceil(expr.constant())); };
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visitFloor(
   const Nodes::FunctionNode* node)
 {
     auto expressions = dispatch(node->getOperands()[0]);
-    for (auto& expression: expressions)
-    {
-        // gp : should be removed when arg of floor operator applies to extra output as well.
-        if (expression.hasCoefs())
-        {
-            std::string err_msg = "floor operator: its argument is not constant, but has to be.";
-            throw std::invalid_argument(err_msg);
-        }
-        expression.constant(std::floor(expression.constant()));
-    }
+    std::ranges::for_each(expressions, checkExpressionIsConstantForFloor);
+    std::ranges::for_each(expressions, floorExpression);
     return expressions;
 }
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visitCeil(
+  const Nodes::FunctionNode* node)
+{
+    auto expressions = dispatch(node->getOperands()[0]);
+    std::ranges::for_each(expressions, checkExpressionIsConstantForCeil);
+    std::ranges::for_each(expressions, ceilExpression);
+    return expressions;
+}
+
+auto max_element_of_vector = [](const auto& v) { return *std::ranges::max_element(v); };
+auto min_element_of_vector = [](const auto& v) { return *std::ranges::min_element(v); };
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::FunctionNode* node)
 {
@@ -320,19 +339,15 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Fu
     case Nodes::FunctionNodeType::dual:
         return visitDual(node);
     case Nodes::FunctionNodeType::max:
-    {
-        return applyOperation(visitChildrenNodes(node),
-                              [](const auto& v) { return *std::ranges::max_element(v); });
-    }
+        return applyOperation(visitChildrenNodes(node), max_element_of_vector);
     case Nodes::FunctionNodeType::min:
-    {
-        return applyOperation(visitChildrenNodes(node),
-                              [](const auto& v) { return *std::ranges::min_element(v); });
-    }
+        return applyOperation(visitChildrenNodes(node), min_element_of_vector);
     case Nodes::FunctionNodeType::pow:
         return visitPower(node);
     case Nodes::FunctionNodeType::floor:
         return visitFloor(node);
+    case Nodes::FunctionNodeType::ceil:
+        return visitCeil(node);
     default:
         throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
     }

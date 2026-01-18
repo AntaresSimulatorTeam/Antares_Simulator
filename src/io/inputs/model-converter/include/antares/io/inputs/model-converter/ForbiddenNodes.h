@@ -35,6 +35,10 @@ namespace Antares::IO::Inputs::ModelConverter
 template<typename NodeType>
 std::type_index typeIndexOf()
 {
+    static_assert(!std::is_same_v<NodeType, Expressions::Nodes::FunctionNode>,
+                  "Use Expressions::Nodes::FunctionNodeType enum values or "
+                  "typeIndexOf<Expressions::Nodes::FunctionNodeType>()"
+                  "instead of FunctionNode for forbidden rules.");
     return std::type_index(typeid(NodeType));
 }
 
@@ -87,7 +91,6 @@ public:
                              const std::type_index& nodeTypeId) const;
 
 private:
-    // gp : we originally used unordered set and map, do we restore these types ?
     std::set<std::type_index> global_;
     std::map<std::type_index, std::set<std::type_index>> rules_; // Parent --> set of children
 };
