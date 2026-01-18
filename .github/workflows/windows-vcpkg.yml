@@ -75,7 +75,7 @@ jobs:
 
     - name: Restore ccache cache
       id: cache
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/.ccache_windows
         key: ${{ env.os }}-${{ github.ref_name }}
@@ -97,7 +97,7 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -154,7 +154,7 @@ jobs:
 
     - name: Upload .zip
       if: ${{ success() }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: ${{env.ZIP_ARCHIVE_NAME}}
         path: _build/${{env.ZIP_ARCHIVE_NAME}}
@@ -207,7 +207,7 @@ jobs:
 
     - name: Upload build on failure
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: MPS-diff
         path: ${{ github.workspace }}/src/tests/mps
@@ -387,13 +387,13 @@ jobs:
 
     - name: Upload NSIS log on failure
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: NSISError.log
         path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: Installer upload
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: installer
         path: _build/${{env.NSIS_NAME}}
@@ -419,7 +419,7 @@ jobs:
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -441,7 +441,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/.ccache_windows
         key: ${{ steps.cache.outputs.cache-primary-key }}

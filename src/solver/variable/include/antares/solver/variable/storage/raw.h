@@ -46,12 +46,6 @@ public:
         categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
-    struct Data
-    {
-        double value;
-        uint32_t indice;
-    };
-
     //! Name of the filter
     static const char* Name()
     {
@@ -59,13 +53,8 @@ public:
     }
 
 public:
-    Raw()
-    {
-    }
-
-    ~Raw()
-    {
-    }
+    Raw() = default;
+    ~Raw() = default;
 
 protected:
     void initializeFromStudy(Antares::Data::Study& study);

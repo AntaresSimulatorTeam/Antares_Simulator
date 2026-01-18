@@ -56,7 +56,7 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -69,7 +69,7 @@ jobs:
 
     - name: Restore ccache cache
       id: cache
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu
         key: ${{ env.os }}-${{ github.ref_name }}
@@ -149,7 +149,7 @@ jobs:
 
     - name: Both previous archives upload
       if: ${{ success() }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: ubuntu-targz
         path: _build/*.tar.gz
@@ -227,7 +227,7 @@ jobs:
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
@@ -390,7 +390,7 @@ jobs:
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Installer deb upload push
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: deb
         path: _build/*.deb
@@ -420,7 +420,7 @@ jobs:
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -442,7 +442,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu
         key: ${{ steps.cache.outputs.cache-primary-key }}

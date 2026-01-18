@@ -84,8 +84,6 @@ bool Study::saveToFolder(const AnyString& newfolder)
         return false;
     }
 
-    Statistics::LogsDumper statisticsDumper;
-
     logs.info() << "Preloading data...";
     bool ret = true;
     {

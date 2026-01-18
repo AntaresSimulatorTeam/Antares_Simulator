@@ -143,7 +143,8 @@ void SingleProblemGetter::initializeRandomNumbers()
 
     MersenneTwister randomHydroGenerator;
     randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
-    randomForParallelYears_->compute(*study_, 1, isYearPerformed, randomHydroGenerator);
+    const unsigned int finalYear = 1 + study_->runtime.rangeLimits.year[Data::rangeEnd];
+    randomForParallelYears_->compute(*study_, finalYear, isYearPerformed, randomHydroGenerator);
 }
 
 void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& outputDir)
