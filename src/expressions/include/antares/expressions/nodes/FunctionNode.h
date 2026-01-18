@@ -38,7 +38,7 @@ enum class FunctionNodeType
     min,          ///< Minimum of multiple expressions.
     pow,          ///< Exponentiation: base^exponent.
     floor,        ///< Rounds a number to closest smaller int
-    ceil          ///< Rounds a number to closest greater int
+    ceil          ///< Rounds a number to closest greater or equal int
 };
 
 /**

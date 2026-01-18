@@ -254,8 +254,8 @@ EvaluationResult EvalVisitor::visitFloor(const Nodes::FunctionNode* node)
 
 EvaluationResult EvalVisitor::visitCeil(const Nodes::FunctionNode* node)
 {
-    auto* floor_arg = node->getOperands()[0];
-    return dispatch(floor_arg).evaluateUnaryOperation(CeilOp);
+    auto* ceil_arg = node->getOperands()[0];
+    return dispatch(ceil_arg).evaluateUnaryOperation(CeilOp);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)

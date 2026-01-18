@@ -505,6 +505,17 @@ std::any ConvertorVisitor::visitCeil(ExprParser::ArgListContext* context)
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::ceil, node));
 }
 
+std::any ConvertorVisitor::visitCeil(ExprParser::ArgListContext* context)
+{
+    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+    if (size_t size = nodes.size(); size > 1)
+    {
+        std::string err_msg = "ceil() expects 1 argument, but has " + std::to_string(size);
+        throw std::invalid_argument(err_msg);
+    }
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::ceil, nodes[0]));
+}
+
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();

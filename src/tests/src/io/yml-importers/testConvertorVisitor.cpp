@@ -749,45 +749,35 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator___nominal_case, SupplyModelForFunctionalOp
     // Root node is a 'ceil' node
     BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::ceil");
 
-    auto CeilNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(CeilNode->typeToString(), "ceil");
+    auto ceilNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(ceilNode->typeToString(), "ceil");
 
     // Child node must be unique, and be the parameter node 'pmin' from the model
-    // ... Child node is unique
-    BOOST_CHECK_EQUAL(CeilNode->getOperands().size(), 1);
-    auto* childNode = CeilNode->getOperands()[0];
+    BOOST_CHECK_EQUAL(ceilNode->getOperands().size(), 1);
+    auto* childNode = ceilNode->getOperands()[0];
 
-    // ... Child node is a parameter node
     const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
     BOOST_CHECK(paramNode);
-
-    // ... Child node is 'pmin' from the model
     BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
 }
 
 BOOST_FIXTURE_TEST_CASE(ceil_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
 {
-    std::string expression = "ceil(2.3)";
+    std::string expression = "ceil(3.7)";
 
     auto expr = convertExpressionToNode(expression, model);
 
-    // Root node is a 'ceil' node
     BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::ceil");
 
-    auto CeilNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(CeilNode->typeToString(), "ceil");
+    auto ceilNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(ceilNode->typeToString(), "ceil");
 
-    // Child node must be unique, and be the literal node '2.3' from the model
-    // ... Child node is unique
-    BOOST_CHECK_EQUAL(CeilNode->getOperands().size(), 1);
-    auto* childNode = CeilNode->getOperands()[0];
+    BOOST_CHECK_EQUAL(ceilNode->getOperands().size(), 1);
+    auto* childNode = ceilNode->getOperands()[0];
 
-    // ... Child node is a parameter node
     const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
     BOOST_CHECK(literalNode);
-
-    // ... Child node is 'pmin' from the model
-    BOOST_CHECK_EQUAL(literalNode->value(), 2.3);
+    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
 }
 
 BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
@@ -808,6 +798,24 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "ceil() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "ceil(varA)";
+
+    auto node = convertExpressionToNode(expression, model);
+
+    // Forbid variables as children of ceil
+    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::ceil, Nodes::VariableNode>();
+
+    std::string err_msg = "'FunctionNode::ceil' is not allowed to contain 'VariableNode' in "
+                          "expression '"
+                          + expression + "'";
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
