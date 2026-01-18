@@ -202,6 +202,47 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_variable_throws,
                             "floor operator: its argument is not constant, but has to be."));
 }
 
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(4.5) = 5
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil, create<LiteralNode>(4.5));
+
+    auto linear_expression = visitor().dispatch(ceilNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(param(4.5)) = 5
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil,
+                                          create<ParameterNode>("four.five"));
+
+    auto linear_expression = visitor().dispatch(ceilNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_variable_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(7 * var) is not linear: argument has non-zero coefficients
+    Node* var = create<VariableNode>("var", 0);
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.), var);
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil, product);
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(ceilNode),
+                          std::invalid_argument,
+                          checkMessage(
+                            "ceil operator: its argument is not constant, but has to be."));
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {

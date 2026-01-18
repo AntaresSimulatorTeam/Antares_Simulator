@@ -170,6 +170,8 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
         return typeIndexOf<FunctionNodeType::pow>();
     case FunctionNodeType::floor:
         return typeIndexOf<FunctionNodeType::floor>();
+    case FunctionNodeType::ceil:
+        return typeIndexOf<FunctionNodeType::ceil>();
     default:
         return typeid(int); // Supposed to be dead code (never reached)
     }

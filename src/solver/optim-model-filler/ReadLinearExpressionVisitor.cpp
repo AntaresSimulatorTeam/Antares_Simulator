@@ -311,6 +311,22 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visitFloor(
     return expressions;
 }
 
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visitCeil(
+  const Nodes::FunctionNode* node)
+{
+    auto expressions = dispatch(node->getOperands()[0]);
+    for (auto& expression: expressions)
+    {
+        if (expression.hasCoefs())
+        {
+            std::string err_msg = "ceil operator: its argument is not constant, but has to be.";
+            throw std::invalid_argument(err_msg);
+        }
+        expression.constant(std::ceil(expression.constant()));
+    }
+    return expressions;
+}
+
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())
@@ -333,6 +349,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Fu
         return visitPower(node);
     case Nodes::FunctionNodeType::floor:
         return visitFloor(node);
+    case Nodes::FunctionNodeType::ceil:
+        return visitCeil(node);
     default:
         throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
     }

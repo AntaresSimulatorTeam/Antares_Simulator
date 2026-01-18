@@ -360,5 +360,6 @@ private:
     EvaluationResult visitDual(const Nodes::FunctionNode* node);
     EvaluationResult visitPow(const Nodes::FunctionNode* node);
     EvaluationResult visitFloor(const Nodes::FunctionNode* node);
+    EvaluationResult visitCeil(const Nodes::FunctionNode* node);
 };
 } // namespace Antares::Expressions::Visitors
