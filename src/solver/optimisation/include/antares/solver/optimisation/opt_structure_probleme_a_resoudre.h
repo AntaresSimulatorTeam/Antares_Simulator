@@ -89,7 +89,7 @@ public:
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    std::vector<std::unique_ptr<operations_research::MPSolver>> ProblemesSpx;
+    std::vector<std::shared_ptr<operations_research::MPSolver>> ProblemesSpx;
 
     std::vector<int>
       PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */

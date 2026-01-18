@@ -40,6 +40,11 @@ public:
     {
         return MpSolver();
     }
+
+    std::shared_ptr<MPSolver> getMpSolverShared()
+    {
+        return MpSolverShared();
+    }
 };
 
 } // namespace Antares::Optimization

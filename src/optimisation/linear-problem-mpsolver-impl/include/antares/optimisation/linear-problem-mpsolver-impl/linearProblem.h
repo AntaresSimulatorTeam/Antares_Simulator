@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
@@ -120,9 +122,10 @@ public:
 
 protected:
     [[nodiscard]] operations_research::MPSolver* MpSolver() const;
+    [[nodiscard]] std::shared_ptr<operations_research::MPSolver> MpSolverShared() const;
 
 private:
-    operations_research::MPSolver* mpSolver_{nullptr};
+    std::shared_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPObjective* objective_{nullptr};
     operations_research::MPSolverParameters params_;
 
