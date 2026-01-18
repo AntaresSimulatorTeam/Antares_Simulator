@@ -216,6 +216,41 @@ models:
     expression: myVar^(2 + myParam)
 ```
 
+### Floor operator
+
+This unary operator **floor(X)** returns the greatest integer less than or equal to its argument.
+When `X` is time-dependent (a parameter, variable, or port field with time dimension), the operator
+applies pointwise on the underlying time-series.
+
+In the context of a linear problem construction (any context but **extra-output**), the argument of
+`floor` must not depend on decision variables: it must be a literal, a parameter, or any
+combination of them. In those contexts the optimizer works with the already-rounded, constant
+expression produced by `floor`.
+
+Within an **extra-output expression**, `floor` can be applied to expressions involving variables as
+well. In that case, the operator is evaluated after optimization using the numerical solution.
+
+_Examples :_
+
+```yaml
+models:
+- id: myModel
+  parameters:
+  - id: myParam
+  variables:
+  - id: x
+    lower_bound: 0
+    upper_bound: 10
+  constraints:
+  - id: myConstraint
+    # Allowed: argument only depends on parameters and literals
+    expression: x <= floor(myParam)
+  extra-outputs:
+  - id: rounded_output
+    # Allowed in extra-output: argument can depend on variables
+    expression: floor(x)
+```
+
 ### max (or min) operator
 
 This n-ary operator **max(u, v, ...)** can be used within any expression, with following restrictions.

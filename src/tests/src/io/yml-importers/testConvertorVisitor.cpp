@@ -726,15 +726,22 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
                           checkMessage(err_msg));
 }
 
-// BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_a_var_as_arg,
-//                         SupplyModelForFunctionalOperator)
-//{
-//     std::string expression = "floor(varA)";
-//
-//     std::string err_msg = "floor()'s argument is neither a parameter or a literal.";
-//     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-//                           std::invalid_argument,
-//                           checkMessage(err_msg));
-// }
+BOOST_FIXTURE_TEST_CASE(floor_operator_forbidden_on_variable_with_forbidden_nodes,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "floor(varA)";
+
+    auto node = convertExpressionToNode(expression, model);
+
+    // Forbid variables as children of floor
+    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::floor, Nodes::VariableNode>();
+
+    std::string err_msg = "'FunctionNode::floor' is not allowed to contain 'VariableNode' in "
+                          "expression '"
+                          + expression + "'";
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          ForbiddenNodeFound,
+                          checkMessage(err_msg));
+}
 
 BOOST_AUTO_TEST_SUITE_END()

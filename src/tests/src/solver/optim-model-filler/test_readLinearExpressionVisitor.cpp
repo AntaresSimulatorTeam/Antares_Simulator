@@ -188,6 +188,20 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_constant_param,
     BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
 }
 
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_variable_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(7 * var) is not linear: argument has non-zero coefficients
+    Node* var = create<VariableNode>("var", 0);
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.), var);
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor, product);
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(floorNode),
+                          std::invalid_argument,
+                          checkMessage(
+                            "floor operator: its argument is not constant, but has to be."));
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
