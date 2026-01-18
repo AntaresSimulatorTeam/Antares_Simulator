@@ -236,6 +236,7 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 
 auto PowerOp = [](const auto& a, const auto& b) { return std::pow(a, b); };
 auto FloorOp = [](double d) { return std::floor(d); };
+auto CeilOp = [](double d) { return std::ceil(d); };
 
 EvaluationResult EvalVisitor::visitPow(const Nodes::FunctionNode* node)
 {
@@ -249,6 +250,12 @@ EvaluationResult EvalVisitor::visitFloor(const Nodes::FunctionNode* node)
 {
     auto* floor_arg = node->getOperands()[0];
     return dispatch(floor_arg).evaluateUnaryOperation(FloorOp);
+}
+
+EvaluationResult EvalVisitor::visitCeil(const Nodes::FunctionNode* node)
+{
+    auto* ceil_arg = node->getOperands()[0];
+    return dispatch(ceil_arg).evaluateUnaryOperation(CeilOp);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
@@ -269,6 +276,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
         return visitPow(node);
     case Nodes::FunctionNodeType::floor:
         return visitFloor(node);
+    case Nodes::FunctionNodeType::ceil:
+        return visitCeil(node);
     default:
         return EvaluationResult(0);
     }

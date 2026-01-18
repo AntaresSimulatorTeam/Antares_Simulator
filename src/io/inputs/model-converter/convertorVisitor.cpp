@@ -85,6 +85,7 @@ private:
     std::any visitMax(ExprParser::ArgListContext* context);
     std::any visitMin(ExprParser::ArgListContext* arglist);
     std::any visitFloor(ExprParser::ArgListContext* context);
+    std::any visitCeil(ExprParser::ArgListContext* context);
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
     PortFieldNode* processPortRule(ExprParser::PortFieldExprContext* context);
@@ -491,6 +492,17 @@ std::any ConvertorVisitor::visitFloor(ExprParser::ArgListContext* context)
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::floor, nodes[0]));
 }
 
+std::any ConvertorVisitor::visitCeil(ExprParser::ArgListContext* context)
+{
+    const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
+    if (size_t size = nodes.size(); size > 1)
+    {
+        std::string err_msg = "ceil() expects 1 argument, but has " + std::to_string(size);
+        throw std::invalid_argument(err_msg);
+    }
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::ceil, nodes[0]));
+}
+
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
@@ -521,6 +533,10 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     else if (functionName == "floor")
     {
         return visitFloor(arglist);
+    }
+    else if (functionName == "ceil")
+    {
+        return visitCeil(arglist);
     }
 
     throw std::invalid_argument("Invalid function: '" + functionName + "'");

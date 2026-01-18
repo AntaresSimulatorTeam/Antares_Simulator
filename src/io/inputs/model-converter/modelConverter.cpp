@@ -96,6 +96,11 @@ static void CommonPreSolve(ForbiddenNodes& f)
     f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::floor, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::floor, PortFieldSumNode>();
+
+    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in ceil(node)
+    f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::ceil, PortFieldNode>();
+    f.parentForbidsChild<FunctionNodeType::ceil, PortFieldSumNode>();
 }
 
 static ForbiddenNodes ForbiddenInConstraint()

@@ -28,6 +28,7 @@ struct CreateAST
     Node* literal(double value);
     Node* parameter(const std::string& name, const VariabilityType variability);
     Node* floor(Node* node);
+    Node* ceil(Node* node);
 
 private:
     Registry<Nodes::Node> registry_;
@@ -46,6 +47,11 @@ Node* CreateAST::parameter(const std::string& name, const VariabilityType variab
 Node* CreateAST::floor(Node* node)
 {
     return registry_.create<FunctionNode>(FunctionNodeType::floor, node);
+}
+
+Node* CreateAST::ceil(Node* node)
+{
+    return registry_.create<FunctionNode>(FunctionNodeType::ceil, node);
 }
 
 // =================================
