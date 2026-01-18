@@ -665,7 +665,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_a_variable_as_arg,
     std::string err_msg = "'FunctionNode::floor' is not allowed to contain 'VariableNode' in ";
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          std::invalid_argument,
+                          ForbiddenNodeFound,
                           checkMessage(err_msg));
 }
 
