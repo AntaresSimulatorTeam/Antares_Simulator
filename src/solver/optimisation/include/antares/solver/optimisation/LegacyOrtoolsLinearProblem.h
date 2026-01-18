@@ -36,12 +36,7 @@ public:
         // nothing else to do
     }
 
-    MPSolver* getMpSolver()
-    {
-        return MpSolver();
-    }
-
-    std::shared_ptr<MPSolver> getMpSolverShared()
+    std::shared_ptr<operations_research::MPSolver> getMpSolverShared()
     {
         return MpSolverShared();
     }
