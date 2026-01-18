@@ -268,27 +268,9 @@ BOOST_AUTO_TEST_CASE(variability_of_ceil_operator___case_constant)
 BOOST_AUTO_TEST_CASE(variability_of_ceil_operator___case_varying_in_scenario_only)
 {
     ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
-    FunctionNode ceilNode(FunctionNodeType::floor, &paramNode);
+    FunctionNode ceilNode(FunctionNodeType::ceil, &paramNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&ceilNode),
-                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
-}
-
-BOOST_AUTO_TEST_CASE(variability_of_ceil_operator___case_constant)
-{
-    LiteralNode literalNode(2.3);
-    FunctionNode ceil(FunctionNodeType::ceil, &literalNode);
-
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&ceil),
-                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
-}
-
-BOOST_AUTO_TEST_CASE(variability_of_ceil_operator___case_varying_in_scenario_only)
-{
-    ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
-    FunctionNode ceil(FunctionNodeType::ceil, &paramNode);
-
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&ceil),
                       VariabilityType::VARYING_IN_SCENARIO_ONLY);
 }
 
