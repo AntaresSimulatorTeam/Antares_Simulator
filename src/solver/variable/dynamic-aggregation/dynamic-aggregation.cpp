@@ -221,34 +221,22 @@ void SetData::writeResultsToFolder(Solver::IResultWriter& writer,
         writer.addEntryFromBuffer(renewablePath, renewableStr);
     }
     // Write STS results
-    for (size_t i = 0; i < stsGroupNames_.size(); ++i)
+    auto writeStsResults =
+      [&](const std::string& suffix, const std::vector<std::vector<long double>>& results)
     {
-        std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_injection.csv";
-        std::ostringstream injectionContent;
-        for (size_t h = 0; h < stsInjectionResults_[i].size(); ++h)
+        for (size_t i = 0; i < stsGroupNames_.size(); ++i)
         {
-            injectionContent << stsInjectionResults_[i][h] << "\n";
+            std::string fileName = folderName + "/" + stsGroupNames_[i] + suffix;
+            std::ostringstream content;
+            for (size_t h = 0; h < results[i].size(); ++h)
+            {
+                content << results[i][h] << "\n";
+            }
+            std::string contentStr = content.str();
+            writer.addEntryFromBuffer(fileName, contentStr);
         }
-        std::string injectionStr = injectionContent.str();
-        writer.addEntryFromBuffer(fileName, injectionStr);
-
-        fileName = folderName + "/" + stsGroupNames_[i] + "_sts_withdrawal.csv";
-        std::ostringstream withdrawlContent;
-        for (size_t h = 0; h < stsWithdrawalResults_[i].size(); ++h)
-        {
-            withdrawlContent << stsWithdrawalResults_[i][h] << "\n";
-        }
-        std::string withdrawlStr = withdrawlContent.str();
-        writer.addEntryFromBuffer(fileName, withdrawlStr);
-
-        fileName = folderName + "/" + stsGroupNames_[i] + "_sts_level.csv";
-        std::ostringstream levelContent;
-        for (size_t h = 0; h < stsLevelResults_[i].size(); ++h)
-        {
-            levelContent << stsLevelResults_[i][h] << "\n";
-        }
-        std::string levelStr = levelContent.str();
-        writer.addEntryFromBuffer(fileName, levelStr);
-    }
-}
+    };
+    writeStsResults("_sts_injection.csv", stsInjectionResults_);
+    writeStsResults("_sts_withdrawal.csv", stsWithdrawalResults_);
+    writeStsResults("_sts_level.csv", stsLevelResults_);
 } // namespace Antares::Solver::Variable
