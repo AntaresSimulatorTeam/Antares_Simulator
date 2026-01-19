@@ -218,7 +218,7 @@ $(document).ready(function(){initNavTree('opt__structure__probleme__a__resoudre_
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">                                  matrice de base reguliere, et dans ce cas il n&#39;y a pas de solution</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">                                */</span></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    std::vector&lt;std::unique_ptr&lt;operations_research::MPSolver&gt;&gt; ProblemesSpx;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    std::vector&lt;std::shared_ptr&lt;operations_research::MPSolver&gt;&gt; ProblemesSpx;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    std::vector&lt;int&gt;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      PositionDeLaVariable; <span class="comment">/* Vecteur a passer au Simplexe pour recuperer la base optimale */</span></div>
