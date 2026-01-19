@@ -23,8 +23,7 @@
 
 #include <vector>
 
-#include "antares/solver/variable/state.h"
-#include "antares/study/area/area.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace Antares::Solver::Variable
 {
