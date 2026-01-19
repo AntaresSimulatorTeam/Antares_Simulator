@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #define WINDOWS_LEAN_AND_MEAN
 
 #define BOOST_TEST_MODULE "EnumTest"

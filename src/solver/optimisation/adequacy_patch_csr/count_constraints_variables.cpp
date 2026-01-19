@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
 
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"

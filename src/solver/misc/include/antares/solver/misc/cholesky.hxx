@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 //! Precision sur la factorisation des matrices
 #define ANTARES_CHOLESKY_EPSIMIN ((T)1.0e-9)
 

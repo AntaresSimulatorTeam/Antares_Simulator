@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #ifndef ANTARES_SOLVER_VARIABLE_COMMONS_HOUR_UTILS_H
 #define ANTARES_SOLVER_VARIABLE_COMMONS_HOUR_UTILS_H
 

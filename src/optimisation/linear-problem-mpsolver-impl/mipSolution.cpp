@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
 #include <antares/solver/utils/ortools_utils.h>

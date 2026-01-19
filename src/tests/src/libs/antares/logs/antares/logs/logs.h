@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #ifndef __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
 #define __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
 
