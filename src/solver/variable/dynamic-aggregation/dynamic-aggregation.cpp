@@ -32,6 +32,7 @@ namespace Antares::Solver::Variable
 SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     set_(set)
 {
+    // Thermal clusters
     for (auto& area: set_)
     {
         // handle sts later
@@ -39,6 +40,12 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
         {
             const std::string groupName = cluster->getGroup();
             nameAndNumberOfOccurrences_[groupName]++;
+        }
+        // Renewable clusters
+        for (const auto& cluster: area->renewable.list.each_enabled())
+        {
+            const std::string groupName = cluster->getGroup();
+            renewableNameAndNumberOfOccurrences_[groupName]++;
         }
     }
 
@@ -48,45 +55,16 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     }
     groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
-    unsigned int nbColumns = groupNames_.size();
+    for (const auto& nameAndNum: renewableNameAndNumberOfOccurrences_)
+    {
+        renewableGroupNames_.push_back(nameAndNum.first);
+    }
+    renewableGroupToNumbers_ = Utils::giveNumbersToStrings(renewableGroupNames_);
+
+    unsigned int nbColumns = groupNames_.size() + renewableGroupNames_.size();
     for (unsigned int i = 0; i < nbColumns; i++)
     {
         results_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
-    }
-}
-
-// TODO  remove tests purpose
-void SetData::writeResultsToFolder(const std::string& folderName) const
-{
-    namespace fs = std::filesystem;
-    fs::create_directories(folderName);
-
-    for (size_t i = 0; i < groupNames_.size(); ++i)
-    {
-        const std::string& group = groupNames_[i];
-        std::string filePath = folderName + "/" + group + ".txt";
-        std::ofstream outFile(filePath);
-        if (outFile.is_open())
-        {
-            for (size_t h = 0; h < results_[i].size(); ++h)
-            {
-                outFile << results_[i][h] << std::endl;
-            }
-            outFile.close();
-        }
-
-        filePath = folderName + "/" + group + "_annual.txt";
-        std::ofstream annualFile(filePath);
-        if (annualFile.is_open())
-        {
-            // For demonstration, sum all values as "annual"
-            long double annual = 0.0;
-            for (auto v: results_[i])
-            {
-                annual += v;
-            }
-            annualFile << annual << std::endl;
-        }
     }
 }
 
@@ -94,6 +72,7 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
 {
     for (const auto* area: set_)
     {
+        // Thermal clusters
         for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {
             const std::string& groupName = cluster->getGroup();
@@ -108,6 +87,21 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
                                                .ProductionThermique[h]
                                                .ProductionThermiqueDuPalier[cluster->index]
                                              * ratio;
+            }
+        }
+        // Renewable clusters
+        for (const auto& cluster: area->renewable.list.each_enabled())
+        {
+            const std::string& groupName = cluster->getGroup();
+            double ratio = 1 / (double)renewableNameAndNumberOfOccurrences_[groupName];
+            unsigned index = groupNames_.size() + renewableGroupToNumbers_[groupName];
+
+            for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
+            {
+                unsigned realHour = h + pb.HeureDansLAnnee;
+                // Extract renewable value for this cluster, area, and hour
+                // This assumes cluster->valueAtTimeStep is available and correct
+                results_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour) * ratio;
             }
         }
     }
@@ -144,6 +138,53 @@ void DynamicAggregation::writeAllResults(const std::string& baseFolder) const
     {
         std::string folderPath = baseFolder + "/" + setName;
         setData.writeResultsToFolder(folderPath);
+    }
+}
+
+// TODO  remove tests purpose
+void SetData::writeResultsToFolder(const std::string& folderName) const
+{
+    namespace fs = std::filesystem;
+    fs::create_directories(folderName);
+
+    for (size_t i = 0; i < groupNames_.size(); ++i)
+    {
+        const std::string& group = groupNames_[i];
+        std::string filePath = folderName + "/" + group + ".txt";
+        std::ofstream outFile(filePath);
+        if (outFile.is_open())
+        {
+            for (size_t h = 0; h < results_[i].size(); ++h)
+            {
+                outFile << results_[i][h] << std::endl;
+            }
+            outFile.close();
+        }
+
+        filePath = folderName + "/" + group + "_annual.txt";
+        std::ofstream annualFile(filePath);
+        if (annualFile.is_open())
+        {
+            // For demonstration, sum all values as "annual"
+            long double annual = 0.0;
+            for (auto v: results_[i])
+            {
+                annual += v;
+            }
+            annualFile << annual << std::endl;
+        }
+    }
+    // Write renewable results
+    for (size_t i = 0; i < renewableGroupNames_.size(); ++i)
+    {
+        std::string fileName = folderName + "/" + renewableGroupNames_[i] + "_renewable.csv";
+        std::ofstream out(fileName);
+        size_t idx = groupNames_.size() + i;
+        for (size_t h = 0; h < results_[idx].size(); ++h)
+        {
+            out << h << "," << results_[idx][h] << "\n";
+        }
+        out.close();
     }
 }
 

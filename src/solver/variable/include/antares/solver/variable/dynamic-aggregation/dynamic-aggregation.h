@@ -35,13 +35,20 @@ public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study);
+
+    // TODO rm tests
     void writeResultsToFolder(const std::string& folderName) const;
 
+private:
     std::vector<std::vector<long double>> results_;
 
     std::vector<std::string> groupNames_;
     std::map<std::string, unsigned int> groupToNumbers_;
     std::map<std::string, int> nameAndNumberOfOccurrences_;
+
+    std::vector<std::string> renewableGroupNames_;
+    std::map<std::string, unsigned int> renewableGroupToNumbers_;
+    std::map<std::string, int> renewableNameAndNumberOfOccurrences_;
 
     const std::set<Data::Area*, Data::CompareAreaName>& set_;
 };
@@ -52,6 +59,8 @@ public:
     explicit DynamicAggregation(Data::Study& study);
 
     void initializeSetsData();
+
+    // TODO rm tests
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
     void writeAllResults(const std::string& baseFolder) const;
