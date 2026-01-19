@@ -36,6 +36,7 @@ var hierarchy =
     [ "AdequacyPatchRuntimeData", "classAdequacyPatchRuntimeData.html", null ],
     [ "Antares::Data::AdequacyPatch::AdqPatchParams", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html", null ],
     [ "ALL_MUST_RUN_GENERATION", "structALL__MUST__RUN__GENERATION.html", null ],
+    [ "AllocationFixture", "structAllocationFixture.html", null ],
     [ "Antares::Data::AllVariablesPrintInfo", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html", null ],
     [ "Antares::Solver::Simulation::annualCostsStatistics", "classAntares_1_1Solver_1_1Simulation_1_1annualCostsStatistics.html", null ],
     [ "Antares::Toolbox::Filter::Operator::AOperator", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1AOperator.html", [
@@ -154,8 +155,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "ColumnBasedStorage", "classColumnBasedStorage.html", null ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", null ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
