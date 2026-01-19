@@ -46,25 +46,25 @@ const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "
 const std::set<std::string> ignoreList{"1_3", "1_5"};
 BOOST_AUTO_TEST_SUITE(ValidateMps)
 
-bool isProblemEmpty(const std::unique_ptr<ILinearProblem>& problem)
+bool isProblemEmpty(const ILinearProblem& problem)
 {
-    return !problem || problem->variableCount() == 0;
+    return problem.variableCount() == 0;
 }
 
-void checkProblemType(const unique_ptr<ILinearProblem>& originalProblem,
+void checkProblemType(const ILinearProblem& originalProblem,
                       const operations_research::mb::ModelBuilderHelper& fromMps)
 {
     const bool isMip = std::ranges::any_of(std::views::iota(0, fromMps.num_variables()),
                                            [&fromMps](const int vi)
                                            { return fromMps.VarIsIntegral(vi); });
-    BOOST_CHECK_EQUAL(isMip, !originalProblem->isLP());
+    BOOST_CHECK_EQUAL(isMip, !originalProblem.isLP());
 }
 
-void checkVariables(const unique_ptr<ILinearProblem>& originalProblem,
+void checkVariables(const ILinearProblem& originalProblem,
                     const operations_research::mb::ModelBuilderHelper& fromMps)
 {
-    BOOST_CHECK_EQUAL(originalProblem->variableCount(), fromMps.num_variables());
-    const auto& origVariables = originalProblem->getVariables();
+    BOOST_CHECK_EQUAL(originalProblem.variableCount(), fromMps.num_variables());
+    const auto& origVariables = originalProblem.getVariables();
     NameManager nameManager;
     for (int vi = 0; vi < fromMps.num_variables(); ++vi)
     {
@@ -77,12 +77,12 @@ void checkVariables(const unique_ptr<ILinearProblem>& originalProblem,
     }
 }
 
-void checkConstraints(const unique_ptr<ILinearProblem>& originalProblem,
+void checkConstraints(const ILinearProblem& originalProblem,
                       const operations_research::mb::ModelBuilderHelper& fromMps)
 {
-    BOOST_CHECK_EQUAL(originalProblem->constraintCount(), fromMps.num_constraints());
-    const auto& origVariables = originalProblem->getVariables();
-    const auto& origConstraints = originalProblem->getConstraints();
+    BOOST_CHECK_EQUAL(originalProblem.constraintCount(), fromMps.num_constraints());
+    const auto& origVariables = originalProblem.getVariables();
+    const auto& origConstraints = originalProblem.getConstraints();
 
     NameManager nameManager;
     for (int ci = 0; ci < fromMps.num_constraints(); ++ci)
@@ -116,21 +116,21 @@ void checkConstraints(const unique_ptr<ILinearProblem>& originalProblem,
     }
 }
 
-void checkObjective(const unique_ptr<ILinearProblem>& originalProblem,
+void checkObjective(const ILinearProblem& originalProblem,
                     const operations_research::mb::ModelBuilderHelper& fromMps)
 {
-    const auto& origVariables = originalProblem->getVariables();
-    BOOST_CHECK_EQUAL(originalProblem->getObjectiveOffset(), fromMps.ObjectiveOffset());
+    const auto& origVariables = originalProblem.getVariables();
+    BOOST_CHECK_EQUAL(originalProblem.getObjectiveOffset(), fromMps.ObjectiveOffset());
     for (int vi = 0; vi < fromMps.num_variables(); ++vi)
     {
         const auto& origVariable = origVariables.at(vi);
 
-        BOOST_CHECK_EQUAL(originalProblem->getObjectiveCoefficient(origVariable.get()),
+        BOOST_CHECK_EQUAL(originalProblem.getObjectiveCoefficient(origVariable.get()),
                           fromMps.VarObjectiveCoefficient(vi));
     }
 }
 
-void checkProblem(const std::unique_ptr<ILinearProblem>& originalProblem, const fs::path& mpsPath)
+void checkProblem(const ILinearProblem& originalProblem, const fs::path& mpsPath)
 {
     operations_research::mb::ModelBuilderHelper fromMps;
     fromMps.ImportFromMpsFile(mpsPath.string());
@@ -143,11 +143,12 @@ void checkProblem(const std::unique_ptr<ILinearProblem>& originalProblem, const 
 void checkMPS(const fs::path& studyPath, Modeler& modeler)
 {
     modeler.run();
-    if (const auto& masterProblem = modeler.masterProblem(); !isProblemEmpty(masterProblem))
+    const auto& masterProblem = modeler.masterProblem();
+    if (masterProblem && !isProblemEmpty(*masterProblem))
     {
-        checkProblem(masterProblem, studyPath / "output" / "master.mps");
+        checkProblem(*masterProblem, studyPath / "output" / "master.mps");
     }
-    checkProblem(modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
+    checkProblem(*modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
 }
 
 struct MpsWriterTestFixture
@@ -304,56 +305,70 @@ BOOST_AUTO_TEST_CASE(MakeMpsSafeUniqueName_Integration)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(MPSGeneratorTests)
+struct TempMPSFilePathProvider
+{
+    void setUpMPSFile(const std::string& name)
+    {
+        mpsFile = std::filesystem::temp_directory_path() / std::filesystem::path(name);
+        if (fs::exists(mpsFile))
+        {
+            fs::remove(mpsFile);
+        }
+    }
+
+    ~TempMPSFilePathProvider()
+    {
+        if (fs::exists(mpsFile))
+        {
+            fs::remove(mpsFile);
+        }
+    }
+
+    std::filesystem::path mpsFile;
+};
+BOOST_FIXTURE_TEST_SUITE(MPSGeneratorTests, TempMPSFilePathProvider)
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_EmptyProblem)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
-    fs::path tempPath = fs::temp_directory_path() / "empty_problem.mps";
+    OrtoolsLinearProblem problem(false, "highs");
+    setUpMPSFile("empty_problem.mps");
 
     BOOST_CHECK_NO_THROW({
-        auto mps = MPSGenerator(*problem, "EmptyProblem").run();
-        MPSFileWriter::write(tempPath, mps);
+        auto mps = MPSGenerator(problem, "EmptyProblem").run();
+        MPSFileWriter::write(mpsFile, mps);
     });
-
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_SimpleProblem)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
     // min x + 2*y
     // s.t. x + y >= 1
     //      x, y >= 0
 
-    auto x = problem->addNumVariable(0.0, problem->infinity(), "x");
-    auto y = problem->addNumVariable(0.0, problem->infinity(), "y");
+    auto x = problem.addNumVariable(0.0, problem.infinity(), "x");
+    auto y = problem.addNumVariable(0.0, problem.infinity(), "y");
 
-    problem->setObjectiveCoefficient(x, 1.0);
-    problem->setObjectiveCoefficient(y, 2.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 1.0);
+    problem.setObjectiveCoefficient(y, 2.0);
+    problem.setMinimization();
 
-    auto c = problem->addConstraint(1.0, problem->infinity(), "c1");
+    auto c = problem.addConstraint(1.0, problem.infinity(), "c1");
     c->setCoefficient(x, 1.0);
     c->setCoefficient(y, 1.0);
 
-    fs::path tempPath = fs::temp_directory_path() / "simple_problem.mps";
+    setUpMPSFile("simple_problem.mps");
 
     BOOST_CHECK_NO_THROW({
-        auto mps = MPSGenerator(*problem, "SimpleProblem").run();
-        MPSFileWriter::write(tempPath, mps);
+        auto mps = MPSGenerator(problem, "SimpleProblem").run();
+        MPSFileWriter::write(mpsFile, mps);
     });
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
     // Verify file contains expected sections
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
@@ -365,62 +380,53 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_SimpleProblem)
     BOOST_CHECK(content.find("ENDATA") != std::string::npos);
 
     // Validate the MPS file can be read back and matches original problem
-    ValidateMps::checkProblem(problem, tempPath);
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_MixedIntegerProblem)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(true, "scip");
+    OrtoolsLinearProblem problem(true, "scip");
 
     // Create a MIP problem
-    auto x = problem->addIntVariable(0, 10, "x");
-    auto y = problem->addNumVariable(0.0, 5.0, "y");
+    auto x = problem.addIntVariable(0, 10, "x");
+    auto y = problem.addNumVariable(0.0, 5.0, "y");
 
-    problem->setObjectiveCoefficient(x, 1.0);
-    problem->setObjectiveCoefficient(y, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 1.0);
+    problem.setObjectiveCoefficient(y, 1.0);
+    problem.setMinimization();
 
-    auto c = problem->addConstraint(-problem->infinity(), 15.0, "c1");
+    auto c = problem.addConstraint(-problem.infinity(), 15.0, "c1");
     c->setCoefficient(x, 2.0);
     c->setCoefficient(y, 3.0);
 
-    fs::path tempPath = fs::temp_directory_path() / "mip_problem.mps";
+    setUpMPSFile("mip_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "MIPProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    auto mps = MPSGenerator(problem, "MIPProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_BinaryVariable)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(true, "highs");
+    OrtoolsLinearProblem problem(true, "highs");
 
-    auto b = problem->addIntVariable(0, 1, "binary_var");
-    problem->addNumVariable(0.5, 1.981, "num_var");
+    auto b = problem.addIntVariable(0, 1, "binary_var");
+    problem.addNumVariable(0.5, 1.981, "num_var");
 
-    problem->setObjectiveCoefficient(b, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(b, 1.0);
+    problem.setMinimization();
 
-    fs::path tempPath = fs::temp_directory_path() / "binary_problem.mps";
-    auto mps = MPSGenerator(*problem, "BinaryProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    setUpMPSFile("binary_problem.mps");
+    auto mps = MPSGenerator(problem, "BinaryProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
@@ -428,32 +434,27 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_BinaryVariable)
     BOOST_CHECK(content.find(" BV ") != std::string::npos);
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_FreeVariables)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
-    auto x = problem->addNumVariable(-problem->infinity(), problem->infinity(), "free_var");
-    auto y = problem->addIntVariable(-problem->infinity(), problem->infinity(), "free_int_var");
+    auto x = problem.addNumVariable(-problem.infinity(), problem.infinity(), "free_var");
+    auto y = problem.addIntVariable(-problem.infinity(), problem.infinity(), "free_int_var");
 
-    problem->setObjectiveCoefficient(x, 1.0);
-    problem->setObjectiveCoefficient(y, -1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 1.0);
+    problem.setObjectiveCoefficient(y, -1.0);
+    problem.setMinimization();
 
-    fs::path tempPath = fs::temp_directory_path() / "free_var_problem.mps";
+    setUpMPSFile("free_var_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "FreeVarProblem").run();
-    MPSFileWriter::write(tempPath, mps);
-    BOOST_CHECK(fs::exists(tempPath));
+    auto mps = MPSGenerator(problem, "FreeVarProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
+    BOOST_CHECK(fs::exists(mpsFile));
 
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
@@ -461,31 +462,26 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_FreeVariables)
     BOOST_CHECK(content.find(" FR ") != std::string::npos);
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_FixedVariable)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
-    auto x = problem->addNumVariable(5.0, 5.0, "fixed_var");
+    auto x = problem.addNumVariable(5.0, 5.0, "fixed_var");
 
-    problem->setObjectiveCoefficient(x, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 1.0);
+    problem.setMinimization();
 
-    fs::path tempPath = fs::temp_directory_path() / "fixed_var_problem.mps";
+    setUpMPSFile("fixed_var_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "FixedVarProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    auto mps = MPSGenerator(problem, "FixedVarProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
@@ -493,35 +489,30 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_FixedVariable)
     BOOST_CHECK(content.find(" FX ") != std::string::npos);
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_EqualityConstraint)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
-    auto x = problem->addNumVariable(0.0, 10.0, "x");
+    auto x = problem.addNumVariable(0.0, 10.0, "x");
 
-    problem->setObjectiveCoefficient(x, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 1.0);
+    problem.setMinimization();
 
     // Equality constraint
-    auto c = problem->addConstraint(5.0, 5.0, "eq_constraint");
+    auto c = problem.addConstraint(5.0, 5.0, "eq_constraint");
     c->setCoefficient(x, 1.0);
 
-    fs::path tempPath = fs::temp_directory_path() / "eq_constraint_problem.mps";
+    setUpMPSFile("eq_constraint_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "EqConstraintProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    auto mps = MPSGenerator(problem, "EqConstraintProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
@@ -529,32 +520,27 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_EqualityConstraint)
     BOOST_CHECK(content.find(" E  ") != std::string::npos);
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_ObjectiveOffset)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
-    auto x = problem->addNumVariable(0.0, 10.0, "x");
+    auto x = problem.addNumVariable(0.0, 10.0, "x");
 
-    problem->setObjectiveCoefficient(x, 1.0);
-    problem->setObjectiveOffset(100.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 1.0);
+    problem.setObjectiveOffset(100.0);
+    problem.setMinimization();
 
-    fs::path tempPath = fs::temp_directory_path() / "offset_problem.mps";
+    setUpMPSFile("offset_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "OffsetProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    auto mps = MPSGenerator(problem, "OffsetProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
@@ -562,55 +548,46 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_ObjectiveOffset)
     BOOST_CHECK(content.find("RHS1  OBJ") != std::string::npos);
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 // TODO
 //  BOOST_AUTO_TEST_CASE(MPSGenerator_MaximizationProblem)
 //  {
-//      std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
+//      OrtoolsLinearProblem problem(false,
 //                                                                                       "highs");
 //
-//      auto x = problem->addNumVariable(0.0, 10.0, "x");
+//      auto x = problem.addNumVariable(0.0, 10.0, "x");
 //
-//      problem->setObjectiveCoefficient(x, 2.0);
-//      problem->setMaximization();
+//      problem.setObjectiveCoefficient(x, 2.0);
+//      problem.setMaximization();
 //
-//      fs::path tempPath = fs::temp_directory_path() / "max_problem.mps";
+//      setUpMPSFile ( "max_problem.mps");
 //
-//      auto mps = MPSGenerator(*problem, "MaxProblem").run();
-//      MPSFileWriter::write(tempPath, mps);
-//      BOOST_CHECK(fs::exists(tempPath));
+//      auto mps = MPSGenerator(problem, "MaxProblem").run();
+//      MPSFileWriter::write(mpsFile, mps);
+//      BOOST_CHECK(fs::exists(mpsFile));
 //
 //      // Verify the objective coefficient is negated for maximization
-//      std::ifstream file(tempPath);
+//      std::ifstream file(mpsFile);
 //      std::string content((std::istreambuf_iterator<char>(file)),
 //      std::istreambuf_iterator<char>()); file.close();
 //
 //      BOOST_CHECK(content.find("COLUMNS") != std::string::npos);
 //
 //      // Validate the MPS file
-//      ValidateMps::checkProblem(problem, tempPath);
-//      if (fs::exists(tempPath))
-//      {
-//          fs::remove(tempPath);
-//      }
+//      ValidateMps::checkProblem(problem, mpsFile);
 //  }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_InvalidPath)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
     fs::path invalidPath = "/invalid/path/that/does/not/exist/problem.mps";
 
     BOOST_CHECK_THROW(
       {
-          auto mps = MPSGenerator(*problem, "InvalidPathProblem").run();
+          auto mps = MPSGenerator(problem, "InvalidPathProblem").run();
           MPSFileWriter::write(invalidPath, mps);
       },
       std::runtime_error);
@@ -618,114 +595,97 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_InvalidPath)
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_VariableNamesWithForbiddenChars)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
-    auto x = problem->addNumVariable(0.0, 10.0, "$invalid-name+test");
-    auto y = problem->addNumVariable(0.0, 10.0, ".another/bad*name");
+    auto x = problem.addNumVariable(0.0, 10.0, "$invalid-name+test");
+    auto y = problem.addNumVariable(0.0, 10.0, ".another/bad*name");
 
-    problem->setObjectiveCoefficient(x, 1.0);
-    problem->setObjectiveCoefficient(y, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 1.0);
+    problem.setObjectiveCoefficient(y, 1.0);
+    problem.setMinimization();
 
-    fs::path tempPath = fs::temp_directory_path() / "invalid_names_problem.mps";
+    setUpMPSFile("invalid_names_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "InvalidNamesProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    auto mps = MPSGenerator(problem, "InvalidNamesProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
     // Verify file is valid
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     BOOST_CHECK(file.is_open());
     file.close();
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_DuplicateVariableNames)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
-    auto x1 = problem->addNumVariable(0.0, 10.0, "duplicate");
-    auto x2 = problem->addNumVariable(0.0, 10.0, "duplicate");
-    auto x3 = problem->addNumVariable(0.0, 10.0, "duplicate");
+    auto x1 = problem.addNumVariable(0.0, 10.0, "duplicate");
+    auto x2 = problem.addNumVariable(0.0, 10.0, "duplicate");
+    auto x3 = problem.addNumVariable(0.0, 10.0, "duplicate");
 
-    problem->setObjectiveCoefficient(x1, 1.0);
-    problem->setObjectiveCoefficient(x2, 1.0);
-    problem->setObjectiveCoefficient(x3, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x1, 1.0);
+    problem.setObjectiveCoefficient(x2, 1.0);
+    problem.setObjectiveCoefficient(x3, 1.0);
+    problem.setMinimization();
 
-    fs::path tempPath = fs::temp_directory_path() / "duplicate_names_problem.mps";
+    setUpMPSFile("duplicate_names_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "DuplicateNamesProblem").run();
-    MPSFileWriter::write(tempPath, mps);
-    BOOST_CHECK(fs::exists(tempPath));
+    auto mps = MPSGenerator(problem, "DuplicateNamesProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
+    BOOST_CHECK(fs::exists(mpsFile));
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_ZeroCoefficients)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(false,
-                                                                                     "highs");
+    OrtoolsLinearProblem problem(false, "highs");
 
-    auto x = problem->addNumVariable(0.0, 10.0, "x");
-    auto y = problem->addNumVariable(0.0, 10.0, "y");
+    auto x = problem.addNumVariable(0.0, 10.0, "x");
+    auto y = problem.addNumVariable(0.0, 10.0, "y");
 
     // Zero coefficient in objective
-    problem->setObjectiveCoefficient(x, 0.0);
-    problem->setObjectiveCoefficient(y, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 0.0);
+    problem.setObjectiveCoefficient(y, 1.0);
+    problem.setMinimization();
 
-    auto c = problem->addConstraint(0.0, 10.0, "c1");
+    auto c = problem.addConstraint(0.0, 10.0, "c1");
     c->setCoefficient(x, 98.0); // should not be zero
     c->setCoefficient(y, 1.0);
 
-    fs::path tempPath = fs::temp_directory_path() / "zero_coef_problem.mps";
+    setUpMPSFile("zero_coef_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "ZeroCoefProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    auto mps = MPSGenerator(problem, "ZeroCoefProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_NegativeIntegerBounds)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(true, "highs");
+    OrtoolsLinearProblem problem(true, "highs");
 
-    auto x = problem->addIntVariable(-10, 5, "neg_int");
+    auto x = problem.addIntVariable(-10, 5, "neg_int");
 
-    problem->setObjectiveCoefficient(x, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 1.0);
+    problem.setMinimization();
 
-    fs::path tempPath = fs::temp_directory_path() / "neg_int_problem.mps";
+    setUpMPSFile("neg_int_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "NegIntProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    auto mps = MPSGenerator(problem, "NegIntProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
 
@@ -733,45 +693,35 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_NegativeIntegerBounds)
     BOOST_CHECK(content.find(" LI ") != std::string::npos);
     BOOST_CHECK(content.find(" UI ") != std::string::npos);
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_CASE(MPSGenerator_UnboundedIntegerVariable)
 {
-    std::unique_ptr<ILinearProblem> problem = std::make_unique<OrtoolsLinearProblem>(true, "highs");
+    OrtoolsLinearProblem problem(true, "highs");
 
-    auto* x = problem->addIntVariable(-problem->infinity(), 2, "unbounded_int");
-    auto* y = problem->addNumVariable(-4, 6.6, "bounded_float");
+    auto* x = problem.addIntVariable(-problem.infinity(), 2, "unbounded_int");
+    auto* y = problem.addNumVariable(-4, 6.6, "bounded_float");
 
-    problem->setObjectiveCoefficient(x, 16.1);
-    problem->setObjectiveCoefficient(y, 1.0);
-    problem->setMinimization();
+    problem.setObjectiveCoefficient(x, 16.1);
+    problem.setObjectiveCoefficient(y, 1.0);
+    problem.setMinimization();
 
-    fs::path tempPath = fs::temp_directory_path() / "unbounded_int_problem.mps";
+    setUpMPSFile("unbounded_int_problem.mps");
 
-    auto mps = MPSGenerator(*problem, "UnboundedIntProblem").run();
-    MPSFileWriter::write(tempPath, mps);
+    auto mps = MPSGenerator(problem, "UnboundedIntProblem").run();
+    MPSFileWriter::write(mpsFile, mps);
 
-    BOOST_CHECK(fs::exists(tempPath));
+    BOOST_CHECK(fs::exists(mpsFile));
 
-    std::ifstream file(tempPath);
+    std::ifstream file(mpsFile);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
     // Should contain MI (minus infinity)
     BOOST_CHECK(content.find(" MI ") != std::string::npos);
 
     // Validate the MPS file
-    ValidateMps::checkProblem(problem, tempPath);
-
-    if (fs::exists(tempPath))
-    {
-        fs::remove(tempPath);
-    }
+    ValidateMps::checkProblem(problem, mpsFile);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
