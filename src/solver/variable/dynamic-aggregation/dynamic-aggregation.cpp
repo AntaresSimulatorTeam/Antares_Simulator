@@ -171,15 +171,17 @@ void DynamicAggregation::addResultsToSets(const PROBLEME_HEBDO& pb)
     }
 }
 
-void DynamicAggregation::writeAllResults(Solver::IResultWriter& writer) const
+void DynamicAggregation::writeAllResults(Solver::IResultWriter& writer,
+                                         const std::string& baseFolder) const
 {
     for (const auto& [setName, setData]: setsData_)
     {
-        setData.writeResultsToFolder(writer);
+        setData.writeResultsToFolder(writer, baseFolder + "/" + setName);
     }
 }
 
-void SetData::writeResultsToFolder(Solver::IResultWriter& writer) const
+void SetData::writeResultsToFolder(Solver::IResultWriter& writer,
+                                   const std::string& folderName) const
 {
     for (size_t i = 0; i < thermalGroupNames_.size(); ++i)
     {
@@ -221,34 +223,32 @@ void SetData::writeResultsToFolder(Solver::IResultWriter& writer) const
     // Write STS results
     for (size_t i = 0; i < stsGroupNames_.size(); ++i)
     {
+        std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_injection.csv";
+        std::ostringstream injectionContent;
+        for (size_t h = 0; h < stsInjectionResults_[i].size(); ++h)
         {
-            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_injection.csv";
-            std::ofstream out(fileName);
-            for (size_t h = 0; h < stsInjectionResults_[i].size(); ++h)
-            {
-                out << stsInjectionResults_[i][h] << "\n";
-            }
-            out.close();
+            injectionContent << stsInjectionResults_[i][h] << "\n";
         }
+        std::string injectionStr = injectionContent.str();
+        writer.addEntryFromBuffer(fileName, injectionStr);
+
+        fileName = folderName + "/" + stsGroupNames_[i] + "_sts_withdrawal.csv";
+        std::ostringstream withdrawlContent;
+        for (size_t h = 0; h < stsWithdrawalResults_[i].size(); ++h)
         {
-            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_withdrawal.csv";
-            std::ofstream out(fileName);
-            for (size_t h = 0; h < stsWithdrawalResults_[i].size(); ++h)
-            {
-                out << stsWithdrawalResults_[i][h] << "\n";
-            }
-            out.close();
+            withdrawlContent << stsWithdrawalResults_[i][h] << "\n";
         }
+        std::string withdrawlStr = withdrawlContent.str();
+        writer.addEntryFromBuffer(fileName, withdrawlStr);
+
+        fileName = folderName + "/" + stsGroupNames_[i] + "_sts_level.csv";
+        std::ostringstream levelContent;
+        for (size_t h = 0; h < stsLevelResults_[i].size(); ++h)
         {
-            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_level.csv";
-            std::ofstream out(fileName);
-            for (size_t h = 0; h < stsLevelResults_[i].size(); ++h)
-            {
-                out << stsLevelResults_[i][h] << "\n";
-            }
-            out.close();
+            levelContent << stsLevelResults_[i][h] << "\n";
         }
+        std::string levelStr = levelContent.str();
+        writer.addEntryFromBuffer(fileName, levelStr);
     }
 }
-
 } // namespace Antares::Solver::Variable

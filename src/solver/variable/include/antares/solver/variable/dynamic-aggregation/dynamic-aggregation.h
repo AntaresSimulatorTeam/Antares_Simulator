@@ -40,7 +40,7 @@ public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study);
-    void writeResultsToFolder(Solver::IResultWriter& writer) const;
+    void writeResultsToFolder(Solver::IResultWriter& writer, const std::string& folderName) const;
 
 private:
     std::vector<std::vector<long double>> thermalResults_;
@@ -74,7 +74,7 @@ public:
 
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
-    void writeAllResults(IResultWriter& writer) const;
+    void writeAllResults(Solver::IResultWriter& writer, const std::string& baseFolder) const;
 
 private:
     Data::Study& study_;
