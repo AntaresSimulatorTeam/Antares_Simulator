@@ -32,45 +32,24 @@ namespace Antares::Solver::Variable
 SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     set_(set)
 {
-    // Thermal clusters
     for (auto& area: set_)
     {
-        // handle sts later
         for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {
-            const std::string groupName = cluster->getGroup();
-            thermalNameAndNumberOfOccurrences_[groupName]++;
+            thermalGroupNames_.insert(cluster->getGroup());
         }
-        // Renewable clusters
         for (const auto& cluster: area->renewable.list.each_enabled())
         {
-            const std::string groupName = cluster->getGroup();
-            renewableNameAndNumberOfOccurrences_[groupName]++;
+            renewableGroupNames_.insert(cluster->getGroup());
         }
-        // STS clusters
         for (const auto& sts: area->shortTermStorage.storagesByIndex)
         {
-            const std::string& groupName = sts.properties.groupName;
-            stsNameAndNumberOfOccurrences_[groupName]++;
+            stsGroupNames_.insert(sts.properties.groupName);
         }
     }
 
-    for (const auto& nameAndNum: thermalNameAndNumberOfOccurrences_)
-    {
-        thermalGroupNames_.push_back(nameAndNum.first);
-    }
     thermalGroupToNumbers_ = Utils::giveNumbersToStrings(thermalGroupNames_);
-
-    for (const auto& nameAndNum: renewableNameAndNumberOfOccurrences_)
-    {
-        renewableGroupNames_.push_back(nameAndNum.first);
-    }
     renewableGroupToNumbers_ = Utils::giveNumbersToStrings(renewableGroupNames_);
-
-    for (const auto& nameAndNum: stsNameAndNumberOfOccurrences_)
-    {
-        stsGroupNames_.push_back(nameAndNum.first);
-    }
     stsGroupToNumbers_ = Utils::giveNumbersToStrings(stsGroupNames_);
 
     for (unsigned int i = 0; i < thermalGroupNames_.size(); i++)
@@ -97,8 +76,6 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
         for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {
             const std::string& groupName = cluster->getGroup();
-
-            double ratio = 1 / (double)thermalNameAndNumberOfOccurrences_[groupName];
             unsigned index = thermalGroupToNumbers_[groupName];
 
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
@@ -106,15 +83,13 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
                 unsigned realHour = h + pb.HeureDansLAnnee;
                 thermalResults_[index][realHour] += pb.ResultatsHoraires[area->index]
                                                       .ProductionThermique[h]
-                                                      .ProductionThermiqueDuPalier[cluster->index]
-                                                    * ratio;
+                                                      .ProductionThermiqueDuPalier[cluster->index];
             }
         }
         // Renewable clusters
         for (const auto& cluster: area->renewable.list.each_enabled())
         {
             const std::string& groupName = cluster->getGroup();
-            double ratio = 1 / (double)renewableNameAndNumberOfOccurrences_[groupName];
             unsigned index = renewableGroupToNumbers_[groupName];
 
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
@@ -122,8 +97,7 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
                 unsigned realHour = h + pb.HeureDansLAnnee;
                 // Extract renewable value for this cluster, area, and hour
                 // This assumes cluster->valueAtTimeStep is available and correct
-                renewableResults_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour)
-                                                      * ratio;
+                renewableResults_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour);
             }
         }
         // STS clusters
@@ -131,7 +105,6 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
         for (const auto& sts: area->shortTermStorage.storagesByIndex)
         {
             const std::string& groupName = sts.properties.groupName;
-            double ratio = 1 / (double)stsNameAndNumberOfOccurrences_[groupName];
             unsigned index = stsGroupToNumbers_[groupName];
 
             const auto& stsResults = pb.ResultatsHoraires[area->index]
@@ -140,9 +113,9 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
             {
                 unsigned realHour = h + pb.HeureDansLAnnee;
-                stsInjectionResults_[index][realHour] += stsResults.injection[h] * ratio;
-                stsWithdrawalResults_[index][realHour] += stsResults.withdrawal[h] * ratio;
-                stsLevelResults_[index][realHour] += stsResults.level[h] * ratio;
+                stsInjectionResults_[index][realHour] += stsResults.injection[h];
+                stsWithdrawalResults_[index][realHour] += stsResults.withdrawal[h];
+                stsLevelResults_[index][realHour] += stsResults.level[h];
             }
             ++clusterIndex;
         }
@@ -189,16 +162,16 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
     namespace fs = std::filesystem;
     fs::create_directories(folderName);
 
-    for (size_t i = 0; i < thermalGroupNames_.size(); ++i)
+    unsigned index = 0;
+    for (const auto& group: thermalGroupNames_)
     {
-        const std::string& group = thermalGroupNames_[i];
         std::string filePath = folderName + "/" + group + ".txt";
         std::ofstream outFile(filePath);
         if (outFile.is_open())
         {
-            for (size_t h = 0; h < thermalResults_[i].size(); ++h)
+            for (size_t h = 0; h < thermalResults_[index].size(); ++h)
             {
-                outFile << thermalResults_[i][h] << std::endl;
+                outFile << thermalResults_[index][h] << std::endl;
             }
             outFile.close();
         }
@@ -209,54 +182,60 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
         {
             // For demonstration, sum all values as "annual"
             long double annual = 0.0;
-            for (auto v: thermalResults_[i])
+            for (auto v: thermalResults_[index])
             {
                 annual += v;
             }
             annualFile << annual << std::endl;
         }
+        ++index;
     }
+
+    index = 0;
     // Write renewable results
-    for (size_t i = 0; i < renewableGroupNames_.size(); ++i)
+    for (const auto& group: renewableGroupNames_)
     {
-        std::string fileName = folderName + "/" + renewableGroupNames_[i] + "_renewable.csv";
+        std::string fileName = folderName + "/" + group + "_renewable.csv";
         std::ofstream out(fileName);
-        for (size_t h = 0; h < renewableResults_[i].size(); ++h)
+        for (size_t h = 0; h < renewableResults_[index].size(); ++h)
         {
-            out << renewableResults_[i][h] << "\n";
+            out << renewableResults_[index][h] << "\n";
         }
         out.close();
+        ++index;
     }
+    index = 0;
     // Write STS results
-    for (size_t i = 0; i < stsGroupNames_.size(); ++i)
+    for (const auto& group: stsGroupNames_)
     {
         {
-            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_injection.csv";
+            std::string fileName = folderName + "/" + group + "_sts_injection.csv";
             std::ofstream out(fileName);
-            for (size_t h = 0; h < stsInjectionResults_[i].size(); ++h)
+            for (size_t h = 0; h < stsInjectionResults_[index].size(); ++h)
             {
-                out << stsInjectionResults_[i][h] << "\n";
+                out << stsInjectionResults_[index][h] << "\n";
             }
             out.close();
         }
         {
-            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_withdrawal.csv";
+            std::string fileName = folderName + "/" + group + "_sts_withdrawal.csv";
             std::ofstream out(fileName);
-            for (size_t h = 0; h < stsWithdrawalResults_[i].size(); ++h)
+            for (size_t h = 0; h < stsWithdrawalResults_[index].size(); ++h)
             {
-                out << stsWithdrawalResults_[i][h] << "\n";
+                out << stsWithdrawalResults_[index][h] << "\n";
             }
             out.close();
         }
         {
-            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_level.csv";
+            std::string fileName = folderName + "/" + group + "_sts_level.csv";
             std::ofstream out(fileName);
-            for (size_t h = 0; h < stsLevelResults_[i].size(); ++h)
+            for (size_t h = 0; h < stsLevelResults_[index].size(); ++h)
             {
-                out << stsLevelResults_[i][h] << "\n";
+                out << stsLevelResults_[index][h] << "\n";
             }
             out.close();
         }
+        ++index;
     }
 }
 
