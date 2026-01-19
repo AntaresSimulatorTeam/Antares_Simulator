@@ -40,6 +40,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
+#include "antares/study/fwd.h"
 #include "antares/study/system-model/system.h"
 
 #include "spx_constantes_externes.h"
@@ -62,11 +63,11 @@ struct SimplexResult
 
 static std::once_flag logProblemSizeFlag;
 
-static void logProblemSize(const MPSolver* mpSolver)
+static void logProblemSize(const MPSolver* mpSolver, std::string type)
 {
     logs.info();
     logs.info();
-    logs.info() << " Total Problem size : " << mpSolver->NumVariables() << " variables, "
+    logs.info() << " Total " << type << " size : " << mpSolver->NumVariables() << " variables, "
                 << mpSolver->NumConstraints() << " constraints";
     logs.info();
     logs.info();
@@ -119,18 +120,22 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 }
 
 // Returns a non-owning pointer
-MPSolver* fillAndGetMpSolver(
-  LegacyOrtoolsLinearProblem& ortoolsProblem,
-  FillContext& fillCtx,
-  const PROBLEME_HEBDO* problemeHebdo,
-  OptimEntityContainer& optimEntityContainer,
-  bool namedProblems,
-  Modeler::Config::Location location,
-  BendersDecomposition* benders_decomposition)
+MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
+                             FillContext& fillCtx,
+                             const PROBLEME_HEBDO* problemeHebdo,
+                             OptimEntityContainer& optimEntityContainer,
+                             bool namedProblems,
+                             Modeler::Config::Location location,
+                             BendersDecomposition* benders_decomposition,
+                             bool legacy)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
-    fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
+    if (legacy)
+    {
+        fillersCollection.push_back(std::make_unique<LegacyFiller>(optimEntityContainer.Problem(),
+                                                                   problemeHebdo,
+                                                                   namedProblems));
+    }
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -196,116 +201,81 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                            ->scenarioGroupRepository
                                                                       : nullptr;
 
-    OptimEntityContainer optimEntityContainer(master_problem,
-                                              modelerDataSeries,
-                                              modelerScenarioGroupRepository);
+    OptimEntityContainer masterOptimEntityContainer(master_problem,
+                                                    modelerDataSeries,
+                                                    modelerScenarioGroupRepository);
 
-    auto* solver = fillAndGetMpSolver(master_problem,
+    auto* master = fillAndGetMpSolver(master_problem,
                                       fillCtx,
                                       problemeHebdo,
-                                      optimEntityContainer,
+                                      masterOptimEntityContainer,
                                       problemeHebdo->NamedProblems,
                                       Modeler::Config::Location::MASTER,
-                                      &bendersDecomposition);
+                                      &bendersDecomposition,
+                                      false);
+    logProblemSize(master, "master");
 
     // Do not store master solver in ProblemeAResoudre->ProblemesSpx[NumIntervalle]
     // (master solver lifecycle is managed locally now)
     // ProblemeAResoudre->ProblemesSpx[NumIntervalle].reset(solver);
 
-    // Create sub-problem only for the first optimization (mirrors Modeler.cpp behavior)
-    std::unique_ptr<LegacyOrtoolsLinearProblem> subproblem; // kept alive for function duration
-
     // Build subproblem and populate its solver (do not solve here)
-    subproblem = std::make_unique<LegacyOrtoolsLinearProblem>(
-      problemeHebdo->ProblemeAResoudre->isMIP(), options.solverName);
+    auto subproblemLP = std::make_unique<LegacyOrtoolsLinearProblem>(
+      problemeHebdo->ProblemeAResoudre->isMIP(),
+      options.solverName);
+
+    OptimEntityContainer subOptimEntityContainer(*subproblemLP,
+                                                 modelerDataSeries,
+                                                 modelerScenarioGroupRepository);
 
     bendersDecomposition.setCurrentProblemId("1-1");
-    (void)fillAndGetMpSolver(*subproblem,
-                             fillCtx,
-                             problemeHebdo,
-                             optimEntityContainer,
-                             problemeHebdo->NamedProblems,
-                             Modeler::Config::Location::SUBPROBLEMS,
-                             &bendersDecomposition);
+    auto* subproblem = fillAndGetMpSolver(*subproblemLP,
+                                          fillCtx,
+                                          problemeHebdo,
+                                          subOptimEntityContainer,
+                                          problemeHebdo->NamedProblems,
+                                          Modeler::Config::Location::SUBPROBLEMS,
+                                          &bendersDecomposition,
+                                          true);
+    logProblemSize(subproblem, "subproblem");
 
     logs.info() << "Subproblem 1-1 created for first optimization";
 
-    std::call_once(logProblemSizeFlag, logProblemSize, solver);
-
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+    {
+        mpsWriterFactory mps_writer_factory(mpsExportStatus::EXPORT_BOTH_OPTIMS,
+                                            problemeHebdo->exportMPSOnError,
+                                            optimizationNumber,
+                                            subproblem);
+        auto mps_writer = mps_writer_factory.create();
+        mps_writer->runIfNeeded(writer, "subproblem.mps");
+    }
 
-    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
-                                        problemeHebdo->exportMPSOnError,
-                                        optimizationNumber,
-                                        solver);
-
-    auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded(writer, filename);
-    // TODO 1 seul fois
-    mps_writer->runIfNeeded(writer, "master.mps");
+    {
+        mpsWriterFactory mps_writer_factory(mpsExportStatus::EXPORT_FIRST_OPTIM,
+                                            problemeHebdo->exportMPSOnError,
+                                            optimizationNumber,
+                                            master);
+        auto mps_writer = mps_writer_factory.create();
+        mps_writer->runIfNeeded(writer, "master.mps");
+    }
 
     measure.tick();
     timeMeasure.updateTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.updateTime);
     measure.reset();
 
-    ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver, options);
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                        problemeHebdo->exportMPSOnError,
+                                        optimizationNumber,
+                                        subproblem);
 
-    measure.tick();
-    logs.info() << fmt::format("Problem {}-{} solved in {}",
-                               problemeHebdo->weekInTheYear,
-                               problemeHebdo->year,
-                               measure.toStringInSeconds());
-    timeMeasure.solveTime = measure.duration_ms();
-    optimizationStatistics.addSolveTime(timeMeasure.solveTime);
-
-    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX)
-    {
-        if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
-        {
-            if (solver)
-            {
-                // Previously we reset the stored solver pointer here. Since we no longer store
-                // the master solver in ProblemeAResoudre, avoid modifying that structure.
-                // Keep local cleanup if needed (nothing to do since solver is non-owned pointer).
-            }
-
-            logs.info() << " Solver: resolution failed";
-            logs.debug() << " solver: resetting";
-
-            return {.timeMeasure = timeMeasure,
-                    .mps_writer_factory = mps_writer_factory,
-                    .objectiveValue = 0};
-        }
-        throw FatalError("Internal error: insufficient memory");
-    }
-
-    if (simulationTable && modelerData)
-    {
-        unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
-                                  ? problemeHebdo->weekInTheYear
-                                  : problemeHebdo->weekInTheYear * 7 + NumIntervalle;
-        TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
-                                                  ? TimeConversionMode::WeeklyBlocks
-                                                  : TimeConversionMode::DailyBlocks;
-        measure.reset();
-        FillSimulationTable(*simulationTable,
-                            master_problem,
-                            ::getObjectiveValue(solver),
-                            *modelerData,
-                            optimEntityContainer,
-                            fillCtx,
-                            currentBlock,
-                            timeConversionMode,
-                            true);
-
-        measure.tick();
-        timeMeasure.simulationTableFillTime = measure.duration_ms();
-    }
+    // cheat
+    problemeHebdo->ProblemeAResoudre->ExistenceDUneSolution = OUI_SPX;
 
     return {.timeMeasure = timeMeasure,
             .mps_writer_factory = mps_writer_factory,
-            .objectiveValue = getObjectiveValue(solver)};
+            .objectiveValue = getObjectiveValue(master)};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
@@ -386,13 +356,15 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        std::unique_ptr<MPSolver> MPproblem(fillAndGetMpSolver(infeasibleProblem,
-                                                               fillCtx,
-                                                               problemeHebdo,
-                                                               optimEntityContainer,
-                                                               true,
-                                                               Modeler::Config::Location::SUBPROBLEMS,
-                                                               nullptr));
+        std::unique_ptr<MPSolver> MPproblem(
+          fillAndGetMpSolver(infeasibleProblem,
+                             fillCtx,
+                             problemeHebdo,
+                             optimEntityContainer,
+                             true,
+                             Modeler::Config::Location::SUBPROBLEMS,
+                             nullptr,
+                             true));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

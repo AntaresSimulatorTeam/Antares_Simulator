@@ -54,7 +54,13 @@ public:
       unsigned int index) const
     {
         const auto& optimComponent = optimComponents_.at(component.Index());
-        return variableStartColumn_.at(optimComponent.modelVariableGlobalIndices.at(index));
+        auto globalIndex = optimComponent.modelVariableGlobalIndices.at(index);
+        if (globalIndex == static_cast<unsigned int>(-1))
+        {
+            throw std::runtime_error("Variable index is invalid - variable location is "
+                                     "incompatible with the target location");
+        }
+        return variableStartColumn_.at(globalIndex);
     }
 
     [[nodiscard]] const EvaluationContext& getEvaluationContext(
