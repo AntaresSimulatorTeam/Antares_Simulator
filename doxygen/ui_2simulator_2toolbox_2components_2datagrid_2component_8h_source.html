@@ -127,180 +127,163 @@ $(document).ready(function(){initNavTree('ui_2simulator_2toolbox_2components_2da
 <div class="title">component.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_COMPONENT_H__</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_COMPONENT_H__</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;ui/common/component/panel.h&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;antares/date/date.h&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>Antares::Component::Datagrid</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// classes forwarding</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">class </span>VGridHelper;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">class </span>DBGrid;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">class </span>InternalState;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>Renderer</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">class </span>IRenderer;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">   39</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">ComponentRefresh</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">ComponentRefresh</a>(<a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">InternalState</a>*&amp; i):</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        pInternal(i)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#a5f1601b857be52c1dd9be980fab3486d">forceRefresh</a>();</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#aae8e5c4400dbe1bb3b7b9f8332f43ccb">forceRefreshDelayed</a>();</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#a8767d9d8394b9185f36b8878b7ee536a">enableRefresh</a>(<span class="keywordtype">bool</span> enabled);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">InternalState</a>*&amp; pInternal;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;};</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_COMPONENT_H__</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_COMPONENT_H__</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;ui/common/component/panel.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;antares/date/date.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span>Antares::Component::Datagrid</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// classes forwarding</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">class </span>VGridHelper;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">class </span>DBGrid;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">class </span>InternalState;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>Renderer</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">class </span>IRenderer;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">ComponentRefresh</a></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">ComponentRefresh</a>(<a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">InternalState</a>*&amp; i):</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        pInternal(i)</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    }</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#a5f1601b857be52c1dd9be980fab3486d">forceRefresh</a>();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#aae8e5c4400dbe1bb3b7b9f8332f43ccb">forceRefreshDelayed</a>();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#a8767d9d8394b9185f36b8878b7ee536a">enableRefresh</a>(<span class="keywordtype">bool</span> enabled);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">InternalState</a>*&amp; pInternal;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;};</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">   66</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">Component</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Component_1_1Panel.html">Panel</a>, <span class="keyword">public</span> Yuni::IEventObserver&lt;Component&gt;, <span class="keyword">public</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">ComponentRefresh</a></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">   83</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">Component</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Component_1_1Panel.html">Panel</a>, <span class="keyword">public</span> Yuni::IEventObserver&lt;Component&gt;, <span class="keyword">public</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">ComponentRefresh</a></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;{</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a34bc9243b2789cabef1c0b4f8d8e3a18">Component</a>(wxWindow* parent,</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;              <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Renderer::IRenderer</a>* <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd">renderer</a> = NULL,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;              <span class="keyword">const</span> wxString&amp; caption = wxEmptyString,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;              <span class="keywordtype">bool</span> hasFilter = <span class="keyword">true</span>,</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;              <span class="keywordtype">bool</span> colorMappingRowLabels = <span class="keyword">true</span>,</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;              <span class="keywordtype">bool</span> copypasteOnly = <span class="keyword">false</span>,</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;              <span class="keywordtype">bool</span> readonly = <span class="keyword">false</span>,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;              <span class="keywordtype">bool</span> hasLayerFilter = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a6c9ae644d922db2209fc8c678b358ec0">~Component</a>();</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Renderer::IRenderer</a>* <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd">renderer</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd">renderer</a>(<a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Renderer::IRenderer</a>* r);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a34bc9243b2789cabef1c0b4f8d8e3a18">Component</a>(wxWindow* parent,</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;              <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Renderer::IRenderer</a>* <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd">renderer</a> = NULL,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;              <span class="keyword">const</span> wxString&amp; caption = wxEmptyString,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;              <span class="keywordtype">bool</span> hasFilter = <span class="keyword">true</span>,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;              <span class="keywordtype">bool</span> colorMappingRowLabels = <span class="keyword">true</span>,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;              <span class="keywordtype">bool</span> copypasteOnly = <span class="keyword">false</span>,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;              <span class="keywordtype">bool</span> readonly = <span class="keyword">false</span>,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;              <span class="keywordtype">bool</span> hasLayerFilter = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a6c9ae644d922db2209fc8c678b358ec0">~Component</a>();</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Renderer::IRenderer</a>* <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd">renderer</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd">renderer</a>(<a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Renderer::IRenderer</a>* r);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1DBGrid.html">DBGrid</a>* <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a612266252f863d481d69dc34210efc74">grid</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    wxScrolledWindow* <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ace843193c36d74e16edc18faf1fdaf91">gridAsScrolledWindow</a>();</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    Date::Precision <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#accdbdc7f17d0cc34891356315493cee0">precision</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#accdbdc7f17d0cc34891356315493cee0">precision</a>(<span class="keyword">const</span> Date::Precision p);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1DBGrid.html">DBGrid</a>* <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a612266252f863d481d69dc34210efc74">grid</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    wxScrolledWindow* <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ace843193c36d74e16edc18faf1fdaf91">gridAsScrolledWindow</a>();</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    Date::Precision <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#accdbdc7f17d0cc34891356315493cee0">precision</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#accdbdc7f17d0cc34891356315493cee0">precision</a>(<span class="keyword">const</span> Date::Precision p);</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#aaba76547053403ae952db9a5d9570dc0">copyToClipboard</a>();</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a14144215f94bc4bde026982fc1c231bd">copyAllToClipboard</a>();</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a0f99ac30d69fc6fd78da5dd576384fdd">pasteFromClipboard</a>();</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#aaba76547053403ae952db9a5d9570dc0">copyToClipboard</a>();</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a14144215f94bc4bde026982fc1c231bd">copyAllToClipboard</a>();</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a0f99ac30d69fc6fd78da5dd576384fdd">pasteFromClipboard</a>();</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a215ca5c65491f2a9e553a65eafe02580">scroll</a>(wxScrolledWindow* component);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    ;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="comment">// For synchronizing scroll with another grid purpose</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordtype">void</span> setOtherGrid(<a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">Component</a>* other);</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ad452534f4c9c2b0c84169da48a07fa44">markTheStudyAsModified</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ad452534f4c9c2b0c84169da48a07fa44">markTheStudyAsModified</a>(<span class="keywordtype">bool</span> flag);</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a215ca5c65491f2a9e553a65eafe02580">scroll</a>(wxScrolledWindow* component);</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    ;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">void</span> createModifyPanel(wxSizer* sizer, <span class="keywordtype">bool</span> copypasteOnly, <span class="keywordtype">bool</span> readonly);</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordtype">void</span> createModifyPanelValues(wxSizer* sizer, <span class="keywordtype">bool</span> copypasteOnly);</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="comment">// For synchronizing scroll with another grid purpose</span></div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">void</span> setOtherGrid(<a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">Component</a>* other);</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordtype">void</span> internalShowDatagrid(<span class="keywordtype">bool</span> v);</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ad452534f4c9c2b0c84169da48a07fa44">markTheStudyAsModified</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ad452534f4c9c2b0c84169da48a07fa44">markTheStudyAsModified</a>(<span class="keywordtype">bool</span> flag);</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">void</span> createModifyPanel(wxSizer* sizer, <span class="keywordtype">bool</span> copypasteOnly, <span class="keywordtype">bool</span> readonly);</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordtype">void</span> createModifyPanelValues(wxSizer* sizer, <span class="keywordtype">bool</span> copypasteOnly);</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordtype">void</span> internalShowDatagrid(<span class="keywordtype">bool</span> v);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">void</span> runSelectedAction(uint selectedSet,</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;                           uint selectedAction,</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                           Yuni::String value,</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;                           <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html">VGridHelper</a>* gridHelper);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">void</span> runSelectedAction(uint selectedSet,</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                           uint selectedAction,</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;                           Yuni::String value,</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;                           <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html">VGridHelper</a>* gridHelper);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">void</span> onModifyAll(<span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordtype">void</span> onLoadMatrix(<span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keywordtype">void</span> onSaveMatrix(<span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordtype">void</span> onCopyValues(<span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordtype">void</span> onCopyAllValues(<span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">void</span> onPasteValues(<span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">void</span> onCopyValuesFromMenu(wxCommandEvent&amp;);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keywordtype">void</span> onCopyAllValuesFromMenu(wxCommandEvent&amp;);</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordtype">void</span> onModifyAll(<span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordtype">void</span> onLoadMatrix(<span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordtype">void</span> onSaveMatrix(<span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordtype">void</span> onStudyClosed();</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordtype">void</span> onBeginUpdate();</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordtype">void</span> onEndUpdate();</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordtype">void</span> onComboUpdated(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordtype">void</span> createPopupCopy(<a class="code" href="classAntares_1_1Component_1_1Button.html">Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keywordtype">void</span> onCopyValues(<span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="keywordtype">void</span> onCopyAllValues(<span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordtype">void</span> onPasteValues(<span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordtype">void</span> onCopyValuesFromMenu(wxCommandEvent&amp;);</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keywordtype">void</span> onCopyAllValuesFromMenu(wxCommandEvent&amp;);</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keywordtype">void</span> onStudyClosed();</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keywordtype">void</span> onBeginUpdate();</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="keywordtype">void</span> onEndUpdate();</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordtype">void</span> onComboUpdated(wxCommandEvent&amp; evt);</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keywordtype">void</span> onChangeModifierSet(wxCommandEvent&amp; event);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="keywordtype">void</span> onChangeModifierOperator(wxCommandEvent&amp; event);</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordtype">void</span> onPopupMenuModifierSet(<a class="code" href="classAntares_1_1Component_1_1Button.html">Button</a>&amp; sender, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordtype">void</span> onPopupMenuModifierOperators(<a class="code" href="classAntares_1_1Component_1_1Button.html">Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="comment">// This variable is mainly used to reduce header dependencies</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">InternalState</a>* pInternal;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="comment">// Outside Component instance, for simultaneous actions with the current Component</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">Component</a>* otherComponent_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="comment">// nakama</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">InternalState</a>;</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keywordtype">void</span> createPopupCopy(<a class="code" href="classAntares_1_1Component_1_1Button.html">Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;}; <span class="comment">// class Component</span></div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordtype">void</span> onChangeModifierSet(wxCommandEvent&amp; event);</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordtype">void</span> onChangeModifierOperator(wxCommandEvent&amp; event);</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keywordtype">void</span> onPopupMenuModifierSet(<a class="code" href="classAntares_1_1Component_1_1Button.html">Button</a>&amp; sender, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keywordtype">void</span> onPopupMenuModifierOperators(<a class="code" href="classAntares_1_1Component_1_1Button.html">Button</a>&amp;, wxMenu&amp; menu, <span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="comment">// This variable is mainly used to reduce header dependencies</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">InternalState</a>* pInternal;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="comment">// Outside Component instance, for simultaneous actions with the current Component</span></div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">Component</a>* otherComponent_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="comment">// nakama</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">InternalState</a>;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;}; <span class="comment">// class Component</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;} <span class="comment">// namespace Antares::Component::Datagrid</span></div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_TOOLBOX_COMPONENT_DATAGRID_COMPONENT_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Button_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Button.html">Antares::Component::Button</a></div><div class="ttdef"><b>Definition:</b> button.h:32</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">Antares::Component::Datagrid::ComponentRefresh</a></div><div class="ttdef"><b>Definition:</b> component.h:40</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh_html_a5f1601b857be52c1dd9be980fab3486d"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#a5f1601b857be52c1dd9be980fab3486d">Antares::Component::Datagrid::ComponentRefresh::forceRefresh</a></div><div class="ttdeci">void forceRefresh()</div><div class="ttdoc">Force a complete refresh of the grid.</div><div class="ttdef"><b>Definition:</b> component.cpp:992</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh_html_a8767d9d8394b9185f36b8878b7ee536a"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#a8767d9d8394b9185f36b8878b7ee536a">Antares::Component::Datagrid::ComponentRefresh::enableRefresh</a></div><div class="ttdeci">void enableRefresh(bool enabled)</div><div class="ttdoc">Allow refresh.</div><div class="ttdef"><b>Definition:</b> component.cpp:1474</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh_html_aae8e5c4400dbe1bb3b7b9f8332f43ccb"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#aae8e5c4400dbe1bb3b7b9f8332f43ccb">Antares::Component::Datagrid::ComponentRefresh::forceRefreshDelayed</a></div><div class="ttdeci">void forceRefreshDelayed()</div><div class="ttdoc">Force refresh for the next main loop.</div><div class="ttdef"><b>Definition:</b> component.cpp:984</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">Antares::Component::Datagrid::Component</a></div><div class="ttdoc">A datagrid with virtual values.</div><div class="ttdef"><b>Definition:</b> component.h:84</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a0f99ac30d69fc6fd78da5dd576384fdd"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a0f99ac30d69fc6fd78da5dd576384fdd">Antares::Component::Datagrid::Component::pasteFromClipboard</a></div><div class="ttdeci">void pasteFromClipboard()</div><div class="ttdoc">Paste data from the clipboard.</div><div class="ttdef"><b>Definition:</b> component.cpp:1447</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a14144215f94bc4bde026982fc1c231bd"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a14144215f94bc4bde026982fc1c231bd">Antares::Component::Datagrid::Component::copyAllToClipboard</a></div><div class="ttdeci">void copyAllToClipboard()</div><div class="ttdoc">Copy the whole datagrid to the clipboard.</div><div class="ttdef"><b>Definition:</b> component.cpp:1327</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a215ca5c65491f2a9e553a65eafe02580"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a215ca5c65491f2a9e553a65eafe02580">Antares::Component::Datagrid::Component::scroll</a></div><div class="ttdeci">void scroll(wxScrolledWindow *component)</div><div class="ttdoc">Copy the scroll position from another component.</div><div class="ttdef"><b>Definition:</b> component.cpp:1506</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a34bc9243b2789cabef1c0b4f8d8e3a18"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a34bc9243b2789cabef1c0b4f8d8e3a18">Antares::Component::Datagrid::Component::Component</a></div><div class="ttdeci">Component(wxWindow *parent, Renderer::IRenderer *renderer=NULL, const wxString &amp;caption=wxEmptyString, bool hasFilter=true, bool colorMappingRowLabels=true, bool copypasteOnly=false, bool readonly=false, bool hasLayerFilter=false)</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> component.cpp:708</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a612266252f863d481d69dc34210efc74"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a612266252f863d481d69dc34210efc74">Antares::Component::Datagrid::Component::grid</a></div><div class="ttdeci">DBGrid * grid() const</div><div class="ttdoc">Get the real datagrid component.</div><div class="ttdef"><b>Definition:</b> component.cpp:1746</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a6c9ae644d922db2209fc8c678b358ec0"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a6c9ae644d922db2209fc8c678b358ec0">Antares::Component::Datagrid::Component::~Component</a></div><div class="ttdeci">virtual ~Component()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> component.cpp:743</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a8e2e79525e79917e15d54168cd7b14fd"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd">Antares::Component::Datagrid::Component::renderer</a></div><div class="ttdeci">Renderer::IRenderer * renderer() const</div><div class="ttdoc">Get the renderer attached to the datagrid.</div><div class="ttdef"><b>Definition:</b> component.cpp:1694</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_aaba76547053403ae952db9a5d9570dc0"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#aaba76547053403ae952db9a5d9570dc0">Antares::Component::Datagrid::Component::copyToClipboard</a></div><div class="ttdeci">void copyToClipboard()</div><div class="ttdoc">Copy the current selection to the clipboard.</div><div class="ttdef"><b>Definition:</b> component.cpp:1280</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_accdbdc7f17d0cc34891356315493cee0"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#accdbdc7f17d0cc34891356315493cee0">Antares::Component::Datagrid::Component::precision</a></div><div class="ttdeci">Date::Precision precision() const</div><div class="ttdoc">Get the precision of the datagrid.</div><div class="ttdef"><b>Definition:</b> component.cpp:1751</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_ace843193c36d74e16edc18faf1fdaf91"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ace843193c36d74e16edc18faf1fdaf91">Antares::Component::Datagrid::Component::gridAsScrolledWindow</a></div><div class="ttdeci">wxScrolledWindow * gridAsScrolledWindow()</div><div class="ttdoc">Get the real datagrid component as a scrolled window.</div><div class="ttdef"><b>Definition:</b> component.cpp:1537</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_ad452534f4c9c2b0c84169da48a07fa44"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ad452534f4c9c2b0c84169da48a07fa44">Antares::Component::Datagrid::Component::markTheStudyAsModified</a></div><div class="ttdeci">bool markTheStudyAsModified() const</div><div class="ttdoc">Get if the component can mark the study as modified if a single cell is modified.</div><div class="ttdef"><b>Definition:</b> component.cpp:1544</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1DBGrid_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1DBGrid.html">Antares::Component::Datagrid::DBGrid</a></div><div class="ttdef"><b>Definition:</b> dbgrid.h:33</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1InternalState_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">Antares::Component::Datagrid::InternalState</a></div><div class="ttdef"><b>Definition:</b> component.cpp:116</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Antares::Component::Datagrid::Renderer::IRenderer</a></div><div class="ttdoc">Data provider for Datagrids.</div><div class="ttdef"><b>Definition:</b> renderer.h:50</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1VGridHelper_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html">Antares::Component::Datagrid::VGridHelper</a></div><div class="ttdoc">Wrapper between a wxGridTableBase and a renderer</div><div class="ttdef"><b>Definition:</b> gridhelper.h:42</div></div>
-<div class="ttc" id="aclassAntares_1_1Component_1_1Panel_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Panel.html">Antares::Component::Panel</a></div><div class="ttdoc">Panel implementation.</div><div class="ttdef"><b>Definition:</b> panel.h:34</div></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;} <span class="comment">// namespace Antares::Component::Datagrid</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_TOOLBOX_COMPONENT_DATAGRID_COMPONENT_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Button_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Button.html">Antares::Component::Button</a></div><div class="ttdef"><b>Definition:</b> button.h:15</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html">Antares::Component::Datagrid::ComponentRefresh</a></div><div class="ttdef"><b>Definition:</b> component.h:23</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh_html_a5f1601b857be52c1dd9be980fab3486d"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#a5f1601b857be52c1dd9be980fab3486d">Antares::Component::Datagrid::ComponentRefresh::forceRefresh</a></div><div class="ttdeci">void forceRefresh()</div><div class="ttdoc">Force a complete refresh of the grid.</div><div class="ttdef"><b>Definition:</b> component.cpp:975</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh_html_a8767d9d8394b9185f36b8878b7ee536a"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#a8767d9d8394b9185f36b8878b7ee536a">Antares::Component::Datagrid::ComponentRefresh::enableRefresh</a></div><div class="ttdeci">void enableRefresh(bool enabled)</div><div class="ttdoc">Allow refresh.</div><div class="ttdef"><b>Definition:</b> component.cpp:1457</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh_html_aae8e5c4400dbe1bb3b7b9f8332f43ccb"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1ComponentRefresh.html#aae8e5c4400dbe1bb3b7b9f8332f43ccb">Antares::Component::Datagrid::ComponentRefresh::forceRefreshDelayed</a></div><div class="ttdeci">void forceRefreshDelayed()</div><div class="ttdoc">Force refresh for the next main loop.</div><div class="ttdef"><b>Definition:</b> component.cpp:967</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html">Antares::Component::Datagrid::Component</a></div><div class="ttdoc">A datagrid with virtual values.</div><div class="ttdef"><b>Definition:</b> component.h:67</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a0f99ac30d69fc6fd78da5dd576384fdd"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a0f99ac30d69fc6fd78da5dd576384fdd">Antares::Component::Datagrid::Component::pasteFromClipboard</a></div><div class="ttdeci">void pasteFromClipboard()</div><div class="ttdoc">Paste data from the clipboard.</div><div class="ttdef"><b>Definition:</b> component.cpp:1430</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a14144215f94bc4bde026982fc1c231bd"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a14144215f94bc4bde026982fc1c231bd">Antares::Component::Datagrid::Component::copyAllToClipboard</a></div><div class="ttdeci">void copyAllToClipboard()</div><div class="ttdoc">Copy the whole datagrid to the clipboard.</div><div class="ttdef"><b>Definition:</b> component.cpp:1310</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a215ca5c65491f2a9e553a65eafe02580"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a215ca5c65491f2a9e553a65eafe02580">Antares::Component::Datagrid::Component::scroll</a></div><div class="ttdeci">void scroll(wxScrolledWindow *component)</div><div class="ttdoc">Copy the scroll position from another component.</div><div class="ttdef"><b>Definition:</b> component.cpp:1489</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a34bc9243b2789cabef1c0b4f8d8e3a18"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a34bc9243b2789cabef1c0b4f8d8e3a18">Antares::Component::Datagrid::Component::Component</a></div><div class="ttdeci">Component(wxWindow *parent, Renderer::IRenderer *renderer=NULL, const wxString &amp;caption=wxEmptyString, bool hasFilter=true, bool colorMappingRowLabels=true, bool copypasteOnly=false, bool readonly=false, bool hasLayerFilter=false)</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> component.cpp:691</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a612266252f863d481d69dc34210efc74"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a612266252f863d481d69dc34210efc74">Antares::Component::Datagrid::Component::grid</a></div><div class="ttdeci">DBGrid * grid() const</div><div class="ttdoc">Get the real datagrid component.</div><div class="ttdef"><b>Definition:</b> component.cpp:1729</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a6c9ae644d922db2209fc8c678b358ec0"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a6c9ae644d922db2209fc8c678b358ec0">Antares::Component::Datagrid::Component::~Component</a></div><div class="ttdeci">virtual ~Component()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> component.cpp:726</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_a8e2e79525e79917e15d54168cd7b14fd"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#a8e2e79525e79917e15d54168cd7b14fd">Antares::Component::Datagrid::Component::renderer</a></div><div class="ttdeci">Renderer::IRenderer * renderer() const</div><div class="ttdoc">Get the renderer attached to the datagrid.</div><div class="ttdef"><b>Definition:</b> component.cpp:1677</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_aaba76547053403ae952db9a5d9570dc0"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#aaba76547053403ae952db9a5d9570dc0">Antares::Component::Datagrid::Component::copyToClipboard</a></div><div class="ttdeci">void copyToClipboard()</div><div class="ttdoc">Copy the current selection to the clipboard.</div><div class="ttdef"><b>Definition:</b> component.cpp:1263</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_accdbdc7f17d0cc34891356315493cee0"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#accdbdc7f17d0cc34891356315493cee0">Antares::Component::Datagrid::Component::precision</a></div><div class="ttdeci">Date::Precision precision() const</div><div class="ttdoc">Get the precision of the datagrid.</div><div class="ttdef"><b>Definition:</b> component.cpp:1734</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_ace843193c36d74e16edc18faf1fdaf91"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ace843193c36d74e16edc18faf1fdaf91">Antares::Component::Datagrid::Component::gridAsScrolledWindow</a></div><div class="ttdeci">wxScrolledWindow * gridAsScrolledWindow()</div><div class="ttdoc">Get the real datagrid component as a scrolled window.</div><div class="ttdef"><b>Definition:</b> component.cpp:1520</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Component_html_ad452534f4c9c2b0c84169da48a07fa44"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Component.html#ad452534f4c9c2b0c84169da48a07fa44">Antares::Component::Datagrid::Component::markTheStudyAsModified</a></div><div class="ttdeci">bool markTheStudyAsModified() const</div><div class="ttdoc">Get if the component can mark the study as modified if a single cell is modified.</div><div class="ttdef"><b>Definition:</b> component.cpp:1527</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1DBGrid_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1DBGrid.html">Antares::Component::Datagrid::DBGrid</a></div><div class="ttdef"><b>Definition:</b> dbgrid.h:16</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1InternalState_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1InternalState.html">Antares::Component::Datagrid::InternalState</a></div><div class="ttdef"><b>Definition:</b> component.cpp:99</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Antares::Component::Datagrid::Renderer::IRenderer</a></div><div class="ttdoc">Data provider for Datagrids.</div><div class="ttdef"><b>Definition:</b> renderer.h:33</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Datagrid_1_1VGridHelper_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html">Antares::Component::Datagrid::VGridHelper</a></div><div class="ttdoc">Wrapper between a wxGridTableBase and a renderer</div><div class="ttdef"><b>Definition:</b> gridhelper.h:25</div></div>
+<div class="ttc" id="aclassAntares_1_1Component_1_1Panel_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Panel.html">Antares::Component::Panel</a></div><div class="ttdoc">Panel implementation.</div><div class="ttdef"><b>Definition:</b> panel.h:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

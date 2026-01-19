@@ -127,67 +127,50 @@ $(document).ready(function(){initNavTree('common_2component_2spotlight_2text_8h_
 <div class="title">text.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classText.html">   26</a></span>&#160;<span class="keyword">class </span><a class="code" href="classText.html">Text</a> : <span class="keyword">public</span> <a class="code" href="classIItem.html">IItem</a></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classText.html#ad34dcdda1068a328635e6dc9fd19c041">   30</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classIItem.html#a8fc6067e92ad4fd6fea717be9076a5c6">Ptr</a> = std::shared_ptr&lt;Text&gt;;</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classText.html#ab5bddc5c2879d2bb97617d736d534115">   32</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classIItem.html#a09ad39816238ea77463e2c22dd419be7">Vector</a> = std::vector&lt;Ptr&gt;;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classText.html#a49b83708796fde0b81bace35083b15bb">   34</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classIItem.html#aa6aadda9297d7a2f8f3fc11478eb8129">VectorPtr</a> = std::shared_ptr&lt;Vector&gt;;</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classText.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="classText.html">Text</a> : <span class="keyword">public</span> <a class="code" href="classIItem.html">IItem</a></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classText.html#ad34dcdda1068a328635e6dc9fd19c041">   13</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classIItem.html#a8fc6067e92ad4fd6fea717be9076a5c6">Ptr</a> = std::shared_ptr&lt;Text&gt;;</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classText.html#ab5bddc5c2879d2bb97617d736d534115">   15</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classIItem.html#a09ad39816238ea77463e2c22dd419be7">Vector</a> = std::vector&lt;Ptr&gt;;</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classText.html#a49b83708796fde0b81bace35083b15bb">   17</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classIItem.html#aa6aadda9297d7a2f8f3fc11478eb8129">VectorPtr</a> = std::shared_ptr&lt;Vector&gt;;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classText.html#ab3e26143fccc52699bcc5149cae852bc">   25</a></span>&#160;    <a class="code" href="classText.html#ab3e26143fccc52699bcc5149cae852bc">Text</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT&gt;</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classText.html#add3049653b974274e1db1def4745cce5">   28</a></span>&#160;    <a class="code" href="classText.html#add3049653b974274e1db1def4745cce5">Text</a>(<span class="keyword">const</span> StringT&amp; text)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="classIItem.html#a36589393f95b6a99713022095cfa1dbd">caption</a>(text);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    }</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classText.html#a068e9e04751fc94f4c45c6cb15af55f4">   33</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classText.html#a068e9e04751fc94f4c45c6cb15af55f4">~Text</a>();</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classText.html#ab3e26143fccc52699bcc5149cae852bc">   42</a></span>&#160;    <a class="code" href="classText.html#ab3e26143fccc52699bcc5149cae852bc">Text</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT&gt;</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classText.html#add3049653b974274e1db1def4745cce5">   45</a></span>&#160;    <a class="code" href="classText.html#add3049653b974274e1db1def4745cce5">Text</a>(<span class="keyword">const</span> StringT&amp; text)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="classIItem.html#a36589393f95b6a99713022095cfa1dbd">caption</a>(text);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classText.html#a068e9e04751fc94f4c45c6cb15af55f4">   50</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classText.html#a068e9e04751fc94f4c45c6cb15af55f4">~Text</a>();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classText.html#a35f5110838e4ef0feacf0fad0e2dd4c5">   53</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classText.html#a35f5110838e4ef0feacf0fad0e2dd4c5">canBeSelected</a>()<span class="keyword"> const override</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}; <span class="comment">// class Text</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__</span></div>
-<div class="ttc" id="aclassIItem_html"><div class="ttname"><a href="classIItem.html">IItem</a></div><div class="ttdef"><b>Definition:</b> iitem.h:27</div></div>
-<div class="ttc" id="aclassIItem_html_a09ad39816238ea77463e2c22dd419be7"><div class="ttname"><a href="classIItem.html#a09ad39816238ea77463e2c22dd419be7">IItem::Vector</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; Vector</div><div class="ttdoc">Vector of items.</div><div class="ttdef"><b>Definition:</b> iitem.h:32</div></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classText.html#a35f5110838e4ef0feacf0fad0e2dd4c5">   36</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classText.html#a35f5110838e4ef0feacf0fad0e2dd4c5">canBeSelected</a>()<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}; <span class="comment">// class Text</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_UI_COMMON_COMPONENT_SPOTLIGHT_SPOTLIGHT_TEXT_H__</span></div>
+<div class="ttc" id="aclassIItem_html"><div class="ttname"><a href="classIItem.html">IItem</a></div><div class="ttdef"><b>Definition:</b> iitem.h:10</div></div>
+<div class="ttc" id="aclassIItem_html_a09ad39816238ea77463e2c22dd419be7"><div class="ttname"><a href="classIItem.html#a09ad39816238ea77463e2c22dd419be7">IItem::Vector</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; Vector</div><div class="ttdoc">Vector of items.</div><div class="ttdef"><b>Definition:</b> iitem.h:15</div></div>
 <div class="ttc" id="aclassIItem_html_a36589393f95b6a99713022095cfa1dbd"><div class="ttname"><a href="classIItem.html#a36589393f95b6a99713022095cfa1dbd">IItem::caption</a></div><div class="ttdeci">const Yuni::String &amp; caption() const</div><div class="ttdoc">Get the caption.</div></div>
-<div class="ttc" id="aclassIItem_html_a8fc6067e92ad4fd6fea717be9076a5c6"><div class="ttname"><a href="classIItem.html#a8fc6067e92ad4fd6fea717be9076a5c6">IItem::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; IItem &gt; Ptr</div><div class="ttdoc">Ptr.</div><div class="ttdef"><b>Definition:</b> iitem.h:30</div></div>
-<div class="ttc" id="aclassIItem_html_aa6aadda9297d7a2f8f3fc11478eb8129"><div class="ttname"><a href="classIItem.html#aa6aadda9297d7a2f8f3fc11478eb8129">IItem::VectorPtr</a></div><div class="ttdeci">std::shared_ptr&lt; Vector &gt; VectorPtr</div><div class="ttdoc">Vector Ptr.</div><div class="ttdef"><b>Definition:</b> iitem.h:34</div></div>
-<div class="ttc" id="aclassText_html"><div class="ttname"><a href="classText.html">Text</a></div><div class="ttdef"><b>Definition:</b> text.h:27</div></div>
+<div class="ttc" id="aclassIItem_html_a8fc6067e92ad4fd6fea717be9076a5c6"><div class="ttname"><a href="classIItem.html#a8fc6067e92ad4fd6fea717be9076a5c6">IItem::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; IItem &gt; Ptr</div><div class="ttdoc">Ptr.</div><div class="ttdef"><b>Definition:</b> iitem.h:13</div></div>
+<div class="ttc" id="aclassIItem_html_aa6aadda9297d7a2f8f3fc11478eb8129"><div class="ttname"><a href="classIItem.html#aa6aadda9297d7a2f8f3fc11478eb8129">IItem::VectorPtr</a></div><div class="ttdeci">std::shared_ptr&lt; Vector &gt; VectorPtr</div><div class="ttdoc">Vector Ptr.</div><div class="ttdef"><b>Definition:</b> iitem.h:17</div></div>
+<div class="ttc" id="aclassText_html"><div class="ttname"><a href="classText.html">Text</a></div><div class="ttdef"><b>Definition:</b> text.h:10</div></div>
 <div class="ttc" id="aclassText_html_a068e9e04751fc94f4c45c6cb15af55f4"><div class="ttname"><a href="classText.html#a068e9e04751fc94f4c45c6cb15af55f4">Text::~Text</a></div><div class="ttdeci">virtual ~Text()</div><div class="ttdoc">Destructor.</div></div>
-<div class="ttc" id="aclassText_html_a35f5110838e4ef0feacf0fad0e2dd4c5"><div class="ttname"><a href="classText.html#a35f5110838e4ef0feacf0fad0e2dd4c5">Text::canBeSelected</a></div><div class="ttdeci">virtual bool canBeSelected() const override</div><div class="ttdoc">Get if the item can be selected.</div><div class="ttdef"><b>Definition:</b> text.h:53</div></div>
+<div class="ttc" id="aclassText_html_a35f5110838e4ef0feacf0fad0e2dd4c5"><div class="ttname"><a href="classText.html#a35f5110838e4ef0feacf0fad0e2dd4c5">Text::canBeSelected</a></div><div class="ttdeci">virtual bool canBeSelected() const override</div><div class="ttdoc">Get if the item can be selected.</div><div class="ttdef"><b>Definition:</b> text.h:36</div></div>
 <div class="ttc" id="aclassText_html_ab3e26143fccc52699bcc5149cae852bc"><div class="ttname"><a href="classText.html#ab3e26143fccc52699bcc5149cae852bc">Text::Text</a></div><div class="ttdeci">Text()</div><div class="ttdoc">Default constructor.</div></div>
-<div class="ttc" id="aclassText_html_add3049653b974274e1db1def4745cce5"><div class="ttname"><a href="classText.html#add3049653b974274e1db1def4745cce5">Text::Text</a></div><div class="ttdeci">Text(const StringT &amp;text)</div><div class="ttdoc">Constructor with text.</div><div class="ttdef"><b>Definition:</b> text.h:45</div></div>
+<div class="ttc" id="aclassText_html_add3049653b974274e1db1def4745cce5"><div class="ttname"><a href="classText.html#add3049653b974274e1db1def4745cce5">Text::Text</a></div><div class="ttdeci">Text(const StringT &amp;text)</div><div class="ttdoc">Constructor with text.</div><div class="ttdef"><b>Definition:</b> text.h:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

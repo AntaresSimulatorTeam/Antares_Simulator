@@ -127,73 +127,56 @@ $(document).ready(function(){initNavTree('antares-study_8h_source.html',''); ini
 <div class="title">antares-study.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_STUDY_H__</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_STUDY_H__</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;fswalker/fswalker.h&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAntaresStudy.html">   27</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntaresStudy.html">AntaresStudy</a> final: <span class="keyword">public</span> <a class="code" href="classFSWalker_1_1IExtension.html">FSWalker::IExtension</a></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="classAntaresStudy.html">AntaresStudy</a>(int64_t dateLimit);</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __ANTARES_STUDY_H__</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_STUDY_H__</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;fswalker/fswalker.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classAntaresStudy.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntaresStudy.html">AntaresStudy</a> final: <span class="keyword">public</span> <a class="code" href="classFSWalker_1_1IExtension.html">FSWalker::IExtension</a></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classAntaresStudy.html">AntaresStudy</a>(int64_t dateLimit);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntaresStudy.html">AntaresStudy</a>()</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    }</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classAntaresStudy.html#ab6f4f792b5935789742af31eb967e28f">caption</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">virtual</span> FSWalker::OnDirectoryEvent <a class="code" href="classAntaresStudy.html#a6caee79a802e8be7616bc9cc8a0f19d9">directoryEvent</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAntaresStudy.html#a62a11749df671c0175448e76bf52d3e5">   23</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classAntaresStudy.html#a62a11749df671c0175448e76bf52d3e5">priority</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordflow">return</span> 9999;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    } <span class="comment">// must be first</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>* <a class="code" href="classAntaresStudy.html#a2378f70a009b5deeb0b2eec25ecfba2b">userdataCreate</a>(FSWalker::DispatchJobEvent&amp; queue);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntaresStudy.html#abcc86fd1a57c449e3beb2c103ecca756">userdataDestroy</a>(<span class="keywordtype">void</span>* userdata);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntaresStudy.html">AntaresStudy</a>()</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    }</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classAntaresStudy.html#ab6f4f792b5935789742af31eb967e28f">caption</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">virtual</span> FSWalker::OnDirectoryEvent <a class="code" href="classAntaresStudy.html#a6caee79a802e8be7616bc9cc8a0f19d9">directoryEvent</a>();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classAntaresStudy.html#a62a11749df671c0175448e76bf52d3e5">   40</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code" href="classAntaresStudy.html#a62a11749df671c0175448e76bf52d3e5">priority</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordflow">return</span> 9999;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    } <span class="comment">// must be first</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>* <a class="code" href="classAntaresStudy.html#a2378f70a009b5deeb0b2eec25ecfba2b">userdataCreate</a>(FSWalker::DispatchJobEvent&amp; queue);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntaresStudy.html#abcc86fd1a57c449e3beb2c103ecca756">userdataDestroy</a>(<span class="keywordtype">void</span>* userdata);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    uint64_t bytesDeleted;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    uint64_t filesDeleted;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    uint64_t foldersDeleted;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::mutex pMutex;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    int64_t pDateLimit;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}; <span class="comment">// class AntaresStudy</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_STUDY_H__</span></div>
-<div class="ttc" id="aclassAntaresStudy_html"><div class="ttname"><a href="classAntaresStudy.html">AntaresStudy</a></div><div class="ttdef"><b>Definition:</b> antares-study.h:28</div></div>
-<div class="ttc" id="aclassAntaresStudy_html_a2378f70a009b5deeb0b2eec25ecfba2b"><div class="ttname"><a href="classAntaresStudy.html#a2378f70a009b5deeb0b2eec25ecfba2b">AntaresStudy::userdataCreate</a></div><div class="ttdeci">virtual void * userdataCreate(FSWalker::DispatchJobEvent &amp;queue)</div><div class="ttdoc">Get the user data.</div><div class="ttdef"><b>Definition:</b> antares-study.cpp:392</div></div>
-<div class="ttc" id="aclassAntaresStudy_html_a62a11749df671c0175448e76bf52d3e5"><div class="ttname"><a href="classAntaresStudy.html#a62a11749df671c0175448e76bf52d3e5">AntaresStudy::priority</a></div><div class="ttdeci">virtual int priority() const</div><div class="ttdoc">Recommended priority for the extension.</div><div class="ttdef"><b>Definition:</b> antares-study.h:40</div></div>
-<div class="ttc" id="aclassAntaresStudy_html_a6caee79a802e8be7616bc9cc8a0f19d9"><div class="ttname"><a href="classAntaresStudy.html#a6caee79a802e8be7616bc9cc8a0f19d9">AntaresStudy::directoryEvent</a></div><div class="ttdeci">virtual FSWalker::OnDirectoryEvent directoryEvent()</div><div class="ttdoc">Provide a reentrant event for handling directories.</div><div class="ttdef"><b>Definition:</b> antares-study.cpp:387</div></div>
-<div class="ttc" id="aclassAntaresStudy_html_ab6f4f792b5935789742af31eb967e28f"><div class="ttname"><a href="classAntaresStudy.html#ab6f4f792b5935789742af31eb967e28f">AntaresStudy::caption</a></div><div class="ttdeci">virtual const char * caption() const</div><div class="ttdoc">Human readable caption of the extension.</div><div class="ttdef"><b>Definition:</b> antares-study.cpp:374</div></div>
-<div class="ttc" id="aclassAntaresStudy_html_abcc86fd1a57c449e3beb2c103ecca756"><div class="ttname"><a href="classAntaresStudy.html#abcc86fd1a57c449e3beb2c103ecca756">AntaresStudy::userdataDestroy</a></div><div class="ttdeci">virtual void userdataDestroy(void *userdata)</div><div class="ttdoc">Destroy user data.</div><div class="ttdef"><b>Definition:</b> antares-study.cpp:400</div></div>
-<div class="ttc" id="aclassFSWalker_1_1IExtension_html"><div class="ttname"><a href="classFSWalker_1_1IExtension.html">FSWalker::IExtension</a></div><div class="ttdef"><b>Definition:</b> fswalker.h:56</div></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    uint64_t bytesDeleted;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    uint64_t filesDeleted;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    uint64_t foldersDeleted;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    std::mutex pMutex;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    int64_t pDateLimit;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}; <span class="comment">// class AntaresStudy</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_STUDY_H__</span></div>
+<div class="ttc" id="aclassAntaresStudy_html"><div class="ttname"><a href="classAntaresStudy.html">AntaresStudy</a></div><div class="ttdef"><b>Definition:</b> antares-study.h:11</div></div>
+<div class="ttc" id="aclassAntaresStudy_html_a2378f70a009b5deeb0b2eec25ecfba2b"><div class="ttname"><a href="classAntaresStudy.html#a2378f70a009b5deeb0b2eec25ecfba2b">AntaresStudy::userdataCreate</a></div><div class="ttdeci">virtual void * userdataCreate(FSWalker::DispatchJobEvent &amp;queue)</div><div class="ttdoc">Get the user data.</div><div class="ttdef"><b>Definition:</b> antares-study.cpp:374</div></div>
+<div class="ttc" id="aclassAntaresStudy_html_a62a11749df671c0175448e76bf52d3e5"><div class="ttname"><a href="classAntaresStudy.html#a62a11749df671c0175448e76bf52d3e5">AntaresStudy::priority</a></div><div class="ttdeci">virtual int priority() const</div><div class="ttdoc">Recommended priority for the extension.</div><div class="ttdef"><b>Definition:</b> antares-study.h:23</div></div>
+<div class="ttc" id="aclassAntaresStudy_html_a6caee79a802e8be7616bc9cc8a0f19d9"><div class="ttname"><a href="classAntaresStudy.html#a6caee79a802e8be7616bc9cc8a0f19d9">AntaresStudy::directoryEvent</a></div><div class="ttdeci">virtual FSWalker::OnDirectoryEvent directoryEvent()</div><div class="ttdoc">Provide a reentrant event for handling directories.</div><div class="ttdef"><b>Definition:</b> antares-study.cpp:369</div></div>
+<div class="ttc" id="aclassAntaresStudy_html_ab6f4f792b5935789742af31eb967e28f"><div class="ttname"><a href="classAntaresStudy.html#ab6f4f792b5935789742af31eb967e28f">AntaresStudy::caption</a></div><div class="ttdeci">virtual const char * caption() const</div><div class="ttdoc">Human readable caption of the extension.</div><div class="ttdef"><b>Definition:</b> antares-study.cpp:356</div></div>
+<div class="ttc" id="aclassAntaresStudy_html_abcc86fd1a57c449e3beb2c103ecca756"><div class="ttname"><a href="classAntaresStudy.html#abcc86fd1a57c449e3beb2c103ecca756">AntaresStudy::userdataDestroy</a></div><div class="ttdeci">virtual void userdataDestroy(void *userdata)</div><div class="ttdoc">Destroy user data.</div><div class="ttdef"><b>Definition:</b> antares-study.cpp:382</div></div>
+<div class="ttc" id="aclassFSWalker_1_1IExtension_html"><div class="ttname"><a href="classFSWalker_1_1IExtension.html">FSWalker::IExtension</a></div><div class="ttdef"><b>Definition:</b> fswalker.h:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

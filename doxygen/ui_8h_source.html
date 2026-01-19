@@ -127,93 +127,76 @@ $(document).ready(function(){initNavTree('ui_8h_source.html',''); initResizable(
 <div class="title">ui.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_LIBS_STUDY_UI_H__</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_LIBS_STUDY_UI_H__</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __ANTARES_LIBS_STUDY_UI_H__</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_LIBS_STUDY_UI_H__</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html">   17</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1AreaUI.html">AreaUI</a> final</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#afa5a2a69037eccf4769037127389d943">AreaUI</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a00e40ca3f49ee00639da58cdf3f1a16c">   24</a></span>&#160;    <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a00e40ca3f49ee00639da58cdf3f1a16c">~AreaUI</a>()</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452">mapLayersVisibilityList</a>.clear();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html">   34</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1AreaUI.html">AreaUI</a> final</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#afa5a2a69037eccf4769037127389d943">AreaUI</a>();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a00e40ca3f49ee00639da58cdf3f1a16c">   41</a></span>&#160;    <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a00e40ca3f49ee00639da58cdf3f1a16c">~AreaUI</a>()</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452">mapLayersVisibilityList</a>.clear();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a3a74c64682ddd04a20d5159a8b1468ae">reset</a>();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a0aa5f8e3888a10d4f56ac9e025a6d771">loadFromFile</a>(<span class="keyword">const</span> AnyString&amp; filename);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#ab9dc91a8ccd522e21d8478ab295d9e8d">saveToFile</a>(<span class="keyword">const</span> AnyString&amp; filename, <span class="keywordtype">bool</span> force = <span class="keyword">false</span>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a82b9e2f5bc9c9cd90e9c684fa5a98dd6">modified</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#ab14c6c2638102613c256603227bf10a0">markAsModified</a>();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> rebuildCache();</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a2a11e4b3b1aaf0c02ad85e71bd86c8bf">   78</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a2a11e4b3b1aaf0c02ad85e71bd86c8bf">x</a>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    std::map&lt;size_t, int&gt; layerX;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a0f656463b3780e333fc843ac8f7bddc5">   81</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a0f656463b3780e333fc843ac8f7bddc5">y</a>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    std::map&lt;size_t, int&gt; layerY;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a3a74c64682ddd04a20d5159a8b1468ae">reset</a>();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a0aa5f8e3888a10d4f56ac9e025a6d771">loadFromFile</a>(<span class="keyword">const</span> AnyString&amp; filename);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#ab9dc91a8ccd522e21d8478ab295d9e8d">saveToFile</a>(<span class="keyword">const</span> AnyString&amp; filename, <span class="keywordtype">bool</span> force = <span class="keyword">false</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a82b9e2f5bc9c9cd90e9c684fa5a98dd6">modified</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#ab14c6c2638102613c256603227bf10a0">markAsModified</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> rebuildCache();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a2a11e4b3b1aaf0c02ad85e71bd86c8bf">   61</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a2a11e4b3b1aaf0c02ad85e71bd86c8bf">x</a>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    std::map&lt;size_t, int&gt; layerX;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a0f656463b3780e333fc843ac8f7bddc5">   64</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a0f656463b3780e333fc843ac8f7bddc5">y</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::map&lt;size_t, int&gt; layerY;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a95e8d3a05c705d91d73df95eed8f73dc">   68</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a95e8d3a05c705d91d73df95eed8f73dc">color</a>[3];</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    std::map&lt;size_t, int[3]&gt; layerColor;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// \see UIRuntimeInfo::reload()</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#abaafef9c93ec9b5d5049aa600eaf166d">   73</a></span>&#160;    Yuni::CString&lt;12, false&gt; <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#abaafef9c93ec9b5d5049aa600eaf166d">cacheColorHSV</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452">   76</a></span>&#160;    std::vector&lt;size_t&gt; <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452">mapLayersVisibilityList</a>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">mutable</span> <span class="keywordtype">bool</span> pModified;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}; <span class="comment">// class AreaUI</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a95e8d3a05c705d91d73df95eed8f73dc">   85</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a95e8d3a05c705d91d73df95eed8f73dc">color</a>[3];</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    std::map&lt;size_t, int[3]&gt; layerColor;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">// \see UIRuntimeInfo::reload()</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#abaafef9c93ec9b5d5049aa600eaf166d">   90</a></span>&#160;    Yuni::CString&lt;12, false&gt; <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#abaafef9c93ec9b5d5049aa600eaf166d">cacheColorHSV</a>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452">   93</a></span>&#160;    std::vector&lt;size_t&gt; <a class="code" href="classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452">mapLayersVisibilityList</a>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">mutable</span> <span class="keywordtype">bool</span> pModified;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}; <span class="comment">// class AreaUI</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_UI_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html">Antares::Data::AreaUI</a></div><div class="ttdoc">Information about the Area for the UI.</div><div class="ttdef"><b>Definition:</b> ui.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a00e40ca3f49ee00639da58cdf3f1a16c"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a00e40ca3f49ee00639da58cdf3f1a16c">Antares::Data::AreaUI::~AreaUI</a></div><div class="ttdeci">~AreaUI()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> ui.h:41</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a0aa5f8e3888a10d4f56ac9e025a6d771"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a0aa5f8e3888a10d4f56ac9e025a6d771">Antares::Data::AreaUI::loadFromFile</a></div><div class="ttdeci">bool loadFromFile(const AnyString &amp;filename)</div><div class="ttdoc">Load settings from an INI file.</div><div class="ttdef"><b>Definition:</b> ui.cpp:212</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a0f656463b3780e333fc843ac8f7bddc5"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a0f656463b3780e333fc843ac8f7bddc5">Antares::Data::AreaUI::y</a></div><div class="ttdeci">int y</div><div class="ttdoc">The Y-Coordinate.</div><div class="ttdef"><b>Definition:</b> ui.h:81</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a2a11e4b3b1aaf0c02ad85e71bd86c8bf"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a2a11e4b3b1aaf0c02ad85e71bd86c8bf">Antares::Data::AreaUI::x</a></div><div class="ttdeci">int x</div><div class="ttdoc">The X-Coordinate.</div><div class="ttdef"><b>Definition:</b> ui.h:78</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a3a74c64682ddd04a20d5159a8b1468ae"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a3a74c64682ddd04a20d5159a8b1468ae">Antares::Data::AreaUI::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">(Re)Initialize all properties</div><div class="ttdef"><b>Definition:</b> ui.cpp:195</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a458393c01a9dc075688ebc9a1b354452"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452">Antares::Data::AreaUI::mapLayersVisibilityList</a></div><div class="ttdeci">std::vector&lt; size_t &gt; mapLayersVisibilityList</div><div class="ttdoc">The list of layers this Node will appear on.</div><div class="ttdef"><b>Definition:</b> ui.h:93</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a82b9e2f5bc9c9cd90e9c684fa5a98dd6"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a82b9e2f5bc9c9cd90e9c684fa5a98dd6">Antares::Data::AreaUI::modified</a></div><div class="ttdeci">bool modified() const</div><div class="ttdoc">Get if the structure has been modified.</div><div class="ttdef"><b>Definition:</b> ui.cpp:364</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a95e8d3a05c705d91d73df95eed8f73dc"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a95e8d3a05c705d91d73df95eed8f73dc">Antares::Data::AreaUI::color</a></div><div class="ttdeci">int color[3]</div><div class="ttdoc">Color of the area (RGB)</div><div class="ttdef"><b>Definition:</b> ui.h:85</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_ab14c6c2638102613c256603227bf10a0"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#ab14c6c2638102613c256603227bf10a0">Antares::Data::AreaUI::markAsModified</a></div><div class="ttdeci">void markAsModified()</div><div class="ttdoc">Mark the structure as modified.</div><div class="ttdef"><b>Definition:</b> ui.cpp:369</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_ab9dc91a8ccd522e21d8478ab295d9e8d"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#ab9dc91a8ccd522e21d8478ab295d9e8d">Antares::Data::AreaUI::saveToFile</a></div><div class="ttdeci">bool saveToFile(const AnyString &amp;filename, bool force=false) const</div><div class="ttdoc">Save the settings into a file.</div><div class="ttdef"><b>Definition:</b> ui.cpp:311</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_abaafef9c93ec9b5d5049aa600eaf166d"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#abaafef9c93ec9b5d5049aa600eaf166d">Antares::Data::AreaUI::cacheColorHSV</a></div><div class="ttdeci">Yuni::CString&lt; 12, false &gt; cacheColorHSV</div><div class="ttdoc">HSV color model (only computed from the interface)</div><div class="ttdef"><b>Definition:</b> ui.h:90</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_afa5a2a69037eccf4769037127389d943"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#afa5a2a69037eccf4769037127389d943">Antares::Data::AreaUI::AreaUI</a></div><div class="ttdeci">AreaUI()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> ui.cpp:183</div></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_UI_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html">Antares::Data::AreaUI</a></div><div class="ttdoc">Information about the Area for the UI.</div><div class="ttdef"><b>Definition:</b> ui.h:18</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a00e40ca3f49ee00639da58cdf3f1a16c"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a00e40ca3f49ee00639da58cdf3f1a16c">Antares::Data::AreaUI::~AreaUI</a></div><div class="ttdeci">~AreaUI()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> ui.h:24</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a0aa5f8e3888a10d4f56ac9e025a6d771"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a0aa5f8e3888a10d4f56ac9e025a6d771">Antares::Data::AreaUI::loadFromFile</a></div><div class="ttdeci">bool loadFromFile(const AnyString &amp;filename)</div><div class="ttdoc">Load settings from an INI file.</div><div class="ttdef"><b>Definition:</b> ui.cpp:194</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a0f656463b3780e333fc843ac8f7bddc5"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a0f656463b3780e333fc843ac8f7bddc5">Antares::Data::AreaUI::y</a></div><div class="ttdeci">int y</div><div class="ttdoc">The Y-Coordinate.</div><div class="ttdef"><b>Definition:</b> ui.h:64</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a2a11e4b3b1aaf0c02ad85e71bd86c8bf"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a2a11e4b3b1aaf0c02ad85e71bd86c8bf">Antares::Data::AreaUI::x</a></div><div class="ttdeci">int x</div><div class="ttdoc">The X-Coordinate.</div><div class="ttdef"><b>Definition:</b> ui.h:61</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a3a74c64682ddd04a20d5159a8b1468ae"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a3a74c64682ddd04a20d5159a8b1468ae">Antares::Data::AreaUI::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">(Re)Initialize all properties</div><div class="ttdef"><b>Definition:</b> ui.cpp:177</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a458393c01a9dc075688ebc9a1b354452"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452">Antares::Data::AreaUI::mapLayersVisibilityList</a></div><div class="ttdeci">std::vector&lt; size_t &gt; mapLayersVisibilityList</div><div class="ttdoc">The list of layers this Node will appear on.</div><div class="ttdef"><b>Definition:</b> ui.h:76</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a82b9e2f5bc9c9cd90e9c684fa5a98dd6"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a82b9e2f5bc9c9cd90e9c684fa5a98dd6">Antares::Data::AreaUI::modified</a></div><div class="ttdeci">bool modified() const</div><div class="ttdoc">Get if the structure has been modified.</div><div class="ttdef"><b>Definition:</b> ui.cpp:346</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_a95e8d3a05c705d91d73df95eed8f73dc"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#a95e8d3a05c705d91d73df95eed8f73dc">Antares::Data::AreaUI::color</a></div><div class="ttdeci">int color[3]</div><div class="ttdoc">Color of the area (RGB)</div><div class="ttdef"><b>Definition:</b> ui.h:68</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_ab14c6c2638102613c256603227bf10a0"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#ab14c6c2638102613c256603227bf10a0">Antares::Data::AreaUI::markAsModified</a></div><div class="ttdeci">void markAsModified()</div><div class="ttdoc">Mark the structure as modified.</div><div class="ttdef"><b>Definition:</b> ui.cpp:351</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_ab9dc91a8ccd522e21d8478ab295d9e8d"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#ab9dc91a8ccd522e21d8478ab295d9e8d">Antares::Data::AreaUI::saveToFile</a></div><div class="ttdeci">bool saveToFile(const AnyString &amp;filename, bool force=false) const</div><div class="ttdoc">Save the settings into a file.</div><div class="ttdef"><b>Definition:</b> ui.cpp:293</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_abaafef9c93ec9b5d5049aa600eaf166d"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#abaafef9c93ec9b5d5049aa600eaf166d">Antares::Data::AreaUI::cacheColorHSV</a></div><div class="ttdeci">Yuni::CString&lt; 12, false &gt; cacheColorHSV</div><div class="ttdoc">HSV color model (only computed from the interface)</div><div class="ttdef"><b>Definition:</b> ui.h:73</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaUI_html_afa5a2a69037eccf4769037127389d943"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaUI.html#afa5a2a69037eccf4769037127389d943">Antares::Data::AreaUI::AreaUI</a></div><div class="ttdeci">AreaUI()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> ui.cpp:165</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

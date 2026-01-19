@@ -127,54 +127,36 @@ $(document).ready(function(){initNavTree('SimulationResults_8h_source.html','');
 <div class="title">SimulationResults.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;antares/solver/lps/LpsFromAntares.h&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>Antares::API</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1Error.html">   35</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1API_1_1Error.html">Error</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93">   40</a></span>&#160;    std::string <a class="code" href="structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93">reason</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1SimulationResults.html">   48</a></span>&#160;<span class="keyword">struct </span>[[nodiscard(&quot;Contains results and potential error&quot;)]] <a class="code" href="structAntares_1_1API_1_1SimulationResults.html">SimulationResults</a></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726">   53</a></span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1LpsFromAntares.html">Antares::Solver::LpsFromAntares</a> <a class="code" href="structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726">antares_problems</a>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89">   57</a></span>&#160;    std::optional&lt;Error&gt; <a class="code" href="structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89">error</a>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;} <span class="comment">// namespace Antares::API</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1LpsFromAntares_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1LpsFromAntares.html">Antares::Solver::LpsFromAntares</a></div><div class="ttdoc">The LpsFromAntares class is used to manage the constant and weekly data for Antares problems.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:113</div></div>
-<div class="ttc" id="astructAntares_1_1API_1_1Error_html"><div class="ttname"><a href="structAntares_1_1API_1_1Error.html">Antares::API::Error</a></div><div class="ttdoc">The Error structure is used to represent an error that occurred during the simulation.</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:36</div></div>
-<div class="ttc" id="astructAntares_1_1API_1_1Error_html_ad5d0c6db0418afc065901a9827ab5d93"><div class="ttname"><a href="structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93">Antares::API::Error::reason</a></div><div class="ttdeci">std::string reason</div><div class="ttdoc">The reason for the error.</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:40</div></div>
-<div class="ttc" id="astructAntares_1_1API_1_1SimulationResults_html"><div class="ttname"><a href="structAntares_1_1API_1_1SimulationResults.html">Antares::API::SimulationResults</a></div><div class="ttdoc">The SimulationResults structure is used to represent the results of a simulation.</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:49</div></div>
-<div class="ttc" id="astructAntares_1_1API_1_1SimulationResults_html_a54376dcd0475b0ca2b301d6dd5461726"><div class="ttname"><a href="structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726">Antares::API::SimulationResults::antares_problems</a></div><div class="ttdeci">Antares::Solver::LpsFromAntares antares_problems</div><div class="ttdoc">weekly problems</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:53</div></div>
-<div class="ttc" id="astructAntares_1_1API_1_1SimulationResults_html_aadded6e6147bd06bda57335ed88f9e89"><div class="ttname"><a href="structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89">Antares::API::SimulationResults::error</a></div><div class="ttdeci">std::optional&lt; Error &gt; error</div><div class="ttdoc">An optional error that occurred during the simulation.</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:57</div></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;antares/solver/lps/LpsFromAntares.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>Antares::API</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1Error.html">   17</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1API_1_1Error.html">Error</a></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93">   22</a></span>&#160;    std::string <a class="code" href="structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93">reason</a>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1SimulationResults.html">   30</a></span>&#160;<span class="keyword">struct </span>[[nodiscard(&quot;Contains results and potential error&quot;)]] <a class="code" href="structAntares_1_1API_1_1SimulationResults.html">SimulationResults</a></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726">   35</a></span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1LpsFromAntares.html">Antares::Solver::LpsFromAntares</a> <a class="code" href="structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726">antares_problems</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89">   39</a></span>&#160;    std::optional&lt;Error&gt; <a class="code" href="structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89">error</a>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;};</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <span class="comment">// namespace Antares::API</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1LpsFromAntares_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1LpsFromAntares.html">Antares::Solver::LpsFromAntares</a></div><div class="ttdoc">The LpsFromAntares class is used to manage the constant and weekly data for Antares problems.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:95</div></div>
+<div class="ttc" id="astructAntares_1_1API_1_1Error_html"><div class="ttname"><a href="structAntares_1_1API_1_1Error.html">Antares::API::Error</a></div><div class="ttdoc">The Error structure is used to represent an error that occurred during the simulation.</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:18</div></div>
+<div class="ttc" id="astructAntares_1_1API_1_1Error_html_ad5d0c6db0418afc065901a9827ab5d93"><div class="ttname"><a href="structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93">Antares::API::Error::reason</a></div><div class="ttdeci">std::string reason</div><div class="ttdoc">The reason for the error.</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:22</div></div>
+<div class="ttc" id="astructAntares_1_1API_1_1SimulationResults_html"><div class="ttname"><a href="structAntares_1_1API_1_1SimulationResults.html">Antares::API::SimulationResults</a></div><div class="ttdoc">The SimulationResults structure is used to represent the results of a simulation.</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:31</div></div>
+<div class="ttc" id="astructAntares_1_1API_1_1SimulationResults_html_a54376dcd0475b0ca2b301d6dd5461726"><div class="ttname"><a href="structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726">Antares::API::SimulationResults::antares_problems</a></div><div class="ttdeci">Antares::Solver::LpsFromAntares antares_problems</div><div class="ttdoc">weekly problems</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:35</div></div>
+<div class="ttc" id="astructAntares_1_1API_1_1SimulationResults_html_aadded6e6147bd06bda57335ed88f9e89"><div class="ttname"><a href="structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89">Antares::API::SimulationResults::error</a></div><div class="ttdeci">std::optional&lt; Error &gt; error</div><div class="ttdoc">An optional error that occurred during the simulation.</div><div class="ttdef"><b>Definition:</b> SimulationResults.h:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

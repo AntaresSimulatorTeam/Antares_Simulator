@@ -127,71 +127,53 @@ $(document).ready(function(){initNavTree('lold__base_8h_source.html',''); initRe
 <div class="title">lold_base.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Economy</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Economy</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html">    9</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html">LOLD_Base_Traits</a></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">static</span> std::string Unit()</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hours&quot;</span>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    }</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average</a>&lt; <span class="comment">// The average values throughout all years</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;      <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">R::AllYears::StdDeviation</a>&lt;          <span class="comment">// The standard deviation values throughout all years</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">R::AllYears::Min</a>&lt;                 <span class="comment">// The minimum values throughout all years</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;          <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">R::AllYears::Max</a>&lt;               <span class="comment">// The maximum values throughout all years</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            &gt;&gt;&gt;&gt;&gt;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;      <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">ResultsType</a>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">static</span> constexpr uint8_t decimal = 4;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">static</span> constexpr uint8_t spatialAggregate = Category::spatialAggregateSumThen1IfPositive;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html">   27</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html">LOLD_Base_Traits</a></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">static</span> std::string Unit()</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hours&quot;</span>;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average</a>&lt; <span class="comment">// The average values throughout all years</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;      <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">R::AllYears::StdDeviation</a>&lt;          <span class="comment">// The standard deviation values throughout all years</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">R::AllYears::Min</a>&lt;                 <span class="comment">// The minimum values throughout all years</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;          <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">R::AllYears::Max</a>&lt;               <span class="comment">// The maximum values throughout all years</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            &gt;&gt;&gt;&gt;&gt;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">ResultsType</a>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">static</span> constexpr uint8_t decimal = 4;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">static</span> constexpr uint8_t spatialAggregate = Category::spatialAggregateSumThen1IfPositive;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">double</span> value(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp;)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> 1.;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> computeStats(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&amp; iv)</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        iv.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">computeStatisticsForTheCurrentYear</a>();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">Antares::Solver::Variable::IntermediateValues</a></div><div class="ttdoc">Temporary buffer for allocating results for a single year.</div><div class="ttdef"><b>Definition:</b> intermediate.h:42</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html_ade98373f7d78dd65f18947cc28edb746"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">Antares::Solver::Variable::IntermediateValues::computeStatisticsForTheCurrentYear</a></div><div class="ttdeci">void computeStatisticsForTheCurrentYear()</div><div class="ttdoc">Compute statistics for the current year.</div><div class="ttdef"><b>Definition:</b> intermediate.cpp:70</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">Antares::Solver::Variable::R::AllYears::Max</a></div><div class="ttdef"><b>Definition:</b> minmax.h:183</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">Antares::Solver::Variable::R::AllYears::Min</a></div><div class="ttdef"><b>Definition:</b> minmax.h:160</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:44</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:71</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html">Antares::Solver::Variable::Economy::LOLD_Base_Traits</a></div><div class="ttdef"><b>Definition:</b> lold_base.h:28</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition:</b> average.h:32</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">Antares::Solver::Variable::R::AllYears::StdDeviation</a></div><div class="ttdef"><b>Definition:</b> stdDeviation.h:33</div></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">double</span> value(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp;)</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">return</span> 1.;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    }</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> computeStats(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&amp; iv)</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        iv.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">computeStatisticsForTheCurrentYear</a>();</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">Antares::Solver::Variable::IntermediateValues</a></div><div class="ttdoc">Temporary buffer for allocating results for a single year.</div><div class="ttdef"><b>Definition:</b> intermediate.h:25</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html_ade98373f7d78dd65f18947cc28edb746"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">Antares::Solver::Variable::IntermediateValues::computeStatisticsForTheCurrentYear</a></div><div class="ttdeci">void computeStatisticsForTheCurrentYear()</div><div class="ttdoc">Compute statistics for the current year.</div><div class="ttdef"><b>Definition:</b> intermediate.cpp:52</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">Antares::Solver::Variable::R::AllYears::Max</a></div><div class="ttdef"><b>Definition:</b> minmax.h:166</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">Antares::Solver::Variable::R::AllYears::Min</a></div><div class="ttdef"><b>Definition:</b> minmax.h:143</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:27</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:54</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD__Base__Traits.html">Antares::Solver::Variable::Economy::LOLD_Base_Traits</a></div><div class="ttdef"><b>Definition:</b> lold_base.h:10</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition:</b> average.h:15</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">Antares::Solver::Variable::R::AllYears::StdDeviation</a></div><div class="ttdef"><b>Definition:</b> stdDeviation.h:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -127,68 +127,51 @@ $(document).ready(function(){initNavTree('libs_2fswalker_2statistics_8h_source.h
 <div class="title">statistics.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_FS_WALKER_STATISTICS_H__</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_FS_WALKER_STATISTICS_H__</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>FSWalker</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html">   28</a></span>&#160;<span class="keyword">class </span><a class="code" href="classFSWalker_1_1Statistics.html">Statistics</a> final</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __ANTARES_FS_WALKER_STATISTICS_H__</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_FS_WALKER_STATISTICS_H__</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>FSWalker</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classFSWalker_1_1Statistics.html">Statistics</a> final</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="classFSWalker_1_1Statistics.html">Statistics</a>():</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">fileCount</a>(0),</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">folderCount</a>(0),</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">bytesCopied</a>(0),</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">aborted</a>(<span class="keyword">true</span>)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    {</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> reset()</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">fileCount</a> = 0;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">folderCount</a> = 0;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">bytesCopied</a> = 0;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">aborted</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    }</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="classFSWalker_1_1Statistics.html">Statistics</a>():</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">fileCount</a>(0),</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">folderCount</a>(0),</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">bytesCopied</a>(0),</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">aborted</a>(<span class="keyword">true</span>)</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> reset()</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">fileCount</a> = 0;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">folderCount</a> = 0;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">bytesCopied</a> = 0;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">aborted</a> = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">   49</a></span>&#160;    uint64_t <a class="code" href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">fileCount</a>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">   51</a></span>&#160;    uint64_t <a class="code" href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">folderCount</a>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">   53</a></span>&#160;    uint64_t <a class="code" href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">bytesCopied</a>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">   55</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">aborted</a>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}; <span class="comment">// class Statistics</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;} <span class="comment">// namespace FSWalker</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_FS_WALKER_STATISTICS_H__</span></div>
-<div class="ttc" id="aclassFSWalker_1_1Statistics_html"><div class="ttname"><a href="classFSWalker_1_1Statistics.html">FSWalker::Statistics</a></div><div class="ttdef"><b>Definition:</b> statistics.h:29</div></div>
-<div class="ttc" id="aclassFSWalker_1_1Statistics_html_a1826f366d77ce28df988ba7cc701918c"><div class="ttname"><a href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">FSWalker::Statistics::folderCount</a></div><div class="ttdeci">uint64_t folderCount</div><div class="ttdoc">The number of folders encountered.</div><div class="ttdef"><b>Definition:</b> statistics.h:51</div></div>
-<div class="ttc" id="aclassFSWalker_1_1Statistics_html_a734241876376abdb8a34ef5c63f56ca2"><div class="ttname"><a href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">FSWalker::Statistics::aborted</a></div><div class="ttdeci">bool aborted</div><div class="ttdoc">Flag to determine whether the operation has been aborted or not.</div><div class="ttdef"><b>Definition:</b> statistics.h:55</div></div>
-<div class="ttc" id="aclassFSWalker_1_1Statistics_html_a8b53d18c5a0b6000d09cbf813589329a"><div class="ttname"><a href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">FSWalker::Statistics::bytesCopied</a></div><div class="ttdeci">uint64_t bytesCopied</div><div class="ttdoc">The amount of bytes that has been copied.</div><div class="ttdef"><b>Definition:</b> statistics.h:53</div></div>
-<div class="ttc" id="aclassFSWalker_1_1Statistics_html_ae45fff468c6914f91be9eb66f8ce8e23"><div class="ttname"><a href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">FSWalker::Statistics::fileCount</a></div><div class="ttdeci">uint64_t fileCount</div><div class="ttdoc">The number of file encountered.</div><div class="ttdef"><b>Definition:</b> statistics.h:49</div></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">   32</a></span>&#160;    uint64_t <a class="code" href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">fileCount</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">   34</a></span>&#160;    uint64_t <a class="code" href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">folderCount</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">   36</a></span>&#160;    uint64_t <a class="code" href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">bytesCopied</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">   38</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">aborted</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}; <span class="comment">// class Statistics</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <span class="comment">// namespace FSWalker</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_FS_WALKER_STATISTICS_H__</span></div>
+<div class="ttc" id="aclassFSWalker_1_1Statistics_html"><div class="ttname"><a href="classFSWalker_1_1Statistics.html">FSWalker::Statistics</a></div><div class="ttdef"><b>Definition:</b> statistics.h:12</div></div>
+<div class="ttc" id="aclassFSWalker_1_1Statistics_html_a1826f366d77ce28df988ba7cc701918c"><div class="ttname"><a href="classFSWalker_1_1Statistics.html#a1826f366d77ce28df988ba7cc701918c">FSWalker::Statistics::folderCount</a></div><div class="ttdeci">uint64_t folderCount</div><div class="ttdoc">The number of folders encountered.</div><div class="ttdef"><b>Definition:</b> statistics.h:34</div></div>
+<div class="ttc" id="aclassFSWalker_1_1Statistics_html_a734241876376abdb8a34ef5c63f56ca2"><div class="ttname"><a href="classFSWalker_1_1Statistics.html#a734241876376abdb8a34ef5c63f56ca2">FSWalker::Statistics::aborted</a></div><div class="ttdeci">bool aborted</div><div class="ttdoc">Flag to determine whether the operation has been aborted or not.</div><div class="ttdef"><b>Definition:</b> statistics.h:38</div></div>
+<div class="ttc" id="aclassFSWalker_1_1Statistics_html_a8b53d18c5a0b6000d09cbf813589329a"><div class="ttname"><a href="classFSWalker_1_1Statistics.html#a8b53d18c5a0b6000d09cbf813589329a">FSWalker::Statistics::bytesCopied</a></div><div class="ttdeci">uint64_t bytesCopied</div><div class="ttdoc">The amount of bytes that has been copied.</div><div class="ttdef"><b>Definition:</b> statistics.h:36</div></div>
+<div class="ttc" id="aclassFSWalker_1_1Statistics_html_ae45fff468c6914f91be9eb66f8ce8e23"><div class="ttname"><a href="classFSWalker_1_1Statistics.html#ae45fff468c6914f91be9eb66f8ce8e23">FSWalker::Statistics::fileCount</a></div><div class="ttdeci">uint64_t fileCount</div><div class="ttdoc">The number of file encountered.</div><div class="ttdef"><b>Definition:</b> statistics.h:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

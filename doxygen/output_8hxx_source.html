@@ -127,41 +127,24 @@ $(document).ready(function(){initNavTree('output_8hxx_source.html',''); initResi
 <div class="title">output.hxx</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __ANTARES_LIBS_STUDY_OUTPUT_HXX__</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __ANTARES_LIBS_STUDY_OUTPUT_HXX__</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Output.html#a64411124abe0d38469a01d2fadc325b1">   26</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1Output.html#a64411124abe0d38469a01d2fadc325b1">Output::operator&lt;</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Output.html">Output</a>&amp; rhs)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> not(<a class="code" href="classAntares_1_1Data_1_1Output.html#a1b0b78cffb6534e38602efedc15546c5">title</a> &lt; rhs.<a class="code" href="classAntares_1_1Data_1_1Output.html#a1b0b78cffb6534e38602efedc15546c5">title</a>);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_OUTPUT_HXX__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Output_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Output.html">Antares::Data::Output</a></div><div class="ttdef"><b>Definition:</b> output.h:38</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Output_html_a1b0b78cffb6534e38602efedc15546c5"><div class="ttname"><a href="classAntares_1_1Data_1_1Output.html#a1b0b78cffb6534e38602efedc15546c5">Antares::Data::Output::title</a></div><div class="ttdeci">Title title</div><div class="ttdoc">Title to use for visual representation of the output.</div><div class="ttdef"><b>Definition:</b> output.h:95</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Output_html_a64411124abe0d38469a01d2fadc325b1"><div class="ttname"><a href="classAntares_1_1Data_1_1Output.html#a64411124abe0d38469a01d2fadc325b1">Antares::Data::Output::operator&lt;</a></div><div class="ttdeci">bool operator&lt;(const Output &amp;rhs) const</div><div class="ttdoc">Operator &lt;.</div><div class="ttdef"><b>Definition:</b> output.hxx:26</div></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __ANTARES_LIBS_STUDY_OUTPUT_HXX__</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_LIBS_STUDY_OUTPUT_HXX__</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Output.html#a64411124abe0d38469a01d2fadc325b1">    9</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1Output.html#a64411124abe0d38469a01d2fadc325b1">Output::operator&lt;</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Output.html">Output</a>&amp; rhs)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordflow">return</span> not(<a class="code" href="classAntares_1_1Data_1_1Output.html#a1b0b78cffb6534e38602efedc15546c5">title</a> &lt; rhs.<a class="code" href="classAntares_1_1Data_1_1Output.html#a1b0b78cffb6534e38602efedc15546c5">title</a>);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;}</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_OUTPUT_HXX__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Output_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Output.html">Antares::Data::Output</a></div><div class="ttdef"><b>Definition:</b> output.h:21</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Output_html_a1b0b78cffb6534e38602efedc15546c5"><div class="ttname"><a href="classAntares_1_1Data_1_1Output.html#a1b0b78cffb6534e38602efedc15546c5">Antares::Data::Output::title</a></div><div class="ttdeci">Title title</div><div class="ttdoc">Title to use for visual representation of the output.</div><div class="ttdef"><b>Definition:</b> output.h:78</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Output_html_a64411124abe0d38469a01d2fadc325b1"><div class="ttname"><a href="classAntares_1_1Data_1_1Output.html#a64411124abe0d38469a01d2fadc325b1">Antares::Data::Output::operator&lt;</a></div><div class="ttdeci">bool operator&lt;(const Output &amp;rhs) const</div><div class="ttdoc">Operator &lt;.</div><div class="ttdef"><b>Definition:</b> output.hxx:9</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

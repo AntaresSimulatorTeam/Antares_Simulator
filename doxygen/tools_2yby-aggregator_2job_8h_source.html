@@ -127,118 +127,101 @@ $(document).ready(function(){initNavTree('tools_2yby-aggregator_2job_8h_source.h
 <div class="title">job.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2025, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** See AUTHORS.txt</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares-Simulator,</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef __STUDY_JOB_AGGREGATOR_JOB_H__</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define __STUDY_JOB_AGGREGATOR_JOB_H__</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __STUDY_JOB_AGGREGATOR_JOB_H__</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __STUDY_JOB_AGGREGATOR_JOB_H__</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;yuni/io/file.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;yuni/job/job.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;yuni/job/queue/service.h&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;antares/solver/ts-generator/xcast/studydata.h&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;datafile.h&quot;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;output.h&quot;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classJobFileReader.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="classJobFileReader.html">JobFileReader</a> final: <span class="keyword">public</span> Yuni::Job::IJob</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classJobFileReader.html#a21f168cdef0f47ddd238f6d7839ec301">   24</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classJobFileReader.html#a21f168cdef0f47ddd238f6d7839ec301">Ptr</a> = std::shared_ptr&lt;JobFileReader&gt;;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;yuni/io/file.h&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;yuni/job/job.h&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;yuni/job/queue/service.h&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;antares/solver/ts-generator/xcast/studydata.h&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">enum</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        maxRows = 8800,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    };</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classJobFileReader.html#aa31f0764a10b13218afe34d0311eb089">RemainJobsToExecute</a>();</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;datafile.h&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;output.h&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classJobFileReader.html">   37</a></span>&#160;<span class="keyword">class </span><a class="code" href="classJobFileReader.html">JobFileReader</a> final: <span class="keyword">public</span> Yuni::Job::IJob</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classJobFileReader.html#a21f168cdef0f47ddd238f6d7839ec301">   41</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classJobFileReader.html#a21f168cdef0f47ddd238f6d7839ec301">Ptr</a> = std::shared_ptr&lt;JobFileReader&gt;;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">enum</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        maxRows = 8800,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    };</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classJobFileReader.html#aa31f0764a10b13218afe34d0311eb089">RemainJobsToExecute</a>();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c">JobFileReader</a>();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classJobFileReader.html#af6f42affc1e8f8ec0a262fd51dc0384c">~JobFileReader</a>();</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classJobFileReader.html#a181dbf72e030ce104178772da7fcfca9">   64</a></span>&#160;    uint <a class="code" href="classJobFileReader.html#a181dbf72e030ce104178772da7fcfca9">year</a>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461">   66</a></span>&#160;    <a class="code" href="classDataFile.html#afa12a7df346f64ff28425065607cc346">DataFile::Ptr</a> <a class="code" href="classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461">datafile</a>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c">   68</a></span>&#160;    <a class="code" href="classOutput.html#af07716dc7eeeae93b5733029b2bca3b7">Output::Ptr</a> <a class="code" href="classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c">output</a>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classJobFileReader.html#aa8607cde78fa1eeb0a276127f49f5a00">   70</a></span>&#160;    <a class="code" href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">StudyData::Ptr</a> <a class="code" href="classJobFileReader.html#aa8607cde78fa1eeb0a276127f49f5a00">studydata</a>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="classJobFileReader.html#adde9c393e3088ec51984f977513d741e">   72</a></span>&#160;    Yuni::String <a class="code" href="classJobFileReader.html#adde9c393e3088ec51984f977513d741e">path</a>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classJobFileReader.html#ac0140032b098e5f4cbbedb62a4fee2a7">onExecute</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c">JobFileReader</a>();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classJobFileReader.html#af6f42affc1e8f8ec0a262fd51dc0384c">~JobFileReader</a>();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classJobFileReader.html#a181dbf72e030ce104178772da7fcfca9">   47</a></span>&#160;    uint <a class="code" href="classJobFileReader.html#a181dbf72e030ce104178772da7fcfca9">year</a>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461">   49</a></span>&#160;    <a class="code" href="classDataFile.html#afa12a7df346f64ff28425065607cc346">DataFile::Ptr</a> <a class="code" href="classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461">datafile</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c">   51</a></span>&#160;    <a class="code" href="classOutput.html#af07716dc7eeeae93b5733029b2bca3b7">Output::Ptr</a> <a class="code" href="classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c">output</a>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classJobFileReader.html#aa8607cde78fa1eeb0a276127f49f5a00">   53</a></span>&#160;    <a class="code" href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">StudyData::Ptr</a> <a class="code" href="classJobFileReader.html#aa8607cde78fa1eeb0a276127f49f5a00">studydata</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classJobFileReader.html#adde9c393e3088ec51984f977513d741e">   55</a></span>&#160;    Yuni::String <a class="code" href="classJobFileReader.html#adde9c393e3088ec51984f977513d741e">path</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classJobFileReader.html#ac0140032b098e5f4cbbedb62a4fee2a7">onExecute</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">bool</span> openCSVFile();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">bool</span> prepareJumpTable();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">bool</span> readRawData();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> readLine(<span class="keyword">const</span> AnyString&amp; line, uint y);</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">bool</span> openCSVFile();</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">bool</span> prepareJumpTable();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">bool</span> readRawData();</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">void</span> readLine(<span class="keyword">const</span> AnyString&amp; line, uint y);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">bool</span> storeResults();</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> resizeJumpTable(uint newsize);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">using</span> TemporaryColumnData = CellData*;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">using</span> BufferType = Yuni::CString&lt;65536&gt;;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keyword">using</span> JumpTable = std::vector&lt;uint&gt;;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    BufferType buffer;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    Yuni::IO::File::Stream pFile;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    Yuni::String pFilename;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    JumpTable pJumpTable;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">bool</span>* pVariablesOn;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    uint pDataOffset;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    TemporaryColumnData* pTmpResults;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    uint pLineCount;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;}; <span class="comment">// class JobFileReader</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="keyword">extern</span> Yuni::Job::QueueService queueService;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#include &quot;job.hxx&quot;</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __STUDY_JOB_AGGREGATOR_JOB_H__</span></div>
-<div class="ttc" id="aclassDataFile_html_afa12a7df346f64ff28425065607cc346"><div class="ttname"><a href="classDataFile.html#afa12a7df346f64ff28425065607cc346">DataFile::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; DataFile &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition:</b> datafile.h:34</div></div>
-<div class="ttc" id="aclassJobFileReader_html"><div class="ttname"><a href="classJobFileReader.html">JobFileReader</a></div><div class="ttdef"><b>Definition:</b> job.h:38</div></div>
-<div class="ttc" id="aclassJobFileReader_html_a181dbf72e030ce104178772da7fcfca9"><div class="ttname"><a href="classJobFileReader.html#a181dbf72e030ce104178772da7fcfca9">JobFileReader::year</a></div><div class="ttdeci">uint year</div><div class="ttdoc">The current year (zero-based)</div><div class="ttdef"><b>Definition:</b> job.h:64</div></div>
-<div class="ttc" id="aclassJobFileReader_html_a21f168cdef0f47ddd238f6d7839ec301"><div class="ttname"><a href="classJobFileReader.html#a21f168cdef0f47ddd238f6d7839ec301">JobFileReader::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; JobFileReader &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition:</b> job.h:41</div></div>
-<div class="ttc" id="aclassJobFileReader_html_a35f76210b50cd6c8a86c8d0ac72f517c"><div class="ttname"><a href="classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c">JobFileReader::JobFileReader</a></div><div class="ttdeci">JobFileReader()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> job.cpp:45</div></div>
-<div class="ttc" id="aclassJobFileReader_html_aa31f0764a10b13218afe34d0311eb089"><div class="ttname"><a href="classJobFileReader.html#aa31f0764a10b13218afe34d0311eb089">JobFileReader::RemainJobsToExecute</a></div><div class="ttdeci">static bool RemainJobsToExecute()</div><div class="ttdoc">Get if some jobs remain.</div><div class="ttdef"><b>Definition:</b> job.cpp:40</div></div>
-<div class="ttc" id="aclassJobFileReader_html_aa8607cde78fa1eeb0a276127f49f5a00"><div class="ttname"><a href="classJobFileReader.html#aa8607cde78fa1eeb0a276127f49f5a00">JobFileReader::studydata</a></div><div class="ttdeci">StudyData::Ptr studydata</div><div class="ttdoc">Study data.</div><div class="ttdef"><b>Definition:</b> job.h:70</div></div>
-<div class="ttc" id="aclassJobFileReader_html_ac0140032b098e5f4cbbedb62a4fee2a7"><div class="ttname"><a href="classJobFileReader.html#ac0140032b098e5f4cbbedb62a4fee2a7">JobFileReader::onExecute</a></div><div class="ttdeci">virtual void onExecute() override</div><div class="ttdoc">Execute the job.</div><div class="ttdef"><b>Definition:</b> job.cpp:73</div></div>
-<div class="ttc" id="aclassJobFileReader_html_adcd1aebb5c4217842478e104bbe4054c"><div class="ttname"><a href="classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c">JobFileReader::output</a></div><div class="ttdeci">Output::Ptr output</div><div class="ttdoc">Output.</div><div class="ttdef"><b>Definition:</b> job.h:68</div></div>
-<div class="ttc" id="aclassJobFileReader_html_adde9c393e3088ec51984f977513d741e"><div class="ttname"><a href="classJobFileReader.html#adde9c393e3088ec51984f977513d741e">JobFileReader::path</a></div><div class="ttdeci">Yuni::String path</div><div class="ttdoc">Path.</div><div class="ttdef"><b>Definition:</b> job.h:72</div></div>
-<div class="ttc" id="aclassJobFileReader_html_ae9f3841ba9ca032ada0a75d87c167461"><div class="ttname"><a href="classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461">JobFileReader::datafile</a></div><div class="ttdeci">DataFile::Ptr datafile</div><div class="ttdoc">Data file.</div><div class="ttdef"><b>Definition:</b> job.h:66</div></div>
-<div class="ttc" id="aclassJobFileReader_html_af6f42affc1e8f8ec0a262fd51dc0384c"><div class="ttname"><a href="classJobFileReader.html#af6f42affc1e8f8ec0a262fd51dc0384c">JobFileReader::~JobFileReader</a></div><div class="ttdeci">virtual ~JobFileReader()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> job.cpp:54</div></div>
-<div class="ttc" id="aclassOutput_html_af07716dc7eeeae93b5733029b2bca3b7"><div class="ttname"><a href="classOutput.html#af07716dc7eeeae93b5733029b2bca3b7">Output::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; Output &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition:</b> output.h:36</div></div>
-<div class="ttc" id="aclassStudyData_html_afd28a35c2a5d4eacabb6ac999e0bb3e7"><div class="ttname"><a href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">StudyData::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; StudyData &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition:</b> studydata.h:34</div></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">bool</span> storeResults();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> resizeJumpTable(uint newsize);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">using</span> TemporaryColumnData = CellData*;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">using</span> BufferType = Yuni::CString&lt;65536&gt;;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">using</span> JumpTable = std::vector&lt;uint&gt;;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    BufferType buffer;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    Yuni::IO::File::Stream pFile;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    Yuni::String pFilename;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    JumpTable pJumpTable;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">bool</span>* pVariablesOn;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    uint pDataOffset;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    TemporaryColumnData* pTmpResults;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    uint pLineCount;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}; <span class="comment">// class JobFileReader</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword">extern</span> Yuni::Job::QueueService queueService;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#include &quot;job.hxx&quot;</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __STUDY_JOB_AGGREGATOR_JOB_H__</span></div>
+<div class="ttc" id="aclassDataFile_html_afa12a7df346f64ff28425065607cc346"><div class="ttname"><a href="classDataFile.html#afa12a7df346f64ff28425065607cc346">DataFile::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; DataFile &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition:</b> datafile.h:17</div></div>
+<div class="ttc" id="aclassJobFileReader_html"><div class="ttname"><a href="classJobFileReader.html">JobFileReader</a></div><div class="ttdef"><b>Definition:</b> job.h:21</div></div>
+<div class="ttc" id="aclassJobFileReader_html_a181dbf72e030ce104178772da7fcfca9"><div class="ttname"><a href="classJobFileReader.html#a181dbf72e030ce104178772da7fcfca9">JobFileReader::year</a></div><div class="ttdeci">uint year</div><div class="ttdoc">The current year (zero-based)</div><div class="ttdef"><b>Definition:</b> job.h:47</div></div>
+<div class="ttc" id="aclassJobFileReader_html_a21f168cdef0f47ddd238f6d7839ec301"><div class="ttname"><a href="classJobFileReader.html#a21f168cdef0f47ddd238f6d7839ec301">JobFileReader::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; JobFileReader &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition:</b> job.h:24</div></div>
+<div class="ttc" id="aclassJobFileReader_html_a35f76210b50cd6c8a86c8d0ac72f517c"><div class="ttname"><a href="classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c">JobFileReader::JobFileReader</a></div><div class="ttdeci">JobFileReader()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> job.cpp:27</div></div>
+<div class="ttc" id="aclassJobFileReader_html_aa31f0764a10b13218afe34d0311eb089"><div class="ttname"><a href="classJobFileReader.html#aa31f0764a10b13218afe34d0311eb089">JobFileReader::RemainJobsToExecute</a></div><div class="ttdeci">static bool RemainJobsToExecute()</div><div class="ttdoc">Get if some jobs remain.</div><div class="ttdef"><b>Definition:</b> job.cpp:22</div></div>
+<div class="ttc" id="aclassJobFileReader_html_aa8607cde78fa1eeb0a276127f49f5a00"><div class="ttname"><a href="classJobFileReader.html#aa8607cde78fa1eeb0a276127f49f5a00">JobFileReader::studydata</a></div><div class="ttdeci">StudyData::Ptr studydata</div><div class="ttdoc">Study data.</div><div class="ttdef"><b>Definition:</b> job.h:53</div></div>
+<div class="ttc" id="aclassJobFileReader_html_ac0140032b098e5f4cbbedb62a4fee2a7"><div class="ttname"><a href="classJobFileReader.html#ac0140032b098e5f4cbbedb62a4fee2a7">JobFileReader::onExecute</a></div><div class="ttdeci">virtual void onExecute() override</div><div class="ttdoc">Execute the job.</div><div class="ttdef"><b>Definition:</b> job.cpp:55</div></div>
+<div class="ttc" id="aclassJobFileReader_html_adcd1aebb5c4217842478e104bbe4054c"><div class="ttname"><a href="classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c">JobFileReader::output</a></div><div class="ttdeci">Output::Ptr output</div><div class="ttdoc">Output.</div><div class="ttdef"><b>Definition:</b> job.h:51</div></div>
+<div class="ttc" id="aclassJobFileReader_html_adde9c393e3088ec51984f977513d741e"><div class="ttname"><a href="classJobFileReader.html#adde9c393e3088ec51984f977513d741e">JobFileReader::path</a></div><div class="ttdeci">Yuni::String path</div><div class="ttdoc">Path.</div><div class="ttdef"><b>Definition:</b> job.h:55</div></div>
+<div class="ttc" id="aclassJobFileReader_html_ae9f3841ba9ca032ada0a75d87c167461"><div class="ttname"><a href="classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461">JobFileReader::datafile</a></div><div class="ttdeci">DataFile::Ptr datafile</div><div class="ttdoc">Data file.</div><div class="ttdef"><b>Definition:</b> job.h:49</div></div>
+<div class="ttc" id="aclassJobFileReader_html_af6f42affc1e8f8ec0a262fd51dc0384c"><div class="ttname"><a href="classJobFileReader.html#af6f42affc1e8f8ec0a262fd51dc0384c">JobFileReader::~JobFileReader</a></div><div class="ttdeci">virtual ~JobFileReader()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> job.cpp:36</div></div>
+<div class="ttc" id="aclassOutput_html_af07716dc7eeeae93b5733029b2bca3b7"><div class="ttname"><a href="classOutput.html#af07716dc7eeeae93b5733029b2bca3b7">Output::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; Output &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition:</b> output.h:19</div></div>
+<div class="ttc" id="aclassStudyData_html_afd28a35c2a5d4eacabb6ac999e0bb3e7"><div class="ttname"><a href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">StudyData::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; StudyData &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition:</b> studydata.h:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
