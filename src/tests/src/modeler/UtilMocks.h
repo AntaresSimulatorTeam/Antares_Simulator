@@ -24,6 +24,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/study/system-model/optimConfig.h"
 
 #include "mockModelerObjects.h"
 
@@ -486,7 +487,8 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
 
     MyDummyFixture()
     {
-        optimEntityContainer.addFromSystemComponents(components);
+        optimEntityContainer
+          .addFromSystemComponents(components, Antares::Modeler::Config::Location::SUBPROBLEMS);
         for (const auto& compo: components)
         {
             defaultComponentEvalVisitor = std::make_unique<
@@ -501,7 +503,8 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
         paramsAndValues)
     {
         components.emplace_back(createComponent(model, id, paramsAndValues, components.size()));
-        optimEntityContainer.addFromSystemComponents(components);
+        optimEntityContainer
+          .addFromSystemComponents(components, Antares::Modeler::Config::Location::SUBPROBLEMS);
         return &components.back();
     }
 };

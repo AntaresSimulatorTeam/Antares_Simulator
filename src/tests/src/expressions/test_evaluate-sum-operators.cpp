@@ -20,6 +20,7 @@
  * <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include "antares/study/system-model/optimConfig.h"
 #define WIN32_LEAN_AND_MEAN
 
 #include <memory>
@@ -127,7 +128,8 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
     optimEntityContainer_ = std::make_unique<OptimEntityContainer>(linearProblem_,
                                                                    &data_,
                                                                    &scenarioGroupRepo_);
-    optimEntityContainer_->addFromSystemComponents(components_);
+    optimEntityContainer_->addFromSystemComponents(components_,
+                                                   Antares::Modeler::Config::Location::SUBPROBLEMS);
 
     // And finally, creation of the evaluation visitor (purpose of this fixture)
     evalVisitor = std::make_unique<EvalVisitor>(*optimEntityContainer_, fillCtx_, component_);

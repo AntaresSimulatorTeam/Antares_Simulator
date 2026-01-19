@@ -7,6 +7,7 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
+#include "antares/study/system-model/optimConfig.h"
 
 #include "UtilMocks.h"
 
@@ -67,7 +68,8 @@ struct VisitorFixture: Registry<Node>
         optimContainer(linearProblem, &data, &scenarioGroupRepository),
         components(1, setupComponent())
     {
-        optimContainer.addFromSystemComponents(components);
+        optimContainer.addFromSystemComponents(components,
+                                               Antares::Modeler::Config::Location::SUBPROBLEMS);
         auto& optimComponent = optimContainer.getOptimComponent(0);
         optimComponent.modelVariableGlobalIndices = {0, 1, 2};
         {

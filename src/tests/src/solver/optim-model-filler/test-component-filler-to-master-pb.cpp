@@ -1,3 +1,4 @@
+#include "antares/study/system-model/optimConfig.h"
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
@@ -82,7 +83,8 @@ private:
     void setOptimEntityContainer()
     {
         std::vector<Component> components = {*component};
-        optimEntityContainer.addFromSystemComponents(components);
+        optimEntityContainer
+          .addFromSystemComponents(components, Antares::Modeler::Config::Location::SUBPROBLEMS);
     }
 };
 

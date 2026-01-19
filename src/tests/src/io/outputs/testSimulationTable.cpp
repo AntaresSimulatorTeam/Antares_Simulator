@@ -599,7 +599,8 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             addRandomVariables(fillContext, linearProblem, compo);
         }
 
-        optimEntityContainer->addFromSystemComponents(components);
+        optimEntityContainer
+          ->addFromSystemComponents(components, Antares::Modeler::Config::Location::SUBPROBLEMS);
 
         for (const auto& compo: components)
         {

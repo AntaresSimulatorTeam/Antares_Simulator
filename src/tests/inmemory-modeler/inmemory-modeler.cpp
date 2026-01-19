@@ -27,6 +27,7 @@
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
+#include "antares/study/system-model/optimConfig.h"
 #include "antares/study/system-model/parameter.h"
 
 using namespace Antares::Optimisation;
@@ -59,14 +60,15 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb,
                                                                   &dummy_data,
                                                                   &scenarioGroupRepo);
-    optimEntityContainer->addFromSystemComponents(components);
+    optimEntityContainer->addFromSystemComponents(components,
+                                                  Antares::Modeler::Config::Location::SUBPROBLEMS);
     for (auto& component: components)
     {
-        auto cf = std::make_unique<ComponentFiller>(
-          component,
-          *optimEntityContainer,
-          scenarioGroupRepo,
-          Antares::Modeler::Config::Location::SUBPROBLEMS);
+        auto cf = std::make_unique<ComponentFiller>(component,
+                                                    *optimEntityContainer,
+                                                    scenarioGroupRepo,
+                                                    Antares::Modeler::Config::Location::SUBPROBLEMS,
+                                                    nullptr);
         fillers.push_back(std::move(cf));
     }
     LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
