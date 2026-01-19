@@ -186,7 +186,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
-                                        solver.get());
+                                        &ortoolsProblem);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
@@ -300,13 +300,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         else
         {
-            problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
@@ -326,8 +326,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         bool hasModelerData = modelerData != nullptr;
         const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                      : nullptr;
-        const ScenarioGroupRepository* modelerScenarioGroupRepository
-          = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
+        const ScenarioGroupRepository*
+          modelerScenarioGroupRepository = hasModelerData ? &modelerData->scenarioGroupRepository
+                                                          : nullptr;
 
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
@@ -344,8 +345,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                             problemeHebdo->exportMPSOnError,
                                             optimizationNumber,
-                                            MPproblem.get());
-
+                                            &infeasibleProblem);
         // Since MpProblem must have named vars and constraints in case of infeasibility, we must
         // use the updated MPSolver
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
