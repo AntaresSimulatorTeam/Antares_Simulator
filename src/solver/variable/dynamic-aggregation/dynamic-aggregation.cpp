@@ -239,4 +239,5 @@ void SetData::writeResultsToFolder(Solver::IResultWriter& writer,
     writeStsResults("_sts_injection.csv", stsInjectionResults_);
     writeStsResults("_sts_withdrawal.csv", stsWithdrawalResults_);
     writeStsResults("_sts_level.csv", stsLevelResults_);
+}
 } // namespace Antares::Solver::Variable
