@@ -161,29 +161,27 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
 {
     std::vector<PortType> out;
     out.reserve(library.port_types.size());
-    for (const auto& portType: library.port_types)
+    for (const auto& ymlPortType: library.port_types)
     {
-        if (portType.fields.empty()) // Can't have a port type without fields
+        if (ymlPortType.fields.empty()) // Can't have a port type without fields
         {
-            throw PortTypeDoesntContainsFields(portType.id);
+            throw PortTypeDoesntContainsFields(ymlPortType.id);
         }
         std::vector<PortField> fields;
-        for (const auto& field: portType.fields)
+        for (const auto& field: ymlPortType.fields)
         {
             fields.emplace_back(field);
         }
 
         // Can't have port types with the same ID
-        if (std::ranges::find_if(out, [&portType](const auto& p) { return p.Id() == portType.id; })
+        if (std::ranges::find_if(out, [&](const auto& p) { return p.Id() == ymlPortType.id; })
             != out.end())
         {
-            throw PortTypeWithThisIdAlreadyExists(portType.id);
+            throw PortTypeWithThisIdAlreadyExists(ymlPortType.id);
         }
 
-        PortType portTypeModel(portType.id,
-                               std::move(fields),
-                               portType.area_connection_injection_field);
-        out.emplace_back(std::move(portTypeModel));
+        PortType portType(ymlPortType.id, std::move(fields), ymlPortType.area_connection.injection);
+        out.emplace_back(std::move(portType));
     }
     return out;
 }

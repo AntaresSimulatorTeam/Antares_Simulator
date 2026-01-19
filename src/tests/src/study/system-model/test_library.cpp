@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(port_type_basic)
     BOOST_REQUIRE_EQUAL(portType.Fields().size(), 2);
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "field1");
     BOOST_CHECK_EQUAL(portType.Fields()[1].Id(), "field2");
-    BOOST_CHECK_EQUAL(portType.AreaConnectionFieldId().has_value(), false);
+    BOOST_CHECK_EQUAL(portType.areaConnection().has_value(), false);
 }
 
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
@@ -188,8 +188,8 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
     BOOST_REQUIRE_EQUAL(portType.Fields().size(), 2);
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "firstField");
     BOOST_CHECK_EQUAL(portType.Fields()[1].Id(), "secondField");
-    BOOST_CHECK_EQUAL(portType.AreaConnectionFieldId().has_value(), true);
-    BOOST_CHECK_EQUAL(portType.AreaConnectionFieldId().value(), "secondField");
+    BOOST_CHECK_EQUAL(portType.areaConnection().has_value(), true);
+    BOOST_CHECK_EQUAL(portType.areaConnection()->injection, "secondField");
 }
 
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)

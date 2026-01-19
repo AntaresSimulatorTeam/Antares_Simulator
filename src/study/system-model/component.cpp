@@ -151,16 +151,16 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
                                     + data_.model->Id() + "\"");
     }
     Port port = getModel()->Ports().at(localPortId);
-    if (!port.Type().AreaConnectionFieldId().has_value())
+    if (!port.Type().areaConnection().has_value())
     {
         throw std::invalid_argument(exceptionPrefix + "port type \"" + port.Type().Id()
                                     + "\" has no area-connection field ID defined");
     }
-    PortFieldKey key(localPortId, port.Type().AreaConnectionFieldId().value());
+    PortFieldKey key(localPortId, port.Type().areaConnection()->injection);
     if (!data_.model->PortFieldDefinitions().contains(key))
     {
         throw std::invalid_argument(
-          exceptionPrefix + "port field \"" + port.Type().AreaConnectionFieldId().value()
+          exceptionPrefix + "port field \"" + port.Type().areaConnection()->injection
           + "\" is not defined in the component's model \"" + data_.model->Id() + "\"");
     }
     if (portToAreaConnections_.contains(localPortId))

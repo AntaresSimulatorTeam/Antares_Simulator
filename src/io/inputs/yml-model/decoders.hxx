@@ -248,7 +248,7 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
             }
             for (const auto& field: node["area-connection"])
             {
-                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
+                rhs.area_connection.injection = field["injection-field"].as<std::string>("");
             }
         }
         return true;

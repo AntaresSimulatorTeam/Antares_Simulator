@@ -58,14 +58,14 @@ void ComponentToAreaConnectionFiller::addVariables(const FillContext&)
 static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Component& component,
                                         const std::string& portId)
 {
-    auto field = component.getModel()->Ports().at(portId).Type().AreaConnectionFieldId();
+    auto field = component.getModel()->Ports().at(portId).Type().areaConnection();
     if (!field.has_value())
     {
         throw Error::RuntimeError("Component \"" + component.Id()
                                   + "\" is connected to an area using a port type that has no "
                                     "area-connection field defined.");
     }
-    return field.value();
+    return field->injection;
 }
 
 IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
