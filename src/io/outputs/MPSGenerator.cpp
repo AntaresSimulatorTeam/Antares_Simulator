@@ -30,7 +30,6 @@
 using namespace Antares::Optimisation::LinearProblemApi;
 static constexpr std::string_view pad = "    ";
 static constexpr double EPS = 1e-12;
-static constexpr fmt::string_view numberFormat = "{:.10g}";
 
 bool isEqual(const double& a, const double& b, const double& eps = EPS)
 {
@@ -188,7 +187,7 @@ void MPSGenerator::writeColumns()
                            "{}{}  OBJ  {}\n",
                            pad,
                            exportableVariablesName,
-                           fmt::format(numberFormat, coef));
+                           coef);
         }
 
         // constraints
@@ -200,7 +199,7 @@ void MPSGenerator::writeColumns()
                            pad,
                            exportableVariablesName,
                            exportableConstraintsNames_[row],
-                           fmt::format(numberFormat, coef));
+                           coef);
         }
 
         if (isInt)
@@ -221,10 +220,7 @@ void MPSGenerator::writeRhs()
     out_ += "RHS\n";
     if (const auto objOffset = linearProblem_.getObjectiveOffset(); isNotEqual(objOffset, 0.0))
     {
-        fmt::format_to(std::back_inserter(out_),
-                       "{}RHS1  OBJ  {}\n",
-                       pad,
-                       fmt::format(numberFormat, -objOffset));
+        fmt::format_to(std::back_inserter(out_), "{}RHS1  OBJ  {}\n", pad, -objOffset);
     }
     int i = 0;
     for (const auto& c: linearProblem_.getConstraints())
@@ -236,7 +232,7 @@ void MPSGenerator::writeRhs()
                            "{}RHS1  {}  {}\n",
                            pad,
                            exportableConstraintsNames_[i],
-                           fmt::format(numberFormat, rhs));
+                           rhs);
         }
         ++i;
     }
@@ -255,7 +251,7 @@ void MPSGenerator::writeRanges()
                            "{}RNG1  {}  {}\n",
                            pad,
                            exportableConstraintsNames_[i],
-                           fmt::format(numberFormat, range));
+                           range);
         }
         ++i;
     }
@@ -287,12 +283,7 @@ void MPSGenerator::writeBounds()
         }
         if (isEqual(lb, ub))
         {
-            fmt::format_to(std::back_inserter(out_),
-                           "{}FX {} {} {}\n",
-                           pad,
-                           bnd,
-                           varName,
-                           fmt::format(numberFormat, lb));
+            fmt::format_to(std::back_inserter(out_), "{}FX {} {} {}\n", pad, bnd, varName, lb);
             continue;
         }
         if (isBinary)
@@ -315,21 +306,11 @@ void MPSGenerator::writeBounds()
             }
             else if (!lbIsZero)
             {
-                fmt::format_to(std::back_inserter(out_),
-                               "{}LI {} {} {}\n",
-                               pad,
-                               bnd,
-                               varName,
-                               fmt::format(numberFormat, lb));
+                fmt::format_to(std::back_inserter(out_), "{}LI {} {} {}\n", pad, bnd, varName, lb);
             }
             if (!ubIsPlusInfinity)
             {
-                fmt::format_to(std::back_inserter(out_),
-                               "{}UI {} {} {}\n",
-                               pad,
-                               bnd,
-                               varName,
-                               fmt::format(numberFormat, ub));
+                fmt::format_to(std::back_inserter(out_), "{}UI {} {} {}\n", pad, bnd, varName, ub);
             }
         }
         else
@@ -340,22 +321,12 @@ void MPSGenerator::writeBounds()
             }
             else if (!lbIsZero)
             {
-                fmt::format_to(std::back_inserter(out_),
-                               "{}LO {} {} {}\n",
-                               pad,
-                               bnd,
-                               varName,
-                               fmt::format(numberFormat, lb));
+                fmt::format_to(std::back_inserter(out_), "{}LO {} {} {}\n", pad, bnd, varName, lb);
             }
 
             if (!ubIsPlusInfinity)
             {
-                fmt::format_to(std::back_inserter(out_),
-                               "{}UP {} {} {}\n",
-                               pad,
-                               bnd,
-                               varName,
-                               fmt::format(numberFormat, ub));
+                fmt::format_to(std::back_inserter(out_), "{}UP {} {} {}\n", pad, bnd, varName, ub);
             }
         }
     }
