@@ -40,11 +40,12 @@ public:
     void writeResultsToFolder(const std::string& folderName) const;
 
 private:
-    std::vector<std::vector<long double>> results_;
+    std::vector<std::vector<long double>> thermalResults_;
+    std::vector<std::vector<long double>> renewableResults_;
 
-    std::vector<std::string> groupNames_;
-    std::map<std::string, unsigned int> groupToNumbers_;
-    std::map<std::string, int> nameAndNumberOfOccurrences_;
+    std::vector<std::string> thermalGroupNames_;
+    std::map<std::string, unsigned int> thermalGroupToNumbers_;
+    std::map<std::string, int> thermalNameAndNumberOfOccurrences_;
 
     std::vector<std::string> renewableGroupNames_;
     std::map<std::string, unsigned int> renewableGroupToNumbers_;

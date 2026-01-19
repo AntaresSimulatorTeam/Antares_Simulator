@@ -39,7 +39,7 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
         for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {
             const std::string groupName = cluster->getGroup();
-            nameAndNumberOfOccurrences_[groupName]++;
+            thermalNameAndNumberOfOccurrences_[groupName]++;
         }
         // Renewable clusters
         for (const auto& cluster: area->renewable.list.each_enabled())
@@ -49,11 +49,11 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
         }
     }
 
-    for (const auto& nameAndNum: nameAndNumberOfOccurrences_)
+    for (const auto& nameAndNum: thermalNameAndNumberOfOccurrences_)
     {
-        groupNames_.push_back(nameAndNum.first);
+        thermalGroupNames_.push_back(nameAndNum.first);
     }
-    groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
+    thermalGroupToNumbers_ = Utils::giveNumbersToStrings(thermalGroupNames_);
 
     for (const auto& nameAndNum: renewableNameAndNumberOfOccurrences_)
     {
@@ -61,10 +61,13 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     }
     renewableGroupToNumbers_ = Utils::giveNumbersToStrings(renewableGroupNames_);
 
-    unsigned int nbColumns = groupNames_.size() + renewableGroupNames_.size();
-    for (unsigned int i = 0; i < nbColumns; i++)
+    for (unsigned int i = 0; i < thermalGroupNames_.size(); i++)
     {
-        results_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
+        thermalResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
+    }
+    for (unsigned int i = 0; i < renewableGroupNames_.size(); i++)
+    {
+        renewableResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
     }
 }
 
@@ -77,13 +80,13 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
         {
             const std::string& groupName = cluster->getGroup();
 
-            double ratio = 1 / (double)nameAndNumberOfOccurrences_[groupName];
-            unsigned index = groupToNumbers_[groupName];
+            double ratio = 1 / (double)thermalNameAndNumberOfOccurrences_[groupName];
+            unsigned index = thermalGroupToNumbers_[groupName];
 
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
             {
                 unsigned realHour = h + pb.HeureDansLAnnee;
-                results_[index][realHour] += pb.ResultatsHoraires[area->index]
+                thermalResults_[index][realHour] += pb.ResultatsHoraires[area->index]
                                                .ProductionThermique[h]
                                                .ProductionThermiqueDuPalier[cluster->index]
                                              * ratio;
@@ -94,14 +97,14 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
         {
             const std::string& groupName = cluster->getGroup();
             double ratio = 1 / (double)renewableNameAndNumberOfOccurrences_[groupName];
-            unsigned index = groupNames_.size() + renewableGroupToNumbers_[groupName];
+            unsigned index = thermalGroupNames_.size() + renewableGroupToNumbers_[groupName];
 
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
             {
                 unsigned realHour = h + pb.HeureDansLAnnee;
                 // Extract renewable value for this cluster, area, and hour
                 // This assumes cluster->valueAtTimeStep is available and correct
-                results_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour) * ratio;
+                renewableResults_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour) * ratio;
             }
         }
     }
@@ -147,16 +150,16 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
     namespace fs = std::filesystem;
     fs::create_directories(folderName);
 
-    for (size_t i = 0; i < groupNames_.size(); ++i)
+    for (size_t i = 0; i < thermalGroupNames_.size(); ++i)
     {
-        const std::string& group = groupNames_[i];
+        const std::string& group = thermalGroupNames_[i];
         std::string filePath = folderName + "/" + group + ".txt";
         std::ofstream outFile(filePath);
         if (outFile.is_open())
         {
-            for (size_t h = 0; h < results_[i].size(); ++h)
+            for (size_t h = 0; h < thermalResults_[i].size(); ++h)
             {
-                outFile << results_[i][h] << std::endl;
+                outFile << thermalResults_[i][h] << std::endl;
             }
             outFile.close();
         }
@@ -167,7 +170,7 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
         {
             // For demonstration, sum all values as "annual"
             long double annual = 0.0;
-            for (auto v: results_[i])
+            for (auto v: thermalResults_[i])
             {
                 annual += v;
             }
@@ -179,10 +182,10 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
     {
         std::string fileName = folderName + "/" + renewableGroupNames_[i] + "_renewable.csv";
         std::ofstream out(fileName);
-        size_t idx = groupNames_.size() + i;
-        for (size_t h = 0; h < results_[idx].size(); ++h)
+        size_t idx = thermalGroupNames_.size() + i;
+        for (size_t h = 0; h < renewableResults_[idx].size(); ++h)
         {
-            out << h << "," << results_[idx][h] << "\n";
+            out << renewableResults_[idx][h] << "\n";
         }
         out.close();
     }
