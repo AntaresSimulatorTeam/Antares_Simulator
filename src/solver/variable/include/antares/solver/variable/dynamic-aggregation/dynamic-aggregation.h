@@ -21,13 +21,23 @@
 
 #pragma once
 
-#include <antares/study/study.h>
+#include <vector>
+
 #include "antares/solver/variable/state.h"
-#include "antares/solver/variable/storage/averagedata.h"
 #include "antares/study/area/area.h"
 
 namespace Antares::Solver::Variable
 {
+class ValuesStorage
+{
+public:
+    ValuesStorage();
+    void merge(const double* values, long double ratio);
+    const std::vector<long double>& data() const;
+
+private:
+    std::vector<long double> values_;
+};
 
 class SetData
 {
@@ -35,15 +45,14 @@ public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(State& state, Data::Study& study);
-    void mergeValues(const std::string& groupName, const double* values, Data::Study& study);
-    void mergeValues(const std::string& groupName,
-                     std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& thermal,
-                     Data::Study& study);
+    void mergeValues(const std::string& groupName, const double* values, long double ratio);
     void writeResultsToFolder(const std::string& folderName) const;
 
-    std::vector<R::AllYears::AverageData> results_;
+    std::vector<ValuesStorage> results_;
+
     std::vector<std::string> groupNames_;
     std::map<std::string, unsigned int> groupToNumbers_;
+    std::map<std::string, int> nameAndNumberOfOccurrences_;
 
     const std::set<Data::Area*, Data::CompareAreaName>& set_;
 };

@@ -21,8 +21,6 @@
 
 #include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
 
-#include "antares/solver/variable/storage/intermediate.h"
-
 // TODO  remove tests purpose
 #include <filesystem>
 #include <fstream>
@@ -30,21 +28,39 @@
 namespace Antares::Solver::Variable
 {
 
+ValuesStorage::ValuesStorage():
+    values_(HOURS_PER_YEAR, 0)
+{
+}
+
+void ValuesStorage::merge(const double* values, long double ratio)
+{
+    for (size_t i = 0; i < HOURS_PER_YEAR; ++i)
+    {
+        values_[i] += values[i] * ratio;
+    }
+}
+
+const std::vector<long double>& ValuesStorage::data() const
+{
+    return values_;
+}
+
 SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     set_(set)
 {
-    std::map<std::string, int> nameAndNumberOfOccurrences; // only used to size results_
+    std::map<std::string, int> nameAndNumberOfOccurrences_;
     for (auto& area: set_)
     {
         // handle sts later
         for (const auto& cluster: area->thermal.list.each_enabled())
         {
             const std::string groupName = cluster->getGroup();
-            nameAndNumberOfOccurrences[groupName]++;
+            nameAndNumberOfOccurrences_[groupName]++;
         }
     }
 
-    for (const auto& nameAndNum: nameAndNumberOfOccurrences)
+    for (const auto& nameAndNum: nameAndNumberOfOccurrences_)
     {
         groupNames_.push_back(nameAndNum.first);
     }
@@ -53,7 +69,7 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
 
     for (unsigned int i = 0; i < nbColumns; i++)
     {
-        results_.push_back(R::AllYears::AverageData(nameAndNumberOfOccurrences[groupNames_[i]]));
+        results_.push_back(ValuesStorage());
     }
 }
 
@@ -70,9 +86,9 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
         std::ofstream outFile(filePath);
         if (outFile.is_open())
         {
-            for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
+            for (size_t h = 0; h < results_[i].data().size(); ++h)
             {
-                outFile << results_[i].hourly[h] << std::endl;
+                outFile << results_[i].data()[h] << std::endl;
             }
             outFile.close();
         }
@@ -81,8 +97,13 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
         std::ofstream annualFile(filePath);
         if (annualFile.is_open())
         {
-            annualFile << results_[i].year << std::endl;
-            annualFile.close();
+            // For demonstration, sum all values as "annual"
+            long double annual = 0.0;
+            for (auto v: results_[i].data())
+            {
+                annual += v;
+            }
+            annualFile << annual << std::endl;
         }
     }
 }
@@ -98,29 +119,19 @@ void SetData::addResultsToSet(State& state, Data::Study& study)
             double prod[HOURS_PER_YEAR];
             for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
             {
-                prod[h] = state.thermal[area->index]
-                            .thermalClustersProductions[cluster->enabledIndex];
+                /*prod[h] = state.hourlyResults->ProductionThermique[h]*/
+                /*            .ProductionThermiqueDuPalier[cluster->index];*/
             }
-            mergeValues(groupName, prod, study);
+            double ratio = 1 / (double)nameAndNumberOfOccurrences_[groupName];
+            mergeValues(groupName, prod, ratio);
         }
     }
 }
 
-void SetData::mergeValues(const std::string& groupName, const double* values, Data::Study& study)
+void SetData::mergeValues(const std::string& groupName, const double* values, long double ratio)
 {
     unsigned index = groupToNumbers_[groupName];
-
-    IntermediateValues valuesForAllGranularities;
-    valuesForAllGranularities.testOtherName(study);
-
-    memcpy(valuesForAllGranularities.hour, values, HOURS_PER_YEAR * sizeof(double));
-
-    valuesForAllGranularities.computeStatisticsForTheCurrentYear();
-
-    results_[index].merge(valuesForAllGranularities);
-
-    // TODO use another type to avoid memory handling ?
-    Antares::Memory::Release(valuesForAllGranularities.hour);
+    results_[index].merge(values, ratio);
 }
 
 DynamicAggregation::DynamicAggregation(Data::Study& study):
