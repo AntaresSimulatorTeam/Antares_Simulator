@@ -48,7 +48,7 @@ void IntermediateValues::initializeFromStudy(Data::Study& study)
     calendar = &study.calendarOutput;
     pRuntimeInfo = &study.runtime;
 }
- 
+
 void IntermediateValues::testOtherName(Data::Study& study)
 {
     pRange = &study.runtime.rangeLimits;

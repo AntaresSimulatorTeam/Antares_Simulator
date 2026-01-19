@@ -184,7 +184,6 @@ bool Economy::year(Progression::Task& progression,
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
-
             dynamicAgg.addResultsToSets(currentProblem);
 
             variables.weekBegin(state);
