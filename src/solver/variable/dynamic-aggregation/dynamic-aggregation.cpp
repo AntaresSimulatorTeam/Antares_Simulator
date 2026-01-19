@@ -47,6 +47,12 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
             const std::string groupName = cluster->getGroup();
             renewableNameAndNumberOfOccurrences_[groupName]++;
         }
+        // STS clusters
+        for (const auto& sts: area->shortTermStorage.storagesByIndex)
+        {
+            const std::string& groupName = sts.properties.groupName;
+            stsNameAndNumberOfOccurrences_[groupName]++;
+        }
     }
 
     for (const auto& nameAndNum: thermalNameAndNumberOfOccurrences_)
@@ -61,6 +67,12 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     }
     renewableGroupToNumbers_ = Utils::giveNumbersToStrings(renewableGroupNames_);
 
+    for (const auto& nameAndNum: stsNameAndNumberOfOccurrences_)
+    {
+        stsGroupNames_.push_back(nameAndNum.first);
+    }
+    stsGroupToNumbers_ = Utils::giveNumbersToStrings(stsGroupNames_);
+
     for (unsigned int i = 0; i < thermalGroupNames_.size(); i++)
     {
         thermalResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
@@ -68,6 +80,12 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     for (unsigned int i = 0; i < renewableGroupNames_.size(); i++)
     {
         renewableResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
+    }
+    for (unsigned int i = 0; i < stsGroupNames_.size(); i++)
+    {
+        stsInjectionResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
+        stsWithdrawalResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
+        stsLevelResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
     }
 }
 
@@ -87,9 +105,9 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
             {
                 unsigned realHour = h + pb.HeureDansLAnnee;
                 thermalResults_[index][realHour] += pb.ResultatsHoraires[area->index]
-                                               .ProductionThermique[h]
-                                               .ProductionThermiqueDuPalier[cluster->index]
-                                             * ratio;
+                                                      .ProductionThermique[h]
+                                                      .ProductionThermiqueDuPalier[cluster->index]
+                                                    * ratio;
             }
         }
         // Renewable clusters
@@ -97,15 +115,36 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
         {
             const std::string& groupName = cluster->getGroup();
             double ratio = 1 / (double)renewableNameAndNumberOfOccurrences_[groupName];
-            unsigned index = thermalGroupNames_.size() + renewableGroupToNumbers_[groupName];
+            unsigned index = renewableGroupToNumbers_[groupName];
 
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
             {
                 unsigned realHour = h + pb.HeureDansLAnnee;
                 // Extract renewable value for this cluster, area, and hour
                 // This assumes cluster->valueAtTimeStep is available and correct
-                renewableResults_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour) * ratio;
+                renewableResults_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour)
+                                                      * ratio;
             }
+        }
+        // STS clusters
+        uint clusterIndex = 0;
+        for (const auto& sts: area->shortTermStorage.storagesByIndex)
+        {
+            const std::string& groupName = sts.properties.groupName;
+            double ratio = 1 / (double)stsNameAndNumberOfOccurrences_[groupName];
+            unsigned index = stsGroupToNumbers_[groupName];
+
+            const auto& stsResults = pb.ResultatsHoraires[area->index]
+                                       .ShortTermStorage[clusterIndex];
+
+            for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
+            {
+                unsigned realHour = h + pb.HeureDansLAnnee;
+                stsInjectionResults_[index][realHour] += stsResults.injection[h] * ratio;
+                stsWithdrawalResults_[index][realHour] += stsResults.withdrawal[h] * ratio;
+                stsLevelResults_[index][realHour] += stsResults.level[h] * ratio;
+            }
+            ++clusterIndex;
         }
     }
 }
@@ -182,12 +221,42 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
     {
         std::string fileName = folderName + "/" + renewableGroupNames_[i] + "_renewable.csv";
         std::ofstream out(fileName);
-        size_t idx = thermalGroupNames_.size() + i;
-        for (size_t h = 0; h < renewableResults_[idx].size(); ++h)
+        for (size_t h = 0; h < renewableResults_[i].size(); ++h)
         {
-            out << renewableResults_[idx][h] << "\n";
+            out << renewableResults_[i][h] << "\n";
         }
         out.close();
+    }
+    // Write STS results
+    for (size_t i = 0; i < stsGroupNames_.size(); ++i)
+    {
+        {
+            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_injection.csv";
+            std::ofstream out(fileName);
+            for (size_t h = 0; h < stsInjectionResults_[i].size(); ++h)
+            {
+                out << stsInjectionResults_[i][h] << "\n";
+            }
+            out.close();
+        }
+        {
+            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_withdrawal.csv";
+            std::ofstream out(fileName);
+            for (size_t h = 0; h < stsWithdrawalResults_[i].size(); ++h)
+            {
+                out << stsWithdrawalResults_[i][h] << "\n";
+            }
+            out.close();
+        }
+        {
+            std::string fileName = folderName + "/" + stsGroupNames_[i] + "_sts_level.csv";
+            std::ofstream out(fileName);
+            for (size_t h = 0; h < stsLevelResults_[i].size(); ++h)
+            {
+                out << stsLevelResults_[i][h] << "\n";
+            }
+            out.close();
+        }
     }
 }
 

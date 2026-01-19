@@ -43,6 +43,10 @@ private:
     std::vector<std::vector<long double>> thermalResults_;
     std::vector<std::vector<long double>> renewableResults_;
 
+    std::vector<std::vector<long double>> stsInjectionResults_;
+    std::vector<std::vector<long double>> stsWithdrawalResults_;
+    std::vector<std::vector<long double>> stsLevelResults_;
+
     std::vector<std::string> thermalGroupNames_;
     std::map<std::string, unsigned int> thermalGroupToNumbers_;
     std::map<std::string, int> thermalNameAndNumberOfOccurrences_;
@@ -50,6 +54,10 @@ private:
     std::vector<std::string> renewableGroupNames_;
     std::map<std::string, unsigned int> renewableGroupToNumbers_;
     std::map<std::string, int> renewableNameAndNumberOfOccurrences_;
+
+    std::vector<std::string> stsGroupNames_;
+    std::map<std::string, unsigned int> stsGroupToNumbers_;
+    std::map<std::string, int> stsNameAndNumberOfOccurrences_;
 
     const std::set<Data::Area*, Data::CompareAreaName>& set_;
 };
