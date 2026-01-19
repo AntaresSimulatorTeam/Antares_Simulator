@@ -24,36 +24,18 @@
 // TODO  remove tests purpose
 #include <filesystem>
 #include <fstream>
+#include <vector>
 
 namespace Antares::Solver::Variable
 {
 
-ValuesStorage::ValuesStorage():
-    values_(HOURS_PER_YEAR, 0)
-{
-}
-
-void ValuesStorage::merge(const double* values, long double ratio)
-{
-    for (size_t i = 0; i < HOURS_PER_YEAR; ++i)
-    {
-        values_[i] += values[i] * ratio;
-    }
-}
-
-const std::vector<long double>& ValuesStorage::data() const
-{
-    return values_;
-}
-
 SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     set_(set)
 {
-    std::map<std::string, int> nameAndNumberOfOccurrences_;
     for (auto& area: set_)
     {
         // handle sts later
-        for (const auto& cluster: area->thermal.list.each_enabled())
+        for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {
             const std::string groupName = cluster->getGroup();
             nameAndNumberOfOccurrences_[groupName]++;
@@ -65,11 +47,11 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
         groupNames_.push_back(nameAndNum.first);
     }
     groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
-    unsigned int nbColumns = groupNames_.size();
 
+    unsigned int nbColumns = groupNames_.size();
     for (unsigned int i = 0; i < nbColumns; i++)
     {
-        results_.push_back(ValuesStorage());
+        results_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
     }
 }
 
@@ -86,9 +68,9 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
         std::ofstream outFile(filePath);
         if (outFile.is_open())
         {
-            for (size_t h = 0; h < results_[i].data().size(); ++h)
+            for (size_t h = 0; h < results_[i].size(); ++h)
             {
-                outFile << results_[i].data()[h] << std::endl;
+                outFile << results_[i][h] << std::endl;
             }
             outFile.close();
         }
@@ -99,7 +81,7 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
         {
             // For demonstration, sum all values as "annual"
             long double annual = 0.0;
-            for (auto v: results_[i].data())
+            for (auto v: results_[i])
             {
                 annual += v;
             }
@@ -108,30 +90,27 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
     }
 }
 
-void SetData::addResultsToSet(State& state, Data::Study& study)
+void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study)
 {
     for (const auto* area: set_)
     {
-        for (const auto& cluster: area->thermal.list.each_enabled())
+        for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {
             const std::string& groupName = cluster->getGroup();
 
-            double prod[HOURS_PER_YEAR];
-            for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
-            {
-                /*prod[h] = state.hourlyResults->ProductionThermique[h]*/
-                /*            .ProductionThermiqueDuPalier[cluster->index];*/
-            }
             double ratio = 1 / (double)nameAndNumberOfOccurrences_[groupName];
-            mergeValues(groupName, prod, ratio);
+            unsigned index = groupToNumbers_[groupName];
+
+            for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
+            {
+                unsigned realHour = h + pb.HeureDansLAnnee;
+                results_[index][realHour] += pb.ResultatsHoraires[area->index]
+                                               .ProductionThermique[h]
+                                               .ProductionThermiqueDuPalier[cluster->index]
+                                             * ratio;
+            }
         }
     }
-}
-
-void SetData::mergeValues(const std::string& groupName, const double* values, long double ratio)
-{
-    unsigned index = groupToNumbers_[groupName];
-    results_[index].merge(values, ratio);
 }
 
 DynamicAggregation::DynamicAggregation(Data::Study& study):
@@ -147,11 +126,11 @@ void DynamicAggregation::initializeSetsData()
     }
 }
 
-void DynamicAggregation::addResultsToSets(State& state)
+void DynamicAggregation::addResultsToSets(const PROBLEME_HEBDO& pb)
 {
     for (auto& [_, setData]: setsData_)
     {
-        setData.addResultsToSet(state, study_);
+        setData.addResultsToSet(pb, study_);
     }
 }
 

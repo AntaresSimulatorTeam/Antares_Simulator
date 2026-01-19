@@ -28,27 +28,16 @@
 
 namespace Antares::Solver::Variable
 {
-class ValuesStorage
-{
-public:
-    ValuesStorage();
-    void merge(const double* values, long double ratio);
-    const std::vector<long double>& data() const;
-
-private:
-    std::vector<long double> values_;
-};
 
 class SetData
 {
 public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
-    void addResultsToSet(State& state, Data::Study& study);
-    void mergeValues(const std::string& groupName, const double* values, long double ratio);
+    void addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study);
     void writeResultsToFolder(const std::string& folderName) const;
 
-    std::vector<ValuesStorage> results_;
+    std::vector<std::vector<long double>> results_;
 
     std::vector<std::string> groupNames_;
     std::map<std::string, unsigned int> groupToNumbers_;
@@ -63,7 +52,7 @@ public:
     explicit DynamicAggregation(Data::Study& study);
 
     void initializeSetsData();
-    void addResultsToSets(State& state);
+    void addResultsToSets(const PROBLEME_HEBDO& pb);
 
     void writeAllResults(const std::string& baseFolder) const;
 

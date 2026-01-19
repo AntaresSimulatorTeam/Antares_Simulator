@@ -28,6 +28,7 @@
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver_utils.h"
+#include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -150,6 +151,9 @@ bool Economy::year(Progression::Task& progression,
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
 
+    Variable::DynamicAggregation dynamicAgg(study);
+    dynamicAgg.initializeSetsData();
+
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -179,6 +183,9 @@ bool Economy::year(Progression::Task& progression,
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
+
+
+            dynamicAgg.addResultsToSets(currentProblem);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
@@ -237,6 +244,7 @@ bool Economy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
 
+        dynamicAgg.writeAllResults(study.folderOutput);
         ++progression;
     }
 

@@ -208,11 +208,6 @@ public:
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
-
-                Variable::DynamicAggregation dynacmicAgg(study);
-                dynacmicAgg.initializeSetsData();
-                dynacmicAgg.addResultsToSets(state);
-                dynacmicAgg.writeAllResults(study.folderOutput);
             };
         }
 
