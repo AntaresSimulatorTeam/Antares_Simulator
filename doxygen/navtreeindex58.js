@@ -1,8 +1,5 @@
 var NAVTREEINDEX58 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a622ac0eef11558ca6d7597d63495651f":[8,0,0,19,5,6,0,9,2],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a7eced0a5c80c17d3b3fd318d40662509":[8,0,0,19,5,6,0,9,9],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#abd0753b91b382df30b7c6e028d8684a5":[8,0,0,19,5,6,0,9,8],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ada37935b4e18bad9341852d49456baf0":[8,0,0,19,5,6,0,9,4],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae3ac30a527c9f15bc40503e58added6b":[8,0,0,19,5,6,0,9,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506":[8,0,0,19,5,6,0,9,0],
@@ -249,5 +246,8 @@ var NAVTREEINDEX58 =
 "structAntares_1_1Window_1_1Inspector_1_1PStudyYearByYear.html#a859f0722f74a83cc876a217bd3665a60":[8,0,0,24,1,11,0],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyYears.html":[8,0,0,24,1,18],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyYears.html#ae3d9922f2b2f1031c1a1dac66258976a":[8,0,0,24,1,18,0],
-"structAntares_1_1Window_1_1Inspector_1_1Unique.html":[8,0,0,24,1,0]
+"structAntares_1_1Window_1_1Inspector_1_1Unique.html":[8,0,0,24,1,0],
+"structAntares_1_1Window_1_1SortColor.html":[8,0,0,24,31],
+"structAntares_1_1Window_1_1SortColor.html#afd57fe258750985ef56db5bbc777f6be":[8,0,0,24,31,0],
+"structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html":[8,0,0,24,52,0,0]
 };

@@ -200,7 +200,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 <li>max(a, b, c) -&gt; FunctionNode(FunctionNodeType::max, a, b, c)</li>
 <li>min(x, y) -&gt; FunctionNode(FunctionNodeType::min, x, y)</li>
 <li>reduced_cost(var) -&gt; <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1FunctionNode.html" title="AST node representing a function expression (max, min, pow, ...).">FunctionNode</a>(FunctionNodeType::reduced_cost, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html" title="Represents a variable node in a syntax tree, storing a string value.">VariableNode</a>("var"))</li>
-<li>dual(constraint) -&gt; <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1FunctionNode.html" title="AST node representing a function expression (max, min, pow, ...).">FunctionNode</a>(FunctionNodeType::dual, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1ParameterNode.html" title="Represents a parameter node in a syntax tree, storing a string value.">ParameterNode</a>("constraint")) </li>
+<li>dual(constraint) -&gt; <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1FunctionNode.html" title="AST node representing a function expression (max, min, pow, ...).">FunctionNode</a>(FunctionNodeType::dual, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1ParameterNode.html" title="Represents a parameter node in a syntax tree, storing a string value.">ParameterNode</a>("constraint"))</li>
+<li>floor(p) -&gt; FunctionNode(FunctionNodeType::floor, ParameterNode(param))</li>
+<li>ceil(p) -&gt; FunctionNode(FunctionNodeType::ceil, ParameterNode(param)) </li>
 </ul>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abac6a499207d9aa29057d9b2417b6b3c"></a>
@@ -285,7 +287,7 @@ template&lt;typename... NodePtr&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -330,7 +332,7 @@ template&lt;typename... NodePtr&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -365,7 +367,7 @@ template&lt;typename... NodePtr&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -406,9 +408,6 @@ template&lt;typename... NodePtr&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::string Antares::Expressions::Nodes::FunctionNode::typeToString </td>
@@ -417,18 +416,14 @@ template&lt;typename... NodePtr&gt; </div>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>String representation of the function type. </dd></dl>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/expressions/include/antares/expressions/nodes/<a class="el" href="FunctionNode_8h_source.html">FunctionNode.h</a></li>
+<li>src/expressions/nodes/FunctionNode.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

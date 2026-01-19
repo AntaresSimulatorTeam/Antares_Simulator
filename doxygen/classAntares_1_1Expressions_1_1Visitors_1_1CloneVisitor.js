@@ -1,7 +1,6 @@
 var classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor =
 [
     [ "CloneVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#a9c198fc1ca3806e403a054fd70fb8b61", null ],
-    [ "cloneOperands", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#acb2278c9aed4a69915e0076395a1d759", null ],
     [ "name", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#ab0f4c37cc7ab24cbe1bd0e76e2ecce0e", null ],
     [ "visit", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#a153d15aedd82ed25b21c9a812684681f", null ],
     [ "visit", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#ada3e95c4ad5b6cdb4aa6ec969529fd40", null ],

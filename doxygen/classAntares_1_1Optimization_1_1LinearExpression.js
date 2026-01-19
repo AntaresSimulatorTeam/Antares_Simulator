@@ -8,6 +8,7 @@ var classAntares_1_1Optimization_1_1LinearExpression =
     [ "addVariable", "classAntares_1_1Optimization_1_1LinearExpression.html#ab870699edb8be7bc92f0a858d4fe24eb", null ],
     [ "begin", "classAntares_1_1Optimization_1_1LinearExpression.html#a33d263872cf8e7b4c1e556789b0a3dcd", null ],
     [ "constant", "classAntares_1_1Optimization_1_1LinearExpression.html#a001af0a89872effba90f21cb78613f67", null ],
+    [ "constant", "classAntares_1_1Optimization_1_1LinearExpression.html#aa5f76aa00928330575ae9c8b39920389", null ],
     [ "end", "classAntares_1_1Optimization_1_1LinearExpression.html#a6690fab36052219d64b00479ed16e2f0", null ],
     [ "hasCoefs", "classAntares_1_1Optimization_1_1LinearExpression.html#a011bd434ab7a74fa9e871e055bb02975", null ],
     [ "mergeDuplicateCoefficients", "classAntares_1_1Optimization_1_1LinearExpression.html#a9e0c509e2159f6c9646ee30ad0b4a667", null ],

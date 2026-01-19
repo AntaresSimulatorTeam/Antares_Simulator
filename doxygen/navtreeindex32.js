@@ -1,7 +1,5 @@
 var NAVTREEINDEX32 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Join.html#aca7b2ac640711f391579be8595abf315":[8,0,0,19,5,12,12],
-"classAntares_1_1Solver_1_1Variable_1_1Join.html#acfbb014e840796d45c906de1fdde9cdb":[8,0,0,19,5,12,23],
 "classAntares_1_1Solver_1_1Variable_1_1Join.html#ada64e47006a1be29f1bd715e635d0914":[8,0,0,19,5,12,38],
 "classAntares_1_1Solver_1_1Variable_1_1Join.html#ae506672ba07b5f3839c26f76196bb424":[8,0,0,19,5,12,36],
 "classAntares_1_1Solver_1_1Variable_1_1Join.html#ae8c70e5a9758d34dde881f8fb34ad506":[8,0,0,19,5,12,19],
@@ -249,5 +247,7 @@ var NAVTREEINDEX32 =
 "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#ade96f8079819c6bc76dd6163acf11f3d":[8,0,0,19,5,41,0,7],
 "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html":[8,0,0,19,27],
 "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html#a84b3b3a9e2491032990c1699973ec64e":[8,0,0,19,27,0],
-"classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html":[8,0,0,19,32]
+"classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html":[8,0,0,19,32],
+"classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html#ac54377fc6a5e2188a2e62be2fbd9675f":[8,0,0,19,32,0],
+"classAntares_1_1Solver_1_1ZipWriteJob.html":[8,0,0,19,13]
 };

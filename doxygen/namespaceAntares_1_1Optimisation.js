@@ -43,10 +43,20 @@ var namespaceAntares_1_1Optimisation =
     [ "checkTimeSteps", "namespaceAntares_1_1Optimisation.html#a156d5abad9c6bc2cf8dfb5919a160ad4", null ],
     [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a48c69d82095c9d4b7ac778aad53b0afa", null ],
     [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a4f35767787ea7ad2c4ffa35bbb2254bb", null ],
+    [ "isConstant", "namespaceAntares_1_1Optimisation.html#a96064a4e8b65de4e3b9f166ac4ee1024", null ],
     [ "isScenarioDependent", "namespaceAntares_1_1Optimisation.html#a71ec14c30f5e16e800f48711698122f1", null ],
     [ "isTimeConstant", "namespaceAntares_1_1Optimisation.html#ab67b00c9c72a890f2f1637226018f390", null ],
     [ "isTimeDependent", "namespaceAntares_1_1Optimisation.html#a6b3c0288d726c2e4207c9942236a5d0e", null ],
     [ "operator-", "namespaceAntares_1_1Optimisation.html#a75b8a5eaeb2eedac8d8be9501ea647a6", null ],
     [ "operator|", "namespaceAntares_1_1Optimisation.html#a02898960488ee6ee4ac5d83b4d1ed8c9", null ],
-    [ "variability", "namespaceAntares_1_1Optimisation.html#a7946a6158774791be219711cab7b5238", null ]
+    [ "variability", "namespaceAntares_1_1Optimisation.html#a7946a6158774791be219711cab7b5238", null ],
+    [ "visitDual", "namespaceAntares_1_1Optimisation.html#a89744a0431e8da516ee3779eef6601e2", null ],
+    [ "visitReducedCost", "namespaceAntares_1_1Optimisation.html#af9329f96ca81dd142a53fac6ff1ff125", null ],
+    [ "ceilExpression", "namespaceAntares_1_1Optimisation.html#aa2431ea743725913aeb276c0c02ac662", null ],
+    [ "checkExpressionIsConstantForCeil", "namespaceAntares_1_1Optimisation.html#ab95b88008f45058e19a87a5cfb056c88", null ],
+    [ "checkExpressionIsConstantForFloor", "namespaceAntares_1_1Optimisation.html#a227b72927fdf65dae0d5d458074a7431", null ],
+    [ "checkIsConstant", "namespaceAntares_1_1Optimisation.html#a3cf175f439c286c14b62f6bf0c38714d", null ],
+    [ "floorExpression", "namespaceAntares_1_1Optimisation.html#a2cc5a5b73fb20f5fb61391dcbe964653", null ],
+    [ "max_element_of_vector", "namespaceAntares_1_1Optimisation.html#aab6a6f7cb1e1304c605d03ef54c82d3c", null ],
+    [ "min_element_of_vector", "namespaceAntares_1_1Optimisation.html#ae24894f7251d36dced8bb0fabd91ed5f", null ]
 ];

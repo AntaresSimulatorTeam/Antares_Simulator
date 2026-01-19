@@ -125,7 +125,6 @@ $(document).ready(function(){initNavTree('classAntares_1_1Expressions_1_1Visitor
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classAntares_1_1Expressions_1_1Visitors_1_1PrintVisitor-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Expressions::Visitors::PrintVisitor Class Reference</div>  </div>
@@ -214,11 +213,12 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () co
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classAntares_1_1Expressions_1_1IName.html">IName</a> &amp;other) const =default</td></tr>
 <tr class="separator:a74b368fed0799e65df95309f6ec6f351 inherit pub_methods_classAntares_1_1Expressions_1_1IName"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a55c083f266d5eec3c2c52bacf7724f26"><td class="memItemLeft" align="right" valign="top"><a id="a55c083f266d5eec3c2c52bacf7724f26"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>trimAndFormat</b> (const std::string &amp;in)</td></tr>
-<tr class="separator:a55c083f266d5eec3c2c52bacf7724f26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html">Antares::Expressions::Visitors::NodeVisitor&lt; std::string &gt;</a></td></tr>
+<tr class="memitem:aea09e2d220b25a522141a0d230f8ddc0 inherit pro_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td class="memItemLeft" align="right" valign="top"><a id="aea09e2d220b25a522141a0d230f8ddc0"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visitChildrenNodes</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html">Nodes::ParentNode</a> *node)</td></tr>
+<tr class="separator:aea09e2d220b25a522141a0d230f8ddc0 inherit pro_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a visitor for printing nodes in a syntax tree as strings. </p>

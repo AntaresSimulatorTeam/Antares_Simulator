@@ -1,5 +1,6 @@
 var NAVTREEINDEX55 =
 {
+"structAntares_1_1Date_1_1HourInterval.html#a8e699af7f35137c818d5a00934f38a53":[8,0,0,6,0,1],
 "structAntares_1_1Date_1_1HourInterval.html#af683944cd6ecd18ffb9f977e8b7fb790":[8,0,0,6,0,0],
 "structAntares_1_1DebugData.html":[8,0,0,54],
 "structAntares_1_1DebugData.html#a02bc55683169d012e89e0b3f61adb3e7":[8,0,0,54,19],
@@ -31,11 +32,11 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html#a59d6031a3d6d9e5076e56b5ab2a68796":[8,0,0,8,1,0,2],
 "structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html#a8cd8f4883f7d0e4808d8dee4b542af39":[8,0,0,8,1,0,1],
 "structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html#afd8922704b6cb33c6607f10a5775fcab":[8,0,0,8,1,0,0],
-"structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides.html":[8,0,0,8,1,6,2],
-"structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides.html#a14155fc514eab31be2df723ddff293d3":[8,0,0,8,1,6,2,1],
-"structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides.html#af94acce19e3a71b68f9d1544d344c3a1":[8,0,0,8,1,6,2,0],
-"structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html":[8,0,0,8,1,13],
-"structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html#ae4babfda37309f09bedfc434e9d77024":[8,0,0,8,1,13,0],
+"structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html":[8,0,0,8,1,15],
+"structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html#ae4babfda37309f09bedfc434e9d77024":[8,0,0,8,1,15,0],
+"structAntares_1_1Expressions_1_1Visitors_1_1SafeDivides.html":[8,0,0,8,1,8],
+"structAntares_1_1Expressions_1_1Visitors_1_1SafeDivides.html#a4613499a02cc557e9dcb71f3478fec68":[8,0,0,8,1,8,0],
+"structAntares_1_1Expressions_1_1Visitors_1_1SafeDivides.html#a90819b18926bb75109e000f2d413e189":[8,0,0,8,1,8,1],
 "structAntares_1_1Forms_1_1CompareBySimulationMode.html":[8,0,0,10,7],
 "structAntares_1_1Forms_1_1CompareBySimulationMode.html#a617a1a6bc5b4b6b4c28eddee151db841":[8,0,0,10,7,0],
 "structAntares_1_1Forms_1_1CompareByTimestamp.html":[8,0,0,10,8],
@@ -44,10 +45,6 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Graph_1_1Edge_1_1addpWeight.html#af93ea7a0752198aa56f08af6ca159d03":[8,0,0,11,1,0,0],
 "structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[8,0,0,11,1,1],
 "structAntares_1_1Graph_1_1Edge_1_1compareWeight.html#afc933aff024e6c8479b530010a71b06f":[8,0,0,11,1,1,0],
-"structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression.html":[8,0,0,12,0,1,19],
-"structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression.html#a508be790e2d62f5792d11ec0d251940d":[8,0,0,12,0,1,19,0],
-"structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression.html#a7cbf58c447393c8535db9cbc9a69d9bf":[8,0,0,12,0,1,19,2],
-"structAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1BadExpression.html#aa5859458448a340c2d7a72e3c2785f49":[8,0,0,12,0,1,19,1],
 "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html":[8,0,0,12,0,2,4],
 "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html":[8,0,0,12,0,2,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html":[8,0,0,12,0,3,4],
@@ -249,5 +246,8 @@ var NAVTREEINDEX55 =
 "structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#afb964f5d0cdc74fc0b4ba44ba939bb4a":[8,0,0,19,4,23,3],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[8,0,0,19,4,34],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html#a876ea3f3d75c932d1e568cbfd0ccd141":[8,0,0,19,4,34,0],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[8,0,0,19,4,11]
+"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[8,0,0,19,4,11],
+"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a3cfaabf2ec52301ec164d66953252590":[8,0,0,19,4,11,0],
+"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a73f94d610c09a9c2e287fda28f12b137":[8,0,0,19,4,11,2],
+"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a7e644b6acdc2a7ab5f97d99386e7ea60":[8,0,0,19,4,11,3]
 };

@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Expressions::Visitors::EvaluationResult::SafeDivides Struct Reference</title>
+<title>Antares Simulator: SupplyModelForFunctionalOperator Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structSupplyModelForFunctionalOperator.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,31 +124,57 @@ $(document).ready(function(){initNavTree('structAntares_1_1Expressions_1_1Visito
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structSupplyModelForFunctionalOperator-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Expressions::Visitors::EvaluationResult::SafeDivides Struct Reference</div>  </div>
+<div class="title">SupplyModelForFunctionalOperator Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:af94acce19e3a71b68f9d1544d344c3a1"><td class="memItemLeft" align="right" valign="top"><a id="af94acce19e3a71b68f9d1544d344c3a1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SafeDivides</b> (double threshold=DEFAULT_THRESHOLD)</td></tr>
-<tr class="separator:af94acce19e3a71b68f9d1544d344c3a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14155fc514eab31be2df723ddff293d3"><td class="memItemLeft" align="right" valign="top"><a id="a14155fc514eab31be2df723ddff293d3"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> (double lhs, double rhs) const</td></tr>
-<tr class="separator:a14155fc514eab31be2df723ddff293d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a989f59559f75255316ebe43ee3042534"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">YmlModel::Model</a>&#160;</td><td class="memItemRight" valign="bottom"><b>model</b></td></tr>
+<tr class="separator:a989f59559f75255316ebe43ee3042534"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64ec1754d36ffc5381246e4ca174914e"><td class="memItemLeft" align="right" valign="top"><a id="a64ec1754d36ffc5381246e4ca174914e"></a>
+<a class="el" href="classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html">ForbiddenNodes</a>&#160;</td><td class="memItemRight" valign="bottom"><b>forbiddenNodes</b></td></tr>
+<tr class="separator:a64ec1754d36ffc5381246e4ca174914e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a989f59559f75255316ebe43ee3042534"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a989f59559f75255316ebe43ee3042534">&#9670;&nbsp;</a></span>model</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html">YmlModel::Model</a> SupplyModelForFunctionalOperator::model</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">      .id = <span class="stringliteral">&quot;model0&quot;</span>,</div>
+<div class="line">      .description = <span class="stringliteral">&quot;description&quot;</span>,</div>
+<div class="line">      .parameters = {{<span class="stringliteral">&quot;pmin&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>}},</div>
+<div class="line">      .variables = {{<span class="stringliteral">&quot;varA&quot;</span>, <span class="stringliteral">&quot;7&quot;</span>, <span class="stringliteral">&quot;pmin&quot;</span>, YmlModel::ValueType::CONTINUOUS, <span class="keyword">false</span>, <span class="keyword">false</span>},</div>
+<div class="line">                    {<span class="stringliteral">&quot;varB&quot;</span>, <span class="stringliteral">&quot;7&quot;</span>, <span class="stringliteral">&quot;pmin&quot;</span>, YmlModel::ValueType::CONTINUOUS, <span class="keyword">false</span>, <span class="keyword">false</span>}},</div>
+<div class="line">      .ports = {},</div>
+<div class="line">      .port_field_definitions = {},</div>
+<div class="line">      .constraints = {},</div>
+<div class="line">      .binding_constraints = {},</div>
+<div class="line">      .objectives = {{<span class="stringliteral">&quot;objective-id&quot;</span>, <span class="stringliteral">&quot;&quot;</span>}},</div>
+<div class="line">      .extra_outputs = {}}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/expressions/include/antares/expressions/visitors/<a class="el" href="EvalVisitor_8h_source.html">EvalVisitor.h</a></li>
+<li>src/tests/src/io/yml-importers/testConvertorVisitor.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Expressions</b></li><li class="navelem"><b>Visitors</b></li><li class="navelem"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html">EvaluationResult</a></li><li class="navelem"><a class="el" href="structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides.html">SafeDivides</a></li>
+    <li class="navelem"><a class="el" href="structSupplyModelForFunctionalOperator.html">SupplyModelForFunctionalOperator</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

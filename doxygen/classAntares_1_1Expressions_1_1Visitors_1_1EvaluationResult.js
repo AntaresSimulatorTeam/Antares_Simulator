@@ -1,12 +1,10 @@
 var classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult =
 [
-    [ "EvalResultTimeIndexOutOfRange", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1EvalResultTimeIndexOutOfRange.html", null ],
-    [ "EvalResultTypeError", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1EvalResultTypeError.html", null ],
-    [ "SafeDivides", "structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides.html", "structAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult_1_1SafeDivides" ],
     [ "EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aa16e7bc2542a2262c79abe9b67cdd9ea", null ],
     [ "EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a72d6614909093cab385e2d6f2c73f2d8", null ],
     [ "alltimeSum", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a5ecbfa28369edec7e3595356666fa0b0", null ],
     [ "evaluateBinaryOperation", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a79dc705acc09f05f7bdea74a285a2fdc", null ],
+    [ "evaluateUnaryOperation", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aace982e14e563322466d7f743ffd3b66", null ],
     [ "getValueInVector", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#ac0f90eed5d71970ebfa054ffd4eaaba3", null ],
     [ "operator*", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a023a72a3c86d86361a1d980516f74f9b", null ],
     [ "operator+", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aa785e5f15bdddcd4a1a5115cf99b25e0", null ],

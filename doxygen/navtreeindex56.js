@@ -1,8 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a3cfaabf2ec52301ec164d66953252590":[8,0,0,19,4,11,0],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a73f94d610c09a9c2e287fda28f12b137":[8,0,0,19,4,11,2],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a7e644b6acdc2a7ab5f97d99386e7ea60":[8,0,0,19,4,11,3],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#aa982732ccf2bb70cc56e28c078d18859":[8,0,0,19,4,11,1],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[8,0,0,19,4,30],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#a286abc5071a6ff0a86603bf8f9f1fa6d":[8,0,0,19,4,30,6],
@@ -249,5 +246,8 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html":[8,0,0,19,5,4,59],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#a76595bdd6c0f2e76f5c4294b4f485ed0":[8,0,0,19,5,4,59,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#aced4e0865cb18c815e20390897886ff5":[8,0,0,19,5,4,59,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#affef9e80220d3dfee67dacd1db501ffc":[8,0,0,19,5,4,59,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#affef9e80220d3dfee67dacd1db501ffc":[8,0,0,19,5,4,59,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html":[8,0,0,19,5,4,77],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a24addc5ae803cafc19c153a2f197fa3c":[8,0,0,19,5,4,77,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a479fafcfb6aca33627fde8b1b10509d1":[8,0,0,19,5,4,77,4]
 };
