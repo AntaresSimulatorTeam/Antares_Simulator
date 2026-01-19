@@ -21,10 +21,11 @@
 
 #include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
 
-// TODO  remove tests purpose
-#include <filesystem>
-#include <fstream>
+#include <sstream>
 #include <vector>
+
+#include "antares/utils/utils.h"
+#include "antares/writer/i_writer.h"
 
 namespace Antares::Solver::Variable
 {
@@ -87,9 +88,9 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
             {
                 unsigned realHour = h + pb.HeureDansLAnnee;
                 thermalResults_[index][realHour] += pb.ResultatsHoraires[area->index]
-                                               .ProductionThermique[h]
-                                               .ProductionThermiqueDuPalier[cluster->index]
-                                             * ratio;
+                                                      .ProductionThermique[h]
+                                                      .ProductionThermiqueDuPalier[cluster->index]
+                                                    * ratio;
             }
         }
         // Renewable clusters
@@ -104,7 +105,8 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study
                 unsigned realHour = h + pb.HeureDansLAnnee;
                 // Extract renewable value for this cluster, area, and hour
                 // This assumes cluster->valueAtTimeStep is available and correct
-                renewableResults_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour) * ratio;
+                renewableResults_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour)
+                                                      * ratio;
             }
         }
     }
@@ -131,63 +133,52 @@ void DynamicAggregation::addResultsToSets(const PROBLEME_HEBDO& pb)
     }
 }
 
-// TODO  remove tests purpose
-void DynamicAggregation::writeAllResults(const std::string& baseFolder) const
+void DynamicAggregation::writeAllResults(Solver::IResultWriter& writer) const
 {
-    namespace fs = std::filesystem;
-    fs::create_directories(baseFolder);
-
     for (const auto& [setName, setData]: setsData_)
     {
-        std::string folderPath = baseFolder + "/" + setName;
-        setData.writeResultsToFolder(folderPath);
+        setData.writeResultsToFolder(writer);
     }
 }
 
-// TODO  remove tests purpose
-void SetData::writeResultsToFolder(const std::string& folderName) const
+void SetData::writeResultsToFolder(Solver::IResultWriter& writer) const
 {
-    namespace fs = std::filesystem;
-    fs::create_directories(folderName);
-
     for (size_t i = 0; i < thermalGroupNames_.size(); ++i)
     {
         const std::string& group = thermalGroupNames_[i];
-        std::string filePath = folderName + "/" + group + ".txt";
-        std::ofstream outFile(filePath);
-        if (outFile.is_open())
-        {
-            for (size_t h = 0; h < thermalResults_[i].size(); ++h)
-            {
-                outFile << thermalResults_[i][h] << std::endl;
-            }
-            outFile.close();
-        }
+        std::string thermalHourlyPath = group + ".txt";
 
-        filePath = folderName + "/" + group + "_annual.txt";
-        std::ofstream annualFile(filePath);
-        if (annualFile.is_open())
+        std::ostringstream thermalHourlyContent;
+        for (size_t h = 0; h < thermalResults_[i].size(); ++h)
         {
-            // For demonstration, sum all values as "annual"
-            long double annual = 0.0;
-            for (auto v: thermalResults_[i])
-            {
-                annual += v;
-            }
-            annualFile << annual << std::endl;
+            thermalHourlyContent << thermalResults_[i][h] << "\n";
         }
+        std::string thermalHourlyStr = thermalHourlyContent.str();
+        writer.addEntryFromBuffer(thermalHourlyPath, thermalHourlyStr);
+
+        std::string thermalAnnualPath = group + "_annual.txt";
+        long double annual = 0.0;
+        for (auto v: thermalResults_[i])
+        {
+            annual += v;
+        }
+        std::ostringstream thermalAnnualContent;
+        thermalAnnualContent << annual;
+        std::string thermalAnnualStr = thermalAnnualContent.str();
+        writer.addEntryFromBuffer(thermalAnnualPath, thermalAnnualStr);
     }
-    // Write renewable results
+
     for (size_t i = 0; i < renewableGroupNames_.size(); ++i)
     {
-        std::string fileName = folderName + "/" + renewableGroupNames_[i] + "_renewable.csv";
-        std::ofstream out(fileName);
+        std::string renewablePath = renewableGroupNames_[i] + "_renewable.csv";
         size_t idx = thermalGroupNames_.size() + i;
+        std::ostringstream renewableContent;
         for (size_t h = 0; h < renewableResults_[idx].size(); ++h)
         {
-            out << renewableResults_[idx][h] << "\n";
+            renewableContent << renewableResults_[idx][h] << "\n";
         }
-        out.close();
+        std::string renewableStr = renewableContent.str();
+        writer.addEntryFromBuffer(renewablePath, renewableStr);
     }
 }
 

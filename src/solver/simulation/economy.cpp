@@ -243,7 +243,7 @@ bool Economy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
 
-        dynamicAgg.writeAllResults(study.folderOutput);
+        dynamicAgg.writeAllResults(resultWriter_);
         ++progression;
     }
 

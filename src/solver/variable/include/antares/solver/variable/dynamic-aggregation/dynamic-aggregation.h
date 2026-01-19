@@ -26,6 +26,11 @@
 #include "antares/solver/variable/state.h"
 #include "antares/study/area/area.h"
 
+namespace Antares::Solver
+{
+class IResultWriter;
+}
+
 namespace Antares::Solver::Variable
 {
 
@@ -35,9 +40,7 @@ public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study);
-
-    // TODO rm tests
-    void writeResultsToFolder(const std::string& folderName) const;
+    void writeResultsToFolder(Solver::IResultWriter& writer) const;
 
 private:
     std::vector<std::vector<long double>> thermalResults_;
@@ -61,10 +64,9 @@ public:
 
     void initializeSetsData();
 
-    // TODO rm tests
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
-    void writeAllResults(const std::string& baseFolder) const;
+    void writeAllResults(IResultWriter& writer) const;
 
 private:
     Data::Study& study_;
