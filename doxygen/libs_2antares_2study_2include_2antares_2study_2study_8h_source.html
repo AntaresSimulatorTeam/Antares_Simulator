@@ -142,7 +142,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;antares/benchmarking/DurationCollector.h&gt;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;antares/correlation/correlation.h&gt;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;antares/date/date.h&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;antares/solver/modeler/data.h&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;antares/solver/modeler/ModelerData.h&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;antares/study/runtime/runtime.h&gt;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;antares/writer/i_writer.h&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;antares/study/binding_constraint/BindingConstraintGroupRepository.h&quot;</span></div>
@@ -405,7 +405,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160; </div>
 <div class="line"><a name="l00604"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Study.html#af416e6cf886489dce4c7c1f8d6129a55">  604</a></span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1Study.html#af416e6cf886489dce4c7c1f8d6129a55">usedByTheSolver</a>;</div>
 <div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160; </div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    <a class="code" href="structAntares_1_1Modeler_1_1Data.html">Antares::Modeler::Data</a>* getModelerData()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ModelerData.html">Solver::ModelerData</a>* getModelerData()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;        <span class="keywordflow">return</span> modelerInput_.get();</div>
 <div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;    }</div>
@@ -431,7 +431,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1Study.html#ae01e3f757080cc0d6fcaedd7b0dc059f">reduceMemoryUsage</a>();</div>
 <div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160; </div>
 <div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    std::unique_ptr&lt;Modeler::Data&gt; modelerInput_;</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    std::unique_ptr&lt;Solver::ModelerData&gt; modelerInput_;</div>
 <div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;}; <span class="comment">// class Study</span></div>
 <div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160; </div>
 <div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;<span class="keyword">extern</span> YString StudyIconFile;</div>
@@ -540,7 +540,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Progression_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Progression.html">Antares::Solver::Progression</a></div><div class="ttdoc">Progress meter about any operation performed on the attached study.</div><div class="ttdef"><b>Definition:</b> progression.h:27</div></div>
 <div class="ttc" id="aclassBenchmarking_1_1DurationCollector_html"><div class="ttname"><a href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a></div><div class="ttdef"><b>Definition:</b> DurationCollector.h:19</div></div>
-<div class="ttc" id="astructAntares_1_1Modeler_1_1Data_html"><div class="ttname"><a href="structAntares_1_1Modeler_1_1Data.html">Antares::Modeler::Data</a></div><div class="ttdef"><b>Definition:</b> data.h:23</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1ModelerData_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelerData.html">Antares::Solver::ModelerData</a></div><div class="ttdef"><b>Definition:</b> ModelerData.h:23</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

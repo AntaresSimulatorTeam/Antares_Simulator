@@ -152,7 +152,7 @@ $(document).ready(function(){initNavTree('study_2system-model_2include_2antares_
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;             ValueType type,</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;             TimeDependent timeDependent,</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;             ScenarioDependent scenarioDependent,</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;             Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;             Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS):</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        id_(std::move(<span class="keywordtype">id</span>)),</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        type_(type),</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        lowerBound_(std::move(lower_bound)),</div>
@@ -193,7 +193,7 @@ $(document).ready(function(){initNavTree('study_2system-model_2include_2antares_
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordflow">return</span> scenarioDependent_ == ScenarioDependent::YES;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    [[nodiscard]] Modeler::Config::Location location()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    [[nodiscard]] Solver::Config::Location location()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">return</span> location_;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
@@ -205,7 +205,7 @@ $(document).ready(function(){initNavTree('study_2system-model_2include_2antares_
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a> upperBound_;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    TimeDependent timeDependent_ = TimeDependent::YES;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;};</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;} <span class="comment">// namespace Antares::ModelerStudy::SystemModel</span></div>

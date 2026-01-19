@@ -13,8 +13,7 @@ var namespaceAntares_1_1Optimisation =
       [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
       [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
       [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ],
-      [ "convertOrtoolsBasisStatus", "convertOrtoolsBasisStatus_8cpp.html#a82d1e8a5093f3f009bf7c358f7ec432f", null ],
-      [ "Write", "linearProblem_8cpp.html#ad57898e44d942c01aeb3b40bdc835f1e", null ]
+      [ "convertOrtoolsBasisStatus", "convertOrtoolsBasisStatus_8cpp.html#a82d1e8a5093f3f009bf7c358f7ec432f", null ]
     ] ],
     [ "EvaluationContext", "classAntares_1_1Optimisation_1_1EvaluationContext.html", "classAntares_1_1Optimisation_1_1EvaluationContext" ],
     [ "OptimComponent", "structAntares_1_1Optimisation_1_1OptimComponent.html", "structAntares_1_1Optimisation_1_1OptimComponent" ],

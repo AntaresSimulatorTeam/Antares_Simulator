@@ -136,20 +136,23 @@ $(document).ready(function(){initNavTree('SimulationTableCsvFile_8h_source.html'
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;SimulationTableCsv.h&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classSimulationTableCsvFile.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSimulationTableCsvFile.html">SimulationTableCsvFile</a> final: <span class="keyword">public</span> <a class="code" href="classSimulationTableCsv.html">SimulationTableCsv</a></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span>Antares::IO::Outputs</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classSimulationTableCsvFile.html">SimulationTableCsvFile</a>(<span class="keyword">const</span> std::filesystem::path&amp; outputFolder,</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;                           <span class="keyword">const</span> std::string&amp; simulationId);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSimulationTableCsvFile.html#a06a1d908fe5e6e5c6f4c76831133c3b8">write</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">   12</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">SimulationTableCsvFile</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html">SimulationTableCsv</a></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">SimulationTableCsvFile</a>(<span class="keyword">const</span> std::filesystem::path&amp; outputFolder,</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                           <span class="keyword">const</span> std::string&amp; simulationId);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    std::ofstream file_;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
-<div class="ttc" id="aclassSimulationTableCsvFile_html"><div class="ttname"><a href="classSimulationTableCsvFile.html">SimulationTableCsvFile</a></div><div class="ttdef"><b>Definition:</b> SimulationTableCsvFile.h:11</div></div>
-<div class="ttc" id="aclassSimulationTableCsvFile_html_a06a1d908fe5e6e5c6f4c76831133c3b8"><div class="ttname"><a href="classSimulationTableCsvFile.html#a06a1d908fe5e6e5c6f4c76831133c3b8">SimulationTableCsvFile::write</a></div><div class="ttdeci">void write() override</div><div class="ttdoc">Write the table to the given file path, using the concrete export format.</div><div class="ttdef"><b>Definition:</b> SimulationTableCsvFile.cpp:27</div></div>
-<div class="ttc" id="aclassSimulationTableCsv_html"><div class="ttname"><a href="classSimulationTableCsv.html">SimulationTableCsv</a></div><div class="ttdef"><b>Definition:</b> SimulationTableCsv.h:13</div></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html#a460c7c1341b88c85c13c5633ce7fd8f4">write</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::ofstream file_;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;} <span class="comment">// namespace Antares::IO::Outputs</span></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">Antares::IO::Outputs::SimulationTableCsvFile</a></div><div class="ttdef"><b>Definition:</b> SimulationTableCsvFile.h:13</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile_html_a460c7c1341b88c85c13c5633ce7fd8f4"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html#a460c7c1341b88c85c13c5633ce7fd8f4">Antares::IO::Outputs::SimulationTableCsvFile::write</a></div><div class="ttdeci">void write() override</div><div class="ttdoc">Write the table to the given file path, using the concrete export format.</div><div class="ttdef"><b>Definition:</b> SimulationTableCsvFile.cpp:29</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html">Antares::IO::Outputs::SimulationTableCsv</a></div><div class="ttdef"><b>Definition:</b> SimulationTableCsv.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

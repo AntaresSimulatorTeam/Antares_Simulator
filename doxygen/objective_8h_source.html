@@ -146,7 +146,7 @@ $(document).ready(function(){initNavTree('objective_8h_source.html',''); initRes
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html">Objective</a>(std::string <span class="keywordtype">id</span>,</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;              <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a>&amp;&amp; expression,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;              Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;              Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS):</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        id_(std::move(<span class="keywordtype">id</span>)),</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        expression_(std::move(expression)),</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        location_(location)</div>
@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('objective_8h_source.html',''); initRes
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">return</span> expression_;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    }</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    [[nodiscard]] Modeler::Config::Location location()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    [[nodiscard]] Solver::Config::Location location()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> location_;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('objective_8h_source.html',''); initRes
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::string id_;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html">Expression</a> expression_;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <span class="comment">// namespace Antares::ModelerStudy::SystemModel</span></div>

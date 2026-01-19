@@ -513,7 +513,7 @@ $(document).ready(function(){initNavTree('solver_8hxx_source.html',''); initResi
 <div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160; </div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;        <span class="comment">// The target folder</span></div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        String newPath;</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;        newPath &lt;&lt; ImplementationType::Name() &lt;&lt; IO::Separator;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;        newPath &lt;&lt; ImplementationType::Name() &lt;&lt; Yuni::IO::Separator;</div>
 <div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        <span class="keywordflow">if</span> (synthesis)</div>
 <div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        {</div>
 <div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;            newPath &lt;&lt; <span class="stringliteral">&quot;mc-all&quot;</span>;</div>
@@ -522,7 +522,7 @@ $(document).ready(function(){initNavTree('solver_8hxx_source.html',''); initResi
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        {</div>
 <div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;            CString&lt;10, false&gt; tmp;</div>
 <div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;            tmp = (year + 1);</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            newPath &lt;&lt; <span class="stringliteral">&quot;mc-ind&quot;</span> &lt;&lt; IO::Separator &lt;&lt; <span class="stringliteral">&quot;00000&quot;</span>;</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            newPath &lt;&lt; <span class="stringliteral">&quot;mc-ind&quot;</span> &lt;&lt; Yuni::IO::Separator &lt;&lt; <span class="stringliteral">&quot;00000&quot;</span>;</div>
 <div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;            newPath.overwriteRight(tmp);</div>
 <div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        }</div>
 <div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160; </div>

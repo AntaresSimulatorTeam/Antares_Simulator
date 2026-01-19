@@ -155,7 +155,7 @@ $(document).ready(function(){initNavTree('linear-problem-mpsolver-impl_2include_
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getUb() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getCoefficient(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">LinearProblemApi::IMipVariable</a>* var) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    [[nodiscard]] std::vector&lt;std::pair&lt;int, double&gt;&gt; getCoefficients() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> dual() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    [[nodiscard]] <span class="keyword">const</span> std::string&amp; getName() <span class="keyword">const override</span>;</div>
@@ -169,7 +169,7 @@ $(document).ready(function(){initNavTree('linear-problem-mpsolver-impl_2include_
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;};</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemMpsolverImpl</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">Antares::Optimisation::LinearProblemApi::IMipConstraint</a></div><div class="ttdef"><b>Definition:</b> mipConstraint.h:12</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html">Antares::Optimisation::LinearProblemApi::IMipConstraint</a></div><div class="ttdef"><b>Definition:</b> mipConstraint.h:13</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html">Antares::Optimisation::LinearProblemApi::IMipVariable</a></div><div class="ttdef"><b>Definition:</b> mipVariable.h:14</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipConstraint</a></div><div class="ttdef"><b>Definition:</b> mipConstraint.h:17</div></div>
 </div><!-- fragment --></div><!-- contents -->

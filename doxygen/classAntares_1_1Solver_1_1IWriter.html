@@ -136,8 +136,8 @@ Inheritance diagram for Antares::Solver::IWriter:</div>
  <div class="center">
   <img src="classAntares_1_1Solver_1_1IWriter.png" usemap="#Antares::Solver::IWriter_map" alt=""/>
   <map id="Antares::Solver::IWriter_map" name="Antares::Solver::IWriter_map">
-<area href="classAntares_1_1Modeler_1_1FileWriter.html" alt="Antares::Modeler::FileWriter" shape="rect" coords="0,56,170,80"/>
-<area href="classInMemoryWriter.html" alt="InMemoryWriter" shape="rect" coords="180,56,350,80"/>
+<area href="classAntares_1_1Solver_1_1FileWriter.html" alt="Antares::Solver::FileWriter" shape="rect" coords="0,56,160,80"/>
+<area href="classInMemoryWriter.html" alt="InMemoryWriter" shape="rect" coords="170,56,330,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -146,9 +146,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a453c16018a5fb26224862edc8eda3bc0"><td class="memItemLeft" align="right" valign="top"><a id="a453c16018a5fb26224862edc8eda3bc0"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (const std::string &amp;simulationId)=0</td></tr>
 <tr class="separator:a453c16018a5fb26224862edc8eda3bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5432158662182316febd3668703f5572"><td class="memItemLeft" align="right" valign="top"><a id="a5432158662182316febd3668703f5572"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSimulationTable</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a> &amp;linearProblem, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution, const <a class="el" href="structAntares_1_1Modeler_1_1Data.html">Antares::Modeler::Data</a> &amp;modelerData, const <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Optimisation::OptimEntityContainer</a> &amp;variableContainer, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext) const =0</td></tr>
-<tr class="separator:a5432158662182316febd3668703f5572"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e27c5a0f13290fdbdabfff55844f20a"><td class="memItemLeft" align="right" valign="top"><a id="a7e27c5a0f13290fdbdabfff55844f20a"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSimulationTable</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a> &amp;linearProblem, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution, const <a class="el" href="structAntares_1_1Solver_1_1ModelerData.html">ModelerData</a> &amp;modelerData, const <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Optimisation::OptimEntityContainer</a> &amp;variableContainer, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext) const =0</td></tr>
+<tr class="separator:a7e27c5a0f13290fdbdabfff55844f20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb93790905e2c4238cc74eab331e5bfd"><td class="memItemLeft" align="right" valign="top"><a id="afb93790905e2c4238cc74eab331e5bfd"></a>
 virtual const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>outputPath</b> () const =0</td></tr>
 <tr class="separator:afb93790905e2c4238cc74eab331e5bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
