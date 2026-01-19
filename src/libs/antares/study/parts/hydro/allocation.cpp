@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/parts/hydro/allocation.h"
 
@@ -42,7 +24,6 @@ static const Area* FindMappedAreaName(const AreaName& id,
 
 HydroAllocation::HydroAllocation()
 {
-    pMustUseValuesFromAreaID = false;
 }
 
 HydroAllocation::~HydroAllocation()
@@ -51,7 +32,6 @@ HydroAllocation::~HydroAllocation()
 
 void HydroAllocation::remove(const AreaName& areaid)
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     if (i != pValues.end())
     {
@@ -61,7 +41,6 @@ void HydroAllocation::remove(const AreaName& areaid)
 
 void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(oldid);
     if (i != pValues.end())
     {
@@ -83,14 +62,12 @@ double HydroAllocation::fromArea(const Area* area) const
 
 double HydroAllocation::operator[](const AreaName& areaid) const
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     return (i != pValues.end()) ? i->second : 0.;
 }
 
 double HydroAllocation::operator[](const Area& area) const
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(area.id);
     return (i != pValues.end()) ? i->second : 0.;
 }
@@ -110,14 +87,12 @@ void HydroAllocation::fromArea(const Area* area, double value)
 
 double HydroAllocation::fromArea(const AreaName& areaid) const
 {
-    assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     return (i != pValues.end()) ? i->second : 0.;
 }
 
 void HydroAllocation::fromArea(const AreaName& areaid, double value)
 {
-    assert(!pMustUseValuesFromAreaID);
     if (Utils::isZero(value))
     {
         auto i = pValues.find(areaid);
@@ -146,14 +121,12 @@ void HydroAllocation::prepareForSolver(const AreaList& list)
     }
 
     pValues.clear();
-    pMustUseValuesFromAreaID = true;
 }
 
 void HydroAllocation::clear()
 {
     pValues.clear();
     pValuesFromAreaID.clear();
-    pMustUseValuesFromAreaID = false;
 }
 
 bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path& filename)

@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -90,11 +72,11 @@ BOOST_FIXTURE_TEST_CASE(visit_pow_two_literals, VisitorFixture<ReadLinearExpress
 
 BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_0, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    Node* variable = create<VariableNode>("variable", 0);
+    Node* variable = create<VariableNode>("variable", 0 /* index */);
     Node* eight = create<LiteralNode>(8);
     Node* zero = create<LiteralNode>(0.);
     Node* mult = create<MultiplicationNode>(eight, variable);
-    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, zero); // (8*variable)^0
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, zero); // (8 * variable)^0
     auto linear_expression = visitor().dispatch(pow);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 1);
@@ -107,7 +89,7 @@ BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_1, VisitorFixture<ReadLinearExpr
     Node* eight = create<LiteralNode>(8);
     Node* one = create<LiteralNode>(1.);
     Node* mult = create<MultiplicationNode>(eight, variable);
-    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, one); // (8*variable)^1
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, one); // (8 * variable)^1
     auto linear_expression = visitor().dispatch(pow);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0);
@@ -123,7 +105,7 @@ BOOST_FIXTURE_TEST_CASE(visit_pow_simple__non_linear_linear,
     Node* eight = create<LiteralNode>(8);
     Node* six = create<LiteralNode>(6.);
     Node* mult = create<MultiplicationNode>(eight, variable);
-    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, six); // (8*variable)^6
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, six); // (8 * variable)^6
     BOOST_CHECK_THROW(visitor().dispatch(pow), std::invalid_argument);
 }
 
@@ -139,7 +121,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpre
 
 BOOST_FIXTURE_TEST_CASE(visit__max_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // 5 + param(3) = 8
+    // max(5, param(3)) = 5
     Node* maxNode = create<FunctionNode>(FunctionNodeType::max,
                                          create<LiteralNode>(5.),
                                          create<ParameterNode>("param_3"));
@@ -151,7 +133,7 @@ BOOST_FIXTURE_TEST_CASE(visit__max_literal__param, VisitorFixture<ReadLinearExpr
 
 BOOST_FIXTURE_TEST_CASE(visit__min_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // 5 + param(3) = 8
+    // min(5, param(3)) = 3
     Node* minNode = create<FunctionNode>(FunctionNodeType::min,
                                          create<LiteralNode>(5.),
                                          create<ParameterNode>("param_3"));
@@ -159,6 +141,88 @@ BOOST_FIXTURE_TEST_CASE(visit__min_literal__param, VisitorFixture<ReadLinearExpr
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 3.);
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(4.5) = 4
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor, create<LiteralNode>(4.5));
+
+    auto linear_expression = visitor().dispatch(floorNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 4.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(param(4.5)) = 4
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor,
+                                           create<ParameterNode>("four.five"));
+
+    auto linear_expression = visitor().dispatch(floorNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 4.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_variable_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(7 * var) is not linear: argument has non-zero coefficients
+    Node* var = create<VariableNode>("var", 0);
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.), var);
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor, product);
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(floorNode),
+                          std::invalid_argument,
+                          checkMessage(
+                            "floor operator: its argument is not constant, but has to be."));
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(4.5) = 5
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil, create<LiteralNode>(4.5));
+
+    auto linear_expression = visitor().dispatch(ceilNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(param(4.5)) = 5
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil,
+                                          create<ParameterNode>("four.five"));
+
+    auto linear_expression = visitor().dispatch(ceilNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_variable_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(7 * var) is not linear: argument has non-zero coefficients
+    Node* var = create<VariableNode>("var", 0);
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.), var);
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil, product);
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(ceilNode),
+                          std::invalid_argument,
+                          checkMessage(
+                            "ceil operator: its argument is not constant, but has to be."));
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,

@@ -3,11 +3,12 @@
 set(SOURCES
         modelConverter.cpp
         convertorVisitor.cpp
-        NodeChecker.cpp
+        ForbiddenNodesVisitor.cpp
+        ForbiddenNodes.cpp
         include/antares/io/inputs/model-converter/modelConverter.h
         include/antares/io/inputs/model-converter/convertorVisitor.h
         include/antares/io/inputs/model-converter/ForbiddenNodes.h
-        include/antares/io/inputs/model-converter/NodeChecker.h
+        include/antares/io/inputs/model-converter/ForbiddenNodesVisitor.h
 )
 
 # Create the library

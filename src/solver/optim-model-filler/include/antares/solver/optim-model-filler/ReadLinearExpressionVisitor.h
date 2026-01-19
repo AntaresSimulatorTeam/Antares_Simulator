@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
@@ -106,23 +88,23 @@ public:
 
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::TimeSumNode* node) override;
+
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::AllTimeSumNode* node) override;
-    static Antares::Optimization::TimeDependentLinearExpression handleReducedCost(
-      const Nodes::FunctionNode* node);
-    static Antares::Optimization::TimeDependentLinearExpression handleDual(
-      const Nodes::FunctionNode* node);
 
-    Optimization::TimeDependentLinearExpression handlePow(const Nodes::FunctionNode* node);
     Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::FunctionNode* node) override;
 
 private:
+    Optimization::TimeDependentLinearExpression visitPower(const Nodes::FunctionNode* node);
+    Optimization::TimeDependentLinearExpression visitFloor(const Nodes::FunctionNode* node);
+    Optimization::TimeDependentLinearExpression visitCeil(const Nodes::FunctionNode* node);
+
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Antares::ModelerStudy::SystemModel::Component& component_;
     const Antares::Optimisation::EvaluationContext& evalContext_;
     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
     Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
-    const int nbtimeSteps_;
+    const unsigned nbtimeSteps_;
 };
 } // namespace Antares::Optimisation
