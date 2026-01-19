@@ -157,7 +157,7 @@ static ForbiddenNodes ForbiddenInExtraOutput()
     return forbidden;
 }
 
-std::vector<PortType> convertTypes(const ::YmlModel::Library& library)
+std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
 {
     std::vector<PortType> out;
     out.reserve(library.port_types.size());
@@ -492,7 +492,7 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
  */
 Library convert(const YmlModel::Library& library)
 {
-    std::vector<PortType> portTypes = convertTypes(library);
+    std::vector<PortType> portTypes = convertPortTypes(library);
     std::vector<Model> models = convertModels(library, portTypes);
 
     LibraryBuilder builder;
