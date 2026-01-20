@@ -40,6 +40,7 @@ Economy::Economy(Data::Study& study,
                  Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
+    dynamicAggregationAllYears(study),
     resultWriter_(resultWriter),
     simulationObserver_(simulationObserver),
     simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
@@ -133,7 +134,8 @@ bool Economy::year(Progression::Task& progression,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
                    Benchmarking::DurationCollector& durationCollector,
-                   const Antares::Data::Area::ScratchMap& scratchmap)
+                   const Antares::Data::Area::ScratchMap& scratchmap,
+                   Solver::Variable::DynamicAggregation& dynamicAggregation)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -150,9 +152,6 @@ bool Economy::year(Progression::Task& progression,
     // In order to avoid slight differences in parallel/sequential, we clear the basis at the start
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
-
-    Variable::DynamicAggregation dynamicAgg(study);
-    dynamicAgg.initializeSetsData();
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -184,7 +183,7 @@ bool Economy::year(Progression::Task& progression,
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
-            dynamicAgg.addResultsToSets(currentProblem);
+            dynamicAggregation.addResultsToSets(currentProblem);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
@@ -243,7 +242,7 @@ bool Economy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
 
-        dynamicAgg.writeAllResults(study.folderOutput);
+        dynamicAggregation.writeAllResults(study.folderOutput);
         ++progression;
     }
 

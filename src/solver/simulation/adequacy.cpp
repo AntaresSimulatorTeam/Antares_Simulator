@@ -141,7 +141,8 @@ bool Adequacy::year(Progression::Task& progression,
                     const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                     OptimizationStatisticsWriter& optWriter,
                     Benchmarking::DurationCollector& durationCollector,
-                    const Antares::Data::Area::ScratchMap& scratchmap)
+                    const Antares::Data::Area::ScratchMap& scratchmap,
+                    Solver::Variable::DynamicAggregation& dynamicAggregation)
 {
     // No failed week at year start
     failedWeekList.clear();

@@ -132,6 +132,9 @@ public:
     {
         Progression::Task progression(study, y, Solver::Progression::sectYear);
 
+        Variable::DynamicAggregation dynamicAggregationForTheYear(study);
+        dynamicAggregationForTheYear.initializeSetsData();
+
         // Index of the current year in the list of structures
         uint indexYear = randomForParallelYears.yearNumberToIndex[y];
 
@@ -174,7 +177,8 @@ public:
                                              hydroManagement.ventilationResults(),
                                              optWriter,
                                              pDurationCollector,
-                                             scratchmap);
+                                             scratchmap,
+                                             dynamicAggregationForTheYear);
         if (!study.parameters.noOutput)
         {
             auto& simTable = simulation_->getSimulationTable(numSpace);

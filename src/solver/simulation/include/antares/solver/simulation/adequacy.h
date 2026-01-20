@@ -83,7 +83,8 @@ protected:
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
               Benchmarking::DurationCollector& durationCollector,
-              const Antares::Data::Area::ScratchMap& scratchmap);
+              const Antares::Data::Area::ScratchMap& scratchmap,
+              Solver::Variable::DynamicAggregation& dynamicAggregation);
 
     void incrementProgression(Progression::Task& progression) const;
 
