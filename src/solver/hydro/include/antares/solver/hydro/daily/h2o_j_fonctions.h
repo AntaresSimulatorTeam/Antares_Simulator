@@ -4,11 +4,10 @@
 #ifndef __SOLVER_H2O_J_FONCTIONS__
 #define __SOLVER_H2O_J_FONCTIONS__
 
-namespace operations_research
-{
-class MPSolver;
-class MPVariable;
-} // namespace operations_research
+#include <string>
+#include <vector>
+
+#include "h2o_j_donnees_optimisation.h"
 
 namespace DoneesOptimisationJournaliere
 {
@@ -42,25 +41,34 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
 void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES&);
 
 // OR-Tools MPSolver helpers for the daily hydro problem.
+// Build the full list of variables in the same order as the legacy
+// PROBLEME_LINEAIRE_PARTIE_FIXE / VARIABLE arrays.
 void H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES*,
                                     int,
                                     operations_research::MPSolver&,
-                                    std::vector<operations_research::MPVariable*>&);
+                                    std::vector<operations_research::MPVariable*>& allVariables);
 
-void H2O_J_MPSolver_SetObjectiveCoefficients(DONNEES_MENSUELLES*,
-                                             int,
-                                             operations_research::MPSolver&,
-                                             const std::vector<operations_research::MPVariable*>&);
+void H2O_J_MPSolver_SetObjectiveCoefficients(
+  DONNEES_MENSUELLES*,
+  int,
+  operations_research::MPSolver&,
+  const std::vector<operations_research::MPVariable*>& allVariables);
 
-void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES*,
-                                      int,
-                                      operations_research::MPSolver&,
-                                      const std::vector<operations_research::MPVariable*>&);
+// Build constraints directly from DONNEES_MENSUELLES and the typed
+// variable pointers, without relying on internal matrix structures or
+// variable indices.
+void H2O_J_MPSolver_CreateConstraints(
+  DONNEES_MENSUELLES*,
+  const std::vector<operations_research::MPVariable*>& turbineVariables,
+  const std::vector<operations_research::MPVariable*>& xiVariables,
+  operations_research::MPVariable* xiPlus,
+  operations_research::MPVariable* xiMoins,
+  operations_research::MPSolver&);
 
 void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES*,
-                                     int,
-                                     operations_research::MPSolver&,
-                                     const std::vector<operations_research::MPVariable*>&);
+                                    int,
+                                    operations_research::MPSolver&,
+                                    const std::vector<operations_research::MPVariable*>&);
 } // namespace DoneesOptimisationJournaliere
 
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */

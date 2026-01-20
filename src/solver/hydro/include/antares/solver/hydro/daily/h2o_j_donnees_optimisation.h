@@ -13,6 +13,12 @@
 
 #define LINFINI 1.e+80
 
+namespace operations_research
+{
+class MPSolver;
+class MPVariable;
+} // namespace operations_research
+
 namespace DoneesOptimisationJournaliere
 {
 /*--------------------------------------------------------------------------------------*/
@@ -98,6 +104,18 @@ struct CORRESPONDANCE_DES_VARIABLES
 
     int NumeroDeLaVariableXiPlus{0};  /* Ecart global positif */
     int NumeroDeLaVariableXiMoins{0}; /* Ecart global négatif */
+};
+
+// Group of OR-Tools variables used in the daily hydro problem.
+struct H2O_J_MPSOLVER_VARIABLES
+{
+    // One turbine variable per day of the month.
+    std::vector<operations_research::MPVariable*> turbine;
+    // One xi variable per day of the month.
+    std::vector<operations_research::MPVariable*> xi;
+    // Global deviation variables.
+    operations_research::MPVariable* xiPlus{nullptr};
+    operations_research::MPVariable* xiMoins{nullptr};
 };
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
