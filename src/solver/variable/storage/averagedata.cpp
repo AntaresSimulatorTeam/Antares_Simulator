@@ -3,25 +3,16 @@
 
 #include "antares/solver/variable/storage/averagedata.h"
 
-#include <yuni/yuni.h>
-
 #include "antares/solver/variable/storage/intermediate.h"
-
-using namespace Yuni;
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-AverageData::AverageData():
-    nbYearsCapacity(0),
-    allYears(0.)
-{
-}
-
+AverageData::AverageData() = default;
 AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {
-    year.assign(nbYearsCapacity, 0.);
+    year = 0.;
     monthly.assign(MONTHS_PER_YEAR, 0.);
     weekly.assign(WEEKS_PER_YEAR, 0.);
     daily.assign(DAYS_PER_YEAR, 0.);
@@ -30,9 +21,6 @@ void AverageData::reset()
 
 void AverageData::initializeFromStudy(Data::Study& study)
 {
-    nbYearsCapacity = study.runtime.rangeLimits.year[Data::rangeEnd] + 1;
-    year.resize(nbYearsCapacity);
-
     yearsWeight = study.parameters.getYearsWeight();
     yearsWeightSum = study.parameters.getYearsWeightSum();
 }
@@ -65,7 +53,7 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
         monthly[i] += rhs.month[i] * ratio;
     }
     // Average value throughout all years
-    year[y] += rhs.year * ratio;
+    year += rhs.year * ratio;
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears

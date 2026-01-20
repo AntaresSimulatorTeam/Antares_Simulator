@@ -210,10 +210,10 @@ public:
             {
                 results.data.matrix
                   .entry[results.data.link->from->index][results.data.link->with->index]
-                  = AncestorType::pResults.avgdata.allYears;
+                  = AncestorType::pResults.avgdata.year;
                 results.data.matrix
                   .entry[results.data.link->with->index][results.data.link->from->index]
-                  = -AncestorType::pResults.avgdata.allYears;
+                  = -AncestorType::pResults.avgdata.year;
             }
         }
 
