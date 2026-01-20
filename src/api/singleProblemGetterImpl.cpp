@@ -255,12 +255,14 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
 
     const auto [hydroLevels, ventilationResults] = getYearlyData(year);
 
-    // TODO
     uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
-
-    // TODO once per year, not every week
-    Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
+    // TODO
+    if (auto [_, seen] = randomPrepared_.insert(year); !seen)
+    {
+        // TODO once per year, not every week
+        Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
+    }
 
     const auto hourInTheYear = 168 * week; // TODO
 

@@ -66,5 +66,6 @@ private:
     std::vector<std::string> constraintsName_;
     std::vector<NameMemo> variablesMemo_;
     std::vector<NameMemo> constraintsMemo_;
+    std::set<int> randomPrepared_;
 };
 } // namespace Antares::Solver::Implementation
