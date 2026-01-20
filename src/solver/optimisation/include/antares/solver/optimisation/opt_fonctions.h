@@ -4,7 +4,7 @@
 #ifndef __SOLVER_OPTIMISATION_FUNCTIONS_H__
 #define __SOLVER_OPTIMISATION_FUNCTIONS_H__
 
-  #include <antares/optimization-options/options.h>
+#include <antares/optimization-options/options.h>
 #include <antares/solver/utils/opt_period_string_generator.h>
 #include <antares/writer/i_writer.h>
 #include "antares/config/config.h"
@@ -15,12 +15,10 @@
 
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 
-
 namespace Antares::Optimisation
 {
 class OptimEntityContainer;
 }
-
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
