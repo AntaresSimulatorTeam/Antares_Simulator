@@ -193,7 +193,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     measure.tick();
     timeMeasure.updateTime = measure.duration_ms();
-    optimizationStatistics.addSolveTime(timeMeasure.updateTime);
+    optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
     measure.reset();
 
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver.get(), options);

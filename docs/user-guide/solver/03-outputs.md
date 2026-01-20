@@ -275,8 +275,8 @@ The section [duration\_ms] contains the following fields:
 - **simulation**:
     - **tsgen_thermal, tsgen_wind, tsgen_solar, tsgen_load, tsgen_hydro**: if we need to generate time series for a type
     - **mc_years**: all monte-carlo years
-        - **hydro_ventilation**
-        - **problem_build_time**
+        - **hydro_ventilation**: running hydro heuristics
+        - **problem_build_time**: building of the optmimization problem (legacy + modeler)
         - **solve_time**: solver resolution
         - **export_simulation_tables**: modeler related, creation and writing of simulation tables
         - **post_processing**: balance and flow quad
