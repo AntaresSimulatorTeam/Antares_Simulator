@@ -344,7 +344,7 @@ $(document).ready(function(){initNavTree('stdDeviation_8h_source.html',''); init
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        <span class="keywordflow">case</span> Category::annual:</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        {</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">double</span> d = *array - results.avgdata.allYears * results.avgdata.allYears;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">double</span> d = *array - (double)results.avgdata.year * (<span class="keywordtype">double</span>)results.avgdata.year;</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            *target = squareRootChecked(d);</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        }</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;        <span class="keywordflow">break</span>;</div>
