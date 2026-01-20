@@ -19,17 +19,15 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <memory>
 #include <mutex>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_utils.h>
-#include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/ISimulationTable.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
-#include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
@@ -170,6 +168,44 @@ MPSolver* fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
     return ortoolsProblem.getMpSolver();
 }
 
+struct MasterProblemResult
+{
+    MPSolver* solver;
+    std::unique_ptr<BendersDecomposition> bendersDecomposition;
+    std::unique_ptr<LegacyOrtoolsLinearProblem> problem;
+};
+
+static MasterProblemResult buildMasterProblem(
+  const SingleOptimOptions& options,
+  PROBLEME_HEBDO* problemeHebdo,
+  const int NumIntervalle,
+  FillContext& fillCtx,
+  const ILinearProblemData* modelerDataSeries,
+  const ScenarioGroupRepository* modelerScenarioGroupRepository)
+{
+    auto master_problem = std::make_unique<LegacyOrtoolsLinearProblem>(
+      problemeHebdo->ProblemeAResoudre->isMIP(),
+      options.solverName);
+    auto bendersDecomposition = std::make_unique<BendersDecomposition>();
+    bendersDecomposition->setCurrentProblemId("master");
+
+    OptimEntityContainer masterOptimEntityContainer(*master_problem,
+                                                    modelerDataSeries,
+                                                    modelerScenarioGroupRepository);
+
+    auto* solver = fillAndGetMpSolver(*master_problem,
+                                      fillCtx,
+                                      problemeHebdo,
+                                      masterOptimEntityContainer,
+                                      problemeHebdo->NamedProblems,
+                                      Modeler::Config::Location::MASTER,
+                                      bendersDecomposition.get(),
+                                      false);
+    logProblemSize(solver, "master");
+
+    return {solver, std::move(bendersDecomposition), std::move(master_problem)};
+}
+
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           const int NumIntervalle,
@@ -186,11 +222,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
 
-    BendersDecomposition bendersDecomposition;
-    LegacyOrtoolsLinearProblem master_problem(problemeHebdo->ProblemeAResoudre->isMIP(),
-                                              options.solverName);
-    bendersDecomposition.setCurrentProblemId("master");
-
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
@@ -201,19 +232,13 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                            ->scenarioGroupRepository
                                                                       : nullptr;
 
-    OptimEntityContainer masterOptimEntityContainer(master_problem,
-                                                    modelerDataSeries,
-                                                    modelerScenarioGroupRepository);
-
-    auto* master = fillAndGetMpSolver(master_problem,
-                                      fillCtx,
-                                      problemeHebdo,
-                                      masterOptimEntityContainer,
-                                      problemeHebdo->NamedProblems,
-                                      Modeler::Config::Location::MASTER,
-                                      &bendersDecomposition,
-                                      false);
-    logProblemSize(master, "master");
+    auto [master, bendersDecomposition, master_problem] = buildMasterProblem(
+      options,
+      problemeHebdo,
+      NumIntervalle,
+      fillCtx,
+      modelerDataSeries,
+      modelerScenarioGroupRepository);
 
     // Do not store master solver in ProblemeAResoudre->ProblemesSpx[NumIntervalle]
     // (master solver lifecycle is managed locally now)
@@ -228,14 +253,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                  modelerDataSeries,
                                                  modelerScenarioGroupRepository);
 
-    bendersDecomposition.setCurrentProblemId("1-1");
+    bendersDecomposition->setCurrentProblemId("1-1");
     auto* subproblem = fillAndGetMpSolver(*subproblemLP,
                                           fillCtx,
                                           problemeHebdo,
                                           subOptimEntityContainer,
                                           problemeHebdo->NamedProblems,
                                           Modeler::Config::Location::SUBPROBLEMS,
-                                          &bendersDecomposition,
+                                          bendersDecomposition,
                                           true);
     logProblemSize(subproblem, "subproblem");
 
